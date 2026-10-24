@@ -1,0 +1,37 @@
+import * as HelpersMisc from "../../helpers/Misc.ts";
+import * as ProtoSchemaCommonProtoMailMailContainer from "../../proto/schema/CommonProto/Mail/MailContainer.ts";
+import type * as ProtoSchemaCommonProtoMailMailFullData from "../../proto/schema/CommonProto/Mail/MailFullData.ts";
+
+type MailFullData       = ProtoSchemaCommonProtoMailMailFullData.MailFullData;
+
+export class MailData {
+    private _mailId             : number;
+    private _createTimestamp    : number;
+    private _isNew              : boolean;
+    private _mailContainer      : ProtoSchemaCommonProtoMailMailContainer.MailContainer;
+
+    public constructor(mailFullData: MailFullData) {
+        this._mailId            = mailFullData.getMailId() ?? 0;
+        this._createTimestamp   = mailFullData.getCreateTimestamp() ?? 0;
+        this._isNew             = !!mailFullData.getIsNew();
+        this._mailContainer     = ProtoSchemaCommonProtoMailMailContainer.MailContainer.decode(HelpersMisc.getExisted(mailFullData.getEncodedContainer()));
+    }
+
+    public getMailId(): number {
+        return this._mailId;
+    }
+    public getCreateTimestamp(): number {
+        return this._createTimestamp;
+    }
+
+    public getIsNew(): boolean {
+        return this._isNew;
+    }
+    public setIsNew(isNew: boolean): void {
+        this._isNew = isNew;
+    }
+
+    public getMailContainer(): ProtoSchemaCommonProtoMailMailContainer.MailContainer {
+        return this._mailContainer;
+    }
+}

@@ -1,0 +1,38 @@
+import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
+import type * as BaseWarInterfaceIBwCursor from "../baseWar/interface/IBwCursor.ts";
+import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
+import type * as PlayerRulesConstants from "../playerRules/Constants.ts";
+import type * as PlayersIPlayer from "../players/IPlayer.ts";
+import type * as TilesITile from "../tiles/ITile.ts";
+import type * as UnitsIUnit from "../units/IUnit.ts";
+
+type GridIndex      = AuxiliaryTypesGridIndex.GridIndex;
+type TouchPoints    = AuxiliaryTypesAuxiliaryTypes.TouchPoints;
+type IBwWar         = BaseWarInterfaceIBwWar.IBwWar;
+type IPlayer        = PlayersIPlayer.IPlayer;
+type ITile          = TilesITile.ITile;
+
+export type McwPlayerIndexInTurnChanged                         = number;
+export type BwPlayerFundChanged                                 = IPlayer;
+export type McwPlayerEnergyChanged                              = IPlayer;
+export type BwCoIdChanged                                       = IPlayer;
+export type BwCursorGridIndexChanged                            = BaseWarInterfaceIBwCursor.IBwCursor;
+export type BwTileHasLocationIdSet                              = ITile;
+export type BwTileIsHighlightChanged                            = ITile;
+export type BwCursorTapped                                      = { current: GridIndex, tappedOn: GridIndex };
+export type BwCursorDragged                                     = { current: GridIndex, draggedTo: GridIndex };
+export type BwFieldZoomedByTouch                                = { previous: TouchPoints, current: TouchPoints };
+export type BwFieldDragged                                      = { previous: AuxiliaryTypesAuxiliaryTypes.Point, current: AuxiliaryTypesAuxiliaryTypes.Point };
+export type BwUnitChanged                                       = { gridIndex: GridIndex };
+export type BwTileChanged                                       = { gridIndex: GridIndex };
+export type BwTileBuffChanged                                   = { tile: ITile };
+export type BwUnitBuffChanged                                   = { unit: UnitsIUnit.IUnit };
+export type ScrCreatePlayerInfoChanged                          = { playerIndex: number };
+export type WarCreator_PlayerInfoChanged                        = { playerIndex: number };
+export type GridMarkAdded                                       = { war: IBwWar, gridId: number };
+export type GridMarkDeleted                                     = { war: IBwWar, gridId: number };
+export type GridMarkListChanged                                 = { war: IBwWar };
+export type HiddenGridMarkTypeIdListChanged                     = { war: IBwWar };
+export type BwPlayerPlayerIndexArrayForShowMarkedGridUpdated    = { player: IPlayer };
+export type RuleEditor_PlayerRuleChanged                        = { playerIndex: number, ruleType: PlayerRulesConstants.RuleTypeId };

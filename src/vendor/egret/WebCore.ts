@@ -353,8 +353,10 @@ export function runEgret(options: RunEgretOptions): void {
         const length: number = list.length;
         for (let i: number = 0; i < length; i++) {
             const container: PlayerContainer = list[i]!;
-            const player: WebPlayer = new WebPlayer(container, options);
+            const player: WebPlayer = new WebPlayer();
             container["egret-player"] = player;
+            player.init(container, options);
+            player.initOrientation();
         }
         window.addEventListener("resize", (): void => {
             if (isNaN(WebMiscHelper.resizeTimer)) {
@@ -1777,11 +1779,11 @@ export class WebPlayer extends HashObject implements StageScreen {
     public declare player: sys.Player;
     public declare webTouchHandler: WebTouchHandler;
     public declare webInput: HTMLInput;
-    public constructor(container: HTMLElement, options: RunEgretOptions) {
-        super();
-        this.init(container, options);
-        this.initOrientation();
-    }
+    // public constructor(container: HTMLElement, options: RunEgretOptions) {
+    //     super();
+    //     this.init(container, options);
+    //     this.initOrientation();
+    // }
     public init(container: HTMLElement, options: RunEgretOptions): void {
         console.log("Egret Engine Version:", Capabilities.engineVersion);
         const option: PlayerOptions = this.readOption(container, options);

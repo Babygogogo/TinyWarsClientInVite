@@ -1,0 +1,497 @@
+import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import * as FloatText2 from "../../FloatText.ts";
+import * as GamePanelsDict from "../../gamePanels/Dict.ts";
+import * as GamePanelsManager from "../../gamePanels/Manager.ts";
+import * as KeyboardKbTypes from "../../keyboard/KbTypes.ts";
+import * as LangConstants from "../../lang/Constants.ts";
+import * as LangUtils from "../../lang/Utils.ts";
+import * as NotificationsTypeId from "../../notifications/TypeId.ts";
+import * as NumbersUtils from "../../numbers/Utils.ts";
+import * as SoundsConstants from "../../sounds/Constants.ts";
+import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
+import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
+import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
+import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
+import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
+import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
+import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
+
+export interface OpenData {
+    getTitle        : () => string;
+    currentValue    : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    maxValue        : number;
+    minValue        : number;
+    getHelpText?    : (() => string);
+    callback        : (value: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>) => any;
+}
+export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
+    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
+    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnHelp!              : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSwitch!            : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+
+    private readonly _groupValue!           : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _labelTips!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelValue!           : UiInterfacesIUiLabel.IUiLabel;
+
+    private readonly _btnMin!               : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnMax!               : UiInterfacesIUiButton.IUiButton;
+
+    private readonly _labelKeyboardTips!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnEmpty!             : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnClear!             : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnConfirm!           : UiInterfacesIUiButton.IUiButton;
+
+    private readonly _groupOperator!        : UiInterfacesIUiContainer.IUiContainer;
+    private readonly _btnAdd1!              : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnAdd10!             : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnAdd100!            : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnAdd1000!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnAdd10000!          : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnAdd100000!         : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSub1!              : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSub10!             : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSub100!            : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSub1000!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSub10000!          : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSub100000!         : UiInterfacesIUiButton.IUiButton;
+
+    private readonly _groupNumber!          : UiInterfacesIUiContainer.IUiContainer;
+    private readonly _btn7!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btn8!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btn9!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btn6!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btn5!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btn4!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btn3!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btn2!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btn1!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btn0!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSign!              : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnBackspace!         : UiInterfacesIUiButton.IUiButton;
+
+    private _value: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+
+    public updateOnLoadedSkin(): void {
+        this._setNotifyListenerArray([
+            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+        ]);
+        this._setUiListenerArray([
+            { ui: this._btnClose,       callback: this.closePanel, },
+            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm, },
+            { ui: this._btnEmpty,       callback: this._onTouchedBtnEmpty },
+            { ui: this._btnClear,       callback: this._onTouchedBtnClear },
+            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
+            { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
+
+            { ui: this._btnMin,         callback: this._onTouchedBtnMin },
+            { ui: this._btnMax,         callback: this._onTouchedBtnMax },
+
+            { ui: this._btnAdd1,        callback: this._onTouchedBtnAdd1 },
+            { ui: this._btnAdd10,       callback: this._onTouchedBtnAdd10 },
+            { ui: this._btnAdd100,      callback: this._onTouchedBtnAdd100 },
+            { ui: this._btnAdd1000,     callback: this._onTouchedBtnAdd1000 },
+            { ui: this._btnAdd10000,    callback: this._onTouchedBtnAdd10000 },
+            { ui: this._btnAdd100000,   callback: this._onTouchedBtnAdd100000 },
+            { ui: this._btnSub1,        callback: this._onTouchedBtnSub1 },
+            { ui: this._btnSub10,       callback: this._onTouchedBtnSub10 },
+            { ui: this._btnSub100,      callback: this._onTouchedBtnSub100 },
+            { ui: this._btnSub1000,     callback: this._onTouchedBtnSub1000 },
+            { ui: this._btnSub10000,    callback: this._onTouchedBtnSub10000 },
+            { ui: this._btnSub100000,   callback: this._onTouchedBtnSub100000 },
+
+            { ui: this._btn7,           callback: this._onTouchedBtn7 },
+            { ui: this._btn8,           callback: this._onTouchedBtn8 },
+            { ui: this._btn9,           callback: this._onTouchedBtn9 },
+            { ui: this._btn6,           callback: this._onTouchedBtn6 },
+            { ui: this._btn5,           callback: this._onTouchedBtn5 },
+            { ui: this._btn4,           callback: this._onTouchedBtn4 },
+            { ui: this._btn3,           callback: this._onTouchedBtn3 },
+            { ui: this._btn2,           callback: this._onTouchedBtn2 },
+            { ui: this._btn1,           callback: this._onTouchedBtn1 },
+            { ui: this._btn0,           callback: this._onTouchedBtn0 },
+            { ui: this._btnSign,        callback: this._onTouchedBtnSign },
+            { ui: this._btnBackspace,   callback: this._onTouchedBtnBackspace },
+        ]);
+        this._setKeyboardListener({
+            callback    : this._onKeyboard,
+            thisObject  : this,
+        });
+        this._setIsTouchMaskEnabled();
+        this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
+
+        this._btn0.setText(`0`);
+        this._btn1.setText(`1`);
+        this._btn2.setText(`2`);
+        this._btn3.setText(`3`);
+        this._btn4.setText(`4`);
+        this._btn5.setText(`5`);
+        this._btn6.setText(`6`);
+        this._btn7.setText(`7`);
+        this._btn8.setText(`8`);
+        this._btn9.setText(`9`);
+        this._btnAdd1.setText(`+1`);
+        this._btnAdd10.setText(`+10`);
+        this._btnAdd100.setText(`+100`);
+        this._btnAdd1000.setText(`+1K`);
+        this._btnAdd10000.setText(`+10K`);
+        this._btnAdd100000.setText(`+100K`);
+        this._btnSub1.setText(`-1`);
+        this._btnSub10.setText(`-10`);
+        this._btnSub100.setText(`-100`);
+        this._btnSub1000.setText(`-1K`);
+        this._btnSub10000.setText(`-10K`);
+        this._btnSub100000.setText(`-100K`);
+        this._btnSign.setText(`+ -`);
+        this._btnBackspace.setText(`<=`);
+    }
+    protected override async _doApplyOpenData(): Promise<void> {
+        this._updateComponentsForLanguage();
+
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        this._labelTitle.setText(openData.getTitle());
+        this._labelKeyboardTips.setText(LangUtils.getText(LangConstants.TextType.A0827));
+        this._btnHelp.setIsVisible(!!openData.getHelpText);
+        this._groupNumber.setIsVisible(true);
+        this._groupOperator.setIsVisible(false);
+
+        this._value = openData.currentValue;
+        this._updateLabelValue();
+    }
+
+    private _onKeyboard(data: KeyboardKbTypes.EventData): void {
+        if (this._getIsShowingCloseAnimation()) {
+            return;
+        }
+
+        if (data.isHandled) {
+            return;
+        }
+        data.isHandled = true;
+
+        const newKeys   = data.newKeys;
+        const allKeys   = data.allKeys;
+        const oldValue  = this._value;
+        if (newKeys.has(KeyboardKbTypes.KeyCode.Escape)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            this.closePanel();
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Enter)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonConfirm01);
+            this._onTouchedBtnConfirm();
+
+        } else if ((allKeys.has(KeyboardKbTypes.KeyCode.Control)) && (newKeys.has(KeyboardKbTypes.KeyCode.C))) {
+            this._handleKeyboardCtrlC();
+
+        } else if ((allKeys.has(KeyboardKbTypes.KeyCode.Control)) && (newKeys.has(KeyboardKbTypes.KeyCode.V))) {
+            this._handleKeyboardCtrlV();
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num0)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            this._updateOnTouchedButtonsForAddDigit(0);
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num1)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            this._updateOnTouchedButtonsForAddDigit(1);
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num2)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            this._updateOnTouchedButtonsForAddDigit(2);
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num3)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            this._updateOnTouchedButtonsForAddDigit(3);
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num4)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            this._updateOnTouchedButtonsForAddDigit(4);
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num5)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            this._updateOnTouchedButtonsForAddDigit(5);
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num6)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            this._updateOnTouchedButtonsForAddDigit(6);
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num7)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            this._updateOnTouchedButtonsForAddDigit(7);
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num8)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            this._updateOnTouchedButtonsForAddDigit(8);
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num9)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            this._updateOnTouchedButtonsForAddDigit(9);
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Backspace)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            this._updateOnBackspace();
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Add)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            if (oldValue != null) {
+                this._value = Math.abs(oldValue);
+                this._updateLabelValue();
+            }
+
+        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Sub)) {
+            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            if (oldValue != null) {
+                this._value = -Math.abs(oldValue);
+                this._updateLabelValue();
+            }
+        }
+    }
+
+    private _onTouchedBtnConfirm(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const value = this._value;
+        if ((value != null)                                             &&
+            ((value < openData.minValue) || (value > openData.maxValue))
+        ) {
+            FloatText2.showLang(LangConstants.TextType.A0098);
+            return;
+        }
+
+        this.closePanel();
+        openData.callback(value);
+    }
+    private _onTouchedBtnEmpty(): void {
+        this._value = null;
+        this._updateLabelValue();
+    }
+    private _onTouchedBtnClear(): void {
+        this._value = 0;
+        this._updateLabelValue();
+    }
+    private _onTouchedBtnHelp(): void {
+        const func = this.getOpenData()?.getHelpText;
+        if (func) {
+            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
+                getContent : () => func(),
+            });
+        }
+    }
+    private _onTouchedBtnSwitch(): void {
+        const groupNumber   = this._groupNumber;
+        const visible       = !groupNumber.getIsVisible();
+        groupNumber.setIsVisible(visible);
+        this._groupOperator.setIsVisible(!visible);
+    }
+
+    private _onTouchedBtnMin(): void {
+        const minValue = this.getOpenData()?.minValue;
+        if (minValue == null) {
+            return;
+        }
+
+        if (this._value !== minValue) {
+            this._value = minValue;
+            this._updateLabelValue();
+        }
+    }
+    private _onTouchedBtnMax(): void {
+        const maxValue = this.getOpenData()?.maxValue;
+        if (maxValue == null) {
+            return;
+        }
+
+        if (this._value !== maxValue) {
+            this._value = maxValue;
+            this._updateLabelValue();
+        }
+    }
+
+    private _onTouchedBtnAdd1(): void {
+        this._updateOnTouchedButtonsForChangeValue(1);
+    }
+    private _onTouchedBtnAdd10(): void {
+        this._updateOnTouchedButtonsForChangeValue(10);
+    }
+    private _onTouchedBtnAdd100(): void {
+        this._updateOnTouchedButtonsForChangeValue(100);
+    }
+    private _onTouchedBtnAdd1000(): void {
+        this._updateOnTouchedButtonsForChangeValue(1000);
+    }
+    private _onTouchedBtnAdd10000(): void {
+        this._updateOnTouchedButtonsForChangeValue(10000);
+    }
+    private _onTouchedBtnAdd100000(): void {
+        this._updateOnTouchedButtonsForChangeValue(100000);
+    }
+    private _onTouchedBtnSub1(): void {
+        this._updateOnTouchedButtonsForChangeValue(-1);
+    }
+    private _onTouchedBtnSub10(): void {
+        this._updateOnTouchedButtonsForChangeValue(-10);
+    }
+    private _onTouchedBtnSub100(): void {
+        this._updateOnTouchedButtonsForChangeValue(-100);
+    }
+    private _onTouchedBtnSub1000(): void {
+        this._updateOnTouchedButtonsForChangeValue(-1000);
+    }
+    private _onTouchedBtnSub10000(): void {
+        this._updateOnTouchedButtonsForChangeValue(-10000);
+    }
+    private _onTouchedBtnSub100000(): void {
+        this._updateOnTouchedButtonsForChangeValue(-100000);
+    }
+
+    private _onTouchedBtn7(): void {
+        this._updateOnTouchedButtonsForAddDigit(7);
+    }
+    private _onTouchedBtn8(): void {
+        this._updateOnTouchedButtonsForAddDigit(8);
+    }
+    private _onTouchedBtn9(): void {
+        this._updateOnTouchedButtonsForAddDigit(9);
+    }
+    private _onTouchedBtn6(): void {
+        this._updateOnTouchedButtonsForAddDigit(6);
+    }
+    private _onTouchedBtn5(): void {
+        this._updateOnTouchedButtonsForAddDigit(5);
+    }
+    private _onTouchedBtn4(): void {
+        this._updateOnTouchedButtonsForAddDigit(4);
+    }
+    private _onTouchedBtn3(): void {
+        this._updateOnTouchedButtonsForAddDigit(3);
+    }
+    private _onTouchedBtn2(): void {
+        this._updateOnTouchedButtonsForAddDigit(2);
+    }
+    private _onTouchedBtn1(): void {
+        this._updateOnTouchedButtonsForAddDigit(1);
+    }
+    private _onTouchedBtn0(): void {
+        this._updateOnTouchedButtonsForAddDigit(0);
+    }
+    private _onTouchedBtnSign(): void {
+        const value = this._value;
+        if (value != null) {
+            this._value = -value;
+            this._updateLabelValue();
+        }
+    }
+    private _onTouchedBtnBackspace(): void {
+        this._updateOnBackspace();
+    }
+
+    private _onNotifyLanguageChanged(): void {
+        this._updateComponentsForLanguage();
+    }
+
+    private _updateComponentsForLanguage(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        this._labelTips.setText(`${LangUtils.getText(LangConstants.TextType.B0319)}: [${openData.minValue}, ${openData.maxValue}]`);
+        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
+        this._btnEmpty.setText(LangUtils.getText(LangConstants.TextType.B0022));
+        this._btnClear.setText(`C`);
+        this._groupValue.arrangeItems();
+    }
+
+    private _updateLabelValue(): void {
+        const value = this._value;
+        const label = this._labelValue;
+        label.setText(`${value == null ? LangUtils.getText(LangConstants.TextType.B0022) : value}`);
+
+        const openData = this.getOpenData();
+        if (openData != null) {
+            if ((value != null) && ((value > openData.maxValue) || (value < openData.minValue))) {
+                label.setTextColor(0xFF7700);
+            } else {
+                label.setTextColor(0xFFFFFF);
+            }
+        } else {
+            label.setTextColor(0xFFFFFF);
+        }
+
+        this._groupValue.arrangeItems();
+    }
+
+    private _updateOnTouchedButtonsForChangeValue(offset: number): void {
+        this._value = this._getValueInRange((this._value ?? 0) + offset);
+        this._updateLabelValue();
+    }
+    private _updateOnTouchedButtonsForAddDigit(num: number): void {
+        const value = this._value ?? 0;
+        // this._value = this._getValueInRange(value >= 0 ? (value * 10 + num) : (value * 10 - num));
+        this._value = value >= 0 ? (value * 10 + num) : (value * 10 - num);
+        this._updateLabelValue();
+    }
+    private _updateOnBackspace(): void {
+        const value = this._value;
+        if (value != null) {
+            this._value = Math.trunc(value / 10);
+            this._updateLabelValue();
+        }
+    }
+
+    private _getValueInRange(rawValue: number): number | undefined {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return undefined;
+        } else {
+            return NumbersUtils.getValueInRange({
+                minValue    : openData.minValue,
+                maxValue    : openData.maxValue,
+                rawValue    : rawValue,
+            });
+        }
+    }
+
+    private async _handleKeyboardCtrlC(): Promise<void> {
+        if (navigator?.clipboard?.writeText == null) {
+            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0275));
+        } else {
+            try {
+                await navigator.clipboard.writeText(`${this._value}`);
+                FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+            } catch {
+                FloatText2.show(LangUtils.getText(LangConstants.TextType.A0275));
+            }
+        }
+    }
+    private async _handleKeyboardCtrlV(): Promise<void> {
+        if (navigator?.clipboard?.writeText == null) {
+            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0275));
+        } else {
+            let text = ``;
+            try {
+                text = await navigator.clipboard.readText();
+            } catch {
+                FloatText2.show(LangUtils.getText(LangConstants.TextType.A0275));
+                return;
+            }
+
+            const value = parseInt(text);
+            if (isNaN(value)) {
+                FloatText2.showLang(LangConstants.TextType.A0098);
+            } else {
+                this._value = value;
+                this._updateLabelValue();
+                FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+            }
+        }
+    }
+}

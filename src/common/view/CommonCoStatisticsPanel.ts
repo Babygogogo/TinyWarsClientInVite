@@ -1,0 +1,479 @@
+import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type * as AuxiliaryTypesCoStatisticsFilter from "../../auxiliaryTypes/CoStatisticsFilter.ts";
+import * as CommonModelCommonModel from "../model/CommonModel.ts";
+import * as CosConstants from "../../cos/Constants.ts";
+import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
+import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
+import * as GameModesUtils from "../../gameModes/Utils.ts";
+import * as GamePanelsDict from "../../gamePanels/Dict.ts";
+import * as GamePanelsManager from "../../gamePanels/Manager.ts";
+import * as HelpersImageSource from "../../helpers/ImageSource.ts";
+import * as HelpersMisc from "../../helpers/Misc.ts";
+import * as HelpersText from "../../helpers/Text.ts";
+import * as LangConstants from "../../lang/Constants.ts";
+import * as LangUtils from "../../lang/Utils.ts";
+import * as NotificationsTypeId from "../../notifications/TypeId.ts";
+import type * as ProtoSchemaCommonProtoNetMessageMsgCommonGetCoStatisticsGameData from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/GameData.ts";
+import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
+import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
+import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
+import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
+import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
+import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
+import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
+import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
+import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import * as WarTypesConstants from "../../warTypes/Constants.ts";
+import * as WarTypesUtils from "../../warTypes/Utils.ts";
+
+type CoStatisticsFilter = AuxiliaryTypesCoStatisticsFilter.CoStatisticsFilter;
+
+interface CoData {
+    rankedBan           : number;
+    rankedWin           : number;
+    rankedLose          : number;
+    rankedDraw          : number;
+    allWin              : number;
+    allLose             : number;
+    allDraw             : number;
+}
+
+let _previousFilter     : AuxiliaryTypesAuxiliaryTypes.Undefinable<CoStatisticsFilter>;
+
+export interface OpenData {
+    filter              : AuxiliaryTypesAuxiliaryTypes.Undefinable<CoStatisticsFilter>;
+    usePreviousFilter   : boolean;
+}
+export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
+    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
+    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
+
+    private readonly _layoutTitle!          : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelReplaysCount!    : UiInterfacesIUiLabel.IUiLabel;
+
+    private readonly _btnSearch!            : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnHelp!              : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+
+    private readonly _listCo!               : UiInterfacesIUiScrollList.IUiScrollList<DataForCoRenderer>;
+
+    private _coStatisticsFilter?            : AuxiliaryTypesAuxiliaryTypes.Undefinable<CoStatisticsFilter>;
+
+    public updateOnLoadedSkin(): void {
+        this._setUiListenerArray([
+            { ui: this._btnSearch,              callback: this._onTouchedBtnSearch },
+            { ui: this._btnHelp,                callback: this._onTouchedBtnHelp },
+            { ui: this._btnClose,               callback: this.closePanel },
+        ]);
+        this._setNotifyListenerArray([
+            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+        ]);
+        this._setIsTouchMaskEnabled();
+        this._setIsCloseOnTouchedMask();
+        this._enableKeyEscapeToClosePanel();
+        this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
+
+        this._listCo.setItemRendererClass(CoRenderer);
+    }
+    protected override async _doApplyOpenData(): Promise<void> {
+        this._updateOnOpenDataChanged();
+    }
+    protected override async _onClosed(): Promise<void> {
+        await this._listCo.removeAllItems();
+
+        await super._onClosed();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Event callbacks.
+    ////////////////////////////////////////////////////////////////////////////////
+    private _onNotifyLanguageChanged(): void {
+        this._updateComponentsForLanguage();
+    }
+
+    private _onTouchedBtnSearch(): void {
+        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonCoStatisticsFilterPanel, {
+            filter              : this._coStatisticsFilter,
+            callbackOnConfirm   : filter => {
+                this.setOpenData({
+                    filter              : filter,
+                    usePreviousFilter   : false,
+                });
+                this._doApplyOpenData();
+            },
+        });
+    }
+
+    private _onTouchedBtnHelp(): void {
+        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
+            getContent : () => LangUtils.getText(LangConstants.TextType.A0903),
+        });
+    }
+
+    private async _updateOnOpenDataChanged(): Promise<void> {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        if (openData.usePreviousFilter) {
+            this._coStatisticsFilter = _previousFilter;
+        } else {
+            this._coStatisticsFilter = openData.filter;
+        }
+        _previousFilter = this._coStatisticsFilter;
+
+        await Promise.all([
+            this._updateComponentsForLanguage(),
+            this._initListCo(),
+        ]);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // View functions.
+    ////////////////////////////////////////////////////////////////////////////////
+    private async _updateComponentsForLanguage(): Promise<void> {
+        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1076));
+
+        const gameDataArray     = (await CommonModelCommonModel.getCoStatistics())?.getGameDataArray();
+        let rankedReplaysCount  = 0;
+        let allReplaysCount     = 0;
+        for (const gameData of gameDataArray ?? []) {
+            if (!checkIsMeetFilter(gameData, this._coStatisticsFilter)) {
+                continue;
+            }
+
+            if (WarTypesUtils.checkIsMrw(gameData.getWarType() ?? 0)) {
+                ++rankedReplaysCount;
+            }
+            ++allReplaysCount;
+        }
+        this._labelReplaysCount.setText(`(${LangUtils.getText(LangConstants.TextType.B0610)}: ${rankedReplaysCount}, ${LangUtils.getText(LangConstants.TextType.B0877)}: ${allReplaysCount})`);
+        this._layoutTitle.arrangeItems();
+    }
+
+    private async _initListCo(): Promise<void> {
+        const dataArray = await this._createDataArrayForListCo();
+        const listCo    = this._listCo;
+        if (dataArray.length) {
+            await listCo.bindData(dataArray);
+        } else {
+            await listCo.removeAllItems();
+        }
+    }
+
+    private async _createDataArrayForListCo(): Promise<DataForCoRenderer[]> {
+        const coStatistics = await CommonModelCommonModel.getCoStatistics();
+        if (coStatistics == null) {
+            return [];
+        }
+
+        const gameDataArray = coStatistics.getGameDataArray();
+        if (!gameDataArray?.length) {
+            return [];
+        }
+
+        const configVersion = coStatistics.getConfigVersion();
+        const gameConfig    = configVersion == null ? null : await GameConfigGcModel.getGameConfig(configVersion);
+        if (gameConfig == null) {
+            return [];
+        }
+
+        const coDataDict            = new Map<number, CoData>();
+        const banDict               = new Map<number, number>();  // coId, count
+        const coStatisticsFilter    = this._coStatisticsFilter;
+        let rankedReplaysCount      = 0;
+        let allReplaysCount         = 0;
+        for (const gameData of gameDataArray) {
+            if (!checkIsMeetFilter(gameData, coStatisticsFilter)) {
+                continue;
+            }
+
+            const pickedCoIdArray = gameData.getPickedCoIdArray();
+            if (pickedCoIdArray?.length !== 2) {
+                continue;
+            }
+
+            const warType   = gameData.getWarType() ?? 0;
+            const isRanked  = (warType === WarTypesConstants.WarTypeId.MrwFog) || (warType === WarTypesConstants.WarTypeId.MrwStd);
+            if (isRanked) {
+                ++rankedReplaysCount;
+
+                for (const coId of gameData.getBannedCoIdArray()) {
+                    banDict.set(coId, (banDict.get(coId) ?? 0) + 1);
+                }
+            }
+            ++allReplaysCount;
+
+            const winnerPlayerIndex = gameData.getWinnerPlayerIndex() ?? 0;
+            for (let i = 0; i < pickedCoIdArray.length; ++i) {
+                const coId = pickedCoIdArray[i];
+                if (!coDataDict.has(coId)) {
+                    coDataDict.set(coId, {
+                        rankedBan       : 0,
+                        rankedWin       : 0,
+                        rankedDraw      : 0,
+                        rankedLose      : 0,
+                        allWin          : 0,
+                        allLose         : 0,
+                        allDraw         : 0,
+                    });
+                }
+
+                const coData = HelpersMisc.getExisted(coDataDict.get(coId));
+                if (winnerPlayerIndex === 0) {
+                    ++coData.allDraw;
+                    if (isRanked) {
+                        ++coData.rankedDraw;
+                    }
+                } else if (winnerPlayerIndex === i + 1) {
+                    ++coData.allWin;
+                    if (isRanked) {
+                        ++coData.rankedWin;
+                    }
+                } else {
+                    ++coData.allLose;
+                    if (isRanked) {
+                        ++coData.rankedLose;
+                    }
+                }
+            }
+        }
+        for (const [coId, coData] of coDataDict) {
+            const banCount = banDict.get(coId);
+            if (banCount != null) {
+                coData.rankedBan = banCount;
+            }
+        }
+
+        const showDeprecatedCo      = coStatisticsFilter?.showDeprecatedCo;
+        const availableCoIdArray    = [...coDataDict.keys()].sort((v1, v2) => (gameConfig.getCoBasicCfg(v1)?.getName() ?? ``).localeCompare(gameConfig.getCoBasicCfg(v2)?.getName() ?? ``));
+        const dataArray             : DataForCoRenderer[] = [];
+        for (const displayCategory of CosConstants.DisplayCategoryArray) {
+            const coIdArray1 = availableCoIdArray.filter(v => gameConfig.getCoBasicCfg(v)?.getDisplayCategoryId() === displayCategory);
+            if (coIdArray1.length <= 0) {
+                continue;
+            }
+
+            for (const force of CosConstants.ForceArray) {
+                const coIdArray2 = coIdArray1.filter(v => gameConfig.getCoBasicCfg(v)?.getForce() === force);
+                if (coIdArray2.length <= 0) {
+                    continue;
+                }
+
+                for (const coId of coIdArray2) {
+                    if ((!showDeprecatedCo) && (!gameConfig.getCoBasicCfg(coId)?.getIsEnabledForMrwAndAtw())) {
+                        continue;
+                    }
+
+                    const coData = coDataDict.get(coId);
+                    dataArray.push({
+                        gameConfig          : gameConfig,
+                        coId                : coId,
+                        allReplaysCount     : allReplaysCount,
+                        rankedReplaysCount  : rankedReplaysCount,
+                        rankedBanCount      : coData?.rankedBan ?? 0,
+                        rankedWin           : coData?.rankedWin ?? 0,
+                        rankedLose          : coData?.rankedLose ?? 0,
+                        rankedDraw          : coData?.rankedDraw ?? 0,
+                        allWin              : coData?.allWin ?? 0,
+                        allLose             : coData?.allLose ?? 0,
+                        allDraw             : coData?.allDraw ?? 0,
+                    });
+                }
+            }
+        }
+
+        return dataArray;
+    }
+}
+
+interface DataForCoRenderer extends UiTypesUiListItemData.UiListItemData {
+    gameConfig          : GameConfigGcData.GcData;
+    coId                : number;
+    allReplaysCount     : number;
+    rankedReplaysCount  : number;
+    rankedBanCount      : number;
+    rankedWin           : number;
+    rankedLose          : number;
+    rankedDraw          : number;
+    allWin              : number;
+    allLose             : number;
+    allDraw             : number;
+}
+class CoRenderer
+    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForCoRenderer>
+    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForCoRenderer>
+{
+    private readonly _imgCoForce!       : UiInterfacesIUiImage.IUiImage;
+    private readonly _imgCoHead!        : UiInterfacesIUiImage.IUiImage;
+    private readonly _labelCoId!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
+
+    private readonly _labelCountTitle!  : UiInterfacesIUiLabel.IUiLabel;
+
+    private readonly _labelRankedTitle! : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelRankedCount! : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelRankedPct!   : UiInterfacesIUiLabel.IUiLabel;
+
+    private readonly _labelAllTitle!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelAllCount!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelAllPct!      : UiInterfacesIUiLabel.IUiLabel;
+
+    public updateOnLoadedSkin(): void {
+        this._setNotifyListenerArray([
+            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+        ]);
+        this._applySettingsForWholeTouch();
+
+        this._updateView();
+    }
+
+    protected override _doApplyOpenData(): void {
+        this._updateView();
+    }
+
+    private _onNotifyLanguageChanged(): void {
+        this._updateComponentsForLanguage();
+    }
+
+    public onItemTapEvent(): void {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonCoInfoPanel, {
+            coId        : openData.coId,
+            gameConfig  : openData.gameConfig,
+        });
+    }
+
+    private _updateView(): void {
+        this._updateComponentsForLanguage();
+
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        const coId      = openData.coId;
+        const gcData    = openData.gameConfig;
+        this._labelCoId.setText(`#${coId}`);
+        this._labelName.setText(gcData.getCoBasicCfg(coId)?.getName() ?? LangConstants.UndefinedError);
+        this._imgCoForce.loadSource(HelpersImageSource.getCoHeadBackgroundByCoId(gcData, coId) ?? ``);
+        this._imgCoHead.loadSource(HelpersImageSource.getCoHead(gcData, coId) ?? ``);
+
+        updateLabelStatistics(
+            this._labelRankedCount,
+            this._labelRankedPct,
+            openData.rankedReplaysCount,
+            openData.rankedBanCount,
+            openData.rankedWin,
+            openData.rankedLose,
+            openData.rankedDraw
+        );
+        updateLabelStatistics(
+            this._labelAllCount,
+            this._labelAllPct,
+            openData.allReplaysCount,
+            null,
+            openData.allWin,
+            openData.allLose,
+            openData.allDraw
+        );
+    }
+
+    private _updateComponentsForLanguage(): void {
+        this._labelCountTitle.setText(`${LangUtils.getText(LangConstants.TextType.B1074)}\n${LangUtils.getText(LangConstants.TextType.B0606)}\n${LangUtils.getText(LangConstants.TextType.B0550)}\n${LangUtils.getText(LangConstants.TextType.B0551)}\n${LangUtils.getText(LangConstants.TextType.B0552)}`);
+        this._labelRankedTitle.setText(LangUtils.getText(LangConstants.TextType.B1075));
+        this._labelAllTitle.setText(LangUtils.getText(LangConstants.TextType.B0120));
+    }
+}
+
+function updateLabelStatistics(
+    labelCount      : UiInterfacesIUiLabel.IUiLabel,
+    labelPct        : UiInterfacesIUiLabel.IUiLabel,
+    replaysCount    : number,
+    banCount        : number | null,
+    win             : number,
+    lose            : number,
+    draw            : number
+): void {
+    const gamesCount = win + lose + draw;
+    labelCount.setText(`${gamesCount}\n${banCount ?? `--`}\n${win}\n${lose}\n${draw}`);
+
+    const pickPct   = replaysCount == 0 ? `--` : HelpersText.format(`%.2f%%`, gamesCount * 100 / replaysCount);
+    const banPct    = (replaysCount == 0) || (banCount == null) ? `--` : HelpersText.format(`%.2f%%`, banCount * 100 / replaysCount);
+    const winPct    = gamesCount == 0 ? `--` : HelpersText.format(`%.2f%%`, win * 100 / gamesCount);
+    const losePct   = gamesCount == 0 ? `--` : HelpersText.format(`%.2f%%`, lose * 100 / gamesCount);
+    const drawPct   = gamesCount == 0 ? `--` : HelpersText.format(`%.2f%%`, draw * 100 / gamesCount);
+    labelPct.setText(`${pickPct}\n${banPct}\n${winPct}\n${losePct}\n${drawPct}`);
+}
+
+function checkIsMeetFilter(gameData: ProtoSchemaCommonProtoNetMessageMsgCommonGetCoStatisticsGameData.GameData, filter: AuxiliaryTypesAuxiliaryTypes.Undefinable<CoStatisticsFilter>): boolean {
+    {
+        const normalMapId = filter?.normalMapId;
+        if ((normalMapId != null) && ((gameData.getNormalMapId() !== normalMapId))) {
+            return false;
+        }
+    }
+    {
+        if (!filter?.includeMirrorGame) {
+            const coIdArray = gameData.getPickedCoIdArray();
+            if ((coIdArray?.length !== 2) || (coIdArray[0] === coIdArray[1])) {
+                return false;
+            }
+        }
+    }
+
+    const warType = gameData.getWarType() ?? 0;
+    {
+        const gameMode = filter?.gameMode;
+        if ((gameMode != null) && (GameModesUtils.getEnum(warType) !== gameMode)) {
+            return false;
+        }
+    }
+    {
+        const hasFog = filter?.hasFog;
+        if ((hasFog != null) && (WarTypesUtils.checkHasFog(warType) !== hasFog)) {
+            return false;
+        }
+    }
+
+    const turnIndex = gameData.getTurnIndex() ?? 0;
+    {
+        const maxTurnIndex = filter?.maxTurnIndex;
+        if ((maxTurnIndex != null) && (turnIndex > maxTurnIndex)) {
+            return false;
+        }
+    }
+    {
+        const minTurnIndex = filter?.minTurnIndex;
+        if ((minTurnIndex != null) && (turnIndex < minTurnIndex)) {
+            return false;
+        }
+    }
+
+    const rankScoreArray = gameData.getRankScoreArray();
+    {
+        const maxRankScore = filter?.maxRankScore;
+        if (maxRankScore != null) {
+            if ((!rankScoreArray?.length) || (rankScoreArray.some(v => (v < 0) || (v > maxRankScore)))) {
+                return false;
+            }
+        }
+    }
+    {
+        const minRankScore = filter?.minRankScore;
+        if (minRankScore != null) {
+            if ((!rankScoreArray?.length) || (rankScoreArray.some(v => (v < 0) || (v < minRankScore)))) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}

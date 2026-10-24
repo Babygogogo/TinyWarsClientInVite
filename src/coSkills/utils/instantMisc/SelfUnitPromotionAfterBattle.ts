@@ -1,0 +1,50 @@
+import type * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
+import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
+import type * as ProtoSchemaCommonProtoConfigCoSkillCfgInstantMiscSelfUnitPromotionAfterBattle from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitPromotionAfterBattle.ts";
+
+export function getTotalOffset({
+    cfg,
+    gameConfig,
+    unitTypeId,
+    isCoOnboard,
+    gridIndex,
+    coZoneRadius,
+    getCoGridIndexArrayOnMap,
+    targetLostNormalizedHp,
+    isTargetKilled,
+}: {
+    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgInstantMiscSelfUnitPromotionAfterBattle.SelfUnitPromotionAfterBattle | null | undefined;
+    gameConfig                  : GameConfigGcData.GcData;
+    unitTypeId                  : number;
+    isCoOnboard                 : boolean;
+    gridIndex                   : AuxiliaryTypesGridIndex.GridIndex;
+    coZoneRadius                : number;
+    getCoGridIndexArrayOnMap    : () => AuxiliaryTypesGridIndex.GridIndex[];
+    targetLostNormalizedHp      : number;
+    isTargetKilled              : boolean;
+}): number {
+    if (cfg == null) {
+        return 0;
+    }
+
+    {
+        const unitCategoryId = cfg.getUnitCategoryId();
+        if ((unitCategoryId != null) && (!gameConfig.checkIsUnitTypeInCategory(unitTypeId, unitCategoryId))) {
+            return 0;
+        }
+    }
+
+    if ((!isCoOnboard)                                                  &&
+        (!gridIndex.checkIsInsideCoSkillArea({
+            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
+            coZoneRadius                : coZoneRadius,
+            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+        }))
+    ) {
+        return 0;
+    }
+
+    const arr = cfg.getOffsetFromDamageDealt() ?? [];
+    return (arr.length ? arr[Math.min(targetLostNormalizedHp, arr.length - 1)] : 0)
+        + (isTargetKilled ? cfg.getOffsetFromKill() ?? 0 : 0);
+}
