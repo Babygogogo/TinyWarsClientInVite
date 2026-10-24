@@ -1,0 +1,12 @@
+{
+  "file": "coBust0032.webp",
+  "frames": { 
+    "coBust0032": {"x":2,"y":2,"w":187,"h":363,"offX":45,"offY":87,"sourceW":300,"sourceH":450}
+  },
+  "meta": {
+    "app": "https://www.codeandweb.com/texturepacker",
+    "exporter": "egret",
+    "sheetsize": "191x367",
+    "smartupdate": "$TexturePacker:SmartUpdate:7ded88b58f3ca10ac0667720f0547300:7106c80d56540f03cb4e1578e83fa45e:8892fe1710a82867a5125bd6b6ba84fa$"
+  }
+}

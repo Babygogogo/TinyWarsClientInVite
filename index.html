@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>TinyWars</title>
+  <meta name="viewport"
+    content="width=device-width,initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="full-screen" content="true" />
+  <meta name="screen-orientation" content="portrait" />
+  <meta name="x5-fullscreen" content="true" />
+  <meta name="360-fullscreen" content="true" />
+  <meta name="description" content="The web version of Advance Wars: Days of Ruin / Dark Conflict.">
+  <link rel="shortcut icon" href="resource/assets/texture/index/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="resource/assets/texture/index/favicon.ico" type="image/x-icon">
+
+  <style>
+    html,
+    body {
+      -ms-touch-action: none;
+      background: #000000;
+      padding: 0;
+      border: 0;
+      margin: 0;
+      height: 100%;
+    }
+
+    #outLoadingLayer div {
+      display: block;
+    }
+
+    #outLoadingLayer {
+      z-index: 10000;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0px;
+    }
+
+    #loadingLayer {
+      width: 100%;
+      height: 100%;
+      background: #000000;
+    }
+
+    #logoDiv {
+      padding-top: 119px;
+    }
+
+    .fullWidth {
+      width: 100%;
+    }
+
+    #logoCon {
+      width: 244px;
+      height: 177px;
+      margin: 0 auto;
+      background-size: contain;
+      background-position: center;
+    }
+
+    #loadingContent {
+      padding-top: 20px;
+    }
+
+    #loadingTxt {
+      color: #b8b8b8;
+      font-size: 16px;
+      width: 100%;
+      text-align: center;
+      font-family: 微软雅黑;
+    }
+
+    #loadingBarCon {
+      width: 237px;
+      height: 4px;
+      margin: 23px auto 0;
+      -webkit-border-radius: 4.528125px;
+      -moz-border-radius: 4.528125px;
+      border-radius: 4.528125px;
+      background: #343234;
+    }
+
+    #loadingBar {
+      margin: 0;
+      width: 237px;
+      height: 100%;
+      background: #fbd067;
+      -webkit-border-radius: 4.528125px;
+      -moz-border-radius: 4.528125px;
+      border-radius: 4.528125px;
+    }
+
+    .addTransition {
+      transform: scale(0, 1);
+      transform-origin: 0% 0%;
+    }
+
+    .line-scale {
+      transition: All 16s ease-in-out;
+      transform: scale(1, 1);
+      transform-origin: 0% 0%;
+    }
+
+    .clickme {
+      color: burlywood;
+    }
+
+    #TextInputContainer {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      pointer-events: none;
+    }
+
+    #TransparentTouchLayer {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div style="margin: auto;width: 100%;height: 100%;" class="egret-player" data-entry-class="Main"
+    data-orientation="auto" data-scale-mode="fixedWidth" data-frame-rate="60" data-content-width="960"
+    data-content-height="540" data-show-paint-rect="false" data-multi-fingered="2" data-show-fps="false"
+    data-show-log="false" data-show-fps-style="x:0,y:0,size:12,textColor:0xffffff,bgAlpha:0.9">
+  </div>
+
+  <div id="outLoadingLayer">
+    <div id="loadingLayer">
+      <div id="logoDiv" class="fullWidth">
+        <div id="logoCon"></div>
+      </div>
+      <div id="loadingContent" class="fullWidth">
+        <div id="loadingTxt">
+          Welcome to the web version of Advance Wars: Days of Ruin.
+          <font color="#f69638" size="1">
+            <script>
+              function sclick() {
+                location.href = "";
+              }
+            </script>
+            <span id="loadingDesTxt"><a class="clickme" href="javascript:sclick();">Now loading... Got
+                stuck? Touch me to refresh<br></a></span>
+          </font>
+          欢迎游玩《高级战争：毁灭之日》网页版！
+          <font color="#f69638" size="1">
+            <script>
+              function sclick() {
+                location.href = "";
+              }
+            </script>
+            <span id="loadingDesTxt"><a class="clickme" href="javascript:sclick();">游戏加载中……若卡住，请点我刷新<br></a></span>
+          </font>
+        </div>
+        <div id="loadingBarCon">
+          <div id="loadingBar" class="addTransition"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="TextInputContainer"></div>
+  <div id="TransparentTouchLayer"></div>
+
+  <script>
+    window.CLIENT_VERSION = "DEVELOP";
+    window.GAME_VERSION = "Legacy";
+    window.TEXT_INPUT_CONTAINER = document.getElementById("TextInputContainer");
+    window.TRANSPARENT_TOUCH_LAYER = document.getElementById("TransparentTouchLayer");
+
+    {
+      var isDown = false;
+      var layer = document.getElementById("TransparentTouchLayer");
+      layer.addEventListener("pointerup", function (e) {
+        if (isDown) {
+          isDown = false;
+          layer.style.pointerEvents = "none";
+        }
+      });
+      layer.addEventListener("pointerdown", function (e) {
+        isDown = true;
+      });
+    }
+
+    {
+      const loadingBar = document.getElementById("loadingBar");
+      // 先让浏览器计算初始 scale(0, 1) 状态
+      loadingBar.getBoundingClientRect();
+      // 再切换到目标状态，触发过渡
+      loadingBar.className = "line-scale";
+    }
+  </script>
+  <script type="module" src="/src/Main.ts"></script>
+</body>
+
+</html>
