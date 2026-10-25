@@ -1,26 +1,28 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersContextsTaskObjective from "../../../expressionParsers/contexts/TaskObjective.ts";
-import * as ExpressionParsersParser from "../../../expressionParsers/Parser.ts";
-import * as ExpressionParsersResultsNum from "../../../expressionParsers/results/Num.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NumbersUtils from "../../../numbers/Utils.ts";
-import * as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState from "../../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetTaskObjectiveState from "../../../proto/schema/CommonProto/WarEvent/WeaSetTaskObjectiveState.ts";
-import * as WarEventsActionsConstantsSetTaskObjectiveState from "../constants/SetTaskObjectiveState.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { TaskObjective } from "../../../expressionParsers/contexts/TaskObjective.ts";
+import { Parser } from "../../../expressionParsers/Parser.ts";
+import { Num } from "../../../expressionParsers/results/Num.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getFormattedText } from "../../../lang/Utils.ts";
+import { getValueInInt32 } from "../../../numbers/Utils.ts";
+import { TaskObjectiveState } from "../../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
+import type {
+    WeaSetTaskObjectiveState as ProtoSchemaCommonProtoWarEventWeaSetTaskObjectiveState,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetTaskObjectiveState.ts";
+import { ExpressionInfoDict } from "../constants/SetTaskObjectiveState.ts";
 
-type WeaSetTaskObjectiveState   = ProtoSchemaCommonProtoWarEventWeaSetTaskObjectiveState.WeaSetTaskObjectiveState;
+type WeaSetTaskObjectiveState   = ProtoSchemaCommonProtoWarEventWeaSetTaskObjectiveState;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetTaskObjectiveState>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: Undefinable<WeaSetTaskObjectiveState>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getConTaskObjectiveFilter(),
-            expressionInfo          : WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ConTaskObjectiveFilter,
+            expressionInfo          : ExpressionInfoDict.ConTaskObjectiveFilter,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -28,9 +30,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActProgress(),
-            expressionInfo          : WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ActProgress,
+            expressionInfo          : ExpressionInfoDict.ActProgress,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -38,9 +40,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActIsHidden(),
-            expressionInfo          : WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ActIsHidden,
+            expressionInfo          : ExpressionInfoDict.ActIsHidden,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -48,9 +50,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActIsProgressUpdaterDisabled(),
-            expressionInfo          : WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ActIsProgressUpdaterDisabled,
+            expressionInfo          : ExpressionInfoDict.ActIsProgressUpdaterDisabled,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -60,89 +62,89 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetTaskObjectiveState>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetTaskObjectiveState>): string | null {
     if (data == null) {
         return null;
     }
 
-    return LangUtils.getFormattedText(LangConstants.TextType.F0078, data.getConTaskObjectiveFilter() ?? LangConstants.UndefinedError);
+    return getFormattedText(TextType.F0078, data.getConTaskObjectiveFilter() ?? UndefinedError);
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetTaskObjectiveState>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetTaskObjectiveState>): string | null {
     if (data == null) {
         return null;
     }
 
     const additionalText = [
-        data.getActProgress()                    ? `${WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ActProgress.getTitleText()}: ${data.getActProgress()}`                                   : null,
-        data.getActIsHidden()                    ? `${WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ActIsHidden.getTitleText()}: ${data.getActIsHidden()}`                                   : null,
-        data.getActIsProgressUpdaterDisabled()   ? `${WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ActIsProgressUpdaterDisabled.getTitleText()}: ${data.getActIsProgressUpdaterDisabled()}` : null,
+        data.getActProgress()                    ? `${ExpressionInfoDict.ActProgress.getTitleText()}: ${data.getActProgress()}`                                   : null,
+        data.getActIsHidden()                    ? `${ExpressionInfoDict.ActIsHidden.getTitleText()}: ${data.getActIsHidden()}`                                   : null,
+        data.getActIsProgressUpdaterDisabled()   ? `${ExpressionInfoDict.ActIsProgressUpdaterDisabled.getTitleText()}: ${data.getActIsProgressUpdaterDisabled()}` : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${LangUtils.getFormattedText(LangConstants.TextType.F0078, data.getConTaskObjectiveFilter() ?? LangConstants.UndefinedError)}\n${additionalText}`;
+    return `${getFormattedText(TextType.F0078, data.getConTaskObjectiveFilter() ?? UndefinedError)}\n${additionalText}`;
 }
 
 export function getErrorTip(data: WeaSetTaskObjectiveState, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ConTaskObjectiveFilter;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ConTaskObjectiveFilter;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getConTaskObjectiveFilter(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ActProgress;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActProgress;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActProgress(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ActIsHidden;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActIsHidden;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActIsHidden(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetTaskObjectiveState.ExpressionInfoDict.ActIsProgressUpdaterDisabled;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActIsProgressUpdaterDisabled;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActIsProgressUpdaterDisabled(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     return null;
 }
 
-function checkIsMeetConditionForTaskObjective(action: WeaSetTaskObjectiveState, war: BaseWarInterfaceIBwWar.IBwWar, objectiveId: number): boolean {
+function checkIsMeetConditionForTaskObjective(action: WeaSetTaskObjectiveState, war: IBwWar, objectiveId: number): boolean {
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(action.getConTaskObjectiveFilter() ?? ``).eval(new ExpressionParsersContextsTaskObjective.TaskObjective(war, objectiveId), false);
-        return (result instanceof ExpressionParsersResultsNum.Num) && (result.num !== 0);
+        const result = Parser.getParseResult(action.getConTaskObjectiveFilter() ?? ``).eval(new TaskObjective(war, objectiveId), false);
+        return (result instanceof Num) && (result.num !== 0);
     } catch {
         return false;
     }
 }
 
-function evalActProgress(action: WeaSetTaskObjectiveState, war: BaseWarInterfaceIBwWar.IBwWar, objectiveId: number): number {
+function evalActProgress(action: WeaSetTaskObjectiveState, war: IBwWar, objectiveId: number): number {
     const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId() ?? 0) === objectiveId)?.getCurrentProgress() ?? 0;
     const act           = action.getActProgress();
     if (!act) {
@@ -150,9 +152,9 @@ function evalActProgress(action: WeaSetTaskObjectiveState, war: BaseWarInterface
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTaskObjective.TaskObjective(war, objectiveId), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInInt32(epResult.num);
+        const epResult = Parser.getParseResult(act).eval(new TaskObjective(war, objectiveId), false);
+        if (epResult instanceof Num) {
+            return getValueInInt32(epResult.num);
         } else {
             return defaultValue;
         }
@@ -161,7 +163,7 @@ function evalActProgress(action: WeaSetTaskObjectiveState, war: BaseWarInterface
     }
 }
 
-function evalActIsHidden(action: WeaSetTaskObjectiveState, war: BaseWarInterfaceIBwWar.IBwWar, objectiveId: number): boolean {
+function evalActIsHidden(action: WeaSetTaskObjectiveState, war: IBwWar, objectiveId: number): boolean {
     const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId() ?? 0) === objectiveId)?.getIsHidden() ?? false;
     const act           = action.getActIsHidden();
     if (!act) {
@@ -169,8 +171,8 @@ function evalActIsHidden(action: WeaSetTaskObjectiveState, war: BaseWarInterface
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTaskObjective.TaskObjective(war, objectiveId), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new TaskObjective(war, objectiveId), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -180,7 +182,7 @@ function evalActIsHidden(action: WeaSetTaskObjectiveState, war: BaseWarInterface
     }
 }
 
-function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war: BaseWarInterfaceIBwWar.IBwWar, objectiveId: number): boolean {
+function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war: IBwWar, objectiveId: number): boolean {
     const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId() ?? 0) === objectiveId)?.getIsProgressUpdaterDisabled() ?? false;
     const act           = action.getActIsProgressUpdaterDisabled();
     if (!act) {
@@ -188,8 +190,8 @@ function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war:
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTaskObjective.TaskObjective(war, objectiveId), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new TaskObjective(war, objectiveId), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -203,8 +205,8 @@ function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war:
 export function applyWithExtraData(_action: WeaSetTaskObjectiveState): void {
     // nothing to do
 }
-export function applyWithoutExtraData(action: WeaSetTaskObjectiveState, war: BaseWarInterfaceIBwWar.IBwWar): void {
-    const newStateArray: ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState[] = [];
+export function applyWithoutExtraData(action: WeaSetTaskObjectiveState, war: IBwWar): void {
+    const newStateArray: TaskObjectiveState[] = [];
     for (const objectiveId of war.getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray().map(v => v.getObjectiveId() ?? 0).sort((v1, v2) => v1 - v2) ?? []) {
         if (checkIsMeetConditionForTaskObjective(action, war, objectiveId)) {
             newStateArray.push(createNewTaskObjectiveState(action, war, objectiveId));
@@ -217,11 +219,11 @@ export function applyWithoutExtraData(action: WeaSetTaskObjectiveState, war: Bas
     }
 }
 
-function createNewTaskObjectiveState(action: WeaSetTaskObjectiveState, war: BaseWarInterfaceIBwWar.IBwWar, objectiveId: number): ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState {
+function createNewTaskObjectiveState(action: WeaSetTaskObjectiveState, war: IBwWar, objectiveId: number): TaskObjectiveState {
     const progress                  = evalActProgress(action, war, objectiveId);
     const isHidden                  = evalActIsHidden(action, war, objectiveId);
     const isProgressUpdaterDisabled = evalActIsProgressUpdaterDisabled(action, war, objectiveId);
-    return ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState.fromJson({
+    return TaskObjectiveState.fromJson({
         objectiveId                 : objectiveId,
         currentProgress             : progress,
         isHidden                    : isHidden,

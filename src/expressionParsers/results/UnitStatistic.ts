@@ -1,9 +1,9 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import { checkIsSameList } from "../../helpers/Collection.ts";
 
-export class UnitStatistic extends ExpressionParsersResultsBase.Base {
+export class UnitStatistic extends Base {
     public readonly playerIndexArray                : number[];
     public readonly unitTypeArray                   : number[];
     public readonly groupedObserverTeamIndexesArray : number[];
@@ -12,7 +12,7 @@ export class UnitStatistic extends ExpressionParsersResultsBase.Base {
     public readonly normalizedHpGain                : number;
     public readonly normalizedHpLoss                : number;
 
-    public constructor(war: BaseWarInterfaceIBwWar.IBwWar, data: { playerIndexArray: number[], unitTypeArray: number[], groupedObserverTeamIndexesArray: number[], unitGain: number, unitLoss: number, normalizedHpGain: number, normalizedHpLoss: number }) {
+    public constructor(war: IBwWar, data: { playerIndexArray: number[], unitTypeArray: number[], groupedObserverTeamIndexesArray: number[], unitGain: number, unitLoss: number, normalizedHpGain: number, normalizedHpLoss: number }) {
         super(war);
 
         this.playerIndexArray                   = data.playerIndexArray;
@@ -24,10 +24,10 @@ export class UnitStatistic extends ExpressionParsersResultsBase.Base {
         this.normalizedHpLoss                   = data.normalizedHpLoss;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.UnitStatistic;
+    public override getResultType(): ResultType {
+        return ResultType.UnitStatistic;
     }
-    public checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public checkIsEqual(rhs: Base): boolean {
         if (!(rhs instanceof UnitStatistic)) {
             return false;
         }
@@ -37,8 +37,8 @@ export class UnitStatistic extends ExpressionParsersResultsBase.Base {
             && (this.normalizedHpLoss   === rhs.normalizedHpLoss)
             && (this.unitGain           === rhs.unitGain)
             && (this.unitLoss           === rhs.unitLoss)
-            && (HelpersCollection.checkIsSameList(this.groupedObserverTeamIndexesArray, rhs.groupedObserverTeamIndexesArray))
-            && (HelpersCollection.checkIsSameList(this.unitTypeArray, rhs.unitTypeArray))
-            && (HelpersCollection.checkIsSameList(this.playerIndexArray, rhs.playerIndexArray));
+            && (checkIsSameList(this.groupedObserverTeamIndexesArray, rhs.groupedObserverTeamIndexesArray))
+            && (checkIsSameList(this.unitTypeArray, rhs.unitTypeArray))
+            && (checkIsSameList(this.playerIndexArray, rhs.playerIndexArray));
     }
 }

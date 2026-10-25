@@ -1,4 +1,4 @@
-import * as UiUtilsUiScrollSpring from "./UiScrollSpring.ts";
+import { UiScrollSpring } from "./UiScrollSpring.ts";
 
 export interface SlidingNumberOptions {
     constrain?: boolean;
@@ -35,7 +35,7 @@ export class UiSlidingNumber {
     public constructor(options: SlidingNumberOptions = {}) {
         this._constrain = options.constrain ?? true;
         this._maxSpeed = options.maxSpeed ?? 400;
-        this._ease = options.ease ?? new UiUtilsUiScrollSpring.UiScrollSpring();
+        this._ease = options.ease ?? new UiScrollSpring();
     }
 
     public setPositionAndClearSpeed(n: number): void {

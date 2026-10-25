@@ -1,103 +1,107 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as ExpressionParsersEnums from "../../expressionParsers/Enums.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventAction from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetTileTypeExpr from "../../proto/schema/CommonProto/WarEvent/WeaSetTileTypeExpr.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import * as WarEventsActionsConstantsSetTileTypeExpr from "../../warEvents/actions/constants/SetTileTypeExpr.ts";
-import * as WarEventsActionsUtilsCommon from "../../warEvents/actions/utils/Common.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { ContextType } from "../../expressionParsers/Enums.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type {
+    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type {
+    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WeaSetTileTypeExpr } from "../../proto/schema/CommonProto/WarEvent/WeaSetTileTypeExpr.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import { ExpressionInfoDict } from "../../warEvents/actions/constants/SetTileTypeExpr.ts";
+import { getErrorTipForAction, getBriefDescForAction } from "../../warEvents/actions/utils/Common.ts";
 
-type WarEventFullData       = ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
-type WarEventAction         = ProtoSchemaCommonProtoWarEventWarEventAction.WarEventAction;
+type WarEventFullData       = ProtoSchemaCommonProtoWarEventWarEventFullData;
+type WarEventAction         = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
-    war         : MapEditorInterfaceIMeWar.IMeWar;
+    war         : IMeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                                          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                                            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                                       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnType!                                          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnIdentifier!                                    : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                                          : IUiImage;
+    private readonly _group!                                            : IUiContainer;
+    private readonly _labelTitle!                                       : IUiLabel;
+    private readonly _btnType!                                          : IUiButton;
+    private readonly _btnClose!                                         : IUiButton;
+    private readonly _btnIdentifier!                                    : IUiButton;
 
-    private readonly _groupDesc!                                        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelDesc!                                        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelError!                                       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDesc!                                        : IUiLayout;
+    private readonly _labelDesc!                                        : IUiLabel;
+    private readonly _labelError!                                       : IUiLabel;
 
-    private readonly _scrExpression!                                    : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiLayout.IUiLayout>;
-    private readonly _groupExpression!                                  : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _groupCon!                                         : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _groupAct!                                         : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _scrExpression!                                    : IUiScroller<IUiLayout>;
+    private readonly _groupExpression!                                  : IUiLayout;
+    private readonly _groupCon!                                         : IUiLayout;
+    private readonly _groupAct!                                         : IUiLayout;
 
-    private readonly _groupConTileFilter!                               : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyConTileFilter!                         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnConTileFilter!                                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConTileFilter!                               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupConTileFilter!                               : IUiContainer;
+    private readonly _groupModifyConTileFilter!                         : IUiContainer;
+    private readonly _btnConTileFilter!                                 : IUiButton;
+    private readonly _labelConTileFilter!                               : IUiLabel;
 
-    private readonly _groupActBaseType!                                 : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActBaseType!                           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelActBaseType!                                 : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnActBaseType!                                   : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupActBaseType!                                 : IUiContainer;
+    private readonly _groupModifyActBaseType!                           : IUiContainer;
+    private readonly _labelActBaseType!                                 : IUiLabel;
+    private readonly _btnActBaseType!                                   : IUiButton;
 
-    private readonly _groupActBaseShapeId!                              : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActBaseShapeId!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelActBaseShapeId!                              : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnActBaseShapeId!                                : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupActBaseShapeId!                              : IUiContainer;
+    private readonly _groupModifyActBaseShapeId!                        : IUiContainer;
+    private readonly _labelActBaseShapeId!                              : IUiLabel;
+    private readonly _btnActBaseShapeId!                                : IUiButton;
 
-    private readonly _groupActObjectType!                               : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActObjectType!                         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelActObjectType!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnActObjectType!                                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupActObjectType!                               : IUiContainer;
+    private readonly _groupModifyActObjectType!                         : IUiContainer;
+    private readonly _labelActObjectType!                               : IUiLabel;
+    private readonly _btnActObjectType!                                 : IUiButton;
 
-    private readonly _groupActObjectShapeId!                            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActObjectShapeId!                      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelActObjectShapeId!                            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnActObjectShapeId!                              : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupActObjectShapeId!                            : IUiContainer;
+    private readonly _groupModifyActObjectShapeId!                      : IUiContainer;
+    private readonly _labelActObjectShapeId!                            : IUiLabel;
+    private readonly _btnActObjectShapeId!                              : IUiButton;
 
-    private readonly _groupActDecorationType!                           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActDecorationType!                     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActDecorationType!                             : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActDecorationType!                           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActDecorationType!                           : IUiContainer;
+    private readonly _groupModifyActDecorationType!                     : IUiContainer;
+    private readonly _btnActDecorationType!                             : IUiButton;
+    private readonly _labelActDecorationType!                           : IUiLabel;
 
-    private readonly _groupActDecorationShapeId!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActDecorationShapeId!                  : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelActDecorationShapeId!                        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnActDecorationShapeId!                          : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupActDecorationShapeId!                        : IUiContainer;
+    private readonly _groupModifyActDecorationShapeId!                  : IUiContainer;
+    private readonly _labelActDecorationShapeId!                        : IUiLabel;
+    private readonly _btnActDecorationShapeId!                          : IUiButton;
 
-    private readonly _groupActUnitHandler!                              : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActUnitHandler!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelActUnitHandler!                              : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnActUnitHandler!                                : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupActUnitHandler!                              : IUiContainer;
+    private readonly _groupModifyActUnitHandler!                        : IUiContainer;
+    private readonly _labelActUnitHandler!                              : IUiLabel;
+    private readonly _btnActUnitHandler!                                : IUiButton;
 
-    private readonly _groupActUnitFilter!                               : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActUnitFilter!                         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelActUnitFilter!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnActUnitFilter!                                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupActUnitFilter!                               : IUiContainer;
+    private readonly _groupModifyActUnitFilter!                         : IUiContainer;
+    private readonly _labelActUnitFilter!                               : IUiLabel;
+    private readonly _btnActUnitFilter!                                 : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarEventFullDataChanged,                 callback: this._onNotifyWarEventFullDataChanged },
+            { type: TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarEventFullDataChanged,                 callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                                       callback: this.closePanel },
@@ -152,21 +156,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeActionTypeListPanel, {
+        openPanel(getDict().WeActionTypeListPanel, {
             fullData    : openData.fullData,
             action      : openData.action,
             war         : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonApiPanel, {
-            contextType : ExpressionParsersEnums.ContextType.Player,
+        openPanel(getDict().CommonApiPanel, {
+            contextType : ContextType.Player,
         });
     }
 
     private _onTouchedBtnConTileFilter(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ConTileFilter.getHelpText(),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => ExpressionInfoDict.ConTileFilter.getHelpText(),
         });
     }
     private _onTouchedGroupModifyConTileFilter(): void {
@@ -180,24 +184,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getConTileFilter(),
-            expressionInfo  : WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ConTileFilter,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ConTileFilter,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getConTileFilter() != text) {
                     action.setConTileFilter(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActBaseType(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActBaseType.getHelpText(),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => ExpressionInfoDict.ActBaseType.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActBaseType(): void {
@@ -211,24 +215,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActBaseType(),
-            expressionInfo  : WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActBaseType,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActBaseType,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActBaseType() != text) {
                     action.setActBaseType(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActBaseShapeId(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActBaseShapeId.getHelpText(),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => ExpressionInfoDict.ActBaseShapeId.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActBaseShapeId(): void {
@@ -242,24 +246,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActBaseShapeId(),
-            expressionInfo  : WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActBaseShapeId,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActBaseShapeId,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActBaseShapeId() != text) {
                     action.setActBaseShapeId(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActObjectType(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActObjectType.getHelpText(),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => ExpressionInfoDict.ActObjectType.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActObjectType(): void {
@@ -273,24 +277,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActObjectType(),
-            expressionInfo  : WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActObjectType,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActObjectType,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActObjectType() != text) {
                     action.setActObjectType(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActObjectShapeId(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActObjectShapeId.getHelpText(),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => ExpressionInfoDict.ActObjectShapeId.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActObjectShapeId(): void {
@@ -304,24 +308,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActObjectShapeId(),
-            expressionInfo  : WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActObjectShapeId,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActObjectShapeId,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActObjectShapeId() != text) {
                     action.setActObjectShapeId(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActDecorationType(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActDecorationType.getHelpText(),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => ExpressionInfoDict.ActDecorationType.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActDecorationType(): void {
@@ -335,24 +339,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActDecorationType(),
-            expressionInfo  : WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActDecorationType,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActDecorationType,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActDecorationType() != text) {
                     action.setActDecorationType(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActDecorationShapeId(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActDecorationShapeId.getHelpText(),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => ExpressionInfoDict.ActDecorationShapeId.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActDecorationShapeId(): void {
@@ -366,24 +370,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActDecorationShapeId(),
-            expressionInfo  : WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActDecorationShapeId,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActDecorationShapeId,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActDecorationShapeId() != text) {
                     action.setActDecorationShapeId(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActUnitHandler(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActUnitHandler.getHelpText(),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => ExpressionInfoDict.ActUnitHandler.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActUnitHandler(): void {
@@ -397,24 +401,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActUnitHandler(),
-            expressionInfo  : WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActUnitHandler,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActUnitHandler,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActUnitHandler() != text) {
                     action.setActUnitHandler(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActUnitFilter(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActUnitFilter.getHelpText(),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => ExpressionInfoDict.ActUnitFilter.getHelpText(),
         });
     }
     private _onTouchedGroupModifyActUnitFilter(): void {
@@ -428,19 +432,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActUnitFilter(),
-            expressionInfo  : WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActUnitFilter,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActUnitFilter,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActUnitFilter() != text) {
                     action.setActUnitFilter(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _updateView(): void {
@@ -452,18 +456,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(LangConstants.TextType.B0516);
-        this._btnIdentifier.setLangText(LangConstants.TextType.B0131);
-        this._btnConTileFilter.setText(WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ConTileFilter.getTitleText());
-        this._btnActBaseType.setText(WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActBaseType.getTitleText());
-        this._btnActBaseShapeId.setText(WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActBaseShapeId.getTitleText());
-        this._btnActObjectType.setText(WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActObjectType.getTitleText());
-        this._btnActObjectShapeId.setText(WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActObjectShapeId.getTitleText());
-        this._btnActDecorationType.setText(WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActDecorationType.getTitleText());
-        this._btnActDecorationShapeId.setText(WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActDecorationShapeId.getTitleText());
-        this._btnActUnitHandler.setText(WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActUnitHandler.getTitleText());
-        this._btnActUnitFilter.setText(WarEventsActionsConstantsSetTileTypeExpr.ExpressionInfoDict.ActUnitFilter.getTitleText());
+        this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(TextType.B0516);
+        this._btnIdentifier.setLangText(TextType.B0131);
+        this._btnConTileFilter.setText(ExpressionInfoDict.ConTileFilter.getTitleText());
+        this._btnActBaseType.setText(ExpressionInfoDict.ActBaseType.getTitleText());
+        this._btnActBaseShapeId.setText(ExpressionInfoDict.ActBaseShapeId.getTitleText());
+        this._btnActObjectType.setText(ExpressionInfoDict.ActObjectType.getTitleText());
+        this._btnActObjectShapeId.setText(ExpressionInfoDict.ActObjectShapeId.getTitleText());
+        this._btnActDecorationType.setText(ExpressionInfoDict.ActDecorationType.getTitleText());
+        this._btnActDecorationShapeId.setText(ExpressionInfoDict.ActDecorationShapeId.getTitleText());
+        this._btnActUnitHandler.setText(ExpressionInfoDict.ActUnitHandler.getTitleText());
+        this._btnActUnitFilter.setText(ExpressionInfoDict.ActUnitFilter.getTitleText());
 
         this._updateLabelDescAndLabelError();
     }
@@ -476,11 +480,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const action            = openData.action;
         const war               = openData.war;
-        const errorTip          = WarEventsActionsUtilsCommon.getErrorTipForAction(openData.fullData, action, war);
+        const errorTip          = getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || LangUtils.getText(LangConstants.TextType.B0493));
-        labelError.setTextColor(errorTip ? GraphicsConstants.ColorValue.Yellow : GraphicsConstants.ColorValue.Green);
-        this._labelDesc.setText(WarEventsActionsUtilsCommon.getBriefDescForAction(action, war.getGcData()) || LangConstants.UndefinedError);
+        labelError.setText(errorTip || getText(TextType.B0493));
+        labelError.setTextColor(errorTip ? ColorValue.Yellow : ColorValue.Green);
+        this._labelDesc.setText(getBriefDescForAction(action, war.getGcData()) || UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
@@ -545,7 +549,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         scrExpression.setUnscaledManualHeight(Math.min(380, groupExpression.getScaledHeight()));
     }
 
-    private getAction(): AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarEventWeaSetTileTypeExpr.WeaSetTileTypeExpr> {
+    private getAction(): Undefinable<WeaSetTileTypeExpr> {
         return this.getOpenData()?.action.getWeaSetTileTypeExpr();
     }
 }

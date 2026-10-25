@@ -1,14 +1,14 @@
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import * as UiUtilsUiFactory from "../../ui/utils/UiFactory.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 
 type TileInfo = {
     tileBaseType            : number;
@@ -20,32 +20,32 @@ type TileInfo = {
     tilePlayerIndex         : number;
 };
 export interface OpenData {
-    gameConfig              : GameConfigGcData.GcData;
+    gameConfig              : GcData;
     /** 从P0开始；必须连续；不能包含不可用的玩家；需把overriding计算在内 */
     finalSkinIdArray        : number[];
     currentTileInfo         : TileInfo;
     callback                : (tileInfo: TileInfo) => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnClose!                 : IUiButton;
 
-    private readonly _btnTileBase!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _conTileBase!              : UiInterfacesIUiContainer.IUiContainer;
+    private readonly _btnTileBase!              : IUiButton;
+    private readonly _conTileBase!              : IUiContainer;
 
-    private readonly _btnTileDecorator!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeleteTileDecorator!   : UiInterfacesIUiButton.IUiButton;
-    private readonly _conTileDecorator!         : UiInterfacesIUiContainer.IUiContainer;
+    private readonly _btnTileDecorator!         : IUiButton;
+    private readonly _btnDeleteTileDecorator!   : IUiButton;
+    private readonly _conTileDecorator!         : IUiContainer;
 
-    private readonly _btnTileObject!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeleteTileObject!      : UiInterfacesIUiButton.IUiButton;
-    private readonly _conTileObject!            : UiInterfacesIUiContainer.IUiContainer;
+    private readonly _btnTileObject!            : IUiButton;
+    private readonly _btnDeleteTileObject!      : IUiButton;
+    private readonly _conTileObject!            : IUiContainer;
 
-    private readonly _btnConfirm!               : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnConfirm!               : IUiButton;
 
-    private readonly _tileView                  = new (UiUtilsUiFactory.getUiTileViewClass())();
+    private readonly _tileView                  = new (getUiTileViewClass())();
     private readonly _tileInfo                  : TileInfo = {
         tileBaseType            : 0,
         tileBaseShapeId         : 0,
@@ -58,8 +58,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.TileAnimationTick,           callback: this._onNotifyTileAnimationTick },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.TileAnimationTick,           callback: this._onNotifyTileAnimationTick },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                           callback: this.closePanel },
@@ -116,7 +116,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const tileInfo = this._tileInfo;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseTileBasePanel, {
+        openPanel(getDict().CommonChooseTileBasePanel, {
             currentBaseType : tileInfo.tileBaseType,
             gameConfig      : gameConfig,
             callback        : (baseType, baseShapeId) => {
@@ -134,7 +134,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const tileInfo = this._tileInfo;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseTileDecorationPanel, {
+        openPanel(getDict().CommonChooseTileDecorationPanel, {
             currentDecorationType   : tileInfo.tileDecorationType,
             gameConfig              : gameConfig,
             callback                : (decorationType, decorationShapeId) => {
@@ -160,7 +160,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const tileInfo          = this._tileInfo;
         const tileObjectType    = tileInfo.tileObjectType;
         const tileObjectCfg     = tileObjectType == null ? null : gameConfig.getTileObjectCfg(tileObjectType);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseTileObjectPanel, {
+        openPanel(getDict().CommonChooseTileObjectPanel, {
             currentPlayerIndex  : ((tileObjectCfg == null) || (tileObjectCfg.isNeutralOnly)) ? undefined : tileInfo.tilePlayerIndex,
             gameConfig          : gameConfig,
             finalSkinIdArray    : openData.finalSkinIdArray,
@@ -191,17 +191,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0516);
+        this._labelTitle.setLangText(TextType.B0516);
 
-        this._btnTileBase.setLangText(LangConstants.TextType.TileBase);
+        this._btnTileBase.setLangText(TextType.TileBase);
 
-        this._btnTileDecorator.setLangText(LangConstants.TextType.TileDecoration);
-        this._btnDeleteTileDecorator.setLangText(LangConstants.TextType.B0220);
+        this._btnTileDecorator.setLangText(TextType.TileDecoration);
+        this._btnDeleteTileDecorator.setLangText(TextType.B0220);
 
-        this._btnTileObject.setLangText(LangConstants.TextType.TileObject);
-        this._btnDeleteTileObject.setLangText(LangConstants.TextType.B0220);
+        this._btnTileObject.setLangText(TextType.TileObject);
+        this._btnDeleteTileObject.setLangText(TextType.B0220);
 
-        this._btnConfirm.setLangText(LangConstants.TextType.B0026);
+        this._btnConfirm.setLangText(TextType.B0026);
     }
 
     private _updateTileView(): void {

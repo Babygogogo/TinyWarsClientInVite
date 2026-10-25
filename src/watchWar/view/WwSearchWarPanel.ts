@@ -1,64 +1,64 @@
-import * as AuxiliaryTypesWarFilter from "../../auxiliaryTypes/WarFilter.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import * as UsersModel from "../../users/Model.ts";
+import { WarFilter } from "../../auxiliaryTypes/WarFilter.ts";
+import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { Misc } from "../../gameConfig/GcWar.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { getEnabledNormalMapIdSet, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import { getUserNickname } from "../../users/Model.ts";
 
 export type OpenData = {
-    filter  : AuxiliaryTypesWarFilter.WarFilter | null;
+    filter  : WarFilter | null;
 };
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp!                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _btnClose!                 : IUiButton;
+    private readonly _btnHelp!                  : IUiButton;
+    private readonly _labelTitle!               : IUiLabel;
 
-    private readonly _btnReset!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSearch!                : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnReset!                 : IUiButton;
+    private readonly _btnSearch!                : IUiButton;
 
-    private readonly _labelMapNameTitle!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapName!             : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnMapName!               : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeleteMapName!         : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelMapNameTitle!        : IUiLabel;
+    private readonly _labelMapName!             : IUiLabel;
+    private readonly _btnMapName!               : IUiButton;
+    private readonly _btnDeleteMapName!         : IUiButton;
 
-    private readonly _labelPlayerNameTitle!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPlayerName!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnPlayerName!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeletePlayerName!      : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelPlayerNameTitle!     : IUiLabel;
+    private readonly _labelPlayerName!          : IUiLabel;
+    private readonly _btnPlayerName!            : IUiButton;
+    private readonly _btnDeletePlayerName!      : IUiButton;
 
-    private readonly _labelPlayersCountTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPlayersCount!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnPlayersCount!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeletePlayersCount!    : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelPlayersCountTitle!   : IUiLabel;
+    private readonly _labelPlayersCount!        : IUiLabel;
+    private readonly _btnPlayersCount!          : IUiButton;
+    private readonly _btnDeletePlayersCount!    : IUiButton;
 
-    private readonly _labelCoNameTitle!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelCoName!              : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnCoName!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeleteCoName!          : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelCoNameTitle!         : IUiLabel;
+    private readonly _labelCoName!              : IUiLabel;
+    private readonly _btnCoName!                : IUiButton;
+    private readonly _btnDeleteCoName!          : IUiButton;
 
-    private readonly _labelWarIdTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelWarId!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnWarId!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeleteWarId!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelWarIdTitle!          : IUiLabel;
+    private readonly _labelWarId!               : IUiLabel;
+    private readonly _btnWarId!                 : IUiButton;
+    private readonly _btnDeleteWarId!           : IUiButton;
 
-    private readonly _labelWarNameTitle!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelWarName!             : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnWarName!               : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeleteWarName!         : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelWarNameTitle!        : IUiLabel;
+    private readonly _labelWarName!             : IUiLabel;
+    private readonly _btnWarName!               : IUiButton;
+    private readonly _btnDeleteWarName!         : IUiButton;
 
-    private _filter                             = new AuxiliaryTypesWarFilter.WarFilter();
+    private _filter                             = new WarFilter();
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -87,7 +87,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnDeleteWarName,       callback: this._onTouchedBtnDeleteWarName },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -95,25 +95,25 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._filter = this.getOpenData()?.filter?.clone() ?? new AuxiliaryTypesWarFilter.WarFilter();
+        this._filter = this.getOpenData()?.filter?.clone() ?? new WarFilter();
 
         this._updateComponentsForLanguage();
         this._updateComponentsForFilter();
     }
 
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => `${LangUtils.getText(LangConstants.TextType.A0838)}\n\n${LangUtils.getText(LangConstants.TextType.A0063)}`,
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => `${getText(TextType.A0838)}\n\n${getText(TextType.A0063)}`,
         });
     }
 
     private _onTouchedBtnReset(): void {
-        this._filter = new AuxiliaryTypesWarFilter.WarFilter();
+        this._filter = new WarFilter();
         this._updateComponentsForFilter();
     }
 
     private _onTouchedBtnSearch(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WwMakeRequestWarsPanel, {
+        openPanel(getDict().WwMakeRequestWarsPanel, {
             filter  : this._filter,
         });
         this.closePanel();
@@ -121,9 +121,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnMapName(): Promise<void> {
         const filter = this._filter;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : [...await NormalMapModelNormalMapModel.getEnabledNormalMapIdSet()],
-            getTitleText                : () => LangUtils.getText(LangConstants.TextType.B0227),
+        openPanel(getDict().CommonChooseSingleNormalMapIdPanel, {
+            availableNormalMapIdArray   : [...await getEnabledNormalMapIdSet()],
+            getTitleText                : () => getText(TextType.B0227),
             callback                    : normalMapId => {
                 filter.normalMapId = normalMapId;
                 this._updateLabelMapName();
@@ -136,7 +136,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnPlayerName(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonSearchSingleUserPanel, {
+        openPanel(getDict().CommonSearchSingleUserPanel, {
             getTitleText        : null,
             callbackOnConfirm   : userId => {
                 this._filter.userId = userId;
@@ -150,9 +150,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnCoName(): Promise<void> {
-        const gameConfig    = await GameConfigGcModel.getLatestGameConfig();
+        const gameConfig    = await getLatestGameConfig();
         const filter        = this._filter;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleCoCategoryIdPanel, {
+        openPanel(getDict().CommonChooseSingleCoCategoryIdPanel, {
             gameConfig                      : gameConfig,
             availableCoCategoryIdArray      : gameConfig.getAllEnabledCoCategoryIdArray(),
             currentCoCategoryId             : filter.coCategoryId ?? null,
@@ -170,10 +170,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnPlayersCount(): void {
         const filter = this._filter;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0229),
+        openPanel(getDict().CommonInputNullableIntegerPanel, {
+            getTitle           : () => getText(TextType.B0229),
             minValue        : 2,
-            maxValue        : PlayersConstants.PlayerIndex.Max,
+            maxValue        : PlayerIndex.Max,
             currentValue    : filter.playersCountUnneutral ?? 2,
             callback        : playersCount => {
                 filter.playersCountUnneutral = playersCount;
@@ -188,8 +188,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnWarId(): void {
         const filter = this._filter;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0226),
+        openPanel(getDict().CommonInputNullableIntegerPanel, {
+            getTitle           : () => getText(TextType.B0226),
             minValue        : 0,
             maxValue        : 999999999,
             currentValue    : filter.warId ?? 0,
@@ -206,11 +206,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnWarName(): void {
         const filter = this._filter;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputPanel, {
-            title           : LangUtils.getText(LangConstants.TextType.B0185),
+        openPanel(getDict().CommonInputPanel, {
+            title           : getText(TextType.B0185),
             charRestrict    : null,
             canBeEmpty      : true,
-            maxChars        : GameConfigGcWar.Misc.MaxNameLength,
+            maxChars        : Misc.MaxNameLength,
             tips            : null,
             currentValue    : filter.warName ?? ``,
             callback        : panel => {
@@ -229,16 +229,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0228));
-        this._labelMapNameTitle.setText(LangUtils.getText(LangConstants.TextType.B0225));
-        this._labelPlayerNameTitle.setText(LangUtils.getText(LangConstants.TextType.B0031));
-        this._labelPlayersCountTitle.setText(LangUtils.getText(LangConstants.TextType.B0922));
-        this._labelCoNameTitle.setText(LangUtils.getText(LangConstants.TextType.B0394));
-        this._labelWarIdTitle.setText(LangUtils.getText(LangConstants.TextType.B0226));
-        this._labelWarNameTitle.setText(LangUtils.getText(LangConstants.TextType.B0185));
+        this._labelTitle.setText(getText(TextType.B0228));
+        this._labelMapNameTitle.setText(getText(TextType.B0225));
+        this._labelPlayerNameTitle.setText(getText(TextType.B0031));
+        this._labelPlayersCountTitle.setText(getText(TextType.B0922));
+        this._labelCoNameTitle.setText(getText(TextType.B0394));
+        this._labelWarIdTitle.setText(getText(TextType.B0226));
+        this._labelWarNameTitle.setText(getText(TextType.B0185));
 
-        this._btnReset.setText(LangUtils.getText(LangConstants.TextType.B0567));
-        this._btnSearch.setText(LangUtils.getText(LangConstants.TextType.B0228));
+        this._btnReset.setText(getText(TextType.B0567));
+        this._btnSearch.setText(getText(TextType.B0228));
     }
 
     private _updateComponentsForFilter(): void {
@@ -254,21 +254,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const normalMapId = this._filter.normalMapId;
         this._labelMapName.setText(normalMapId == null
             ? ``
-            : (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId)) ?? LangConstants.UndefinedError);
+            : (await getMapNameInCurrentLanguage(normalMapId)) ?? UndefinedError);
     }
 
     private async _updateLabelPlayerName(): Promise<void> {
         const userId = this._filter.userId;
         this._labelPlayerName.setText( userId == null
             ? ``
-            : (await UsersModel.getUserNickname(userId)) ?? LangConstants.UndefinedError);
+            : (await getUserNickname(userId)) ?? UndefinedError);
     }
 
     private async _updateLabelCoName(): Promise<void> {
         const coCategoryId = this._filter.coCategoryId;
         this._labelCoName.setText( coCategoryId == null
             ? ``
-            : (await GameConfigGcModel.getLatestGameConfig()).getCoCategoryCfg(coCategoryId)?.getName() ?? LangConstants.UndefinedError);
+            : (await getLatestGameConfig()).getCoCategoryCfg(coCategoryId)?.getName() ?? UndefinedError);
     }
 
     private _updateLabelPlayersCount(): void {

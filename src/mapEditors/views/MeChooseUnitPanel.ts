@@ -1,50 +1,50 @@
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as MapEditorModelMeModel from "../../mapEditor/model/MeModel.ts";
-import type * as MapEditorModelMeTypes from "../../mapEditor/model/MeTypes.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UnitsUtilsSerialization from "../../units/utils/Serialization.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getUnitViewClass, getUnitClass } from "../../gameHelpers/GhFactory.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getSkinButtonBackground } from "../../helpers/ImageSource.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getUnitName } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { getWar } from "../../mapEditor/model/MeModel.ts";
+import type { DataForDrawUnit } from "../../mapEditor/model/MeTypes.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { createDefault } from "../../units/utils/Serialization.ts";
 
 const MAX_RECENT_COUNT = 10;
 
 export interface OpenData {
-    war     : MapEditorInterfaceIMeWar.IMeWar;
+    war     : IMeWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSwitch!        : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
+    private readonly _btnSwitch!        : IUiButton;
 
-    private readonly _labelRecentTitle! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listRecent!       : UiInterfacesIUiScrollList.IUiScrollList<DataForUnitRenderer>;
-    private readonly _listPlayerIndex!  : UiInterfacesIUiScrollList.IUiScrollList<DataForPlayerIndexRenderer>;
-    private readonly _listUnit!         : UiInterfacesIUiScrollList.IUiScrollList<DataForUnitRenderer>;
+    private readonly _labelRecentTitle! : IUiLabel;
+    private readonly _listRecent!       : IUiScrollList<DataForUnitRenderer>;
+    private readonly _listPlayerIndex!  : IUiScrollList<DataForPlayerIndexRenderer>;
+    private readonly _listUnit!         : IUiScrollList<DataForUnitRenderer>;
 
     private readonly _dataListForRecent : DataForUnitRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,   callback: this.closePanel },
@@ -78,7 +78,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     public async setAndReviseSelectedPlayerIndex(newPlayerIndex: number, needScroll: boolean): Promise<void> {
         const listPlayerIndex   = this._listPlayerIndex;
-        const index             = HelpersMisc.getExisted(listPlayerIndex.getRevisedFirstIndex(v => v?.playerIndex === newPlayerIndex));
+        const index             = getExisted(listPlayerIndex.getRevisedFirstIndex(v => v?.playerIndex === newPlayerIndex));
         listPlayerIndex.setSelectedItemIndex(index);
         if (needScroll) {
             listPlayerIndex.scrollToItem(index);
@@ -87,7 +87,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         await this._updateListUnit();
     }
 
-    public async updateOnChooseUnit(data: MapEditorModelMeTypes.DataForDrawUnit): Promise<void> {
+    public async updateOnChooseUnit(data: DataForDrawUnit): Promise<void> {
         const dataList      = this._dataListForRecent;
         const filteredList  = dataList.filter(v => {
             const oldData = v.dataForDrawUnit;
@@ -98,7 +98,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         dataList[0]         = {
             dataForDrawUnit : data,
             panel           : this,
-            gameConfig      : await GameConfigGcModel.getLatestGameConfig(),
+            gameConfig      : await getLatestGameConfig(),
         };
         for (const v of filteredList) {
             if (dataList.length < MAX_RECENT_COUNT) {
@@ -123,7 +123,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().MeChooseTileBasePanel, {
+        openPanel(getDict().MeChooseTileBasePanel, {
             war : war,
         });
         this.closePanel();
@@ -133,20 +133,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0281));
-        this._labelRecentTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0372)}:`);
+        this._labelTitle.setText(getText(TextType.B0281));
+        this._labelRecentTitle.setText(`${getText(TextType.B0372)}:`);
     }
 
     private async _updateOnOpenDataChanged(): Promise<void> {
         const data = this._dataListForRecent[0];
-        await this._resetListPlayerIndex(data ? data.dataForDrawUnit.playerIndex : PlayersConstants.PlayerIndex.First);
+        await this._resetListPlayerIndex(data ? data.dataForDrawUnit.playerIndex : PlayerIndex.First);
         await this._updateListUnit();
         await this._updateListRecent();
     }
 
     private async _resetListPlayerIndex(selectedPlayerIndex: number | null): Promise<void> {
         const dataArray: DataForPlayerIndexRenderer[] = [];
-        for (let playerIndex = PlayersConstants.PlayerIndex.First; playerIndex <= PlayersConstants.PlayerIndex.Max; ++playerIndex) {
+        for (let playerIndex = PlayerIndex.First; playerIndex <= PlayerIndex.Max; ++playerIndex) {
             dataArray.push({
                 playerIndex,
                 panel       : this,
@@ -166,7 +166,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const gameConfig    = await GameConfigGcModel.getLatestGameConfig();
+        const gameConfig    = await getLatestGameConfig();
         const dataArray     : DataForUnitRenderer[] = [];
         for (const unitType of gameConfig.getAllUnitTypeArray()) {
             dataArray.push({
@@ -188,14 +188,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForPlayerIndexRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForPlayerIndexRenderer extends UiListItemData {
     playerIndex : number;
     panel       : Panel;
 }
-class PlayerIndexRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForPlayerIndexRenderer> {
-    private readonly _labelPlayerIndex! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgBg!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgSelected!      : UiInterfacesIUiImage.IUiImage;
+class PlayerIndexRenderer extends UiListItemRenderer<DataForPlayerIndexRenderer> {
+    private readonly _labelPlayerIndex! : IUiLabel;
+    private readonly _imgBg!            : IUiImage;
+    private readonly _imgSelected!      : IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -205,13 +205,13 @@ class PlayerIndexRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        TweenExecutor.Executor.removeTweens(imgSelected);
-        TweenExecutor.Executor.get(imgSelected, { loop: true })
+        Executor.removeTweens(imgSelected);
+        Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        TweenExecutor.Executor.removeTweens(this._imgSelected);
+        Executor.removeTweens(this._imgSelected);
         await super._onClosed();
     }
 
@@ -222,7 +222,7 @@ class PlayerIndexRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
         }
 
         this._labelPlayerIndex.setText(`P${playerIndex}`);
-        this._imgBg.loadSource(HelpersImageSource.getSkinButtonBackground(playerIndex));
+        this._imgBg.loadSource(getSkinButtonBackground(playerIndex));
     }
 
     public onItemTapEvent(): void {
@@ -231,17 +231,17 @@ class PlayerIndexRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
     }
 }
 
-interface DataForUnitRenderer extends UiTypesUiListItemData.UiListItemData {
-    dataForDrawUnit : MapEditorModelMeTypes.DataForDrawUnit;
+interface DataForUnitRenderer extends UiListItemData {
+    dataForDrawUnit : DataForDrawUnit;
     panel           : Panel;
-    gameConfig      : GameConfigGcData.GcData;
+    gameConfig      : GcData;
 }
-class UnitRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForUnitRenderer> {
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _conUnitView!  : UiInterfacesIUiContainer.IUiContainer;
+class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
+    private readonly _group!        : IUiContainer;
+    private readonly _labelName!    : IUiLabel;
+    private readonly _conUnitView!  : IUiContainer;
 
-    private _unitView   = new (GameHelpersGhFactory.getUnitViewClass())();
+    private _unitView   = new (getUnitViewClass())();
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -262,12 +262,12 @@ class UnitRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const dataForDrawUnit   = openData.dataForDrawUnit;
         const unitType          = dataForDrawUnit.unitType;
         const gameConfig        = openData.gameConfig;
-        const war               = HelpersMisc.getExisted(MapEditorModelMeModel.getWar());
-        this._labelName.setText(LangUtils.getUnitName(unitType, gameConfig) ?? LangConstants.UndefinedError);
+        const war               = getExisted(getWar());
+        this._labelName.setText(getUnitName(unitType, gameConfig) ?? UndefinedError);
 
         const unitView  = this._unitView;
-        const unit      = new (GameHelpersGhFactory.getUnitClass())();
-        unit.init(UnitsUtilsSerialization.createDefault({
+        const unit      = new (getUnitClass())();
+        unit.init(createDefault({
             gridIndex   : { x: 0, y: 0 },
             unitId      : 0,
             unitTypeId  : unitType,
@@ -289,6 +289,6 @@ class UnitRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const dataForDrawUnit   = openData.dataForDrawUnit;
         panel.updateOnChooseUnit(dataForDrawUnit);
         panel.closePanel();
-        HelpersMisc.getExisted(MapEditorModelMeModel.getWar()).getDrawer().setModeDrawUnit(dataForDrawUnit);
+        getExisted(getWar()).getDrawer().setModeDrawUnit(dataForDrawUnit);
     }
 }

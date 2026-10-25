@@ -1,179 +1,200 @@
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import * as DestructionsUtils from "../../destructions/Utils.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameConfigGcMapEditor from "../../gameConfig/GcMapEditor.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GeometriesConstants from "../../geometries/Constants.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeDrawer from "../interface/IMeDrawer.ts";
-import type * as MapEditorInterfaceIMeWar from "../interface/IMeWar.ts";
-import * as MapEditorModelMeHelpers from "./MeHelpers.ts";
-import type * as MapEditorModelMeTypes from "./MeTypes.ts";
-import type * as NotificationsDataTypes from "../../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as NotificationsTypes from "../../notifications/Types.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialField from "../../proto/schema/CommonProto/WarSerialization/SerialField.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialTile from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import * as TilesConstantsCommon from "../../tiles/constants/Common.ts";
-import type * as TilesITile from "../../tiles/ITile.ts";
-import * as TilesUtilsSerialization from "../../tiles/utils/Serialization.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import * as UnitsUtilsSerialization from "../../units/utils/Serialization.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import { destroyUnitOnMap } from "../../destructions/Utils.ts";
+import { show, showLang } from "../../FloatText.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { DrawerMode } from "../../gameConfig/GcMapEditor.ts";
+import { getUnitClass } from "../../gameHelpers/GhFactory.ts";
+import { SymmetryTypeId } from "../../geometries/Constants.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getFormattedText } from "../../lang/Utils.ts";
+import type { IMeDrawer } from "../interface/IMeDrawer.ts";
+import type { IMeWar } from "../interface/IMeWar.ts";
+import {
+    getAutoRiverShapeId,
+    getAutoBeachShapeId,
+    getAutoSeaShapeId,
+    getAutoRoadShapeId,
+    getAutoBridgeShapeId,
+    getAutoPlasmaShapeId,
+    getAutoPipeShapeId,
+    getAutoTileDecorationTypeAndShapeId,
+    getSymmetricalGridIndex,
+} from "./MeHelpers.ts";
+import type {
+    DataForDrawTileObject,
+    DataForDrawTileBase,
+    DataForDrawTileDecoration,
+    DataForAddTileToLocation,
+    DataForDeleteTileFromLocation,
+    DataForDrawUnit,
+} from "./MeTypes.ts";
+import type { BwCursorTapped, BwCursorDragged, BwTileChanged, BwUnitChanged } from "../../notifications/DataTypes.ts";
+import { addEventListeners, removeEventListeners, dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { Listener } from "../../notifications/Types.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import type {
+    SerialField as ProtoSchemaCommonProtoWarSerializationSerialField,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialField.ts";
+import type {
+    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import { TileTypeId, BaseTypeId, ObjectTypeId } from "../../tiles/constants/Common.ts";
+import type { ITile } from "../../tiles/ITile.ts";
+import { create, fillNonTrivialDefaultValues } from "../../tiles/utils/Serialization.ts";
+import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import { createDefault } from "../../units/utils/Serialization.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
-type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile.SerialTile;
-type SerialField            = ProtoSchemaCommonProtoWarSerializationSerialField.SerialField;
-type IUnit                  = UnitsIUnit.IUnit;
+type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
+type SerialField            = ProtoSchemaCommonProtoWarSerializationSerialField;
+type IUnit                  = UnitsIUnit;
 
 const MaxCheckpointCount            = 1000;
 const SymmetricalPlayerIndexArray   = [0, 2, 1, 4, 3, 6, 5, 8, 7];
 
-export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
-    private _war?                               : MapEditorInterfaceIMeWar.IMeWar;
-    private _mode                               = GameConfigGcMapEditor.DrawerMode.Preview;
-    private _dataForDrawTileObject              : MapEditorModelMeTypes.DataForDrawTileObject | null = null;
-    private _dataForDrawTileBase                : MapEditorModelMeTypes.DataForDrawTileBase | null = null;
-    private _dataForDrawTileDecoration          : MapEditorModelMeTypes.DataForDrawTileDecoration | null = null;
+export class MeDrawer implements IMeDrawer {
+    private _war?                               : IMeWar;
+    private _mode                               = DrawerMode.Preview;
+    private _dataForDrawTileObject              : DataForDrawTileObject | null = null;
+    private _dataForDrawTileBase                : DataForDrawTileBase | null = null;
+    private _dataForDrawTileDecoration          : DataForDrawTileDecoration | null = null;
     private _dataForPasteTile                   : SerialTile | null = null;
     private _dataForPasteUnit                   : IUnit[] | null = null;
     private _drawTargetUnit                     : IUnit | null = null;
-    private _dataForAddTileToLocation           : MapEditorModelMeTypes.DataForAddTileToLocation | null = null;
-    private _dataForDeleteTileFromLocation      : MapEditorModelMeTypes.DataForDeleteTileFromLocation | null = null;
-    private _symmetricalDrawType                = GeometriesConstants.SymmetryTypeId.None;
+    private _dataForAddTileToLocation           : DataForAddTileToLocation | null = null;
+    private _dataForDeleteTileFromLocation      : DataForDeleteTileFromLocation | null = null;
+    private _symmetricalDrawType                = SymmetryTypeId.None;
     private _isRealTimeAdjust                   = true;
     private _isSymmetricalPlayerIndexEnabled    = true;
     private _roadConnectTileTypeArray           : number[] = [
-        TilesConstantsCommon.TileTypeId.Road,
-        TilesConstantsCommon.TileTypeId.BridgeOnBeach,
-        TilesConstantsCommon.TileTypeId.BridgeOnPlain,
-        TilesConstantsCommon.TileTypeId.BridgeOnRiver,
-        TilesConstantsCommon.TileTypeId.BridgeOnSea,
-        TilesConstantsCommon.TileTypeId.Headquarters,
-        TilesConstantsCommon.TileTypeId.City,
-        TilesConstantsCommon.TileTypeId.CommandTower,
-        TilesConstantsCommon.TileTypeId.Radar,
-        TilesConstantsCommon.TileTypeId.Factory,
-        TilesConstantsCommon.TileTypeId.Airport,
-        TilesConstantsCommon.TileTypeId.Seaport,
-        TilesConstantsCommon.TileTypeId.TempAirport,
-        TilesConstantsCommon.TileTypeId.TempSeaport,
+        TileTypeId.Road,
+        TileTypeId.BridgeOnBeach,
+        TileTypeId.BridgeOnPlain,
+        TileTypeId.BridgeOnRiver,
+        TileTypeId.BridgeOnSea,
+        TileTypeId.Headquarters,
+        TileTypeId.City,
+        TileTypeId.CommandTower,
+        TileTypeId.Radar,
+        TileTypeId.Factory,
+        TileTypeId.Airport,
+        TileTypeId.Seaport,
+        TileTypeId.TempAirport,
+        TileTypeId.TempSeaport,
     ];
     private _bridgeConnectTileTypeArray         : number[] = [
-        TilesConstantsCommon.TileTypeId.Road,
-        TilesConstantsCommon.TileTypeId.BridgeOnBeach,
-        TilesConstantsCommon.TileTypeId.BridgeOnPlain,
-        TilesConstantsCommon.TileTypeId.BridgeOnRiver,
-        TilesConstantsCommon.TileTypeId.BridgeOnSea,
-        TilesConstantsCommon.TileTypeId.Headquarters,
-        TilesConstantsCommon.TileTypeId.City,
-        TilesConstantsCommon.TileTypeId.CommandTower,
-        TilesConstantsCommon.TileTypeId.Radar,
-        TilesConstantsCommon.TileTypeId.Factory,
-        TilesConstantsCommon.TileTypeId.Airport,
-        TilesConstantsCommon.TileTypeId.Seaport,
-        TilesConstantsCommon.TileTypeId.TempAirport,
-        TilesConstantsCommon.TileTypeId.TempSeaport,
+        TileTypeId.Road,
+        TileTypeId.BridgeOnBeach,
+        TileTypeId.BridgeOnPlain,
+        TileTypeId.BridgeOnRiver,
+        TileTypeId.BridgeOnSea,
+        TileTypeId.Headquarters,
+        TileTypeId.City,
+        TileTypeId.CommandTower,
+        TileTypeId.Radar,
+        TileTypeId.Factory,
+        TileTypeId.Airport,
+        TileTypeId.Seaport,
+        TileTypeId.TempAirport,
+        TileTypeId.TempSeaport,
     ];
 
     private _checkpointArray                    : SerialField[] = [];
     private _currentCheckpointIndex             = 0;
 
-    private _notifyListeners: NotificationsTypes.Listener[] = [
-        { type: NotificationsTypeId.TypeId.BwCursorTapped,     callback: this._onNotifyBwCursorTapped },
-        { type: NotificationsTypeId.TypeId.BwCursorDragged,    callback: this._onNotifyBwCursorDragged },
+    private _notifyListeners: Listener[] = [
+        { type: TypeId.BwCursorTapped,     callback: this._onNotifyBwCursorTapped },
+        { type: TypeId.BwCursorDragged,    callback: this._onNotifyBwCursorDragged },
     ];
 
-    public init(): MapEditorInterfaceIMeDrawer.IMeDrawer {
+    public init(): IMeDrawer {
         return this;
     }
 
-    public startRunning(war: MapEditorInterfaceIMeWar.IMeWar): void {
+    public startRunning(war: IMeWar): void {
         this._setWar(war);
 
-        NotificationsDispatcher.addEventListeners(this._notifyListeners, this);
+        addEventListeners(this._notifyListeners, this);
     }
     public stopRunning(): void {
         delete this._war;
 
-        NotificationsDispatcher.removeEventListeners(this._notifyListeners, this);
+        removeEventListeners(this._notifyListeners, this);
     }
 
-    private _onNotifyBwCursorTapped(e: VendorEgretEgret.Event): void {
-        const data      = e.data as NotificationsDataTypes.BwCursorTapped;
+    private _onNotifyBwCursorTapped(e: Event): void {
+        const data      = e.data as BwCursorTapped;
         const gridIndex = data.tappedOn;
         this._handleAction(gridIndex);
     }
-    private _onNotifyBwCursorDragged(e: VendorEgretEgret.Event): void {
-        const data = e.data as NotificationsDataTypes.BwCursorDragged;
+    private _onNotifyBwCursorDragged(e: Event): void {
+        const data = e.data as BwCursorDragged;
         this._handleAction(data.draggedTo);
     }
 
-    private _setWar(war: MapEditorInterfaceIMeWar.IMeWar): void {
+    private _setWar(war: IMeWar): void {
         this._war = war;
     }
-    private _getWar(): MapEditorInterfaceIMeWar.IMeWar {
-        return HelpersMisc.getExisted(this._war);
+    private _getWar(): IMeWar {
+        return getExisted(this._war);
     }
 
-    private _setMode(mode: GameConfigGcMapEditor.DrawerMode): void {
+    private _setMode(mode: DrawerMode): void {
         this._mode = mode;
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MeDrawerModeChanged);
+        dispatch(TypeId.MeDrawerModeChanged);
     }
     public setModeDeleteUnit(): void {
-        this._setMode(GameConfigGcMapEditor.DrawerMode.DeleteUnit);
+        this._setMode(DrawerMode.DeleteUnit);
     }
     public setModeDeleteTileDecoration(): void {
-        this._setMode(GameConfigGcMapEditor.DrawerMode.DeleteTileDecoration);
+        this._setMode(DrawerMode.DeleteTileDecoration);
     }
     public setModeDeleteTileObject(): void {
-        this._setMode(GameConfigGcMapEditor.DrawerMode.DeleteTileObject);
+        this._setMode(DrawerMode.DeleteTileObject);
     }
     public setModePreview(): void {
-        this._setMode(GameConfigGcMapEditor.DrawerMode.Preview);
+        this._setMode(DrawerMode.Preview);
     }
-    public getMode(): GameConfigGcMapEditor.DrawerMode {
+    public getMode(): DrawerMode {
         return this._mode;
     }
 
-    public setModeDrawTileObject(data: MapEditorModelMeTypes.DataForDrawTileObject): void {
+    public setModeDrawTileObject(data: DataForDrawTileObject): void {
         this._setDrawTargetTileObjectData(data);
         this._setDrawTargetTileBaseData(null);
         this._setDrawTargetTileDecorationData(null);
-        this._setMode(GameConfigGcMapEditor.DrawerMode.DrawTileObject);
+        this._setMode(DrawerMode.DrawTileObject);
     }
-    public setModeDrawTileBase(data: MapEditorModelMeTypes.DataForDrawTileBase): void {
+    public setModeDrawTileBase(data: DataForDrawTileBase): void {
         this._setDrawTargetTileObjectData(null);
         this._setDrawTargetTileBaseData(data);
         this._setDrawTargetTileDecorationData(null);
-        this._setMode(GameConfigGcMapEditor.DrawerMode.DrawTileBase);
+        this._setMode(DrawerMode.DrawTileBase);
     }
-    public setModeDrawTileDecoration(data: MapEditorModelMeTypes.DataForDrawTileDecoration): void {
+    public setModeDrawTileDecoration(data: DataForDrawTileDecoration): void {
         this._setDrawTargetTileObjectData(null);
         this._setDrawTargetTileBaseData(null);
         this._setDrawTargetTileDecorationData(data);
-        this._setMode(GameConfigGcMapEditor.DrawerMode.DrawTileDecoration);
+        this._setMode(DrawerMode.DrawTileDecoration);
     }
-    private _setDrawTargetTileObjectData(data: MapEditorModelMeTypes.DataForDrawTileObject | null): void {
+    private _setDrawTargetTileObjectData(data: DataForDrawTileObject | null): void {
         this._dataForDrawTileObject = data;
     }
-    public getDrawTargetTileObjectData(): MapEditorModelMeTypes.DataForDrawTileObject | null {
+    public getDrawTargetTileObjectData(): DataForDrawTileObject | null {
         return this._dataForDrawTileObject;
     }
-    private _setDrawTargetTileBaseData(data: MapEditorModelMeTypes.DataForDrawTileBase | null): void {
+    private _setDrawTargetTileBaseData(data: DataForDrawTileBase | null): void {
         this._dataForDrawTileBase = data;
     }
-    public getDrawTargetTileBaseData(): MapEditorModelMeTypes.DataForDrawTileBase | null {
+    public getDrawTargetTileBaseData(): DataForDrawTileBase | null {
         return this._dataForDrawTileBase;
     }
-    private _setDrawTargetTileDecorationData(data: MapEditorModelMeTypes.DataForDrawTileDecoration | null): void {
+    private _setDrawTargetTileDecorationData(data: DataForDrawTileDecoration | null): void {
         this._dataForDrawTileDecoration = data;
     }
-    public getDrawTargetTileDecorationData(): MapEditorModelMeTypes.DataForDrawTileDecoration | null {
+    public getDrawTargetTileDecorationData(): DataForDrawTileDecoration | null {
         return this._dataForDrawTileDecoration;
     }
     public setDataForPasteTile(data: SerialTile): void {
@@ -189,11 +210,11 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         return this._dataForPasteUnit;
     }
 
-    public setModeDrawUnit(data: MapEditorModelMeTypes.DataForDrawUnit): void {
+    public setModeDrawUnit(data: DataForDrawUnit): void {
         const war           = this._getWar();
-        const unit          = new (GameHelpersGhFactory.getUnitClass())();
+        const unit          = new (getUnitClass())();
         const gameConfig    = war.getGcData();
-        unit.init(UnitsUtilsSerialization.createDefault({
+        unit.init(createDefault({
             gridIndex   : { x: 0, y: 0 },
             unitId      : -1,
             unitTypeId  : data.unitType,
@@ -203,7 +224,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         unit.startRunning(war);
 
         this._setDrawTargetUnit(unit);
-        this._setMode(GameConfigGcMapEditor.DrawerMode.DrawUnit);
+        this._setMode(DrawerMode.DrawUnit);
     }
     private _setDrawTargetUnit(unit: IUnit): void {
         this._drawTargetUnit = unit;
@@ -212,48 +233,48 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         return this._drawTargetUnit;
     }
 
-    public setModeAddTileToLocation(data: MapEditorModelMeTypes.DataForAddTileToLocation): void {
+    public setModeAddTileToLocation(data: DataForAddTileToLocation): void {
         this._setDataForAddTileToLocation(data);
-        this._setMode(GameConfigGcMapEditor.DrawerMode.AddTileToLocation);
+        this._setMode(DrawerMode.AddTileToLocation);
     }
-    private _setDataForAddTileToLocation(data: MapEditorModelMeTypes.DataForAddTileToLocation): void {
+    private _setDataForAddTileToLocation(data: DataForAddTileToLocation): void {
         this._dataForAddTileToLocation = data;
     }
-    public getDataForAddTileToLocation(): MapEditorModelMeTypes.DataForAddTileToLocation | null {
+    public getDataForAddTileToLocation(): DataForAddTileToLocation | null {
         return this._dataForAddTileToLocation;
     }
 
-    public setModeDeleteTileFromLocation(data: MapEditorModelMeTypes.DataForDeleteTileFromLocation): void {
+    public setModeDeleteTileFromLocation(data: DataForDeleteTileFromLocation): void {
         this._setDataForDeleteTileFromLocation(data);
-        this._setMode(GameConfigGcMapEditor.DrawerMode.DeleteTileFromLocation);
+        this._setMode(DrawerMode.DeleteTileFromLocation);
     }
-    private _setDataForDeleteTileFromLocation(data: MapEditorModelMeTypes.DataForDeleteTileFromLocation): void {
+    private _setDataForDeleteTileFromLocation(data: DataForDeleteTileFromLocation): void {
         this._dataForDeleteTileFromLocation = data;
     }
-    public getDataForDeleteTileFromLocation(): MapEditorModelMeTypes.DataForDeleteTileFromLocation | null {
+    public getDataForDeleteTileFromLocation(): DataForDeleteTileFromLocation | null {
         return this._dataForDeleteTileFromLocation;
     }
 
     public setModePasteTile(): void {
-        this._setMode(GameConfigGcMapEditor.DrawerMode.PasteTile);
+        this._setMode(DrawerMode.PasteTile);
     }
     public setModePasteUnit(): void {
-        this._setMode(GameConfigGcMapEditor.DrawerMode.PasteUnit);
+        this._setMode(DrawerMode.PasteUnit);
     }
 
-    public getSymmetricalDrawType(): GeometriesConstants.SymmetryTypeId {
+    public getSymmetricalDrawType(): SymmetryTypeId {
         return this._symmetricalDrawType;
     }
-    public setSymmetricalDrawType(type: GeometriesConstants.SymmetryTypeId): void {
+    public setSymmetricalDrawType(type: SymmetryTypeId): void {
         this._symmetricalDrawType = type;
     }
 
     public getSymmetricalPlayerIndex(playerIndex: number): number {
-        return HelpersMisc.getExisted(SymmetricalPlayerIndexArray[playerIndex]);
+        return getExisted(SymmetricalPlayerIndexArray[playerIndex]);
     }
     public setSymmetricalPlayerIndex(srcPlayerIndex: number, dstPlayerIndex: number): void {
-        if (srcPlayerIndex === PlayersConstants.PlayerIndex.Neutral) {
-            throw HelpersMisc.newError(`Cannot set symmetrical color for neutral player.`);
+        if (srcPlayerIndex === PlayerIndex.Neutral) {
+            throw newError(`Cannot set symmetrical color for neutral player.`);
         }
         SymmetricalPlayerIndexArray[srcPlayerIndex] = dstPlayerIndex;
     }
@@ -270,7 +291,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
     public setIsRealTimeAdjust(isAuto: boolean): void {
         if (this._isRealTimeAdjust != isAuto) {
             this._isRealTimeAdjust = isAuto;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MeRealTimeAdjustChanged);
+            dispatch(TypeId.MeRealTimeAdjustChanged);
         }
     }
 
@@ -287,23 +308,23 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
             const tileBaseType = tile.getBaseType();
-            if (tileBaseType !== TilesConstantsCommon.BaseTypeId.River) {
+            if (tileBaseType !== BaseTypeId.River) {
                 continue;
             }
 
             const gridIndex = tile.getGridIndex();
-            const shapeId   = MapEditorModelMeHelpers.getAutoRiverShapeId(tileMap, gridIndex);
+            const shapeId   = getAutoRiverShapeId(tileMap, gridIndex);
             if (shapeId !== tile.getBaseShapeId()) {
                 ++adjustCount;
                 tile.setBaseShapeId(shapeId);
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
             }
         }
 
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0159, adjustCount));
+        show(getFormattedText(TextType.F0159, adjustCount));
     }
     public autoAdjustBeaches(): void {
         const war           = this._getWar();
@@ -311,23 +332,23 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
             const tileBaseType = tile.getBaseType();
-            if (tileBaseType !== TilesConstantsCommon.BaseTypeId.Beach) {
+            if (tileBaseType !== BaseTypeId.Beach) {
                 continue;
             }
 
             const gridIndex = tile.getGridIndex();
-            const shapeId   = MapEditorModelMeHelpers.getAutoBeachShapeId(tileMap, gridIndex);
+            const shapeId   = getAutoBeachShapeId(tileMap, gridIndex);
             if (shapeId !== tile.getBaseShapeId()) {
                 ++adjustCount;
                 tile.setBaseShapeId(shapeId);
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
             }
         }
 
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0159, adjustCount));
+        show(getFormattedText(TextType.F0159, adjustCount));
     }
     public autoAdjustSeas(): void {
         const war           = this._getWar();
@@ -335,23 +356,23 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
             const tileBaseType = tile.getBaseType();
-            if (tileBaseType !== TilesConstantsCommon.BaseTypeId.Sea) {
+            if (tileBaseType !== BaseTypeId.Sea) {
                 continue;
             }
 
             const gridIndex = tile.getGridIndex();
-            const shapeId   = MapEditorModelMeHelpers.getAutoSeaShapeId(tileMap, gridIndex);
+            const shapeId   = getAutoSeaShapeId(tileMap, gridIndex);
             if (shapeId !== tile.getBaseShapeId()) {
                 ++adjustCount;
                 tile.setBaseShapeId(shapeId);
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
             }
         }
 
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0159, adjustCount));
+        show(getFormattedText(TextType.F0159, adjustCount));
     }
     public autoAdjustRoads(connectTileTypeArray: number[]): void {
         this._roadConnectTileTypeArray.length = 0;
@@ -361,23 +382,23 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            if (tile.getObjectType() !== TilesConstantsCommon.ObjectTypeId.Road) {
+            if (tile.getObjectType() !== ObjectTypeId.Road) {
                 continue;
             }
 
             const gridIndex = tile.getGridIndex();
-            const shapeId   = MapEditorModelMeHelpers.getAutoRoadShapeId(tileMap, gridIndex, connectTileTypeArray);
+            const shapeId   = getAutoRoadShapeId(tileMap, gridIndex, connectTileTypeArray);
             if (shapeId !== tile.getObjectShapeId()) {
                 ++adjustCount;
                 tile.setObjectShapeId(shapeId);
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
             }
         }
 
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0159, adjustCount));
+        show(getFormattedText(TextType.F0159, adjustCount));
     }
     public autoAdjustBridges(connectTileTypeArray: number[]): void {
         this._bridgeConnectTileTypeArray.length = 0;
@@ -387,69 +408,69 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            if (tile.getObjectType() !== TilesConstantsCommon.ObjectTypeId.Bridge) {
+            if (tile.getObjectType() !== ObjectTypeId.Bridge) {
                 continue;
             }
 
             const gridIndex = tile.getGridIndex();
-            const shapeId   = MapEditorModelMeHelpers.getAutoBridgeShapeId(tileMap, gridIndex, connectTileTypeArray);
+            const shapeId   = getAutoBridgeShapeId(tileMap, gridIndex, connectTileTypeArray);
             if (shapeId !== tile.getObjectShapeId()) {
                 ++adjustCount;
                 tile.setObjectShapeId(shapeId);
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
             }
         }
 
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0159, adjustCount));
+        show(getFormattedText(TextType.F0159, adjustCount));
     }
     public autoAdjustPlasmas(): void {
         const war           = this._getWar();
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            if (tile.getObjectType() !== TilesConstantsCommon.ObjectTypeId.Plasma) {
+            if (tile.getObjectType() !== ObjectTypeId.Plasma) {
                 continue;
             }
 
             const gridIndex = tile.getGridIndex();
-            const shapeId   = MapEditorModelMeHelpers.getAutoPlasmaShapeId(tileMap, gridIndex);
+            const shapeId   = getAutoPlasmaShapeId(tileMap, gridIndex);
             if (shapeId !== tile.getObjectShapeId()) {
                 ++adjustCount;
                 tile.setObjectShapeId(shapeId);
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
             }
         }
 
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0159, adjustCount));
+        show(getFormattedText(TextType.F0159, adjustCount));
     }
     public autoAdjustPipes(): void {
         const war           = this._getWar();
         const tileMap       = war.getTileMap();
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
-            if (tile.getObjectType() !== TilesConstantsCommon.ObjectTypeId.Pipe) {
+            if (tile.getObjectType() !== ObjectTypeId.Pipe) {
                 continue;
             }
 
             const gridIndex = tile.getGridIndex();
-            const shapeId   = MapEditorModelMeHelpers.getAutoPipeShapeId(tileMap, gridIndex);
+            const shapeId   = getAutoPipeShapeId(tileMap, gridIndex);
             if (shapeId !== tile.getObjectShapeId()) {
                 ++adjustCount;
                 tile.setObjectShapeId(shapeId);
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
             }
         }
 
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0159, adjustCount));
+        show(getFormattedText(TextType.F0159, adjustCount));
     }
     public autoFillTileDecorations(): void {
         const war           = this._getWar();
@@ -457,7 +478,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         let adjustCount     = 0;
         for (const tile of tileMap.getAllTiles()) {
             const gridIndex             = tile.getGridIndex();
-            const targetDecorationData  = MapEditorModelMeHelpers.getAutoTileDecorationTypeAndShapeId(tileMap, gridIndex);
+            const targetDecorationData  = getAutoTileDecorationTypeAndShapeId(tileMap, gridIndex);
             const decorationType        = targetDecorationData.decorationType;
             const decorationShapeId     = targetDecorationData.shapeId;
 
@@ -468,72 +489,72 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
             }
         }
 
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0159, adjustCount));
+        show(getFormattedText(TextType.F0159, adjustCount));
     }
 
-    private _handleAction(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handleAction(gridIndex: GridIndex): void {
         const mode = this.getMode();
-        if (mode === GameConfigGcMapEditor.DrawerMode.DrawTileBase) {
+        if (mode === DrawerMode.DrawTileBase) {
             this._addCheckpoint();
             this._handleDrawTileBase(gridIndex);
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.DrawTileDecoration) {
+        } else if (mode === DrawerMode.DrawTileDecoration) {
             this._addCheckpoint();
             this._handleDrawTileDecoration(gridIndex);
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.DrawTileObject) {
+        } else if (mode === DrawerMode.DrawTileObject) {
             this._addCheckpoint();
             this._handleDrawTileObject(gridIndex);
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.DrawUnit) {
+        } else if (mode === DrawerMode.DrawUnit) {
             this._addCheckpoint();
             this._handleDrawUnit(gridIndex);
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.DeleteTileDecoration) {
+        } else if (mode === DrawerMode.DeleteTileDecoration) {
             this._addCheckpoint();
             this._handleDeleteTileDecoration(gridIndex);
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.DeleteTileObject) {
+        } else if (mode === DrawerMode.DeleteTileObject) {
             this._addCheckpoint();
             this._handleDeleteTileObject(gridIndex);
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.DeleteUnit) {
+        } else if (mode === DrawerMode.DeleteUnit) {
             this._addCheckpoint();
             this._handleDeleteUnit(gridIndex);
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.AddTileToLocation) {
+        } else if (mode === DrawerMode.AddTileToLocation) {
             this._addCheckpoint();
             this._handleAddTileToLocation(gridIndex);
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.DeleteTileFromLocation) {
+        } else if (mode === DrawerMode.DeleteTileFromLocation) {
             this._addCheckpoint();
             this._handleDeleteTileFromLocation(gridIndex);
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.Preview) {
+        } else if (mode === DrawerMode.Preview) {
             // nothing to do
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.PasteTile) {
+        } else if (mode === DrawerMode.PasteTile) {
             this._addCheckpoint();
             this._handlePasteTile(gridIndex);
 
-        } else if (mode === GameConfigGcMapEditor.DrawerMode.PasteUnit) {
+        } else if (mode === DrawerMode.PasteUnit) {
             this._addCheckpoint();
             this._handlePasteUnit(gridIndex);
 
         } else {
-            throw HelpersMisc.newError(`MeDrawer._handleAction() invalid mode.`);
+            throw newError(`MeDrawer._handleAction() invalid mode.`);
         }
 
         this._getWar().setIsMapModified(true);
     }
-    private _handleDrawTileBase(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handleDrawTileBase(gridIndex: GridIndex): void {
         const war               = this._getWar();
         const tileMap           = war.getTileMap();
-        const targetBaseData    = HelpersMisc.getExisted(this.getDrawTargetTileBaseData());
+        const targetBaseData    = getExisted(this.getDrawTargetTileBaseData());
         const baseType          = targetBaseData.baseType;
         const baseShapeId       = targetBaseData.shapeId;
         const gameConfig        = war.getGcData();
@@ -547,7 +568,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                 tile.setBaseType(baseType);
                 tile.setBaseShapeId(baseShapeId);
             } else {
-                const data = TilesUtilsSerialization.create({
+                const data = create({
                     gridIndex               : tile.getGridIndex().toProto().toJson(),
                     playerIndex             : tile.getPlayerIndex(),
                     objectType              : objectType,
@@ -570,14 +591,14 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                     customCrystalData       : null,
                     customLaserTurretData   : null,
                 });
-                TilesUtilsSerialization.fillNonTrivialDefaultValues(data, gameConfig);
+                fillNonTrivialDefaultValues(data, gameConfig);
 
                 tile.init(data, gameConfig);
             }
             tile.startRunning(war);
             tile.flushDataToView();
 
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+            dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
 
             if (isRealTileAdjust) {
                 for (const g of gridIndex.getGridsWithinDistance({
@@ -592,7 +613,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
 
         {
             const symmetryType = this.getSymmetricalDrawType();
-            const symGridIndex = MapEditorModelMeHelpers.getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
+            const symGridIndex = getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile          = tileMap.getTile(symGridIndex);
                 const objectType    = tile.getObjectType();
@@ -601,7 +622,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                     tile.setBaseType(baseType);
                     tile.setBaseShapeId(baseShapeId2);
                 } else {
-                    const data = TilesUtilsSerialization.create({
+                    const data = create({
                         gridIndex               : tile.getGridIndex().toProto().toJson(),
                         playerIndex             : tile.getPlayerIndex(),
                         objectType              : objectType,
@@ -624,14 +645,14 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                         customCrystalData       : null,
                         customLaserTurretData   : null,
                     });
-                    TilesUtilsSerialization.fillNonTrivialDefaultValues(data, gameConfig);
+                    fillNonTrivialDefaultValues(data, gameConfig);
 
                     tile.init(data, gameConfig);
                 }
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex: symGridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
 
                 if (isRealTileAdjust) {
                     for (const g of symGridIndex.getGridsWithinDistance({
@@ -645,11 +666,11 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
             }
         }
     }
-    private _handleDrawTileDecoration(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handleDrawTileDecoration(gridIndex: GridIndex): void {
         const war                   = this._getWar();
         const tileMap               = war.getTileMap();
         const gameConfig            = war.getGcData();
-        const targetDecorationData  = HelpersMisc.getExisted(this.getDrawTargetTileDecorationData());
+        const targetDecorationData  = getExisted(this.getDrawTargetTileDecorationData());
         const decorationType        = targetDecorationData.decorationType;
         const decorationShapeId     = targetDecorationData.shapeId;
         const isRealTileAdjust      = this.getIsRealTimeAdjust();
@@ -662,7 +683,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
             tile.startRunning(war);
             tile.flushDataToView();
 
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+            dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
 
             if (isRealTileAdjust) {
                 for (const g of gridIndex.getGridsWithinDistance({
@@ -677,7 +698,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
 
         {
             const symmetryType = this.getSymmetricalDrawType();
-            const symGridIndex = MapEditorModelMeHelpers.getSymmetricalGridIndex(gridIndex, symmetryType, mapSize);
+            const symGridIndex = getSymmetricalGridIndex(gridIndex, symmetryType, mapSize);
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile = tileMap.getTile(symGridIndex);
                 tile.setDecorationType(decorationType);
@@ -685,7 +706,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex: symGridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
 
                 if (isRealTileAdjust) {
                     for (const g of symGridIndex.getGridsWithinDistance({
@@ -699,12 +720,12 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
             }
         }
     }
-    private _handleDrawTileObject(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handleDrawTileObject(gridIndex: GridIndex): void {
         const war               = this._getWar();
         const gameConfig        = war.getGcData();
         const tileMap           = war.getTileMap();
         const unitMap           = war.getUnitMap();
-        const targetObjectData  = HelpersMisc.getExisted(this.getDrawTargetTileObjectData());
+        const targetObjectData  = getExisted(this.getDrawTargetTileObjectData());
         const objectType        = targetObjectData.objectType;
         const playerIndex       = targetObjectData.playerIndex;
         const objectShapeId     = targetObjectData.shapeId;
@@ -714,13 +735,13 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         {
             const tile      = tileMap.getTile(gridIndex);
             const baseType  = tile.getBaseType();
-            const tileType  = HelpersMisc.getExisted(gameConfig.getTileType(baseType, objectType));
+            const tileType  = getExisted(gameConfig.getTileType(baseType, objectType));
             if (tileType === tile.getTileTypeId()) {
                 tile.setPlayerIndex(playerIndex);
                 tile.setObjectType(objectType);
                 tile.setObjectShapeId(objectShapeId);
             } else {
-                const data = TilesUtilsSerialization.create({
+                const data = create({
                     gridIndex               : tile.getGridIndex().toProto().toJson(),
                     baseType                : baseType,
                     baseShapeId             : tile.getBaseShapeId(),
@@ -743,14 +764,14 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                     customCrystalData       : null,
                     customLaserTurretData   : null,
                 });
-                TilesUtilsSerialization.fillNonTrivialDefaultValues(data, gameConfig);
+                fillNonTrivialDefaultValues(data, gameConfig);
 
                 tile.init(data, gameConfig);
             }
             tile.startRunning(war);
             tile.flushDataToView();
 
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+            dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
 
             if (isRealTileAdjust) {
                 for (const g of gridIndex.getGridsWithinDistance({
@@ -765,12 +786,12 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
 
         {
             const symmetryType  = this.getSymmetricalDrawType();
-            const symGridIndex  = MapEditorModelMeHelpers.getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
+            const symGridIndex  = getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile          = tileMap.getTile(symGridIndex);
                 const baseType      = tile.getBaseType();
                 const objectType2   = gameConfig.getSymmetricalTileObjectType(objectType, symmetryType);
-                const tileType      = HelpersMisc.getExisted(gameConfig.getTileType(baseType, objectType2));
+                const tileType      = getExisted(gameConfig.getTileType(baseType, objectType2));
                 if ((!!gameConfig.getTileTemplateCfg(tileType)?.getMaxHp()) && (unitMap.getUnitOnMap(symGridIndex))) {
                     return;
                 }
@@ -782,7 +803,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                     tile.setObjectType(objectType2);
                     tile.setObjectShapeId(objectShapeId2 ?? 0);
                 } else {
-                    const data = TilesUtilsSerialization.create({
+                    const data = create({
                         gridIndex               : tile.getGridIndex().toProto().toJson(),
                         baseType                : tile.getBaseType(),
                         baseShapeId             : tile.getBaseShapeId(),
@@ -805,14 +826,14 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                         customCrystalData       : null,
                         customLaserTurretData   : null,
                     });
-                    TilesUtilsSerialization.fillNonTrivialDefaultValues(data, gameConfig);
+                    fillNonTrivialDefaultValues(data, gameConfig);
 
                     tile.init(data, gameConfig);
                 }
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex: symGridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
 
                 if (isRealTileAdjust) {
                     for (const g of symGridIndex.getGridsWithinDistance({
@@ -826,16 +847,16 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
             }
         }
     }
-    private _handleDrawUnit(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handleDrawUnit(gridIndex: GridIndex): void {
         this._handleDeleteUnit(gridIndex);
 
         const war           = this._getWar();
         const gameConfig    = war.getGcData();
         const unitMap       = war.getUnitMap();
         const unitId        = unitMap.getNextUnitId();
-        const targetUnit    = HelpersMisc.getExisted(this.getDrawTargetUnit());
-        const unit          = new (GameHelpersGhFactory.getUnitClass())();
-        unit.init(UnitsUtilsSerialization.createDefault({
+        const targetUnit    = getExisted(this.getDrawTargetUnit());
+        const unit          = new (getUnitClass())();
+        unit.init(createDefault({
             gridIndex   : gridIndex.getXY(),
             playerIndex : targetUnit.getPlayerIndex(),
             unitTypeId  : targetUnit.getUnitType(),
@@ -848,27 +869,27 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         unitMap.setUnitOnMap(unit);
         unitMap.setNextUnitId(unitId + 1);
 
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwUnitChanged, { gridIndex } as NotificationsDataTypes.BwUnitChanged);
+        dispatch(TypeId.BwUnitChanged, { gridIndex } as BwUnitChanged);
     }
-    private _handleDeleteTileDecoration(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handleDeleteTileDecoration(gridIndex: GridIndex): void {
         const tileMap   = this._getWar().getTileMap();
         const tile      = tileMap.getTile(gridIndex);
         tile.deleteTileDecoration();
         tile.flushDataToView();
 
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+        dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
 
         const symmetryType = this.getSymmetricalDrawType();
-        const symGridIndex = MapEditorModelMeHelpers.getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
+        const symGridIndex = getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
         if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
             const t2 = tileMap.getTile(symGridIndex);
             t2.deleteTileDecoration();
             t2.flushDataToView();
 
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex: symGridIndex } as NotificationsDataTypes.BwTileChanged);
+            dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
         }
     }
-    private _handleDeleteTileObject(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handleDeleteTileObject(gridIndex: GridIndex): void {
         const war       = this._getWar();
         const gcData    = war.getGcData();
         const tileMap   = war.getTileMap();
@@ -879,45 +900,45 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
             this.startRunning(war);
             tile.flushDataToView();
 
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+            dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
         }
 
         {
             const symmetryType = this.getSymmetricalDrawType();
-            const symGridIndex = MapEditorModelMeHelpers.getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
+            const symGridIndex = getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile = tileMap.getTile(symGridIndex);
                 tile.init(generateSerialTileForDeleteTileObject(tile, gcData), gcData);
                 this.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex: symGridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
             }
         }
     }
-    private _handleDeleteUnit(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handleDeleteUnit(gridIndex: GridIndex): void {
         const unit = this._getWar().getUnitMap().getUnitOnMap(gridIndex);
         if (unit) {
             const war = this._getWar();
-            DestructionsUtils.destroyUnitOnMap(war, gridIndex, true);
+            destroyUnitOnMap(war, gridIndex, true);
             if (unit.getIsCoOnboard()) {
                 war.getTileMap().getView().updateCoZone();
             }
 
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwUnitChanged, { gridIndex } as NotificationsDataTypes.BwUnitChanged);
+            dispatch(TypeId.BwUnitChanged, { gridIndex } as BwUnitChanged);
         }
     }
-    private _handleAddTileToLocation(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handleAddTileToLocation(gridIndex: GridIndex): void {
         this._getWar().getTileMap().getTile(gridIndex).setHasLocationIdWithLocationIdArray(this.getDataForAddTileToLocation()?.locationIdArray ?? [], true);
     }
-    private _handleDeleteTileFromLocation(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handleDeleteTileFromLocation(gridIndex: GridIndex): void {
         this._getWar().getTileMap().getTile(gridIndex).setHasLocationIdWithLocationIdArray(this.getDataForDeleteTileFromLocation()?.locationIdArray ?? [], false);
     }
-    private _handlePasteTile(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handlePasteTile(gridIndex: GridIndex): void {
         const war               = this._getWar();
         const gameConfig        = war.getGcData();
         const unitMap           = war.getUnitMap();
-        const srcTileData       = HelpersMisc.getExisted(this.getDataForPasteTile());
+        const srcTileData       = getExisted(this.getDataForPasteTile());
         const srcBaseType       = srcTileData.getBaseType() ?? 0;
         const srcObjectType     = srcTileData.getObjectType() ?? 0;
         const tileMap           = war.getTileMap();
@@ -933,7 +954,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
             tile.startRunning(war);
             tile.flushDataToView();
 
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+            dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
 
             if (isRealTileAdjust) {
                 for (const g of gridIndex.getGridsWithinDistance({
@@ -948,11 +969,11 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
 
         {
             const symmetryType = this.getSymmetricalDrawType();
-            const symGridIndex = MapEditorModelMeHelpers.getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
+            const symGridIndex = getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const newBaseType   = srcBaseType;
                 const newObjectType = gameConfig.getSymmetricalTileObjectType(srcObjectType, symmetryType);
-                const newTileType   = HelpersMisc.getExisted(gameConfig.getTileType(newBaseType, newObjectType));
+                const newTileType   = getExisted(gameConfig.getTileType(newBaseType, newObjectType));
                 if ((!!gameConfig.getTileTemplateCfg(newTileType)?.getMaxHp()) && (unitMap.getUnitOnMap(symGridIndex))) {
                     return;
                 }
@@ -976,7 +997,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex: symGridIndex } as NotificationsDataTypes.BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
 
                 if (isRealTileAdjust) {
                     for (const g of symGridIndex.getGridsWithinDistance({
@@ -990,7 +1011,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
             }
         }
     }
-    private _handlePasteUnit(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _handlePasteUnit(gridIndex: GridIndex): void {
         this._handleDeleteUnit(gridIndex);
 
         const war                   = this._getWar();
@@ -1003,13 +1024,13 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
             if (!revisedUnitIdDict.has(rawUnitId)) {
                 revisedUnitIdDict.set(rawUnitId, nextUnitId++);
             }
-            return HelpersMisc.getExisted(revisedUnitIdDict.get(rawUnitId));
+            return getExisted(revisedUnitIdDict.get(rawUnitId));
         };
 
         const addedUnits: IUnit[] = [];
         for (const rawUnit of this.getDataForPasteUnit() ?? []) {
             const unitData = rawUnit.serialize();
-            unitData.setUnitId(getRevisedUnitIdDict(HelpersMisc.getExisted(unitData.getUnitId())));
+            unitData.setUnitId(getRevisedUnitIdDict(getExisted(unitData.getUnitId())));
             unitData.setGridIndex(gridIndex.toProto());
 
             const rawLoaderUnitId = unitData.getLoaderUnitId();
@@ -1017,7 +1038,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
                 unitData.setLoaderUnitId(getRevisedUnitIdDict(rawLoaderUnitId));
             }
 
-            const unit = new (GameHelpersGhFactory.getUnitClass())();
+            const unit = new (getUnitClass())();
             unit.init(unitData, gameConfig);
             unit.startRunning(this._getWar());
             addedUnits.push(unit);
@@ -1037,36 +1058,36 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
 
         unitMap.setNextUnitId(nextUnitId);
 
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwUnitChanged, { gridIndex } as NotificationsDataTypes.BwUnitChanged);
+        dispatch(TypeId.BwUnitChanged, { gridIndex } as BwUnitChanged);
     }
 
-    private _adjustTile(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    private _adjustTile(gridIndex: GridIndex): void {
         const war               = this._getWar();
         const tileMap           = war.getTileMap();
         const tile              = tileMap.getTile(gridIndex);
         const baseType          = tile.getBaseType();
         const oldBaseShapeId    = tile.getBaseShapeId();
         let newBaseShapeId      = oldBaseShapeId;
-        if (baseType === TilesConstantsCommon.BaseTypeId.River) {
-            newBaseShapeId = MapEditorModelMeHelpers.getAutoRiverShapeId(tileMap, gridIndex);
-        } else if (baseType === TilesConstantsCommon.BaseTypeId.Beach) {
-            newBaseShapeId = MapEditorModelMeHelpers.getAutoBeachShapeId(tileMap, gridIndex);
-        } else if (baseType === TilesConstantsCommon.BaseTypeId.Sea) {
-            newBaseShapeId = MapEditorModelMeHelpers.getAutoSeaShapeId(tileMap, gridIndex);
+        if (baseType === BaseTypeId.River) {
+            newBaseShapeId = getAutoRiverShapeId(tileMap, gridIndex);
+        } else if (baseType === BaseTypeId.Beach) {
+            newBaseShapeId = getAutoBeachShapeId(tileMap, gridIndex);
+        } else if (baseType === BaseTypeId.Sea) {
+            newBaseShapeId = getAutoSeaShapeId(tileMap, gridIndex);
         }
         tile.setBaseShapeId(newBaseShapeId);
 
         const objectType        = tile.getObjectType();
         const oldObjectShapeId  = tile.getObjectShapeId();
         let newObjectShapeId    = oldObjectShapeId;
-        if (objectType === TilesConstantsCommon.ObjectTypeId.Road) {
-            newObjectShapeId = MapEditorModelMeHelpers.getAutoRoadShapeId(tileMap, gridIndex, this.getRoadConnectTileTypeArray());
-        } else if (objectType === TilesConstantsCommon.ObjectTypeId.Bridge) {
-            newObjectShapeId = MapEditorModelMeHelpers.getAutoBridgeShapeId(tileMap, gridIndex, this.getBridgeConnectTileTypeArray());
-        } else if (objectType === TilesConstantsCommon.ObjectTypeId.Plasma) {
-            newObjectShapeId = MapEditorModelMeHelpers.getAutoPlasmaShapeId(tileMap, gridIndex);
-        } else if (objectType === TilesConstantsCommon.ObjectTypeId.Pipe) {
-            newObjectShapeId = MapEditorModelMeHelpers.getAutoPipeShapeId(tileMap, gridIndex);
+        if (objectType === ObjectTypeId.Road) {
+            newObjectShapeId = getAutoRoadShapeId(tileMap, gridIndex, this.getRoadConnectTileTypeArray());
+        } else if (objectType === ObjectTypeId.Bridge) {
+            newObjectShapeId = getAutoBridgeShapeId(tileMap, gridIndex, this.getBridgeConnectTileTypeArray());
+        } else if (objectType === ObjectTypeId.Plasma) {
+            newObjectShapeId = getAutoPlasmaShapeId(tileMap, gridIndex);
+        } else if (objectType === ObjectTypeId.Pipe) {
+            newObjectShapeId = getAutoPipeShapeId(tileMap, gridIndex);
         }
         tile.setObjectShapeId(newObjectShapeId);
 
@@ -1075,7 +1096,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         const {
             decorationType  : newDecorationType,
             shapeId         : newDecorationShapeId,
-        } = MapEditorModelMeHelpers.getAutoTileDecorationTypeAndShapeId(tileMap, gridIndex);
+        } = getAutoTileDecorationTypeAndShapeId(tileMap, gridIndex);
         tile.setDecorationType(newDecorationType);
         tile.setDecorationShapeId(newDecorationShapeId);
 
@@ -1087,7 +1108,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
             tile.startRunning(war);
             tile.flushDataToView();
 
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex } as NotificationsDataTypes.BwTileChanged);
+            dispatch(TypeId.BwTileChanged, { gridIndex } as BwTileChanged);
         }
     }
 
@@ -1095,14 +1116,14 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
     public loadNextCheckpoint(): void {
         const arr = this._checkpointArray;
         if (this._currentCheckpointIndex >= arr.length - 1) {
-            FloatText2.showLang(LangConstants.TextType.A0319);
+            showLang(TextType.A0319);
         } else {
             this._loadCheckpoint(arr[++this._currentCheckpointIndex]);
         }
     }
     public loadPreviousCheckpoint(): void {
         if (this._currentCheckpointIndex <= 0) {
-            FloatText2.showLang(LangConstants.TextType.A0319);
+            showLang(TextType.A0319);
         } else {
             const arr = this._checkpointArray;
             if (this._currentCheckpointIndex < arr.length) {
@@ -1119,7 +1140,7 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
         war.getField().init({
             data                    : data,
             gameConfig              : war.getGcData(),
-            playersCountUnneutral   : PlayersConstants.PlayerIndex.Max,
+            playersCountUnneutral   : PlayerIndex.Max,
         });
         war.startRunning();
         war.startRunningView();
@@ -1140,16 +1161,16 @@ export class MeDrawer implements MapEditorInterfaceIMeDrawer.IMeDrawer {
     }
 }
 
-function generateSerialTileForDeleteTileObject(tile: TilesITile.ITile, gcData: GameConfigGcData.GcData): SerialTile {
+function generateSerialTileForDeleteTileObject(tile: ITile, gcData: GcData): SerialTile {
     const data = tile.serialize();
-    data.setPlayerIndex(PlayersConstants.PlayerIndex.Neutral);
-    data.setObjectType(TilesConstantsCommon.ObjectTypeId.Empty);
+    data.setPlayerIndex(PlayerIndex.Neutral);
+    data.setObjectType(ObjectTypeId.Empty);
     data.setObjectShapeId(0);
     data.setCustomBuildingData(null);
     data.setCustomCannonData(null);
     data.setCustomCrystalData(null);
     data.setCustomLaserTurretData(null);
-    TilesUtilsSerialization.fillNonTrivialDefaultValues(data, gcData);
+    fillNonTrivialDefaultValues(data, gcData);
 
     return data;
 }

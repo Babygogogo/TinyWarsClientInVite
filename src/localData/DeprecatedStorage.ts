@@ -1,22 +1,25 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as HelpersGzip from "../helpers/Gzip.ts";
-import * as LocalDataConstants from "./Constants.ts";
-import * as Logger2 from "../Logger.ts";
-import * as ProtoSchemaCommonProtoMapMapEditorData from "../proto/schema/CommonProto/Map/MapEditorData.ts";
-import * as ProtoSchemaCommonProtoMapMapRawData from "../proto/schema/CommonProto/Map/MapRawData.ts";
+import type {
+    DecodedMapEditorData as AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData,
+    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { compress, decompress } from "../helpers/Gzip.ts";
+import { OldDatabaseName } from "./Constants.ts";
+import { warn } from "../Logger.ts";
+import { MapEditorData } from "../proto/schema/CommonProto/Map/MapEditorData.ts";
+import { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
 
-type DecodedMapEditorData   = AuxiliaryTypesAuxiliaryTypes.DecodedMapEditorData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type DecodedMapEditorData   = AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 namespace IndexedDb {
-    const DatabaseName      = LocalDataConstants.OldDatabaseName;
+    const DatabaseName      = OldDatabaseName;
     const DatabaseVersion   = 5;
 
     export function initDatabase(): Promise<void> {
         return new Promise<void>(resolve => {
             const request       = window.indexedDB.open(DatabaseName, DatabaseVersion);
             request.onsuccess   = () => {
-                Logger2.warn(`IndexedDB init successfully.`);
+                warn(`IndexedDB init successfully.`);
 
                 const database = request.result;
                 StoreNormalMapRawData.setDatabase(database);
@@ -26,7 +29,7 @@ namespace IndexedDb {
                 resolve();
             };
             request.onupgradeneeded = () => {
-                Logger2.warn(`IndexedDB upgrade successfully.`);
+                warn(`IndexedDB upgrade successfully.`);
 
                 const database = request.result;
                 StoreNormalMapRawData.initStore(database);
@@ -34,7 +37,7 @@ namespace IndexedDb {
                 StoreCampaignMapRawData.initStore(database);
             };
             request.onerror     = () => {
-                Logger2.warn(`IndexedDB failed to init.`);
+                warn(`IndexedDB failed to init.`);
 
                 resolve();
             };
@@ -397,14 +400,14 @@ export function init(): Promise<void> {
     return IndexedDb.initDatabase();
 }
 
-export const StoreNormalMapRawData = new IndexedDb.Store1<number, ProtoSchemaCommonProtoMapMapRawData.MapRawData, Uint8Array>({
+export const StoreNormalMapRawData = new IndexedDb.Store1<number, MapRawData, Uint8Array>({
     storeName           : "NormalMapRawData",
-    encode              : mapRawData    => HelpersGzip.compress(mapRawData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoMapMapRawData.MapRawData.decode(HelpersGzip.decompress(encodedData))
+    encode              : mapRawData    => compress(mapRawData.encode()),
+    decode              : encodedData   => MapRawData.decode(decompress(encodedData))
 });
 export const StoreMeFullData = new IndexedDb.Store2<DecodedMapEditorData, Uint8Array>({    // userId, slotIndex
     storeName           : "MeFullData",
-    encode              : data => HelpersGzip.compress(ProtoSchemaCommonProtoMapMapEditorData.MapEditorData.fromJson({
+    encode              : data => compress(MapEditorData.fromJson({
         slotIndex                   : data.slotIndex,
         reviewComment               : data.reviewComment,
         reviewStatus                : data.reviewStatus,
@@ -414,21 +417,21 @@ export const StoreMeFullData = new IndexedDb.Store2<DecodedMapEditorData, Uint8A
         gridMarkData                : data.gridMarkData?.toJson(),
     }).encode()),
     decode              : encodedData => {
-        const data              = ProtoSchemaCommonProtoMapMapEditorData.MapEditorData.decode(HelpersGzip.decompress(encodedData));
+        const data              = MapEditorData.decode(decompress(encodedData));
         const encodedMapRawData = data.getEncodedMapRawData();
         return {
             slotIndex                   : data.getSlotIndex() ?? 0,
             reviewComment               : data.getReviewComment() ?? null,
             reviewStatus                : data.getReviewStatus() ?? 0,
-            mapRawData                  : encodedMapRawData ? ProtoSchemaCommonProtoMapMapRawData.MapRawData.decode(encodedMapRawData) : null,
+            mapRawData                  : encodedMapRawData ? MapRawData.decode(encodedMapRawData) : null,
             dataTimestamp               : data.getDataTimestamp() ?? 0,
             srcNormalMapIdForAddEvent   : data.getSrcNormalMapIdForAddEvent() ?? null,
             gridMarkData                : data.getGridMarkData(),
         };
     }
 });
-export const StoreCampaignMapRawData = new IndexedDb.Store2<ProtoSchemaCommonProtoMapMapRawData.MapRawData, Uint8Array>({
+export const StoreCampaignMapRawData = new IndexedDb.Store2<MapRawData, Uint8Array>({
     storeName           : "CampaignMapRawData",
-    encode              : mapRawData    => HelpersGzip.compress(mapRawData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoMapMapRawData.MapRawData.decode(HelpersGzip.decompress(encodedData))
+    encode              : mapRawData    => compress(mapRawData.encode()),
+    decode              : encodedData   => MapRawData.decode(decompress(encodedData))
 });

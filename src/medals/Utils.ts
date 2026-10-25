@@ -1,10 +1,10 @@
-import * as MedalsConstants from "./Constants.ts";
-import type * as MedalsTypes from "./Types.ts";
+import { CfgDict } from "./Constants.ts";
+import type { MedalCfg } from "./Types.ts";
 
-export function getMedalCfg(medalId: number): MedalsTypes.MedalCfg | null {
-    return MedalsConstants.CfgDict.get(medalId) ?? null;
+export function getMedalCfg(medalId: number): MedalCfg | null {
+    return CfgDict.get(medalId) ?? null;
 }
 
 export function checkHasMedal(medalId: number): boolean {
-    return MedalsConstants.CfgDict.has(medalId);
+    return CfgDict.has(medalId);
 }

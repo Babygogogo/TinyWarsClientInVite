@@ -1,19 +1,21 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as CosUtils from "../../cos/Utils.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as PlayerRulesUtils from "../../playerRules/Utils.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type * as ProtoSchemaCommonProtoWarRuleInstanceWarRule from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import * as WarRulesUtilsCommonData from "../../warRules/utils/CommonData.ts";
-import * as WarRulesUtilsInstance from "../../warRules/utils/Instance.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { pickRandomCo } from "../../cos/Utils.ts";
+import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getNonNullElements } from "../../helpers/Collection.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getFinalMfwHumanCoIdSet } from "../../playerRules/Utils.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
+import type {
+    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
+import { createDefault, create } from "../../warRules/utils/Instance.ts";
 
-type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
-type MapRawData         = ProtoSchemaCommonProtoMapMapRawData.MapRawData;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar;
+type MapRawData         = ProtoSchemaCommonProtoMapMapRawData;
+type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 let _mapRawData : MapRawData;
 let _warData    : SerialWar;
@@ -39,21 +41,21 @@ export async function resetData(mapRawData: MapRawData, warData: SerialWar): Pro
 
 export function checkIsValidWarData(): boolean {
     const teamIndexSet = new Set<number>();
-    for (const player of HelpersMisc.getExisted(getInstanceWarRule().getWarRuleCommonData()?.getPlayerRuleList())) {
-        teamIndexSet.add(HelpersMisc.getExisted(player.getTeamIndex()));
+    for (const player of getExisted(getInstanceWarRule().getWarRuleCommonData()?.getPlayerRuleList())) {
+        teamIndexSet.add(getExisted(player.getTeamIndex()));
     }
     return teamIndexSet.size > 1;
 }
 
-export function getInstanceWarRule(): ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule {
-    return HelpersMisc.getExisted(getWarData().getSettingsForCommon()?.getInstanceWarRule());
+export function getInstanceWarRule(): InstanceWarRule {
+    return getExisted(getWarData().getSettingsForCommon()?.getInstanceWarRule());
 }
 
 export function reviseInstanceWarRuleForAi(): void {
     setCustomWarRuleId();
 
-    const playerRuleArray = HelpersMisc.getExisted(getInstanceWarRule().getWarRuleCommonData()?.getPlayerRuleList());
-    for (const player of HelpersMisc.getExisted(getWarData().getPlayerManager()?.getPlayers())) {
+    const playerRuleArray = getExisted(getInstanceWarRule().getWarRuleCommonData()?.getPlayerRuleList());
+    for (const player of getExisted(getWarData().getPlayerManager()?.getPlayers())) {
         const playerRule = playerRuleArray.find(v => v.getPlayerIndex() === player.getPlayerIndex());
         if (playerRule == null) {
             continue;
@@ -64,30 +66,30 @@ export function reviseInstanceWarRuleForAi(): void {
 }
 
 async function resetDataByTemplateWarRuleId(templateWarRuleId: Undefinable<number>): Promise<void> {
-    const warData               = HelpersMisc.getExisted(getWarData());
-    const settingsForCommon     = HelpersMisc.getExisted(warData.getSettingsForCommon());
+    const warData               = getExisted(getWarData());
+    const settingsForCommon     = getExisted(warData.getSettingsForCommon());
     const mapRawData            = getMapRawData();
-    const playersCountUnneutral = HelpersMisc.getExisted(mapRawData.getPlayersCountUnneutral());
-    const gameConfig            = await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(settingsForCommon.getConfigVersion()));
+    const playersCountUnneutral = getExisted(mapRawData.getPlayersCountUnneutral());
+    const gameConfig            = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));
 
     if (templateWarRuleId == null) {
-        settingsForCommon.setInstanceWarRule(WarRulesUtilsInstance.createDefault(playersCountUnneutral, gameConfig));
+        settingsForCommon.setInstanceWarRule(createDefault(playersCountUnneutral, gameConfig));
     } else {
-        settingsForCommon.setInstanceWarRule(WarRulesUtilsInstance.create({
-            templateWarRule             : HelpersMisc.getExisted(mapRawData.getTemplateWarRuleArray().find(v => v.getRuleId() === templateWarRuleId)),
+        settingsForCommon.setInstanceWarRule(create({
+            templateWarRule             : getExisted(mapRawData.getTemplateWarRuleArray().find(v => v.getRuleId() === templateWarRuleId)),
             warEventFullData            : mapRawData.getWarEventFullData(),
             allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
             taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
         }));
     }
 
-    const players           = HelpersMisc.getExisted(warData.getPlayerManager()?.getPlayers());
-    const warRuleCommonData = HelpersMisc.getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
+    const players           = getExisted(warData.getPlayerManager()?.getPlayers());
+    const warRuleCommonData = getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
     const hasFogByDefault   = warRuleCommonData.getHasFogByDefault();
-    for (let playerIndex = PlayersConstants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
-        HelpersMisc.getExisted(players.find(v => v.getPlayerIndex() === playerIndex)).setCoId(
-            CosUtils.pickRandomCo([...PlayerRulesUtils.getFinalMfwHumanCoIdSet({
-                playerRule      : WarRulesUtilsCommonData.getPlayerRule(warRuleCommonData, playerIndex),
+    for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
+        getExisted(players.find(v => v.getPlayerIndex() === playerIndex)).setCoId(
+            pickRandomCo([...getFinalMfwHumanCoIdSet({
+                playerRule      : getPlayerRule(warRuleCommonData, playerIndex),
                 gameConfig      : gameConfig,
                 hasFogByDefault : hasFogByDefault,
                 includeRandom   : true,
@@ -103,11 +105,11 @@ export function getTemplateWarRuleId(): Undefinable<number> {
 }
 export async function tickTemplateWarRuleId(): Promise<void> {
     const currTemplateWarRuleId = getTemplateWarRuleId();
-    const templateWarRuleArray  = HelpersMisc.getExisted(getMapRawData().getTemplateWarRuleArray());
+    const templateWarRuleArray  = getExisted(getMapRawData().getTemplateWarRuleArray());
     if (currTemplateWarRuleId == null) {
-        await resetDataByTemplateWarRuleId(HelpersMisc.getExisted(templateWarRuleArray[0].getRuleId()));
+        await resetDataByTemplateWarRuleId(getExisted(templateWarRuleArray[0].getRuleId()));
     } else {
-        const newTemplateWarRuleId = HelpersCollection.getNonNullElements(templateWarRuleArray.map(v => v.getRuleId())).sort((v1, v2) => {
+        const newTemplateWarRuleId = getNonNullElements(templateWarRuleArray.map(v => v.getRuleId())).sort((v1, v2) => {
             if (v1 > currTemplateWarRuleId) {
                 return (v2 <= currTemplateWarRuleId) ? -1 : v1 - v2;
             } else {

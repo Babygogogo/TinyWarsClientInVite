@@ -1,56 +1,56 @@
-import * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ReplayWarModelRwModel from "../../replayWar/model/RwModel.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../Model.ts";
-import type * as WarTypesConstants from "../../warTypes/Constants.ts";
+import { UserWarHistoryType } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import { gotoReplayWar } from "../../helpers/GameFlow.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getWarTypeName, getTimestampShortText } from "../../lang/Utils.ts";
+import { getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getReplayData } from "../../replayWar/model/RwModel.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getUserPublicInfo } from "../Model.ts";
+import type { WarTypeId } from "../../warTypes/Constants.ts";
 
 export type OpenData = {
     userId      : number;
-    historyType : AuxiliaryTypesAuxiliaryTypes.UserWarHistoryType;
+    historyType : UserWarHistoryType;
 };
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
 
-    private readonly _btnRankStd!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _imgRankStd!       : UiInterfacesIUiImage.IUiImage;
-    private readonly _btnRankFow!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _imgRankFow!       : UiInterfacesIUiImage.IUiImage;
-    private readonly _btnUnranked!      : UiInterfacesIUiButton.IUiButton;
-    private readonly _imgUnranked!      : UiInterfacesIUiImage.IUiImage;
+    private readonly _btnRankStd!       : IUiButton;
+    private readonly _imgRankStd!       : IUiImage;
+    private readonly _btnRankFow!       : IUiButton;
+    private readonly _imgRankFow!       : IUiImage;
+    private readonly _btnUnranked!      : IUiButton;
+    private readonly _imgUnranked!      : IUiImage;
 
-    private readonly _labelMapName!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTimestamp!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRankScore!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelWarType!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelNoData!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelMapName!     : IUiLabel;
+    private readonly _labelTimestamp!   : IUiLabel;
+    private readonly _labelRankScore!   : IUiLabel;
+    private readonly _labelWarType!     : IUiLabel;
+    private readonly _labelNoData!      : IUiLabel;
 
-    private readonly _listRanked!       : UiInterfacesIUiScrollList.IUiScrollList<DataForRankedRenderer>;
-    private readonly _listUnranked!     : UiInterfacesIUiScrollList.IUiScrollList<DataForUnrankedRenderer>;
+    private readonly _listRanked!       : IUiScrollList<DataForRankedRenderer>;
+    private readonly _listUnranked!     : IUiScrollList<DataForUnrankedRenderer>;
 
-    private _historyType = AuxiliaryTypesAuxiliaryTypes.UserWarHistoryType.RankStd;
+    private _historyType = UserWarHistoryType.RankStd;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgUserGetPublicInfo,    callback: this._onNotifyMsgUserGetPublicInfo },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgUserGetPublicInfo,    callback: this._onNotifyMsgUserGetPublicInfo },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -96,17 +96,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnRankFow(): void {
-        this._historyType = AuxiliaryTypesAuxiliaryTypes.UserWarHistoryType.RankFow;
+        this._historyType = UserWarHistoryType.RankFow;
         this._updateComponentsForHistory();
     }
 
     private _onTouchedBtnRankStd(): void {
-        this._historyType = AuxiliaryTypesAuxiliaryTypes.UserWarHistoryType.RankStd;
+        this._historyType = UserWarHistoryType.RankStd;
         this._updateComponentsForHistory();
     }
 
     private _onTouchedBtnUnranked(): void {
-        this._historyType = AuxiliaryTypesAuxiliaryTypes.UserWarHistoryType.Unranked;
+        this._historyType = UserWarHistoryType.Unranked;
         this._updateComponentsForHistory();
     }
 
@@ -120,15 +120,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0201));
-        this._labelMapName.setText(LangUtils.getText(LangConstants.TextType.B0225));
-        this._labelTimestamp.setText(LangUtils.getText(LangConstants.TextType.EndTime));
-        this._labelRankScore.setText(LangUtils.getText(LangConstants.TextType.B0060));
-        this._labelWarType.setText(LangUtils.getText(LangConstants.TextType.B0599));
-        this._labelNoData.setText(LangUtils.getText(LangConstants.TextType.B0278));
-        this._btnRankFow.setText(LangUtils.getText(LangConstants.TextType.B0416));
-        this._btnRankStd.setText(LangUtils.getText(LangConstants.TextType.B0415));
-        this._btnUnranked.setText(LangUtils.getText(LangConstants.TextType.B0912));
+        this._labelTitle.setText(getText(TextType.B0201));
+        this._labelMapName.setText(getText(TextType.B0225));
+        this._labelTimestamp.setText(getText(TextType.EndTime));
+        this._labelRankScore.setText(getText(TextType.B0060));
+        this._labelWarType.setText(getText(TextType.B0599));
+        this._labelNoData.setText(getText(TextType.B0278));
+        this._btnRankFow.setText(getText(TextType.B0416));
+        this._btnRankStd.setText(getText(TextType.B0415));
+        this._btnUnranked.setText(getText(TextType.B0912));
     }
 
     private async _updateComponentsForHistory(): Promise<void> {
@@ -149,7 +149,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         labelWarType.setIsVisible(false);
         labelRankScore.setIsVisible(false);
 
-        if (historyType === AuxiliaryTypesAuxiliaryTypes.UserWarHistoryType.RankFow) {
+        if (historyType === UserWarHistoryType.RankFow) {
             listRanked.setIsVisible(true);
             labelRankScore.setIsVisible(true);
             imgRankFow.setIsVisible(true);
@@ -159,7 +159,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             labelNoData.setIsVisible(!dataArray.length);
             await listRanked.bindData(dataArray);
 
-        } else if (historyType === AuxiliaryTypesAuxiliaryTypes.UserWarHistoryType.RankStd) {
+        } else if (historyType === UserWarHistoryType.RankStd) {
             listRanked.setIsVisible(true);
             labelRankScore.setIsVisible(true);
             imgRankStd.setIsVisible(true);
@@ -188,14 +188,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const dataArray: DataForRankedRenderer[] = [];
-        for (const data of ((await UsersModel.getUserPublicInfo(userId))?.getUserWarHistory()?.getMpwRankedStdHistoryArray() ?? []).concat().reverse()) {
+        for (const data of ((await getUserPublicInfo(userId))?.getUserWarHistory()?.getMpwRankedStdHistoryArray() ?? []).concat().reverse()) {
             dataArray.push({
                 index       : dataArray.length + 1,
                 isLast      : false,
                 normalMapId : data.getNormalMapId() ?? null,
-                timestamp   : HelpersMisc.getExisted(data.getEndTimestamp()),
-                newScore    : HelpersMisc.getExisted(data.getNewScore()),
-                deltaScore  : HelpersMisc.getExisted(data.getDeltaScore()),
+                timestamp   : getExisted(data.getEndTimestamp()),
+                newScore    : getExisted(data.getNewScore()),
+                deltaScore  : getExisted(data.getDeltaScore()),
                 replayId    : data.getReplayId() ?? null,
             });
         }
@@ -213,14 +213,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const dataArray: DataForRankedRenderer[] = [];
-        for (const data of ((await UsersModel.getUserPublicInfo(userId))?.getUserWarHistory()?.getMpwRankedFowHistoryArray() ?? []).concat().reverse()) {
+        for (const data of ((await getUserPublicInfo(userId))?.getUserWarHistory()?.getMpwRankedFowHistoryArray() ?? []).concat().reverse()) {
             dataArray.push({
                 index       : dataArray.length + 1,
                 isLast      : false,
                 normalMapId : data.getNormalMapId() ?? null,
-                timestamp   : HelpersMisc.getExisted(data.getEndTimestamp()),
-                newScore    : HelpersMisc.getExisted(data.getNewScore()),
-                deltaScore  : HelpersMisc.getExisted(data.getDeltaScore()),
+                timestamp   : getExisted(data.getEndTimestamp()),
+                newScore    : getExisted(data.getNewScore()),
+                deltaScore  : getExisted(data.getDeltaScore()),
                 replayId    : data.getReplayId() ?? null,
             });
         }
@@ -238,13 +238,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const dataArray: DataForUnrankedRenderer[] = [];
-        for (const data of ((await UsersModel.getUserPublicInfo(userId))?.getUserWarHistory()?.getMpwUnrankedHistoryArray() ?? []).concat().reverse()) {
+        for (const data of ((await getUserPublicInfo(userId))?.getUserWarHistory()?.getMpwUnrankedHistoryArray() ?? []).concat().reverse()) {
             dataArray.push({
                 index       : dataArray.length + 1,
                 isLast      : false,
                 normalMapId : data.getNormalMapId() ?? null,
-                timestamp   : HelpersMisc.getExisted(data.getEndTimestamp()),
-                warType     : HelpersMisc.getExisted(data.getWarType()),
+                timestamp   : getExisted(data.getEndTimestamp()),
+                warType     : getExisted(data.getWarType()),
                 replayId    : data.getReplayId() ?? null,
             });
         }
@@ -257,22 +257,22 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForUnrankedRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForUnrankedRenderer extends UiListItemData {
     index       : number;
     isLast      : boolean;
     normalMapId : number | null;
     timestamp   : number;
-    warType     : WarTypesConstants.WarTypeId;
+    warType     : WarTypeId;
     replayId    : number | null;
 }
-class UnrankedRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForUnrankedRenderer> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBg!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgBottom!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelMapName!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTimestamp!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelWarType!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnReplay!        : UiInterfacesIUiButton.IUiButton;
+class UnrankedRenderer extends UiListItemRenderer<DataForUnrankedRenderer> {
+    private readonly _group!            : IUiContainer;
+    private readonly _imgBg!            : IUiImage;
+    private readonly _imgBottom!        : IUiImage;
+    private readonly _labelMapName!     : IUiLabel;
+    private readonly _labelTimestamp!   : IUiLabel;
+    private readonly _labelWarType!     : IUiLabel;
+    private readonly _btnReplay!        : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -286,16 +286,16 @@ class UnrankedRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
     private async _onTouchedBtnReplay(): Promise<void> {
         const replayId = this.getOpenData()?.replayId;
         if (replayId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonBlockPanel, {
-                title   : LangUtils.getText(LangConstants.TextType.B0088),
-                content : LangUtils.getText(LangConstants.TextType.A0040),
+            openPanel(getDict().CommonBlockPanel, {
+                title   : getText(TextType.B0088),
+                content : getText(TextType.A0040),
             });
 
-            const data = await ReplayWarModelRwModel.getReplayData(replayId);
+            const data = await getReplayData(replayId);
             if (data) {
-                HelpersGameFlow.gotoReplayWar(data, HelpersMisc.getExisted(replayId));
+                gotoReplayWar(data, getExisted(replayId));
             } else {
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonBlockPanel);
+                closePanel(getDict().CommonBlockPanel);
             }
         }
     }
@@ -312,14 +312,14 @@ class UnrankedRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
         const normalMapId = openData.normalMapId;
         this._imgBg.setAlpha(openData.index % 2 == 1 ? 0.2 : 0.5);
         this._imgBottom.setIsVisible(openData.isLast);
-        this._labelWarType.setText(LangUtils.getWarTypeName(openData.warType) ?? LangConstants.UndefinedError);
+        this._labelWarType.setText(getWarTypeName(openData.warType) ?? UndefinedError);
         this._labelTimestamp.setText(getTextForTimestamp(openData.timestamp));
-        this._labelMapName.setText(normalMapId == null ? `--` : (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId) ?? LangConstants.UndefinedError));
+        this._labelMapName.setText(normalMapId == null ? `--` : (await getMapNameInCurrentLanguage(normalMapId) ?? UndefinedError));
         this._btnReplay.setIsVisible(openData.replayId != null);
     }
 }
 
-interface DataForRankedRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForRankedRenderer extends UiListItemData {
     index       : number;
     isLast      : boolean;
     normalMapId : number | null;
@@ -328,14 +328,14 @@ interface DataForRankedRenderer extends UiTypesUiListItemData.UiListItemData {
     deltaScore  : number;
     replayId    : number | null;
 }
-class RankedRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForRankedRenderer> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBg!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgBottom!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelMapName!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTimestamp!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelScore!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnReplay!        : UiInterfacesIUiButton.IUiButton;
+class RankedRenderer extends UiListItemRenderer<DataForRankedRenderer> {
+    private readonly _group!            : IUiContainer;
+    private readonly _imgBg!            : IUiImage;
+    private readonly _imgBottom!        : IUiImage;
+    private readonly _labelMapName!     : IUiLabel;
+    private readonly _labelTimestamp!   : IUiLabel;
+    private readonly _labelScore!       : IUiLabel;
+    private readonly _btnReplay!        : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -349,16 +349,16 @@ class RankedRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
     private async _onTouchedBtnReplay(): Promise<void> {
         const replayId = this.getOpenData()?.replayId;
         if (replayId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonBlockPanel, {
-                title   : LangUtils.getText(LangConstants.TextType.B0088),
-                content : LangUtils.getText(LangConstants.TextType.A0040),
+            openPanel(getDict().CommonBlockPanel, {
+                title   : getText(TextType.B0088),
+                content : getText(TextType.A0040),
             });
 
-            const data = await ReplayWarModelRwModel.getReplayData(replayId);
+            const data = await getReplayData(replayId);
             if (data) {
-                HelpersGameFlow.gotoReplayWar(data, HelpersMisc.getExisted(replayId));
+                gotoReplayWar(data, getExisted(replayId));
             } else {
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonBlockPanel);
+                closePanel(getDict().CommonBlockPanel);
             }
         }
     }
@@ -378,13 +378,13 @@ class RankedRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
         this._imgBottom.setIsVisible(openData.isLast);
         this._labelScore.setText(`${openData.newScore}(${deltaScore >= 0 ? `+` : ``}${deltaScore})`);
         this._labelTimestamp.setText(getTextForTimestamp(openData.timestamp));
-        this._labelMapName.setText(normalMapId == null ? `--` : (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId) ?? LangConstants.UndefinedError));
+        this._labelMapName.setText(normalMapId == null ? `--` : (await getMapNameInCurrentLanguage(normalMapId) ?? UndefinedError));
         this._btnReplay.setIsVisible(openData.replayId != null);
     }
 }
 
 function getTextForTimestamp(timestamp: number): string {
-    const text1 = LangUtils.getTimestampShortText(timestamp, { hour: false, minute: false, second: false });
-    const text2 = LangUtils.getTimestampShortText(timestamp, { year: false, month: false, date: false });
+    const text1 = getTimestampShortText(timestamp, { hour: false, minute: false, second: false });
+    const text2 = getTimestampShortText(timestamp, { year: false, month: false, date: false });
     return `${text1} ${text2}`;
 }

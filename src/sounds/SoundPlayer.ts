@@ -1,24 +1,37 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import * as CoSkillsConstants from "../coSkills/Constants.ts";
-import * as FloatText2 from "../FloatText.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import * as LocalDataStorage from "../localData/Storage.ts";
-import * as Logger2 from "../Logger.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import type * as NotificationsTypes from "../notifications/Types.ts";
-import * as SoundsConstants from "./Constants.ts";
-import type * as SoundsTypes from "./Types.ts";
-import * as SoundsUtils from "./Utils.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
-import * as VendorEgretEgret from "../vendor/egret/Egret.ts";
-import * as VendorEgretRes from "../vendor/egret/Res.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
+import { SkillTypeId } from "../coSkills/Constants.ts";
+import { show } from "../FloatText.ts";
+import { getExisted, newError } from "../helpers/Misc.ts";
+import { TextType } from "../lang/Constants.ts";
+import { getText } from "../lang/Utils.ts";
+import {
+    getIsSoundMainMute,
+    setIsSoundMainMute,
+    getSoundMainVolume,
+    setSoundMainVolume,
+    getIsSoundBgmMute,
+    setIsSoundBgmMute,
+    getSoundBgmVolume,
+    setSoundBgmVolume,
+    getIsSoundEffectMute,
+    setIsSoundEffectMute,
+    getSoundEffectVolume,
+    setSoundEffectVolume,
+} from "../localData/Storage.ts";
+import { error, log } from "../Logger.ts";
+import { addEventListeners, dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { Listener } from "../notifications/Types.ts";
+import { ShortSfxCode, BgmSfxCode, SoundTypeId } from "./Constants.ts";
+import type { BgmSfxCfg as SoundsTypesBgmSfxCfg } from "./Types.ts";
+import { getBgmSfxCfg } from "./Utils.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+import { Capabilities, clearTimeout, setTimeout } from "../vendor/egret/Egret.ts";
+import { getResByUrl, ResourceItemHelper } from "../vendor/egret/Res.ts";
 
-type BgmSfxCfg          = SoundsTypes.BgmSfxCfg;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type BgmSfxCfg          = SoundsTypesBgmSfxCfg;
+type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export const DEFAULT_MUTE   = false;
 export const DEFAULT_VOLUME = 1;
@@ -36,30 +49,30 @@ type OngoingLongSfxData = {
 };
 
 const _SOUND_PATH       = "resource/assets/sound/";
-const _SHORT_SFX_PARAM  = new Map<SoundsConstants.ShortSfxCode, ShortSfxParams>([   // 必须和config保持一致
-    [ SoundsConstants.ShortSfxCode.FootMove01,          { name: "footMove.mp3"          } ],
-    [ SoundsConstants.ShortSfxCode.TireMove01,          { name: "tireMove.mp3"          } ],
-    [ SoundsConstants.ShortSfxCode.TankMove01,          { name: "tankMove.mp3"          } ],
-    [ SoundsConstants.ShortSfxCode.CopterMove01,        { name: "copterMove.mp3"        } ],
-    [ SoundsConstants.ShortSfxCode.JetMove01,           { name: "jetMove.mp3"           } ],
-    [ SoundsConstants.ShortSfxCode.NavalMove01,         { name: "navalMove.mp3"         } ],
-    [ SoundsConstants.ShortSfxCode.ButtonNeutral01,     { name: "buttonNeutral01.mp3"   } ],
-    [ SoundsConstants.ShortSfxCode.ButtonConfirm01,     { name: "buttonConfirm01.mp3"   } ],
-    [ SoundsConstants.ShortSfxCode.ButtonCancel01,      { name: "buttonCancel01.mp3"    } ],
-    [ SoundsConstants.ShortSfxCode.ButtonForbidden01,   { name: `buttonForbidden01.mp3` } ],
-    [ SoundsConstants.ShortSfxCode.CursorConfirm01,     { name: "cursorConfirm01.mp3"   } ],
-    [ SoundsConstants.ShortSfxCode.CursorMove01,        { name: "cursorMove01.mp3"      } ],
-    [ SoundsConstants.ShortSfxCode.Explode,             { name: "explode.mp3"           } ],
-    [ SoundsConstants.ShortSfxCode.Attack,              { name: "attack.m4a"            } ],
-    [ SoundsConstants.ShortSfxCode.Block,               { name: "block.m4a"             } ],
-    [ SoundsConstants.ShortSfxCode.Capture,             { name: "capture.m4a"           } ],
-    [ SoundsConstants.ShortSfxCode.SpendMoney,          { name: "spendMoney.m4a"        } ],
-    [ SoundsConstants.ShortSfxCode.UnitProduction,      { name: "unitProduction.m4a"    } ],
+const _SHORT_SFX_PARAM  = new Map<ShortSfxCode, ShortSfxParams>([   // 必须和config保持一致
+    [ ShortSfxCode.FootMove01,          { name: "footMove.mp3"          } ],
+    [ ShortSfxCode.TireMove01,          { name: "tireMove.mp3"          } ],
+    [ ShortSfxCode.TankMove01,          { name: "tankMove.mp3"          } ],
+    [ ShortSfxCode.CopterMove01,        { name: "copterMove.mp3"        } ],
+    [ ShortSfxCode.JetMove01,           { name: "jetMove.mp3"           } ],
+    [ ShortSfxCode.NavalMove01,         { name: "navalMove.mp3"         } ],
+    [ ShortSfxCode.ButtonNeutral01,     { name: "buttonNeutral01.mp3"   } ],
+    [ ShortSfxCode.ButtonConfirm01,     { name: "buttonConfirm01.mp3"   } ],
+    [ ShortSfxCode.ButtonCancel01,      { name: "buttonCancel01.mp3"    } ],
+    [ ShortSfxCode.ButtonForbidden01,   { name: `buttonForbidden01.mp3` } ],
+    [ ShortSfxCode.CursorConfirm01,     { name: "cursorConfirm01.mp3"   } ],
+    [ ShortSfxCode.CursorMove01,        { name: "cursorMove01.mp3"      } ],
+    [ ShortSfxCode.Explode,             { name: "explode.mp3"           } ],
+    [ ShortSfxCode.Attack,              { name: "attack.m4a"            } ],
+    [ ShortSfxCode.Block,               { name: "block.m4a"             } ],
+    [ ShortSfxCode.Capture,             { name: "capture.m4a"           } ],
+    [ ShortSfxCode.SpendMoney,          { name: "spendMoney.m4a"        } ],
+    [ ShortSfxCode.UnitProduction,      { name: "unitProduction.m4a"    } ],
 ]);
 const _UNIT_MOVE_FADEOUT_TIME   = 0.6;
-const _NOTIFY_EVENTS    : NotificationsTypes.Listener[] = [
-    { type: NotificationsTypeId.TypeId.GameShown,    callback: _onNotifyGameShown },
-    { type: NotificationsTypeId.TypeId.GameHidden,   callback: _onNotifyGameHidden },
+const _NOTIFY_EVENTS    : Listener[] = [
+    { type: TypeId.GameShown,    callback: _onNotifyGameShown },
+    { type: TypeId.GameHidden,   callback: _onNotifyGameHidden },
 ];
 
 let _isInitialized              = false;
@@ -71,7 +84,7 @@ let _mainVolume                 = DEFAULT_VOLUME;
 
 let _bgmMute                    = DEFAULT_MUTE;
 let _bgmVolume                  = DEFAULT_VOLUME;    // 音量范围是0～1，1为最大音量
-let _playingBgmCode             = SoundsConstants.BgmSfxCode.None;
+let _playingBgmCode             = BgmSfxCode.None;
 
 const _bgmBufferCache           = new Map<number, AudioBuffer>();
 let _bgmGain                    : GainNode;
@@ -83,7 +96,7 @@ const _ongoingLongSfxDataDict   = new Map<BgmSfxCfg, OngoingLongSfxData>();
 const _queueDictForLongSfx      = new Map<BgmSfxCfg, (() => Promise<void>)[]>();
 
 const _longSfxBufferCache       = new Map<number, AudioBuffer>();
-const _shortSfxBufferCache      = new Map<SoundsConstants.ShortSfxCode, AudioBuffer>();
+const _shortSfxBufferCache      = new Map<ShortSfxCode, AudioBuffer>();
 let _shortSfxGain               : GainNode;
 let _longSfxMainGain            : GainNode | null = null;
 
@@ -120,7 +133,7 @@ export async function init(): Promise<void> {
         _shortSfxGain.connect(_mainGain);
         _longSfxMainGain.connect(_mainGain);
     } catch (e) {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0196));
+        show(getText(TextType.A0196));
     }
 
     _initMainMute();
@@ -130,7 +143,7 @@ export async function init(): Promise<void> {
     _initEffectMute();
     _initEffectVolume();
 
-    NotificationsDispatcher.addEventListeners(_NOTIFY_EVENTS, null);
+    addEventListeners(_NOTIFY_EVENTS, null);
     // playBgm(GameConfig.BgmSfxCode.Lobby);
 }
 
@@ -154,7 +167,7 @@ export function pause(): void {
 }
 
 export function playCoBgmWithWar({ war, force, coBgmCodeArrayFromUserSettings }: {
-    war                             : BaseWarInterfaceIBwWar.IBwWar;
+    war                             : IBwWar;
     force                           : boolean;
     coBgmCodeArrayFromUserSettings  : Undefinable<number[]>;
 }): void {
@@ -185,9 +198,9 @@ export function playCoBgmWithWar({ war, force, coBgmCodeArrayFromUserSettings }:
         ? null
         : coBgmCodeArrayFromUserSettings ?? gameConfig.getCoCategoryCfg(coCategoryId)?.getBgmCodeArray()) ?? [];
     switch (player.getCoUsingSkillType()) {
-        case CoSkillsConstants.SkillTypeId.Power        : playBgm(bgmCodeArray[1] ?? SoundsConstants.BgmSfxCode.CoPower); return;
-        case CoSkillsConstants.SkillTypeId.SuperPower   : playBgm(bgmCodeArray[2] ?? SoundsConstants.BgmSfxCode.CoPower); return;
-        default                         : playBgm(bgmCodeArray[0] ?? SoundsConstants.BgmSfxCode.CoEmpty); return;
+        case SkillTypeId.Power        : playBgm(bgmCodeArray[1] ?? BgmSfxCode.CoPower); return;
+        case SkillTypeId.SuperPower   : playBgm(bgmCodeArray[2] ?? BgmSfxCode.CoPower); return;
+        default                         : playBgm(bgmCodeArray[0] ?? BgmSfxCode.CoEmpty); return;
     }
 }
 
@@ -202,7 +215,7 @@ function _onNotifyGameHidden(): void {
 // 主音量控制
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 function _initMainMute(): void {
-    setIsMainMute(LocalDataStorage.getIsSoundMainMute(), true);
+    setIsMainMute(getIsSoundMainMute(), true);
 }
 export function setIsMainMute(isMute: boolean, isForce = false): void {
     if ((!isForce) && (isMute === getIsMainMute())) {
@@ -213,14 +226,14 @@ export function setIsMainMute(isMute: boolean, isForce = false): void {
     _updateMainVolume();
 }
 export function setIsMainMuteToStore(): void {
-    LocalDataStorage.setIsSoundMainMute(getIsMainMute());
+    setIsSoundMainMute(getIsMainMute());
 }
 export function getIsMainMute(): boolean {
     return _mainMute;
 }
 
 function _initMainVolume(): void {
-    setMainVolume(LocalDataStorage.getSoundMainVolume(), true);
+    setMainVolume(getSoundMainVolume(), true);
 }
 export function setMainVolume(volume: number, isForce = false): void {
     volume = Math.min(1, Math.max(0, volume || 0));
@@ -232,13 +245,13 @@ export function setMainVolume(volume: number, isForce = false): void {
     _updateMainVolume();
 }
 export function setMainVolumeToStore(): void {
-    LocalDataStorage.setSoundMainVolume(getMainVolume());
+    setSoundMainVolume(getMainVolume());
 }
 export function getMainVolume(): number {
     return _mainVolume;
 }
 function _getRevisedMainVolume(): number {
-    return (getIsMainMute() ? 0 : getMainVolume()) * (VendorEgretEgret.Capabilities.isMobile ? 0.5 : 1);
+    return (getIsMainMute() ? 0 : getMainVolume()) * (Capabilities.isMobile ? 0.5 : 1);
 }
 
 function _updateMainVolume(): void {
@@ -249,7 +262,7 @@ function _updateMainVolume(): void {
 // bgm(背景音乐)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 function _initBgmMute(): void {
-    setIsBgmMute(LocalDataStorage.getIsSoundBgmMute());
+    setIsBgmMute(getIsSoundBgmMute());
 }
 export function setIsBgmMute(isMute: boolean): void {
     if (isMute == getIsBgmMute()) {
@@ -260,14 +273,14 @@ export function setIsBgmMute(isMute: boolean): void {
     _updateBgmVolumeForNormal();
 }
 export function setIsBgmMuteToStore(): void {
-    LocalDataStorage.setIsSoundBgmMute(getIsBgmMute());
+    setIsSoundBgmMute(getIsBgmMute());
 }
 export function getIsBgmMute(): boolean {
     return _bgmMute;
 }
 
 function _initBgmVolume(): void {
-    setBgmVolume(LocalDataStorage.getSoundBgmVolume());
+    setBgmVolume(getSoundBgmVolume());
 }
 export function setBgmVolume(volume: number): void {
     volume = Math.min(1, Math.max(0, volume || 0));
@@ -279,7 +292,7 @@ export function setBgmVolume(volume: number): void {
     _updateBgmVolumeForNormal();
 }
 export function setBgmVolumeToStore(): void {
-    LocalDataStorage.setSoundBgmVolume(getBgmVolume());
+    setSoundBgmVolume(getBgmVolume());
 }
 export function getBgmVolume(): number {
     return _bgmVolume;
@@ -296,7 +309,7 @@ function _updateBgmVolumeForNormal(): void {
 
 function _setPlayingBgmCode(bgmCode: number): void {
     _playingBgmCode = bgmCode;
-    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.SoundManagerPlayingBgmCodeChanged);
+    dispatch(TypeId.SoundManagerPlayingBgmCodeChanged);
 }
 export function getPlayingBgmCode(): number {
     return _playingBgmCode;
@@ -319,7 +332,7 @@ export function playBgm(bgmCode: number, forcePlayFromBeginning = false): void {
     }
 }
 async function _playBgmForNormal(bgmCode: number): Promise<void> {
-    const bgmCfg        = HelpersMisc.getExisted(SoundsUtils.getBgmSfxCfg(bgmCode), UtilsClientErrorCode.ClientErrorCode.SoundManager_PlayBgmForNormal_00);
+    const bgmCfg        = getExisted(getBgmSfxCfg(bgmCode), ClientErrorCode.SoundManager_PlayBgmForNormal_00);
     const cacheDict     = _bgmBufferCache;
     const cachedBuffer  = cacheDict.get(bgmCode);
     if (cachedBuffer) {
@@ -328,9 +341,9 @@ async function _playBgmForNormal(bgmCode: number): Promise<void> {
         const filename  = bgmCfg.filename;
         let audioBuffer : AudioBuffer;
         try {
-            audioBuffer = HelpersMisc.getExisted(await loadAudioBuffer(getResourcePath(filename, SoundsConstants.SoundTypeId.Bgm)));
+            audioBuffer = getExisted(await loadAudioBuffer(getResourcePath(filename, SoundTypeId.Bgm)));
         } catch {
-            Logger2.error(`Failed to load audio buffer, bgmCode: ${bgmCode}, filename: ${filename}.`);
+            error(`Failed to load audio buffer, bgmCode: ${bgmCode}, filename: ${filename}.`);
             return;
         }
 
@@ -349,8 +362,8 @@ function _doPlayBgmForNormal(buffer: AudioBuffer, params: BgmSfxCfg): void {
 
     _bgmSourceNode              = _audioContext.createBufferSource();
     _bgmSourceNode.buffer       = buffer;
-    _bgmSourceNode.loopStart    = HelpersMisc.getExisted(params.loopStart) / 10000;
-    _bgmSourceNode.loopEnd      = HelpersMisc.getExisted(params.loopEnd) / 10000;
+    _bgmSourceNode.loopStart    = getExisted(params.loopStart) / 10000;
+    _bgmSourceNode.loopEnd      = getExisted(params.loopEnd) / 10000;
     _bgmSourceNode.loop         = true;
     _bgmSourceNode.connect(_bgmGain);
     _bgmSourceNode.start();
@@ -371,7 +384,7 @@ function _stopBgmForNormal(): void {
 // 音效音量控制
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 function _initEffectMute(): void {
-    setIsEffectMute(LocalDataStorage.getIsSoundEffectMute());
+    setIsEffectMute(getIsSoundEffectMute());
 }
 export function setIsEffectMute(isMute: boolean): void {
     if (isMute === getIsEffectMute()) {
@@ -383,14 +396,14 @@ export function setIsEffectMute(isMute: boolean): void {
     _updateLongEffectVolume();
 }
 export function setIsEffectMuteToStore(): void {
-    LocalDataStorage.setIsSoundEffectMute(getIsEffectMute());
+    setIsSoundEffectMute(getIsEffectMute());
 }
 export function getIsEffectMute(): boolean {
     return _effectMute;
 }
 
 function _initEffectVolume(): void {
-    setEffectVolume(LocalDataStorage.getSoundEffectVolume());
+    setEffectVolume(getSoundEffectVolume());
 }
 export function setEffectVolume(volume: number): void {
     volume = Math.min(1, Math.max(0, volume || 0));
@@ -403,7 +416,7 @@ export function setEffectVolume(volume: number): void {
     _updateLongEffectVolume();
 }
 export function setEffectVolumeToStore(): void {
-    LocalDataStorage.setSoundEffectVolume(getEffectVolume());
+    setSoundEffectVolume(getEffectVolume());
 }
 export function getEffectVolume(): number {
     return _effectVolume;
@@ -424,34 +437,34 @@ function _updateShortEffectVolume(): void {
 }
 
 /** 技能或按钮的点击音效，可以同时播放多个 */
-export async function playShortSfx(shortSfxCode: SoundsConstants.ShortSfxCode): Promise<void> {
+export async function playShortSfx(shortSfxCode: ShortSfxCode): Promise<void> {
     if (!_isInitialized) {
         return;
     }
 
-    if ((shortSfxCode == null) || (shortSfxCode === SoundsConstants.ShortSfxCode.None)) {
+    if ((shortSfxCode == null) || (shortSfxCode === ShortSfxCode.None)) {
         return;
     }
 
-    const params        = HelpersMisc.getExisted(_SHORT_SFX_PARAM.get(shortSfxCode), UtilsClientErrorCode.ClientErrorCode.SoundManager_PlayShortSfx_00);
+    const params        = getExisted(_SHORT_SFX_PARAM.get(shortSfxCode), ClientErrorCode.SoundManager_PlayShortSfx_00);
     const cacheDict     = _shortSfxBufferCache;
     const cachedBuffer  = cacheDict.get(shortSfxCode);
     if (cachedBuffer) {
         _doPlayShortSfx(cachedBuffer);
     } else {
-        const path          = getResourcePath(params.name, SoundsConstants.SoundTypeId.Sfx);
+        const path          = getResourcePath(params.name, SoundTypeId.Sfx);
         const currentTime   = Date.now();
         let audioBuffer     : AudioBuffer;
         try {
-            audioBuffer = HelpersMisc.getExisted(await loadAudioBuffer(path));
+            audioBuffer = getExisted(await loadAudioBuffer(path));
         } catch {
-            Logger2.error(`Failed to load audio buffer, shortSfxCode: ${shortSfxCode}, path: ${path}.`);
+            error(`Failed to load audio buffer, shortSfxCode: ${shortSfxCode}, path: ${path}.`);
             return;
         }
 
         cacheDict.set(shortSfxCode, audioBuffer);
         if (Date.now() - currentTime > 200) {
-            Logger2.log(`SoundManager.playShortSfx() spent too much time on loading.`);
+            log(`SoundManager.playShortSfx() spent too much time on loading.`);
             return;
         }
 
@@ -540,7 +553,7 @@ async function doPlayLongSfxForMoveUnit(cfg: BgmSfxCfg): Promise<void> {
 
         const timeoutId = ongoingData.timeoutId;
         if (timeoutId != null) {
-            VendorEgretEgret.clearTimeout(timeoutId);
+            clearTimeout(timeoutId);
             ongoingData.timeoutId = null;
         }
 
@@ -554,8 +567,8 @@ async function doPlayLongSfxForMoveUnit(cfg: BgmSfxCfg): Promise<void> {
 function createLongSfxSourceNode(buffer: AudioBuffer, gainNode: GainNode, params: BgmSfxCfg, needStart: boolean): AudioBufferSourceNode {
     const sourceNode        = _audioContext.createBufferSource();
     sourceNode.buffer       = buffer;
-    sourceNode.loopStart    = HelpersMisc.getExisted(params.loopStart) / 10000;
-    sourceNode.loopEnd      = HelpersMisc.getExisted(params.loopEnd) / 10000;
+    sourceNode.loopStart    = getExisted(params.loopStart) / 10000;
+    sourceNode.loopEnd      = getExisted(params.loopEnd) / 10000;
     sourceNode.loop         = true;
     sourceNode.connect(gainNode);
 
@@ -573,12 +586,12 @@ async function getLongSfxBuffer(cfg: BgmSfxCfg): Promise<AudioBuffer | null> {
         return existingBuffer;
     }
 
-    const path      = getResourcePath(cfg.filename, SoundsConstants.SoundTypeId.Sfx);
+    const path      = getResourcePath(cfg.filename, SoundTypeId.Sfx);
     let audioBuffer : AudioBuffer;
     try {
-        audioBuffer = HelpersMisc.getExisted(await loadAudioBuffer(path));
+        audioBuffer = getExisted(await loadAudioBuffer(path));
     } catch {
-        Logger2.error(`Failed to load audio buffer, longSfxCode: ${longSfxCode}, path: ${path}`);
+        error(`Failed to load audio buffer, longSfxCode: ${longSfxCode}, path: ${path}`);
         return null;
     }
 
@@ -604,10 +617,10 @@ async function doFadeoutLongSfxForMoveUnit(cfg: BgmSfxCfg): Promise<void> {
 
         const timeoutId = data.timeoutId;
         if (timeoutId) {
-            VendorEgretEgret.clearTimeout(timeoutId);
+            clearTimeout(timeoutId);
         }
 
-        data.timeoutId = VendorEgretEgret.setTimeout(
+        data.timeoutId = setTimeout(
             () => {
                 const sourceNode = data.sourceNode;
                 if (data.isStarted) {
@@ -637,14 +650,14 @@ function addToQueueForLongSfx<T>(cfg: BgmSfxCfg, rawFunc: () => Promise<T>): Pro
         const func = async (): Promise<void> => {
             const funcList = _queueDictForLongSfx.get(cfg);
             if (!funcList) {
-                throw HelpersMisc.newError(`SoundManager.addToQueueForLongSfx() exception queueing 1!!`);
+                throw newError(`SoundManager.addToQueueForLongSfx() exception queueing 1!!`);
             } else {
                 if (funcList[0] !== func) {
-                    throw HelpersMisc.newError(`SoundManager.addToQueueForLongSfx() exception queueing 2!!`);
+                    throw newError(`SoundManager.addToQueueForLongSfx() exception queueing 2!!`);
                 } else {
                     const result = await rawFunc();
                     if (funcList.shift() !== func) {
-                        throw HelpersMisc.newError(`SoundManager.addToQueueForLongSfx() exception queueing 3!!`);
+                        throw newError(`SoundManager.addToQueueForLongSfx() exception queueing 3!!`);
                     }
                     resolve(result);
 
@@ -686,11 +699,11 @@ function _disposeAllSfx(): void {
     _stopAllShortSfx();
 }
 
-function getResourcePath(musicName: string, soundType: SoundsConstants.SoundTypeId): string {
+function getResourcePath(musicName: string, soundType: SoundTypeId): string {
     switch (soundType) {
-        case SoundsConstants.SoundTypeId.Bgm  : return _SOUND_PATH + "bgm/" + musicName;
-        case SoundsConstants.SoundTypeId.Sfx  : return _SOUND_PATH + "effect/" + musicName;
-        default             : throw HelpersMisc.newError(`Invalid soundType: ${soundType}`, UtilsClientErrorCode.ClientErrorCode.SoundManager_GetResourcePath_00);
+        case SoundTypeId.Bgm  : return _SOUND_PATH + "bgm/" + musicName;
+        case SoundTypeId.Sfx  : return _SOUND_PATH + "effect/" + musicName;
+        default             : throw newError(`Invalid soundType: ${soundType}`, ClientErrorCode.SoundManager_GetResourcePath_00);
     }
 }
 
@@ -699,13 +712,13 @@ async function loadAudioBuffer(fullName: string): Promise<AudioBuffer | null> {
         return null;
     }
 
-    const arrayBuffer: Undefinable<ArrayBuffer> = await VendorEgretRes.getResByUrl(
+    const arrayBuffer: Undefinable<ArrayBuffer> = await getResByUrl(
         fullName,
         () => {
             // nothing to do.
         },
         null,
-        VendorEgretRes.ResourceItemHelper.TYPE_BIN
+        ResourceItemHelper.TYPE_BIN
     );
     if (!arrayBuffer) {
         return null;
@@ -715,7 +728,7 @@ async function loadAudioBuffer(fullName: string): Promise<AudioBuffer | null> {
         return await _audioContext.decodeAudioData(arrayBuffer);
     } catch {
         // Compatibility.showError(err); throw err;
-        Logger2.error(`Failed to decode audio data: ${fullName}`);
+        error(`Failed to decode audio data: ${fullName}`);
         return null;
     }
 }

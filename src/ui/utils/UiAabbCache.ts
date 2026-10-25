@@ -1,9 +1,9 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as UiTypesUiAabbParams from "../types/UiAabbParams.ts";
-import * as UiUtilsUiHelpers from "./UiHelpers.ts";
+import type { Rectangle as AuxiliaryTypesAuxiliaryTypesRectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { UiAabbParams as UiTypesUiAabbParams } from "../types/UiAabbParams.ts";
+import { getAabbToParent } from "./UiHelpers.ts";
 
-type UiAabbParams   = UiTypesUiAabbParams.UiAabbParams;
-type Rectangle      = AuxiliaryTypesAuxiliaryTypes.Rectangle;
+type UiAabbParams   = UiTypesUiAabbParams;
+type Rectangle      = AuxiliaryTypesAuxiliaryTypesRectangle;
 
 export class UiAabbCache {
     private _params?    : UiAabbParams;
@@ -12,7 +12,7 @@ export class UiAabbCache {
     public getAabb(params: UiAabbParams): Rectangle {
         if (!checkIsSameParam(this._params, params)) {
             this._params = params;
-            this._result = UiUtilsUiHelpers.getAabbToParent(params);
+            this._result = getAabbToParent(params);
         }
         return this._result;
     }

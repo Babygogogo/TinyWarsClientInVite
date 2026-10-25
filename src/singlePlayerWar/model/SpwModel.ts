@@ -1,32 +1,36 @@
-import * as CampaignsMainsGateway from "../../campaigns/mains/Gateway.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as Logger2 from "../../Logger.ts";
-import * as MultiPlayerWarModelMpwModel from "../../multiPlayerWar/model/MpwModel.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import * as SinglePlayerModeModelSpmProxy from "../../singlePlayerMode/model/SpmProxy.ts";
-import type * as SinglePlayerWarInterfaceISpwWar from "../interface/ISpwWar.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import * as WarOperationsExecutorsExecutor from "../../warOperations/executors/Executor.ts";
-import * as WarOperationsRevisersReviser from "../../warOperations/revisers/Reviser.ts";
-import * as WarOperationsUtils from "../../warOperations/Utils.ts";
+import { reqCampaignValidateWar } from "../../campaigns/mains/Gateway.ts";
+import { showLang } from "../../FloatText.ts";
+import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { SinglePlayerWar } from "../../gameConfig/GcWar.ts";
+import { getSfwWarClass, getSrwWarClass, getCawWarClass, getScwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import { gotoMultiPlayerWar, gotoLobby, gotoCampaignCreateMapsPanel } from "../../helpers/GameFlow.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getFormattedText } from "../../lang/Utils.ts";
+import { warn } from "../../Logger.ts";
+import { getOngoingWarData } from "../../multiPlayerWar/model/MpwModel.ts";
+import { AliveStateId } from "../../players/Constants.ts";
+import type {
+    SpmWarSaveSlotExtraData as ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData,
+} from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type {
+    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import { reqSpmValidateSrw } from "../../singlePlayerMode/model/SpmProxy.ts";
+import type { ISpwWar } from "../interface/ISpwWar.ts";
+import { getSelfUserId, getSelfCawHighScoreInfo } from "../../users/Model.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
+import { revise } from "../../warOperations/revisers/Reviser.ts";
+import { getNextSystemOrBotOperation } from "../../warOperations/Utils.ts";
 
-type SerialWar                  = ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
-type SpmWarSaveSlotExtraData    = ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData.SpmWarSaveSlotExtraData;
+type SerialWar                  = ProtoSchemaCommonProtoWarSerializationSerialWar;
+type SpmWarSaveSlotExtraData    = ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData;
 
-let _war: SinglePlayerWarInterfaceISpwWar.ISpwWar | null = null;
+let _war: ISpwWar | null = null;
 
 export function init(): void {
     // nothing to do.
@@ -39,9 +43,9 @@ export async function loadWar({ warData, slotIndex, slotExtraData }: {
     warData         : SerialWar;
     slotIndex       : number | null;
     slotExtraData   : SpmWarSaveSlotExtraData | null;
-}): Promise<SinglePlayerWarInterfaceISpwWar.ISpwWar> {
+}): Promise<ISpwWar> {
     if (getWar()) {
-        Logger2.warn(`SpwModel.loadWar() another war has been loaded already!`);
+        warn(`SpwModel.loadWar() another war has been loaded already!`);
         unloadWar();
     }
 
@@ -49,7 +53,7 @@ export async function loadWar({ warData, slotIndex, slotExtraData }: {
     const war   = createWarByWarData(data);
     war.setSaveSlotIndex(slotIndex);
     war.setSaveSlotExtraData(slotExtraData?.clone());
-    war.init(data, await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(data.getSettingsForCommon()?.getConfigVersion())));
+    war.init(data, await getGameConfig(getExisted(data.getSettingsForCommon()?.getConfigVersion())));
     war.startRunning().startRunningView();
     setWar(war);
 
@@ -64,39 +68,39 @@ export function unloadWar(): void {
     }
 }
 
-export function getWar(): SinglePlayerWarInterfaceISpwWar.ISpwWar | null {
+export function getWar(): ISpwWar | null {
     return _war;
 }
-function setWar(war: SinglePlayerWarInterfaceISpwWar.ISpwWar | null): void {
+function setWar(war: ISpwWar | null): void {
     _war = war;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Util functions.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-const _warsWithRobotRunning = new Set<SinglePlayerWarInterfaceISpwWar.ISpwWar>();
+const _warsWithRobotRunning = new Set<ISpwWar>();
 
-export async function handlePlayerActionAndAutoActions(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, action: ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer): Promise<void> {
+export async function handlePlayerActionAndAutoActions(war: ISpwWar, action: WoContainer): Promise<void> {
     if (war.getIsEnded()) {
-        throw HelpersMisc.newError(`war.getIsEnded() is true.`, UtilsClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_00);
+        throw newError(`war.getIsEnded() is true.`, ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_00);
     }
     if (war.getIsExecutingAction()) {
-        throw HelpersMisc.newError(`war.getIsExecutingAction() is true.`, UtilsClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_01);
+        throw newError(`war.getIsExecutingAction() is true.`, ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_01);
     }
     if (!war.getIsRunning()) {
-        throw HelpersMisc.newError(`war.getIsRunning() is false.`, UtilsClientErrorCode.ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_02);
+        throw newError(`war.getIsRunning() is false.`, ClientErrorCode.SpwModel_HandlePlayerOrRobotAction_02);
     }
 
-    await WarOperationsExecutorsExecutor.checkAndExecute(
+    await checkAndExecute(
         war,
-        WarOperationsRevisersReviser.revise(war, action, UsersModel.getSelfUserId()),
+        revise(war, action, getSelfUserId()),
         false
     );
 
     await checkAndHandleAutoActionsAndRobotRecursively(war);
 }
 
-export async function checkAndHandleAutoActionsAndRobotRecursively(war: SinglePlayerWarInterfaceISpwWar.ISpwWar): Promise<void> {
+export async function checkAndHandleAutoActionsAndRobotRecursively(war: ISpwWar): Promise<void> {
     if (_warsWithRobotRunning.has(war)) {
         return;
     }
@@ -113,7 +117,7 @@ export async function checkAndHandleAutoActionsAndRobotRecursively(war: SinglePl
             return;
         }
 
-        const data = await WarOperationsUtils.getNextSystemOrBotOperation(war);
+        const data = await getNextSystemOrBotOperation(war);
         if ((checkAndEndWar(war))       ||
             (!war.getIsRunning())       ||
             (war.getIsAiPaused())       ||
@@ -126,9 +130,9 @@ export async function checkAndHandleAutoActionsAndRobotRecursively(war: SinglePl
             break;
         }
 
-        await WarOperationsExecutorsExecutor.checkAndExecute(
+        await checkAndExecute(
             war,
-            WarOperationsRevisersReviser.revise(war, data.warOperation, data.userId),
+            revise(war, data.warOperation, data.userId),
             false
         );
     }
@@ -143,101 +147,101 @@ export async function checkAndHandleAutoActionsAndRobotRecursively(war: SinglePl
     _warsWithRobotRunning.delete(war);
 }
 
-function checkAndEndWar(war: SinglePlayerWarInterfaceISpwWar.ISpwWar): boolean {
+function checkAndEndWar(war: ISpwWar): boolean {
     if (!war.getIsEnded()) {
         return false;
     }
 
-    const mpwWarId = war instanceof GameHelpersGhFactory.getSfwWarClass()
+    const mpwWarId = war instanceof getSfwWarClass()
         ? war.getSaveSlotExtraData()?.getMpwWarId()
         : null;
     if (mpwWarId != null) {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle            : () => LangUtils.getText(LangConstants.TextType.B0088),
-            getContent          : () => LangUtils.getText(LangConstants.TextType.A0964),
-            getTextForConfirm   : () => LangUtils.getText(LangConstants.TextType.B0711),
-            getTextForCancel    : () => LangUtils.getText(LangConstants.TextType.B1446),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle            : () => getText(TextType.B0088),
+            getContent          : () => getText(TextType.A0964),
+            getTextForConfirm   : () => getText(TextType.B0711),
+            getTextForCancel    : () => getText(TextType.B1446),
             callback            : async () => {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonBlockPanel, {
-                    title   : LangUtils.getText(LangConstants.TextType.B0088),
-                    content : LangUtils.getText(LangConstants.TextType.A0040),
+                openPanel(getDict().CommonBlockPanel, {
+                    title   : getText(TextType.B0088),
+                    content : getText(TextType.A0040),
                 });
 
-                const warData = await MultiPlayerWarModelMpwModel.getOngoingWarData(mpwWarId);
+                const warData = await getOngoingWarData(mpwWarId);
                 if (warData) {
-                    HelpersGameFlow.gotoMultiPlayerWar(warData);
+                    gotoMultiPlayerWar(warData);
                 } else {
-                    FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                    showLang(TextType.YouCanNotDoThisRightNow);
                 }
 
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonBlockPanel);
+                closePanel(getDict().CommonBlockPanel);
             },
             callbackOnCancel    : () => {
                 war.setIsEnded(false);
                 war.getDrawVoteManager().clearAllVotes();
                 for (const [, player] of war.getPlayerManager().getAllPlayersDict()) {
                     player.setHasVotedForDraw(false);
-                    player.setAliveState(PlayersConstants.AliveStateId.Alive);
+                    player.setAliveState(AliveStateId.Alive);
                 }
             },
         });
     } else {
         if (war.getDrawVoteManager().checkIsDraw()) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonAlertPanel, {
-                getTitle    : () => LangUtils.getText(LangConstants.TextType.B0088),
-                getContent  : () => LangUtils.getText(LangConstants.TextType.A0030),
-                callback    : () => HelpersGameFlow.gotoLobby(),
+            openPanel(getDict().CommonAlertPanel, {
+                getTitle    : () => getText(TextType.B0088),
+                getContent  : () => getText(TextType.A0030),
+                callback    : () => gotoLobby(),
             });
         } else {
             const humanPlayerArray = war.getPlayerManager().getHumanPlayers();
             if (humanPlayerArray.length <= 0) {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonAlertPanel, {
-                    getTitle    : () => LangUtils.getText(LangConstants.TextType.B0088),
-                    getContent  : () => LangUtils.getText(LangConstants.TextType.A0035),
-                    callback    : () => HelpersGameFlow.gotoLobby(),
+                openPanel(getDict().CommonAlertPanel, {
+                    getTitle    : () => getText(TextType.B0088),
+                    getContent  : () => getText(TextType.A0035),
+                    callback    : () => gotoLobby(),
                 });
             } else {
-                if (humanPlayerArray.every(v => v.getAliveState() === PlayersConstants.AliveStateId.Dead)) {
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonAlertPanel, {
-                        getTitle    : () => LangUtils.getText(LangConstants.TextType.B0088),
-                        getContent  : () => LangUtils.getText(LangConstants.TextType.A0023),
-                        callback    : () => HelpersGameFlow.gotoLobby(),
+                if (humanPlayerArray.every(v => v.getAliveState() === AliveStateId.Dead)) {
+                    openPanel(getDict().CommonAlertPanel, {
+                        getTitle    : () => getText(TextType.B0088),
+                        getContent  : () => getText(TextType.A0023),
+                        callback    : () => gotoLobby(),
                     });
                 } else {
-                    if (war instanceof GameHelpersGhFactory.getSrwWarClass()) {
+                    if (war instanceof getSrwWarClass()) {
                         const turnIndex     = war.getTurnManager().getTurnIndex();
                         const actionsCount  = war.getExecutedOperationManager().getExecutedOperationsCount();
-                        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonAlertPanel, {
-                            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0088),
-                            getContent : () => LangUtils.getFormattedText(
-                                LangConstants.TextType.F0127,
-                                GameConfigGcWar.SinglePlayerWar.PlayerScore.BaseScore,
+                        openPanel(getDict().CommonAlertPanel, {
+                            getTitle   : () => getText(TextType.B0088),
+                            getContent : () => getFormattedText(
+                                TextType.F0127,
+                                SinglePlayerWar.PlayerScore.BaseScore,
                                 `${(turnIndex - 1) * -1000} (${turnIndex})`,
                                 `${-actionsCount} (${actionsCount})`,
                                 war.getTaskObjectiveManager().getScore(),
                                 war.calculateTotalScore(),
                             ),
                             callback: () => {
-                                HelpersGameFlow.gotoLobby();
+                                gotoLobby();
 
-                                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                                    getContent : () => LangUtils.getText(LangConstants.TextType.A0277),
+                                openPanel(getDict().CommonConfirmPanel, {
+                                    getContent : () => getText(TextType.A0277),
                                     callback: () => {
-                                        SinglePlayerModeModelSpmProxy.reqSpmValidateSrw(war);
+                                        reqSpmValidateSrw(war);
                                     },
                                 });
                             },
                         });
 
-                    } else if (war instanceof GameHelpersGhFactory.getCawWarClass()) {
+                    } else if (war instanceof getCawWarClass()) {
                         const turnIndex     = war.getTurnManager().getTurnIndex();
                         const actionsCount  = war.getExecutedOperationManager().getExecutedOperationsCount();
                         const newScore      = war.calculateTotalScore();
-                        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonAlertPanel, {
-                            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0088),
-                            getContent : () => LangUtils.getFormattedText(
-                                LangConstants.TextType.F0127,
-                                GameConfigGcWar.SinglePlayerWar.PlayerScore.BaseScore,
+                        openPanel(getDict().CommonAlertPanel, {
+                            getTitle   : () => getText(TextType.B0088),
+                            getContent : () => getFormattedText(
+                                TextType.F0127,
+                                SinglePlayerWar.PlayerScore.BaseScore,
                                 `${(turnIndex - 1) * -1000} (${turnIndex})`,
                                 `${-actionsCount} (${actionsCount})`,
                                 war.getTaskObjectiveManager().getScore(),
@@ -246,24 +250,24 @@ function checkAndEndWar(war: SinglePlayerWarInterfaceISpwWar.ISpwWar): boolean {
                             callback: () => {
                                 const settingsForCaw    = war.getSettingsForCaw();
                                 const campaignId        = settingsForCaw.getCampaignId() ?? 0;
-                                const existingInfo      = UsersModel.getSelfCawHighScoreInfo(campaignId, settingsForCaw.getCampaignMapId() ?? 0);
+                                const existingInfo      = getSelfCawHighScoreInfo(campaignId, settingsForCaw.getCampaignMapId() ?? 0);
                                 if ((existingInfo == null)                                                                          ||
                                     ((settingsForCaw.getCampaignMapRevision() ?? 0) > (existingInfo.getCampaignMapRevision() ?? 0)) ||
                                     (newScore > (existingInfo.getHighScore() ?? 0))                                                 ||
                                     (war.getGcData().getVersion() !== existingInfo.getConfigVersion())
                                 ) {
-                                    CampaignsMainsGateway.reqCampaignValidateWar(war);
+                                    reqCampaignValidateWar(war);
                                 }
 
-                                HelpersGameFlow.gotoCampaignCreateMapsPanel(campaignId);
+                                gotoCampaignCreateMapsPanel(campaignId);
                             },
                         });
 
                     } else {
-                        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonAlertPanel, {
-                            getTitle    : () => LangUtils.getText(LangConstants.TextType.B0088),
-                            getContent  : () => LangUtils.getText(LangConstants.TextType.A0022),
-                            callback    : () => HelpersGameFlow.gotoLobby(),
+                        openPanel(getDict().CommonAlertPanel, {
+                            getTitle    : () => getText(TextType.B0088),
+                            getContent  : () => getText(TextType.A0022),
+                            callback    : () => gotoLobby(),
                         });
                     }
                 }
@@ -274,16 +278,16 @@ function checkAndEndWar(war: SinglePlayerWarInterfaceISpwWar.ISpwWar): boolean {
     return true;
 }
 
-function createWarByWarData(warData: SerialWar): SinglePlayerWarInterfaceISpwWar.ISpwWar {
+function createWarByWarData(warData: SerialWar): ISpwWar {
     if (warData.getSettingsForScw()) {
-        return new (GameHelpersGhFactory.getScwWarClass())();
+        return new (getScwWarClass())();
     } else if (warData.getSettingsForSfw()) {
-        return new (GameHelpersGhFactory.getSfwWarClass())();
+        return new (getSfwWarClass())();
     } else if (warData.getSettingsForSrw()) {
-        return new (GameHelpersGhFactory.getSrwWarClass())();
+        return new (getSrwWarClass())();
     } else if (warData.getSettingsForCaw()) {
-        return new (GameHelpersGhFactory.getCawWarClass())();
+        return new (getCawWarClass())();
     } else {
-        throw HelpersMisc.newError(`Invalid warData.`, UtilsClientErrorCode.ClientErrorCode.SpwModel_CreateWarByWarData_00);
+        throw newError(`Invalid warData.`, ClientErrorCode.SpwModel_CreateWarByWarData_00);
     }
 }

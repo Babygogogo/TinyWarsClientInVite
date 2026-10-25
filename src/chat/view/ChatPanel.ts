@@ -1,83 +1,118 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesChatToTarget from "../../auxiliaryTypes/ChatToTarget.ts";
-import * as ChatConstants from "../Constants.ts";
-import * as ChatModel from "../Model.ts";
-import * as ChatProxy from "../Proxy.ts";
-import * as CoopCustomRoomModelCcrModel from "../../coopCustomRoom/model/CcrModel.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as KeyboardKbTypes from "../../keyboard/KbTypes.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as MultiCustomRoomModelMcrModel from "../../multiCustomRoom/model/McrModel.ts";
-import * as MultiFreeRoomModelMfrModel from "../../multiFreeRoom/model/MfrModel.ts";
-import * as MultiPlayerWarModelMpwModel from "../../multiPlayerWar/model/MpwModel.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoChatChatMessage from "../../proto/schema/CommonProto/Chat/ChatMessage.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgChatAddMessageS from "../../proto/schema/CommonProto/NetMessage/MsgChatAddMessage/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgChatDeleteMessageS from "../../proto/schema/CommonProto/NetMessage/MsgChatDeleteMessage/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgChatUpdateReadProgressS from "../../proto/schema/CommonProto/NetMessage/MsgChatUpdateReadProgress/S.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
+import { MainCategoryId, Common, ToCategoryId, PublicChannelId } from "../Constants.ts";
+import {
+    checkHasUnreadMessageForTarget,
+    getLatestMessageTimestamp,
+    getTimestampForNextReqAllMessages,
+    setTimestampForNextReqAllMessages,
+    getMessagesForCategory,
+    checkHasUnreadMessageForMainCategory,
+} from "../Model.ts";
+import { reqUpdateReadProgress, reqGetAllMessages, reqChatAddMessage } from "../Proxy.ts";
+import { getRoomStaticInfo, getJoinedRoomIdArray } from "../../coopCustomRoom/model/CcrModel.ts";
+import { show } from "../../FloatText.ts";
+import { getMpwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getOngoingWar } from "../../helpers/GameFlow.ts";
+import { getUserOnlineState, getUserAvatar, getMedal } from "../../helpers/ImageSource.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
+import { LanguageType, TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getCurrentLanguageType,
+    getFormattedText,
+    getText,
+    getChatChannelName,
+    getWarTypeName,
+    getPlayerTeamName,
+    getPlayerShortTeamName,
+    getTimestampShortText,
+} from "../../lang/Utils.ts";
+import {
+    getRoomStaticInfo as MultiCustomRoomModelMcrModelGetRoomStaticInfo,
+    getJoinedRoomIdArray as MultiCustomRoomModelMcrModelGetJoinedRoomIdArray,
+} from "../../multiCustomRoom/model/McrModel.ts";
+import {
+    getRoomStaticInfo as MultiFreeRoomModelMfrModelGetRoomStaticInfo,
+    getJoinedRoomIdArray as MultiFreeRoomModelMfrModelGetJoinedRoomIdArray,
+} from "../../multiFreeRoom/model/MfrModel.ts";
+import { getWarProgressInfo, getWarSettings, getJoinedMpwIdArray, getWarType } from "../../multiPlayerWar/model/MpwModel.ts";
+import { getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { ChatMessage } from "../../proto/schema/CommonProto/Chat/ChatMessage.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgChatAddMessage/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgChatDeleteMessageS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgChatDeleteMessage/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgChatUpdateReadProgressS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgChatUpdateReadProgress/S.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { getServerTimestamp } from "../../timer/TimerModel.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import {
+    getSelfUserId,
+    checkIsFollowingUser,
+    checkIsBlockingUser,
+    getSelfInfo,
+    getUserOnlineState as UsersModelGetUserOnlineState,
+    getUserNickname,
+    getUserBriefInfo,
+    getUserPublicInfo,
+} from "../../users/Model.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
 
-type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-let _preferredChatToTarget          = new AuxiliaryTypesChatToTarget.ChatToTarget();
-const _preferredChatToTargetDict    = new Map<ChatConstants.MainCategoryId, AuxiliaryTypesChatToTarget.ChatToTarget>();
+let _preferredChatToTarget          = new ChatToTarget();
+const _preferredChatToTargetDict    = new Map<MainCategoryId, ChatToTarget>();
 
 export interface OpenData {
-    toTarget    : AuxiliaryTypesChatToTarget.ChatToTarget;
+    toTarget    : ChatToTarget;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnRefresh!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnRefresh!       : IUiButton;
+    private readonly _btnHelp!          : IUiButton;
+    private readonly _btnClose!         : IUiButton;
 
-    private readonly _listMainCategory! : UiInterfacesIUiScrollList.IUiScrollList<DataForMainCategoryRenderer>;
+    private readonly _listMainCategory! : IUiScrollList<DataForMainCategoryRenderer>;
 
-    private readonly _groupContent!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelNoContent!   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupContent!     : IUiContainer;
+    private readonly _labelNoContent!   : IUiLabel;
 
-    private readonly _listTarget!       : UiInterfacesIUiScrollList.IUiScrollList<DataForTargetRenderer>;
+    private readonly _listTarget!       : IUiScrollList<DataForTargetRenderer>;
 
-    private readonly _groupMessage!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelNoMessage!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listMessage!      : UiInterfacesIUiScrollList.IUiScrollList<DataForMessageRenderer>;
+    private readonly _groupMessage!     : IUiContainer;
+    private readonly _labelNoMessage!   : IUiLabel;
+    private readonly _listMessage!      : IUiScrollList<DataForMessageRenderer>;
 
-    private readonly _groupInput!       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _inputMessage!     : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _btnSend!          : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupInput!       : IUiContainer;
+    private readonly _inputMessage!     : IUiPromptedInput;
+    private readonly _btnSend!          : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgChatAddMessage,       callback: this._onNotifyMsgChatAddMessage },
-            { type: NotificationsTypeId.TypeId.MsgChatDeleteMessage,    callback: this._onNotifyMsgChatDeleteMessage },
-            { type: NotificationsTypeId.TypeId.MsgChatGetAllMessages,   callback: this._onNotifyMsgChatGetAllMessages },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgChatAddMessage,       callback: this._onNotifyMsgChatAddMessage },
+            { type: TypeId.MsgChatDeleteMessage,    callback: this._onNotifyMsgChatDeleteMessage },
+            { type: TypeId.MsgChatGetAllMessages,   callback: this._onNotifyMsgChatGetAllMessages },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -97,7 +132,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._listMainCategory.setItemRendererClass(MainCategoryRenderer);
         this._listTarget.setItemRendererClass(TargetRenderer);
         this._listMessage.setItemRendererClass(MessageRenderer);
-        this._inputMessage.setInputMaxLength(ChatConstants.Common.MaxMessageLength);
+        this._inputMessage.setInputMaxLength(Common.MaxMessageLength);
 
         this._updateComponentsForLanguage();
     }
@@ -128,25 +163,25 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         await super._onClosed();
     }
 
-    public async updateOnSelectMainCategory(mainCategory: ChatConstants.MainCategoryId): Promise<void> {
+    public async updateOnSelectMainCategory(mainCategory: MainCategoryId): Promise<void> {
         const listMainCategory = this._listMainCategory;
-        listMainCategory.setSelectedItemIndex(HelpersMisc.getExisted(listMainCategory.getRevisedFirstIndex(v => v?.mainCategory === mainCategory)));
+        listMainCategory.setSelectedItemIndex(getExisted(listMainCategory.getRevisedFirstIndex(v => v?.mainCategory === mainCategory)));
 
         await this._updateGroupContent();
 
-        const chatToTarget = _preferredChatToTargetDict.get(mainCategory) ?? new AuxiliaryTypesChatToTarget.ChatToTarget();
+        const chatToTarget = _preferredChatToTargetDict.get(mainCategory) ?? new ChatToTarget();
         this.updateOnSelectToTarget(getDefaultSelectedToCategory(chatToTarget), getDefaultSelectedToTarget(chatToTarget));
     }
-    public updateOnSelectToTarget(toCategory: ChatConstants.ToCategoryId | null, toTarget: number | null): void {
+    public updateOnSelectToTarget(toCategory: ToCategoryId | null, toTarget: number | null): void {
         const listTarget        = this._listTarget;
         const newSelectedIndex  = listTarget.getRevisedFirstIndex(v => {
             if ((toCategory != null) && (toTarget != null)) {
                 return (v?.toCategory === toCategory) && (v.toTarget === toTarget);
             } else {
-                if (v?.toCategory !== ChatConstants.ToCategoryId.PublicChannel) {
+                if (v?.toCategory !== ToCategoryId.PublicChannel) {
                     return true;
                 } else {
-                    return v.toTarget === (toTarget ?? (LangUtils.getCurrentLanguageType() === LangConstants.LanguageType.Chinese ? ChatConstants.PublicChannelId.PublicCn : ChatConstants.PublicChannelId.PublicEn));
+                    return v.toTarget === (toTarget ?? (getCurrentLanguageType() === LanguageType.Chinese ? PublicChannelId.PublicCn : PublicChannelId.PublicEn));
                 }
             }
         }) ?? -1;
@@ -158,11 +193,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             if (targetData != null) {
                 const selectedToCategory    = targetData.toCategory;
                 const selectedToTarget      = targetData.toTarget;
-                if (ChatModel.checkHasUnreadMessageForTarget(selectedToCategory, selectedToTarget)) {
-                    ChatProxy.reqUpdateReadProgress(
+                if (checkHasUnreadMessageForTarget(selectedToCategory, selectedToTarget)) {
+                    reqUpdateReadProgress(
                         selectedToCategory,
                         selectedToTarget,
-                        ChatModel.getLatestMessageTimestamp(selectedToCategory, selectedToTarget)
+                        getLatestMessageTimestamp(selectedToCategory, selectedToTarget)
                     );
                 }
 
@@ -180,18 +215,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private async _onNotifyMsgChatAddMessage(e: VendorEgretEgret.Event): Promise<void> {
-        const message       = HelpersMisc.getExisted((e.data as ProtoSchemaCommonProtoNetMessageMsgChatAddMessageS.S).getMessage());
-        const msgFromUserId = HelpersMisc.getExisted(message.getFromUserId());
-        const selfUserId    = HelpersMisc.getExisted(UsersModel.getSelfUserId());
+    private async _onNotifyMsgChatAddMessage(e: Event): Promise<void> {
+        const message       = getExisted((e.data as S).getMessage());
+        const msgFromUserId = getExisted(message.getFromUserId());
+        const selfUserId    = getExisted(getSelfUserId());
         if (msgFromUserId === selfUserId) {
             this._inputMessage.setInputText(``);
         }
 
-        const msgToCategory     = HelpersMisc.getExisted(message.getToCategory()) as ChatConstants.ToCategoryId;
-        const rawMsgToTarget    = HelpersMisc.getExisted(message.getToTarget());
+        const msgToCategory     = getExisted(message.getToCategory()) as ToCategoryId;
+        const rawMsgToTarget    = getExisted(message.getToTarget());
         if (!checkIsMessageInMainCategory({
-            mainCategory    : HelpersMisc.getExisted(this._listMainCategory.getFirstSelectedData()?.mainCategory),
+            mainCategory    : getExisted(this._listMainCategory.getFirstSelectedData()?.mainCategory),
             toCategory      : msgToCategory,
             toTarget        : rawMsgToTarget,
             fromUserId      : msgFromUserId,
@@ -210,8 +245,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
 
-    private async _onNotifyMsgChatDeleteMessage(e: VendorEgretEgret.Event): Promise<void> {
-        const messageId = (e.data as ProtoSchemaCommonProtoNetMessageMsgChatDeleteMessageS.S).getMessageId();
+    private async _onNotifyMsgChatDeleteMessage(e: Event): Promise<void> {
+        const messageId = (e.data as ProtoSchemaCommonProtoNetMessageMsgChatDeleteMessageS).getMessageId();
         if (this._listMessage.getBoundDataArray()?.some(v => v?.message.getMessageId() === messageId)) {
             this._updateComponentsForMessage(false);
         }
@@ -229,37 +264,37 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnRefresh(): void {
-        const currTime  = TimerTimerModel.getServerTimestamp();
-        const cdTime    = ChatModel.getTimestampForNextReqAllMessages() - currTime;
+        const currTime  = getServerTimestamp();
+        const cdTime    = getTimestampForNextReqAllMessages() - currTime;
         if (cdTime > 0) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0026, cdTime));
+            show(getFormattedText(TextType.F0026, cdTime));
         } else {
-            ChatModel.setTimestampForNextReqAllMessages(currTime + 30);
-            ChatProxy.reqGetAllMessages();
+            setTimestampForNextReqAllMessages(currTime + 30);
+            reqGetAllMessages();
         }
     }
 
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0870),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0870),
         });
     }
 
     private _onTouchedBtnSend(): void {
         const content = (this._inputMessage.getInputText() ?? ``).trim();
         if (content) {
-            if (content.length > ChatConstants.Common.MaxMessageLength) {
-                FloatText2.show(LangUtils.getText(LangConstants.TextType.B0375));
+            if (content.length > Common.MaxMessageLength) {
+                show(getText(TextType.B0375));
             } else {
                 const data = this._listTarget.getFirstSelectedData();
                 if (data != null) {
-                    ChatProxy.reqChatAddMessage(content, data.toCategory, data.toTarget);
+                    reqChatAddMessage(content, data.toCategory, data.toTarget);
                 }
             }
         }
     }
 
-    private _onKeyboard(data: KeyboardKbTypes.EventData): void {
+    private _onKeyboard(data: EventData): void {
         if (this._getIsShowingCloseAnimation()) {
             return;
         }
@@ -271,11 +306,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const newKeys = data.newKeys;
         const allKeys = data.allKeys;
-        if ((newKeys.has(KeyboardKbTypes.KeyCode.Enter)) && (!allKeys.has(KeyboardKbTypes.KeyCode.Shift))) {
+        if ((newKeys.has(KeyCode.Enter)) && (!allKeys.has(KeyCode.Shift))) {
             this._onTouchedBtnSend();
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Escape)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+        } else if (newKeys.has(KeyCode.Escape)) {
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this.closePanel();
         }
     }
@@ -284,10 +319,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0383));
-        this._labelNoContent.setText(LangUtils.getText(LangConstants.TextType.B0278));
-        this._labelNoMessage.setText(LangUtils.getText(LangConstants.TextType.B0381));
-        this._btnClose.setText(LangUtils.getText(LangConstants.TextType.B0146));
+        this._labelTitle.setText(getText(TextType.B0383));
+        this._labelNoContent.setText(getText(TextType.B0278));
+        this._labelNoMessage.setText(getText(TextType.B0381));
+        this._btnClose.setText(getText(TextType.B0146));
     }
     private async _updateGroupContent(): Promise<void> {
         const dataArray         = await this._createDataForListTarget();
@@ -315,7 +350,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const dataArray : DataForMessageRenderer[] = [];
-        for (const message of ChatModel.getMessagesForCategory(chatData.toCategory).get(chatData.toTarget) || []) {
+        for (const message of getMessagesForCategory(chatData.toCategory).get(chatData.toTarget) || []) {
             dataArray.push({ message });
         }
         labelNoMessage.setIsVisible(!dataArray.length);
@@ -331,27 +366,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if (!list.getBoundDataArray()?.length) {
             await list.bindData([
                 {
-                    mainCategory    : ChatConstants.MainCategoryId.PublicChannel,
+                    mainCategory    : MainCategoryId.PublicChannel,
                     panel           : this,
                 },
                 {
-                    mainCategory    : ChatConstants.MainCategoryId.War,
+                    mainCategory    : MainCategoryId.War,
                     panel           : this,
                 },
                 {
-                    mainCategory    : ChatConstants.MainCategoryId.Room,
+                    mainCategory    : MainCategoryId.Room,
                     panel           : this,
                 },
                 {
-                    mainCategory    : ChatConstants.MainCategoryId.Following,
+                    mainCategory    : MainCategoryId.Following,
                     panel           : this,
                 },
                 {
-                    mainCategory    : ChatConstants.MainCategoryId.Stranger,
+                    mainCategory    : MainCategoryId.Stranger,
                     panel           : this,
                 },
                 {
-                    mainCategory    : ChatConstants.MainCategoryId.MapReview,
+                    mainCategory    : MainCategoryId.MapReview,
                     panel           : this,
                 },
             ]);
@@ -364,59 +399,59 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const dataDict      = new Map<number, DataForTargetRenderer>();
-        const selfUserId    = UsersModel.getSelfUserId();
+        const selfUserId    = getSelfUserId();
         const timestampList : { index: number, timestamp: number }[] = [];
-        const mainCategory  = HelpersMisc.getExisted(this._listMainCategory.getFirstSelectedData()?.mainCategory);
+        const mainCategory  = getExisted(this._listMainCategory.getFirstSelectedData()?.mainCategory);
         let indexForSort    = 0;
-        if (mainCategory === ChatConstants.MainCategoryId.PublicChannel) {
-            for (const [toChannelId, msgList] of ChatModel.getMessagesForCategory(ChatConstants.ToCategoryId.PublicChannel)) {
+        if (mainCategory === MainCategoryId.PublicChannel) {
+            for (const [toChannelId, msgList] of getMessagesForCategory(ToCategoryId.PublicChannel)) {
                 dataDict.set(indexForSort, {
                     index       : indexForSort,
                     panel       : this,
-                    toCategory  : ChatConstants.ToCategoryId.PublicChannel,
+                    toCategory  : ToCategoryId.PublicChannel,
                     toTarget    : toChannelId,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, msgList));
                 ++indexForSort;
             }
 
-            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.PublicChannel, toTarget: ChatConstants.PublicChannelId.PublicCn})) {
+            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.PublicChannel, toTarget: PublicChannelId.PublicCn})) {
                 dataDict.set(indexForSort, {
                     index       : indexForSort,
                     panel       : this,
-                    toCategory  : ChatConstants.ToCategoryId.PublicChannel,
-                    toTarget    : ChatConstants.PublicChannelId.PublicCn,
+                    toCategory  : ToCategoryId.PublicChannel,
+                    toTarget    : PublicChannelId.PublicCn,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, null));
                 ++indexForSort;
             }
-            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.PublicChannel, toTarget: ChatConstants.PublicChannelId.PublicEn})) {
+            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.PublicChannel, toTarget: PublicChannelId.PublicEn})) {
                 dataDict.set(indexForSort, {
                     index       : indexForSort,
                     panel       : this,
-                    toCategory  : ChatConstants.ToCategoryId.PublicChannel,
-                    toTarget    : ChatConstants.PublicChannelId.PublicEn,
+                    toCategory  : ToCategoryId.PublicChannel,
+                    toTarget    : PublicChannelId.PublicEn,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, null));
                 ++indexForSort;
             }
 
-        } else if (mainCategory === ChatConstants.MainCategoryId.War) {
-            for (const [toWarAndTeam, msgList] of ChatModel.getMessagesForCategory(ChatConstants.ToCategoryId.WarAndTeam)) {
+        } else if (mainCategory === MainCategoryId.War) {
+            for (const [toWarAndTeam, msgList] of getMessagesForCategory(ToCategoryId.WarAndTeam)) {
                 dataDict.set(indexForSort, {
                     index       : indexForSort,
                     panel       : this,
-                    toCategory  : ChatConstants.ToCategoryId.WarAndTeam,
+                    toCategory  : ToCategoryId.WarAndTeam,
                     toTarget    : toWarAndTeam,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, msgList));
                 ++indexForSort;
             }
-            for (const [toWarAndSelf, msgList] of ChatModel.getMessagesForCategory(ChatConstants.ToCategoryId.WarAndSelf)) {
+            for (const [toWarAndSelf, msgList] of getMessagesForCategory(ToCategoryId.WarAndSelf)) {
                 dataDict.set(indexForSort, {
                     index       : indexForSort,
                     panel       : this,
-                    toCategory  : ChatConstants.ToCategoryId.WarAndSelf,
+                    toCategory  : ToCategoryId.WarAndSelf,
                     toTarget    : toWarAndSelf,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, msgList));
@@ -426,27 +461,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             if (selfUserId != null) {
                 const handlerForWarAndTeam = async (warIdArray: Undefinable<number[]>) => {
                     for (const warId of warIdArray ?? []) {
-                        const warProgressInfo = await MultiPlayerWarModelMpwModel.getWarProgressInfo(warId);
+                        const warProgressInfo = await getWarProgressInfo(warId);
                         if ((warProgressInfo != null) && (!warProgressInfo.getIsEnded())) {
-                            const toWarAndTeam1 = warId * ChatConstants.Common.TeamDivider;
-                            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.WarAndTeam, toTarget: toWarAndTeam1 })) {
+                            const toWarAndTeam1 = warId * Common.TeamDivider;
+                            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.WarAndTeam, toTarget: toWarAndTeam1 })) {
                                 dataDict.set(indexForSort, {
                                     index       : indexForSort,
                                     panel       : this,
-                                    toCategory  : ChatConstants.ToCategoryId.WarAndTeam,
+                                    toCategory  : ToCategoryId.WarAndTeam,
                                     toTarget    : toWarAndTeam1,
                                 });
                                 timestampList.push(getLatestTimestamp(indexForSort, null));
                                 ++indexForSort;
                             }
 
-                            const selfPlayerInfo    = (await MultiPlayerWarModelMpwModel.getWarSettings(warId))?.getPlayerInfoArray().find(v => (v.getUserId() ?? 0) == selfUserId);
+                            const selfPlayerInfo    = (await getWarSettings(warId))?.getPlayerInfoArray().find(v => (v.getUserId() ?? 0) == selfUserId);
                             const toWarAndTeam2     = toWarAndTeam1 + (selfPlayerInfo?.getTeamIndex() ?? 0);
-                            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.WarAndTeam, toTarget: toWarAndTeam2 })) {
+                            if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.WarAndTeam, toTarget: toWarAndTeam2 })) {
                                 dataDict.set(indexForSort, {
                                     index       : indexForSort,
                                     panel       : this,
-                                    toCategory  : ChatConstants.ToCategoryId.WarAndTeam,
+                                    toCategory  : ToCategoryId.WarAndTeam,
                                     toTarget    : toWarAndTeam2,
                                 });
                                 timestampList.push(getLatestTimestamp(indexForSort, null));
@@ -454,12 +489,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                             }
 
                             {
-                                const toWarAndSelf = warId * ChatConstants.Common.TeamDivider + (selfPlayerInfo?.getPlayerIndex() ?? 0);
-                                if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.WarAndSelf, toTarget: toWarAndSelf })) {
+                                const toWarAndSelf = warId * Common.TeamDivider + (selfPlayerInfo?.getPlayerIndex() ?? 0);
+                                if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.WarAndSelf, toTarget: toWarAndSelf })) {
                                     dataDict.set(indexForSort, {
                                         index       : indexForSort,
                                         panel       : this,
-                                        toCategory  : ChatConstants.ToCategoryId.WarAndSelf,
+                                        toCategory  : ToCategoryId.WarAndSelf,
                                         toTarget    : toWarAndSelf,
                                     });
                                     timestampList.push(getLatestTimestamp(indexForSort, null));
@@ -470,41 +505,41 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     }
                 };
                 await Promise.all([
-                    handlerForWarAndTeam(await MultiPlayerWarModelMpwModel.getJoinedMpwIdArray()),
+                    handlerForWarAndTeam(await getJoinedMpwIdArray()),
                 ]);
             }
 
-        } else if (mainCategory === ChatConstants.MainCategoryId.Room) {
-            for (const [toRoomId, msgList] of ChatModel.getMessagesForCategory(ChatConstants.ToCategoryId.McrRoom)) {
-                if (await MultiCustomRoomModelMcrModel.getRoomStaticInfo(toRoomId)) {
+        } else if (mainCategory === MainCategoryId.Room) {
+            for (const [toRoomId, msgList] of getMessagesForCategory(ToCategoryId.McrRoom)) {
+                if (await MultiCustomRoomModelMcrModelGetRoomStaticInfo(toRoomId)) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
-                        toCategory  : ChatConstants.ToCategoryId.McrRoom,
+                        toCategory  : ToCategoryId.McrRoom,
                         toTarget    : toRoomId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, msgList));
                     ++indexForSort;
                 }
             }
-            for (const [toRoomId, msgList] of ChatModel.getMessagesForCategory(ChatConstants.ToCategoryId.CcrRoom)) {
-                if (await CoopCustomRoomModelCcrModel.getRoomStaticInfo(toRoomId)) {
+            for (const [toRoomId, msgList] of getMessagesForCategory(ToCategoryId.CcrRoom)) {
+                if (await getRoomStaticInfo(toRoomId)) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
-                        toCategory  : ChatConstants.ToCategoryId.CcrRoom,
+                        toCategory  : ToCategoryId.CcrRoom,
                         toTarget    : toRoomId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, msgList));
                     ++indexForSort;
                 }
             }
-            for (const [toRoomId, msgList] of ChatModel.getMessagesForCategory(ChatConstants.ToCategoryId.MfrRoom)) {
-                if (await MultiFreeRoomModelMfrModel.getRoomStaticInfo(toRoomId)) {
+            for (const [toRoomId, msgList] of getMessagesForCategory(ToCategoryId.MfrRoom)) {
+                if (await MultiFreeRoomModelMfrModelGetRoomStaticInfo(toRoomId)) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
-                        toCategory  : ChatConstants.ToCategoryId.MfrRoom,
+                        toCategory  : ToCategoryId.MfrRoom,
                         toTarget    : toRoomId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, msgList));
@@ -513,12 +548,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             }
 
             {
-                for (const roomId of await MultiCustomRoomModelMcrModel.getJoinedRoomIdArray(false) ?? []) {
-                    if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.McrRoom, toTarget: roomId })) {
+                for (const roomId of await MultiCustomRoomModelMcrModelGetJoinedRoomIdArray(false) ?? []) {
+                    if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.McrRoom, toTarget: roomId })) {
                         dataDict.set(indexForSort, {
                             index       : indexForSort,
                             panel       : this,
-                            toCategory  : ChatConstants.ToCategoryId.McrRoom,
+                            toCategory  : ToCategoryId.McrRoom,
                             toTarget    : roomId,
                         });
                         timestampList.push(getLatestTimestamp(indexForSort, null));
@@ -527,12 +562,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 }
             }
             {
-                for (const roomId of await CoopCustomRoomModelCcrModel.getJoinedRoomIdArray(false) ?? []) {
-                    if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.CcrRoom, toTarget: roomId })) {
+                for (const roomId of await getJoinedRoomIdArray(false) ?? []) {
+                    if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.CcrRoom, toTarget: roomId })) {
                         dataDict.set(indexForSort, {
                             index       : indexForSort,
                             panel       : this,
-                            toCategory  : ChatConstants.ToCategoryId.CcrRoom,
+                            toCategory  : ToCategoryId.CcrRoom,
                             toTarget    : roomId,
                         });
                         timestampList.push(getLatestTimestamp(indexForSort, null));
@@ -541,12 +576,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 }
             }
             {
-                for (const roomId of await MultiFreeRoomModelMfrModel.getJoinedRoomIdArray(false) ?? []) {
-                    if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.MfrRoom, toTarget: roomId })) {
+                for (const roomId of await MultiFreeRoomModelMfrModelGetJoinedRoomIdArray(false) ?? []) {
+                    if (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.MfrRoom, toTarget: roomId })) {
                         dataDict.set(indexForSort, {
                             index       : indexForSort,
                             panel       : this,
-                            toCategory  : ChatConstants.ToCategoryId.MfrRoom,
+                            toCategory  : ToCategoryId.MfrRoom,
                             toTarget    : roomId,
                         });
                         timestampList.push(getLatestTimestamp(indexForSort, null));
@@ -555,12 +590,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 }
             }
 
-        } else if (mainCategory === ChatConstants.MainCategoryId.MapReview) {
-            for (const [toMapReviewTarget, msgList] of ChatModel.getMessagesForCategory(ChatConstants.ToCategoryId.MapReview)) {
+        } else if (mainCategory === MainCategoryId.MapReview) {
+            for (const [toMapReviewTarget, msgList] of getMessagesForCategory(ToCategoryId.MapReview)) {
                 dataDict.set(indexForSort, {
                     index       : indexForSort,
                     panel       : this,
-                    toCategory  : ChatConstants.ToCategoryId.MapReview,
+                    toCategory  : ToCategoryId.MapReview,
                     toTarget    : toMapReviewTarget,
                 });
                 timestampList.push(getLatestTimestamp(indexForSort, msgList));
@@ -569,11 +604,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
             {
                 const toMapReviewTarget = chatToTarget.toMapReviewTarget;
-                if ((toMapReviewTarget != null) && (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.MapReview, toTarget: toMapReviewTarget }))) {
+                if ((toMapReviewTarget != null) && (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.MapReview, toTarget: toMapReviewTarget }))) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
-                        toCategory  : ChatConstants.ToCategoryId.MapReview,
+                        toCategory  : ToCategoryId.MapReview,
                         toTarget    : toMapReviewTarget,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, null));
@@ -582,12 +617,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             }
 
             {
-                const toMapReviewTarget = UsersModel.getSelfUserId();
-                if ((toMapReviewTarget != null) && (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.MapReview, toTarget: toMapReviewTarget }))) {
+                const toMapReviewTarget = getSelfUserId();
+                if ((toMapReviewTarget != null) && (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.MapReview, toTarget: toMapReviewTarget }))) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
-                        toCategory  : ChatConstants.ToCategoryId.MapReview,
+                        toCategory  : ToCategoryId.MapReview,
                         toTarget    : toMapReviewTarget,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, null));
@@ -595,15 +630,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 }
             }
 
-        } else if (mainCategory === ChatConstants.MainCategoryId.Following) {
-            for (const [toUserId, msgList] of ChatModel.getMessagesForCategory(ChatConstants.ToCategoryId.Private)) {
-                if ((UsersModel.checkIsFollowingUser(toUserId)) &&
-                    (!UsersModel.checkIsBlockingUser(toUserId))
+        } else if (mainCategory === MainCategoryId.Following) {
+            for (const [toUserId, msgList] of getMessagesForCategory(ToCategoryId.Private)) {
+                if ((checkIsFollowingUser(toUserId)) &&
+                    (!checkIsBlockingUser(toUserId))
                 ) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
-                        toCategory  : ChatConstants.ToCategoryId.Private,
+                        toCategory  : ToCategoryId.Private,
                         toTarget    : toUserId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, msgList));
@@ -611,14 +646,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 }
             }
 
-            for (const toUserId of UsersModel.getSelfInfo()?.getUserRelationInfo()?.getFollowingUserIdArray() ?? []) {
-                if ((!UsersModel.checkIsBlockingUser(toUserId))                                                                             &&
-                    (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.Private, toTarget: toUserId }))
+            for (const toUserId of getSelfInfo()?.getUserRelationInfo()?.getFollowingUserIdArray() ?? []) {
+                if ((!checkIsBlockingUser(toUserId))                                                                             &&
+                    (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.Private, toTarget: toUserId }))
                 ) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
-                        toCategory  : ChatConstants.ToCategoryId.Private,
+                        toCategory  : ToCategoryId.Private,
                         toTarget    : toUserId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, null));
@@ -626,15 +661,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 }
             }
 
-        } else if (mainCategory === ChatConstants.MainCategoryId.Stranger) {
-            for (const [toUserId, msgList] of ChatModel.getMessagesForCategory(ChatConstants.ToCategoryId.Private)) {
-                if ((!UsersModel.checkIsFollowingUser(toUserId))    &&
-                    (!UsersModel.checkIsBlockingUser(toUserId))
+        } else if (mainCategory === MainCategoryId.Stranger) {
+            for (const [toUserId, msgList] of getMessagesForCategory(ToCategoryId.Private)) {
+                if ((!checkIsFollowingUser(toUserId))    &&
+                    (!checkIsBlockingUser(toUserId))
                 ) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
-                        toCategory  : ChatConstants.ToCategoryId.Private,
+                        toCategory  : ToCategoryId.Private,
                         toTarget    : toUserId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, msgList));
@@ -645,14 +680,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             {
                 const toUserId = chatToTarget.toUserId;
                 if ((toUserId != null)                                                                                                          &&
-                    (!UsersModel.checkIsFollowingUser(toUserId))                                                                            &&
-                    (!UsersModel.checkIsBlockingUser(toUserId))                                                                             &&
-                    (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ChatConstants.ToCategoryId.Private, toTarget: toUserId }))
+                    (!checkIsFollowingUser(toUserId))                                                                            &&
+                    (!checkIsBlockingUser(toUserId))                                                                             &&
+                    (!checkHasDataForChatCategoryAndTarget({ dict: dataDict, toCategory: ToCategoryId.Private, toTarget: toUserId }))
                 ) {
                     dataDict.set(indexForSort, {
                         index       : indexForSort,
                         panel       : this,
-                        toCategory  : ChatConstants.ToCategoryId.Private,
+                        toCategory  : ToCategoryId.Private,
                         toTarget    : toUserId,
                     });
                     timestampList.push(getLatestTimestamp(indexForSort, null));
@@ -661,13 +696,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             }
 
         } else {
-            throw HelpersMisc.newError(`Invalid mainCategory: ${mainCategory}`);
+            throw newError(`Invalid mainCategory: ${mainCategory}`);
         }
 
         const dataList  : DataForTargetRenderer[] = [];
         let index       = 0;
         for (const v of timestampList.sort((a, b) => b.timestamp - a.timestamp)) {
-            const data = HelpersMisc.getExisted(dataDict.get(v.index));
+            const data = getExisted(dataDict.get(v.index));
             data.index = index;
             dataList.push(data);
             ++index;
@@ -677,10 +712,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-function getLatestTimestamp(index: number, msgList: ProtoSchemaCommonProtoChatChatMessage.ChatMessage[] | null): { index: number, timestamp: number } {
+function getLatestTimestamp(index: number, msgList: ChatMessage[] | null): { index: number, timestamp: number } {
     let timestamp = 0;
     for (const msg of msgList || []) {
-        timestamp = Math.max(timestamp, HelpersMisc.getExisted(msg.getTimestamp()));
+        timestamp = Math.max(timestamp, getExisted(msg.getTimestamp()));
     }
     return {
         index,
@@ -690,7 +725,7 @@ function getLatestTimestamp(index: number, msgList: ProtoSchemaCommonProtoChatCh
 function checkHasDataForChatCategoryAndTarget({ dict, toTarget, toCategory }: {
     dict        : Map<number, DataForTargetRenderer>;
     toTarget    : number;
-    toCategory  : ChatConstants.ToCategoryId
+    toCategory  : ToCategoryId
 }): boolean {
     for (const [, data] of dict) {
         if ((data.toCategory === toCategory) && (data.toTarget === toTarget)) {
@@ -700,23 +735,23 @@ function checkHasDataForChatCategoryAndTarget({ dict, toTarget, toCategory }: {
     return false;
 }
 
-interface DataForMainCategoryRenderer extends UiTypesUiListItemData.UiListItemData {
-    mainCategory    : ChatConstants.MainCategoryId;
+interface DataForMainCategoryRenderer extends UiListItemData {
+    mainCategory    : MainCategoryId;
     panel           : Panel;
 }
 class MainCategoryRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForMainCategoryRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForMainCategoryRenderer>
+    extends     UiListItemRenderer<DataForMainCategoryRenderer>
+    implements  IUiListItemRenderer<DataForMainCategoryRenderer>
 {
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgRed!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelName!    : IUiLabel;
+    private readonly _imgRed!       : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.MsgChatGetAllMessages,            callback: this._onMsgChatGetAllMessages },
-            { type: NotificationsTypeId.TypeId.MsgChatAddMessage,                callback: this._onMsgChatAddMessage },
-            { type: NotificationsTypeId.TypeId.MsgChatGetAllReadProgressList,    callback: this._onMsgChatGetAllReadProgressList },
-            { type: NotificationsTypeId.TypeId.MsgChatUpdateReadProgress,        callback: this._onMsgChatUpdateReadProgress },
+            { type: TypeId.MsgChatGetAllMessages,            callback: this._onMsgChatGetAllMessages },
+            { type: TypeId.MsgChatAddMessage,                callback: this._onMsgChatAddMessage },
+            { type: TypeId.MsgChatGetAllReadProgressList,    callback: this._onMsgChatGetAllReadProgressList },
+            { type: TypeId.MsgChatUpdateReadProgress,        callback: this._onMsgChatUpdateReadProgress },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -733,63 +768,63 @@ class MainCategoryRenderer
     private _onMsgChatGetAllMessages(): void {
         this._updateImgRed();
     }
-    private _onMsgChatAddMessage(e: VendorEgretEgret.Event): void {
+    private _onMsgChatAddMessage(e: Event): void {
         const mainCategory = this.getOpenData()?.mainCategory;
         if (mainCategory == null) {
             return;
         }
 
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgChatAddMessageS.S;
-        const message       = HelpersMisc.getExisted(data.getMessage());
-        const toCategory    = HelpersMisc.getExisted(message.getToCategory()) as ChatConstants.ToCategoryId;
-        if (mainCategory === ChatConstants.MainCategoryId.PublicChannel) {
-            if (toCategory === ChatConstants.ToCategoryId.PublicChannel) {
+        const data          = e.data as S;
+        const message       = getExisted(data.getMessage());
+        const toCategory    = getExisted(message.getToCategory()) as ToCategoryId;
+        if (mainCategory === MainCategoryId.PublicChannel) {
+            if (toCategory === ToCategoryId.PublicChannel) {
                 this._updateImgRed();
             }
-        } else if (mainCategory === ChatConstants.MainCategoryId.Room) {
-            if ((toCategory === ChatConstants.ToCategoryId.CcrRoom) || (toCategory === ChatConstants.ToCategoryId.McrRoom) || (toCategory === ChatConstants.ToCategoryId.MfrRoom)) {
+        } else if (mainCategory === MainCategoryId.Room) {
+            if ((toCategory === ToCategoryId.CcrRoom) || (toCategory === ToCategoryId.McrRoom) || (toCategory === ToCategoryId.MfrRoom)) {
                 this._updateImgRed();
             }
-        } else if (mainCategory === ChatConstants.MainCategoryId.War) {
-            if (toCategory === ChatConstants.ToCategoryId.WarAndTeam) {
+        } else if (mainCategory === MainCategoryId.War) {
+            if (toCategory === ToCategoryId.WarAndTeam) {
                 this._updateImgRed();
             }
-        } else if (mainCategory === ChatConstants.MainCategoryId.Following) {
-            if (toCategory === ChatConstants.ToCategoryId.Private) {
-                if ((UsersModel.checkIsFollowingUser(message.getFromUserId())) || (UsersModel.checkIsFollowingUser(message.getToTarget()))) {
+        } else if (mainCategory === MainCategoryId.Following) {
+            if (toCategory === ToCategoryId.Private) {
+                if ((checkIsFollowingUser(message.getFromUserId())) || (checkIsFollowingUser(message.getToTarget()))) {
                     this._updateImgRed();
                 }
             }
-        } else if (mainCategory === ChatConstants.MainCategoryId.Stranger) {
-            if (toCategory === ChatConstants.ToCategoryId.Private) {
-                if ((!UsersModel.checkIsFollowingUser(message.getFromUserId())) && (!UsersModel.checkIsFollowingUser(message.getToTarget()))) {
+        } else if (mainCategory === MainCategoryId.Stranger) {
+            if (toCategory === ToCategoryId.Private) {
+                if ((!checkIsFollowingUser(message.getFromUserId())) && (!checkIsFollowingUser(message.getToTarget()))) {
                     this._updateImgRed();
                 }
             }
-        } else if (mainCategory === ChatConstants.MainCategoryId.MapReview) {
-            if (toCategory === ChatConstants.ToCategoryId.MapReview) {
+        } else if (mainCategory === MainCategoryId.MapReview) {
+            if (toCategory === ToCategoryId.MapReview) {
                 this._updateImgRed();
             }
         } else {
-            throw HelpersMisc.newError(`Invalid mainCategory: ${mainCategory}`);
+            throw newError(`Invalid mainCategory: ${mainCategory}`);
         }
     }
     private _onMsgChatGetAllReadProgressList(): void {
         this._updateImgRed();
     }
-    private _onMsgChatUpdateReadProgress(e: VendorEgretEgret.Event): void {
+    private _onMsgChatUpdateReadProgress(e: Event): void {
         const mainCategory = this.getOpenData()?.mainCategory;
         if (mainCategory == null) {
             return;
         }
 
-        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgChatUpdateReadProgressS.S;
-        const progress  = HelpersMisc.getExisted(data.getProgress());
+        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgChatUpdateReadProgressS;
+        const progress  = getExisted(data.getProgress());
         if (checkIsMessageInMainCategory({
             mainCategory    : mainCategory,
-            toCategory      : HelpersMisc.getExisted(progress.getToCategory()),
-            toTarget        : HelpersMisc.getExisted(progress.getToTarget()),
-            fromUserId      : UsersModel.getSelfUserId(),
+            toCategory      : getExisted(progress.getToCategory()),
+            toTarget        : getExisted(progress.getToTarget()),
+            fromUserId      : getSelfUserId(),
         })) {
             this._updateImgRed();
         }
@@ -807,58 +842,58 @@ class MainCategoryRenderer
         }
 
         const labelType = this._labelName;
-        if (category === ChatConstants.MainCategoryId.PublicChannel) {
-            labelType.setText(LangUtils.getText(LangConstants.TextType.B0376));
+        if (category === MainCategoryId.PublicChannel) {
+            labelType.setText(getText(TextType.B0376));
 
-        } else if (category === ChatConstants.MainCategoryId.War) {
-            labelType.setText(LangUtils.getText(LangConstants.TextType.B0719));
+        } else if (category === MainCategoryId.War) {
+            labelType.setText(getText(TextType.B0719));
 
-        } else if (category === ChatConstants.MainCategoryId.Room) {
-            labelType.setText(LangUtils.getText(LangConstants.TextType.B0405));
+        } else if (category === MainCategoryId.Room) {
+            labelType.setText(getText(TextType.B0405));
 
-        } else if (category === ChatConstants.MainCategoryId.Following) {
-            labelType.setText(LangUtils.getText(LangConstants.TextType.B0997));
+        } else if (category === MainCategoryId.Following) {
+            labelType.setText(getText(TextType.B0997));
 
-        } else if (category === ChatConstants.MainCategoryId.Stranger) {
-            labelType.setText(LangUtils.getText(LangConstants.TextType.B0998));
+        } else if (category === MainCategoryId.Stranger) {
+            labelType.setText(getText(TextType.B0998));
 
-        } else if (category === ChatConstants.MainCategoryId.MapReview) {
-            labelType.setText(LangUtils.getText(LangConstants.TextType.B0892));
+        } else if (category === MainCategoryId.MapReview) {
+            labelType.setText(getText(TextType.B0892));
 
         } else {
-            labelType.setText(LangConstants.UndefinedError);
+            labelType.setText(UndefinedError);
         }
     }
 
     private _updateImgRed(): void {
         const openData = this.getOpenData();
-        this._imgRed.setIsVisible(openData == null ? false : ChatModel.checkHasUnreadMessageForMainCategory(openData.mainCategory));
+        this._imgRed.setIsVisible(openData == null ? false : checkHasUnreadMessageForMainCategory(openData.mainCategory));
     }
 }
 
-interface DataForTargetRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTargetRenderer extends UiListItemData {
     index       : number;
     panel       : Panel;
-    toCategory  : ChatConstants.ToCategoryId;
+    toCategory  : ToCategoryId;
     toTarget    : number;
 }
 class TargetRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForTargetRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForTargetRenderer>
+    extends     UiListItemRenderer<DataForTargetRenderer>
+    implements  IUiListItemRenderer<DataForTargetRenderer>
 {
-    private readonly _layoutContent!    : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _layoutType!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelType!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgOnlineState!   : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgRed!           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutContent!    : IUiLayout;
+    private readonly _layoutType!       : IUiLayout;
+    private readonly _labelType!        : IUiLabel;
+    private readonly _imgOnlineState!   : IUiImage;
+    private readonly _labelName!        : IUiLabel;
+    private readonly _imgRed!           : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.MsgChatGetAllMessages,            callback: this._onMsgChatGetAllMessages },
-            { type: NotificationsTypeId.TypeId.MsgChatAddMessage,                callback: this._onMsgChatAddMessage },
-            { type: NotificationsTypeId.TypeId.MsgChatGetAllReadProgressList,    callback: this._onMsgChatGetAllReadProgressList },
-            { type: NotificationsTypeId.TypeId.MsgChatUpdateReadProgress,        callback: this._onMsgChatUpdateReadProgress },
+            { type: TypeId.MsgChatGetAllMessages,            callback: this._onMsgChatGetAllMessages },
+            { type: TypeId.MsgChatAddMessage,                callback: this._onMsgChatAddMessage },
+            { type: TypeId.MsgChatGetAllReadProgressList,    callback: this._onMsgChatGetAllReadProgressList },
+            { type: TypeId.MsgChatUpdateReadProgress,        callback: this._onMsgChatUpdateReadProgress },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -904,125 +939,125 @@ class TargetRenderer
         labelType.setTextColor(0xFFFFFF);
         labelName.setTextColor(0xFFFFFF);
 
-        if (toCategory === ChatConstants.ToCategoryId.PublicChannel) {
-            const languageType  = toTarget === ChatConstants.PublicChannelId.PublicCn
-                ? LangConstants.LanguageType.Chinese
-                : (toTarget === ChatConstants.PublicChannelId.PublicEn
-                    ? LangConstants.LanguageType.English
-                    : LangUtils.getCurrentLanguageType()
+        if (toCategory === ToCategoryId.PublicChannel) {
+            const languageType  = toTarget === PublicChannelId.PublicCn
+                ? LanguageType.Chinese
+                : (toTarget === PublicChannelId.PublicEn
+                    ? LanguageType.English
+                    : getCurrentLanguageType()
                 );
-            labelType.setText(LangUtils.getText(LangConstants.TextType.B0376, languageType));
-            labelName.setText(LangUtils.getChatChannelName(toTarget, languageType) ?? LangConstants.UndefinedError);
+            labelType.setText(getText(TextType.B0376, languageType));
+            labelName.setText(getChatChannelName(toTarget, languageType) ?? UndefinedError);
             imgOnlineState.setIsVisible(false);
 
-        } else if (toCategory === ChatConstants.ToCategoryId.WarAndTeam) {
-            const divider           = ChatConstants.Common.TeamDivider;
+        } else if (toCategory === ToCategoryId.WarAndTeam) {
+            const divider           = Common.TeamDivider;
             const teamIndex         = toTarget % divider;
             const warId             = Math.floor(toTarget / divider);
-            const warType           = await MultiPlayerWarModelMpwModel.getWarType(warId);
-            const war               = HelpersGameFlow.getOngoingWar();
+            const warType           = await getWarType(warId);
+            const war               = getOngoingWar();
             imgOnlineState.setIsVisible(false);
 
             if (war?.getWarId() !== warId) {
-                labelType.setText(`${warType == null ? LangConstants.UndefinedError : LangUtils.getWarTypeName(warType) ?? LangConstants.UndefinedError} #${warId}`);
-                labelName.setText(`${teamIndex === 0 ? LangUtils.getText(LangConstants.TextType.B0379) : LangUtils.getPlayerTeamName(teamIndex)}`);
+                labelType.setText(`${warType == null ? UndefinedError : getWarTypeName(warType) ?? UndefinedError} #${warId}`);
+                labelName.setText(`${teamIndex === 0 ? getText(TextType.B0379) : getPlayerTeamName(teamIndex)}`);
             } else {
-                labelType.setText(`${LangUtils.getText(LangConstants.TextType.B1341)} #${warId}`);
+                labelType.setText(`${getText(TextType.B1341)} #${warId}`);
                 labelType.setTextColor(0x00FF00);
 
                 if (teamIndex === 0) {
-                    labelName.setText(LangUtils.getText(LangConstants.TextType.B0379));
+                    labelName.setText(getText(TextType.B0379));
                 } else {
-                    if ((war instanceof GameHelpersGhFactory.getMpwWarClass())                                      &&
+                    if ((war instanceof getMpwWarClass())                                      &&
                         (teamIndex === war.getPlayerManager().getPlayerLoggedIn()?.getTeamIndex())
                     ) {
-                        labelName.setText(`${LangUtils.getText(LangConstants.TextType.B1342)} (${LangUtils.getPlayerShortTeamName(teamIndex)})` );
+                        labelName.setText(`${getText(TextType.B1342)} (${getPlayerShortTeamName(teamIndex)})` );
                         labelName.setTextColor(0x00FF00);
                     } else {
-                        labelName.setText(LangUtils.getPlayerTeamName(teamIndex) ?? LangConstants.UndefinedError);
+                        labelName.setText(getPlayerTeamName(teamIndex) ?? UndefinedError);
                     }
                 }
             }
 
-        } else if (toCategory === ChatConstants.ToCategoryId.WarAndSelf) {
-            const warId             = Math.floor(toTarget / ChatConstants.Common.TeamDivider);
-            const warType           = await MultiPlayerWarModelMpwModel.getWarType(warId);
+        } else if (toCategory === ToCategoryId.WarAndSelf) {
+            const warId             = Math.floor(toTarget / Common.TeamDivider);
+            const warType           = await getWarType(warId);
             imgOnlineState.setIsVisible(false);
-            labelName.setText(LangUtils.getText(LangConstants.TextType.B1367) ?? LangConstants.UndefinedError);
+            labelName.setText(getText(TextType.B1367) ?? UndefinedError);
             labelName.setTextColor(0x00FF00);
 
-            if (HelpersGameFlow.getOngoingWar()?.getWarId() !== warId) {
-                labelType.setText(`${warType == null ? LangConstants.UndefinedError : LangUtils.getWarTypeName(warType) ?? LangConstants.UndefinedError} #${warId}`);
+            if (getOngoingWar()?.getWarId() !== warId) {
+                labelType.setText(`${warType == null ? UndefinedError : getWarTypeName(warType) ?? UndefinedError} #${warId}`);
             } else {
-                labelType.setText(`${LangUtils.getText(LangConstants.TextType.B1341)} #${warId}`);
+                labelType.setText(`${getText(TextType.B1341)} #${warId}`);
                 labelType.setTextColor(0x00FF00);
             }
 
-        } else if (toCategory === ChatConstants.ToCategoryId.Private) {
-            labelType.setText(LangUtils.getText(LangConstants.TextType.B0378));
+        } else if (toCategory === ToCategoryId.Private) {
+            labelType.setText(getText(TextType.B0378));
             labelName.setText(``);
             imgOnlineState.setIsVisible(true);
-            imgOnlineState.loadSource(HelpersImageSource.getUserOnlineState(await UsersModel.getUserOnlineState(toTarget)));
-            labelName.setText((await UsersModel.getUserNickname(toTarget)) ?? LangConstants.UndefinedError);
+            imgOnlineState.loadSource(getUserOnlineState(await UsersModelGetUserOnlineState(toTarget)));
+            labelName.setText((await getUserNickname(toTarget)) ?? UndefinedError);
 
-        } else if (toCategory === ChatConstants.ToCategoryId.McrRoom) {
-            const hasFog = (await MultiCustomRoomModelMcrModel.getRoomStaticInfo(toTarget))?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
-            labelType.setText(`${LangUtils.getWarTypeName(hasFog ? WarTypesConstants.WarTypeId.McwFog : WarTypesConstants.WarTypeId.McwStd)} #${toTarget}`);
+        } else if (toCategory === ToCategoryId.McrRoom) {
+            const hasFog = (await MultiCustomRoomModelMcrModelGetRoomStaticInfo(toTarget))?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
+            labelType.setText(`${getWarTypeName(hasFog ? WarTypeId.McwFog : WarTypeId.McwStd)} #${toTarget}`);
             labelName.setText(``);
             imgOnlineState.setIsVisible(false);
 
-            const roomInfo = await MultiCustomRoomModelMcrModel.getRoomStaticInfo(toTarget);
+            const roomInfo = await MultiCustomRoomModelMcrModelGetRoomStaticInfo(toTarget);
             if (roomInfo == null) {
                 labelName.setText(``);
             } else {
-                const settingsForMcw    = HelpersMisc.getExisted(roomInfo.getSettingsForMcw());
+                const settingsForMcw    = getExisted(roomInfo.getSettingsForMcw());
                 const warName           = settingsForMcw.getWarName();
                 if (warName) {
                     labelName.setText(warName);
                 } else {
-                    labelName.setText(await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId() ?? 0) ?? LangConstants.UndefinedError);
+                    labelName.setText(await getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId() ?? 0) ?? UndefinedError);
                 }
             }
 
-        } else if (toCategory === ChatConstants.ToCategoryId.CcrRoom) {
-            const hasFog = (await CoopCustomRoomModelCcrModel.getRoomStaticInfo(toTarget))?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
-            labelType.setText(`${LangUtils.getWarTypeName(hasFog ? WarTypesConstants.WarTypeId.CcwFog : WarTypesConstants.WarTypeId.CcwStd)} #${toTarget}`);
+        } else if (toCategory === ToCategoryId.CcrRoom) {
+            const hasFog = (await getRoomStaticInfo(toTarget))?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
+            labelType.setText(`${getWarTypeName(hasFog ? WarTypeId.CcwFog : WarTypeId.CcwStd)} #${toTarget}`);
             labelName.setText(``);
             imgOnlineState.setIsVisible(false);
 
-            const roomInfo = await CoopCustomRoomModelCcrModel.getRoomStaticInfo(toTarget);
+            const roomInfo = await getRoomStaticInfo(toTarget);
             if (roomInfo == null) {
                 labelName.setText(``);
             } else {
-                const settingsForCcw    = HelpersMisc.getExisted(roomInfo.getSettingsForCcw());
+                const settingsForCcw    = getExisted(roomInfo.getSettingsForCcw());
                 const warName           = settingsForCcw.getWarName();
                 if (warName) {
                     labelName.setText(warName);
                 } else {
-                    labelName.setText(await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId() ?? 0) ?? LangConstants.UndefinedError);
+                    labelName.setText(await getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId() ?? 0) ?? UndefinedError);
                 }
             }
 
-        } else if (toCategory === ChatConstants.ToCategoryId.MfrRoom) {
-            const hasFog = (await MultiFreeRoomModelMfrModel.getRoomStaticInfo(toTarget))?.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
-            labelType.setText(`${LangUtils.getWarTypeName(hasFog ? WarTypesConstants.WarTypeId.MfwFog : WarTypesConstants.WarTypeId.MfwStd)} #${toTarget}`);
+        } else if (toCategory === ToCategoryId.MfrRoom) {
+            const hasFog = (await MultiFreeRoomModelMfrModelGetRoomStaticInfo(toTarget))?.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault();
+            labelType.setText(`${getWarTypeName(hasFog ? WarTypeId.MfwFog : WarTypeId.MfwStd)} #${toTarget}`);
             labelName.setText(``);
             imgOnlineState.setIsVisible(false);
 
-            const roomInfo = await MultiFreeRoomModelMfrModel.getRoomStaticInfo(toTarget);
+            const roomInfo = await MultiFreeRoomModelMfrModelGetRoomStaticInfo(toTarget);
             if (roomInfo == null) {
                 labelName.setText(``);
             } else {
-                labelName.setText(roomInfo.getSettingsForMfw()?.getWarName() ?? LangUtils.getText(LangConstants.TextType.B0555));
+                labelName.setText(roomInfo.getSettingsForMfw()?.getWarName() ?? getText(TextType.B0555));
             }
 
-        } else if (toCategory === ChatConstants.ToCategoryId.MapReview) {
-            labelType.setText(`${LangUtils.getText(LangConstants.TextType.B0892)}`);
-            labelName.setText((await UsersModel.getUserBriefInfo(toTarget))?.getNickname() ?? LangConstants.UndefinedError);
+        } else if (toCategory === ToCategoryId.MapReview) {
+            labelType.setText(`${getText(TextType.B0892)}`);
+            labelName.setText((await getUserBriefInfo(toTarget))?.getNickname() ?? UndefinedError);
             imgOnlineState.setIsVisible(false);
 
         } else {
-            throw HelpersMisc.newError(`Invalid data.`);
+            throw newError(`Invalid data.`);
         }
 
         this._layoutType.arrangeItems();
@@ -1035,26 +1070,26 @@ class TargetRenderer
             return;
         }
 
-        this._imgRed.setIsVisible(ChatModel.checkHasUnreadMessageForTarget(openData.toCategory, openData.toTarget));
+        this._imgRed.setIsVisible(checkHasUnreadMessageForTarget(openData.toCategory, openData.toTarget));
     }
 }
 
-interface DataForMessageRenderer extends UiTypesUiListItemData.UiListItemData {
-    message: ProtoSchemaCommonProtoChatChatMessage.ChatMessage;
+interface DataForMessageRenderer extends UiListItemData {
+    message: ChatMessage;
 }
 class MessageRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForMessageRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForMessageRenderer>
+    extends     UiListItemRenderer<DataForMessageRenderer>
+    implements  IUiListItemRenderer<DataForMessageRenderer>
 {
-    private readonly _imgAvatar!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgOnlineState!   : UiInterfacesIUiImage.IUiImage;
+    private readonly _imgAvatar!        : IUiImage;
+    private readonly _imgOnlineState!   : IUiImage;
 
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgMedal!         : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTime!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelName!        : IUiLabel;
+    private readonly _imgMedal!         : IUiImage;
+    private readonly _labelTime!        : IUiLabel;
 
-    private readonly _labelContent!     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelContent!     : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -1077,11 +1112,11 @@ class MessageRenderer
 
         const message       = openData.message;
         const labelContent  = this._labelContent;
-        if (UsersModel.checkIsBlockingUser(HelpersMisc.getExisted(message.getFromUserId()))) {
-            labelContent.setText(`(${LangUtils.getText(LangConstants.TextType.B1301)})`);
+        if (checkIsBlockingUser(getExisted(message.getFromUserId()))) {
+            labelContent.setText(`(${getText(TextType.B1301)})`);
             labelContent.setTextColor(0xAAAAAA);
         } else {
-            labelContent.setText((message.getContent() ?? LangConstants.UndefinedError));
+            labelContent.setText((message.getContent() ?? UndefinedError));
             labelContent.setTextColor(0xFFFFFF);
         }
         this.setUnscaledManualHeight(labelContent.getScaledHeight() + 30);
@@ -1093,22 +1128,22 @@ class MessageRenderer
         }
 
         const message       = openData.message;
-        const fromUserId    = HelpersMisc.getExisted(message.getFromUserId());
-        this._labelName.setTextColor(fromUserId === UsersModel.getSelfUserId() ? 0x00FF00 : 0xFFFFFF);
-        this._labelTime.setText(LangUtils.getTimestampShortText(HelpersMisc.getExisted(message.getTimestamp())));
+        const fromUserId    = getExisted(message.getFromUserId());
+        this._labelName.setTextColor(fromUserId === getSelfUserId() ? 0x00FF00 : 0xFFFFFF);
+        this._labelTime.setText(getTimestampShortText(getExisted(message.getTimestamp())));
         this._imgMedal.loadSource(``);
 
-        const userInfo = HelpersMisc.getExisted(await UsersModel.getUserPublicInfo(fromUserId));
+        const userInfo = getExisted(await getUserPublicInfo(fromUserId));
         if (openData === this.getOpenData()) {
-            this._imgAvatar.loadSource(HelpersImageSource.getUserAvatar(userInfo.getAvatarId() ?? 1));
+            this._imgAvatar.loadSource(getUserAvatar(userInfo.getAvatarId() ?? 1));
             this._labelName.setText(`${userInfo.getNickname() || `???`}`);
 
             const medalId = userInfo.getShowMedalIdArray()[0];
-            this._imgMedal.loadSource(medalId == null ? `` : HelpersImageSource.getMedal(medalId));
+            this._imgMedal.loadSource(medalId == null ? `` : getMedal(medalId));
         }
         this._layoutName.arrangeItems();
 
-        this._imgOnlineState.loadSource(HelpersImageSource.getUserOnlineState(await UsersModel.getUserOnlineState(fromUserId)));
+        this._imgOnlineState.loadSource(getUserOnlineState(await UsersModelGetUserOnlineState(fromUserId)));
     }
 
     public async onItemTapEvent(): Promise<void> {
@@ -1117,46 +1152,46 @@ class MessageRenderer
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().ChatCommandPanel, {
-            messageId   : HelpersMisc.getExisted(message.getMessageId()),
+        openPanel(getDict().ChatCommandPanel, {
+            messageId   : getExisted(message.getMessageId()),
             userId      : message.getFromUserId(),
         });
     }
 }
 
 function checkIsMessageInMainCategory({ mainCategory, toCategory, toTarget, fromUserId }: {
-    mainCategory    : ChatConstants.MainCategoryId;
-    toCategory      : ChatConstants.ToCategoryId;
+    mainCategory    : MainCategoryId;
+    toCategory      : ToCategoryId;
     toTarget        : number;
     fromUserId      : Undefinable<number>;
 }): boolean {
-    if (mainCategory === ChatConstants.MainCategoryId.PublicChannel) {
-        return toCategory === ChatConstants.ToCategoryId.PublicChannel;
+    if (mainCategory === MainCategoryId.PublicChannel) {
+        return toCategory === ToCategoryId.PublicChannel;
 
-    } else if (mainCategory === ChatConstants.MainCategoryId.Room) {
-        return (toCategory === ChatConstants.ToCategoryId.CcrRoom) || (toCategory === ChatConstants.ToCategoryId.McrRoom) || (toCategory === ChatConstants.ToCategoryId.MfrRoom);
+    } else if (mainCategory === MainCategoryId.Room) {
+        return (toCategory === ToCategoryId.CcrRoom) || (toCategory === ToCategoryId.McrRoom) || (toCategory === ToCategoryId.MfrRoom);
 
-    } else if (mainCategory === ChatConstants.MainCategoryId.War) {
-        return (toCategory === ChatConstants.ToCategoryId.WarAndTeam) || (toCategory === ChatConstants.ToCategoryId.WarAndSelf);
+    } else if (mainCategory === MainCategoryId.War) {
+        return (toCategory === ToCategoryId.WarAndTeam) || (toCategory === ToCategoryId.WarAndSelf);
 
-    } else if (mainCategory === ChatConstants.MainCategoryId.Following) {
-        return (toCategory === ChatConstants.ToCategoryId.Private)
-            && ((UsersModel.checkIsFollowingUser(toTarget)) || (UsersModel.checkIsFollowingUser(fromUserId)));
+    } else if (mainCategory === MainCategoryId.Following) {
+        return (toCategory === ToCategoryId.Private)
+            && ((checkIsFollowingUser(toTarget)) || (checkIsFollowingUser(fromUserId)));
 
-    } else if (mainCategory === ChatConstants.MainCategoryId.Stranger) {
-        return (toCategory === ChatConstants.ToCategoryId.Private)
-            && (!UsersModel.checkIsFollowingUser(toTarget))
-            && (!UsersModel.checkIsFollowingUser(fromUserId));
+    } else if (mainCategory === MainCategoryId.Stranger) {
+        return (toCategory === ToCategoryId.Private)
+            && (!checkIsFollowingUser(toTarget))
+            && (!checkIsFollowingUser(fromUserId));
 
-    } else if (mainCategory === ChatConstants.MainCategoryId.MapReview) {
-        return toCategory === ChatConstants.ToCategoryId.MapReview;
+    } else if (mainCategory === MainCategoryId.MapReview) {
+        return toCategory === ToCategoryId.MapReview;
 
     } else {
-        throw HelpersMisc.newError(`Invalid mainCategory: ${mainCategory}`);
+        throw newError(`Invalid mainCategory: ${mainCategory}`);
     }
 }
 
-function checkIsEmptyChatToTarget(chatToTarget: AuxiliaryTypesChatToTarget.ChatToTarget): boolean {
+function checkIsEmptyChatToTarget(chatToTarget: ChatToTarget): boolean {
     return (chatToTarget.toCcrRoomId == null)
         && (chatToTarget.toMapReviewTarget == null)
         && (chatToTarget.toMcrRoomId == null)
@@ -1166,49 +1201,49 @@ function checkIsEmptyChatToTarget(chatToTarget: AuxiliaryTypesChatToTarget.ChatT
         && (chatToTarget.toWarAndTeam == null)
         && (chatToTarget.toWarAndSelf == null);
 }
-function getDefaultSelectedMainCategory(chatToTarget: AuxiliaryTypesChatToTarget.ChatToTarget): ChatConstants.MainCategoryId {
+function getDefaultSelectedMainCategory(chatToTarget: ChatToTarget): MainCategoryId {
     if (chatToTarget.toCcrRoomId != null) {
-        return ChatConstants.MainCategoryId.Room;
+        return MainCategoryId.Room;
     } else if (chatToTarget.toMapReviewTarget != null) {
-        return ChatConstants.MainCategoryId.MapReview;
+        return MainCategoryId.MapReview;
     } else if (chatToTarget.toMcrRoomId != null) {
-        return ChatConstants.MainCategoryId.Room;
+        return MainCategoryId.Room;
     } else if (chatToTarget.toMfrRoomId != null) {
-        return ChatConstants.MainCategoryId.Room;
+        return MainCategoryId.Room;
     } else if (chatToTarget.toUserId != null) {
-        return UsersModel.checkIsFollowingUser(chatToTarget.toUserId) ? ChatConstants.MainCategoryId.Following : ChatConstants.MainCategoryId.Stranger;
+        return checkIsFollowingUser(chatToTarget.toUserId) ? MainCategoryId.Following : MainCategoryId.Stranger;
     } else if (chatToTarget.toWarAndTeam != null) {
-        return ChatConstants.MainCategoryId.War;
+        return MainCategoryId.War;
     } else if (chatToTarget.toWarAndSelf != null) {
-        return ChatConstants.MainCategoryId.War;
+        return MainCategoryId.War;
     } else if (chatToTarget.toPublicChannel != null) {
-        return ChatConstants.MainCategoryId.PublicChannel;
+        return MainCategoryId.PublicChannel;
     } else {
-        return ChatConstants.MainCategoryId.PublicChannel;
+        return MainCategoryId.PublicChannel;
     }
 }
-function getDefaultSelectedToCategory(chatToTarget: AuxiliaryTypesChatToTarget.ChatToTarget): ChatConstants.ToCategoryId | null {
+function getDefaultSelectedToCategory(chatToTarget: ChatToTarget): ToCategoryId | null {
     if (chatToTarget.toCcrRoomId != null) {
-        return ChatConstants.ToCategoryId.CcrRoom;
+        return ToCategoryId.CcrRoom;
     } else if (chatToTarget.toMapReviewTarget != null) {
-        return ChatConstants.ToCategoryId.MapReview;
+        return ToCategoryId.MapReview;
     } else if (chatToTarget.toMcrRoomId != null) {
-        return ChatConstants.ToCategoryId.McrRoom;
+        return ToCategoryId.McrRoom;
     } else if (chatToTarget.toMfrRoomId != null) {
-        return ChatConstants.ToCategoryId.MfrRoom;
+        return ToCategoryId.MfrRoom;
     } else if (chatToTarget.toUserId != null) {
-        return ChatConstants.ToCategoryId.Private;
+        return ToCategoryId.Private;
     } else if (chatToTarget.toWarAndTeam != null) {
-        return ChatConstants.ToCategoryId.WarAndTeam;
+        return ToCategoryId.WarAndTeam;
     } else if (chatToTarget.toWarAndSelf != null) {
-        return ChatConstants.ToCategoryId.WarAndSelf;
+        return ToCategoryId.WarAndSelf;
     } else if (chatToTarget.toPublicChannel != null) {
-        return ChatConstants.ToCategoryId.PublicChannel;
+        return ToCategoryId.PublicChannel;
     } else {
         return null;
     }
 }
-function getDefaultSelectedToTarget(chatToTarget: AuxiliaryTypesChatToTarget.ChatToTarget): number | null {
+function getDefaultSelectedToTarget(chatToTarget: ChatToTarget): number | null {
     return chatToTarget.toCcrRoomId
         ?? chatToTarget.toMapReviewTarget
         ?? chatToTarget.toMcrRoomId
@@ -1219,29 +1254,29 @@ function getDefaultSelectedToTarget(chatToTarget: AuxiliaryTypesChatToTarget.Cha
         ?? chatToTarget.toPublicChannel
         ?? null;
 }
-function generateChatToTarget(data: DataForTargetRenderer | null): AuxiliaryTypesChatToTarget.ChatToTarget {
+function generateChatToTarget(data: DataForTargetRenderer | null): ChatToTarget {
     if (data == null) {
-        return new AuxiliaryTypesChatToTarget.ChatToTarget();
+        return new ChatToTarget();
     } else {
         const toCategory = data.toCategory;
-        if (toCategory === ChatConstants.ToCategoryId.CcrRoom) {
-            return new AuxiliaryTypesChatToTarget.ChatToTarget({ toCcrRoomId: data.toTarget });
-        } else if (toCategory === ChatConstants.ToCategoryId.MapReview) {
-            return new AuxiliaryTypesChatToTarget.ChatToTarget({ toMapReviewTarget: data.toTarget });
-        } else if (toCategory === ChatConstants.ToCategoryId.McrRoom) {
-            return new AuxiliaryTypesChatToTarget.ChatToTarget({ toMcrRoomId: data.toTarget });
-        } else if (toCategory === ChatConstants.ToCategoryId.MfrRoom) {
-            return new AuxiliaryTypesChatToTarget.ChatToTarget({ toMfrRoomId: data.toTarget });
-        } else if (toCategory === ChatConstants.ToCategoryId.Private) {
-            return new AuxiliaryTypesChatToTarget.ChatToTarget({ toUserId: data.toTarget });
-        } else if (toCategory === ChatConstants.ToCategoryId.PublicChannel) {
-            return new AuxiliaryTypesChatToTarget.ChatToTarget({ toPublicChannel: data.toTarget });
-        } else if (toCategory === ChatConstants.ToCategoryId.WarAndTeam) {
-            return new AuxiliaryTypesChatToTarget.ChatToTarget({ toWarAndTeam: data.toTarget });
-        } else if (toCategory === ChatConstants.ToCategoryId.WarAndSelf) {
-            return new AuxiliaryTypesChatToTarget.ChatToTarget({ toWarAndSelf: data.toTarget });
+        if (toCategory === ToCategoryId.CcrRoom) {
+            return new ChatToTarget({ toCcrRoomId: data.toTarget });
+        } else if (toCategory === ToCategoryId.MapReview) {
+            return new ChatToTarget({ toMapReviewTarget: data.toTarget });
+        } else if (toCategory === ToCategoryId.McrRoom) {
+            return new ChatToTarget({ toMcrRoomId: data.toTarget });
+        } else if (toCategory === ToCategoryId.MfrRoom) {
+            return new ChatToTarget({ toMfrRoomId: data.toTarget });
+        } else if (toCategory === ToCategoryId.Private) {
+            return new ChatToTarget({ toUserId: data.toTarget });
+        } else if (toCategory === ToCategoryId.PublicChannel) {
+            return new ChatToTarget({ toPublicChannel: data.toTarget });
+        } else if (toCategory === ToCategoryId.WarAndTeam) {
+            return new ChatToTarget({ toWarAndTeam: data.toTarget });
+        } else if (toCategory === ToCategoryId.WarAndSelf) {
+            return new ChatToTarget({ toWarAndSelf: data.toTarget });
         } else {
-            return new AuxiliaryTypesChatToTarget.ChatToTarget();
+            return new ChatToTarget();
         }
     }
 }

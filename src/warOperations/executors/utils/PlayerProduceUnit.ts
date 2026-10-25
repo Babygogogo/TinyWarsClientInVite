@@ -1,41 +1,51 @@
-import * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "../../../auxiliaryTypes/MapSize.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import * as GameHelpersGhFactory from "../../../gameHelpers/GhFactory.ts";
-import type * as HalfwayReplayWarInterfaceIHrwWar from "../../../halfwayReplayWar/interface/IHrwWar.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as HelpersTeam from "../../../helpers/Team.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../../mapEditor/interface/IMeWar.ts";
-import type * as MultiPlayerWarInterfaceIMpwWar from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type * as PlayersIPlayer from "../../../players/IPlayer.ts";
-import * as ProtoSchemaCommonProtoStructureTileBuff from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoPlayerProduceUnit from "../../../proto/schema/CommonProto/WarOperation/WoPlayerProduceUnit.ts";
-import * as ProtoSchemaCommonProtoWarSerializationWsUnitStatistics from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type * as ReplayWarInterfaceIRwWar from "../../../replayWar/interface/IRwWar.ts";
-import type * as SinglePlayerWarInterfaceISpwWar from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import * as SoundsConstants from "../../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../../sounds/SoundPlayer.ts";
-import type * as TestWarInterfaceITwWar from "../../../testWar/interface/ITwWar.ts";
-import * as TileBuffsConstants from "../../../tileBuffs/Constants.ts";
-import * as UnitsConstants from "../../../units/Constants.ts";
-import * as UnitsUtilsCommon from "../../../units/utils/Common.ts";
-import * as UnitsUtilsSerialization from "../../../units/utils/Serialization.ts";
-import * as UtilsClientErrorCode from "../../../utils/ClientErrorCode.ts";
-import * as VisibilitiesUtils from "../../../visibilities/Utils.ts";
-import * as WarOperationsExecutorsUtilsCommon from "./Common.ts";
+import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import {
+    getUnitClass,
+    getHrwWarClass,
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../../gameHelpers/GhFactory.ts";
+import type { IHrwWar } from "../../../halfwayReplayWar/interface/IHrwWar.ts";
+import { getExisted, createLazyFunc } from "../../../helpers/Misc.ts";
+import { encodeTeamIndex } from "../../../helpers/Team.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText, getUnitName } from "../../../lang/Utils.ts";
+import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
+import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
+import { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type {
+    WoPlayerProduceUnit as ProtoSchemaCommonProtoWarOperationWoPlayerProduceUnit,
+} from "../../../proto/schema/CommonProto/WarOperation/WoPlayerProduceUnit.ts";
+import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+import type { IRwWar } from "../../../replayWar/interface/IRwWar.ts";
+import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
+import { ShortSfxCode } from "../../../sounds/Constants.ts";
+import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
+import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
+import { BuffTypeId } from "../../../tileBuffs/Constants.ts";
+import { Hp, ActionStateId } from "../../../units/Constants.ts";
+import { getNormalizedHp } from "../../../units/utils/Common.ts";
+import { create } from "../../../units/utils/Serialization.ts";
+import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
+import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
+import { handleCommonExtraData } from "./Common.ts";
 
-type WoPlayerProduceUnit    = ProtoSchemaCommonProtoWarOperationWoPlayerProduceUnit.WoPlayerProduceUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
+type WoPlayerProduceUnit    = ProtoSchemaCommonProtoWarOperationWoPlayerProduceUnit;
+type IBwWar                 = BaseWarInterfaceIBwWar;
 
-let _hrwWarClass    : new () => HalfwayReplayWarInterfaceIHrwWar.IHrwWar;
-let _meWarClass     : new () => MapEditorInterfaceIMeWar.IMeWar;
-let _mpwWarClass    : new () => MultiPlayerWarInterfaceIMpwWar.IMpwWar;
-let _rwWarClass     : new () => ReplayWarInterfaceIRwWar.IRwWar;
-let _spwWarClass    : new () => SinglePlayerWarInterfaceISpwWar.ISpwWar;
-let _twWarClass     : new () => TestWarInterfaceITwWar.ITwWar;
+let _hrwWarClass    : new () => IHrwWar;
+let _meWarClass     : new () => IMeWar;
+let _mpwWarClass    : new () => IMpwWar;
+let _rwWarClass     : new () => IRwWar;
+let _spwWarClass    : new () => ISpwWar;
+let _twWarClass     : new () => ITwWar;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function execute(war: IBwWar, action: WoPlayerProduceUnit, isFast: boolean): Promise<void> {
@@ -61,8 +71,8 @@ function normalExePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit): v
 function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFastExecute: boolean): void {
     const extraData = action.getExtraData();
     if (extraData) {
-        const commonExtraData = HelpersMisc.getExisted(extraData.getCommonExtraData(), UtilsClientErrorCode.ClientErrorCode.WarOperationExecutor_HandlePlayerProduceUnit_00);
-        WarOperationsExecutorsUtilsCommon.handleCommonExtraData({
+        const commonExtraData = getExisted(extraData.getCommonExtraData(), ClientErrorCode.WarOperationExecutor_HandlePlayerProduceUnit_00);
+        handleCommonExtraData({
             war             : war,
             commonExtraData : commonExtraData,
             isFastExecute   : true,
@@ -70,39 +80,39 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
 
         if (!isFastExecute) {
             if (commonExtraData.getUnitArrayAfterAction()?.length) {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.UnitProduction);
+                playShortSfx(ShortSfxCode.UnitProduction);
             }
         }
 
     } else {
         const unitMap           = war.getUnitMap();
         const unitId            = unitMap.getNextUnitId();
-        const tileGridIndex     = HelpersMisc.getExisted(AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(action.getGridIndex()));
-        const unitType          = HelpersMisc.getExisted(action.getUnitType());
-        const unitHp            = HelpersMisc.getExisted(action.getUnitHp());
+        const tileGridIndex     = getExisted(GridIndex.convertGridIndex(action.getGridIndex()));
+        const unitType          = getExisted(action.getUnitType());
+        const unitHp            = getExisted(action.getUnitHp());
         const gameConfig        = war.getGcData();
         const playerInTurn      = war.getPlayerInTurn();
         const playerIndex       = playerInTurn.getPlayerIndex();
         const tileMap           = war.getTileMap();
         const skillCfg          = tileMap.getTile(tileGridIndex).getEffectiveSelfUnitProductionSkillCfg(playerIndex);
-        const unitTemplateCfg   = HelpersMisc.getExisted(gameConfig.getUnitTemplateCfg(unitType));
+        const unitTemplateCfg   = getExisted(gameConfig.getUnitTemplateCfg(unitType));
         const cfgCost           = unitTemplateCfg.getProductionCost();
         const cost              = Math.floor(
             cfgCost
             * (skillCfg ? (skillCfg.getCostMultiplierPct() ?? 0) : 100)
-            * UnitsUtilsCommon.getNormalizedHp(unitHp)
+            * getNormalizedHp(unitHp)
             * playerInTurn.getUnitCostModifier(unitType)
             / 100
-            / UnitsConstants.Hp.Normalizer
+            / Hp.Normalizer
         );
 
-        const unitData = UnitsUtilsSerialization.create({
+        const unitData = create({
             unitType                        : unitType,
             unitId                          : unitId,
             playerIndex                     : playerIndex,
             gridIndex                       : tileGridIndex.toProto().toJson(),
 
-            actionState                     : skillCfg?.getUnitActionStateId() ?? UnitsConstants.ActionStateId.Acted,
+            actionState                     : skillCfg?.getUnitActionStateId() ?? ActionStateId.Acted,
             currentHp                       : unitHp,
             aiMode                          : null,
             groupedTagId                    : null,
@@ -131,8 +141,8 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
 
             const unitCategoryId = cfg.getUnitCategoryId();
             if ((unitCategoryId == null) || (gameConfig.checkIsUnitTypeInCategory(unitType, unitCategoryId))) {
-                tileMap.getTile(tileGridIndex).addUnfixedBuff(ProtoSchemaCommonProtoStructureTileBuff.TileBuff.fromJson({
-                    buffTypeId          : TileBuffsConstants.BuffTypeId.NoProduction,
+                tileMap.getTile(tileGridIndex).addUnfixedBuff(TileBuff.fromJson({
+                    buffTypeId          : BuffTypeId.NoProduction,
                     expiringTurnIndex   : war.getTurnManager().getTurnIndex() + 1,
                     expiringPlayerIndex : playerIndex,
                     extraParamArray     : [],
@@ -140,7 +150,7 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
 
                 const maxCount = cfg.getConMaxCountOfNoProductionBuilding();
                 if ((maxCount == null)                                                                                                                                                  ||
-                    (tileMap.getTilesCount(v => (v.getPlayerIndex() == playerIndex) && (v.checkHasUnfixedBuff(TileBuffsConstants.BuffTypeId.NoProduction))) <= maxCount)
+                    (tileMap.getTilesCount(v => (v.getPlayerIndex() == playerIndex) && (v.checkHasUnfixedBuff(BuffTypeId.NoProduction))) <= maxCount)
                 ) {
                     const destination = getTeleportDestinationForPlayerProduceUnit(war, playerInTurn, unitType, tileGridIndex, cfg.getConCoUnitActionStateId() ?? null);
                     if (destination != null) {
@@ -157,7 +167,7 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
             }
         }
 
-        const unit = new (GameHelpersGhFactory.getUnitClass())();
+        const unit = new (getUnitClass())();
         unit.init(unitData, gameConfig);
         unit.startRunning(war);
         unit.startRunningView();
@@ -166,16 +176,16 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
         playerInTurn.setFund(playerInTurn.getFund() - cost);
 
         {
-            const observerTeamIndexes = VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+            const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
             if (observerTeamIndexes != null) {
-                war.getWarStatisticsManager().addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                war.getWarStatisticsManager().addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                    : unitType,
                     dstPlayerIndex              : playerIndex,
                     normalizedHpGain            : unit.getNormalizedCurrentHp(),
                     normalizedHpLoss            : 0,
                     unitGain                    : 1,
                     unitLoss                    : 0,
-                    groupedObserverTeamIndexes  : HelpersTeam.encodeTeamIndex(observerTeamIndexes),
+                    groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
                 }));
             }
 
@@ -183,18 +193,18 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
                 if ((observerTeamIndexes?.length) &&
                     (war.getPlayerManager().getAllPlayers(false).some(v => (v.getUserId() != null) && (observerTeamIndexes.indexOf(v.getTeamIndex()) >= 0)))
                 ) {
-                    SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.UnitProduction);
+                    playShortSfx(ShortSfxCode.UnitProduction);
                 }
             }
         }
     }
 }
 
-function getPromotionForPlayerProduceUnit(war: IBwWar, gridIndex: AuxiliaryTypesGridIndex.GridIndex, unitType: number): number {
+function getPromotionForPlayerProduceUnit(war: IBwWar, gridIndex: GridIndex, unitType: number): number {
     const player                    = war.getPlayerInTurn();
     const coZoneRadius              = player.getCoZoneRadius();
     const gameConfig                = war.getGcData();
-    const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+    const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
     let promotion                   = 0;
     for (const skillId of war.getPlayerInTurn().getCoCurrentSkills()) {
         const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfPromotionBonusByProduce();
@@ -213,13 +223,13 @@ function getPromotionForPlayerProduceUnit(war: IBwWar, gridIndex: AuxiliaryTypes
     return promotion;
 }
 
-function getTeleportDestinationForPlayerProduceUnit(war: IBwWar, player: PlayersIPlayer.IPlayer, unitTypeId: number, tileGridIndex: AuxiliaryTypesGridIndex.GridIndex, conCoUnitActionStateId: number | null): AuxiliaryTypesGridIndex.GridIndex | null {
+function getTeleportDestinationForPlayerProduceUnit(war: IBwWar, player: IPlayer, unitTypeId: number, tileGridIndex: GridIndex, conCoUnitActionStateId: number | null): GridIndex | null {
     const tileMap           = war.getTileMap();
     const unitMap           = war.getUnitMap();
     const mapSize           = tileMap.getMapSize();
-    const moveTypeId        = HelpersMisc.getExisted(war.getGcData().getUnitTemplateCfg(unitTypeId)?.getMoveTypeId());
+    const moveTypeId        = getExisted(war.getGcData().getUnitTemplateCfg(unitTypeId)?.getMoveTypeId());
     const checkedGridIdSet  = new Set<number>();
-    let destination         : AuxiliaryTypesGridIndex.GridIndex | null = null;
+    let destination         : GridIndex | null = null;
     for (const coGridIndex of player.getCoGridIndexListOnMap()) {
         if ((conCoUnitActionStateId != null) && (unitMap.getUnitOnMap(coGridIndex)?.getActionState() !== conCoUnitActionStateId)) {
             continue;
@@ -282,7 +292,7 @@ function getTeleportDestinationForPlayerProduceUnit(war: IBwWar, player: Players
 
     return destination;
 }
-function getDistanceList(gridIndex: AuxiliaryTypesGridIndex.GridIndex, mapSize: AuxiliaryTypesMapSize.MapSize): number[] {
+function getDistanceList(gridIndex: GridIndex, mapSize: MapSize): number[] {
     const x = gridIndex.getX();
     const y = gridIndex.getY();
     return [
@@ -304,22 +314,22 @@ function compareDistanceList(list1: number[], list2: number[]): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoPlayerProduceUnit, gcData: GameConfigGcData.GcData): Promise<string | null> {
-    _hrwWarClass    ??= GameHelpersGhFactory.getHrwWarClass();
-    _meWarClass     ??= GameHelpersGhFactory.getMeWarClass();
-    _mpwWarClass    ??= GameHelpersGhFactory.getMpwWarClass();
-    _rwWarClass     ??= GameHelpersGhFactory.getRwWarClass();
-    _spwWarClass    ??= GameHelpersGhFactory.getSpwWarClass();
-    _twWarClass     ??= GameHelpersGhFactory.getTwWarClass();
+async function getDesc(war: IBwWar, action: WoPlayerProduceUnit, gcData: GcData): Promise<string | null> {
+    _hrwWarClass    ??= getHrwWarClass();
+    _meWarClass     ??= getMeWarClass();
+    _mpwWarClass    ??= getMpwWarClass();
+    _rwWarClass     ??= getRwWarClass();
+    _spwWarClass    ??= getSpwWarClass();
+    _twWarClass     ??= getTwWarClass();
 
     if (war instanceof _hrwWarClass) {
-        return `${LangUtils.getText(LangConstants.TextType.B0095)} ${war.getWarOperationDescSuffix()}`;
+        return `${getText(TextType.B0095)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof _meWarClass) {
         return null;
     } else if (war instanceof _mpwWarClass) {
         return null;
     } else if (war instanceof _rwWarClass) {
-        return `${LangUtils.getText(LangConstants.TextType.B0095)} ${LangUtils.getUnitName(HelpersMisc.getExisted(action.getUnitType()), gcData)} ${war.getWarOperationDescSuffix()}`;
+        return `${getText(TextType.B0095)} ${getUnitName(getExisted(action.getUnitType()), gcData)} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof _spwWarClass) {
         return null;
     } else if (war instanceof _twWarClass) {

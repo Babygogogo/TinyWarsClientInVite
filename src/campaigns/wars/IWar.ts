@@ -1,9 +1,9 @@
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForCaw from "../../proto/schema/CommonProto/WarSettings/SettingsForCaw.ts";
-import type * as SinglePlayerWarInterfaceISpwWar from "../../singlePlayerWar/interface/ISpwWar.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SettingsForCaw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCaw.ts";
+import type { ISpwWar } from "../../singlePlayerWar/interface/ISpwWar.ts";
 
-export interface IWar extends SinglePlayerWarInterfaceISpwWar.ISpwWar {
-    serializeForValidation(): ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
+export interface IWar extends ISpwWar {
+    serializeForValidation(): SerialWar;
 
     getIsNeedExecutedOperations(): boolean;
     getIsNeedSeedRandom(): boolean;
@@ -18,7 +18,7 @@ export interface IWar extends SinglePlayerWarInterfaceISpwWar.ISpwWar {
 
     getSettingsBootTimerParams(): number[];
 
-    getSettingsForCaw(): ProtoSchemaCommonProtoWarSettingsSettingsForCaw.SettingsForCaw;
+    getSettingsForCaw(): SettingsForCaw;
 
     calculateTotalScore(): number;
 }

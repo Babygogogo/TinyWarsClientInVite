@@ -1,46 +1,46 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesDropDestination from "../../../auxiliaryTypes/DropDestination.ts";
-import * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMovePath from "../../../auxiliaryTypes/MovePath.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as PlayersConstants from "../../../players/Constants.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoUnitDropUnit from "../../../proto/schema/CommonProto/WarOperation/WoUnitDropUnit.ts";
-import * as TurnsConstants from "../../../turns/Constants.ts";
-import * as UtilsClientErrorCode from "../../../utils/ClientErrorCode.ts";
-import * as VisibilitiesUtils from "../../../visibilities/Utils.ts";
-import * as WarOperationsRevisersUtilsCommon from "./Common.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { DropDestination } from "../../../auxiliaryTypes/DropDestination.ts";
+import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { newError, getExisted } from "../../../helpers/Misc.ts";
+import { AliveStateId } from "../../../players/Constants.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { WoUnitDropUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitDropUnit.ts";
+import { PhaseCode } from "../../../turns/Constants.ts";
+import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
+import { checkIsUnitOnMapVisibleToTeam } from "../../../visibilities/Utils.ts";
+import { getRevisedPath, checkIsPathDestinationOccupiedByOtherVisibleUnit } from "./Common.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type IBwWar                 = BaseWarInterfaceIBwWar;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-export function revise(war: IBwWar, rawAction: ProtoSchemaCommonProtoWarOperationWoUnitDropUnit.WoUnitDropUnit, requesterUserId: Undefinable<number>): ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer {
-    if (war.getTurnPhaseCode() !== TurnsConstants.PhaseCode.Main) {
-        throw HelpersMisc.newError(`Invalid turnPhaseCode.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitDropUnit_00);
+export function revise(war: IBwWar, rawAction: WoUnitDropUnit, requesterUserId: Undefinable<number>): WoContainer {
+    if (war.getTurnPhaseCode() !== PhaseCode.Main) {
+        throw newError(`Invalid turnPhaseCode.`, ClientErrorCode.WarOperationReviser_ReviseUnitDropUnit_00);
     }
 
     const playerInTurn = war.getPlayerInTurn();
-    if ((playerInTurn == null) || (playerInTurn.getAliveState() !== PlayersConstants.AliveStateId.Alive)) {
-        throw HelpersMisc.newError(`Invalid aliveState.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitDropUnit_01);
+    if ((playerInTurn == null) || (playerInTurn.getAliveState() !== AliveStateId.Alive)) {
+        throw newError(`Invalid aliveState.`, ClientErrorCode.WarOperationReviser_ReviseUnitDropUnit_01);
     }
 
     const rawPath       = rawAction.getPath();
     const launchUnitId  = rawAction.getLaunchUnitId();
-    const revisedPath   = WarOperationsRevisersUtilsCommon.getRevisedPath({ war, rawPath, launchUnitId, requesterUserId });
-    const rawPathNodes  = rawPath?.getNodes().map(v => HelpersMisc.getExisted(AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(v))) ?? [];
-    if (WarOperationsRevisersUtilsCommon.checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
-        throw HelpersMisc.newError(`Destination occupied.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitDropUnit_02);
+    const revisedPath   = getRevisedPath({ war, rawPath, launchUnitId, requesterUserId });
+    const rawPathNodes  = rawPath?.getNodes().map(v => getExisted(GridIndex.convertGridIndex(v))) ?? [];
+    if (checkIsPathDestinationOccupiedByOtherVisibleUnit(war, rawPathNodes)) {
+        throw newError(`Destination occupied.`, ClientErrorCode.WarOperationReviser_ReviseUnitDropUnit_02);
     }
 
     const dropDestinations  = rawAction.getDropDestinations();
     if ((!dropDestinations) || (!checkIsDropDestinationsValid(war, rawAction))) {
-        throw HelpersMisc.newError(`Invalid dropDestinations.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseUnitDropUnit_03);
+        throw newError(`Invalid dropDestinations.`, ClientErrorCode.WarOperationReviser_ReviseUnitDropUnit_03);
     }
 
     const revisedDropDestinations   = getRevisedDropDestinations(war, rawAction, revisedPath);
     const isDropBlocked             =  (!revisedPath.isBlocked) && (revisedDropDestinations.length < dropDestinations.length);
-    return ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    return WoContainer.fromJson({
         WoUnitDropUnit   : {
             path                : revisedPath.toProto().toJson(),
             launchUnitId        : launchUnitId,
@@ -50,7 +50,7 @@ export function revise(war: IBwWar, rawAction: ProtoSchemaCommonProtoWarOperatio
     });
 }
 
-function checkIsDropDestinationsValid(war: IBwWar, action: ProtoSchemaCommonProtoWarOperationWoUnitDropUnit.WoUnitDropUnit): boolean {
+function checkIsDropDestinationsValid(war: IBwWar, action: WoUnitDropUnit): boolean {
     const destinations = action.getDropDestinations();
     if (destinations == null) {
         return false;
@@ -67,7 +67,7 @@ function checkIsDropDestinationsValid(war: IBwWar, action: ProtoSchemaCommonProt
     }
 
     const unitMap       = war.getUnitMap();
-    const pathNodes     = path.getNodes().map(v => HelpersMisc.getExisted(AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(v))) ?? [];
+    const pathNodes     = path.getNodes().map(v => getExisted(GridIndex.convertGridIndex(v))) ?? [];
     const loaderUnit    = unitMap.getUnit(pathNodes[0], action.getLaunchUnitId());
     if (loaderUnit == null) {
         return false;
@@ -101,7 +101,7 @@ function checkIsDropDestinationsValid(war: IBwWar, action: ProtoSchemaCommonProt
 
     for (let i = 0; i < destinationsCount; ++i) {
         const data              = destinations[i];
-        const droppingGridIndex = AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(data.getGridIndex());
+        const droppingGridIndex = GridIndex.convertGridIndex(data.getGridIndex());
         if ((!droppingGridIndex)                                        ||
             (!droppingGridIndex.checkIsInsideMap(mapSize))              ||
             (!droppingGridIndex.checkIsAdjacent(loaderEndingGridIndex))
@@ -130,7 +130,7 @@ function checkIsDropDestinationsValid(war: IBwWar, action: ProtoSchemaCommonProt
 
         const existingUnit = unitMap.getUnitOnMap(droppingGridIndex);
         if ((existingUnit) && (existingUnit !== loaderUnit)) {
-            if (VisibilitiesUtils.checkIsUnitOnMapVisibleToTeam({
+            if (checkIsUnitOnMapVisibleToTeam({
                 war                 : war,
                 gridIndex           : droppingGridIndex,
                 unitType            : existingUnit.getUnitType(),
@@ -145,7 +145,7 @@ function checkIsDropDestinationsValid(war: IBwWar, action: ProtoSchemaCommonProt
 
         for (let j = i + 1; j < destinationsCount; ++j) {
             const nextData  = destinations[j];
-            const gridIndex = AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(nextData.getGridIndex());
+            const gridIndex = GridIndex.convertGridIndex(nextData.getGridIndex());
             if ((!gridIndex)                                ||
                 (droppingUnitId === nextData.getUnitId())   ||
                 (droppingGridIndex.checkIsEqual(gridIndex))
@@ -158,18 +158,18 @@ function checkIsDropDestinationsValid(war: IBwWar, action: ProtoSchemaCommonProt
     return true;
 }
 
-function getRevisedDropDestinations(war: IBwWar, action: ProtoSchemaCommonProtoWarOperationWoUnitDropUnit.WoUnitDropUnit, revisedPath: AuxiliaryTypesMovePath.MovePath): AuxiliaryTypesDropDestination.DropDestination[] {
-    const destinations: AuxiliaryTypesDropDestination.DropDestination[] = [];
+function getRevisedDropDestinations(war: IBwWar, action: WoUnitDropUnit, revisedPath: MovePath): DropDestination[] {
+    const destinations: DropDestination[] = [];
     if (!revisedPath.isBlocked) {
         const unitMap       = war.getUnitMap();
         const loaderUnit    = unitMap.getUnit(revisedPath.nodes[0], action.getLaunchUnitId());
         for (const raw of action.getDropDestinations()) {
-            const gridIndex     = HelpersMisc.getExisted(AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(raw.getGridIndex()));
+            const gridIndex     = getExisted(GridIndex.convertGridIndex(raw.getGridIndex()));
             const existingUnit  = unitMap.getUnitOnMap(gridIndex);
             if ((existingUnit) && (existingUnit !== loaderUnit)) {
                 break;
             } else {
-                destinations.push(new AuxiliaryTypesDropDestination.DropDestination(gridIndex, raw.getUnitId() ?? 0));
+                destinations.push(new DropDestination(gridIndex, raw.getUnitId() ?? 0));
             }
         }
     }

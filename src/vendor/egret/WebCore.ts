@@ -54,8 +54,41 @@ import {
     type StageText,
     DisplayObjectContainer
 } from "./EgretCore";
-import * as sys from "./SysCore";
-import * as lifecycle from "./Lifecycle";
+import {
+    type CanvasContext,
+    type IScreenAdapter,
+    RenderBuffHelper,
+    RenderHelper,
+    DisplayList,
+    SystemTicker,
+    ScreenAdapterHelper,
+    DefaultScreenAdapter,
+    createCanvas,
+    BitmapNode,
+    type CanvasRenderBuffer as sysCanvasRenderBuffer,
+    createCanvasRenderBufferSurface,
+    resizeCanvasRenderBuffer,
+    TouchHandler,
+    Player,
+    type RenderBuffer,
+    type StageSize,
+    _createTexture,
+    mainCanvas,
+    resizeContext,
+    getContextWebGL,
+    createTexture,
+    getContext2d,
+    drawTextureElements,
+    type SystemRenderer,
+    RenderNode,
+    TextNode,
+    GraphicsNode,
+    GroupNode,
+    MeshNode,
+    NormalBitmapNode,
+    measureText,
+} from "./SysCore";
+import { LifecycleContext, LifecycleHelper, addLifecycleListener } from "./Lifecycle";
 
 export type InputElement = HTMLInputElement | (HTMLTextAreaElement & { type: string });
 export type DrawCommandType = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
@@ -105,8 +138,8 @@ export interface RunEgretOptions {
     antialias?: boolean;
     audioType?: number;
     canvasScaleFactor?: number;
-    calculateCanvasScaleFactor?: (context: sys.CanvasContext) => number;
-    screenAdapter?: sys.IScreenAdapter;
+    calculateCanvasScaleFactor?: (context: CanvasContext) => number;
+    screenAdapter?: IScreenAdapter;
     entryClass: typeof DisplayObjectContainer;
 }
 export interface WebPlayer {
@@ -188,7 +221,7 @@ interface BrowserSocket extends globalThis.WebSocket {
 interface PlayerContainer extends HTMLElement {
     "egret-player": WebPlayer;
 }
-interface BackingStoreContext extends sys.CanvasContext {
+interface BackingStoreContext extends CanvasContext {
     backingStorePixelRatio?: number;
     webkitBackingStorePixelRatio?: number;
     mozBackingStorePixelRatio?: number;
@@ -248,7 +281,7 @@ export function $cacheTextAdapter(adapter: HTMLInput, stage: Stage, container: H
     WebMiscHelper.stageToCanvasMap[stage.$hashCode] = canvas;
     WebMiscHelper.stageToContainerMap[stage.$hashCode] = container;
 }
-export function WebLifeCycleHandler(context: lifecycle.LifecycleContext): void {
+export function WebLifeCycleHandler(context: LifecycleContext): void {
     const visibilityDocument: LegacyDocument = document;
     let hidden: "hidden" | "mozHidden" | "msHidden" | "webkitHidden" | "oHidden" | undefined;
     let visibilityChange: string | undefined;
@@ -329,25 +362,25 @@ export function runEgret(options: RunEgretOptions): void {
         Html5Capatibility.$init();
         let renderMode: string | undefined = options.renderMode;
         if (renderMode == "webgl") { WebGLRenderContext.antialias = !!options.antialias; }
-        sys.RenderBuffHelper.CanvasRenderBuffer = CanvasRenderBuffer;
+        RenderBuffHelper.CanvasRenderBuffer = CanvasRenderBuffer;
         if (ua.indexOf("egretnative") >= 0 && renderMode != "webgl") { $warn(1051); renderMode = "webgl"; }
         setRenderMode(renderMode);
         let canvasScaleFactor: number;
         if (options.canvasScaleFactor) { canvasScaleFactor = options.canvasScaleFactor; }
-        else if (options.calculateCanvasScaleFactor) { canvasScaleFactor = options.calculateCanvasScaleFactor(sys.RenderHelper.canvasHitTestBuffer!.context); }
+        else if (options.calculateCanvasScaleFactor) { canvasScaleFactor = options.calculateCanvasScaleFactor(RenderHelper.canvasHitTestBuffer!.context); }
         else {
-            const context: BackingStoreContext = sys.RenderHelper.canvasHitTestBuffer!.context;
+            const context: BackingStoreContext = RenderHelper.canvasHitTestBuffer!.context;
             const backingStore: number = context.backingStorePixelRatio || context.webkitBackingStorePixelRatio ||
                 context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
             canvasScaleFactor = (window.devicePixelRatio || 1) / backingStore;
         }
-        sys.DisplayList.$canvasScaleFactor = canvasScaleFactor;
-        const ticker: sys.SystemTicker = getTicker();
+        DisplayList.$canvasScaleFactor = canvasScaleFactor;
+        const ticker: SystemTicker = getTicker();
         startTicker(ticker);
         if (options.screenAdapter) {
-            sys.ScreenAdapterHelper.screenAdapter = options.screenAdapter;
-        } else if (!sys.ScreenAdapterHelper.screenAdapter) {
-            sys.ScreenAdapterHelper.screenAdapter = new sys.DefaultScreenAdapter();
+            ScreenAdapterHelper.screenAdapter = options.screenAdapter;
+        } else if (!ScreenAdapterHelper.screenAdapter) {
+            ScreenAdapterHelper.screenAdapter = new DefaultScreenAdapter();
         }
         const list: NodeListOf<PlayerContainer> = document.querySelectorAll<PlayerContainer>(".egret-player");
         const length: number = list.length;
@@ -456,7 +489,7 @@ function extractUniforms(gl: WebGLRenderingContext, program: WebGLProgram): Reco
     return uniforms;
 }
 function __createCanvas__(width: number, height: number): HTMLCanvasElement {
-    const canvas: HTMLCanvasElement = sys.createCanvas(width, height)!;
+    const canvas: HTMLCanvasElement = createCanvas(width, height)!;
     const context: SmoothingContext = canvas.getContext("2d")!;
     if (context.imageSmoothingEnabled === undefined) {
         const keys: SmoothingKey[] = ["webkitImageSmoothingEnabled", "mozImageSmoothingEnabled", "msImageSmoothingEnabled"];
@@ -476,22 +509,22 @@ function __createCanvas__(width: number, height: number): HTMLCanvasElement {
 }
 function setRenderMode(renderMode: string | undefined): void {
     if (renderMode == "webgl" && WebGLUtils.checkCanUseWebGL()) {
-        sys.RenderBuffHelper.RenderBuffer = WebGLRenderBuffer;
-        sys.RenderBuffHelper.systemRenderer = new WebGLRenderer();
-        sys.RenderHelper.canvasRenderer = new CanvasRenderer();
-        sys.RenderBuffHelper.customHitTestBuffer = new WebGLRenderBuffer(3, 3);
-        sys.RenderHelper.canvasHitTestBuffer = new CanvasRenderBuffer(3, 3);
+        RenderBuffHelper.RenderBuffer = WebGLRenderBuffer;
+        RenderBuffHelper.systemRenderer = new WebGLRenderer();
+        RenderHelper.canvasRenderer = new CanvasRenderer();
+        RenderBuffHelper.customHitTestBuffer = new WebGLRenderBuffer(3, 3);
+        RenderHelper.canvasHitTestBuffer = new CanvasRenderBuffer(3, 3);
         Capabilities.renderMode = "webgl";
     } else {
-        sys.RenderBuffHelper.RenderBuffer = CanvasRenderBuffer;
-        sys.RenderBuffHelper.systemRenderer = new CanvasRenderer();
-        sys.RenderHelper.canvasRenderer = sys.RenderBuffHelper.systemRenderer as CanvasRenderer;
-        sys.RenderBuffHelper.customHitTestBuffer = new CanvasRenderBuffer(3, 3);
-        sys.RenderHelper.canvasHitTestBuffer = sys.RenderBuffHelper.customHitTestBuffer as CanvasRenderBuffer;
+        RenderBuffHelper.RenderBuffer = CanvasRenderBuffer;
+        RenderBuffHelper.systemRenderer = new CanvasRenderer();
+        RenderHelper.canvasRenderer = RenderBuffHelper.systemRenderer as CanvasRenderer;
+        RenderBuffHelper.customHitTestBuffer = new CanvasRenderBuffer(3, 3);
+        RenderHelper.canvasHitTestBuffer = RenderBuffHelper.customHitTestBuffer as CanvasRenderBuffer;
         Capabilities.renderMode = "canvas";
     }
 }
-function startTicker(ticker: sys.SystemTicker): void {
+function startTicker(ticker: SystemTicker): void {
     let requestFrame: typeof requestAnimationFrame | undefined = window.requestAnimationFrame || WebMiscHelper.browserWindow.webkitRequestAnimationFrame ||
         WebMiscHelper.browserWindow.mozRequestAnimationFrame || WebMiscHelper.browserWindow.oRequestAnimationFrame || WebMiscHelper.browserWindow.msRequestAnimationFrame;
     if (!requestFrame) { requestFrame = (callback: FrameRequestCallback): number => window.setTimeout(callback, 1000 / 60); }
@@ -524,7 +557,7 @@ export class WebMiscHelper {
         return WebMiscHelper.textContext ??= WebMiscHelper.createContext();
     }
     private static createContext(): CanvasRenderingContext2D {
-        const textContext = sys.RenderHelper.canvasHitTestBuffer!.context;
+        const textContext = RenderHelper.canvasHitTestBuffer!.context;
         textContext.textAlign = "left";
         textContext.textBaseline = "middle";
         return textContext;
@@ -546,11 +579,11 @@ export class WebVideo extends DisplayObject implements Video {
     public declare video: HTMLVideoElement | null;
     public declare posterData: BitmapData | undefined;
     public declare _bitmapData: BitmapData | undefined;
-    public declare $renderNode: sys.BitmapNode;
+    public declare $renderNode: BitmapNode;
 
     public constructor(url?: string, _cache: boolean = true) {
         super();
-        this.$renderNode = new sys.BitmapNode();
+        this.$renderNode = new BitmapNode();
         this.src = url;
         this.once(Event.ADDED_TO_STAGE, this.loadPoster, this);
         if (url) { this.load(); }
@@ -771,7 +804,7 @@ export class WebVideo extends DisplayObject implements Video {
         return NaN;
     }
     public override $updateRenderNode(): void {
-        const node: sys.BitmapNode = this.$renderNode;
+        const node: BitmapNode = this.$renderNode;
         const bitmapData: BitmapData | null = this.bitmapData;
         const posterData: BitmapData | undefined = this.posterData;
         const width: number = this.getPlayWidth();
@@ -1210,8 +1243,8 @@ export class HTMLInput {
     }
     public $updateSize(): void {
         if (!this.canvas) { return; }
-        this.$scaleX = sys.DisplayList.$canvasScaleX;
-        this.$scaleY = sys.DisplayList.$canvasScaleY;
+        this.$scaleX = DisplayList.$canvasScaleX;
+        this.$scaleY = DisplayList.$canvasScaleY;
         this.StageDelegateDiv.style.left = this.canvas.style.left;
         this.StageDelegateDiv.style.top = this.canvas.style.top;
         const transformKey: string = getPrefixStyleName("transform");
@@ -1318,18 +1351,18 @@ export class HTMLInput {
 }
 __reflect(HTMLInput.prototype, "egret.web.HTMLInput");
 
-export class CanvasRenderBuffer implements sys.CanvasRenderBuffer {
+export class CanvasRenderBuffer implements sysCanvasRenderBuffer {
     public surface: HTMLCanvasElement;
-    public context: sys.CanvasContext;
+    public context: CanvasContext;
     public constructor(width: number = NaN, height: number = NaN, root?: boolean) {
-        this.surface = sys.createCanvasRenderBufferSurface(__createCanvas__, width, height, root)!;
-        this.context = this.surface.getContext("2d") as sys.CanvasContext;
+        this.surface = createCanvasRenderBufferSurface(__createCanvas__, width, height, root)!;
+        this.context = this.surface.getContext("2d") as CanvasContext;
         if (this.context) { this.context.$offsetX = 0; this.context.$offsetY = 0; }
         this.resize(width, height);
     }
     public get width(): number { return this.surface.width; }
     public get height(): number { return this.surface.height; }
-    public resize(width: number, height: number, useMaxSize?: boolean): void { sys.resizeCanvasRenderBuffer(this, width, height, useMaxSize); }
+    public resize(width: number, height: number, useMaxSize?: boolean): void { resizeCanvasRenderBuffer(this, width, height, useMaxSize); }
     public getPixels(x: number, y: number, width: number = 1, height: number = 1): Uint8ClampedArray {
         return this.context.getImageData(x, y, width, height).data;
     }
@@ -1344,14 +1377,14 @@ __reflect(CanvasRenderBuffer.prototype, "egret.web.CanvasRenderBuffer", ["egret.
 
 export class WebTouchHandler extends HashObject {
     public canvas: InputCanvas;
-    public touch: sys.TouchHandler;
+    public touch: TouchHandler;
     public scaleX: number = 1;
     public scaleY: number = 1;
     public rotation: number = 0;
     public constructor(stage: Stage, canvas: InputCanvas) {
         super();
         this.canvas = canvas;
-        this.touch = new sys.TouchHandler(stage);
+        this.touch = new TouchHandler(stage);
         this.addListeners();
     }
     public onTouchBegin: (event: TouchLocation) => void = (event: TouchLocation): void => {
@@ -1776,7 +1809,7 @@ export class WebPlayer extends HashObject implements StageScreen {
     public declare container: HTMLElement;
     public declare canvas: InputCanvas;
     public declare stage: Stage;
-    public declare player: sys.Player;
+    public declare player: Player;
     public declare webTouchHandler: WebTouchHandler;
     public declare webInput: HTMLInput;
     // public constructor(container: HTMLElement, options: RunEgretOptions) {
@@ -1794,13 +1827,13 @@ export class WebPlayer extends HashObject implements StageScreen {
         stage.$maxTouches = option.maxTouches;
         stage.frameRate = option.frameRate;
         stage.textureScaleFactor = option.textureScaleFactor;
-        const buffer: sys.RenderBuffer = new sys.RenderBuffHelper.RenderBuffer!(undefined, undefined, true);
+        const buffer: RenderBuffer = new RenderBuffHelper.RenderBuffer!(undefined, undefined, true);
         const canvas: InputCanvas = buffer.surface as InputCanvas;
         this.attachCanvas(container, canvas);
         const webTouch: WebTouchHandler = new WebTouchHandler(stage, canvas);
-        const player: sys.Player = new sys.Player(buffer, stage, option.entryClass);
-        lifecycle.LifecycleHelper.stage = stage;
-        lifecycle.addLifecycleListener(WebLifeCycleHandler);
+        const player: Player = new Player(buffer, stage, option.entryClass);
+        LifecycleHelper.stage = stage;
+        addLifecycleListener(WebLifeCycleHandler);
         const webInput: HTMLInput = new HTMLInput();
         if ((option.showFPS || option.showLog)) {
             player.displayFPS(option.showFPS, option.showLog, option.logFilter!, option.fpsStyles);
@@ -1878,7 +1911,7 @@ export class WebPlayer extends HashObject implements StageScreen {
         const screenHeight: number = shouldRotate ? boundingClientWidth : boundingClientHeight;
         Capabilities.boundingClientWidth = screenWidth;
         Capabilities.boundingClientHeight = screenHeight;
-        const stageSize: sys.StageSize = sys.ScreenAdapterHelper.screenAdapter!.calculateStageSize(this.stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
+        const stageSize: StageSize = ScreenAdapterHelper.screenAdapter!.calculateStageSize(this.stage.$scaleMode, screenWidth, screenHeight, option.contentWidth, option.contentHeight);
         const stageWidth: number = stageSize.stageWidth;
         const stageHeight: number = stageSize.stageHeight;
         const displayWidth: number = stageSize.displayWidth;
@@ -1904,8 +1937,8 @@ export class WebPlayer extends HashObject implements StageScreen {
         }
         const scalex: number = displayWidth / stageWidth;
         const scaley: number = displayHeight / stageHeight;
-        let canvasScaleX: number = scalex * sys.DisplayList.$canvasScaleFactor;
-        let canvasScaleY: number = scaley * sys.DisplayList.$canvasScaleFactor;
+        let canvasScaleX: number = scalex * DisplayList.$canvasScaleFactor;
+        let canvasScaleY: number = scaley * DisplayList.$canvasScaleFactor;
         if (Capabilities.renderMode == "canvas") { canvasScaleX = Math.ceil(canvasScaleX); canvasScaleY = Math.ceil(canvasScaleY); }
         const m: Matrix = Matrix.create();
         m.identity();
@@ -1914,7 +1947,7 @@ export class WebPlayer extends HashObject implements StageScreen {
         const transform: string = "matrix(" + m.a + "," + m.b + "," + m.c + "," + m.d + "," + m.tx + "," + m.ty + ")";
         Matrix.release(m);
         style[getPrefixStyleName("transform")] = transform;
-        sys.DisplayList.$setCanvasScale(canvasScaleX, canvasScaleY);
+        DisplayList.$setCanvasScale(canvasScaleX, canvasScaleY);
         this.webTouchHandler.updateScaleMode(scalex, scaley, rotation);
         this.webInput.$updateSize();
         this.player.updateStageSize(stageWidth, stageHeight);
@@ -2273,7 +2306,7 @@ export class WebGLRenderTarget extends HashObject {
     }
     public createTexture(): EngineWebGLTexture | null {
         const webglrendercontext: WebGLRenderContext = WebGLRenderContext.getInstance(0, 0);
-        return sys._createTexture(webglrendercontext, this.width, this.height, null);
+        return _createTexture(webglrendercontext, this.width, this.height, null);
     }
     public clear(bind?: boolean): void {
         const gl: WebGLRenderingContext = this.gl;
@@ -2326,7 +2359,7 @@ export class WebGLRenderContext {
     public declare etc1: CompressedTextureExtension | null;
     public declare $filter: Filter | null;
     public constructor(width: number, height: number) {
-        this.surface = sys.mainCanvas(width, height)!;
+        this.surface = mainCanvas(width, height)!;
         this.initWebGL(); this.$bufferStack = [];
         const gl: WebGLRenderingContext = this.context;
         this.vertexBuffer = gl.createBuffer(); this.indexBuffer = gl.createBuffer();
@@ -2363,7 +2396,7 @@ export class WebGLRenderContext {
         this.projectionX = width / 2; this.projectionY = -height / 2;
         if (this.context) { this.context.viewport(0, 0, width, height); }
     }
-    public resize(width: number, height: number, useMaxSize?: boolean): void { sys.resizeContext(this, width, height, useMaxSize); }
+    public resize(width: number, height: number, useMaxSize?: boolean): void { resizeContext(this, width, height, useMaxSize); }
     public _buildSupportedCompressedTextureInfo(extensions: (CompressedTextureExtension | null)[]): CompressedTextureInfo[] {
         const returnValue: CompressedTextureInfo[] = [];
         for (let i: number = 0; i < extensions.length; i++) {
@@ -2402,7 +2435,7 @@ export class WebGLRenderContext {
     }
     public handleContextLost(): void { this.contextLost = true; }
     public handleContextRestored(): void { this.initWebGL(); this.contextLost = false; }
-    public getWebGLContext(): void { const gl: WebGLRenderingContext = sys.getContextWebGL(this.surface)!; this.setContext(gl); }
+    public getWebGLContext(): void { const gl: WebGLRenderingContext = getContextWebGL(this.surface)!; this.setContext(gl); }
     public setContext(gl: WebGLRenderingContext): void {
         this.context = gl;
         const engineGL: WebGLRenderingContext & { id: number } = gl as WebGLRenderingContext & { id: number };
@@ -2416,7 +2449,7 @@ export class WebGLRenderContext {
     public getPixels(x: number, y: number, width: number, height: number, pixels: Uint8Array | Uint8ClampedArray): void {
         const gl: WebGLRenderingContext = this.context; gl.readPixels(x, y, width, height, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
     }
-    public createTexture(bitmapData: TexImageSource): EngineWebGLTexture | undefined { return sys.createTexture(this, bitmapData); }
+    public createTexture(bitmapData: TexImageSource): EngineWebGLTexture | undefined { return createTexture(this, bitmapData); }
     public checkCompressedTextureInternalFormat(supportedCompressedTextureInfo: CompressedTextureInfo[], internalFormat: number): boolean {
         for (let i: number = 0, length: number = supportedCompressedTextureInfo.length; i < length; ++i) {
             const ss: CompressedTextureInfo = supportedCompressedTextureInfo[i]!;
@@ -2463,8 +2496,8 @@ export class WebGLRenderContext {
     public get defaultEmptyTexture(): EngineWebGLTexture | undefined {
         if (!this._defaultEmptyTexture) {
             const size: number = 16;
-            const canvas: HTMLCanvasElement = sys.createCanvas(size, size)!;
-            const context: sys.CanvasContext = sys.getContext2d(canvas)!;
+            const canvas: HTMLCanvasElement = createCanvas(size, size)!;
+            const context: CanvasContext = getContext2d(canvas)!;
             context.fillStyle = "white"; context.fillRect(0, 0, size, size);
             this._defaultEmptyTexture = this.createTexture(canvas);
             this._defaultEmptyTexture![DefinitionHelper.engine_default_empty_texture] = true;
@@ -2690,7 +2723,7 @@ export class WebGLRenderContext {
             else { const value: unknown = filter!.$uniforms[key]; if (value !== undefined) { uniforms[key]!.setValue(value as UniformInput); } }
         }
     }
-    public drawTextureElements(data: WebGLDrawData, offset: number): number { return sys.drawTextureElements(this, data, offset); }
+    public drawTextureElements(data: WebGLDrawData, offset: number): number { return drawTextureElements(this, data, offset); }
     public drawRectElements(data: WebGLDrawData, offset: number): number {
         const gl: WebGLRenderingContext = this.context;
         const size: number = data.count * 3;
@@ -2788,7 +2821,7 @@ export class WebGLRenderContext {
 __reflect(WebGLRenderContext.prototype, "egret.web.WebGLRenderContext", ["egret.sys.RenderContext"]);
 WebGLRenderContext.initBlendMode();
 
-export class WebGLRenderBuffer extends HashObject implements sys.RenderBuffer {
+export class WebGLRenderBuffer extends HashObject implements RenderBuffer {
     private static readonly bufferPool: WebGLRenderBuffer[] = [];
 
     public currentTexture: EngineWebGLTexture | null = null;
@@ -2977,7 +3010,7 @@ export class WebGLRenderBuffer extends HashObject implements sys.RenderBuffer {
 }
 __reflect(WebGLRenderBuffer.prototype, "egret.web.WebGLRenderBuffer", ["egret.sys.RenderBuffer"]);
 
-export class WebGLRenderer implements sys.SystemRenderer {
+export class WebGLRenderer implements SystemRenderer {
     private static readonly defaultCompositeOp: GlobalCompositeOperation = "source-over";
     private static readonly blendModes: GlobalCompositeOperation[] = ["source-over", "lighter", "destination-out"];
     private static readonly rendererBufferPool: WebGLRenderBuffer[] = [];
@@ -2987,7 +3020,7 @@ export class WebGLRenderer implements sys.SystemRenderer {
     public nestLevel: number = 0;
     public declare canvasRenderer: CanvasRenderer | undefined;
     public declare canvasRenderBuffer: CanvasRenderBuffer | undefined;
-    public render(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix, _forRenderTexture?: boolean): number {
+    public render(displayObject: DisplayObject, buffer: RenderBuffer, matrix: Matrix, _forRenderTexture?: boolean): number {
         this.nestLevel++;
         const webglBuffer: WebGLRenderBuffer = buffer as WebGLRenderBuffer;
         const context: WebGLRenderContext = webglBuffer.context;
@@ -3016,10 +3049,10 @@ export class WebGLRenderer implements sys.SystemRenderer {
     }
     public drawDisplayObject(displayObject: DisplayObject, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, isStage?: boolean): number {
         let drawCalls: number = 0;
-        let node: sys.RenderNode | null;
-        const displayList: sys.DisplayList | null = displayObject.$displayList;
+        let node: RenderNode | null;
+        const displayList: DisplayList | null = displayObject.$displayList;
         if (displayList && !isStage) {
-            if (displayObject.$cacheDirty || displayObject.$renderDirty || displayList.$canvasScaleX != sys.DisplayList.$canvasScaleX || displayList.$canvasScaleY != sys.DisplayList.$canvasScaleY) {
+            if (displayObject.$cacheDirty || displayObject.$renderDirty || displayList.$canvasScaleX != DisplayList.$canvasScaleX || displayList.$canvasScaleY != DisplayList.$canvasScaleY) {
                 drawCalls += displayList.drawToSurface();
             }
             node = displayList.$renderNode;
@@ -3123,7 +3156,7 @@ export class WebGLRenderer implements sys.SystemRenderer {
     }
     public getRenderCount(displayObject: DisplayObject): number {
         let drawCount: number = 0;
-        const node: sys.RenderNode | null = displayObject.$getRenderNode();
+        const node: RenderNode | null = displayObject.$getRenderNode();
         if (node) { drawCount += node.$getRenderCount(); }
         if (displayObject.$children) {
             const children: DisplayObject[] = displayObject.$children;
@@ -3133,7 +3166,7 @@ export class WebGLRenderer implements sys.SystemRenderer {
                 if (filters && filters.length > 0) { return 2; }
                 else if (child.$children) { drawCount += this.getRenderCount(child); }
                 else {
-                    const childNode: sys.RenderNode | null = child.$getRenderNode();
+                    const childNode: RenderNode | null = child.$getRenderNode();
                     if (childNode) { drawCount += childNode.$getRenderCount(); }
                 }
             }
@@ -3261,7 +3294,7 @@ export class WebGLRenderer implements sys.SystemRenderer {
         if (scissor) { context.disableScissor(); } else { context.popMask(); }
         return drawCalls;
     }
-    public drawNodeToBuffer(node: sys.RenderNode, buffer: sys.RenderBuffer, matrix: Matrix, forHitTest?: boolean): void {
+    public drawNodeToBuffer(node: RenderNode, buffer: RenderBuffer, matrix: Matrix, forHitTest?: boolean): void {
         const webglBuffer: WebGLRenderBuffer = buffer as WebGLRenderBuffer;
         webglBuffer.context.pushBuffer(webglBuffer);
         webglBuffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
@@ -3273,7 +3306,7 @@ export class WebGLRenderer implements sys.SystemRenderer {
     public drawDisplayToBuffer(displayObject: DisplayObject, buffer: WebGLRenderBuffer, matrix?: Matrix): number {
         buffer.context.pushBuffer(buffer);
         if (matrix) { buffer.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty); }
-        const node: sys.RenderNode | null = displayObject.$renderDirty ? displayObject.$getRenderNode() : displayObject.$renderNode;
+        const node: RenderNode | null = displayObject.$renderDirty ? displayObject.$getRenderNode() : displayObject.$renderNode;
         let drawCalls: number = 0;
         if (node) { drawCalls++; this.renderNode(node, buffer, buffer.$offsetX, buffer.$offsetY); }
         const children: DisplayObject[] | null = displayObject.$children;
@@ -3295,24 +3328,24 @@ export class WebGLRenderer implements sys.SystemRenderer {
         buffer.context.popBuffer();
         return drawCalls;
     }
-    public renderNode(node: sys.RenderNode, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, forHitTest?: boolean): void {
+    public renderNode(node: RenderNode, buffer: WebGLRenderBuffer, offsetX: number, offsetY: number, forHitTest?: boolean): void {
         buffer.$offsetX = offsetX;
         buffer.$offsetY = offsetY;
         switch (node.type) {
-            case 1: this.renderBitmap(node as sys.BitmapNode, buffer); break;
-            case 2: this.renderText(node as sys.TextNode, buffer); break;
-            case 3: this.renderGraphics(node as sys.GraphicsNode, buffer, forHitTest); break;
-            case 4: this.renderGroup(node as sys.GroupNode, buffer); break;
-            case 5: this.renderMesh(node as sys.MeshNode, buffer); break;
-            case 6: this.renderNormalBitmap(node as sys.NormalBitmapNode, buffer); break;
+            case 1: this.renderBitmap(node as BitmapNode, buffer); break;
+            case 2: this.renderText(node as TextNode, buffer); break;
+            case 3: this.renderGraphics(node as GraphicsNode, buffer, forHitTest); break;
+            case 4: this.renderGroup(node as GroupNode, buffer); break;
+            case 5: this.renderMesh(node as MeshNode, buffer); break;
+            case 6: this.renderNormalBitmap(node as NormalBitmapNode, buffer); break;
         }
     }
-    public renderNormalBitmap(node: sys.NormalBitmapNode, buffer: WebGLRenderBuffer): void {
+    public renderNormalBitmap(node: NormalBitmapNode, buffer: WebGLRenderBuffer): void {
         const image: BitmapData | null = node.image;
         if (!image) { return; }
         buffer.context.drawImage(image, node.sourceX, node.sourceY, node.sourceW, node.sourceH, node.drawX, node.drawY, node.drawW, node.drawH, node.imageWidth, node.imageHeight, node.rotated, node.smoothing);
     }
-    public renderBitmap(node: sys.BitmapNode, buffer: WebGLRenderBuffer): void {
+    public renderBitmap(node: BitmapNode, buffer: WebGLRenderBuffer): void {
         const image: BitmapData | null = node.image;
         if (!image) { return; }
         const data: number[] = node.drawData;
@@ -3355,7 +3388,7 @@ export class WebGLRenderer implements sys.SystemRenderer {
             Matrix.release(savedMatrix!);
         }
     }
-    public renderMesh(node: sys.MeshNode, buffer: WebGLRenderBuffer): void {
+    public renderMesh(node: MeshNode, buffer: WebGLRenderBuffer): void {
         const image: BitmapData | null = node.image;
         const data: number[] = node.drawData;
         const length: number = data.length;
@@ -3397,12 +3430,12 @@ export class WebGLRenderer implements sys.SystemRenderer {
             Matrix.release(savedMatrix!);
         }
     }
-    public ___renderText____(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
+    public ___renderText____(node: TextNode, buffer: WebGLRenderBuffer): void {
         let width: number = node.width - node.x;
         let height: number = node.height - node.y;
         if (width <= 0 || height <= 0 || !width || !height || node.drawData.length === 0) { return; }
-        let canvasScaleX: number = sys.DisplayList.$canvasScaleX;
-        let canvasScaleY: number = sys.DisplayList.$canvasScaleY;
+        let canvasScaleX: number = DisplayList.$canvasScaleX;
+        let canvasScaleY: number = DisplayList.$canvasScaleY;
         const maxTextureSize: number = buffer.context.$maxTextureSize;
         if (width * canvasScaleX > maxTextureSize) { canvasScaleX *= maxTextureSize / (width * canvasScaleX); }
         if (height * canvasScaleY > maxTextureSize) { canvasScaleY *= maxTextureSize / (height * canvasScaleY); }
@@ -3440,12 +3473,12 @@ export class WebGLRenderer implements sys.SystemRenderer {
         if (x || y) { buffer.transform(1, 0, 0, 1, -x / canvasScaleX, -y / canvasScaleY); }
         node.dirtyRender = false;
     }
-    public renderText(node: sys.TextNode, buffer: WebGLRenderBuffer): void {
+    public renderText(node: TextNode, buffer: WebGLRenderBuffer): void {
         let width: number = node.width - node.x;
         let height: number = node.height - node.y;
         if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) { return; }
-        let canvasScaleX: number = sys.DisplayList.$canvasScaleX;
-        let canvasScaleY: number = sys.DisplayList.$canvasScaleY;
+        let canvasScaleX: number = DisplayList.$canvasScaleX;
+        let canvasScaleY: number = DisplayList.$canvasScaleY;
         const maxTextureSize: number = buffer.context.$maxTextureSize;
         if (width * canvasScaleX > maxTextureSize) { canvasScaleX *= maxTextureSize / (width * canvasScaleX); }
         if (height * canvasScaleY > maxTextureSize) { canvasScaleY *= maxTextureSize / (height * canvasScaleY); }
@@ -3493,12 +3526,12 @@ export class WebGLRenderer implements sys.SystemRenderer {
         }
         node.dirtyRender = false;
     }
-    public renderGraphics(node: sys.GraphicsNode, buffer: WebGLRenderBuffer, forHitTest?: boolean): void {
+    public renderGraphics(node: GraphicsNode, buffer: WebGLRenderBuffer, forHitTest?: boolean): void {
         let width: number = node.width;
         let height: number = node.height;
         if (width <= 0 || height <= 0 || !width || !height || node.drawData.length == 0) { return; }
-        let canvasScaleX: number = sys.DisplayList.$canvasScaleX;
-        let canvasScaleY: number = sys.DisplayList.$canvasScaleY;
+        let canvasScaleX: number = DisplayList.$canvasScaleX;
+        let canvasScaleY: number = DisplayList.$canvasScaleY;
         if (width * canvasScaleX < 1 || height * canvasScaleY < 1) { canvasScaleX = canvasScaleY = 1; }
         if (node.$canvasScaleX != canvasScaleX || node.$canvasScaleY != canvasScaleY) {
             node.$canvasScaleX = canvasScaleX; node.$canvasScaleY = canvasScaleY; node.dirtyRender = true;
@@ -3556,7 +3589,7 @@ export class WebGLRenderer implements sys.SystemRenderer {
         }
         if (!forHitTest) { node.dirtyRender = false; }
     }
-    public renderGroup(groupNode: sys.GroupNode, buffer: WebGLRenderBuffer): void {
+    public renderGroup(groupNode: GroupNode, buffer: WebGLRenderBuffer): void {
         const m: Matrix | null = groupNode.matrix;
         let savedMatrix: Matrix | undefined;
         let offsetX: number = buffer.$offsetX;
@@ -3569,10 +3602,10 @@ export class WebGLRenderer implements sys.SystemRenderer {
             buffer.useOffset();
             buffer.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
-        const children: sys.RenderNode[] = groupNode.drawData;
+        const children: RenderNode[] = groupNode.drawData;
         const length: number = children.length;
         for (let i: number = 0; i < length; i++) {
-            const node: sys.RenderNode = children[i]!;
+            const node: RenderNode = children[i]!;
             this.renderNode(node, buffer, buffer.$offsetX, buffer.$offsetY);
         }
         if (m) {
@@ -3783,7 +3816,7 @@ class StyleInfo extends HashObject {
     public fontFamily: string;
     public font: string;
     public description: string;
-    public constructor(textNode: sys.TextNode, format: ITextStyle) {
+    public constructor(textNode: TextNode, format: ITextStyle) {
         super();
         this.textColor = textNode.textColor;
         this.strokeColor = textNode.strokeColor;
@@ -3855,7 +3888,7 @@ class CharImageRender extends HashObject {
         const precision: number = Math.pow(10, numberOfPrecision);
         this.canvasWidthOffset = Math.floor(this.canvasWidthOffset * precision) / precision;
         this.canvasHeightOffset = Math.floor(this.canvasHeightOffset * precision) / precision;
-        const context: CanvasRenderingContext2D = sys.getContext2d(canvas)!;
+        const context: CanvasRenderingContext2D = getContext2d(canvas)!;
         context.save();
         context.textAlign = "center";
         context.textBaseline = "middle";
@@ -3871,7 +3904,7 @@ class CharImageRender extends HashObject {
     public measure(text: string, styleKey: StyleInfo, textFlowSize: number): number {
         const isChinese: boolean = CharImageRender.chineseCharactersRegExp.test(text);
         if (isChinese && CharImageRender.chineseCharacterMeasureFastMap[styleKey.font]) { return CharImageRender.chineseCharacterMeasureFastMap[styleKey.font]!; }
-        const measureTextWidth: number = sys.measureText(text, styleKey.fontFamily, textFlowSize || styleKey.size, styleKey.bold, styleKey.italic);
+        const measureTextWidth: number = measureText(text, styleKey.fontFamily, textFlowSize || styleKey.size, styleKey.bold, styleKey.italic);
         if (isChinese) { CharImageRender.chineseCharacterMeasureFastMap[styleKey.font] = measureTextWidth; }
         return measureTextWidth;
     }
@@ -3892,7 +3925,7 @@ export class TextAtlasRender extends HashObject {
         this.webglRenderContext = webglRenderContext;
         this.book = new Book(maxSize, border);
     }
-    public static analysisTextNodeAndFlushDrawLabel(textNode: sys.TextNode | null | undefined): void {
+    public static analysisTextNodeAndFlushDrawLabel(textNode: TextNode | null | undefined): void {
         if (!textNode) { return; }
         if (!TextAtlasRender.__textAtlasRender__) {
             const webglcontext: WebGLRenderContext = WebGLRenderContext.getInstance(0, 0);
@@ -3955,17 +3988,17 @@ export class TextAtlasRender extends HashObject {
     public createTextTextureAtlas(width: number, height: number, debug: boolean): EngineWebGLTexture | null | undefined {
         let texture: EngineWebGLTexture | null | undefined;
         if (debug) {
-            const canvas: HTMLCanvasElement = sys.createCanvas(width, width)!;
-            const context: CanvasRenderingContext2D = sys.getContext2d(canvas)!;
+            const canvas: HTMLCanvasElement = createCanvas(width, width)!;
+            const context: CanvasRenderingContext2D = getContext2d(canvas)!;
             context.fillStyle = "black";
             context.fillRect(0, 0, width, width);
-            texture = sys.createTexture(this.webglRenderContext, canvas);
-        } else { texture = sys._createTexture(this.webglRenderContext, width, height, null); }
+            texture = createTexture(this.webglRenderContext, canvas);
+        } else { texture = _createTexture(this.webglRenderContext, width, height, null); }
         if (texture) { this.textAtlasTextureCache.push(texture); }
         return texture;
     }
     public get canvas(): HTMLCanvasElement {
-        if (!this._canvas) { this._canvas = sys.createCanvas(24, 24)!; }
+        if (!this._canvas) { this._canvas = createCanvas(24, 24)!; }
         return this._canvas;
     }
 }

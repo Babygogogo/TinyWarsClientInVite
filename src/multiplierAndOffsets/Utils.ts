@@ -1,10 +1,10 @@
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import * as NumbersUtils from "../numbers/Utils.ts";
-import type * as ProtoSchemaCommonProtoStructureMultiplierAndOffset from "../proto/schema/CommonProto/Structure/MultiplierAndOffset.ts";
-import * as WarEventsConstants from "../warEvents/Constants.ts";
+import { TextType } from "../lang/Constants.ts";
+import { getText } from "../lang/Utils.ts";
+import { getValueInInt32 } from "../numbers/Utils.ts";
+import type { MultiplierAndOffset } from "../proto/schema/CommonProto/Structure/MultiplierAndOffset.ts";
+import { Event } from "../warEvents/Constants.ts";
 
-type MultiplierAndOffsetSchema  = ProtoSchemaCommonProtoStructureMultiplierAndOffset.MultiplierAndOffset;
+type MultiplierAndOffsetSchema  = MultiplierAndOffset;
 
 export function checkIsValid(data: MultiplierAndOffsetSchema): boolean {
     return getErrorTip(data) == null;
@@ -16,7 +16,7 @@ export function checkIsDefault(data: MultiplierAndOffsetSchema): boolean {
 }
 
 export function getResultValue(data: MultiplierAndOffsetSchema, rawValue: number): number {
-    return NumbersUtils.getValueInInt32(rawValue * (data.getMultiplierPct() ?? 100) / 100 + (data.getOffset() ?? 0));
+    return getValueInInt32(rawValue * (data.getMultiplierPct() ?? 100) / 100 + (data.getOffset() ?? 0));
 }
 
 export function getBriefDesc(data: MultiplierAndOffsetSchema): string {
@@ -33,22 +33,22 @@ export function getDesc(data: MultiplierAndOffsetSchema, name: string): string {
     const offset                = data.getOffset() ?? 0;
     const textForOffset         = offset >= 0 ? `+ ${offset}` : `- ${-offset}`;
 
-    return `${LangUtils.getText(LangConstants.TextType.B0317)} ${name}: ${textForMultiplierPct} ${textForOffset}`;
+    return `${getText(TextType.B0317)} ${name}: ${textForMultiplierPct} ${textForOffset}`;
 }
 
 export function getErrorTip(data: MultiplierAndOffsetSchema): string | null {
     const multiplierPct = data.getMultiplierPct() ?? 100;
-    if (Math.abs(multiplierPct) > WarEventsConstants.Event.MaxMultiplier) {
-        return LangUtils.getText(LangConstants.TextType.Multiplier);
+    if (Math.abs(multiplierPct) > Event.MaxMultiplier) {
+        return getText(TextType.Multiplier);
     }
 
     const offset = data.getOffset() ?? 0;
-    if (Math.abs(offset) > WarEventsConstants.Event.MaxOffset) {
-        return LangUtils.getText(LangConstants.TextType.Offset);
+    if (Math.abs(offset) > Event.MaxOffset) {
+        return getText(TextType.Offset);
     }
 
     if ((multiplierPct === 100) && (offset === 0)) {
-        return LangUtils.getText(LangConstants.TextType.A0957);
+        return getText(TextType.A0957);
     }
 
     return null;

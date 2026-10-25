@@ -1,48 +1,56 @@
-import type * as ActionPlannersIActionPlanner from "../actionPlanners/IActionPlanner.ts";
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesMapSize from "../auxiliaryTypes/MapSize.ts";
-import type * as BaseWarInterfaceIBwCursor from "../baseWar/interface/IBwCursor.ts";
-import type * as BaseWarInterfaceIBwGridVisualEffect from "../baseWar/interface/IBwGridVisualEffect.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as FieldsIField from "./IField.ts";
-import type * as FieldsIFieldView from "./IFieldView.ts";
-import type * as FogMapsIFogMap from "../fogMaps/IFogMap.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import * as GameHelpersGhFactory from "../gameHelpers/GhFactory.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialField from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
-import type * as TilesITileMap from "../tiles/ITileMap.ts";
-import type * as UnitsIUnitMap from "../units/IUnitMap.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
+import type { IActionPlanner } from "../actionPlanners/IActionPlanner.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { MapSize } from "../auxiliaryTypes/MapSize.ts";
+import type { IBwCursor as BaseWarInterfaceIBwCursor } from "../baseWar/interface/IBwCursor.ts";
+import type { IBwGridVisualEffect as BaseWarInterfaceIBwGridVisualEffect } from "../baseWar/interface/IBwGridVisualEffect.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IField } from "./IField.ts";
+import type { IFieldView } from "./IFieldView.ts";
+import type { IFogMap } from "../fogMaps/IFogMap.ts";
+import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import {
+    getBwCursorClass,
+    getBwGridVisualEffectClass,
+    getFieldViewClass,
+    getActionPlannerClass,
+    getFogMapClass,
+    getTileMapClass,
+    getUnitMapClass,
+} from "../gameHelpers/GhFactory.ts";
+import { newError } from "../helpers/Misc.ts";
+import { SerialField } from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
+import type { ITileMap } from "../tiles/ITileMap.ts";
+import type { IUnitMap } from "../units/IUnitMap.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type GcData                 = GameConfigGcData.GcData;
-type IBwTileMap             = TilesITileMap.ITileMap;
-type IBwUnitMap             = UnitsIUnitMap.IUnitMap;
-type IBwCursor              = BaseWarInterfaceIBwCursor.IBwCursor;
-type IBwGridVisualEffect    = BaseWarInterfaceIBwGridVisualEffect.IBwGridVisualEffect;
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
+type GcData                 = GameConfigGcData;
+type IBwTileMap             = ITileMap;
+type IBwUnitMap             = IUnitMap;
+type IBwCursor              = BaseWarInterfaceIBwCursor;
+type IBwGridVisualEffect    = BaseWarInterfaceIBwGridVisualEffect;
+type IBwWar                 = BaseWarInterfaceIBwWar;
 
-export class Field implements FieldsIField.IField {
-    private readonly _cursor            = new (GameHelpersGhFactory.getBwCursorClass())();
-    private readonly _gridVisualEffect  = new (GameHelpersGhFactory.getBwGridVisualEffectClass())();
-    private readonly _view              = new (GameHelpersGhFactory.getFieldViewClass())();
-    private readonly _actionPlanner     = new (GameHelpersGhFactory.getActionPlannerClass())();
-    private readonly _fogMap            = new (GameHelpersGhFactory.getFogMapClass())();
-    private readonly _tileMap           = new (GameHelpersGhFactory.getTileMapClass())();
-    private readonly _unitMap           = new (GameHelpersGhFactory.getUnitMapClass())();
+export class Field implements IField {
+    private readonly _cursor            = new (getBwCursorClass())();
+    private readonly _gridVisualEffect  = new (getBwGridVisualEffectClass())();
+    private readonly _view              = new (getFieldViewClass())();
+    private readonly _actionPlanner     = new (getActionPlannerClass())();
+    private readonly _fogMap            = new (getFogMapClass())();
+    private readonly _tileMap           = new (getTileMapClass())();
+    private readonly _unitMap           = new (getUnitMapClass())();
 
     public init({ data, gameConfig, playersCountUnneutral }: {
-        data                    : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialField.SerialField>;
+        data                    : Undefinable<SerialField>;
         gameConfig              : GcData;
         playersCountUnneutral   : number;
     }): void {
         if (data == null) {
-            throw HelpersMisc.newError(`Empty data.`, UtilsClientErrorCode.ClientErrorCode.BwField_Init_00);
+            throw newError(`Empty data.`, ClientErrorCode.BwField_Init_00);
         }
 
-        const mapSize = AuxiliaryTypesMapSize.MapSize.createWithSerialTileMap(data.getTileMap());
+        const mapSize = MapSize.createWithSerialTileMap(data.getTileMap());
         if (!mapSize.checkIsValid()) {
-            throw HelpersMisc.newError(`Invalid mapSize.`, UtilsClientErrorCode.ClientErrorCode.BwField_Init_01);
+            throw newError(`Invalid mapSize.`, ClientErrorCode.BwField_Init_01);
         }
 
         this.getFogMap().init({
@@ -84,11 +92,11 @@ export class Field implements FieldsIField.IField {
         this.getView().init(this);
     }
     public fastInit({ data, gameConfig, playersCountUnneutral }: {
-        data                    : ProtoSchemaCommonProtoWarSerializationSerialField.SerialField;
+        data                    : SerialField;
         gameConfig              : GcData;
         playersCountUnneutral   : number;
     }): void {
-        const mapSize = AuxiliaryTypesMapSize.MapSize.createWithSerialTileMap(data.getTileMap());
+        const mapSize = MapSize.createWithSerialTileMap(data.getTileMap());
         this.getFogMap().fastInit({
             data                    : data.getFogMap(),
             mapSize                 : mapSize,
@@ -138,22 +146,22 @@ export class Field implements FieldsIField.IField {
         this.getGridVisualEffect().stopRunning();
     }
 
-    public serialize(): ProtoSchemaCommonProtoWarSerializationSerialField.SerialField {
-        return ProtoSchemaCommonProtoWarSerializationSerialField.SerialField.fromJson({
+    public serialize(): SerialField {
+        return SerialField.fromJson({
             fogMap  : this.getFogMap().serialize().toJson(),
             unitMap : this.getUnitMap().serialize().toJson(),
             tileMap : this.getTileMap().serialize().toJson(),
         });
     }
-    public serializeForCreateSfw(): ProtoSchemaCommonProtoWarSerializationSerialField.SerialField {
-        return ProtoSchemaCommonProtoWarSerializationSerialField.SerialField.fromJson({
+    public serializeForCreateSfw(): SerialField {
+        return SerialField.fromJson({
             fogMap  : this.getFogMap().serializeForCreateSfw().toJson(),
             unitMap : this.getUnitMap().serializeForCreateSfw().toJson(),
             tileMap : this.getTileMap().serializeForCreateSfw().toJson(),
         });
     }
-    public serializeForCreateMfr(): ProtoSchemaCommonProtoWarSerializationSerialField.SerialField {
-        return ProtoSchemaCommonProtoWarSerializationSerialField.SerialField.fromJson({
+    public serializeForCreateMfr(): SerialField {
+        return SerialField.fromJson({
             fogMap  : this.getFogMap().serializeForCreateMfr().toJson(),
             unitMap : this.getUnitMap().serializeForCreateMfr().toJson(),
             tileMap : this.getTileMap().serializeForCreateMfr().toJson(),
@@ -163,7 +171,7 @@ export class Field implements FieldsIField.IField {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getView(): FieldsIFieldView.IFieldView {
+    public getView(): IFieldView {
         return this._view;
     }
 
@@ -175,11 +183,11 @@ export class Field implements FieldsIField.IField {
         return this._gridVisualEffect;
     }
 
-    public getActionPlanner(): ActionPlannersIActionPlanner.IActionPlanner {
+    public getActionPlanner(): IActionPlanner {
         return this._actionPlanner;
     }
 
-    public getFogMap(): FogMapsIFogMap.IFogMap {
+    public getFogMap(): IFogMap {
         return this._fogMap;
     }
 

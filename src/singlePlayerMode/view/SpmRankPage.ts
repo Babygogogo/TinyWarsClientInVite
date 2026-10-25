@@ -1,49 +1,49 @@
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersText from "../../helpers/Text.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SinglePlayerModeModelSpmModel from "../model/SpmModel.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiOpenableComponent from "../../ui/components/UiOpenableComponent.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiOpenableComponent from "../../ui/interfaces/IUiOpenableComponent.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import * as UiTypesUiHorizontalAlign from "../../ui/types/UiHorizontalAlign.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UiTypesUiVerticalAlign from "../../ui/types/UiVerticalAlign.ts";
-import * as UiUtilsUiSkinHelpers from "../../ui/utils/UiSkinHelpers.ts";
-import * as UsersModel from "../../users/Model.ts";
+import { getLatestConfigVersion } from "../../gameConfig/GcModel.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { gotoReplayWar } from "../../helpers/GameFlow.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getSuffixForRankIndex } from "../../helpers/Text.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getRankData, getReplayData } from "../model/SpmModel.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiOpenableComponent } from "../../ui/interfaces/IUiOpenableComponent.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
+import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
+import { getSelfInfo, getUserPublicInfo } from "../../users/Model.ts";
 
 export type OpenData = {
     normalMapId   : number | null;
 } | null;
 export class Page
-    extends     UiComponentsUiOpenableComponent.UiOpenableComponent<OpenData>
-    implements  UiInterfacesIUiOpenableComponent.IUiOpenableComponent<OpenData>
+    extends     UiOpenableComponent<OpenData>
+    implements  IUiOpenableComponent<OpenData>
 {
-    private readonly _listRule! : UiInterfacesIUiScrollList.IUiScrollList<DataForRuleRenderer>;
+    private readonly _listRule! : IUiScrollList<DataForRuleRenderer>;
 
     public constructor() {
         super();
 
-        UiUtilsUiSkinHelpers.loadSkinByPath(this, "singlePlayerMode/SpmRankPage.exml");
+        loadSkinByPath(this, "singlePlayerMode/SpmRankPage.exml");
     }
 
     public updateOnLoadedSkin(): void {
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
+            verticalAlign   : { align       : UiVerticalAlign.Middle },
+            horizontalAlign : { align       : UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -73,37 +73,37 @@ export class Page
             return;
         }
 
-        const mapRawData    = await NormalMapModelNormalMapModel.getRawData(normalMapId);
+        const mapRawData    = await getRawData(normalMapId);
         const dataArray     : DataForRuleRenderer[] = [];
         for (const templateWarRule of mapRawData?.getTemplateWarRuleArray().filter(v => v.getRuleAvailability()?.getCanSrw()) ?? []) {
             dataArray.push({
                 normalMapId : normalMapId,
-                ruleId      : HelpersMisc.getExisted(templateWarRule.getRuleId()),
+                ruleId      : getExisted(templateWarRule.getRuleId()),
             });
         }
         await listRule.bindData(dataArray.sort((v1, v2) => v1.ruleId - v2.ruleId));
     }
 }
 
-interface DataForRuleRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForRuleRenderer extends UiListItemData {
     normalMapId : number;
     ruleId      : number;
 }
-class RuleRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForRuleRenderer> {
-    private readonly _layoutMyScore!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMyScoreTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyScore!         : UiInterfacesIUiLabel.IUiLabel;
+class RuleRenderer extends UiListItemRenderer<DataForRuleRenderer> {
+    private readonly _layoutMyScore!        : IUiLayout;
+    private readonly _labelMyScoreTitle!    : IUiLabel;
+    private readonly _labelMyScore!         : IUiLabel;
 
-    private readonly _labelStdTitle!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStdNoData!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStdNickname!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStdScore!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTurnIndex!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listStd!              : UiInterfacesIUiScrollList.IUiScrollList<DataForUserRenderer>;
+    private readonly _labelStdTitle!        : IUiLabel;
+    private readonly _labelStdNoData!       : IUiLabel;
+    private readonly _labelStdNickname!     : IUiLabel;
+    private readonly _labelStdScore!        : IUiLabel;
+    private readonly _labelTurnIndex!       : IUiLabel;
+    private readonly _listStd!              : IUiScrollList<DataForUserRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
         ]);
 
         this._listStd.setItemRendererClass(UserRenderer);
@@ -133,11 +133,11 @@ class RuleRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelMyScoreTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0822)}:`);
-        this._labelStdNoData.setText(LangUtils.getText(LangConstants.TextType.B0278));
-        this._labelStdNickname.setText(LangUtils.getText(LangConstants.TextType.B0175));
-        this._labelStdScore.setText(LangUtils.getText(LangConstants.TextType.B0579));
-        this._labelTurnIndex.setText(LangUtils.getText(LangConstants.TextType.Turns));
+        this._labelMyScoreTitle.setText(`${getText(TextType.B0822)}:`);
+        this._labelStdNoData.setText(getText(TextType.B0278));
+        this._labelStdNickname.setText(getText(TextType.B0175));
+        this._labelStdScore.setText(getText(TextType.B0579));
+        this._labelTurnIndex.setText(getText(TextType.Turns));
 
         this._layoutMyScore.arrangeItems();
     }
@@ -150,23 +150,23 @@ class RuleRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const ruleId        = openData.ruleId;
         const normalMapId   = openData.normalMapId;
-        const configVersion = await GameConfigGcModel.getLatestConfigVersion();
-        const selfInfo      = UsersModel.getSelfInfo()?.getUserComplexInfo();
+        const configVersion = await getLatestConfigVersion();
+        const selfInfo      = getSelfInfo()?.getUserComplexInfo();
         const selfPrivilege = selfInfo?.getUserPrivilege();
         const hasPrivilege  = (selfPrivilege?.getIsAdmin() || selfPrivilege?.getIsMapCommittee()) ?? false;
         const selfScore     = selfInfo?.getUserWarStatistics()?.getSrwArray()
             .find(v => (v.getNormalMapId() === normalMapId) && (v.getConfigVersion() === configVersion) && (v.getRuleId() === ruleId))?.getHighScore() ?? Number.MIN_SAFE_INTEGER;
         const dataArray     : DataForUserRenderer[] = [];
 
-        for (const rankData of (await SinglePlayerModeModelSpmModel.getRankData(normalMapId))?.find(v => v.getRuleId() === ruleId)?.getInfoArray() ?? []) {
-            const score = HelpersMisc.getExisted(rankData.getScore());
+        for (const rankData of (await getRankData(normalMapId))?.find(v => v.getRuleId() === ruleId)?.getInfoArray() ?? []) {
+            const score = getExisted(rankData.getScore());
             dataArray.push({
                 index       : 0,
-                rankId      : HelpersMisc.getExisted(rankData.getRankId()),
+                rankId      : getExisted(rankData.getRankId()),
                 rank        : 0,
-                userId      : HelpersMisc.getExisted(rankData.getUserId()),
+                userId      : getExisted(rankData.getUserId()),
                 score,
-                turnIndex   : HelpersMisc.getExisted(rankData.getTurnIndex()),
+                turnIndex   : getExisted(rankData.getTurnIndex()),
                 canReplay   : (hasPrivilege) || (selfScore >= score),
                 isLast      : false,
             });
@@ -192,7 +192,7 @@ class RuleRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         this._labelStdNoData.setIsVisible(!length);
         await this._listStd.bindData(dataArray);
 
-        const myScore = UsersModel.getSelfInfo()?.getUserComplexInfo()?.getUserWarStatistics()?.getSrwArray()
+        const myScore = getSelfInfo()?.getUserComplexInfo()?.getUserWarStatistics()?.getSrwArray()
             .find(v => (v.getNormalMapId() === normalMapId) && (v.getConfigVersion() === configVersion) && (v.getRuleId() === ruleId))
             ?.getHighScore();
         const labelMyScore  = this._labelMyScore;
@@ -200,13 +200,13 @@ class RuleRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             labelMyScore.setText(`--`);
         } else {
             const rank          = dataArray.find(v => v.score === myScore)?.rank;
-            labelMyScore.setText(rank == null ? `${myScore} (--)` : `${myScore} (${rank}${HelpersText.getSuffixForRankIndex(rank)})`);
+            labelMyScore.setText(rank == null ? `${myScore} (--)` : `${myScore} (${rank}${getSuffixForRankIndex(rank)})`);
         }
         this._layoutMyScore.arrangeItems();
     }
 }
 
-interface DataForUserRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForUserRenderer extends UiListItemData {
     index       : number;
     rankId      : number;
     rank        : number;
@@ -216,17 +216,17 @@ interface DataForUserRenderer extends UiTypesUiListItemData.UiListItemData {
     canReplay   : boolean;
     isLast      : boolean;
 }
-class UserRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForUserRenderer> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBg!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgBottomLine!    : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelIndex!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelNickname!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelScore!       : UiInterfacesIUiLabel.IUiLabel;
+class UserRenderer extends UiListItemRenderer<DataForUserRenderer> {
+    private readonly _group!            : IUiContainer;
+    private readonly _imgBg!            : IUiImage;
+    private readonly _imgBottomLine!    : IUiImage;
+    private readonly _labelIndex!       : IUiLabel;
+    private readonly _labelNickname!    : IUiLabel;
+    private readonly _labelScore!       : IUiLabel;
 
-    private readonly _groupTurnIndex!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTurnIndex!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgReplay!        : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupTurnIndex!   : IUiContainer;
+    private readonly _labelTurnIndex!   : IUiLabel;
+    private readonly _imgReplay!        : IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -246,9 +246,9 @@ class UserRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: openData.userId });
+        openPanel(getDict().UserPanel, { userId: openData.userId });
     }
     private async _onTouchedGroupTurnIndex(): Promise<void> {
         const openData = this.getOpenData();
@@ -256,13 +256,13 @@ class UserRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         if (!openData.canReplay) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: openData.userId });
+            openPanel(getDict().UserPanel, { userId: openData.userId });
         } else {
-            const replayData = await SinglePlayerModeModelSpmModel.getReplayData(openData.rankId);
-            (replayData) && (HelpersGameFlow.gotoReplayWar(replayData, -1));
+            const replayData = await getReplayData(openData.rankId);
+            (replayData) && (gotoReplayWar(replayData, -1));
         }
     }
 
@@ -277,15 +277,15 @@ class UserRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const rank                  = openData.rank;
         const labelNickname         = this._labelNickname;
-        labelNickname.setText(LangUtils.getText(LangConstants.TextType.B0029));
-        this._labelIndex.setText(`${rank}${HelpersText.getSuffixForRankIndex(rank)}`);
+        labelNickname.setText(getText(TextType.B0029));
+        this._labelIndex.setText(`${rank}${getSuffixForRankIndex(rank)}`);
         this._labelScore.setText(`${openData.score}`);
         this._labelTurnIndex.setText(`${openData.turnIndex}`);
         this._imgBg.setAlpha(openData.index % 2 == 1 ? 0.2 : 0.5);
         this._imgBottomLine.setIsVisible(openData.isLast);
         this._imgReplay.setIsVisible(openData.canReplay);
 
-        const userInfo = HelpersMisc.getExisted(await UsersModel.getUserPublicInfo(openData.userId));
-        labelNickname.setText(userInfo.getNickname() || LangConstants.UndefinedError);
+        const userInfo = getExisted(await getUserPublicInfo(openData.userId));
+        labelNickname.setText(userInfo.getNickname() || UndefinedError);
     }
 }

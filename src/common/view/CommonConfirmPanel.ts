@@ -1,16 +1,16 @@
-import * as KeyboardKbTypes from "../../keyboard/KbTypes.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as StagesConstants from "../../stages/Constants.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
+import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { Dimension } from "../../stages/Constants.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 
 export interface OpenData {
     getTitle?           : () => string;
@@ -22,17 +22,17 @@ export interface OpenData {
     showButtonClose?    : boolean;
     showRedConfirm?     : boolean;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!      : UiInterfacesIUiImage.IUiImage;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!      : IUiImage;
 
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _scrContent!   : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiContainer.IUiContainer>;
-    private readonly _labelContent! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!     : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCancel!    : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm1!  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm2!  : UiInterfacesIUiButton.IUiButton;
+    private readonly _group!        : IUiContainer;
+    private readonly _labelTitle!   : IUiLabel;
+    private readonly _scrContent!   : IUiScroller<IUiContainer>;
+    private readonly _labelContent! : IUiLabel;
+    private readonly _btnClose!     : IUiButton;
+    private readonly _btnCancel!    : IUiButton;
+    private readonly _btnConfirm1!  : IUiButton;
+    private readonly _btnConfirm2!  : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -56,19 +56,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         this._btnClose.setIsVisible(!!openData.showButtonClose);
         this._btnConfirm1.setIsVisible(!openData.showRedConfirm);
-        this._btnConfirm1.setText(openData.getTextForConfirm?.() || LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnConfirm2.setText(openData.getTextForConfirm?.() || LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnCancel.setText(openData.getTextForCancel?.() || LangUtils.getText(LangConstants.TextType.B0154));
-        this._labelTitle.setText(openData.getTitle?.() || LangUtils.getText(LangConstants.TextType.B0088));
+        this._btnConfirm1.setText(openData.getTextForConfirm?.() || getText(TextType.B0026));
+        this._btnConfirm2.setText(openData.getTextForConfirm?.() || getText(TextType.B0026));
+        this._btnCancel.setText(openData.getTextForCancel?.() || getText(TextType.B0154));
+        this._labelTitle.setText(openData.getTitle?.() || getText(TextType.B0088));
         this._scrContent.scrollTop();
 
         const labelContent = this._labelContent;
         labelContent.setText(openData.getContent());
 
-        this._group.setUnscaledManualHeight(NumbersUtils.getValueInRange({
+        this._group.setUnscaledManualHeight(getValueInRange({
             rawValue    : labelContent.getScaledHeight() + 130,
             minValue    : 190,
-            maxValue    : StagesConstants.Dimension.DesignMinHeight,
+            maxValue    : Dimension.DesignMinHeight,
         }));
     }
 
@@ -84,7 +84,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         (callback) && (callback());
     }
 
-    private _onKeyboard(data: KeyboardKbTypes.EventData): void {
+    private _onKeyboard(data: EventData): void {
         if (this._getIsShowingCloseAnimation()) {
             return;
         }
@@ -95,21 +95,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         data.isHandled = true;
 
         const newKeys = data.newKeys;
-        if (newKeys.has(KeyboardKbTypes.KeyCode.J)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonConfirm01);
+        if (newKeys.has(KeyCode.J)) {
+            playShortSfx(ShortSfxCode.ButtonConfirm01);
             this._onTouchedBtnConfirm();
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.K)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+        } else if (newKeys.has(KeyCode.K)) {
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnCancel();
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Escape)) {
+        } else if (newKeys.has(KeyCode.Escape)) {
             const openData = this.getOpenData();
             if ((openData?.showButtonClose) || (openData?.callbackOnCancel == null)) {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+                playShortSfx(ShortSfxCode.ButtonCancel01);
                 this.closePanel();
             } else {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonForbidden01);
+                playShortSfx(ShortSfxCode.ButtonForbidden01);
             }
         }
     }

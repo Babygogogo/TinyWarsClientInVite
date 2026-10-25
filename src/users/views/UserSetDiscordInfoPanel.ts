@@ -1,55 +1,55 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
-import * as UrlsConstants from "../../urls/Constants.ts";
-import * as UsersModel from "../Model.ts";
-import * as UsersProxy from "../Proxy.ts";
-import * as UsersUtils from "../Utils.ts";
+import { show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getFormattedText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
+import { Constants } from "../../urls/Constants.ts";
+import { getSelfDiscordInfo } from "../Model.ts";
+import { reqSetDiscordInfo } from "../Proxy.ts";
+import { checkIsDiscordIdValid } from "../Utils.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp!          : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
+    private readonly _btnHelp!          : IUiButton;
 
-    private readonly _labelDiscordId!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputDiscordId!   : UiInterfacesIUiPromptedInput.IUiPromptedInput;
+    private readonly _labelDiscordId!   : IUiLabel;
+    private readonly _inputDiscordId!   : IUiPromptedInput;
 
-    private readonly _btnConfirm!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDiscord!       : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnConfirm!       : IUiButton;
+    private readonly _btnDiscord!       : IUiButton;
 
-    private readonly _groupTurn!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgTurn!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTurn!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupTurn!        : IUiContainer;
+    private readonly _imgTurn!          : IUiImage;
+    private readonly _labelTurn!        : IUiLabel;
 
-    private readonly _groupRankPhase!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgRankPhase!     : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelRankPhase!   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupRankPhase!   : IUiContainer;
+    private readonly _imgRankPhase!     : IUiImage;
+    private readonly _labelRankPhase!   : IUiLabel;
 
-    private readonly _groupRoom!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgRoom!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelRoom!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupRoom!        : IUiContainer;
+    private readonly _imgRoom!          : IUiImage;
+    private readonly _labelRoom!        : IUiLabel;
 
     private _isRequesting   = false;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgUserSetDiscordInfo,           callback: this._onMsgUserSetDiscordId },
-            { type: NotificationsTypeId.TypeId.MsgUserSetDiscordInfoFailed,     callback: this._onMsgUserSetDiscordIdFailed },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgUserSetDiscordInfo,           callback: this._onMsgUserSetDiscordId },
+            { type: TypeId.MsgUserSetDiscordInfoFailed,     callback: this._onMsgUserSetDiscordIdFailed },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -72,7 +72,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        const discordInfo = UsersModel.getSelfDiscordInfo();
+        const discordInfo = getSelfDiscordInfo();
         this._inputDiscordId.setInputText(discordInfo?.getDiscordId() ?? ``);
         this._imgRankPhase.setIsVisible(!discordInfo?.getIgnoreRankPhaseNotification());
         this._imgRoom.setIsVisible(!discordInfo?.getIgnoreRoomNotification());
@@ -80,20 +80,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0067),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0067),
         });
     }
     private _onTouchedBtnConfirm(): void {
         if (this._isRequesting) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0046));
+            show(getText(TextType.A0046));
         } else {
             const discordId = this._inputDiscordId.getInputText() ?? ``;
-            if (!UsersUtils.checkIsDiscordIdValid(discordId)) {
-                FloatText2.show(LangUtils.getText(LangConstants.TextType.A0048));
+            if (!checkIsDiscordIdValid(discordId)) {
+                show(getText(TextType.A0048));
             } else {
                 this._isRequesting = true;
-                UsersProxy.reqSetDiscordInfo({
+                reqSetDiscordInfo({
                     discordId,
                     ignoreRankPhaseNotification : this._imgRankPhase.getIsVisible() ? null : true,
                     ignoreRoomNotification      : this._imgRoom.getIsVisible() ? null : true,
@@ -105,36 +105,36 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnDiscord(): void {
         if ((window) && (window.open)) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent : () => LangUtils.getFormattedText(LangConstants.TextType.F0065, `Discord`),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent : () => getFormattedText(TextType.F0065, `Discord`),
                 callback: () => {
-                    window.open(UrlsConstants.Constants.DiscordUrl);
+                    window.open(Constants.DiscordUrl);
                 },
             });
         }
     }
 
     private _onTouchedGroupTurn(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const img   = this._imgTurn;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupRankPhase(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const img   = this._imgRankPhase;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupRoom(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const img   = this._imgRoom;
         img.setIsVisible(!img.getIsVisible());
     }
 
     private _onMsgUserSetDiscordId(): void {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0049));
+        show(getText(TextType.A0049));
         this.closePanel();
     }
     private _onMsgUserSetDiscordIdFailed(): void {
@@ -149,12 +149,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0150);
-        this._labelDiscordId.setLangText(LangConstants.TextType.B0243);
-        this._btnConfirm.setLangText(LangConstants.TextType.B0026);
-        this._btnDiscord.setLangText(LangConstants.TextType.B1330);
-        this._labelTurn.setLangText(LangConstants.TextType.B0918);
-        this._labelRankPhase.setLangText(LangConstants.TextType.B0919);
-        this._labelRoom.setLangText(LangConstants.TextType.B0920);
+        this._labelTitle.setLangText(TextType.B0150);
+        this._labelDiscordId.setLangText(TextType.B0243);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnDiscord.setLangText(TextType.B1330);
+        this._labelTurn.setLangText(TextType.B0918);
+        this._labelRankPhase.setLangText(TextType.B0919);
+        this._labelRoom.setLangText(TextType.B0920);
     }
 }

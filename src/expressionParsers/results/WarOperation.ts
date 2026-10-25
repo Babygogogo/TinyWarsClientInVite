@@ -1,21 +1,21 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
-export class WarOperation extends ExpressionParsersResultsBase.Base {
-    public readonly woContainer: ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer | null;
+export class WarOperation extends Base {
+    public readonly woContainer: WoContainer | null;
 
-    public constructor(woContainer: ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer | null, war: BaseWarInterfaceIBwWar.IBwWar) {
+    public constructor(woContainer: WoContainer | null, war: IBwWar) {
         super(war);
 
         this.woContainer = woContainer;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.WarOperation;
+    public override getResultType(): ResultType {
+        return ResultType.WarOperation;
     }
-    public override checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public override checkIsEqual(rhs: Base): boolean {
         return (rhs instanceof WarOperation)
             && (rhs.woContainer != null)
             && (rhs.woContainer === this.woContainer);

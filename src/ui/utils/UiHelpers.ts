@@ -1,23 +1,23 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as GeometriesUtils from "../../geometries/Utils.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as GraphicsUtils from "../../graphics/Utils.ts";
-import * as NumbersConstants from "../../numbers/Constants.ts";
-import * as StagesStageManager from "../../stages/StageManager.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import type * as UiTypesUiAabbParams from "../types/UiAabbParams.ts";
-import * as UiUtilsUiFactory from "./UiFactory.ts";
-import * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { Rectangle, Size } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { getRotatedPoint } from "../../geometries/Utils.ts";
+import { ColorId } from "../../graphics/Constants.ts";
+import { checkIsWebGl } from "../../graphics/Utils.ts";
+import { DegToRad } from "../../numbers/Constants.ts";
+import { getStage } from "../../stages/StageManager.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
+import type { UiAabbParams } from "../types/UiAabbParams.ts";
+import { getUiContainerBaseClass, getUiImageClass, getUiLabelClass } from "./UiFactory.ts";
+import { ColorMatrixFilter, DisplayObject, DisplayObjectContainer, Shape } from "../../vendor/egret/Egret.ts";
 
 const COLOR_MATRIX_FILTERS = {
-    [GraphicsConstants.ColorId.Gray]: new VendorEgretEgret.ColorMatrixFilter([
+    [ColorId.Gray]: new ColorMatrixFilter([
         0.3, 0.6, 0, 0, 0,
         0.3, 0.6, 0, 0, 0,
         0.3, 0.6, 0, 0, 0,
         0, 0, 0, 1, 0
     ]),
 
-    [GraphicsConstants.ColorId.Dark]: new VendorEgretEgret.ColorMatrixFilter([
+    [ColorId.Dark]: new ColorMatrixFilter([
         0.625,  0,      0,      0,  0,
         0,      0.625,  0,      0,  0,
         0,      0,      0.625,  0,  0,
@@ -25,20 +25,20 @@ const COLOR_MATRIX_FILTERS = {
     ]),
 };
 
-export function changeColor(obj: VendorEgretEgret.DisplayObject | UiInterfacesIUiComponent.IUiComponent, color: GraphicsConstants.ColorId, value = 100): void {
-    if (GraphicsUtils.checkIsWebGl()) {
-        if ((color === GraphicsConstants.ColorId.Gray) || (color === GraphicsConstants.ColorId.Dark)) {
+export function changeColor(obj: DisplayObject | IUiComponent, color: ColorId, value = 100): void {
+    if (checkIsWebGl()) {
+        if ((color === ColorId.Gray) || (color === ColorId.Dark)) {
             (obj as any).filters = [COLOR_MATRIX_FILTERS[color]];
-        } else if (color === GraphicsConstants.ColorId.Origin) {
+        } else if (color === ColorId.Origin) {
             (obj as any).filters = null;
         } else {
-            (obj as any).filters = [new VendorEgretEgret.ColorMatrixFilter(getColorMatrix(color, value) ?? void 0)];
+            (obj as any).filters = [new ColorMatrixFilter(getColorMatrix(color, value) ?? void 0)];
         }
     }
 }
-function getColorMatrix(color: GraphicsConstants.ColorId, value = 100): number[] | null {
+function getColorMatrix(color: ColorId, value = 100): number[] | null {
     switch (color) {
-        case GraphicsConstants.ColorId.Blue:
+        case ColorId.Blue:
             return [
                 1, 0, 0, 0, 0,
                 0, 1, 0, 0, 0,
@@ -46,7 +46,7 @@ function getColorMatrix(color: GraphicsConstants.ColorId, value = 100): number[]
                 0, 0, 0, 1, 0
             ];
 
-        case GraphicsConstants.ColorId.Green:
+        case ColorId.Green:
             return [
                 1, 0, 0, 0, 0,
                 0, 1, 0, 0, value,
@@ -54,7 +54,7 @@ function getColorMatrix(color: GraphicsConstants.ColorId, value = 100): number[]
                 0, 0, 0, 1, 0
             ];
 
-        case GraphicsConstants.ColorId.Red:
+        case ColorId.Red:
             return [
                 1, 0, 0, 0, value,
                 0, 1, 0, 0, 0,
@@ -62,7 +62,7 @@ function getColorMatrix(color: GraphicsConstants.ColorId, value = 100): number[]
                 0, 0, 0, 1, 0
             ];
 
-        case GraphicsConstants.ColorId.White:
+        case ColorId.White:
             return [
                 1, 0, 0, 0, value,
                 0, 1, 0, 0, value,
@@ -70,7 +70,7 @@ function getColorMatrix(color: GraphicsConstants.ColorId, value = 100): number[]
                 0, 0, 0, 1, 0
             ];
 
-        case GraphicsConstants.ColorId.Yellow:
+        case ColorId.Yellow:
             return [
                 1, 0, 0, 0, value,
                 0, 1, 0, 0, value,
@@ -83,11 +83,11 @@ function getColorMatrix(color: GraphicsConstants.ColorId, value = 100): number[]
     }
 }
 
-export function checkIsInStage(con: VendorEgretEgret.DisplayObject): boolean {
+export function checkIsInStage(con: DisplayObject): boolean {
     return con.stage != null;
 }
-export function getWorldAlpha(con: VendorEgretEgret.DisplayObject | null): number {
-    const stage = StagesStageManager.getStage();
+export function getWorldAlpha(con: DisplayObject | null): number {
+    const stage = getStage();
     let alpha   = 1;
     while ((con != null) && (con !== stage)) {
         alpha   *= con.alpha;
@@ -95,7 +95,7 @@ export function getWorldAlpha(con: VendorEgretEgret.DisplayObject | null): numbe
     }
     return alpha;
 }
-export function getWorldScale(con: VendorEgretEgret.DisplayObject | null): { x: number, y: number } {
+export function getWorldScale(con: DisplayObject | null): { x: number, y: number } {
     let x = 1;
     let y = 1;
     while (con) {
@@ -105,8 +105,8 @@ export function getWorldScale(con: VendorEgretEgret.DisplayObject | null): { x: 
     }
     return { x: x, y: y };
 }
-export function getWorldVisible(con: VendorEgretEgret.DisplayObject | null): boolean {
-    const stage = StagesStageManager.getStage();
+export function getWorldVisible(con: DisplayObject | null): boolean {
+    const stage = getStage();
     while (con !== stage) {
         if ((con == null) || (!con.visible)) {
             return false;
@@ -115,7 +115,7 @@ export function getWorldVisible(con: VendorEgretEgret.DisplayObject | null): boo
     }
     return true;
 }
-export function getAabbToParent({ unscaledWidth, unscaledHeight, scaleX, scaleY, rotationInDegree, anchorOffsetX, anchorOffsetY }: UiTypesUiAabbParams.UiAabbParams): AuxiliaryTypesAuxiliaryTypes.Rectangle {
+export function getAabbToParent({ unscaledWidth, unscaledHeight, scaleX, scaleY, rotationInDegree, anchorOffsetX, anchorOffsetY }: UiAabbParams): Rectangle {
     const tempX1            = (0               - anchorOffsetX) * scaleX + anchorOffsetX;
     const tempX2            = (unscaledWidth   - anchorOffsetX) * scaleX + anchorOffsetX;
     const tempY1            = (0               - anchorOffsetY) * scaleY + anchorOffsetY;
@@ -124,13 +124,13 @@ export function getAabbToParent({ unscaledWidth, unscaledHeight, scaleX, scaleY,
     // const { x: x2, y: y2 }  = AuxiliaryHelpers.getRotatedPointInDegree(tempX1,  tempY2, rotationInDegree,   anchorOffsetX,  anchorOffsetY);
     // const { x: x3, y: y3 }  = AuxiliaryHelpers.getRotatedPointInDegree(tempX2,  tempY1, rotationInDegree,   anchorOffsetX,  anchorOffsetY);
     // const { x: x4, y: y4 }  = AuxiliaryHelpers.getRotatedPointInDegree(tempX2,  tempY2, rotationInDegree,   anchorOffsetX,  anchorOffsetY);
-    const radians           = rotationInDegree * NumbersConstants.DegToRad;
+    const radians           = rotationInDegree * DegToRad;
     const sinValue          = Math.sin(radians);
     const cosValue          = Math.cos(radians);
-    const { x: x1, y: y1 }  = GeometriesUtils.getRotatedPoint(tempX1, tempY1, sinValue, cosValue, anchorOffsetX, anchorOffsetY);
-    const { x: x2, y: y2 }  = GeometriesUtils.getRotatedPoint(tempX1, tempY2, sinValue, cosValue, anchorOffsetX, anchorOffsetY);
-    const { x: x3, y: y3 }  = GeometriesUtils.getRotatedPoint(tempX2, tempY1, sinValue, cosValue, anchorOffsetX, anchorOffsetY);
-    const { x: x4, y: y4 }  = GeometriesUtils.getRotatedPoint(tempX2, tempY2, sinValue, cosValue, anchorOffsetX, anchorOffsetY);
+    const { x: x1, y: y1 }  = getRotatedPoint(tempX1, tempY1, sinValue, cosValue, anchorOffsetX, anchorOffsetY);
+    const { x: x2, y: y2 }  = getRotatedPoint(tempX1, tempY2, sinValue, cosValue, anchorOffsetX, anchorOffsetY);
+    const { x: x3, y: y3 }  = getRotatedPoint(tempX2, tempY1, sinValue, cosValue, anchorOffsetX, anchorOffsetY);
+    const { x: x4, y: y4 }  = getRotatedPoint(tempX2, tempY2, sinValue, cosValue, anchorOffsetX, anchorOffsetY);
     const minX              = Math.min(x1, x2, x3, x4);
     const minY              = Math.min(y1, y2, y3, y4);
     const maxX              = Math.max(x1, x2, x3, x4);
@@ -171,12 +171,12 @@ type HitTestResult = {
      *
      * 也就是说，如果未命中，或者命中的所有元素都不可触摸，则此值会是undefined
      */
-    mostInnerObject : VendorEgretEgret.DisplayObject | undefined;
+    mostInnerObject : DisplayObject | undefined;
     /** 表示指定点是否命中target或其子元素，不考虑touchEnabled / touchChildren */
     isInTarget      : boolean;
 };
 /** 查找给定点所命中的可触摸元素，比如查找玩家触摸了舞台中的哪个按钮 */
-export function hitTestTarget(target: VendorEgretEgret.DisplayObject, stageX: number, stageY: number): HitTestResult {
+export function hitTestTarget(target: DisplayObject, stageX: number, stageY: number): HitTestResult {
     // if (target instanceof UiFactory.getUiScrollerBaseClass()) {
     //     const { x, y }          = target.globalToLocal(stageX, stageY);
     //     const { width, height } = getUnscaledSize(target);
@@ -185,18 +185,18 @@ export function hitTestTarget(target: VendorEgretEgret.DisplayObject, stageX: nu
     //     }
     // }
 
-    return target instanceof VendorEgretEgret.DisplayObjectContainer
+    return target instanceof DisplayObjectContainer
         ? hitTestContainer(target, stageX, stageY)
         : hitTestObject(target, stageX, stageY);
 }
-function hitTestObject(obj: VendorEgretEgret.DisplayObject, stageX: number, stageY: number): HitTestResult {
+function hitTestObject(obj: DisplayObject, stageX: number, stageY: number): HitTestResult {
     const isInTarget = (obj.$touchEnabled) && (checkIsInTarget(obj, stageX, stageY, false));
     return {
         mostInnerObject : isInTarget ? obj : undefined,
         isInTarget      : isInTarget,
     };
 }
-function hitTestContainer(con: VendorEgretEgret.DisplayObjectContainer, stageX: number, stageY: number): HitTestResult {
+function hitTestContainer(con: DisplayObjectContainer, stageX: number, stageY: number): HitTestResult {
     const touchEnabled = con.$touchEnabled;
     if (!con.$touchChildren) {
         const isInTarget = (touchEnabled) && (checkIsInTarget(con, stageX, stageY, false));
@@ -263,13 +263,13 @@ function hitTestContainer(con: VendorEgretEgret.DisplayObjectContainer, stageX: 
     }
 }
 /**  不考虑touchEnabled */
-function checkIsInTarget(target: VendorEgretEgret.DisplayObject | VendorEgretEgret.DisplayObjectContainer, stageX: number, stageY: number, checkChildren: boolean): boolean {
-    return target instanceof VendorEgretEgret.DisplayObjectContainer
+function checkIsInTarget(target: DisplayObject | DisplayObjectContainer, stageX: number, stageY: number, checkChildren: boolean): boolean {
+    return target instanceof DisplayObjectContainer
         ? checkIsInContainer(target, stageX, stageY, checkChildren)
         : checkIsInObject(target, stageX, stageY);
 }
 /**  不考虑touchEnabled */
-function checkIsInObject(obj: VendorEgretEgret.DisplayObject, stageX: number, stageY: number): boolean {
+function checkIsInObject(obj: DisplayObject, stageX: number, stageY: number): boolean {
     if ((!obj.$renderNode)                              ||
         (!obj.$visible)                                 ||
         ((obj as any).$scaleX == 0)                     ||
@@ -305,14 +305,14 @@ function checkIsInObject(obj: VendorEgretEgret.DisplayObject, stageX: number, st
         }
     }
 
-    if (obj instanceof VendorEgretEgret.Shape) {
+    if (obj instanceof Shape) {
         return obj.$graphics.$hitTest(stageX, stageY) != null;
     } else {
         return true;
     }
 }
 /**  不考虑touchEnabled */
-function checkIsInContainer(con: VendorEgretEgret.DisplayObjectContainer, stageX: number, stageY: number, checkChildren: boolean): boolean {
+function checkIsInContainer(con: DisplayObjectContainer, stageX: number, stageY: number, checkChildren: boolean): boolean {
     if ((!con.$visible)             ||
         ((con as any).$scaleX == 0) ||
         ((con as any).$scaleY == 0)
@@ -363,10 +363,10 @@ function checkIsInContainer(con: VendorEgretEgret.DisplayObjectContainer, stageX
 
     return false;
 }
-export function getUnscaledSize(obj: VendorEgretEgret.DisplayObject): AuxiliaryTypesAuxiliaryTypes.Size {
-    if ((obj instanceof UiUtilsUiFactory.getUiContainerBaseClass())    ||
-        (obj instanceof UiUtilsUiFactory.getUiImageClass())            ||
-        (obj instanceof UiUtilsUiFactory.getUiLabelClass())
+export function getUnscaledSize(obj: DisplayObject): Size {
+    if ((obj instanceof getUiContainerBaseClass())    ||
+        (obj instanceof getUiImageClass())            ||
+        (obj instanceof getUiLabelClass())
     ) {
         return { width: obj.getUnscaledWidth(), height: obj.getUnscaledHeight() };
     } else {

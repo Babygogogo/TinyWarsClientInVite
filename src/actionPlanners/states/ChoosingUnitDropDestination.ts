@@ -1,32 +1,39 @@
-import * as ActionPlannersConstants from "../Constants.ts";
-import type * as ActionPlannersIActionPlanner from "../IActionPlanner.ts";
-import type * as ActionPlannersStatesIState from "./IState.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
+import { StateId } from "../Constants.ts";
+import type { IActionPlanner } from "../IActionPlanner.ts";
+import type { IState } from "./IState.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import {
+    getHrwWarClass,
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 
-type GridIndex      = AuxiliaryTypesGridIndex.GridIndex;
+type GridIndex      = AuxiliaryTypesGridIndex;
 
-export class ChoosingUnitDropDestination implements ActionPlannersStatesIState.IState {
+export class ChoosingUnitDropDestination implements IState {
     private static readonly _instance = new ChoosingUnitDropDestination();
 
     public static getInstance(): ChoosingUnitDropDestination {
         return ChoosingUnitDropDestination._instance;
     }
 
-    public getStateId(): ActionPlannersConstants.StateId {
-        return ActionPlannersConstants.StateId.ChoosingUnitDropDestination;
+    public getStateId(): StateId {
+        return StateId.ChoosingUnitDropDestination;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): ActionPlannersConstants.StateId {
+    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
         const war = actionPlanner.getWar();
-        if (war instanceof GameHelpersGhFactory.getHrwWarClass()) {
-            if (HelpersMisc.getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
-                return ActionPlannersConstants.StateId.ChoosingUnitAction;
+        if (war instanceof getHrwWarClass()) {
+            if (getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
+                return StateId.ChoosingUnitAction;
             } else {
                 const chosenUnits               = [actionPlanner.getChoosingUnitForDrop()];
                 const chosenDropDestinations    = [gridIndex];
@@ -35,22 +42,22 @@ export class ChoosingUnitDropDestination implements ActionPlannersStatesIState.I
                     chosenDropDestinations.push(data.destination);
                 }
 
-                const restLoadedUnits = HelpersMisc.getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
+                const restLoadedUnits = getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
                 for (const unit of restLoadedUnits) {
                     if (actionPlanner.calculateAvailableDropDestination(unit, chosenDropDestinations).length) {
-                        return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                        return StateId.ChoosingUnitAction;
                     }
                 }
 
-                return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                return StateId.ChoosingUnitAction;
             }
 
-        } else if (war instanceof GameHelpersGhFactory.getMeWarClass()) {
-            return ActionPlannersConstants.StateId.Idle;
+        } else if (war instanceof getMeWarClass()) {
+            return StateId.Idle;
 
-        } else if (war instanceof GameHelpersGhFactory.getMpwWarClass()) {
+        } else if (war instanceof getMpwWarClass()) {
             if ((actionPlanner.getAvailableDropDestinations() || []).every(g => !g.checkIsEqual(gridIndex))) {
-                return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                return StateId.ChoosingUnitAction;
             } else {
                 const chosenUnits               = [actionPlanner.getChoosingUnitForDrop()];
                 const chosenDropDestinations    = [gridIndex];
@@ -59,20 +66,20 @@ export class ChoosingUnitDropDestination implements ActionPlannersStatesIState.I
                     chosenDropDestinations.push(data.destination);
                 }
 
-                const focusUnit         = HelpersMisc.getExisted(actionPlanner.getFocusUnit());
+                const focusUnit         = getExisted(actionPlanner.getFocusUnit());
                 const restLoadedUnits   = focusUnit.getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
                 for (const unit of restLoadedUnits) {
                     if (actionPlanner.calculateAvailableDropDestination(unit, chosenDropDestinations).length) {
-                        return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                        return StateId.ChoosingUnitAction;
                     }
                 }
 
-                return ActionPlannersConstants.StateId.RequestingUnitDrop;
+                return StateId.RequestingUnitDrop;
             }
 
-        } else if (war instanceof GameHelpersGhFactory.getRwWarClass()) {
-            if (HelpersMisc.getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
-                return ActionPlannersConstants.StateId.ChoosingUnitAction;
+        } else if (war instanceof getRwWarClass()) {
+            if (getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
+                return StateId.ChoosingUnitAction;
             } else {
                 const chosenUnits               = [actionPlanner.getChoosingUnitForDrop()];
                 const chosenDropDestinations    = [gridIndex];
@@ -81,19 +88,19 @@ export class ChoosingUnitDropDestination implements ActionPlannersStatesIState.I
                     chosenDropDestinations.push(data.destination);
                 }
 
-                const restLoadedUnits = HelpersMisc.getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
+                const restLoadedUnits = getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
                 for (const unit of restLoadedUnits) {
                     if (actionPlanner.calculateAvailableDropDestination(unit, chosenDropDestinations).length) {
-                        return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                        return StateId.ChoosingUnitAction;
                     }
                 }
 
-                return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                return StateId.ChoosingUnitAction;
             }
 
-        } else if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
-            if (HelpersMisc.getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
-                return ActionPlannersConstants.StateId.ChoosingUnitAction;
+        } else if (war instanceof getSpwWarClass()) {
+            if (getExisted(actionPlanner.getAvailableDropDestinations()).every(g => !g.checkIsEqual(gridIndex))) {
+                return StateId.ChoosingUnitAction;
             } else {
                 const chosenUnits               = [actionPlanner.getChoosingUnitForDrop()];
                 const chosenDropDestinations    = [gridIndex];
@@ -102,87 +109,87 @@ export class ChoosingUnitDropDestination implements ActionPlannersStatesIState.I
                     chosenDropDestinations.push(data.destination);
                 }
 
-                const restLoadedUnits = HelpersMisc.getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
+                const restLoadedUnits = getExisted(actionPlanner.getFocusUnit()).getLoadedUnits().filter(unit => chosenUnits.every(u => u !== unit));
                 for (const unit of restLoadedUnits) {
                     if (actionPlanner.calculateAvailableDropDestination(unit, chosenDropDestinations).length) {
-                        return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                        return StateId.ChoosingUnitAction;
                     }
                 }
 
-                return ActionPlannersConstants.StateId.RequestingUnitDrop;
+                return StateId.RequestingUnitDrop;
             }
 
-        } else if (war instanceof GameHelpersGhFactory.getTwWarClass()) {
-            return ActionPlannersConstants.StateId.Idle;
+        } else if (war instanceof getTwWarClass()) {
+            return StateId.Idle;
 
         } else {
-            throw HelpersMisc.newError(`Unknown actionPlanner.`);
+            throw newError(`Unknown actionPlanner.`);
         }
     }
 
-    public getNextStateIdOnDrag(): ActionPlannersConstants.StateId {
+    public getNextStateIdOnDrag(): StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): ActionPlannersConstants.StateId {
+    public getNextStateIdOnDragEnded(): StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
+    public cancel(actionPlanner: IActionPlanner): void {
         actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
         actionPlanner.clearChoosingUnitForDrop();
         actionPlanner.clearAvailableDropDestinations();
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitAction);
+        actionPlanner.setStateId(StateId.ChoosingUnitAction);
         actionPlanner.updateView();
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+        playShortSfx(ShortSfxCode.ButtonCancel01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
+    public doApplyOnTap(actionPlanner: IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === ActionPlannersConstants.StateId.ChoosingUnitAction) {
+        if (currState === StateId.ChoosingUnitAction) {
             const data = actionPlanner.popBackChosenUnitForDrop();
             actionPlanner.setChoosingUnitForDrop(data.unit);
             actionPlanner.setAvailableDropDestinations(actionPlanner.calculateAvailableDropDestination(data.unit, actionPlanner.getChosenDropDestinations()));
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
 
         } else {
-            throw HelpersMisc.newError(`Invalid currState: ${currState}`);
+            throw newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitDropDestination);
+        actionPlanner.setStateId(StateId.ChoosingUnitDropDestination);
         actionPlanner.updateView();
     }
 
-    public doApplyOnDrag(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
+    public doApplyOnDrag(actionPlanner: IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === ActionPlannersConstants.StateId.ChoosingUnitDropDestination) {
+        if (currState === StateId.ChoosingUnitDropDestination) {
             // Nothing to do.
 
         } else {
-            throw HelpersMisc.newError(`Invalid currState: ${currState}`);
+            throw newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitDropDestination);
+        actionPlanner.setStateId(StateId.ChoosingUnitDropDestination);
         actionPlanner.updateView();
     }
 
     public doApplyOnDragEnded(): void {
-        throw HelpersMisc.newError(`ChoosingUnitDropDestinationState: Not expected to apply on drag ended!`);
+        throw newError(`ChoosingUnitDropDestinationState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, unitForDrop: UnitsIUnit.IUnit): void {
+    public doApplyOnChooseAction(actionPlanner: IActionPlanner, unitForDrop: IUnit): void {
         const currStateId = actionPlanner.getStateId();
-        if (currStateId !== ActionPlannersConstants.StateId.ChoosingUnitAction) {
-            throw HelpersMisc.newError(`Invalid currState: ${currStateId}`);
+        if (currStateId !== StateId.ChoosingUnitAction) {
+            throw newError(`Invalid currState: ${currStateId}`);
         } else {
             actionPlanner.setChoosingUnitForDrop(unitForDrop);
             actionPlanner.setAvailableDropDestinations(actionPlanner.calculateAvailableDropDestination(unitForDrop, actionPlanner.getChosenDropDestinations()));
         }
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitDropDestination);
+        actionPlanner.setStateId(StateId.ChoosingUnitDropDestination);
         actionPlanner.updateView();
     }
 }

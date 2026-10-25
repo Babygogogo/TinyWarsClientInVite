@@ -1,29 +1,31 @@
-import * as BootTimersConstants from "../../bootTimers/Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForSfw from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
-import type * as SingleFreeWarInterfaceISfwWar from "../interface/ISfwWar.ts";
-import * as SinglePlayerWarModelSpwWar from "../../singlePlayerWar/model/SpwWar.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import { TimerTypeId } from "../../bootTimers/Constants.ts";
+import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type {
+    SettingsForSfw as ProtoSchemaCommonProtoWarSettingsSettingsForSfw,
+} from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
+import type { ISfwWar } from "../interface/ISfwWar.ts";
+import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type SettingsForSfw     = ProtoSchemaCommonProtoWarSettingsSettingsForSfw.SettingsForSfw;
-type GcData             = GameConfigGcData.GcData;
+type SettingsForSfw     = ProtoSchemaCommonProtoWarSettingsSettingsForSfw;
+type GcData             = GameConfigGcData;
 
-export class SfwWar extends SinglePlayerWarModelSpwWar.SpwWar implements SingleFreeWarInterfaceISfwWar.ISfwWar {
+export class SfwWar extends SpwWar implements ISfwWar {
     private _settingsForSfw?    : SettingsForSfw;
 
-    public init(data: ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, HelpersProtoSchemaWarSerializationSerialWar.getWarTypeId(data));
-        this._setSettingsForSfw(HelpersMisc.getExisted(data.getSettingsForSfw(), UtilsClientErrorCode.ClientErrorCode.SfwWar_Init_00));
+    public init(data: SerialWar, gameConfig: GcData): void {
+        this._baseInit(data, gameConfig, getWarTypeId(data));
+        this._setSettingsForSfw(getExisted(data.getSettingsForSfw(), ClientErrorCode.SfwWar_Init_00));
         this.getRetractManager().setCanRetract(true);
 
         this._initView();
     }
 
-    public serialize(): ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar {
-        return ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.fromJson({
+    public serialize(): SerialWar {
+        return SerialWar.fromJson({
             settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
             settingsForSfw              : this.getSettingsForSfw().toJson(),
 
@@ -66,13 +68,13 @@ export class SfwWar extends SinglePlayerWarModelSpwWar.SpwWar implements SingleF
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return [BootTimersConstants.TimerTypeId.NoBoot];
+        return [TimerTypeId.NoBoot];
     }
 
     private _setSettingsForSfw(settings: SettingsForSfw): void {
         this._settingsForSfw = settings;
     }
     public getSettingsForSfw(): SettingsForSfw {
-        return HelpersMisc.getExisted(this._settingsForSfw);
+        return getExisted(this._settingsForSfw);
     }
 }

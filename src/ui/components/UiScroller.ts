@@ -1,37 +1,37 @@
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as UiComponentsUiScrollerBase from "./UiScrollerBase.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import type * as UiInterfacesIUiContainer from "../interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLayout from "../interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScroller from "../interfaces/IUiScroller.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { UiScrollerBase } from "./UiScrollerBase.ts";
+import type { IUiComponent as UiInterfacesIUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiContainer } from "../interfaces/IUiContainer.ts";
+import type { IUiLayout } from "../interfaces/IUiLayout.ts";
+import type { IUiScroller } from "../interfaces/IUiScroller.ts";
+import { getUiLayoutClass, getUiContainerClass } from "../utils/UiFactory.ts";
+import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
 
-type IUiComponent = UiInterfacesIUiComponent.IUiComponent;
+type IUiComponent = UiInterfacesIUiComponent;
 
-export class UiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInterfacesIUiLayout.IUiLayout>
-    extends     UiComponentsUiScrollerBase.UiScrollerBase
-    implements  UiInterfacesIUiScroller.IUiScroller<T>
+export class UiScroller<T extends IUiContainer | IUiLayout>
+    extends     UiScrollerBase
+    implements  IUiScroller<T>
 {
     private _viewport: T | undefined;
 
     public initViewport(viewport: T): void {
         if (this._getViewport()) {
-            throw HelpersMisc.newError(`Viewport initialized.`);
+            throw newError(`Viewport initialized.`);
         }
 
-        if (viewport instanceof UiUtilsUiFactory.getUiLayoutClass()) {
+        if (viewport instanceof getUiLayoutClass()) {
             viewport.setUnscaledRequestedSize(this.getUnscaledManualWidth(), this.getUnscaledManualHeight());
-        } else if (viewport instanceof UiUtilsUiFactory.getUiContainerClass()) {
+        } else if (viewport instanceof getUiContainerClass()) {
             // nothing to do
         } else {
-            throw HelpersMisc.newError(`Unknown viewport.`);
+            throw newError(`Unknown viewport.`);
         }
 
         this._viewport = viewport;
-        this.addChild(viewport as unknown as VendorEgretEgret.DisplayObjectContainer);
+        this.addChild(viewport as unknown as DisplayObjectContainer);
     }
-    protected _getViewport(): UiInterfacesIUiComponent.IUiComponent | undefined {
+    protected _getViewport(): UiInterfacesIUiComponent | undefined {
         return this._viewport;
     }
 
@@ -44,21 +44,21 @@ export class UiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInte
         if (viewport == null) {
             return;
 
-        } else if (viewport instanceof UiUtilsUiFactory.getUiLayoutClass()) {
+        } else if (viewport instanceof getUiLayoutClass()) {
             for (const item of items) {
                 viewport.addItem(item, false);
             }
             viewport.arrangeItems();
             this._resizeAllComponents();
 
-        } else if (viewport instanceof UiUtilsUiFactory.getUiContainerClass()) {
+        } else if (viewport instanceof getUiContainerClass()) {
             for (const item of items) {
                 viewport.addUiChild(item);
             }
             this._resizeAllComponents();
 
         } else {
-            throw HelpersMisc.newError(`Unknown viewport.`);
+            throw newError(`Unknown viewport.`);
         }
     }
     public addItem(item: IUiComponent): void {
@@ -78,7 +78,7 @@ export class UiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInte
         if (viewport == null) {
             return undefined;
 
-        } else if (viewport instanceof UiUtilsUiFactory.getUiLayoutClass()) {
+        } else if (viewport instanceof getUiLayoutClass()) {
             const item = viewport.removeItemAt(index, false);
             if (item) {
                 viewport.arrangeItems();
@@ -86,7 +86,7 @@ export class UiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInte
             }
             return item;
 
-        } else if (viewport instanceof UiUtilsUiFactory.getUiContainerClass()) {
+        } else if (viewport instanceof getUiContainerClass()) {
             const item = viewport.removeUiChildAt(index);
             if (item) {
                 this._resizeAllComponents();
@@ -94,7 +94,7 @@ export class UiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInte
             return item;
 
         } else {
-            throw HelpersMisc.newError(`Unknown viewport.`);
+            throw newError(`Unknown viewport.`);
         }
     }
     public removeAllItems(): IUiComponent[] | undefined {
@@ -102,7 +102,7 @@ export class UiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInte
         if (viewport == null) {
             return undefined;
 
-        } else if (viewport instanceof UiUtilsUiFactory.getUiLayoutClass()) {
+        } else if (viewport instanceof getUiLayoutClass()) {
             const items = viewport.removeAllItems(false);
             if (items.length) {
                 viewport.arrangeItems();
@@ -110,7 +110,7 @@ export class UiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInte
             }
             return items;
 
-        } else if (viewport instanceof UiUtilsUiFactory.getUiContainerClass()) {
+        } else if (viewport instanceof getUiContainerClass()) {
             const items = viewport.removeUiChildren();
             if (items.length) {
                 this._resizeAllComponents();
@@ -118,7 +118,7 @@ export class UiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInte
             return items;
 
         } else {
-            throw HelpersMisc.newError(`Unknown viewport.`);
+            throw newError(`Unknown viewport.`);
         }
     }
 
@@ -127,14 +127,14 @@ export class UiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInte
         if (viewport == null) {
             return undefined;
 
-        } else if (viewport instanceof UiUtilsUiFactory.getUiLayoutClass()) {
+        } else if (viewport instanceof getUiLayoutClass()) {
             return viewport.getAllItems();
 
-        } else if (viewport instanceof UiUtilsUiFactory.getUiContainerClass()) {
+        } else if (viewport instanceof getUiContainerClass()) {
             return viewport.getUiChildren();
 
         } else {
-            throw HelpersMisc.newError(`Unknown viewport.`);
+            throw newError(`Unknown viewport.`);
         }
     }
     public override getItem(index: number): IUiComponent | undefined {
@@ -142,14 +142,14 @@ export class UiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInte
         if (viewport == null) {
             return undefined;
 
-        } else if (viewport instanceof UiUtilsUiFactory.getUiLayoutClass()) {
+        } else if (viewport instanceof getUiLayoutClass()) {
             return viewport.getItemAt(index);
 
-        } else if (viewport instanceof UiUtilsUiFactory.getUiContainerClass()) {
+        } else if (viewport instanceof getUiContainerClass()) {
             return viewport.getUiChildAt(index);
 
         } else {
-            throw HelpersMisc.newError(`Unknown viewport.`);
+            throw newError(`Unknown viewport.`);
         }
     }
 }

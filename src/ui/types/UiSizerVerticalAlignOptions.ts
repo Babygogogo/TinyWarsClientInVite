@@ -1,6 +1,6 @@
-import type * as UiTypesUiVerticalAlign from "./UiVerticalAlign.ts";
+import type { UiVerticalAlign } from "./UiVerticalAlign.ts";
 
 export interface UiSizerVerticalAlignOptions {
-    align?  : UiTypesUiVerticalAlign.UiVerticalAlign;  // default: Top
+    align?  : UiVerticalAlign;  // default: Top
     offset? : number;           // default: 0
 }

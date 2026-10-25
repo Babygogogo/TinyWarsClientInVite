@@ -1,49 +1,49 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import * as GameHelpersGhFactory from "../gameHelpers/GhFactory.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoConfigWeatherCfg from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialWeatherManager from "../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
-import type * as WeathersIManager from "./IManager.ts";
-import type * as WeathersIView from "./IView.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import { getBwWeatherManagerViewClass } from "../gameHelpers/GhFactory.ts";
+import { getExisted, getDefined } from "../helpers/Misc.ts";
+import { TextType } from "../lang/Constants.ts";
+import { getWeatherName, getFormattedText, getWeatherFullDesc } from "../lang/Utils.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
+import { SerialWeatherManager } from "../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+import type { IManager } from "./IManager.ts";
+import type { IView } from "./IView.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
+type IBwWar                 = BaseWarInterfaceIBwWar;
 
-export class Manager implements WeathersIManager.IManager {
+export class Manager implements IManager {
     private _forceWeatherType?      : number | null;
     private _expirePlayerIndex?     : number | null;
     private _expireTurnIndex?       : number | null;
     private _war?                   : IBwWar;
 
-    private readonly _view = new (GameHelpersGhFactory.getBwWeatherManagerViewClass())();
+    private readonly _view = new (getBwWeatherManagerViewClass())();
 
-    public init(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialWeatherManager.SerialWeatherManager>): void {
+    public init(data: Undefinable<SerialWeatherManager>): void {
         this.setForceWeatherType(data?.getForceWeatherType() ?? null);
         this.setExpireTurnIndex(data?.getExpireTurnIndex() ?? null);
         this.setExpirePlayerIndex(data?.getExpirePlayerIndex() ?? null);
 
         this.getView().init(this);
     }
-    public fastInit(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialWeatherManager.SerialWeatherManager>): void {
+    public fastInit(data: Undefinable<SerialWeatherManager>): void {
         this.init(data);
     }
 
-    public serialize(): ProtoSchemaCommonProtoWarSerializationSerialWeatherManager.SerialWeatherManager {
-        return ProtoSchemaCommonProtoWarSerializationSerialWeatherManager.SerialWeatherManager.fromJson({
+    public serialize(): SerialWeatherManager {
+        return SerialWeatherManager.fromJson({
             forceWeatherType    : this.getForceWeatherType(),
             expireTurnIndex     : this.getExpireTurnIndex(),
             expirePlayerIndex   : this.getExpirePlayerIndex(),
         });
     }
-    public serializeForCreateMfr(): ProtoSchemaCommonProtoWarSerializationSerialWeatherManager.SerialWeatherManager {
+    public serializeForCreateMfr(): SerialWeatherManager {
         return this.serialize();
     }
-    public serializeForCreateSfw(): ProtoSchemaCommonProtoWarSerializationSerialWeatherManager.SerialWeatherManager {
+    public serializeForCreateSfw(): SerialWeatherManager {
         return this.serialize();
     }
 
@@ -61,10 +61,10 @@ export class Manager implements WeathersIManager.IManager {
         this._war = war;
     }
     public getWar(): IBwWar {
-        return HelpersMisc.getExisted(this._war, UtilsClientErrorCode.ClientErrorCode.BwWeatherManager_GetWar_00);
+        return getExisted(this._war, ClientErrorCode.BwWeatherManager_GetWar_00);
     }
 
-    public getView(): WeathersIView.IView {
+    public getView(): IView {
         return this._view;
     }
 
@@ -74,32 +74,32 @@ export class Manager implements WeathersIManager.IManager {
     public getCurrentWeatherType(): number {
         return this.getForceWeatherType() ?? this.getDefaultWeatherType();
     }
-    public getCurrentWeatherCfg(): ProtoSchemaCommonProtoConfigWeatherCfg.WeatherCfg {
-        return HelpersMisc.getExisted(this.getWar().getGcData().getWeatherCfg(this.getCurrentWeatherType()));
+    public getCurrentWeatherCfg(): WeatherCfg {
+        return getExisted(this.getWar().getGcData().getWeatherCfg(this.getCurrentWeatherType()));
     }
 
     public setForceWeatherType(type: number | null): void {
         if (this._forceWeatherType !== type) {
             this._forceWeatherType = type;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwForceWeatherTypeChanged);
+            dispatch(TypeId.BwForceWeatherTypeChanged);
         }
     }
     public getForceWeatherType(): number | null {
-        return HelpersMisc.getDefined(this._forceWeatherType, UtilsClientErrorCode.ClientErrorCode.BwWeatherManager_GetForceWeatherType_00);
+        return getDefined(this._forceWeatherType, ClientErrorCode.BwWeatherManager_GetForceWeatherType_00);
     }
 
     public setExpirePlayerIndex(playerIndex: number | null): void {
         this._expirePlayerIndex = playerIndex;
     }
     public getExpirePlayerIndex(): number | null {
-        return HelpersMisc.getDefined(this._expirePlayerIndex, UtilsClientErrorCode.ClientErrorCode.BwWeatherManager_GetExpirePlayerIndex_00);
+        return getDefined(this._expirePlayerIndex, ClientErrorCode.BwWeatherManager_GetExpirePlayerIndex_00);
     }
 
     public setExpireTurnIndex(turnIndex: number | null): void {
         this._expireTurnIndex = turnIndex;
     }
     public getExpireTurnIndex(): number | null {
-        return HelpersMisc.getDefined(this._expireTurnIndex, UtilsClientErrorCode.ClientErrorCode.BwWeatherManager_GetExpireTurnIndex_00);
+        return getDefined(this._expireTurnIndex, ClientErrorCode.BwWeatherManager_GetExpireTurnIndex_00);
     }
 
     public updateOnPlayerTurnSwitched(): void {
@@ -124,16 +124,16 @@ export class Manager implements WeathersIManager.IManager {
         const war               = this.getWar();
         const gameConfig        = war.getGcData();
         const expireTurnIndex   = this.getExpireTurnIndex();
-        const currentWeatherName = LangUtils.getWeatherName(this.getCurrentWeatherType(), gameConfig);
-        const defaultWeatherName = LangUtils.getWeatherName(this.getDefaultWeatherType(), gameConfig);
+        const currentWeatherName = getWeatherName(this.getCurrentWeatherType(), gameConfig);
+        const defaultWeatherName = getWeatherName(this.getDefaultWeatherType(), gameConfig);
         if (expireTurnIndex == null) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0073, currentWeatherName, defaultWeatherName)}`
-                + `\n\n${LangUtils.getWeatherFullDesc(gameConfig)}`;
+            return `${getFormattedText(TextType.F0073, currentWeatherName, defaultWeatherName)}`
+                + `\n\n${getWeatherFullDesc(gameConfig)}`;
         } else {
             const turnManager   = war.getTurnManager();
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0073, currentWeatherName, defaultWeatherName)}`
-                + `\n${LangUtils.getFormattedText(LangConstants.TextType.F0074, expireTurnIndex, this.getExpirePlayerIndex(), turnManager.getTurnIndex(), turnManager.getPlayerIndexInTurn())}`
-                + `\n\n${LangUtils.getWeatherFullDesc(gameConfig)}`;
+            return `${getFormattedText(TextType.F0073, currentWeatherName, defaultWeatherName)}`
+                + `\n${getFormattedText(TextType.F0074, expireTurnIndex, this.getExpirePlayerIndex(), turnManager.getTurnIndex(), turnManager.getPlayerIndexInTurn())}`
+                + `\n\n${getWeatherFullDesc(gameConfig)}`;
         }
     }
 }

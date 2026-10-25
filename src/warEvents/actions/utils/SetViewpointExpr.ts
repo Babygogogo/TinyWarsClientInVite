@@ -1,33 +1,35 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersContextsWar from "../../../expressionParsers/contexts/War.ts";
-import * as ExpressionParsersParser from "../../../expressionParsers/Parser.ts";
-import * as ExpressionParsersResultsNullableUnit from "../../../expressionParsers/results/NullableUnit.ts";
-import * as ExpressionParsersResultsNullableUnitArray from "../../../expressionParsers/results/NullableUnitArray.ts";
-import * as ExpressionParsersResultsNum from "../../../expressionParsers/results/Num.ts";
-import * as ExpressionParsersResultsPosition from "../../../expressionParsers/results/Position.ts";
-import * as ExpressionParsersResultsPositionArray from "../../../expressionParsers/results/PositionArray.ts";
-import * as ExpressionParsersResultsTile from "../../../expressionParsers/results/Tile.ts";
-import * as ExpressionParsersResultsTileArray from "../../../expressionParsers/results/TileArray.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NumbersUtils from "../../../numbers/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetViewpointExpr from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointExpr.ts";
-import * as VendorEgretEgret from "../../../vendor/egret/Egret.ts";
-import * as WarEventsActionsConstantsSetViewpointExpr from "../constants/SetViewpointExpr.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { War } from "../../../expressionParsers/contexts/War.ts";
+import { Parser } from "../../../expressionParsers/Parser.ts";
+import { NullableUnit } from "../../../expressionParsers/results/NullableUnit.ts";
+import { NullableUnitArray } from "../../../expressionParsers/results/NullableUnitArray.ts";
+import { Num } from "../../../expressionParsers/results/Num.ts";
+import { Position } from "../../../expressionParsers/results/Position.ts";
+import { PositionArray } from "../../../expressionParsers/results/PositionArray.ts";
+import { Tile } from "../../../expressionParsers/results/Tile.ts";
+import { TileArray } from "../../../expressionParsers/results/TileArray.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getFormattedText } from "../../../lang/Utils.ts";
+import { getValueInRange } from "../../../numbers/Utils.ts";
+import type {
+    WeaSetViewpointExpr as ProtoSchemaCommonProtoWarEventWeaSetViewpointExpr,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointExpr.ts";
+import { setTimeout } from "../../../vendor/egret/Egret.ts";
+import { ExpressionInfoDict } from "../constants/SetViewpointExpr.ts";
 
-type WeaSetViewpointExpr    = ProtoSchemaCommonProtoWarEventWeaSetViewpointExpr.WeaSetViewpointExpr;
+type WeaSetViewpointExpr    = ProtoSchemaCommonProtoWarEventWeaSetViewpointExpr;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetViewpointExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: Undefinable<WeaSetViewpointExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getTargets(),
-            expressionInfo          : WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.Targets,
+            expressionInfo          : ExpressionInfoDict.Targets,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -35,9 +37,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getNeedFocusEffect(),
-            expressionInfo          : WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.NeedFocusEffect,
+            expressionInfo          : ExpressionInfoDict.NeedFocusEffect,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -45,9 +47,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getIsOneByOne(),
-            expressionInfo          : WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.IsOneByOne,
+            expressionInfo          : ExpressionInfoDict.IsOneByOne,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -55,9 +57,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getInterval(),
-            expressionInfo          : WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.Interval,
+            expressionInfo          : ExpressionInfoDict.Interval,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -67,83 +69,83 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetViewpointExpr>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetViewpointExpr>): string | null {
     if (data == null) {
         return null;
     }
 
-    return LangUtils.getFormattedText(LangConstants.TextType.F0046, data.getTargets());
+    return getFormattedText(TextType.F0046, data.getTargets());
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetViewpointExpr>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetViewpointExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     const textArray = [
-        data.getNeedFocusEffect()    ? `${WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.NeedFocusEffect.getTitleText()}: ${data.getNeedFocusEffect()}`   : null,
-        data.getIsOneByOne()         ? `${WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.IsOneByOne.getTitleText()}: ${data.getIsOneByOne()}`             : null,
-        data.getInterval()           ? `${WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.Interval.getTitleText()}: ${data.getInterval()}`                 : null,
+        data.getNeedFocusEffect()    ? `${ExpressionInfoDict.NeedFocusEffect.getTitleText()}: ${data.getNeedFocusEffect()}`   : null,
+        data.getIsOneByOne()         ? `${ExpressionInfoDict.IsOneByOne.getTitleText()}: ${data.getIsOneByOne()}`             : null,
+        data.getInterval()           ? `${ExpressionInfoDict.Interval.getTitleText()}: ${data.getInterval()}`                 : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${LangUtils.getFormattedText(LangConstants.TextType.F0046, data.getTargets() ?? LangConstants.UndefinedError)}\n${textArray}`;
+    return `${getFormattedText(TextType.F0046, data.getTargets() ?? UndefinedError)}\n${textArray}`;
 }
 
 export function getErrorTip(data: WeaSetViewpointExpr, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.Targets;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.Targets;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getTargets(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.NeedFocusEffect;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.NeedFocusEffect;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getNeedFocusEffect(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.IsOneByOne;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.IsOneByOne;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getIsOneByOne(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetViewpointExpr.ExpressionInfoDict.Interval;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.Interval;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getInterval(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
+export async function applyWithExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: IBwWar): Promise<void> {
     return applyWithoutExtraData(action, isFast, war);
 }
-export async function applyWithoutExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetViewpointExpr, isFast: boolean, war: IBwWar): Promise<void> {
     return doApply({
         gridIndexArray      : getTargetGridIndexArray(action.getTargets() ?? ``, war),
         isNeedFocusEffect   : getIsNeedFocusEffect(action.getNeedFocusEffect(), war),
@@ -154,11 +156,11 @@ export async function applyWithoutExtraData(action: WeaSetViewpointExpr, isFast:
     });
 }
 export async function doApply({ gridIndexArray, isNeedFocusEffect, isOneByOne, interval, war, isFastExecute }: {
-    gridIndexArray      : AuxiliaryTypesGridIndex.GridIndex[];
+    gridIndexArray      : GridIndex[];
     isNeedFocusEffect   : boolean;
     isOneByOne          : boolean;
     interval            : number;
-    war                 : BaseWarInterfaceIBwWar.IBwWar;
+    war                 : IBwWar;
     isFastExecute       : boolean;
 }): Promise<void> {
     if (isFastExecute) {
@@ -180,7 +182,7 @@ export async function doApply({ gridIndexArray, isNeedFocusEffect, isOneByOne, i
             if (isNeedFocusEffect) {
                 visualEffect.showEffectAiming(gridIndex, interval);
                 await new Promise<void>(resolve => {
-                    VendorEgretEgret.setTimeout(() => resolve(), null, interval);
+                    setTimeout(() => resolve(), null, interval);
                 });
             }
         }
@@ -194,42 +196,42 @@ export async function doApply({ gridIndexArray, isNeedFocusEffect, isOneByOne, i
                 visualEffect.showEffectAiming(gridIndex, interval);
             }
             await new Promise<void>(resolve => {
-                VendorEgretEgret.setTimeout(() => resolve(), null, interval);
+                setTimeout(() => resolve(), null, interval);
             });
         }
     }
 }
-function getTargetGridIndexArray(str: string, war: BaseWarInterfaceIBwWar.IBwWar): AuxiliaryTypesGridIndex.GridIndex[] {
+function getTargetGridIndexArray(str: string, war: IBwWar): GridIndex[] {
     const gridIdSet = new Set<number>();
     const mapSize   = war.getTileMap().getMapSize();
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(str).eval(new ExpressionParsersContextsWar.War(war), false);
-        if (result instanceof ExpressionParsersResultsNullableUnit.NullableUnit) {
+        const result = Parser.getParseResult(str).eval(new War(war), false);
+        if (result instanceof NullableUnit) {
             const unit = result.unit;
             if (unit) {
                 gridIdSet.add(unit.getGridIndex().getGridId(mapSize));
             }
-        } else if (result instanceof ExpressionParsersResultsNullableUnitArray.NullableUnitArray) {
+        } else if (result instanceof NullableUnitArray) {
             for (const data of result.array) {
                 const unit = data.unit;
                 if (unit) {
                     gridIdSet.add(unit.getGridIndex().getGridId(mapSize));
                 }
             }
-        } else if (result instanceof ExpressionParsersResultsTile.Tile) {
+        } else if (result instanceof Tile) {
             gridIdSet.add(result.tile.getGridIndex().getGridId(mapSize));
-        } else if (result instanceof ExpressionParsersResultsTileArray.TileArray) {
+        } else if (result instanceof TileArray) {
             for (const tile of result.array) {
                 gridIdSet.add(tile.getGridIndex().getGridId(mapSize));
             }
-        } else if (result instanceof ExpressionParsersResultsPosition.Position) {
-            const gridIndex = new AuxiliaryTypesGridIndex.GridIndex(result.x, result.y);
+        } else if (result instanceof Position) {
+            const gridIndex = new GridIndex(result.x, result.y);
             if (gridIndex.checkIsInsideMap(mapSize)) {
                 gridIdSet.add(gridIndex.getGridId(mapSize));
             }
-        } else if (result instanceof ExpressionParsersResultsPositionArray.PositionArray) {
+        } else if (result instanceof PositionArray) {
             for (const data of result.positionArray) {
-                const gridIndex = new AuxiliaryTypesGridIndex.GridIndex(data.x, data.y);
+                const gridIndex = new GridIndex(data.x, data.y);
                 if (gridIndex.checkIsInsideMap(mapSize)) {
                     gridIdSet.add(gridIndex.getGridId(mapSize));
                 }
@@ -239,9 +241,9 @@ function getTargetGridIndexArray(str: string, war: BaseWarInterfaceIBwWar.IBwWar
         // nothing to do
     }
 
-    return [...gridIdSet].map(v => AuxiliaryTypesGridIndex.GridIndex.getGridIndexByGridId(v, mapSize));
+    return [...gridIdSet].map(v => GridIndex.getGridIndexByGridId(v, mapSize));
 }
-function getCenterGridIndex(gridIndexArray: AuxiliaryTypesGridIndex.GridIndex[]): AuxiliaryTypesGridIndex.GridIndex {
+function getCenterGridIndex(gridIndexArray: GridIndex[]): GridIndex {
     let x = 0;
     let y = 0;
     for (const g of gridIndexArray) {
@@ -250,32 +252,32 @@ function getCenterGridIndex(gridIndexArray: AuxiliaryTypesGridIndex.GridIndex[])
     }
 
     const length = gridIndexArray.length;
-    return new AuxiliaryTypesGridIndex.GridIndex(
+    return new GridIndex(
         Math.floor(x / length),
         Math.floor(y / length)
     );
 }
-function getIsOneByOne(str: AuxiliaryTypesAuxiliaryTypes.Undefinable<string>, war: BaseWarInterfaceIBwWar.IBwWar): boolean {
+function getIsOneByOne(str: Undefinable<string>, war: IBwWar): boolean {
     if (!str) {
         return false;
     }
 
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(str).eval(new ExpressionParsersContextsWar.War(war), false);
-        return (result instanceof ExpressionParsersResultsNum.Num) && (result.num !== 0);
+        const result = Parser.getParseResult(str).eval(new War(war), false);
+        return (result instanceof Num) && (result.num !== 0);
     } catch {
         return false;
     }
 }
-function getInterval(str: AuxiliaryTypesAuxiliaryTypes.Undefinable<string>, war: BaseWarInterfaceIBwWar.IBwWar): number {
+function getInterval(str: Undefinable<string>, war: IBwWar): number {
     if (!str) {
         return 1000;
     }
 
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(str).eval(new ExpressionParsersContextsWar.War(war), false);
-        if (result instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
+        const result = Parser.getParseResult(str).eval(new War(war), false);
+        if (result instanceof Num) {
+            return getValueInRange({
                 minValue    : 100,
                 maxValue    : 3000,
                 rawValue    : Math.floor(result.num),
@@ -287,14 +289,14 @@ function getInterval(str: AuxiliaryTypesAuxiliaryTypes.Undefinable<string>, war:
         return 1000;
     }
 }
-function getIsNeedFocusEffect(str: AuxiliaryTypesAuxiliaryTypes.Undefinable<string>, war: BaseWarInterfaceIBwWar.IBwWar): boolean {
+function getIsNeedFocusEffect(str: Undefinable<string>, war: IBwWar): boolean {
     if (!str) {
         return false;
     }
 
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(str).eval(new ExpressionParsersContextsWar.War(war), false);
-        return (result instanceof ExpressionParsersResultsNum.Num) && (result.num !== 0);
+        const result = Parser.getParseResult(str).eval(new War(war), false);
+        return (result instanceof Num) && (result.num !== 0);
     } catch {
         return false;
     }

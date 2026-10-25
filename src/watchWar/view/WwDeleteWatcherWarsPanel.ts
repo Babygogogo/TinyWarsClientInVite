@@ -1,70 +1,86 @@
-import * as CommonViewCommonWarAdvancedSettingsPage from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import * as CommonViewCommonWarBasicSettingsPage from "../../common/view/CommonWarBasicSettingsPage.ts";
-import * as CommonViewCommonWarMapInfoPage from "../../common/view/CommonWarMapInfoPage.ts";
-import * as CommonViewCommonWarPlayerInfoPage from "../../common/view/CommonWarPlayerInfoPage.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as MultiPlayerWarModelMpwModel from "../../multiPlayerWar/model/MpwModel.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import * as UiComponentsUiTabItemRenderer from "../../ui/components/UiTabItemRenderer.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiInterfacesIUiTab from "../../ui/interfaces/IUiTab.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as WarSettingsUtilsMpwWarSettings from "../../warSettings/utils/MpwWarSettings.ts";
-import * as WatchWarModelWwModel from "../model/WwModel.ts";
-import * as WatchWarModelWwProxy from "../model/WwProxy.ts";
+import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
+    Page as CommonViewCommonWarBasicSettingsPage,
+} from "../../common/view/CommonWarBasicSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
+    Page as CommonViewCommonWarMapInfoPage,
+} from "../../common/view/CommonWarMapInfoPage.ts";
+import {
+    type OpenData as CommonViewCommonWarPlayerInfoPageOpenData,
+    Page as CommonViewCommonWarPlayerInfoPage,
+} from "../../common/view/CommonWarPlayerInfoPage.ts";
+import { show, showLang } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getWarTypeName } from "../../lang/Utils.ts";
+import { getWarSettings } from "../../multiPlayerWar/model/MpwModel.ts";
+import { getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import { UiTabItemRenderer } from "../../ui/components/UiTabItemRenderer.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getUserNickname } from "../../users/Model.ts";
+import { getWarTypeByMpwWarSettings } from "../../warSettings/utils/MpwWarSettings.ts";
+import {
+    getWatchIncomingInfo,
+    getWatchedWarIdArray,
+    createDataForCommonWarMapInfoPage,
+    createDataForCommonWarPlayerInfoPage,
+    createDataForCommonWarBasicSettingsPage,
+    createDataForCommonWarAdvancedSettingsPage,
+} from "../model/WwModel.ts";
+import { reqMpwWatchWatchedWarIdArray, reqWatchDeleteWatcher } from "../model/WwProxy.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _groupTab!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _tabSettings!          : UiInterfacesIUiTab.IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPage.OpenData | CommonViewCommonWarPlayerInfoPage.OpenData | CommonViewCommonWarAdvancedSettingsPage.OpenData | CommonViewCommonWarBasicSettingsPage.OpenData>;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _groupTab!             : IUiContainer;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPageOpenData | CommonViewCommonWarPlayerInfoPageOpenData | CommonViewCommonWarAdvancedSettingsPageOpenData | CommonViewCommonWarBasicSettingsPageOpenData>;
 
-    private readonly _groupNavigator!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelWatchWar!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDeleteWatcher!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelChooseWar!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupNavigator!       : IUiLayout;
+    private readonly _labelWatchWar!        : IUiLabel;
+    private readonly _labelDeleteWatcher!   : IUiLabel;
+    private readonly _labelChooseWar!       : IUiLabel;
 
-    private readonly _btnBack!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnNextStep!          : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnBack!              : IUiButton;
+    private readonly _btnNextStep!          : IUiButton;
 
-    private readonly _groupWarList!         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listWar!              : UiInterfacesIUiScrollList.IUiScrollList<DataForWarRenderer>;
-    private readonly _labelNoWar!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelLoading!         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupWarList!         : IUiContainer;
+    private readonly _listWar!              : IUiScrollList<DataForWarRenderer>;
+    private readonly _labelNoWar!           : IUiLabel;
+    private readonly _labelLoading!         : IUiLabel;
 
     private _hasReceivedData    = false;
     private _isTabInitialized   = false;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgMpwWatchGetWatchedWarInfos,  callback: this._onNotifyMsgMpwWatchGetWatchedWarInfos },
-            { type: NotificationsTypeId.TypeId.MsgMpwWatchDeleteWatcher,       callback: this._onNotifyMpwWatchDeleteWatcher },
+            { type: TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgMpwWatchGetWatchedWarInfos,  callback: this._onNotifyMsgMpwWatchGetWatchedWarInfos },
+            { type: TypeId.MsgMpwWatchDeleteWatcher,       callback: this._onNotifyMpwWatchDeleteWatcher },
         ]);
         this._setUiListenerArray([
             { ui: this._btnBack,        callback: this._onTouchedBtnBack },
             { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -81,7 +97,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._hasReceivedData = false;
-        WatchWarModelWwProxy.reqMpwWatchWatchedWarIdArray();
+        reqMpwWatchWatchedWarIdArray();
 
         this._updateGroupWarList();
     }
@@ -97,7 +113,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     public async setAndReviseSelectedWarId(warId: number, needScroll: boolean): Promise<void> {
         const listMap   = this._listWar;
-        const index     = HelpersMisc.getExisted(listMap.getRevisedFirstIndex(v => v?.warId === warId));
+        const index     = getExisted(listMap.getRevisedFirstIndex(v => v?.warId === warId));
         listMap.setSelectedItemIndex(index);
         if (needScroll) {
             listMap.scrollToItem(index);
@@ -123,15 +139,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMpwWatchDeleteWatcher(): void {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0062));
-        WatchWarModelWwProxy.reqMpwWatchWatchedWarIdArray();
+        show(getText(TextType.A0062));
+        reqMpwWatchWatchedWarIdArray();
     }
 
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyTopPanel, void 0);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyBottomPanel, void 0);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WwMainMenuPanel, void 0);
+        openPanel(getDict().LobbyTopPanel, void 0);
+        openPanel(getDict().LobbyBottomPanel, void 0);
+        openPanel(getDict().WwMainMenuPanel, void 0);
     }
 
     private async _onTouchedBtnNextStep(): Promise<void> {
@@ -141,38 +157,38 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const warId                 = data.warId;
-        const watchIncomingInfo     = await WatchWarModelWwModel.getWatchIncomingInfo(warId);
-        const warPlayerInfoArray    = (await MultiPlayerWarModelMpwModel.getWarSettings(warId))?.getPlayerInfoArray();
+        const watchIncomingInfo     = await getWatchIncomingInfo(warId);
+        const warPlayerInfoArray    = (await getWarSettings(warId))?.getPlayerInfoArray();
         if ((watchIncomingInfo == null) || (warPlayerInfoArray == null)) {
-            FloatText2.showLang(LangConstants.TextType.A0301);
+            showLang(TextType.A0301);
             return;
         }
 
         const ongoingUserIdArray = watchIncomingInfo.getOngoingSrcUserIdArray();
         if (!ongoingUserIdArray.length) {
-            FloatText2.showLang(LangConstants.TextType.A0301);
+            showLang(TextType.A0301);
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiNumberPanel, {
+            openPanel(getDict().CommonChooseMultiNumberPanel, {
                 currentNumberArray      : [],
                 availableNumberArray    : ongoingUserIdArray,
                 showNumber              : true,
                 minChooseCount          : 1,
                 columnsCount            : 3,
-                getTitleText            : () => LangUtils.getText(LangConstants.TextType.B0219),
-                getHelpText             : () => LangUtils.getText(LangConstants.TextType.A0858),
-                getNumberMainText       : async userId => (await UsersModel.getUserNickname(userId)) ?? LangConstants.UndefinedError,
+                getTitleText            : () => getText(TextType.B0219),
+                getHelpText             : () => getText(TextType.A0858),
+                getNumberMainText       : async userId => (await getUserNickname(userId)) ?? UndefinedError,
                 getNumberMainTextColor  : userId => {
                     if (warPlayerInfoArray.some(v => (v.getUserId() ?? 0) === userId)) {
-                        return GraphicsConstants.ColorValue.Yellow;
+                        return ColorValue.Yellow;
                     }
 
                     const info = watchIncomingInfo.getSrcUserInfoArray().find(v => (v.getUserId() ?? 0) === userId);
                     return ((info?.getIsRequestingOthers()) || (info?.getIsWatchingOthers()))
-                        ? GraphicsConstants.ColorValue.Yellow
-                        : GraphicsConstants.ColorValue.White;
+                        ? ColorValue.Yellow
+                        : ColorValue.White;
                 },
-                callbackOnHelp          : userId => GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId }),
-                callbackOnConfirm       : userIdArray => WatchWarModelWwProxy.reqWatchDeleteWatcher(warId, userIdArray),
+                callbackOnHelp          : userId => openPanel(getDict().UserPanel, { userId }),
+                callbackOnConfirm       : userIdArray => reqWatchDeleteWatcher(warId, userIdArray),
             });
         }
     }
@@ -182,7 +198,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private _createDataForListWar(): DataForWarRenderer[] {
         const dataArray: DataForWarRenderer[] = [];
-        for (const info of WatchWarModelWwModel.getWatchedWarIdArray() || []) {
+        for (const info of getWatchedWarIdArray() || []) {
             dataArray.push({
                 warId: info,
                 panel   : this,
@@ -192,43 +208,43 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         return dataArray;
     }
 
-    private async _createDataForCommonWarMapInfoPage(): Promise<CommonViewCommonWarMapInfoPage.OpenData> {
-        return WatchWarModelWwModel.createDataForCommonWarMapInfoPage(this._getSelectedWarId());
+    private async _createDataForCommonWarMapInfoPage(): Promise<CommonViewCommonWarMapInfoPageOpenData> {
+        return createDataForCommonWarMapInfoPage(this._getSelectedWarId());
     }
 
-    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonViewCommonWarPlayerInfoPage.OpenData> {
-        return WatchWarModelWwModel.createDataForCommonWarPlayerInfoPage(this._getSelectedWarId());
+    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
+        return createDataForCommonWarPlayerInfoPage(this._getSelectedWarId());
     }
 
-    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonViewCommonWarBasicSettingsPage.OpenData> {
-        return await WatchWarModelWwModel.createDataForCommonWarBasicSettingsPage(this._getSelectedWarId());
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
+        return await createDataForCommonWarBasicSettingsPage(this._getSelectedWarId());
     }
 
-    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonViewCommonWarAdvancedSettingsPage.OpenData> {
-        return WatchWarModelWwModel.createDataForCommonWarAdvancedSettingsPage(this._getSelectedWarId());
+    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonViewCommonWarAdvancedSettingsPageOpenData> {
+        return createDataForCommonWarAdvancedSettingsPage(this._getSelectedWarId());
     }
 
     private async _initTabSettings(): Promise<void> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0298) },
+                pageClass   : CommonViewCommonWarMapInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0224) },
-                pageClass   : CommonViewCommonWarPlayerInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0224) },
+                pageClass   : CommonViewCommonWarPlayerInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage.Page,
+                tabItemData : { name: getText(TextType.B0002) },
+                pageClass   : CommonViewCommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0003) },
-                pageClass   : CommonViewCommonWarAdvancedSettingsPage.Page,
+                tabItemData : { name: getText(TextType.B0003) },
+                pageClass   : Page,
                 pageData    : null,
             },
         ]);
@@ -236,13 +252,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(LangUtils.getText(LangConstants.TextType.A0040));
-        this._labelWatchWar.setText(LangUtils.getText(LangConstants.TextType.B0206));
-        this._labelDeleteWatcher.setText(LangUtils.getText(LangConstants.TextType.B0219));
-        this._labelChooseWar.setText(LangUtils.getText(LangConstants.TextType.B0589));
-        this._btnBack.setText(LangUtils.getText(LangConstants.TextType.B0146));
-        this._labelNoWar.setText(LangUtils.getText(LangConstants.TextType.B0210));
-        this._btnNextStep.setText(LangUtils.getText(LangConstants.TextType.B0566));
+        this._labelLoading.setText(getText(TextType.A0040));
+        this._labelWatchWar.setText(getText(TextType.B0206));
+        this._labelDeleteWatcher.setText(getText(TextType.B0219));
+        this._labelChooseWar.setText(getText(TextType.B0589));
+        this._btnBack.setText(getText(TextType.B0146));
+        this._labelNoWar.setText(getText(TextType.B0210));
+        this._btnNextStep.setText(getText(TextType.B0566));
 
         this._groupNavigator.arrangeItems();
     }
@@ -287,88 +303,88 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupWarList,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnNextStep,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 0, },
             endProps    : { customAlpha: 1, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupWarList,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnNextStep,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 1, },
             endProps    : { customAlpha: 0, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 }
 
-interface DataForTabItemRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTabItemRenderer extends UiListItemData {
     name: string;
 }
-class TabItemRenderer extends UiComponentsUiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer> {
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+class TabItemRenderer extends UiTabItemRenderer<DataForTabItemRenderer> {
+    private readonly _labelName!    : IUiLabel;
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? LangConstants.UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
     }
 }
 
-interface DataForWarRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForWarRenderer extends UiListItemData {
     warId   : number;
     panel   : Panel;
 }
 class WarRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForWarRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForWarRenderer>
+    extends     UiListItemRenderer<DataForWarRenderer>
+    implements  IUiListItemRenderer<DataForWarRenderer>
 {
-    private readonly _layoutName!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelType!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelId!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!   : IUiLayout;
+    private readonly _labelType!    : IUiLabel;
+    private readonly _labelId!      : IUiLabel;
+    private readonly _labelName!    : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -395,12 +411,12 @@ class WarRenderer
         }
         this._labelId.setText(`#${warId}`);
 
-        const warSettings   = await MultiPlayerWarModelMpwModel.getWarSettings(warId);
+        const warSettings   = await getWarSettings(warId);
         const label         = this._labelType;
         if (warSettings == null) {
-            label.setText(LangConstants.UndefinedError);
+            label.setText(UndefinedError);
         } else {
-            label.setText(LangUtils.getWarTypeName(WarSettingsUtilsMpwWarSettings.getWarTypeByMpwWarSettings(warSettings)) ?? LangConstants.UndefinedError);
+            label.setText(getWarTypeName(getWarTypeByMpwWarSettings(warSettings)) ?? UndefinedError);
         }
         this._layoutName.arrangeItems();
     }
@@ -416,7 +432,7 @@ class WarRenderer
             return;
         }
 
-        const warSettings = await MultiPlayerWarModelMpwModel.getWarSettings(warId);
+        const warSettings = await getWarSettings(warId);
         if (warSettings != null) {
             const settingsForAtw = warSettings.getSettingsForAtw();
             const settingsForMfw = warSettings.getSettingsForMfw();
@@ -434,7 +450,7 @@ class WarRenderer
                     labelName.setText(warName);
                 } else {
                     const normalMapId   = settingsForMcw.getNormalMapId() ?? 0;
-                    labelName.setText((normalMapId == null ? null : await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId)) || LangConstants.UndefinedError);
+                    labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
                 }
 
             } else if (settingsForCcw) {
@@ -443,20 +459,20 @@ class WarRenderer
                     labelName.setText(warName);
                 } else {
                     const normalMapId   = settingsForCcw.getNormalMapId() ?? 0;
-                    labelName.setText((normalMapId == null ? null : await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId)) || LangConstants.UndefinedError);
+                    labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
                 }
 
             } else if (settingsForMrw) {
                 const normalMapId   = settingsForMrw.getNormalMapId() ?? 0;
-                labelName.setText((normalMapId == null ? null : await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId)) || LangConstants.UndefinedError);
+                labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
 
             } else if (settingsForMmw) {
                 const normalMapId   = settingsForMmw.getNormalMapId() ?? 0;
-                labelName.setText((normalMapId == null ? null : await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId)) || LangConstants.UndefinedError);
+                labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
 
             } else if (settingsForAtw) {
                 const normalMapId   = settingsForAtw.getNormalMapId() ?? 0;
-                labelName.setText((normalMapId == null ? null : await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId)) || LangConstants.UndefinedError);
+                labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
             }
         }
 

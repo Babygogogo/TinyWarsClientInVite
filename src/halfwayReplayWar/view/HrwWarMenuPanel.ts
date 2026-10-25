@@ -1,41 +1,41 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import type * as HalfwayReplayWarInterfaceIHrwWar from "../interface/IHrwWar.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as MultiPlayerWarModelMpwModel from "../../multiPlayerWar/model/MpwModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
+import { show, showLang } from "../../FloatText.ts";
+import { getTwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import type { IHrwWar } from "../interface/IHrwWar.ts";
+import { gotoSinglePlayerWar, gotoMfrCreateSettingsPanel, gotoMultiPlayerWar, gotoLobby } from "../../helpers/GameFlow.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getErrorText } from "../../lang/Utils.ts";
+import { getOngoingWarData } from "../../multiPlayerWar/model/MpwModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 
 export interface OpenData {
-    war     : HalfwayReplayWarInterfaceIHrwWar.IHrwWar;
+    war     : IHrwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCalculator!        : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _btnCalculator!        : IUiButton;
 
-    private readonly _btnSettings!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSimulation!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnFreeMode!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnOverrideSkin!      : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSettings!          : IUiButton;
+    private readonly _btnSimulation!        : IUiButton;
+    private readonly _btnFreeMode!          : IUiButton;
+    private readonly _btnOverrideSkin!      : IUiButton;
 
-    private readonly _btnOngoingWar!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnLobby!             : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnOngoingWar!        : IUiButton;
+    private readonly _btnLobby!             : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                   callback: this.closePanel },
@@ -70,7 +70,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonDamageCalculatorPanel, {
+        openPanel(getDict().CommonDamageCalculatorPanel, {
             war                     : war,
             needReviseWeaponType    : true,
             data                    : null,
@@ -79,7 +79,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSettings(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserSettingsPanel, void 0);
+        openPanel(getDict().UserSettingsPanel, void 0);
     }
 
     private async _onTouchedBtnSimulation(): Promise<void> {
@@ -89,18 +89,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (war.getIsExecutingAction()) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0103));
+            show(getText(TextType.A0103));
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent     : () => LangUtils.getText(LangConstants.TextType.A0931),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent     : () => getText(TextType.A0931),
                 callback    : () => {
                     const warData = war.serializeForCreateSfw();
                     warData.createIfNotExistsSettingsForSfw();
 
-                    HelpersGameFlow.gotoSinglePlayerWar({
+                    gotoSinglePlayerWar({
                         warData         : warData,
                         slotIndex       : null,
-                        slotExtraData   : ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData.SpmWarSaveSlotExtraData.fromJson({
+                        slotExtraData   : SpmWarSaveSlotExtraData.fromJson({
                             mpwWarId                : war.getWarId(),
                             overridingSkinIdArray   : [],
                             gridMarkData            : war.getGridMarkData().toJson(),
@@ -117,21 +117,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (war.getPlayerManager().getAliveOrDyingTeamsCount(false) < 2) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0199));
+            show(getText(TextType.A0199));
             return;
         }
 
         const warData   = war.serializeForCreateMfr();
-        const errorCode = new (GameHelpersGhFactory.getTwWarClass())().getErrorCodeForInitForMfw(warData, war.getGcData());
+        const errorCode = new (getTwWarClass())().getErrorCodeForInitForMfw(warData, war.getGcData());
         if (errorCode) {
-            FloatText2.show(LangUtils.getErrorText(errorCode));
+            show(getErrorText(errorCode));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => `${LangUtils.getText(LangConstants.TextType.R0007)}\n\n\n${LangUtils.getText(LangConstants.TextType.A0201)}`,
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => `${getText(TextType.R0007)}\n\n\n${getText(TextType.A0201)}`,
             callback: () => {
-                HelpersGameFlow.gotoMfrCreateSettingsPanel(warData);
+                gotoMfrCreateSettingsPanel(warData);
             }
         });
     }
@@ -141,7 +141,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseOverridingSkinIdPanel, { war });
+        openPanel(getDict().CommonChooseOverridingSkinIdPanel, { war });
     }
     private _onTouchedBtnOngoingWar(): void {
         const war = this.getOpenData()?.war;
@@ -149,31 +149,31 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0711),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0711),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: async () => {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonBlockPanel, {
-                    title   : LangUtils.getText(LangConstants.TextType.B0088),
-                    content : LangUtils.getText(LangConstants.TextType.A0040),
+                openPanel(getDict().CommonBlockPanel, {
+                    title   : getText(TextType.B0088),
+                    content : getText(TextType.A0040),
                 });
 
-                const warData = await MultiPlayerWarModelMpwModel.getOngoingWarData(war.getWarId() ?? 0);
+                const warData = await getOngoingWarData(war.getWarId() ?? 0);
                 if (warData) {
-                    HelpersGameFlow.gotoMultiPlayerWar(warData);
+                    gotoMultiPlayerWar(warData);
                 } else {
-                    FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                    showLang(TextType.YouCanNotDoThisRightNow);
                 }
 
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonBlockPanel);
+                closePanel(getDict().CommonBlockPanel);
             }
         });
     }
     private _onTouchedBtnLobby(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0054),
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0025),
-            callback: () => HelpersGameFlow.gotoLobby(),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0054),
+            getContent : () => getText(TextType.A0025),
+            callback: () => gotoLobby(),
         });
     }
 
@@ -185,11 +185,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0155);
-        this._btnOngoingWar.setLangText(LangConstants.TextType.B0711);
-        this._btnLobby.setLangText(LangConstants.TextType.B0054);
-        this._btnSimulation.setLangText(LangConstants.TextType.B0325);
-        this._btnFreeMode.setLangText(LangConstants.TextType.B0557);
-        this._btnOverrideSkin.setLangText(LangConstants.TextType.B0609);
+        this._labelTitle.setLangText(TextType.B0155);
+        this._btnOngoingWar.setLangText(TextType.B0711);
+        this._btnLobby.setLangText(TextType.B0054);
+        this._btnSimulation.setLangText(TextType.B0325);
+        this._btnFreeMode.setLangText(TextType.B0557);
+        this._btnOverrideSkin.setLangText(TextType.B0609);
     }
 }

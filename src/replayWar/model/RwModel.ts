@@ -1,48 +1,67 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesCachedDataAccessor from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import * as LocalDataStorage2 from "../../localData/Storage.ts";
-import * as Logger2 from "../../Logger.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgReplayGetAllInfoVersionsS from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetAllInfoVersions/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetInfoVersion/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoArrayS from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfoArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgReplaySetSelfRatingS from "../../proto/schema/CommonProto/NetMessage/MsgReplaySetSelfRating/S.ts";
-import * as ProtoSchemaCommonProtoReplayReplayInfo from "../../proto/schema/CommonProto/Replay/ReplayInfo.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialTileMap from "../../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialUnitMap from "../../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as ReplayWarInterfaceIRwWar from "../interface/IRwWar.ts";
-import * as ReplayWarModelRwProxy from "./RwProxy.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
+import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getRwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getNormalMapId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import { StoreMpmFullReplayInfo, StoreMpmFullReplayData } from "../../localData/Storage.ts";
+import { warn } from "../../Logger.ts";
+import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetAllInfoVersions/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetData/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetInfoVersion/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetReplayInfoArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgReplayGetSelfRating/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgReplaySetSelfRatingS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgReplaySetSelfRating/S.ts";
+import { ReplayInfo } from "../../proto/schema/CommonProto/Replay/ReplayInfo.ts";
+import { SerialTileMap } from "../../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
+import { SerialUnitMap } from "../../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
+import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { IRwWar } from "../interface/IRwWar.ts";
+import {
+    reqReplayGetSelfRating,
+    reqReplayGetAllInfoVersions,
+    reqMsgReplayGetInfoVersion,
+    reqReplayGetReplayInfo,
+    reqReplayGetData,
+    reqReplayGetReplayInfoArray,
+} from "./RwProxy.ts";
 
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-let _war                : Undefinable<ReplayWarInterfaceIRwWar.IRwWar>;
+let _war                : Undefinable<IRwWar>;
 
-const _replaySelfRatingAccessor = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, number>({
-    reqData: (replayId: number) => ReplayWarModelRwProxy.reqReplayGetSelfRating(replayId),
+const _replaySelfRatingAccessor = new CachedDataAccessor<number, number>({
+    reqData: (replayId: number) => reqReplayGetSelfRating(replayId),
 });
-const _replayIdSetAccessor  = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<null, Set<number>>({
-    reqData : () => ReplayWarModelRwProxy.reqReplayGetAllInfoVersions(),
+const _replayIdSetAccessor  = new CachedDataAccessor<null, Set<number>>({
+    reqData : () => reqReplayGetAllInfoVersions(),
 });
-const _infoVersionAccessor = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, number>({
-    reqData : (replayId: number) => ReplayWarModelRwProxy.reqMsgReplayGetInfoVersion(replayId),
+const _infoVersionAccessor = new CachedDataAccessor<number, number>({
+    reqData : (replayId: number) => reqMsgReplayGetInfoVersion(replayId),
 });
 /** 只用于保证收到过消息 */
-const _replayInfoArrayAccessor = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<null, boolean>({
+const _replayInfoArrayAccessor = new CachedDataAccessor<null, boolean>({
     reqData : () => { /** nothing to do */ },
 });
-const _replayInfoAccessor   = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, ProtoSchemaCommonProtoReplayReplayInfo.ReplayInfo>({
-    reqData: (replayId: number) => ReplayWarModelRwProxy.reqReplayGetReplayInfo(replayId),
+const _replayInfoAccessor   = new CachedDataAccessor<number, ReplayInfo>({
+    reqData: (replayId: number) => reqReplayGetReplayInfo(replayId),
 });
-const _replayDataAccessor   = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar>({
-    reqData : (replayId: number) => ReplayWarModelRwProxy.reqReplayGetData(replayId),
+const _replayDataAccessor   = new CachedDataAccessor<number, SerialWar>({
+    reqData : (replayId: number) => reqReplayGetData(replayId),
 });
 
 export function init(): void {
@@ -50,7 +69,7 @@ export function init(): void {
 }
 
 export async function getReplayIdSet(): Promise<Set<number>> {
-    return HelpersMisc.getExisted(await _replayIdSetAccessor.getData(null));
+    return getExisted(await _replayIdSetAccessor.getData(null));
 }
 async function addReplayId(replayId: number): Promise<void> {
     (await getReplayIdSet()).add(replayId);
@@ -65,13 +84,13 @@ function setInfoVersion(replayId: number, infoVersion: number): void {
     _infoVersionAccessor.setData(replayId, infoVersion);
 }
 
-export async function getReplayInfo(replayId: number): Promise<Undefinable<ProtoSchemaCommonProtoReplayReplayInfo.ReplayInfo>> {
+export async function getReplayInfo(replayId: number): Promise<Undefinable<ReplayInfo>> {
     const dataVersion = await getInfoVersion(replayId);
     if (dataVersion == null) {
         return null;
     }
 
-    const cachedData = await LocalDataStorage2.StoreMpmFullReplayInfo.getData(replayId);
+    const cachedData = await StoreMpmFullReplayInfo.getData(replayId);
     if (cachedData != null) {
         if ((cachedData.getInfoVersion() ?? 0) === dataVersion) {
             return cachedData;
@@ -81,21 +100,21 @@ export async function getReplayInfo(replayId: number): Promise<Undefinable<Proto
 
     return _replayInfoAccessor.getData(replayId);
 }
-function setReplayInfo(replayId: number, replayInfo: ProtoSchemaCommonProtoReplayReplayInfo.ReplayInfo | null): Promise<void> {
+function setReplayInfo(replayId: number, replayInfo: ReplayInfo | null): Promise<void> {
     _replayInfoAccessor.setData(replayId, replayInfo);
-    return LocalDataStorage2.StoreMpmFullReplayInfo.setData(replayId, replayInfo);
+    return StoreMpmFullReplayInfo.setData(replayId, replayInfo);
 }
 
-export async function getReplayData(replayId: number): Promise<Undefinable<ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar>> {
-    return (await LocalDataStorage2.StoreMpmFullReplayData.getData(replayId)) ?? _replayDataAccessor.getData(replayId);
+export async function getReplayData(replayId: number): Promise<Undefinable<SerialWar>> {
+    return (await StoreMpmFullReplayData.getData(replayId)) ?? _replayDataAccessor.getData(replayId);
 }
-function setReplayData(replayId: number, replayData: ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar | null): Promise<void> {
+function setReplayData(replayId: number, replayData: SerialWar | null): Promise<void> {
     _replayDataAccessor.setData(replayId, replayData);
-    return LocalDataStorage2.StoreMpmFullReplayData.setData(replayId, replayData);
+    return StoreMpmFullReplayData.setData(replayId, replayData);
 }
 
-export async function updateOnMsgReplayGetAllInfoVersions(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetAllInfoVersionsS.S): Promise<void> {
-    const existingInfoDict  = await LocalDataStorage2.StoreMpmFullReplayInfo.getAllDataDict();
+export async function updateOnMsgReplayGetAllInfoVersions(data: S): Promise<void> {
+    const existingInfoDict  = await StoreMpmFullReplayInfo.getAllDataDict();
     const neededReplayIdSet = new Set<number>();
     const infoArray         = data.getInfoArray();
     for (const info of infoArray) {
@@ -110,16 +129,16 @@ export async function updateOnMsgReplayGetAllInfoVersions(data: ProtoSchemaCommo
         }
     }
 
-    ReplayWarModelRwProxy.reqReplayGetReplayInfoArray([...neededReplayIdSet]);
+    reqReplayGetReplayInfoArray([...neededReplayIdSet]);
     await _replayInfoArrayAccessor.getData(null);
 
     _replayIdSetAccessor.setData(null, new Set(infoArray.map(v => v.getReplayId() ?? 0)));
 }
 
-export async function updateOnMsgReplayGetReplayInfoArray(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoArrayS.S): Promise<void> {
+export async function updateOnMsgReplayGetReplayInfoArray(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoArrayS): Promise<void> {
     const promiseArray: Promise<void>[] = [];
     for (const encodedData of data.getEncodedReplayInfoArray()) {
-        const replayInfo = ProtoSchemaCommonProtoReplayReplayInfo.ReplayInfo.decode(encodedData);
+        const replayInfo = ReplayInfo.decode(encodedData);
         promiseArray.push(setReplayInfo(replayInfo.getReplayId() ?? 0, replayInfo));
     }
     await Promise.all(promiseArray);
@@ -127,35 +146,35 @@ export async function updateOnMsgReplayGetReplayInfoArray(data: ProtoSchemaCommo
     _replayInfoArrayAccessor.setData(null, true);
 }
 
-export function updateOnMsgReplayGetInfoVersion(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS.S): Promise<void> {
+export function updateOnMsgReplayGetInfoVersion(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS): Promise<void> {
     const replayId = data.getReplayId() ?? 0;
     setInfoVersion(replayId, data.getInfoVersion() ?? 0);
 
     return addReplayId(replayId);  // 没有必要区分这个replay是否应当被缓存，直接统一缓存
 }
-export function updateOnFailedMsgReplayGetInfoVersion(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS.S): void {
+export function updateOnFailedMsgReplayGetInfoVersion(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetInfoVersionS): void {
     const replayId = data.getReplayId();
     if (replayId != null) {
         _infoVersionAccessor.updateOnRequestFailed(replayId);
     }
 }
 
-export function updateOnMsgReplayGetReplayInfo(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS.S): Promise<void> {
+export function updateOnMsgReplayGetReplayInfo(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS): Promise<void> {
     const encodedInfo = data.getEncodedReplayInfo();
-    return setReplayInfo(data.getReplayId() ?? 0, encodedInfo == null ? null : ProtoSchemaCommonProtoReplayReplayInfo.ReplayInfo.decode(encodedInfo));
+    return setReplayInfo(data.getReplayId() ?? 0, encodedInfo == null ? null : ReplayInfo.decode(encodedInfo));
 }
-export function updateOnFailedMsgReplayGetReplayInfo(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS.S): void {
+export function updateOnFailedMsgReplayGetReplayInfo(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetReplayInfoS): void {
     const replayId = data.getReplayId();
     if (replayId != null) {
         _replayInfoAccessor.updateOnRequestFailed(replayId);
     }
 }
 
-export function updateOnMsgReplayGetData(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS.S): Promise<void> {
+export function updateOnMsgReplayGetData(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS): Promise<void> {
     const encodedWar = data.getEncodedWar();
-    return setReplayData(data.getReplayId() ?? 0, encodedWar ? ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(encodedWar) : null);
+    return setReplayData(data.getReplayId() ?? 0, encodedWar ? SerialWar.decode(encodedWar) : null);
 }
-export function updateOnFailedMsgReplayGetData(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS.S): void {
+export function updateOnFailedMsgReplayGetData(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetDataS): void {
     const replayId = data.getReplayId();
     if (replayId != null) {
         _replayDataAccessor.updateOnRequestFailed(replayId);
@@ -165,24 +184,24 @@ export function updateOnFailedMsgReplayGetData(data: ProtoSchemaCommonProtoNetMe
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for managing war.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function loadWar(warData: ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, replayId: number): Promise<ReplayWarInterfaceIRwWar.IRwWar> {
+export async function loadWar(warData: SerialWar, replayId: number): Promise<IRwWar> {
     if (_war) {
-        Logger2.warn(`RwModel.loadWar() another war has been loaded already!`);
+        warn(`RwModel.loadWar() another war has been loaded already!`);
         unloadWar();
     }
 
-    const normalMapId = HelpersProtoSchemaWarSerializationSerialWar.getNormalMapId(warData);
+    const normalMapId = getNormalMapId(warData);
     if (normalMapId != null) {
-        const mapRawData    = HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId));
+        const mapRawData    = getExisted(await getRawData(normalMapId));
         const unitDataArray = mapRawData.getUnitDataArray();
-        const field         = HelpersMisc.getExisted(warData.getField());
+        const field         = getExisted(warData.getField());
 
         warData.setSeedRandomCurrentState(warData.getSeedRandomInitialState()?.clone());
-        field.setTileMap(ProtoSchemaCommonProtoWarSerializationSerialTileMap.SerialTileMap.fromJson({
+        field.setTileMap(SerialTileMap.fromJson({
             tiles               : mapRawData.getTileDataArray().map(v => v.toJson()),
             tileCustomNameArray : mapRawData.getTileCustomNameArray().map(v => v.toJson()),
         }));
-        field.setUnitMap(ProtoSchemaCommonProtoWarSerializationSerialUnitMap.SerialUnitMap.fromJson({
+        field.setUnitMap(SerialUnitMap.fromJson({
             units               : unitDataArray.map(v => v.toJson()),
             nextUnitId          : unitDataArray.length,
             unitCustomNameArray : mapRawData.getUnitCustomNameArray().map(v => v.toJson()),
@@ -191,7 +210,7 @@ export async function loadWar(warData: ProtoSchemaCommonProtoWarSerializationSer
     {
         const settingsForMfw = warData.getSettingsForMfw();
         if (settingsForMfw) {
-            const initialWarData            = HelpersMisc.getExisted(settingsForMfw.getInitialWarData());
+            const initialWarData            = getExisted(settingsForMfw.getInitialWarData());
             const seedRandomInitialState    = initialWarData.getSeedRandomInitialState();
             warData.setRemainingVotesForDraw(initialWarData.getRemainingVotesForDraw());
             warData.setDrawVoteManager(initialWarData.getDrawVoteManager()?.clone());
@@ -206,9 +225,9 @@ export async function loadWar(warData: ProtoSchemaCommonProtoWarSerializationSer
         }
     }
 
-    const war = new (GameHelpersGhFactory.getRwWarClass())();
+    const war = new (getRwWarClass())();
     war.setReplayId(replayId);
-    war.init(warData, await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
+    war.init(warData, await getGameConfig(getExisted(warData.getSettingsForCommon()?.getConfigVersion())));
     war.startRunning().startRunningView();
     _war = war;
     return _war;
@@ -221,7 +240,7 @@ export function unloadWar(): void {
     }
 }
 
-export function getWar(): Undefinable<ReplayWarInterfaceIRwWar.IRwWar> {
+export function getWar(): Undefinable<IRwWar> {
     return _war;
 }
 
@@ -235,16 +254,16 @@ function setReplaySelfRating(replayId: number, rating: Undefinable<number>): voi
     _replaySelfRatingAccessor.setData(replayId, rating);
 }
 
-export function updateOnMsgReplayGetSelfRating(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS.S): void {
+export function updateOnMsgReplayGetSelfRating(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS): void {
     setReplaySelfRating(data.getReplayId() ?? 0, data.getRating() ?? null);
 }
-export function updateOnFailedMsgReplayGetSelfRating(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS.S): void {
+export function updateOnFailedMsgReplayGetSelfRating(data: ProtoSchemaCommonProtoNetMessageMsgReplayGetSelfRatingS): void {
     const replayId = data.getReplayId();
     if (replayId != null) {
         _replaySelfRatingAccessor.updateOnRequestFailed(replayId);
     }
 }
 
-export function updateOnMsgReplaySetSelfRating(data: ProtoSchemaCommonProtoNetMessageMsgReplaySetSelfRatingS.S): void {
+export function updateOnMsgReplaySetSelfRating(data: ProtoSchemaCommonProtoNetMessageMsgReplaySetSelfRatingS): void {
     setReplaySelfRating(data.getReplayId() ?? 0, data.getRating() ?? 0);
 }

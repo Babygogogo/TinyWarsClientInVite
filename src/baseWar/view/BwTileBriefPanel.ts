@@ -1,27 +1,27 @@
-import * as ActionPlannersConstants from "../../actionPlanners/Constants.ts";
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as DestructionsUtils from "../../destructions/Utils.ts";
-import * as ForceSkinsUtils from "../../forceSkins/Utils.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as NotificationsDataTypes from "../../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
-import * as WarTypesUtils from "../../warTypes/Utils.ts";
+import { StateId } from "../../actionPlanners/Constants.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { destroyUnitOnMap } from "../../destructions/Utils.ts";
+import { getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
+import { getTileViewClass, getUnitClass, getRwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getTileName } from "../../lang/Utils.ts";
+import type { BwCursorGridIndexChanged, BwTileChanged, BwTileBuffChanged, BwUnitChanged } from "../../notifications/DataTypes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
+import { checkCanCheatInWar } from "../../warTypes/Utils.ts";
 
 const _IMAGE_SOURCE_HP      = `c04_t10_s00_f00`;
 const _IMAGE_SOURCE_CAPTURE = `c04_t10_s04_f00`;
@@ -32,39 +32,39 @@ const _IMAGE_SOURCE_CAPTURE = `c04_t10_s04_f00`;
 // const _CELL_WIDTH           = 80;
 
 export interface OpenData {
-    war : BaseWarInterfaceIBwWar.IBwWar;
+    war : IBwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _conTileView!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelGridIndex!   : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _group!            : IUiContainer;
+    private readonly _conTileView!      : IUiContainer;
+    private readonly _labelName!        : IUiLabel;
+    private readonly _labelGridIndex!   : IUiLabel;
 
-    private readonly _groupAttr!        : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _groupAttr!        : IUiLayout;
 
-    private readonly _imgDefense!       : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelDefense!     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _imgDefense!       : IUiImage;
+    private readonly _labelDefense!     : IUiLabel;
 
-    private readonly _imgState!         : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelState!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _imgState!         : IUiImage;
+    private readonly _labelState!       : IUiLabel;
 
-    private readonly _tileView          = new (GameHelpersGhFactory.getTileViewClass())();
+    private readonly _tileView          = new (getTileViewClass())();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
             // { type: NotifyType.GlobalTouchBegin,            callback: this._onNotifyGlobalTouchBegin },
             // { type: NotifyType.GlobalTouchMove,             callback: this._onNotifyGlobalTouchMove },
-            { type: NotificationsTypeId.TypeId.BwCursorGridIndexChanged,        callback: this._onNotifyBwCursorGridIndexChanged },
-            { type: NotificationsTypeId.TypeId.ActionPlannerStateSet,           callback: this._onNotifyActionPlannerStateChanged },
-            { type: NotificationsTypeId.TypeId.BwTileChanged,                   callback: this._onNotifyMeTileChanged },
-            { type: NotificationsTypeId.TypeId.TileAnimationTick,               callback: this._onNotifyTileAnimationTick },
-            { type: NotificationsTypeId.TypeId.StateIndicatorTick,              callback: this._onNotifyStateIndicatorTick },
-            { type: NotificationsTypeId.TypeId.BwTileIsHighlightedChanged,      callback: this._onNotifyTileIsHighlightedChanged },
-            { type: NotificationsTypeId.TypeId.BwTileBuffChanged,               callback: this._onNotifyTileBuffChanged },
-            { type: NotificationsTypeId.TypeId.BwOverridingSkinIdChanged,       callback: this._onNotifyBwOverridingSkinIdChanged },
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.BwTileCustomNameArrayChanged,    callback: this._onNotifyBwTileCustomNameArrayChanged },
-            { type: NotificationsTypeId.TypeId.BwTileCustomNameIdChanged,       callback: this._onNotifyBwTileCustomNameIdChanged },
+            { type: TypeId.BwCursorGridIndexChanged,        callback: this._onNotifyBwCursorGridIndexChanged },
+            { type: TypeId.ActionPlannerStateSet,           callback: this._onNotifyActionPlannerStateChanged },
+            { type: TypeId.BwTileChanged,                   callback: this._onNotifyMeTileChanged },
+            { type: TypeId.TileAnimationTick,               callback: this._onNotifyTileAnimationTick },
+            { type: TypeId.StateIndicatorTick,              callback: this._onNotifyStateIndicatorTick },
+            { type: TypeId.BwTileIsHighlightedChanged,      callback: this._onNotifyTileIsHighlightedChanged },
+            { type: TypeId.BwTileBuffChanged,               callback: this._onNotifyTileBuffChanged },
+            { type: TypeId.BwOverridingSkinIdChanged,       callback: this._onNotifyBwOverridingSkinIdChanged },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.BwTileCustomNameArrayChanged,    callback: this._onNotifyBwTileCustomNameArrayChanged },
+            { type: TypeId.BwTileCustomNameIdChanged,       callback: this._onNotifyBwTileCustomNameIdChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._group, callback: this._onTouchedGroup, },
@@ -91,8 +91,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // private _onNotifyGlobalTouchMove(e: egret.Event): void {
     //     this._adjustPositionOnTouch(e.data);
     // }
-    private _onNotifyBwCursorGridIndexChanged(e: VendorEgretEgret.Event): void {
-        const data  = e.data as NotificationsDataTypes.BwCursorGridIndexChanged;
+    private _onNotifyBwCursorGridIndexChanged(e: Event): void {
+        const data  = e.data as BwCursorGridIndexChanged;
         const war   = this.getOpenData()?.war;
         if ((war?.getIsRunning()) && (data === war.getCursor())) {
             this._updateView();
@@ -100,14 +100,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     private _onNotifyActionPlannerStateChanged(): void {
         const planner = this.getOpenData()?.war.getActionPlanner();
-        if ((planner?.getPreviousStateId() === ActionPlannersConstants.StateId.ExecutingAction)    &&
-            (planner.getStateId() !== ActionPlannersConstants.StateId.ExecutingAction)
+        if ((planner?.getPreviousStateId() === StateId.ExecutingAction)    &&
+            (planner.getStateId() !== StateId.ExecutingAction)
         ) {
             this._updateView();
         }
     }
-    private _onNotifyMeTileChanged(e: VendorEgretEgret.Event): void {
-        const data  = e.data as NotificationsDataTypes.BwTileChanged;
+    private _onNotifyMeTileChanged(e: Event): void {
+        const data  = e.data as BwTileChanged;
         const war   = this.getOpenData()?.war;
         if ((war?.getIsRunning()) && (data.gridIndex.checkIsEqual(war.getCursor().getGridIndex()))) {
             this._updateView();
@@ -122,9 +122,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onNotifyTileIsHighlightedChanged(): void {
         this._updateTileView();
     }
-    private _onNotifyTileBuffChanged(e: VendorEgretEgret.Event): void {
+    private _onNotifyTileBuffChanged(e: Event): void {
         const war = this.getOpenData()?.war;
-        if ((e.data as NotificationsDataTypes.BwTileBuffChanged).tile === war?.getTileMap().getTile(war.getCursor().getGridIndex())) {
+        if ((e.data as BwTileBuffChanged).tile === war?.getTileMap().getTile(war.getCursor().getGridIndex())) {
             this._updateTileView();
         }
     }
@@ -152,28 +152,28 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const tile      = tileMap.getTile(gridIndex);
         const warType   = war.getWarType();
 
-        if ((warType === WarTypesConstants.WarTypeId.Me)                 ||
-            (!WarTypesUtils.checkCanCheatInWar(warType))
+        if ((warType === WarTypeId.Me)                 ||
+            (!checkCanCheatInWar(warType))
         ) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().BwTileDetailPanel, {
+            openPanel(getDict().BwTileDetailPanel, {
                 tile,
                 callbackForAddUnit  : null,
             });
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().BwTileDetailPanel, {
+            openPanel(getDict().BwTileDetailPanel, {
                 tile                : tile,
                 callbackForAddUnit  : () => {
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseUnitAttrPanel, {
-                        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B0535),
+                    openPanel(getDict().CommonChooseUnitAttrPanel, {
+                        getTitleText    : () => getText(TextType.B0535),
                         war             : war,
                         callback        : unitData => {
                             const unitMap = war.getUnitMap();
                             if (unitMap.getUnitOnMap(gridIndex)) {
-                                DestructionsUtils.destroyUnitOnMap(war, gridIndex, false);
+                                destroyUnitOnMap(war, gridIndex, false);
                             }
 
                             const unitId        = unitMap.getNextUnitId();
-                            const unit          = new (GameHelpersGhFactory.getUnitClass())();
+                            const unit          = new (getUnitClass())();
                             unitData.setUnitId(unitId);
                             unitData.setGridIndex(gridIndex.toProto());
                             unit.init(unitData, war.getGcData());
@@ -182,14 +182,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                             unitMap.setUnitOnMap(unit);
                             unitMap.setNextUnitId(unitId + 1);
                             war.updateTilesAndUnitsOnVisibilityChanged(false);
-                            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwUnitChanged, { gridIndex } as NotificationsDataTypes.BwUnitChanged);
+                            dispatch(TypeId.BwUnitChanged, { gridIndex } as BwUnitChanged);
                         },
                     });
                 },
             });
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,8 +238,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const tile = war.getTileMap().getTile(war.getCursor().getGridIndex());
         this._labelName.setText(
             tile.getCustomName() ??
-            LangUtils.getTileName(tile.getTileTypeId(), tile.getGameConfig()) ??
-            LangConstants.UndefinedError
+            getTileName(tile.getTileTypeId(), tile.getGameConfig()) ??
+            UndefinedError
         );
     }
     private _updateTileView(): void {
@@ -255,9 +255,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             tileData            : tile.serialize(),
             hasFog              : tile.getHasFog(),
             skinId              : tile.getSkinId(),
-            overridingSkinId    : ForceSkinsUtils.getRawOverridingSkinId(war, tile.getPlayerIndex()),
+            overridingSkinId    : getRawOverridingSkinId(war, tile.getPlayerIndex()),
             themeType           : tile.getTileThemeType(),
-            isFullReplay        : war instanceof GameHelpersGhFactory.getRwWarClass(),
+            isFullReplay        : war instanceof getRwWarClass(),
         });
         tileView.updateView();
     }
@@ -289,23 +289,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._group,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
             tweenTime   : 50,
         });
 
-        await TimerTimerModel.wait(50);
+        await wait(50);
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._group,
             beginProps  : { customAlpha: 1, customY: 0 },
             endProps    : { customAlpha: 0, customY: 40 },
             tweenTime   : 50,
         });
 
-        await TimerTimerModel.wait(50);
+        await wait(50);
     }
 }

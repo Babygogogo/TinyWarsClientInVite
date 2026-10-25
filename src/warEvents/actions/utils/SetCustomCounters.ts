@@ -1,27 +1,29 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as CustomCountersUtils from "../../../customCounters/Utils.ts";
-import * as ExpressionParsersContextsCustomCounter from "../../../expressionParsers/contexts/CustomCounter.ts";
-import * as ExpressionParsersContextsWar from "../../../expressionParsers/contexts/War.ts";
-import * as ExpressionParsersParser from "../../../expressionParsers/Parser.ts";
-import * as ExpressionParsersResultsNum from "../../../expressionParsers/results/Num.ts";
-import * as ExpressionParsersResultsNumArray from "../../../expressionParsers/results/NumArray.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetCustomCounters from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCounters.ts";
-import * as WarEventsActionsConstantsSetCustomCounters from "../constants/SetCustomCounters.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { checkIsValidId, checkIsValidValue } from "../../../customCounters/Utils.ts";
+import { CustomCounter } from "../../../expressionParsers/contexts/CustomCounter.ts";
+import { War } from "../../../expressionParsers/contexts/War.ts";
+import { Parser } from "../../../expressionParsers/Parser.ts";
+import { Num } from "../../../expressionParsers/results/Num.ts";
+import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getFormattedText } from "../../../lang/Utils.ts";
+import type {
+    WeaSetCustomCounters as ProtoSchemaCommonProtoWarEventWeaSetCustomCounters,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCounters.ts";
+import { ExpressionInfoDict } from "../constants/SetCustomCounters.ts";
 
-type WeaSetCustomCounters   = ProtoSchemaCommonProtoWarEventWeaSetCustomCounters.WeaSetCustomCounters;
+type WeaSetCustomCounters   = ProtoSchemaCommonProtoWarEventWeaSetCustomCounters;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomCounters>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: Undefinable<WeaSetCustomCounters>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getIdExpression(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCounters.ExpressionInfoDict.IdExpression,
+            expressionInfo          : ExpressionInfoDict.IdExpression,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -29,9 +31,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getValueExpression(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCounters.ExpressionInfoDict.ValueExpression,
+            expressionInfo          : ExpressionInfoDict.ValueExpression,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -41,43 +43,43 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomCounters>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetCustomCounters>): string | null {
     if (data == null) {
         return null;
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0042,
+    return getFormattedText(
+        TextType.F0042,
         data.getIdExpression(),
         data.getValueExpression()
     );
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomCounters>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetCustomCounters>): string | null {
     return getBriefDesc(data);
 }
 
 export function getErrorTip(data: WeaSetCustomCounters, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = WarEventsActionsConstantsSetCustomCounters.ExpressionInfoDict.IdExpression;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.IdExpression;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getIdExpression(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCounters.ExpressionInfoDict.ValueExpression;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ValueExpression;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getValueExpression(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -89,13 +91,13 @@ export async function applyWithExtraData(_action: WeaSetCustomCounters): Promise
     // nothing to do
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function applyWithoutExtraData(action: WeaSetCustomCounters, _isFast: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetCustomCounters, _isFast: boolean, war: IBwWar): Promise<void> {
     const customCounterIdArray: number[] = [];
     try {
-        const idResult = ExpressionParsersParser.Parser.getParseResult(action.getIdExpression() ?? "").eval(new ExpressionParsersContextsWar.War(war), false);
-        if (idResult instanceof ExpressionParsersResultsNum.Num) {
+        const idResult = Parser.getParseResult(action.getIdExpression() ?? "").eval(new War(war), false);
+        if (idResult instanceof Num) {
             customCounterIdArray.push(idResult.num);
-        } else if (idResult instanceof ExpressionParsersResultsNumArray.NumArray) {
+        } else if (idResult instanceof NumArray) {
             customCounterIdArray.push(...idResult.numberArray);
         } else {
             return;
@@ -104,14 +106,14 @@ export async function applyWithoutExtraData(action: WeaSetCustomCounters, _isFas
         return;
     }
 
-    const customCounterIdSet    = new Set(customCounterIdArray.map(v => Math.floor(v)).filter(v => CustomCountersUtils.checkIsValidId(v)));
-    const expression            = ExpressionParsersParser.Parser.getParseResult(action.getValueExpression() ?? "");
+    const customCounterIdSet    = new Set(customCounterIdArray.map(v => Math.floor(v)).filter(v => checkIsValidId(v)));
+    const expression            = Parser.getParseResult(action.getValueExpression() ?? "");
     const newValueDict          = new Map<number, number>();
     for (const counterId of customCounterIdSet) {
         try {
-            const rawValue = expression.eval(new ExpressionParsersContextsCustomCounter.CustomCounter(counterId, war), false);
-            if ((rawValue instanceof ExpressionParsersResultsNum.Num)                               &&
-                (CustomCountersUtils.checkIsValidValue(rawValue.num))
+            const rawValue = expression.eval(new CustomCounter(counterId, war), false);
+            if ((rawValue instanceof Num)                               &&
+                (checkIsValidValue(rawValue.num))
             ) {
                 newValueDict.set(counterId, rawValue.num);
             }

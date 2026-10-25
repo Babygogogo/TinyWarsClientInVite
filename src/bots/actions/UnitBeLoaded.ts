@@ -1,19 +1,19 @@
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMovePathNode from "../../auxiliaryTypes/MovePathNode.ts";
-import type * as BotsCommonParams from "../CommonParams.ts";
-import type * as BotsTypes from "../Types.ts";
-import * as BotsUtils from "../Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
+import type { CommonParams } from "../CommonParams.ts";
+import type { ScoreAndAction } from "../Types.ts";
+import { IsNeedVisibility } from "../Utils.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
+import type { IUnit } from "../../units/IUnit.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = UnitsIUnit.IUnit;
-type GrScoreAndAction   = BotsTypes.ScoreAndAction;
+type IBwUnit            = IUnit;
+type GrScoreAndAction   = ScoreAndAction;
 
-export async function getScoreAndActionUnitBeLoaded(commonParams: BotsCommonParams.CommonParams, unit: IBwUnit, gridIndex: AuxiliaryTypesGridIndex.GridIndex, pathNodes: AuxiliaryTypesMovePathNode.MovePathNode[]): Promise<GrScoreAndAction | null> {
-    await TimerTimerModel.checkAndCallLater();
+export async function getScoreAndActionUnitBeLoaded(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+    await checkAndCallLater();
 
     const unitGridIndex = unit.getGridIndex();
     if (gridIndex.checkIsEqual(unitGridIndex)) {
@@ -28,7 +28,7 @@ export async function getScoreAndActionUnitBeLoaded(commonParams: BotsCommonPara
     const score = await getScoreForActionUnitBeLoaded(commonParams, unit, gridIndex);
     return {
         score   : score,
-        action  : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({ WoUnitBeLoaded: {
+        action  : WoContainer.fromJson({ WoUnitBeLoaded: {
             path        : {
                 nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                 fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
@@ -39,13 +39,13 @@ export async function getScoreAndActionUnitBeLoaded(commonParams: BotsCommonPara
     };
 }
 
-async function getScoreForActionUnitBeLoaded(commonParams: BotsCommonParams.CommonParams, unit: IBwUnit, gridIndex: AuxiliaryTypesGridIndex.GridIndex): Promise<number> {
-    await TimerTimerModel.checkAndCallLater();
+async function getScoreForActionUnitBeLoaded(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex): Promise<number> {
+    await checkAndCallLater();
 
     const war       = commonParams.getWar();
-    const loader    = HelpersMisc.getExisted(war.getUnitMap().getUnitOnMap(gridIndex), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitBeLoaded_00);
+    const loader    = getExisted(war.getUnitMap().getUnitOnMap(gridIndex), ClientErrorCode.SpwRobot_GetScoreForActionUnitBeLoaded_00);
     if (!loader.checkCanLoadUnit(unit)) {
-        throw HelpersMisc.newError(`Can't load the unit.`, UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitBeLoaded_01);
+        throw newError(`Can't load the unit.`, ClientErrorCode.SpwRobot_GetScoreForActionUnitBeLoaded_01);
     }
 
     const passiveScaler = unit.getProductionCfgCost() / 1000 / Math.max(1, commonParams.getUnitValueRatio()) * (unit.getIsCoOnboard() ? 2 : 1);
@@ -58,7 +58,7 @@ async function getScoreForActionUnitBeLoaded(commonParams: BotsCommonParams.Comm
         {
             const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
             if (maxAmmo) {
-                const currentAmmo   = HelpersMisc.getExisted(unit.getPrimaryWeaponCurrentAmmo(), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitBeLoaded_02);
+                const currentAmmo   = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.SpwRobot_GetScoreForActionUnitBeLoaded_02);
                 totalScore          += ((maxAmmo - currentAmmo) / maxAmmo * 10 + (currentAmmo <= 0 ? 40 : 0)) * passiveScaler;
             }
         }
@@ -68,10 +68,10 @@ async function getScoreForActionUnitBeLoaded(commonParams: BotsCommonParams.Comm
             totalScore      += (maxFuel - unit.getCurrentFuel()) / maxFuel * 10 * (unit.checkIsDestroyedOnOutOfFuel() ? 5 : 1) * passiveScaler;
         }
 
-        if (BotsUtils.IsNeedVisibility) {
+        if (IsNeedVisibility) {
             const maxAmmo = unit.getFlareMaxAmmo();
             if ((maxAmmo) && (war.getFogMap().checkHasFogCurrently())) {
-                const currentAmmo   = HelpersMisc.getExisted(unit.getFlareCurrentAmmo(), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitBeLoaded_03);
+                const currentAmmo   = getExisted(unit.getFlareCurrentAmmo(), ClientErrorCode.SpwRobot_GetScoreForActionUnitBeLoaded_03);
                 totalScore          += ((maxAmmo - currentAmmo) / maxAmmo * 10 + (currentAmmo <= 0 ? 40 : 0)) * passiveScaler;
             }
         }

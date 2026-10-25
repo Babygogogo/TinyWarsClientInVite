@@ -1,22 +1,22 @@
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import type * as GamePanelsTypes from "../../gamePanels/Types.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as KeyboardKbManager from "../../keyboard/KbManager.ts";
-import * as KeyboardKbTypes from "../../keyboard/KbTypes.ts";
-import * as Logger2 from "../../Logger.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as StagesStageManager from "../../stages/StageManager.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiOpenableComponent from "./UiOpenableComponent.ts";
-import type * as UiInterfacesIUiContainer from "../interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiPanel from "../interfaces/IUiPanel.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { closePanel } from "../../gamePanels/Manager.ts";
+import type { PanelConfig as GamePanelsTypesPanelConfig } from "../../gamePanels/Types.ts";
+import { Tween } from "../../graphics/Constants.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { PointerEventType } from "../../helpers/PointerInput.ts";
+import { addListener, deleteListener } from "../../keyboard/KbManager.ts";
+import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
+import { log } from "../../Logger.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { getStage } from "../../stages/StageManager.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiOpenableComponent } from "./UiOpenableComponent.ts";
+import type { IUiContainer } from "../interfaces/IUiContainer.ts";
+import type { IUiImage } from "../interfaces/IUiImage.ts";
+import type { IUiPanel } from "../interfaces/IUiPanel.ts";
+import { getUiButtonClass, getUiContainerClass } from "../utils/UiFactory.ts";
+import type { DisplayObject } from "../../vendor/egret/Egret.ts";
 
 const NAMES_FOR_GROUP = [
     `_group`,
@@ -29,25 +29,25 @@ const NAMES_FOR_BUTTON_CLOSE = [
     `_btnCancel`,
     `_btnBack`,
 ];
-const DefaultTweenTime = GraphicsConstants.Tween.DefaultDuration;
+const DefaultTweenTime = Tween.DefaultDuration;
 
 interface ComponentsForDefaultOpenAndCloseAnimation {
-    imgMask : UiInterfacesIUiImage.IUiImage;
-    group   : UiInterfacesIUiContainer.IUiContainer;
+    imgMask : IUiImage;
+    group   : IUiContainer;
 }
 
 
 
-type PanelConfig<T> = GamePanelsTypes.PanelConfig<T>;
+type PanelConfig<T> = GamePanelsTypesPanelConfig<T>;
 
-export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.UiOpenableComponent<OpenData> implements UiInterfacesIUiPanel.IUiPanel<OpenData> {
+export abstract class UiPanel<OpenData> extends UiOpenableComponent<OpenData> implements IUiPanel<OpenData> {
     private _panelConfig?                               : PanelConfig<OpenData>;
     private _boundedGroupTouchCallbacks?                : Map<string, () => void>;
 
     private _isTouchMaskEnabled                         = false;
     private _isCloseOnTouchedMask                       = false;
     private _callbackOnTouchedMask?                     : () => void;
-    private _touchMask?                                 : UiInterfacesIUiContainer.IUiContainer;
+    private _touchMask?                                 : IUiContainer;
 
     private _componentsForDefaultOpenAndCloseAnimation? : ComponentsForDefaultOpenAndCloseAnimation;
     private _defaultOpenAndCloseAnimationType           = 1;
@@ -60,7 +60,7 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
         this._panelConfig = config;
     }
     public getPanelConfig(): PanelConfig<OpenData> {
-        return HelpersMisc.getExisted(this._panelConfig);
+        return getExisted(this._panelConfig);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -68,9 +68,9 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
     ////////////////////////////////////////////////////////////////////////////////
     protected override async _onOpened(): Promise<void> {
         const touchMask = createTouchMask();
-        this.addChild(touchMask as unknown as VendorEgretEgret.DisplayObject);
+        this.addChild(touchMask as unknown as DisplayObject);
 
-        const stage = StagesStageManager.getStage();
+        const stage = getStage();
         this.resize(stage.stageWidth, stage.stageHeight);
         this._resetSoundForCommonButtons();
         this._resetInteractiveForGroup(true);
@@ -81,16 +81,16 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
         );
 
         if (this._shouldListenKeyEscape) {
-            KeyboardKbManager.addListener(this._onKeyEscape, this);
+            addListener(this._onKeyEscape, this);
         }
-        this.removeChild(touchMask as unknown as VendorEgretEgret.DisplayObject);
+        this.removeChild(touchMask as unknown as DisplayObject);
     }
 
     protected async _showOpenAnimation(): Promise<void> {
         // to be overridden
     }
 
-    protected _enableDefaultOpenAndCloseAnimation(imgMask: UiInterfacesIUiImage.IUiImage, group: UiInterfacesIUiContainer.IUiContainer, animationType = 1): void {
+    protected _enableDefaultOpenAndCloseAnimation(imgMask: IUiImage, group: IUiContainer, animationType = 1): void {
         this._componentsForDefaultOpenAndCloseAnimation = { imgMask: imgMask, group: group };
         this._defaultOpenAndCloseAnimationType          = animationType;
     }
@@ -102,14 +102,14 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
     // Functions for close self.
     ////////////////////////////////////////////////////////////////////////////////
     public closePanel(): void {
-        GamePanelsManager.closePanel(this.getPanelConfig());
+        closePanel(this.getPanelConfig());
     }
 
     protected override async _onClosed(): Promise<void> {
         const touchMask = createTouchMask();
-        this.addChild(touchMask as unknown as VendorEgretEgret.DisplayObject);
+        this.addChild(touchMask as unknown as DisplayObject);
 
-        KeyboardKbManager.deleteListener(this._onKeyEscape, this);
+        deleteListener(this._onKeyEscape, this);
 
         this._setIsShowingCloseAnimation(true);
         await (this._componentsForDefaultOpenAndCloseAnimation
@@ -118,7 +118,7 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
         );
         this._setIsShowingCloseAnimation(false);
 
-        this.removeChild(touchMask as unknown as VendorEgretEgret.DisplayObject);
+        this.removeChild(touchMask as unknown as DisplayObject);
     }
 
     protected async _showCloseAnimation(): Promise<void> {
@@ -167,17 +167,17 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
             const mask = this._touchMask;
             if (mask) {
                 // mask.off(UiEventTypePointerTap, this._onTouchedTouchMask, this);
-                this.removeChild(mask as unknown as VendorEgretEgret.DisplayObject);
+                this.removeChild(mask as unknown as DisplayObject);
             }
 
         } else {
             if (!this._touchMask) {
                 const newMask = createTouchMask();
                 // newMask.on(UiEventTypePointerTap, this._onTouchedTouchMask, this);
-                newMask.getEventAgent().addPointerEventListener(HelpersPointerInput.PointerEventType.Tap, this._onTouchedTouchMask, this);
+                newMask.getEventAgent().addPointerEventListener(PointerEventType.Tap, this._onTouchedTouchMask, this);
                 this._touchMask = newMask;
             }
-            this.addChildAt(this._touchMask as unknown as VendorEgretEgret.DisplayObject, 0);
+            this.addChildAt(this._touchMask as unknown as DisplayObject, 0);
         }
     }
 
@@ -200,7 +200,7 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
         }
 
         if (this._getIsCloseOnTouchedMask()) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this.closePanel();
         }
     }
@@ -212,17 +212,17 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
         this._shouldListenKeyEscape = true;
         this._callbackOnKeyEscape   = callback;
     }
-    private _onKeyEscape(data: KeyboardKbTypes.EventData): void {
+    private _onKeyEscape(data: EventData): void {
         if (data.isHandled) {
             return;
         }
         data.isHandled = true;
 
-        if (data.newKeys.has(KeyboardKbTypes.KeyCode.Escape)) {
+        if (data.newKeys.has(KeyCode.Escape)) {
             if (this._callbackOnKeyEscape) {
                 this._callbackOnKeyEscape();
             } else {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+                playShortSfx(ShortSfxCode.ButtonCancel01);
                 this.closePanel();
             }
         }
@@ -232,17 +232,17 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
     // Utils.
     ////////////////////////////////////////////////////////////////////////////////
     private _resetSoundForCommonButtons(): void {
-        const buttonClass = UiUtilsUiFactory.getUiButtonClass();
+        const buttonClass = getUiButtonClass();
         for (const name of NAMES_FOR_BUTTON_CLOSE) {
             const btn = (this as any)[name];
             if (btn instanceof buttonClass) {
-                btn.setShortSfxCode(SoundsConstants.ShortSfxCode.ButtonCancel01);
+                btn.setShortSfxCode(ShortSfxCode.ButtonCancel01);
             }
         }
         for (const name of NAMES_FOR_BUTTON_CONFIRM) {
             const btn = (this as any)[name];
             if (btn instanceof buttonClass) {
-                btn.setShortSfxCode(SoundsConstants.ShortSfxCode.ButtonConfirm01);
+                btn.setShortSfxCode(ShortSfxCode.ButtonConfirm01);
             }
         }
     }
@@ -250,7 +250,7 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
         const skinName = this._panelConfig?.skinName;
         for (const name of NAMES_FOR_GROUP) {
             const group = (this as any)[name];
-            if (group instanceof UiUtilsUiFactory.getUiContainerClass()) {
+            if (group instanceof getUiContainerClass()) {
                 if (on) {
                     group.setIsTouchEnabled(true);
 
@@ -258,11 +258,11 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
                         const agent = group.getEventAgent();
                         const dict  = this._boundedGroupTouchCallbacks ??= new Map();
                         if (dict.has(name)) {
-                            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.Press, HelpersMisc.getExisted(dict.get(name)), undefined);
+                            agent.addPointerEventListener(PointerEventType.Press, getExisted(dict.get(name)), undefined);
                         } else {
-                            const callback = (): void => Logger2.log(`%cPanel pointer down:`, `background:#aaaaff;`, ` ${skinName}.${name}`);
+                            const callback = (): void => log(`%cPanel pointer down:`, `background:#aaaaff;`, ` ${skinName}.${name}`);
                             dict.set(name, callback);
-                            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.Press, callback, undefined);
+                            agent.addPointerEventListener(PointerEventType.Press, callback, undefined);
                         }
                     }
                 } else {
@@ -271,9 +271,9 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
                     if (window.CLIENT_VERSION === "DEVELOP") {
                         const dict = this._boundedGroupTouchCallbacks;
                         if (dict?.has(name)) {
-                            group.getEventAgent().removePointerEventListener(HelpersPointerInput.PointerEventType.Press, HelpersMisc.getExisted(dict.get(name)), undefined);
+                            group.getEventAgent().removePointerEventListener(PointerEventType.Press, getExisted(dict.get(name)), undefined);
                         } else {
-                            throw HelpersMisc.newError(`WTF? ${skinName}`);
+                            throw newError(`WTF? ${skinName}`);
                         }
                     }
                 }
@@ -282,9 +282,9 @@ export abstract class UiPanel<OpenData> extends UiComponentsUiOpenableComponent.
     }
 }
 
-function createTouchMask(): UiInterfacesIUiContainer.IUiContainer {
-    const mask  = new (UiUtilsUiFactory.getUiContainerClass())();
-    const stage = StagesStageManager.getStage();
+function createTouchMask(): IUiContainer {
+    const mask  = new (getUiContainerClass())();
+    const stage = getStage();
     mask.setIsTouchEnabled(true);
     mask.setUnscaledManualWidth(stage.stageWidth);
     mask.setUnscaledManualHeight(stage.stageHeight);
@@ -295,7 +295,7 @@ function createTouchMask(): UiInterfacesIUiContainer.IUiContainer {
 async function showDefaultOpenAnimation(components: ComponentsForDefaultOpenAndCloseAnimation, animationType: number): Promise<void> {
     const { imgMask, group } = components;
     if (animationType === 1) {
-        throw HelpersMisc.newError("animationType 1 is no longer supported.");
+        throw newError("animationType 1 is no longer supported.");
 
         // resetTween({
         //     obj         : imgMask,
@@ -311,7 +311,7 @@ async function showDefaultOpenAnimation(components: ComponentsForDefaultOpenAndC
         // await TimerModel.wait(DefaultTweenTime);
 
     } else if (animationType === 2) {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : imgMask,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
@@ -321,20 +321,20 @@ async function showDefaultOpenAnimation(components: ComponentsForDefaultOpenAndC
         group.customScaleY  = 0.9;
         group.customAlpha   = 0;
 
-        TweenExecutor.Executor.removeTweens(group);
-        TweenExecutor.Executor.get(group).to({ customAlpha: 1 }, DefaultTweenTime);
-        TweenExecutor.Executor.get(group)
+        Executor.removeTweens(group);
+        Executor.get(group).to({ customAlpha: 1 }, DefaultTweenTime);
+        Executor.get(group)
             .to({ customScaleX: 1.05,   customScaleY: 1.05 },   DefaultTweenTime / 8 * 6)
             .to({ customScaleX: 1,      customScaleY: 1 },      DefaultTweenTime / 8 * 2);
 
-        await TimerTimerModel.wait(DefaultTweenTime);
+        await wait(DefaultTweenTime);
     }
 }
 
 async function showDefaultCloseAnimation(components: ComponentsForDefaultOpenAndCloseAnimation, animationType: number): Promise<void> {
     const { imgMask, group } = components;
     if (animationType === 1) {
-        throw HelpersMisc.newError("animationType 1 is no longer supported.");
+        throw newError("animationType 1 is no longer supported.");
 
         // resetTween({
         //     obj         : imgMask,
@@ -350,7 +350,7 @@ async function showDefaultCloseAnimation(components: ComponentsForDefaultOpenAnd
         // await TimerModel.wait(DefaultTweenTime);
 
     } else if (animationType === 2) {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : imgMask,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
@@ -360,12 +360,12 @@ async function showDefaultCloseAnimation(components: ComponentsForDefaultOpenAnd
         group.customScaleY  = 1;
         group.customAlpha   = 1;
 
-        TweenExecutor.Executor.removeTweens(group);
-        TweenExecutor.Executor.get(group).to({ customAlpha: 0 }, DefaultTweenTime);
-        TweenExecutor.Executor.get(group)
+        Executor.removeTweens(group);
+        Executor.get(group).to({ customAlpha: 0 }, DefaultTweenTime);
+        Executor.get(group)
             .to({ customScaleX: 1.05,   customScaleY: 1.05 },   DefaultTweenTime / 8 * 2)
             .to({ customScaleX: 0.9,    customScaleY: 0.9 },    DefaultTweenTime / 8 * 6);
 
-        await TimerTimerModel.wait(DefaultTweenTime);
+        await wait(DefaultTweenTime);
     }
 }

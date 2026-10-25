@@ -1,13 +1,13 @@
 
 import loadingIcon from './assets/resource/assets/texture/index/loadingIcon.png'
-import * as egret from './vendor/egret/Egret.ts'
+import { DisplayObjectContainer, Event, runEgret } from './vendor/egret/Egret.ts';
 import { startGame } from './helpers/GameFlow.ts'
 
-class Main extends egret.DisplayObjectContainer {
+class Main extends DisplayObjectContainer {
     public constructor() {
         super();
 
-        this.once(egret.Event.ADDED_TO_STAGE, this._onAddedToStage, this);
+        this.once(Event.ADDED_TO_STAGE, this._onAddedToStage, this);
     }
 
     private _onAddedToStage(): void {
@@ -30,7 +30,7 @@ class Main extends egret.DisplayObjectContainer {
 
 document.getElementById("logoCon")!.style.backgroundImage = "url(" + loadingIcon + ")";
 
-egret.runEgret({
+runEgret({
     renderMode: "webgl",
     audioType: 0,
     entryClass: Main,

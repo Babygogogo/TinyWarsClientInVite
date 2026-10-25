@@ -1,48 +1,48 @@
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as HelpersText from "../../helpers/Text.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocalDataStorage from "../../localData/Storage.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as StagesConstants from "../../stages/Constants.ts";
-import * as StagesStageManager from "../../stages/StageManager.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import { format } from "../../helpers/Text.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { setStageScale } from "../../localData/Storage.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { Scale } from "../../stages/Constants.ts";
+import { getStageScale, setStageScale as StagesStageManagerSetStageScale } from "../../stages/StageManager.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
 
-    private readonly _layoutContent!    : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _layoutContent!    : IUiLayout;
 
-    private readonly _labelScaleTitle!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupScale!       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgScaleBar!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgScalePoint!    : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelScale!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelScaleTitle!  : IUiLabel;
+    private readonly _groupScale!       : IUiContainer;
+    private readonly _imgScaleBar!      : IUiImage;
+    private readonly _imgScalePoint!    : IUiImage;
+    private readonly _labelScale!       : IUiLabel;
 
-    private readonly _btnDefault!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!       : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnDefault!       : IUiButton;
+    private readonly _btnConfirm!       : IUiButton;
 
     private _prevScale                  : number | null = null;
     private _selectedScale              : number | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._groupScale,     callback: this._onTouchedGroupScale,    eventType: HelpersPointerInput.PointerEventType.Press },
+            { ui: this._groupScale,     callback: this._onTouchedGroupScale,    eventType: PointerEventType.Press },
 
             { ui: this._btnClose,       callback: this._onTouchedBtnClose },
             { ui: this._btnDefault,     callback: this._onTouchedBtnDefault },
@@ -51,12 +51,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => this._onTouchedPanelMask());
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnClose();
         });
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
-        const scale         = StagesStageManager.getStageScale();
+        const scale         = getStageScale();
         this._prevScale     = scale;
         this._selectedScale = scale;
 
@@ -70,39 +70,39 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onTouchedGroupScale(e: VendorEgretEgret.Event): void {
+    private _onTouchedGroupScale(e: Event): void {
         this._handleTouchGroupScale(e);
     }
-    private _handleTouchGroupScale(e: VendorEgretEgret.Event): void {
+    private _handleTouchGroupScale(e: Event): void {
         const group         = this._groupScale;
         const width         = group.getUnscaledWidth();
-        const data          = e.data as HelpersPointerInput.PointerUnifiedEventData;
+        const data          = e.data as PointerUnifiedEventData;
         const point         = group.globalToLocal(data.stageX, data.stageY);
-        const scale         = Math.floor(Math.max(0, Math.min(point.x, width)) / width * (StagesConstants.Scale.MaxScale - StagesConstants.Scale.MinScale) + StagesConstants.Scale.MinScale);
+        const scale         = Math.floor(Math.max(0, Math.min(point.x, width)) / width * (Scale.MaxScale - Scale.MinScale) + Scale.MinScale);
         this._selectedScale = scale;
-        StagesStageManager.setStageScale(scale);
+        StagesStageManagerSetStageScale(scale);
         this._updateGroupScale();
     }
 
     private _onTouchedBtnClose(): void {
-        StagesStageManager.setStageScale(this._prevScale || StagesConstants.Scale.MinScale);
+        StagesStageManagerSetStageScale(this._prevScale || Scale.MinScale);
 
         this.closePanel();
     }
     private _onTouchedBtnDefault(): void {
-        this._selectedScale = StagesConstants.Scale.MinScale;
-        StagesStageManager.setStageScale(StagesConstants.Scale.MinScale);
+        this._selectedScale = Scale.MinScale;
+        StagesStageManagerSetStageScale(Scale.MinScale);
 
         this._updateView();
     }
     private _onTouchedBtnConfirm(): void {
-        LocalDataStorage.setStageScale(this._selectedScale || StagesConstants.Scale.MinScale);
+        setStageScale(this._selectedScale || Scale.MinScale);
 
         this.closePanel();
     }
     private _onTouchedPanelMask(): void {
-        StagesStageManager.setStageScale(this._prevScale || StagesConstants.Scale.MinScale);
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+        StagesStageManagerSetStageScale(this._prevScale || Scale.MinScale);
+        playShortSfx(ShortSfxCode.ButtonCancel01);
 
         this.closePanel();
     }
@@ -114,21 +114,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0558));
-        this._labelScaleTitle.setText(LangUtils.getText(LangConstants.TextType.B0559));
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnDefault.setText(LangUtils.getText(LangConstants.TextType.B0543));
-        this._btnClose.setText(LangUtils.getText(LangConstants.TextType.B0154));
+        this._labelTitle.setText(getText(TextType.B0558));
+        this._labelScaleTitle.setText(getText(TextType.B0559));
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._btnDefault.setText(getText(TextType.B0543));
+        this._btnClose.setText(getText(TextType.B0154));
 
         this._layoutContent.arrangeItems();
     }
 
     private _updateGroupScale(): void {
-        const scale = this._selectedScale || StagesConstants.Scale.MinScale;
+        const scale = this._selectedScale || Scale.MinScale;
         const width = this._groupScale.getUnscaledWidth();
-        const pos   = width * (scale - StagesConstants.Scale.MinScale) / (StagesConstants.Scale.MaxScale - StagesConstants.Scale.MinScale);
+        const pos   = width * (scale - Scale.MinScale) / (Scale.MaxScale - Scale.MinScale);
         this._imgScalePoint.setX(pos);
         this._imgScaleBar.setUnscaledManualWidth(pos);
-        this._labelScale.setText(`${HelpersText.format("%.2f", 10000 / scale)}%`);
+        this._labelScale.setText(`${format("%.2f", 10000 / scale)}%`);
     }
 }

@@ -1,69 +1,75 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as BootTimersConstants from "../../bootTimers/Constants.ts";
-import * as CommonViewCommonWarAdvancedSettingsPage from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import * as CommonViewCommonWarBasicSettingsPage from "../../common/view/CommonWarBasicSettingsPage.ts";
-import * as CommonViewCommonWarMapInfoPage from "../../common/view/CommonWarMapInfoPage.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as GameModesConstants from "../../gameModes/Constants.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TurnsConstants from "../../turns/Constants.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import * as UiComponentsUiTabItemRenderer from "../../ui/components/UiTabItemRenderer.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiInterfacesIUiTab from "../../ui/interfaces/IUiTab.ts";
-import type * as UiInterfacesIUiTabItemRenderer from "../../ui/interfaces/IUiTabItemRenderer.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import * as WarOperationsConstants from "../../warOperations/Constants.ts";
-import * as WarRulesUtilsInstance from "../../warRules/utils/Instance.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { DefaultParams, TimerTypeId } from "../../bootTimers/Constants.ts";
+import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
+    Page as CommonViewCommonWarBasicSettingsPage,
+} from "../../common/view/CommonWarBasicSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
+    Page as CommonViewCommonWarMapInfoPage,
+} from "../../common/view/CommonWarMapInfoPage.ts";
+import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { BasicSettingsType } from "../../gameConfig/GcWar.ts";
+import { ModeId } from "../../gameModes/Constants.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getLanguageText } from "../../lang/Utils.ts";
+import { getEnabledNormalMapIdSet, getBriefData, getRawData } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { TurnIndex } from "../../turns/Constants.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import { UiTabItemRenderer } from "../../ui/components/UiTabItemRenderer.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
+import type { IUiTabItemRenderer } from "../../ui/interfaces/IUiTabItemRenderer.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import { Common } from "../../warOperations/Constants.ts";
+import { create } from "../../warRules/utils/Instance.ts";
 
 export interface OpenData {
     hasFog: boolean;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _groupTab!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _tabSettings!          : UiInterfacesIUiTab.IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPage.OpenData | CommonViewCommonWarBasicSettingsPage.OpenData | CommonViewCommonWarAdvancedSettingsPage.OpenData>;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _groupTab!             : IUiContainer;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPageOpenData | CommonViewCommonWarBasicSettingsPageOpenData | CommonViewCommonWarAdvancedSettingsPageOpenData>;
 
-    private readonly _groupNavigator!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _layoutNavName!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelRankMatch!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPreviewMap!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapType!         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupNavigator!       : IUiLayout;
+    private readonly _layoutNavName!        : IUiLayout;
+    private readonly _labelRankMatch!       : IUiLabel;
+    private readonly _labelPreviewMap!      : IUiLabel;
+    private readonly _labelMapType!         : IUiLabel;
 
-    private readonly _btnBack!              : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnBack!              : IUiButton;
 
-    private readonly _groupBottomButton!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnBanMap!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSwitch!            : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupBottomButton!    : IUiContainer;
+    private readonly _btnBanMap!            : IUiButton;
+    private readonly _btnSwitch!            : IUiButton;
 
-    private readonly _groupMapList!         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listMap!              : UiInterfacesIUiScrollList.IUiScrollList<DataForMapNameRenderer>;
-    private readonly _labelNoMap!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelLoading!         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupMapList!         : IUiContainer;
+    private readonly _listMap!              : IUiScrollList<DataForMapNameRenderer>;
+    private readonly _labelNoMap!           : IUiLabel;
+    private readonly _labelLoading!         : IUiLabel;
 
     private _isTabInitialized = false;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnBanMap,      callback: this._onTouchedBtnBanMap },
@@ -71,7 +77,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -101,7 +107,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     public async setAndReviseSelectedNormalMapId(normalMapId: number, needScroll: boolean): Promise<void> {
         const listMap   = this._listMap;
-        const index     = HelpersMisc.getExisted(listMap.getRevisedFirstIndex(v => v?.normalMapId === normalMapId), UtilsClientErrorCode.ClientErrorCode.MrrPreviewMapListPanel_SetSelectedNormalMapId_00);
+        const index     = getExisted(listMap.getRevisedFirstIndex(v => v?.normalMapId === normalMapId), ClientErrorCode.MrrPreviewMapListPanel_SetSelectedNormalMapId_00);
         listMap.setSelectedItemIndex(index);
 
         if (needScroll) {
@@ -118,19 +124,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnBanMap(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().MrrBanMapPanel, void 0);
+        openPanel(getDict().MrrBanMapPanel, void 0);
     }
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().MrrMainMenuPanel, void 0);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyTopPanel, void 0);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyBottomPanel, void 0);
+        openPanel(getDict().MrrMainMenuPanel, void 0);
+        openPanel(getDict().LobbyTopPanel, void 0);
+        openPanel(getDict().LobbyBottomPanel, void 0);
     }
 
     private _onTouchedBtnSwitch(): void {
         const hasFog = this.getOpenData()?.hasFog;
         this.closePanel();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().MrrPreviewMapListPanel, { hasFog: !hasFog });
+        openPanel(getDict().MrrPreviewMapListPanel, { hasFog: !hasFog });
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -140,18 +146,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0298) },
+                pageClass   : CommonViewCommonWarMapInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage.Page,
+                tabItemData : { name: getText(TextType.B0002) },
+                pageClass   : CommonViewCommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0003) },
-                pageClass   : CommonViewCommonWarAdvancedSettingsPage.Page,
+                tabItemData : { name: getText(TextType.B0003) },
+                pageClass   : Page,
                 pageData    : null,
             },
         ]);
@@ -166,14 +172,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(LangUtils.getText(LangConstants.TextType.A0040));
-        this._labelRankMatch.setText(LangUtils.getText(LangConstants.TextType.B0404));
-        this._labelPreviewMap.setText(LangUtils.getText(LangConstants.TextType.B0594));
-        this._labelMapType.setText(LangUtils.getText(this.getOpenData()?.hasFog ? LangConstants.TextType.B0596 : LangConstants.TextType.B0595));
-        this._btnBack.setText(LangUtils.getText(LangConstants.TextType.B0146));
-        this._labelNoMap.setText(LangUtils.getText(LangConstants.TextType.B0582));
-        this._btnBanMap.setText(LangUtils.getText(LangConstants.TextType.B0084));
-        this._btnSwitch.setText(LangUtils.getText(LangConstants.TextType.B0520));
+        this._labelLoading.setText(getText(TextType.A0040));
+        this._labelRankMatch.setText(getText(TextType.B0404));
+        this._labelPreviewMap.setText(getText(TextType.B0594));
+        this._labelMapType.setText(getText(this.getOpenData()?.hasFog ? TextType.B0596 : TextType.B0595));
+        this._btnBack.setText(getText(TextType.B0146));
+        this._labelNoMap.setText(getText(TextType.B0582));
+        this._btnBanMap.setText(getText(TextType.B0084));
+        this._btnSwitch.setText(getText(TextType.B0520));
 
         this._layoutNavName.arrangeItems();
         this._groupNavigator.arrangeItems();
@@ -222,10 +228,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private async _createDataForListMap(): Promise<DataForMapNameRenderer[]> {
-        const promiseArray: Promise<AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoMapMapRawData.MapRawData>>[] = [];
-        for (const normalMapId of await NormalMapModelNormalMapModel.getEnabledNormalMapIdSet()) {
-            promiseArray.push((async (): Promise<AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoMapMapRawData.MapRawData>> => {
-                const mapBriefData = await NormalMapModelNormalMapModel.getBriefData(normalMapId);
+        const promiseArray: Promise<Undefinable<MapRawData>>[] = [];
+        for (const normalMapId of await getEnabledNormalMapIdSet()) {
+            promiseArray.push((async (): Promise<Undefinable<MapRawData>> => {
+                const mapBriefData = await getBriefData(normalMapId);
                 if (mapBriefData == null) {
                     return null;
                 }
@@ -233,7 +239,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 if ((mapBriefData.getNormalMapExtraData()?.getIsEnabled())  &&
                     (mapBriefData.getRuleAvailability()?.getCanMrw())
                 ) {
-                    return await NormalMapModelNormalMapModel.getRawData(normalMapId);
+                    return await getRawData(normalMapId);
                 }
 
                 return null;
@@ -247,8 +253,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 return (v.getRuleAvailability()?.getCanMrw()) && (hasFog === v.getWarRuleCommonData()?.getHasFogByDefault());
             })) {
                 dataArray.push({
-                    normalMapId   : HelpersMisc.getExisted(mapRawData.getNormalMapId()),
-                    mapName : LangUtils.getLanguageText({ textArray: mapRawData.getMapNameArray() }) || LangConstants.UndefinedError,
+                    normalMapId   : getExisted(mapRawData.getNormalMapId()),
+                    mapName : getLanguageText({ textArray: mapRawData.getMapNameArray() }) || UndefinedError,
                     panel   : this,
                 });
             }
@@ -257,27 +263,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         return dataArray.sort((a, b) => a.mapName.localeCompare(b.mapName, "zh"));
     }
 
-    private async _createDataForCommonMapInfoPage(): Promise<CommonViewCommonWarMapInfoPage.OpenData> {
+    private async _createDataForCommonMapInfoPage(): Promise<CommonViewCommonWarMapInfoPageOpenData> {
         const normalMapId = this._getPreviewingNormalMapId();
         return normalMapId == null
             ? null
             : {
                 mapInfo : {
                     hasFog              : !!this.getOpenData()?.hasFog,
-                    mapRawData          : HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId)),
-                    gameConfig          : await GameConfigGcModel.getLatestGameConfig(),
+                    mapRawData          : getExisted(await getRawData(normalMapId)),
+                    gameConfig          : await getLatestGameConfig(),
                     overridingPlayers   : null,
                 },
             };
     }
 
-    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonViewCommonWarBasicSettingsPage.OpenData> {
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
         const normalMapId = this._getPreviewingNormalMapId();
         if (normalMapId == null) {
             return null;
         }
 
-        const mapRawData = await NormalMapModelNormalMapModel.getRawData(normalMapId);
+        const mapRawData = await getRawData(normalMapId);
         if (mapRawData == null) {
             return null;
         }
@@ -290,20 +296,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return null;
         }
 
-        const instanceWarRule   = WarRulesUtilsInstance.create({
+        const instanceWarRule   = create({
             templateWarRule             : templateWarRuleArray[0],
             warEventFullData            : mapRawData.getWarEventFullData(),
             allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
             taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
         });
-        const bootTimerParams   = BootTimersConstants.DefaultParams.concat();
-        const timerType         = bootTimerParams[0] as BootTimersConstants.TimerTypeId;
-        const gameConfig        = await GameConfigGcModel.getLatestGameConfig();
+        const bootTimerParams   = DefaultParams.concat();
+        const timerType         = bootTimerParams[0] as TimerTypeId;
+        const gameConfig        = await getLatestGameConfig();
         const warEventFullData  = mapRawData.getWarEventFullData() ?? null;
-        const openData          : CommonViewCommonWarBasicSettingsPage.OpenData = {
+        const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
             dataArrayForListSettings    : [
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.NormalMapId,
+                    settingsType    : BasicSettingsType.NormalMapId,
                     currentValue    : normalMapId,
                     instanceWarRule,
                     gameConfig,
@@ -311,7 +317,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.WarRuleTitle,
+                    settingsType    : BasicSettingsType.WarRuleTitle,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -319,7 +325,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.HasFog,
+                    settingsType    : BasicSettingsType.HasFog,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -327,7 +333,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.Weather,
+                    settingsType    : BasicSettingsType.Weather,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -335,7 +341,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType        : GameConfigGcWar.BasicSettingsType.TileTheme,
+                    settingsType        : BasicSettingsType.TileTheme,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -343,7 +349,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify    : null,
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.WarEvent,
+                    settingsType    : BasicSettingsType.WarEvent,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -351,15 +357,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.TurnsAndWarOperationsLimit,
-                    currentValue    : `${TurnsConstants.TurnIndex.DefaultLimit}, ${WarOperationsConstants.Common.DefaultLimit}`,
+                    settingsType    : BasicSettingsType.TurnsAndWarOperationsLimit,
+                    currentValue    : `${TurnIndex.DefaultLimit}, ${Common.DefaultLimit}`,
                     instanceWarRule,
                     gameConfig,
                     warEventFullData,
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.TimerType,
+                    settingsType    : BasicSettingsType.TimerType,
                     currentValue    : timerType,
                     instanceWarRule,
                     gameConfig,
@@ -368,19 +374,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 },
             ],
         };
-        if (timerType === BootTimersConstants.TimerTypeId.Regular) {
+        if (timerType === TimerTypeId.Regular) {
             openData.dataArrayForListSettings.push({
-                settingsType    : GameConfigGcWar.BasicSettingsType.TimerRegularParam,
+                settingsType    : BasicSettingsType.TimerRegularParam,
                 currentValue    : bootTimerParams[1],
                 instanceWarRule,
                 gameConfig,
                 warEventFullData,
                 callbackOnModify: null,
             });
-        } else if (timerType === BootTimersConstants.TimerTypeId.Incremental) {
+        } else if (timerType === TimerTypeId.Incremental) {
             openData.dataArrayForListSettings.push(
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.TimerIncrementalParams,
+                    settingsType    : BasicSettingsType.TimerIncrementalParams,
                     currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                     instanceWarRule,
                     gameConfig,
@@ -389,19 +395,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 },
             );
         } else {
-            throw HelpersMisc.newError(`Invalid timerType: ${timerType}`, UtilsClientErrorCode.ClientErrorCode.MrrPreviewMapListPanel_CreateDataForCommonWarBasicSettingsPage_00);
+            throw newError(`Invalid timerType: ${timerType}`, ClientErrorCode.MrrPreviewMapListPanel_CreateDataForCommonWarBasicSettingsPage_00);
         }
 
         return openData;
     }
 
-    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonViewCommonWarAdvancedSettingsPage.OpenData> {
+    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonViewCommonWarAdvancedSettingsPageOpenData> {
         const normalMapId = this._getPreviewingNormalMapId();
         if (normalMapId == null) {
             return null;
         }
 
-        const mapRawData            = HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId));
+        const mapRawData            = getExisted(await getRawData(normalMapId));
         const hasFog                = this.getOpenData()?.hasFog;
         const templateWarRuleArray  = mapRawData.getTemplateWarRuleArray().filter(v => {
             return (v.getRuleAvailability()?.getCanMrw()) && (hasFog === v.getWarRuleCommonData()?.getHasFogByDefault());
@@ -412,14 +418,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         return {
             canModify       : false,
-            gcData          : await GameConfigGcModel.getLatestGameConfig(),
-            instanceWarRule : WarRulesUtilsInstance.create({
+            gcData          : await getLatestGameConfig(),
+            instanceWarRule : create({
                 templateWarRule             : templateWarRuleArray[0],
                 warEventFullData            : mapRawData.getWarEventFullData(),
                 allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
                 taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
             }),
-            gameModeId      : GameModesConstants.ModeId.RankedMatch,
+            gameModeId      : ModeId.RankedMatch,
         };
     }
 
@@ -428,92 +434,92 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupMapList,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupBottomButton,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 0, },
             endProps    : { customAlpha: 1, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupMapList,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupBottomButton,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 1, },
             endProps    : { customAlpha: 0, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 }
 
-interface DataForTabItemRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTabItemRenderer extends UiListItemData {
     name: string;
 }
 class TabItemRenderer
-    extends     UiComponentsUiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer>
-    implements  UiInterfacesIUiTabItemRenderer.IUiTabItemRenderer<DataForTabItemRenderer>
+    extends     UiTabItemRenderer<DataForTabItemRenderer>
+    implements  IUiTabItemRenderer<DataForTabItemRenderer>
 {
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelName!    : IUiLabel;
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? LangConstants.UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
     }
 }
 
-interface DataForMapNameRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForMapNameRenderer extends UiListItemData {
     normalMapId : number;
     mapName     : string;
     panel       : Panel;
 }
 class MapNameRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForMapNameRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForMapNameRenderer>
+    extends     UiListItemRenderer<DataForMapNameRenderer>
+    implements  IUiListItemRenderer<DataForMapNameRenderer>
 {
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelId!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDesigner!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelName!        : IUiLabel;
+    private readonly _labelId!          : IUiLabel;
+    private readonly _labelDesigner!    : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -530,14 +536,14 @@ class MapNameRenderer
             return;
         }
 
-        const mapBriefData = await NormalMapModelNormalMapModel.getBriefData(normalMapId);
+        const mapBriefData = await getBriefData(normalMapId);
         if ((mapBriefData == null) || (normalMapId !== this.getOpenData()?.normalMapId)) {
             return;
         }
 
-        this._labelName.setText(LangUtils.getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? LangConstants.UndefinedError);
+        this._labelName.setText(getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? UndefinedError);
         this._labelId.setText(`#${normalMapId}`);
-        this._labelDesigner.setText(mapBriefData.getDesignerName() ?? LangConstants.UndefinedError);
+        this._labelDesigner.setText(mapBriefData.getDesignerName() ?? UndefinedError);
         this._layoutName.arrangeItems();
     }
 }

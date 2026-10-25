@@ -1,16 +1,20 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    WoContainer as ProtoSchemaCommonProtoWarOperationWoContainer,
+} from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type {
+    SerialExecutedOperationManager as ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
 
-type WoContainer                    = ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer;
-type SerialExecutedOperationManager = ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager;
+type WoContainer                    = ProtoSchemaCommonProtoWarOperationWoContainer;
+type SerialExecutedOperationManager = ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager;
 
 export interface IBwExecutedOperationManager {
     init({ isNeedExecutedOperations, data }: {
         isNeedExecutedOperations    : boolean;
-        data                        : AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialExecutedOperationManager>;
+        data                        : Undefinable<SerialExecutedOperationManager>;
     }): void;
-    fastInit(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialExecutedOperationManager>): void;
+    fastInit(data: Undefinable<SerialExecutedOperationManager>): void;
 
     serialize(): SerialExecutedOperationManager;
     serializeForSrwValidation(): SerialExecutedOperationManager;
@@ -24,6 +28,6 @@ export interface IBwExecutedOperationManager {
     getAllExecutedOperationArray(): WoContainer[];
 
     getExecutedOperation(operationId: number): WoContainer | null;
-    getLastExecutedOperation(): AuxiliaryTypesAuxiliaryTypes.Undefinable<WoContainer>;
+    getLastExecutedOperation(): Undefinable<WoContainer>;
     addExecutedOperation(rawOperation: WoContainer): void;
 }

@@ -1,25 +1,25 @@
-import type * as ActionPlannersConstants from "./Constants.ts";
-import type * as ActionPlannersIActionPlannerView from "./IActionPlannerView.ts";
-import type * as ActionPlannersTypes from "./Types.ts";
-import type * as AuxiliaryTypesAttackableArea from "../auxiliaryTypes/AttackableArea.ts";
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMovableArea from "../auxiliaryTypes/MovableArea.ts";
-import type * as AuxiliaryTypesMovePathNode from "../auxiliaryTypes/MovePathNode.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as ProtoSchemaCommonProtoStructureMovePath from "../proto/schema/CommonProto/Structure/MovePath.ts";
-import type * as TilesITile from "../tiles/ITile.ts";
-import type * as UnitsIUnit from "../units/IUnit.ts";
+import type { StateId } from "./Constants.ts";
+import type { IActionPlannerView } from "./IActionPlannerView.ts";
+import type { ChosenUnitForDrop } from "./Types.ts";
+import type { AttackableArea as AuxiliaryTypesAttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { MovableArea as AuxiliaryTypesMovableArea } from "../auxiliaryTypes/MovableArea.ts";
+import type { MovePathNode as AuxiliaryTypesMovePathNode } from "../auxiliaryTypes/MovePathNode.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { MovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
+import type { ITile } from "../tiles/ITile.ts";
+import type { IUnit } from "../units/IUnit.ts";
 
-type GridIndex          = AuxiliaryTypesGridIndex.GridIndex;
-type MovableArea        = AuxiliaryTypesMovableArea.MovableArea;
-type MovePathNode       = AuxiliaryTypesMovePathNode.MovePathNode;
-type AttackableArea     = AuxiliaryTypesAttackableArea.AttackableArea;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type IBwTile            = TilesITile.ITile;
-type IBwUnit            = UnitsIUnit.IUnit;
-type IBwWar             = BaseWarInterfaceIBwWar.IBwWar;
-type ApStateId          = ActionPlannersConstants.StateId;
+type GridIndex          = AuxiliaryTypesGridIndex;
+type MovableArea        = AuxiliaryTypesMovableArea;
+type MovePathNode       = AuxiliaryTypesMovePathNode;
+type AttackableArea     = AuxiliaryTypesAttackableArea;
+type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type IBwTile            = ITile;
+type IBwUnit            = IUnit;
+type IBwWar             = BaseWarInterfaceIBwWar;
+type ApStateId          = StateId;
 
 export interface IActionPlanner {
     init(): void;
@@ -48,7 +48,7 @@ export interface IActionPlanner {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getView(): ActionPlannersIActionPlannerView.IActionPlannerView;
+    getView(): IActionPlannerView;
     updateView(): void;
 
     checkCanControlUnit(unit: IBwUnit): boolean;
@@ -73,9 +73,9 @@ export interface IActionPlanner {
     setChoosingUnitForDrop(unit: IBwUnit): void;
     clearChoosingUnitForDrop(): void;
 
-    getChosenUnitsForDrop(): ActionPlannersTypes.ChosenUnitForDrop[];
-    pushBackChosenUnitForDrop(data: ActionPlannersTypes.ChosenUnitForDrop): void;
-    popBackChosenUnitForDrop(): ActionPlannersTypes.ChosenUnitForDrop;
+    getChosenUnitsForDrop(): ChosenUnitForDrop[];
+    pushBackChosenUnitForDrop(data: ChosenUnitForDrop): void;
+    popBackChosenUnitForDrop(): ChosenUnitForDrop;
     clearChosenUnitsForDrop(): void;
     getChosenDropDestinations(): GridIndex[];
 
@@ -132,7 +132,7 @@ export interface IActionPlanner {
     getFocusUnitDestination(): GridIndex;
     updateMovePathByDestination(destination: GridIndex): void;
 
-    generateProtoMovePath(): ProtoSchemaCommonProtoStructureMovePath.MovePath;
+    generateProtoMovePath(): MovePath;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for previewing attackable area.

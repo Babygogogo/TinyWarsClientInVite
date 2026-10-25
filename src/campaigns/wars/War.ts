@@ -1,38 +1,40 @@
-import * as BootTimersConstants from "../../bootTimers/Constants.ts";
-import type * as CampaignsWarsIWar from "./IWar.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForCaw from "../../proto/schema/CommonProto/WarSettings/SettingsForCaw.ts";
-import * as SinglePlayerWarModelSpwWar from "../../singlePlayerWar/model/SpwWar.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import { TimerTypeId } from "../../bootTimers/Constants.ts";
+import type { IWar } from "./IWar.ts";
+import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import { SinglePlayerWar } from "../../gameConfig/GcWar.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
+import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type {
+    SettingsForCaw as ProtoSchemaCommonProtoWarSettingsSettingsForCaw,
+} from "../../proto/schema/CommonProto/WarSettings/SettingsForCaw.ts";
+import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type GcData             = GameConfigGcData.GcData;
-type SettingsForCaw     = ProtoSchemaCommonProtoWarSettingsSettingsForCaw.SettingsForCaw;
+type GcData             = GameConfigGcData;
+type SettingsForCaw     = ProtoSchemaCommonProtoWarSettingsSettingsForCaw;
 
-export class War extends SinglePlayerWarModelSpwWar.SpwWar implements CampaignsWarsIWar.IWar {
+export class War extends SpwWar implements IWar {
     private _settingsForCaw?    : SettingsForCaw;
 
-    public init(data: ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, HelpersProtoSchemaWarSerializationSerialWar.getWarTypeId(data));
-        this._setSettingsForCaw(HelpersMisc.getExisted(data.getSettingsForCaw(), UtilsClientErrorCode.ClientErrorCode.CawWar_Init_00));
+    public init(data: SerialWar, gameConfig: GcData): void {
+        this._baseInit(data, gameConfig, getWarTypeId(data));
+        this._setSettingsForCaw(getExisted(data.getSettingsForCaw(), ClientErrorCode.CawWar_Init_00));
 
         this._initView();
     }
 
-    public serialize(): ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar {
+    public serialize(): SerialWar {
         const randomNumberManager = this.getRandomNumberManager();
-        return ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.fromJson({
+        return SerialWar.fromJson({
             settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
             settingsForCaw              : this.getSettingsForCaw().toJson(),
 
             warId                       : this.getWarId(),
             isEnded                     : this.getIsEnded(),
-            seedRandomInitialState      : HelpersMisc.getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
+            seedRandomInitialState      : getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
             seedRandomCurrentState      : randomNumberManager.getSeedRandomCurrentStateJson(),
             remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
             drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
@@ -46,19 +48,19 @@ export class War extends SinglePlayerWarModelSpwWar.SpwWar implements CampaignsW
             taskObjectiveManager        : this.getTaskObjectiveManager().serialize().toJson(),
         });
     }
-    public serializeForValidation(): ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar {
+    public serializeForValidation(): SerialWar {
         const settingsForCaw = this.getSettingsForCaw().clone();
         settingsForCaw.setTotalScore(this.calculateTotalScore());
-        return ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.fromJson({
+        return SerialWar.fromJson({
             settingsForCommon           : this.getCommonSettingManager().getSettingsForCommon().toJson(),
             settingsForCaw              : settingsForCaw.toJson(),
 
             warId                       : null,
             isEnded                     : null,
-            seedRandomInitialState      : HelpersMisc.getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
+            seedRandomInitialState      : getExisted(this.getRandomNumberManager().getSeedRandomInitialState()).toJson(),
             seedRandomCurrentState      : null,
             remainingVotesForDraw       : null,
-            drawVoteManager             : new ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager.SerialDrawVoteManager().toJson(),
+            drawVoteManager             : new SerialDrawVoteManager().toJson(),
             weatherManager              : null,
             warEventManager             : null,
             playerManager               : this.getPlayerManager().serialize().toJson(),
@@ -92,22 +94,22 @@ export class War extends SinglePlayerWarModelSpwWar.SpwWar implements CampaignsW
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return [BootTimersConstants.TimerTypeId.NoBoot];
+        return [TimerTypeId.NoBoot];
     }
 
     private _setSettingsForCaw(settings: SettingsForCaw): void {
         this._settingsForCaw = settings;
     }
     public getSettingsForCaw(): SettingsForCaw {
-        return HelpersMisc.getExisted(this._settingsForCaw);
+        return getExisted(this._settingsForCaw);
     }
 
     public calculateTotalScore(): number {
-        return NumbersUtils.getValueInRange({
-            minValue    : GameConfigGcWar.SinglePlayerWar.PlayerScore.MinScore,
-            maxValue    : GameConfigGcWar.SinglePlayerWar.PlayerScore.MaxScore,
+        return getValueInRange({
+            minValue    : SinglePlayerWar.PlayerScore.MinScore,
+            maxValue    : SinglePlayerWar.PlayerScore.MaxScore,
             rawValue    : Math.floor(
-                GameConfigGcWar.SinglePlayerWar.PlayerScore.BaseScore
+                SinglePlayerWar.PlayerScore.BaseScore
                 - (this.getTurnManager().getTurnIndex() - 1) * 1000
                 - this.getExecutedOperationManager().getExecutedOperationsCount()
                 + this.getTaskObjectiveManager().getScore()

@@ -1,17 +1,17 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitOffense from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitOffense.ts";
-import * as UnitsUtilsCommon from "../../../units/utils/Common.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { SelfUnitOffense } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitOffense.ts";
+import { getNormalizedHp } from "../../../units/utils/Common.ts";
 
-function getTotalPctFromOwnTiles(cfg: AuxiliaryTypesAuxiliaryTypes.Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
+function getTotalPctFromOwnTiles(cfg: Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
     if (!cfg?.length) {
         return 0;
     } else {
         return getOwnTilesCount(cfg[0]) * cfg[1];
     }
 }
-function getTotalPctFromTileDefense(cfg: AuxiliaryTypesAuxiliaryTypes.Undefinable<number[]>, tileDefenseAmount: number, canTileDefendUnit: boolean): number {
+function getTotalPctFromTileDefense(cfg: Undefinable<number[]>, tileDefenseAmount: number, canTileDefendUnit: boolean): number {
     if (!cfg?.length) {
         return 0;
     } else {
@@ -38,16 +38,16 @@ export function getTotalOffsetPct({
     canTileDefendUnit,
     getOwnTilesCount,
 }: {
-    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitOffense.SelfUnitOffense | null | undefined;
-    gameConfig                  : GameConfigGcData.GcData;
+    cfg                         : SelfUnitOffense | null | undefined;
+    gameConfig                  : GcData;
     unitTypeId                  : number;
     tileTypeId                  : number;
     weatherTypeId               : number;
     isCoOnboard                 : boolean;
     isInCozByPreviewSettings    : boolean;
-    gridIndex                   : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex                   : GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => AuxiliaryTypesGridIndex.GridIndex[];
+    getCoGridIndexArrayOnMap    : () => GridIndex[];
     fund                        : number;
     promotion                   : number;
     hp                          : number;
@@ -99,7 +99,7 @@ export function getTotalOffsetPct({
         + (isCounter ? cfg.getOffsetPctOnCounter() ?? 0 : 0)
         + getTotalPctFromOwnTiles(cfg.getOffsetPctFromOwnTile(), getOwnTilesCount)
         + getTotalPctFromTileDefense(cfg.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (cfg.getOffsetPctFromHp() ?? [])[UnitsUtilsCommon.getNormalizedHp(hp) - 1] ?? 0 : 0);
+        + (hp > 0 ? (cfg.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0);
 }
 
 export function getTotalOffsetPctForDamageCalculatorPanel({
@@ -117,8 +117,8 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
     canTileDefendUnit,
     getOwnTilesCount,
 }: {
-    cfg                 : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitOffense.SelfUnitOffense | null | undefined;
-    gameConfig          : GameConfigGcData.GcData;
+    cfg                 : SelfUnitOffense | null | undefined;
+    gameConfig          : GcData;
     unitTypeId          : number;
     tileTypeId          : number;
     weatherTypeId       : number;
@@ -163,5 +163,5 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
         + (isCounter ? cfg.getOffsetPctOnCounter() ?? 0 : 0)
         + getTotalPctFromOwnTiles(cfg.getOffsetPctFromOwnTile(), getOwnTilesCount)
         + getTotalPctFromTileDefense(cfg.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (cfg.getOffsetPctFromHp() ?? [])[UnitsUtilsCommon.getNormalizedHp(hp) - 1] ?? 0 : 0);
+        + (hp > 0 ? (cfg.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0);
 }

@@ -1,30 +1,32 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as ProtoSchemaCommonProtoConfigWeatherCfg from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWeatherManager from "../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
-import type * as WeathersIView from "./IView.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
+import type {
+    SerialWeatherManager as ProtoSchemaCommonProtoWarSerializationSerialWeatherManager,
+} from "../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
+import type { IView } from "./IView.ts";
 
-type SerialWeatherManager = ProtoSchemaCommonProtoWarSerializationSerialWeatherManager.SerialWeatherManager;
+type SerialWeatherManager = ProtoSchemaCommonProtoWarSerializationSerialWeatherManager;
 
 export interface IManager {
-    init(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialWeatherManager>): void;
-    fastInit(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialWeatherManager>): void;
+    init(data: Undefinable<SerialWeatherManager>): void;
+    fastInit(data: Undefinable<SerialWeatherManager>): void;
 
     serialize(): SerialWeatherManager;
     serializeForCreateMfr(): SerialWeatherManager;
     serializeForCreateSfw(): SerialWeatherManager;
 
-    startRunning(war: BaseWarInterfaceIBwWar.IBwWar): void;
+    startRunning(war: IBwWar): void;
     startRunningView(): void;
     stopRunning(): void;
 
-    getWar(): BaseWarInterfaceIBwWar.IBwWar;
+    getWar(): IBwWar;
 
-    getView(): WeathersIView.IView;
+    getView(): IView;
 
     getDefaultWeatherType(): number;
     getCurrentWeatherType(): number;
-    getCurrentWeatherCfg(): ProtoSchemaCommonProtoConfigWeatherCfg.WeatherCfg;
+    getCurrentWeatherCfg(): WeatherCfg;
 
     setForceWeatherType(type: number | null): void;
     getForceWeatherType(): number | null;

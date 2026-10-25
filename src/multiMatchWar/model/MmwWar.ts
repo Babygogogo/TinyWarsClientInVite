@@ -1,23 +1,27 @@
-import * as BootTimersConstants from "../../bootTimers/Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import type * as MultiMatchWarInterfaceIMmwWar from "../interface/IMmwWar.ts";
-import * as MultiPlayerWarModelMpwWar from "../../multiPlayerWar/model/MpwWar.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForMmw from "../../proto/schema/CommonProto/WarSettings/SettingsForMmw.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import { DefaultParams } from "../../bootTimers/Constants.ts";
+import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import type { IMmwWar } from "../interface/IMmwWar.ts";
+import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
+import type {
+    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type {
+    SettingsForMmw as ProtoSchemaCommonProtoWarSettingsSettingsForMmw,
+} from "../../proto/schema/CommonProto/WarSettings/SettingsForMmw.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
-type SettingsForMmw     = ProtoSchemaCommonProtoWarSettingsSettingsForMmw.SettingsForMmw;
-type GcData             = GameConfigGcData.GcData;
+type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar;
+type SettingsForMmw     = ProtoSchemaCommonProtoWarSettingsSettingsForMmw;
+type GcData             = GameConfigGcData;
 
-export class MmwWar extends MultiPlayerWarModelMpwWar.MpwWar implements MultiMatchWarInterfaceIMmwWar.IMmwWar {
+export class MmwWar extends MpwWar implements IMmwWar {
     private _settingsForMmw?    : SettingsForMmw;
 
     public init(data: SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, HelpersProtoSchemaWarSerializationSerialWar.getWarTypeId(data));
-        this._setSettingsForMmw(HelpersMisc.getExisted(data.getSettingsForMmw(), UtilsClientErrorCode.ClientErrorCode.MmwWar_Init_00));
+        this._baseInit(data, gameConfig, getWarTypeId(data));
+        this._setSettingsForMmw(getExisted(data.getSettingsForMmw(), ClientErrorCode.MmwWar_Init_00));
 
         this._initView();
     }
@@ -43,13 +47,13 @@ export class MmwWar extends MultiPlayerWarModelMpwWar.MpwWar implements MultiMat
         this._settingsForMmw = settings;
     }
     public getSettingsForMmw(): SettingsForMmw {
-        return HelpersMisc.getExisted(this._settingsForMmw);
+        return getExisted(this._settingsForMmw);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getSettingsBootTimerParams(): number[] {
-        return this.getSettingsForMmw().getBootTimerParams() ?? BootTimersConstants.DefaultParams.concat();
+        return this.getSettingsForMmw().getBootTimerParams() ?? DefaultParams.concat();
     }
 }

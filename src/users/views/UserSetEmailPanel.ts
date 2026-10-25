@@ -1,56 +1,56 @@
-import * as EmailsConstants from "../../emails/Constants.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserRequestEmailVerificationCodeS from "../../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
-import * as UiTypesUiInputEventType from "../../ui/types/UiInputEventType.ts";
-import * as UsersModel from "../Model.ts";
-import * as UsersProxy from "../Proxy.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { Common } from "../../emails/Constants.ts";
+import { showLang, show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getFormattedText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
+import { getServerTimestamp } from "../../timer/TimerModel.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
+import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
+import { getSelfInfo } from "../Model.ts";
+import { reqUserRequestEmailVerificationCode, reqUserVerifyEmail } from "../Proxy.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 let _lastRequestTimestamp = 0;
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp!                  : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnClose!                 : IUiButton;
+    private readonly _btnHelp!                  : IUiButton;
 
-    private readonly _groupStep!                : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _groupStep!                : IUiLayout;
 
-    private readonly _groupStep1!               : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelStep1!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelEmail!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputEmail!               : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelEmailState!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnRequest!               : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupStep1!               : IUiLayout;
+    private readonly _labelStep1!               : IUiLabel;
+    private readonly _labelEmail!               : IUiLabel;
+    private readonly _inputEmail!               : IUiPromptedInput;
+    private readonly _labelEmailState!          : IUiLabel;
+    private readonly _btnRequest!               : IUiButton;
 
-    private readonly _groupStep2!               : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelStep2!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelVerificationCode!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputVerificationCode!    : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _btnVerify!                : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupStep2!               : IUiLayout;
+    private readonly _labelStep2!               : IUiLabel;
+    private readonly _labelVerificationCode!    : IUiLabel;
+    private readonly _inputVerificationCode!    : IUiPromptedInput;
+    private readonly _btnVerify!                : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgUserRequestEmailVerificationCode,         callback: this._onNotifyMsgUserRequestEmailVerificationCode },
-            { type: NotificationsTypeId.TypeId.MsgUserRequestEmailVerificationCodeFailed,   callback: this._onNotifyMsgUserRequestEmailVerificationCodeFailed },
-            { type: NotificationsTypeId.TypeId.MsgUserVerifyEmail,                          callback: this._onNotifyMsgUserVerifyEmail },
+            { type: TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgUserRequestEmailVerificationCode,         callback: this._onNotifyMsgUserRequestEmailVerificationCode },
+            { type: TypeId.MsgUserRequestEmailVerificationCodeFailed,   callback: this._onNotifyMsgUserRequestEmailVerificationCodeFailed },
+            { type: TypeId.MsgUserVerifyEmail,                          callback: this._onNotifyMsgUserVerifyEmail },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -60,26 +60,26 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnVerify,              callback: this._onTouchedBtnVerify },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputEmail,             callback: this._onFocusOutInputEmail,               eventType: UiTypesUiInputEventType.UiInputEventType.FocusOut },
-            { ui: this._inputVerificationCode,  callback: this._onFocusOutInputVerificationCode,    eventType: UiTypesUiInputEventType.UiInputEventType.FocusOut },
+            { ui: this._inputEmail,             callback: this._onFocusOutInputEmail,               eventType: UiInputEventType.FocusOut },
+            { ui: this._inputVerificationCode,  callback: this._onFocusOutInputVerificationCode,    eventType: UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
-        this._inputEmail.setInputMaxLength(EmailsConstants.Common.MaxAddressLength);
-        this._inputVerificationCode.setInputMaxLength(EmailsConstants.Common.VerificationCodeLength);
+        this._inputEmail.setInputMaxLength(Common.MaxAddressLength);
+        this._inputVerificationCode.setInputMaxLength(Common.VerificationCodeLength);
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateInputEmail();
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifyMsgUserRequestEmailVerificationCode(e: VendorEgretEgret.Event): void {
-        FloatText2.showLang(LangConstants.TextType.A0863);
+    private _onNotifyMsgUserRequestEmailVerificationCode(e: Event): void {
+        showLang(TextType.A0863);
 
-        _lastRequestTimestamp = ((e.data as ProtoSchemaCommonProtoNetMessageMsgUserRequestEmailVerificationCodeS.S).getEndTimestamp() ?? 0) - EmailsConstants.Common.VerificationCodeExpiration;
+        _lastRequestTimestamp = ((e.data as S).getEndTimestamp() ?? 0) - Common.VerificationCodeExpiration;
         this._updateLabelEmailState();
     }
     private _onNotifyMsgUserRequestEmailVerificationCodeFailed(): void {
@@ -87,7 +87,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgUserVerifyEmail(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
         this._updateLabelEmailState();
     }
 
@@ -96,8 +96,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0862),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0862),
         });
     }
 
@@ -108,16 +108,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnRequest(): void {
         const address = this._inputEmail.trimInputText() ?? ``;
         if (!validateEmail(address)) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B1333)));
+            show(getFormattedText(TextType.F0091, getText(TextType.B1333)));
             return;
         }
 
-        const cd = EmailsConstants.Common.VerificationCodeRefreshInterval - (TimerTimerModel.getServerTimestamp() - _lastRequestTimestamp);
+        const cd = Common.VerificationCodeRefreshInterval - (getServerTimestamp() - _lastRequestTimestamp);
         if (cd >= 0) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0204, cd));
+            show(getFormattedText(TextType.F0204, cd));
         } else {
-            UsersProxy.reqUserRequestEmailVerificationCode(address);
-            FloatText2.showLang(LangConstants.TextType.A0867);
+            reqUserRequestEmailVerificationCode(address);
+            showLang(TextType.A0867);
         }
     }
 
@@ -126,21 +126,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnVerify(): void {
         const text = this._inputVerificationCode.trimInputText() ?? ``;
-        if (text.length !== EmailsConstants.Common.VerificationCodeLength) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B1334)));
+        if (text.length !== Common.VerificationCodeLength) {
+            show(getFormattedText(TextType.F0091, getText(TextType.B1334)));
         } else {
-            UsersProxy.reqUserVerifyEmail(text);
+            reqUserVerifyEmail(text);
         }
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1332));
-        this._labelEmail.setText(LangUtils.getText(LangConstants.TextType.B1333));
-        this._labelVerificationCode.setText(LangUtils.getText(LangConstants.TextType.B1334));
-        this._btnRequest.setText(LangUtils.getText(LangConstants.TextType.B0382));
-        this._btnVerify.setText(LangUtils.getText(LangConstants.TextType.B1335));
-        this._labelStep1.setText(LangUtils.getText(LangConstants.TextType.A0860));
-        this._labelStep2.setText(LangUtils.getText(LangConstants.TextType.A0861));
+        this._labelTitle.setText(getText(TextType.B1332));
+        this._labelEmail.setText(getText(TextType.B1333));
+        this._labelVerificationCode.setText(getText(TextType.B1334));
+        this._btnRequest.setText(getText(TextType.B0382));
+        this._btnVerify.setText(getText(TextType.B1335));
+        this._labelStep1.setText(getText(TextType.A0860));
+        this._labelStep2.setText(getText(TextType.A0861));
         this._updateLabelEmailState();
 
         this._groupStep1.arrangeItems();
@@ -152,13 +152,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateInputEmail(): void {
-        const selfInfo          = UsersModel.getSelfInfo();
+        const selfInfo          = getSelfInfo();
         const userComplexInfo   = selfInfo?.getUserComplexInfo();
         const verifiedAddress   = selfInfo?.getEmailAddress() ?? ``;
         const input             = this._inputEmail;
         if (userComplexInfo) {
             const endTimestamp = userComplexInfo.getEmailVerificationEndTimestamp();
-            if ((endTimestamp) && (endTimestamp > TimerTimerModel.getServerTimestamp())) {
+            if ((endTimestamp) && (endTimestamp > getServerTimestamp())) {
                 input.setInputText(userComplexInfo.getUnverifiedEmailAddress() ?? verifiedAddress);
                 return;
             }
@@ -170,16 +170,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _updateLabelEmailState(): void {
         const text      = this._inputEmail.trimInputText();
         const label     = this._labelEmailState;
-        const selfInfo  = UsersModel.getSelfInfo();
+        const selfInfo  = getSelfInfo();
         if ((text) && (text === selfInfo?.getEmailAddress())) {
-            label.setText(LangUtils.getText(LangConstants.TextType.A0864));
-            label.setTextColor(GraphicsConstants.ColorValue.Green);
+            label.setText(getText(TextType.A0864));
+            label.setTextColor(ColorValue.Green);
         } else if ((text) && (text === selfInfo?.getUserComplexInfo()?.getUnverifiedEmailAddress())) {
-            label.setText(LangUtils.getText(LangConstants.TextType.A0866));
-            label.setTextColor(GraphicsConstants.ColorValue.Yellow);
+            label.setText(getText(TextType.A0866));
+            label.setTextColor(ColorValue.Yellow);
         } else {
-            label.setText(LangUtils.getText(LangConstants.TextType.A0865));
-            label.setTextColor(GraphicsConstants.ColorValue.Dark);
+            label.setText(getText(TextType.A0865));
+            label.setTextColor(ColorValue.Dark);
         }
     }
 }

@@ -1,33 +1,35 @@
-import type * as AuxiliaryTypesBattleInfo from "../../../auxiliaryTypes/BattleInfo.ts";
-import * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as CoSkillsUtilsInstantMiscSelfUnitHpAfterWait from "../../../coSkills/utils/instantMisc/SelfUnitHpAfterWait.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import * as GameHelpersGhFactory from "../../../gameHelpers/GhFactory.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as PlayersUtilsCommon from "../../../players/utils/Common.ts";
-import type * as ProtoSchemaCommonProtoStructureCommonExtraDataForWarOperation from "../../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
-import * as ProtoSchemaCommonProtoStructureTileBuff from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialUnit from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-import * as SoundsConstants from "../../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../../sounds/SoundPlayer.ts";
-import * as TeamsConstants from "../../../teams/Constants.ts";
-import * as TileBuffsConstants from "../../../tileBuffs/Constants.ts";
-import * as UnitsConstants from "../../../units/Constants.ts";
-import type * as UnitsIUnit from "../../../units/IUnit.ts";
-import * as UtilsClientErrorCode from "../../../utils/ClientErrorCode.ts";
+import type { BattleInfo } from "../../../auxiliaryTypes/BattleInfo.ts";
+import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { getTotalOffset } from "../../../coSkills/utils/instantMisc/SelfUnitHpAfterWait.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
+import { getExisted, newError, createLazyFunc } from "../../../helpers/Misc.ts";
+import { getValidFund } from "../../../players/utils/Common.ts";
+import type { CommonExtraDataForWarOperation } from "../../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
+import { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type {
+    SerialUnit as ProtoSchemaCommonProtoWarSerializationSerialUnit,
+} from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
+import { ShortSfxCode } from "../../../sounds/Constants.ts";
+import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
+import { TeamIndex } from "../../../teams/Constants.ts";
+import { BuffTypeId } from "../../../tileBuffs/Constants.ts";
+import { Hp } from "../../../units/Constants.ts";
+import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-type SerialUnit         = ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit;
-type IUnit              = UnitsIUnit.IUnit;
-type IBwUnit            = UnitsIUnit.IUnit;
-type IBwWar             = BaseWarInterfaceIBwWar.IBwWar;
+type SerialUnit         = ProtoSchemaCommonProtoWarSerializationSerialUnit;
+type IUnit              = UnitsIUnit;
+type IBwUnit            = UnitsIUnit;
+type IBwWar             = BaseWarInterfaceIBwWar;
 
 /**
  * @return the war view is vibrated or not
  */
 export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isUnitJoinUnit = false }: {
-    war                 : BaseWarInterfaceIBwWar.IBwWar;
-    commonExtraData     : ProtoSchemaCommonProtoStructureCommonExtraDataForWarOperation.CommonExtraDataForWarOperation;
+    war                 : BaseWarInterfaceIBwWar;
+    commonExtraData     : CommonExtraDataForWarOperation;
     isFastExecute       : boolean;
     isUnitJoinUnit?     : boolean;
 }): boolean {
@@ -55,16 +57,16 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
     }
 
     const unitMap = war.getUnitMap();
-    unitMap.setNextUnitId(HelpersMisc.getExisted(commonExtraData.getNextUnitId(), UtilsClientErrorCode.ClientErrorCode.WarCommonHelpers_HandleCommonExtraDataForWarOperation_01));
+    unitMap.setNextUnitId(getExisted(commonExtraData.getNextUnitId(), ClientErrorCode.WarCommonHelpers_HandleCommonExtraDataForWarOperation_01));
 
     const unitArrayAfterAction  = commonExtraData.getUnitArrayAfterAction();
     const destroyedUnitIdArray  = commonExtraData.getDestroyedUnitIdArray();
     if (unitArrayAfterAction.some(v => destroyedUnitIdArray.includes(v.getUnitId() ?? 0))) {
-        throw HelpersMisc.newError(`WarCommonHelpers.handleCommonExtraDataForWarOperations() unitArrayAfterAction and destroyedUnitIdArray overlapped!`, UtilsClientErrorCode.ClientErrorCode.WarCommonHelpers_HandleCommonExtraDataForWarOperation_03);
+        throw newError(`WarCommonHelpers.handleCommonExtraDataForWarOperations() unitArrayAfterAction and destroyedUnitIdArray overlapped!`, ClientErrorCode.WarCommonHelpers_HandleCommonExtraDataForWarOperation_03);
     }
 
     const movingUnitAndPath     = commonExtraData.getMovingUnitAndPath();
-    const movingUnitData        = movingUnitAndPath ? HelpersMisc.getExisted(movingUnitAndPath.getUnit()) : null;
+    const movingUnitData        = movingUnitAndPath ? getExisted(movingUnitAndPath.getUnit()) : null;
     const movingUnitId          = movingUnitData ? movingUnitData.getUnitId() ?? 0 : null;
     // const movingUnit            = movingUnitId == null ? null : unitMap.getUnitById(movingUnitId);
     const gridVisualEffect      = war.getGridVisualEffect();
@@ -72,7 +74,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
     {
         const movingPath            = movingUnitAndPath?.getPath();
         const movingDestination     = movingPath ? movingPath[movingPath.length - 1] : null;
-        const destinationGridIndex  = movingDestination?.getIsVisible() ? AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(movingDestination.getGridIndex()) : null;
+        const destinationGridIndex  = movingDestination?.getIsVisible() ? GridIndex.convertGridIndex(movingDestination.getGridIndex()) : null;
         for (const unitId of destroyedUnitIdArray) {
             const unit = unitMap.getUnitById(unitId);
             if (unit == null) {
@@ -149,7 +151,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
 
     const tileMap = war.getTileMap();
     for (const tileData of commonExtraData.getTileArrayAfterAction()) {
-        const gridIndex             = HelpersMisc.getExisted(AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(tileData.getGridIndex()), UtilsClientErrorCode.ClientErrorCode.WarCommonHelpers_HandleCommonExtraDataForWarOperation_07);
+        const gridIndex             = getExisted(GridIndex.convertGridIndex(tileData.getGridIndex()), ClientErrorCode.WarCommonHelpers_HandleCommonExtraDataForWarOperation_07);
         const tile                  = tileMap.getTile(gridIndex);
         const hpBeforeAction        = tile.getCurrentHp();
         const hasMaxHpBeforeAction  = tile.getMaxHp() != null;
@@ -209,7 +211,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
             }
 
         } else {
-            const unit = new (GameHelpersGhFactory.getUnitClass())();
+            const unit = new (getUnitClass())();
             unit.init(unitData, gameConfig);
 
             if (unit.getLoaderUnitId() == null) {
@@ -281,7 +283,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
     {
         const forceFog = commonExtraData.getForceFog();
         if (forceFog != null) {
-            fogMap.setForceFogCode(HelpersMisc.getExisted(forceFog.getForceFogCode()));
+            fogMap.setForceFogCode(getExisted(forceFog.getForceFogCode()));
             fogMap.setForceExpirePlayerIndex(forceFog.getExpirePlayerIndex());
             fogMap.setForceExpireTurnIndex(forceFog.getExpireTurnIndex());
         }
@@ -306,7 +308,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
 
     if ((!isFastExecute) && (isShownExplosionEffect)) {
         war.getView().showVibration();
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.Explode);
+        playShortSfx(ShortSfxCode.Explode);
         return true;
     } else {
         return false;
@@ -318,15 +320,15 @@ function checkIsUnitRepaired(oldUnitData: SerialUnit, newUnitData: SerialUnit): 
         return false;
     }
 
-    return (newUnitData.getCurrentHp() ?? UnitsConstants.Hp.MaxHp) > (oldUnitData.getCurrentHp() ?? UnitsConstants.Hp.MaxHp);
+    return (newUnitData.getCurrentHp() ?? Hp.MaxHp) > (oldUnitData.getCurrentHp() ?? Hp.MaxHp);
 }
-function checkIsUnitSupplied(oldUnitData: SerialUnit, newUnitData: SerialUnit, gameConfig: GameConfigGcData.GcData): boolean {
+function checkIsUnitSupplied(oldUnitData: SerialUnit, newUnitData: SerialUnit, gameConfig: GcData): boolean {
     const unitType = newUnitData.getUnitType() ?? 0;
     if (oldUnitData.getUnitType() != unitType) {
         return false;
     }
 
-    const unitCfg = HelpersMisc.getExisted(gameConfig.getUnitTemplateCfg(unitType), UtilsClientErrorCode.ClientErrorCode.WarCommonHelpers_CheckIsUnitSupplied_00);
+    const unitCfg = getExisted(gameConfig.getUnitTemplateCfg(unitType), ClientErrorCode.WarCommonHelpers_CheckIsUnitSupplied_00);
     {
         const maxFuel = unitCfg.getMaxFuel();
         if ((newUnitData.getCurrentFuel() ?? maxFuel) > (oldUnitData.getCurrentFuel() ?? maxFuel)) {
@@ -377,10 +379,10 @@ function checkIsUnitDamaged(oldUnitData: SerialUnit, newUnitData: SerialUnit): b
         return false;
     }
 
-    return (newUnitData.getCurrentHp() ?? UnitsConstants.Hp.MaxHp) < (oldUnitData.getCurrentHp() ?? UnitsConstants.Hp.MaxHp);
+    return (newUnitData.getCurrentHp() ?? Hp.MaxHp) < (oldUnitData.getCurrentHp() ?? Hp.MaxHp);
 }
 
-export function handleViewForBattle(battleInfo: AuxiliaryTypesBattleInfo.BattleInfo, war: IBwWar, allVisibleUnits: Set<IBwUnit>): void {
+export function handleViewForBattle(battleInfo: BattleInfo, war: IBwWar, allVisibleUnits: Set<IBwUnit>): void {
     const gridVisualEffect      = war.getGridVisualEffect();
     let isVisibleUnitDestroyed  = false;
     let isVisibleUnitDamaged    = false;
@@ -418,10 +420,10 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypesBattleInfo.BattleI
         }
 
         for (const gridId of destroyedUnitGridIdSet) {
-            gridVisualEffect.showEffectExplosion(AuxiliaryTypesGridIndex.GridIndex.getGridIndexByGridId(gridId, mapSize));
+            gridVisualEffect.showEffectExplosion(GridIndex.getGridIndexByGridId(gridId, mapSize));
         }
         for (const gridId of damagedUnitGridIdSet) {
-            gridVisualEffect.showEffectDamage(AuxiliaryTypesGridIndex.GridIndex.getGridIndexByGridId(gridId, mapSize));
+            gridVisualEffect.showEffectDamage(GridIndex.getGridIndexByGridId(gridId, mapSize));
         }
     }
 
@@ -441,10 +443,10 @@ export function handleViewForBattle(battleInfo: AuxiliaryTypesBattleInfo.BattleI
 
     if ((isVisibleUnitDestroyed) || (destroyedTiles.size)) {
         war.getView().showVibration();
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.Explode);
+        playShortSfx(ShortSfxCode.Explode);
     } else {
         if ((isVisibleUnitDamaged) || (damagedTiles.size)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.Attack);
+            playShortSfx(ShortSfxCode.Attack);
         }
     }
 }
@@ -462,7 +464,7 @@ export function handleSelfUnitHpAfterWait(focusUnit: IBwUnit, isFastExecute: boo
     const currentHp                 = focusUnit.getCurrentHp();
     const focusCoZoneRadius         = focusPlayer.getCoZoneRadius();
     const gameConfig                = war.getGcData();
-    const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => focusPlayer.getCoGridIndexListOnMap());
+    const getCoGridIndexArrayOnMap  = createLazyFunc(() => focusPlayer.getCoGridIndexListOnMap());
     let newHp                       = currentHp;
     for (const skillId of focusPlayer.getCoCurrentSkills()) {
         const skillCfg = gameConfig.getCoSkillCfg(skillId)?.getInstantMisc()?.getSelfUnitHpAfterWait();
@@ -478,7 +480,7 @@ export function handleSelfUnitHpAfterWait(focusUnit: IBwUnit, isFastExecute: boo
             continue;
         }
 
-        newHp += CoSkillsUtilsInstantMiscSelfUnitHpAfterWait.getTotalOffset({
+        newHp += getTotalOffset({
             cfg         : skillCfg,
             gameConfig  : gameConfig,
             maxHp       : maxHp,
@@ -503,7 +505,7 @@ export function handlePostOperationPlunder(focusUnit: IBwUnit, isFastExecute: bo
     }
 
     const tile = war.getTileMap().getTile(gridIndex);
-    if (tile.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === TileBuffsConstants.BuffTypeId.NoIncome)) {
+    if (tile.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === BuffTypeId.NoIncome)) {
         return;
     }
 
@@ -518,7 +520,7 @@ export function handlePostOperationPlunder(focusUnit: IBwUnit, isFastExecute: bo
     const tilePlayerIndex           = tile.getPlayerIndex();
     const gameConfig                = war.getGcData();
     const turnIndex                 = war.getTurnManager().getTurnIndex();
-    const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => focusPlayer.getCoGridIndexListOnMap());
+    const getCoGridIndexArrayOnMap  = createLazyFunc(() => focusPlayer.getCoGridIndexListOnMap());
     for (const skillId of focusPlayer.getCoCurrentSkills()) {
         const skillCfg = gameConfig.getCoSkillCfg(skillId)?.getInstantMisc()?.getSelfPostOperationPlunder();
         if (skillCfg == null) {
@@ -530,7 +532,7 @@ export function handlePostOperationPlunder(focusUnit: IBwUnit, isFastExecute: bo
             continue;
         }
 
-        if ((tileTeamIndex === TeamsConstants.TeamIndex.Neutral) && (!skillCfg.getCanPlunderNeutral())) {
+        if ((tileTeamIndex === TeamIndex.Neutral) && (!skillCfg.getCanPlunderNeutral())) {
             continue;
         } else if ((tileTeamIndex === focusTeamIndex) && (!skillCfg.getCanPlunderSelf())) {
             continue;
@@ -553,9 +555,9 @@ export function handlePostOperationPlunder(focusUnit: IBwUnit, isFastExecute: bo
             continue;
         }
 
-        focusPlayer.setFund(PlayersUtilsCommon.getValidFund(focusPlayer.getFund() + tile.getIncomeForPlayer(tilePlayerIndex) * multiple));
-        tile.addUnfixedBuff(ProtoSchemaCommonProtoStructureTileBuff.TileBuff.fromJson({
-            buffTypeId          : TileBuffsConstants.BuffTypeId.NoIncome,
+        focusPlayer.setFund(getValidFund(focusPlayer.getFund() + tile.getIncomeForPlayer(tilePlayerIndex) * multiple));
+        tile.addUnfixedBuff(TileBuff.fromJson({
+            buffTypeId          : BuffTypeId.NoIncome,
             expiringTurnIndex   : turnIndex + multiple,
             expiringPlayerIndex : focusPlayerIndex,
             extraParamArray     : [],

@@ -1,17 +1,17 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwExecutedOperationManager from "../interface/IBwExecutedOperationManager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwExecutedOperationManager } from "../interface/IBwExecutedOperationManager.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { SerialExecutedOperationManager } from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
 
-export class BwExecutedOperationManager implements BaseWarInterfaceIBwExecutedOperationManager.IBwExecutedOperationManager {
+export class BwExecutedOperationManager implements IBwExecutedOperationManager {
     private _isNeedExecutedOperations?  : boolean;
-    private _executedOperationArray?    : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer[];
+    private _executedOperationArray?    : WoContainer[];
     private _executedOperationsCount    = 0;
 
     public init({ isNeedExecutedOperations, data }: {
         isNeedExecutedOperations    : boolean;
-        data                        : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager>;
+        data                        : Undefinable<SerialExecutedOperationManager>;
     }): void {
         this._setIsNeedExecutedOperations(isNeedExecutedOperations);
 
@@ -19,35 +19,35 @@ export class BwExecutedOperationManager implements BaseWarInterfaceIBwExecutedOp
         this._setAllExecutedOperationArray(executedOperationArray);
         this.setExecutedOperationsCount(data?.getExecutedOperationsCount() ?? executedOperationArray.length);
     }
-    public fastInit(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager>): void {
+    public fastInit(data: Undefinable<SerialExecutedOperationManager>): void {
         const executedOperationArray = data?.getExecutedOperationArray() ?? [];
         this._setAllExecutedOperationArray(executedOperationArray);
         this.setExecutedOperationsCount(data?.getExecutedOperationsCount() ?? executedOperationArray.length);
     }
 
-    public serialize(): ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager {
-        return ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager.fromJson({
+    public serialize(): SerialExecutedOperationManager {
+        return SerialExecutedOperationManager.fromJson({
             executedOperationArray      : this.getAllExecutedOperationArray().map(v => v.toJson()),
             executedOperationsCount     : this.getExecutedOperationsCount(),
             halfwayReplayOperationArray : [],
         });
     }
-    public serializeForSrwValidation(): ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager {
-        return ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager.fromJson({
+    public serializeForSrwValidation(): SerialExecutedOperationManager {
+        return SerialExecutedOperationManager.fromJson({
             executedOperationArray      : this.getAllExecutedOperationArray().map(v => v.toJson()),
             executedOperationsCount     : null,
             halfwayReplayOperationArray : [],
         });
     }
-    public serializeForCawValidation(): ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager {
-        return ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager.fromJson({
+    public serializeForCawValidation(): SerialExecutedOperationManager {
+        return SerialExecutedOperationManager.fromJson({
             executedOperationArray      : this.getAllExecutedOperationArray().map(v => v.toJson()),
             executedOperationsCount     : null,
             halfwayReplayOperationArray : [],
         });
     }
-    public serializeForReplayCheckpoint(): ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager {
-        return ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager.fromJson({
+    public serializeForReplayCheckpoint(): SerialExecutedOperationManager {
+        return SerialExecutedOperationManager.fromJson({
             executedOperationArray      : [],
             executedOperationsCount     : this.getExecutedOperationsCount(),
             halfwayReplayOperationArray : [],
@@ -58,7 +58,7 @@ export class BwExecutedOperationManager implements BaseWarInterfaceIBwExecutedOp
         this._isNeedExecutedOperations = isNeedReplay;
     }
     private _getIsNeedExecutedOperations(): boolean {
-        return HelpersMisc.getExisted(this._isNeedExecutedOperations);
+        return getExisted(this._isNeedExecutedOperations);
     }
 
     public setExecutedOperationsCount(count: number): void {
@@ -71,14 +71,14 @@ export class BwExecutedOperationManager implements BaseWarInterfaceIBwExecutedOp
         ++this._executedOperationsCount;
     }
 
-    private _setAllExecutedOperationArray(operations: ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer[]): void {
+    private _setAllExecutedOperationArray(operations: WoContainer[]): void {
         this._executedOperationArray = operations;
     }
-    public getAllExecutedOperationArray(): ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer[] {
-        return HelpersMisc.getExisted(this._executedOperationArray);
+    public getAllExecutedOperationArray(): WoContainer[] {
+        return getExisted(this._executedOperationArray);
     }
 
-    public getExecutedOperation(operationId: number): ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer | null {
+    public getExecutedOperation(operationId: number): WoContainer | null {
         const array = this.getAllExecutedOperationArray();
         if (!array.length) {
             return null;
@@ -86,7 +86,7 @@ export class BwExecutedOperationManager implements BaseWarInterfaceIBwExecutedOp
 
         return array[operationId - (array[0].getOperationId() ?? 0)];
     }
-    public getLastExecutedOperation(): AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer> {
+    public getLastExecutedOperation(): Undefinable<WoContainer> {
         const arr = this.getAllExecutedOperationArray();
         if (arr == null) {
             return null;
@@ -107,11 +107,11 @@ export class BwExecutedOperationManager implements BaseWarInterfaceIBwExecutedOp
     //         this.getAllExecutedOperationArray().push(Helpers.deepClone(rawOperation));
     //     }
     // }
-    public addExecutedOperation(rawOperation: ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer): void {
+    public addExecutedOperation(rawOperation: WoContainer): void {
         const executedOperationsCount   = this.getExecutedOperationsCount();
         const operationId               = rawOperation.getOperationId();
         if (operationId !== executedOperationsCount - 1) {
-            throw HelpersMisc.newError(`Invalid operationId: ${operationId}, expected: ${executedOperationsCount}`);
+            throw newError(`Invalid operationId: ${operationId}, expected: ${executedOperationsCount}`);
         }
 
         if (this._getIsNeedExecutedOperations()) {

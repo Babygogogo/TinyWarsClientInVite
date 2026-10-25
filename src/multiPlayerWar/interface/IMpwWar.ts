@@ -1,13 +1,13 @@
-import type * as BaseWarInterfaceIBwCommonSettingManager from "../../baseWar/interface/IBwCommonSettingManager.ts";
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import type * as BaseWarInterfaceIBwWarEventManager from "../../baseWar/interface/IBwWarEventManager.ts";
-import type * as BaseWarInterfaceIBwWarStatisticsManager from "../../baseWar/interface/IBwWarStatisticsManager.ts";
-import type * as PlayersIPlayer from "../../players/IPlayer.ts";
+import type { IBwCommonSettingManager } from "../../baseWar/interface/IBwCommonSettingManager.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
+import type { IBwWarStatisticsManager } from "../../baseWar/interface/IBwWarStatisticsManager.ts";
+import type { IPlayer } from "../../players/IPlayer.ts";
 
-export interface IMpwWar extends BaseWarInterfaceIBwWar.IBwWar {
-    getCommonSettingManager(): BaseWarInterfaceIBwCommonSettingManager.IBwCommonSettingManager;
-    getWarEventManager(): BaseWarInterfaceIBwWarEventManager.IBwWarEventManager;
-    getWarStatisticsManager(): BaseWarInterfaceIBwWarStatisticsManager.IBwWarStatisticsManager;
+export interface IMpwWar extends IBwWar {
+    getCommonSettingManager(): IBwCommonSettingManager;
+    getWarEventManager(): IBwWarEventManager;
+    getWarStatisticsManager(): IBwWarStatisticsManager;
 
     updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void;
 
@@ -19,7 +19,7 @@ export interface IMpwWar extends BaseWarInterfaceIBwWar.IBwWar {
     getIsExecuteActionsWithExtraData(): boolean;
 
     getPlayerIndexLoggedIn(): number | null;
-    getPlayerLoggedIn(): PlayersIPlayer.IPlayer | null;
+    getPlayerLoggedIn(): IPlayer | null;
 
     getVisionTeamIndex(): number | null;
     checkCanTickVisionTeamIndex(): boolean;

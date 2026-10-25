@@ -1,6 +1,6 @@
-import type * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitMoveRange from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitMoveRange.ts";
+import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { SelfUnitMoveRange } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitMoveRange.ts";
 
 export function getTotalOffset({
     cfg,
@@ -13,15 +13,15 @@ export function getTotalOffset({
     coZoneRadius,
     getCoGridIndexArrayOnMap,
 }: {
-    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitMoveRange.SelfUnitMoveRange | null | undefined;
-    gameConfig                  : GameConfigGcData.GcData;
+    cfg                         : SelfUnitMoveRange | null | undefined;
+    gameConfig                  : GcData;
     unitTypeId                  : number;
     tileTypeId                  : number;
     weatherTypeId               : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex                   : GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => AuxiliaryTypesGridIndex.GridIndex[];
+    getCoGridIndexArrayOnMap    : () => GridIndex[];
 }): number {
     if (cfg == null) {
         return 0;

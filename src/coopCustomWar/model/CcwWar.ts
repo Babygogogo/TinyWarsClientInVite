@@ -1,21 +1,25 @@
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import * as MultiPlayerWarModelMpwWar from "../../multiPlayerWar/model/MpwWar.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForCcw from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
+import type {
+    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type {
+    SettingsForCcw as ProtoSchemaCommonProtoWarSettingsSettingsForCcw,
+} from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
-type SettingsForCcw     = ProtoSchemaCommonProtoWarSettingsSettingsForCcw.SettingsForCcw;
-type GcData             = GameConfigGcData.GcData;
+type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar;
+type SettingsForCcw     = ProtoSchemaCommonProtoWarSettingsSettingsForCcw;
+type GcData             = GameConfigGcData;
 
-export class CcwWar extends MultiPlayerWarModelMpwWar.MpwWar {
+export class CcwWar extends MpwWar {
     private _settingsForCcw?: SettingsForCcw;
 
     public init(data: SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, HelpersProtoSchemaWarSerializationSerialWar.getWarTypeId(data));
-        this._setSettingsForCcw(HelpersMisc.getExisted(data.getSettingsForCcw(), UtilsClientErrorCode.ClientErrorCode.CcwWar_Init_00));
+        this._baseInit(data, gameConfig, getWarTypeId(data));
+        this._setSettingsForCcw(getExisted(data.getSettingsForCcw(), ClientErrorCode.CcwWar_Init_00));
 
         this._initView();
     }
@@ -41,7 +45,7 @@ export class CcwWar extends MultiPlayerWarModelMpwWar.MpwWar {
         this._settingsForCcw = settings;
     }
     public getSettingsForCcw(): SettingsForCcw {
-        return HelpersMisc.getExisted(this._settingsForCcw);
+        return getExisted(this._settingsForCcw);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +62,6 @@ export class CcwWar extends MultiPlayerWarModelMpwWar.MpwWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return HelpersMisc.getExisted(this.getSettingsForCcw().getBootTimerParams());
+        return getExisted(this.getSettingsForCcw().getBootTimerParams());
     }
 }

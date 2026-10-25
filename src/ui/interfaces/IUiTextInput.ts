@@ -1,11 +1,11 @@
-import type * as UiInterfacesIUiComponent from "./IUiComponent.ts";
-import type * as UiTypesUiHorizontalAlign from "../types/UiHorizontalAlign.ts";
-import type * as UiTypesUiVerticalAlign from "../types/UiVerticalAlign.ts";
+import type { IUiComponent } from "./IUiComponent.ts";
+import type { UiHorizontalAlign as UiTypesUiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
+import type { UiVerticalAlign as UiTypesUiVerticalAlign } from "../types/UiVerticalAlign.ts";
 
-type UiHorizontalAlign  = UiTypesUiHorizontalAlign.UiHorizontalAlign;
-type UiVerticalAlign    = UiTypesUiVerticalAlign.UiVerticalAlign;
+type UiHorizontalAlign  = UiTypesUiHorizontalAlign;
+type UiVerticalAlign    = UiTypesUiVerticalAlign;
 
-export interface IUiTextInput extends UiInterfacesIUiComponent.IUiComponent {
+export interface IUiTextInput extends IUiComponent {
     getText(): string;
     setText(text: string): void;
     getFontFamily(): string;

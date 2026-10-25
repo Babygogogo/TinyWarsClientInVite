@@ -1,10 +1,10 @@
-import type * as GraphicsConstants from "../graphics/Constants.ts";
-import type * as UiInterfacesIUiPanel from "../ui/interfaces/IUiPanel.ts";
+import type { DisplayLayerId } from "../graphics/Constants.ts";
+import type { IUiPanel } from "../ui/interfaces/IUiPanel.ts";
 
 export interface PanelConfig<T> {
-    cls             : new () => UiInterfacesIUiPanel.IUiPanel<T>;
+    cls             : new () => IUiPanel<T>;
     skinName        : string;
-    layer           : GraphicsConstants.DisplayLayerId;
+    layer           : DisplayLayerId;
     isExclusive?    : boolean;
     needCache?      : boolean;
 }

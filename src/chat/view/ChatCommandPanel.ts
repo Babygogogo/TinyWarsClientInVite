@@ -1,39 +1,39 @@
-import * as AuxiliaryTypesChatToTarget from "../../auxiliaryTypes/ChatToTarget.ts";
-import * as ChatModel from "../Model.ts";
-import * as ChatProxy from "../Proxy.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as UsersModel from "../../users/Model.ts";
+import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
+import { getMessage } from "../Model.ts";
+import { reqChatDeleteMessage } from "../Proxy.ts";
+import { showLang } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { getSelfUserId, getIsSelfAdmin, getIsSelfChatManager } from "../../users/Model.ts";
 
 export interface OpenData {
     userId      : number | null;
     messageId   : number;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnClose!                 : IUiButton;
+    private readonly _group!                    : IUiContainer;
 
-    private readonly _groupButtons!             : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnUserInfo!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnPrivateChat!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeleteMessage!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCopyMessage!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupButtons!             : IUiLayout;
+    private readonly _btnUserInfo!              : IUiButton;
+    private readonly _btnPrivateChat!           : IUiButton;
+    private readonly _btnDeleteMessage!         : IUiButton;
+    private readonly _btnCopyMessage!           : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -59,7 +59,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, {
+        openPanel(getDict().UserPanel, {
             userId  : userId,
         });
         this.closePanel();
@@ -70,7 +70,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().ChatPanel, { toTarget: new AuxiliaryTypesChatToTarget.ChatToTarget({
+        openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({
             toUserId    : userId,
         }) });
         this.closePanel();
@@ -81,10 +81,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0286),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => getText(TextType.A0286),
             callback: () => {
-                ChatProxy.reqChatDeleteMessage(messageId);
+                reqChatDeleteMessage(messageId);
                 this.closePanel();
             },
         });
@@ -96,17 +96,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (navigator?.clipboard?.writeText == null) {
-            FloatText2.showLang(LangConstants.TextType.A0275);
+            showLang(TextType.A0275);
             return;
         }
 
         try {
-            const text = ChatModel.getMessage(messageId)?.getContent();
+            const text = getMessage(messageId)?.getContent();
             await navigator.clipboard.writeText(text ?? ``);
 
-            FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+            showLang(TextType.OperationSucceeded);
         } catch {
-            FloatText2.showLang(LangConstants.TextType.A0275);
+            showLang(TextType.A0275);
         }
     }
 
@@ -126,7 +126,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         group.addItem(this._btnCopyMessage, false);
 
         const userId        = openData.userId;
-        const selfUserId    = UsersModel.getSelfUserId();
+        const selfUserId    = getSelfUserId();
         if ((userId != null) && (userId > 1000000)) {
             group.addItem(this._btnUserInfo, false);
 
@@ -134,9 +134,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 group.addItem(this._btnPrivateChat, false);
             }
         }
-        if ((UsersModel.getIsSelfAdmin())                                               ||
-            (UsersModel.getIsSelfChatManager())                                         ||
-            ((ChatModel.getMessage(openData.messageId)?.getFromUserId() ?? 0) === selfUserId)
+        if ((getIsSelfAdmin())                                               ||
+            (getIsSelfChatManager())                                         ||
+            ((getMessage(openData.messageId)?.getFromUserId() ?? 0) === selfUserId)
         ) {
             group.addItem(this._btnDeleteMessage, false);
         }
@@ -145,10 +145,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0155);
-        this._btnUserInfo.setLangText(LangConstants.TextType.B0224);
-        this._btnPrivateChat.setLangText(LangConstants.TextType.B0383);
-        this._btnDeleteMessage.setLangText(LangConstants.TextType.B0838);
-        this._btnCopyMessage.setLangText(LangConstants.TextType.B1147);
+        this._labelTitle.setLangText(TextType.B0155);
+        this._btnUserInfo.setLangText(TextType.B0224);
+        this._btnPrivateChat.setLangText(TextType.B0383);
+        this._btnDeleteMessage.setLangText(TextType.B0838);
+        this._btnCopyMessage.setLangText(TextType.B1147);
     }
 }

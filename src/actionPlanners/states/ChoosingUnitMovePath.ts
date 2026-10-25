@@ -1,66 +1,66 @@
-import * as ActionPlannersConstants from "../Constants.ts";
-import type * as ActionPlannersIActionPlanner from "../IActionPlanner.ts";
-import * as ActionPlannersStatesIdle from "./Idle.ts";
-import type * as ActionPlannersStatesIState from "./IState.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import * as UsersModel from "../../users/Model.ts";
+import { StateId } from "../Constants.ts";
+import type { IActionPlanner } from "../IActionPlanner.ts";
+import { Idle } from "./Idle.ts";
+import type { IState } from "./IState.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { ActionStateId } from "../../units/Constants.ts";
+import type { IUnit } from "../../units/IUnit.ts";
+import { getSelfSettingsIsSetPathMode } from "../../users/Model.ts";
 
-type GridIndex              = AuxiliaryTypesGridIndex.GridIndex;
+type GridIndex              = AuxiliaryTypesGridIndex;
 
-export class ChoosingUnitMovePath implements ActionPlannersStatesIState.IState {
+export class ChoosingUnitMovePath implements IState {
     private static readonly _instance = new ChoosingUnitMovePath();
 
     public static getInstance(): ChoosingUnitMovePath {
         return ChoosingUnitMovePath._instance;
     }
 
-    public getStateId(): ActionPlannersConstants.StateId {
-        return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+    public getStateId(): StateId {
+        return StateId.ChoosingUnitMovePath;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): ActionPlannersConstants.StateId {
+    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
         const war           = actionPlanner.getWar();
         const existingUnit  = war.getUnitMap().getVisibleUnitOnMap(gridIndex);
-        if (HelpersMisc.getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
+        if (getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
             if (!existingUnit) {
-                if (!UsersModel.getSelfSettingsIsSetPathMode()) {
-                    return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                if (!getSelfSettingsIsSetPathMode()) {
+                    return StateId.ChoosingUnitAction;
                 } else {
                     const previousGridIndex = war.getCursor().getPreviousGridIndex();
                     if ((previousGridIndex) && (gridIndex.checkIsEqual(previousGridIndex))) {
-                        return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                        return StateId.ChoosingUnitAction;
                     } else {
-                        return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                        return StateId.ChoosingUnitMovePath;
                     }
                 }
             } else {
                 if (!actionPlanner.checkCanControlUnit(existingUnit)) {
                     if (existingUnit.checkHasWeapon()) {
-                        return ActionPlannersConstants.StateId.PreviewingUnitAttackableArea;
+                        return StateId.PreviewingUnitAttackableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.PreviewingUnitMovableArea;
+                        return StateId.PreviewingUnitMovableArea;
                     }
                 } else {
-                    const focusUnit = HelpersMisc.getExisted(actionPlanner.getFocusUnit());
+                    const focusUnit = getExisted(actionPlanner.getFocusUnit());
                     if ((focusUnit === actionPlanner.getFocusUnitLoaded()) && (gridIndex.checkIsEqual(focusUnit.getGridIndex()))) {
-                        return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                        return StateId.ChoosingUnitMovePath;
                     } else {
                         if ((focusUnit === existingUnit) || (focusUnit.checkCanJoinUnit(existingUnit)) || (existingUnit.checkCanLoadUnit(focusUnit))) {
-                            return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                            return StateId.ChoosingUnitAction;
                         } else {
-                            if (existingUnit.getActionState() === UnitsConstants.ActionStateId.Idle) {
-                                return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                            if (existingUnit.getActionState() === ActionStateId.Idle) {
+                                return StateId.ChoosingUnitMovePath;
                             } else {
                                 if (existingUnit.checkHasWeapon()) {
-                                    return ActionPlannersConstants.StateId.PreviewingUnitAttackableArea;
+                                    return StateId.PreviewingUnitAttackableArea;
                                 } else {
-                                    return ActionPlannersConstants.StateId.PreviewingUnitMovableArea;
+                                    return StateId.PreviewingUnitMovableArea;
                                 }
                             }
                         }
@@ -71,36 +71,36 @@ export class ChoosingUnitMovePath implements ActionPlannersStatesIState.IState {
             if (actionPlanner.checkCanFocusUnitOnMapAttackTarget(gridIndex)) {
                 const previousGridIndex = war.getCursor().getPreviousGridIndex();
                 if ((previousGridIndex == null) || (!gridIndex.checkIsEqual(previousGridIndex))) {
-                    return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                    return StateId.ChoosingUnitMovePath;
                 } else {
-                    if (HelpersMisc.getExisted(actionPlanner.getFocusUnit()).checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
+                    if (getExisted(actionPlanner.getFocusUnit()).checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
                         if (existingUnit) {
-                            return ActionPlannersConstants.StateId.RequestingUnitAttackUnit;
+                            return StateId.RequestingUnitAttackUnit;
                         } else {
-                            return ActionPlannersConstants.StateId.RequestingUnitAttackTile;
+                            return StateId.RequestingUnitAttackTile;
                         }
                     } else {
-                        return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                        return StateId.ChoosingUnitMovePath;
                     }
                 }
             } else {
                 if (actionPlanner.getFocusUnitLoaded()) {
-                    return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                    return StateId.ChoosingUnitAction;
                 } else {
                     if (!existingUnit) {
                         if (war.getTileMap().getTile(gridIndex).checkIsMapWeapon()) {
-                            return ActionPlannersConstants.StateId.PreviewingTileAttackableArea;
+                            return StateId.PreviewingTileAttackableArea;
                         } else {
-                            return ActionPlannersConstants.StateId.Idle;
+                            return StateId.Idle;
                         }
                     } else {
-                        if ((actionPlanner.checkCanControlUnit(existingUnit)) && (existingUnit.getActionState() === UnitsConstants.ActionStateId.Idle)) {
-                            return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                        if ((actionPlanner.checkCanControlUnit(existingUnit)) && (existingUnit.getActionState() === ActionStateId.Idle)) {
+                            return StateId.ChoosingUnitMovePath;
                         } else {
                             if (existingUnit.checkHasWeapon()) {
-                                return ActionPlannersConstants.StateId.PreviewingUnitAttackableArea;
+                                return StateId.PreviewingUnitAttackableArea;
                             } else {
-                                return ActionPlannersConstants.StateId.PreviewingUnitMovableArea;
+                                return StateId.PreviewingUnitMovableArea;
                             }
                         }
                     }
@@ -109,47 +109,47 @@ export class ChoosingUnitMovePath implements ActionPlannersStatesIState.IState {
         }
     }
 
-    public getNextStateIdOnDrag(): ActionPlannersConstants.StateId {
+    public getNextStateIdOnDrag(): StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): ActionPlannersConstants.StateId {
-        if (HelpersMisc.getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
+    public getNextStateIdOnDragEnded(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
+        if (getExisted(actionPlanner.getMovableArea()).checkHasGridByGridIndex(gridIndex)) {
             const existingUnit = actionPlanner.getWar().getUnitMap().getVisibleUnitOnMap(gridIndex);
             if (!existingUnit) {
-                if (!UsersModel.getSelfSettingsIsSetPathMode()) {
-                    return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                if (!getSelfSettingsIsSetPathMode()) {
+                    return StateId.ChoosingUnitAction;
                 } else {
-                    return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                    return StateId.ChoosingUnitMovePath;
                 }
             } else {
                 if (!actionPlanner.checkCanControlUnit(existingUnit)) {
-                    return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                    return StateId.ChoosingUnitMovePath;
                 } else {
-                    const focusUnit = HelpersMisc.getExisted(actionPlanner.getFocusUnit());
+                    const focusUnit = getExisted(actionPlanner.getFocusUnit());
                     if ((focusUnit === actionPlanner.getFocusUnitLoaded()) && (gridIndex.checkIsEqual(focusUnit.getGridIndex()))) {
-                        return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                        return StateId.ChoosingUnitMovePath;
                     } else {
                         if ((focusUnit === existingUnit) || (focusUnit.checkCanJoinUnit(existingUnit)) || (existingUnit.checkCanLoadUnit(focusUnit))) {
-                            return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                            return StateId.ChoosingUnitAction;
                         } else {
-                            return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                            return StateId.ChoosingUnitMovePath;
                         }
                     }
                 }
             }
         } else {
-            return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+            return StateId.ChoosingUnitMovePath;
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
-        const gridIndex = HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap()).getGridIndex();
+    public cancel(actionPlanner: IActionPlanner): void {
+        const gridIndex = getExisted(actionPlanner.getFocusUnitOnMap()).getGridIndex();
         actionPlanner.getWar().getCursor().setGridIndex(gridIndex);
 
         if (!actionPlanner.getFocusUnitLoaded()) {
-            ActionPlannersStatesIdle.Idle.getInstance().apply(actionPlanner, SoundsConstants.ShortSfxCode.ButtonCancel01);
+            Idle.getInstance().apply(actionPlanner, ShortSfxCode.ButtonCancel01);
 
         } else {
             actionPlanner.clearFocusUnitLoaded();
@@ -157,28 +157,28 @@ export class ChoosingUnitMovePath implements ActionPlannersStatesIState.IState {
             actionPlanner.resetAttackableArea();
             actionPlanner.resetMovePathAsShortest(gridIndex);
 
-            actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitAction);
+            actionPlanner.setStateId(StateId.ChoosingUnitAction);
             actionPlanner.updateView();
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
         const currState = actionPlanner.getStateId();
         const war       = actionPlanner.getWar();
         const unitMap   = war.getUnitMap();
 
-        if (currState === ActionPlannersConstants.StateId.Idle) {
-            actionPlanner.setFocusUnitOnMap(HelpersMisc.getExisted(unitMap.getUnitOnMap(gridIndex)));
+        if (currState === StateId.Idle) {
+            actionPlanner.setFocusUnitOnMap(getExisted(unitMap.getUnitOnMap(gridIndex)));
             actionPlanner.resetMovableArea();
             actionPlanner.resetAttackableArea();
             actionPlanner.resetMovePathAsShortest(gridIndex);
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+            playShortSfx(ShortSfxCode.CursorConfirm01);
 
-        } else if (currState === ActionPlannersConstants.StateId.ChoosingUnitMovePath) {
-            if (HelpersMisc.getExisted(actionPlanner.getFocusUnit()).checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+        } else if (currState === StateId.ChoosingUnitMovePath) {
+            if (getExisted(actionPlanner.getFocusUnit()).checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
+                playShortSfx(ShortSfxCode.CursorConfirm01);
             } else {
                 const existingUnit = unitMap.getVisibleUnitOnMap(gridIndex);
                 if ((existingUnit === actionPlanner.getFocusUnitOnMap()) && (actionPlanner.getFocusUnitLoaded())) {
@@ -200,26 +200,26 @@ export class ChoosingUnitMovePath implements ActionPlannersStatesIState.IState {
                             actionPlanner.resetMovableArea();
                             actionPlanner.resetAttackableArea();
                             actionPlanner.resetMovePathAsShortest(gridIndex);
-                            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                            playShortSfx(ShortSfxCode.CursorConfirm01);
                         } else {
-                            actionPlanner.resetMovePathAsShortest(HelpersMisc.getExisted(actionPlanner.getAttackableArea()?.getDataByGridIndex(gridIndex)).movePathDestination);
-                            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                            actionPlanner.resetMovePathAsShortest(getExisted(actionPlanner.getAttackableArea()?.getDataByGridIndex(gridIndex)).movePathDestination);
+                            playShortSfx(ShortSfxCode.CursorConfirm01);
                         }
                     } else {
                         if (war.getTileMap().getTile(gridIndex).getMaxHp() != null) {
-                            actionPlanner.resetMovePathAsShortest(HelpersMisc.getExisted(actionPlanner.getAttackableArea()?.getDataByGridIndex(gridIndex)).movePathDestination);
-                            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                            actionPlanner.resetMovePathAsShortest(getExisted(actionPlanner.getAttackableArea()?.getDataByGridIndex(gridIndex)).movePathDestination);
+                            playShortSfx(ShortSfxCode.CursorConfirm01);
                         } else {
                             actionPlanner.updateMovePathByDestination(gridIndex);
-                            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                            playShortSfx(ShortSfxCode.CursorConfirm01);
                         }
                     }
                 }
             }
 
-        } else if (currState === ActionPlannersConstants.StateId.ChoosingUnitAction) {
-            if (HelpersMisc.getExisted(actionPlanner.getFocusUnit()).checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+        } else if (currState === StateId.ChoosingUnitAction) {
+            if (getExisted(actionPlanner.getFocusUnit()).checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
+                playShortSfx(ShortSfxCode.CursorConfirm01);
             } else {
                 const existingUnit = war.getUnitMap().getVisibleUnitOnMap(gridIndex);
                 if ((existingUnit === actionPlanner.getFocusUnitOnMap()) && (actionPlanner.getFocusUnitLoaded())) {
@@ -232,90 +232,90 @@ export class ChoosingUnitMovePath implements ActionPlannersStatesIState.IState {
                             actionPlanner.resetMovableArea();
                             actionPlanner.resetAttackableArea();
                             actionPlanner.resetMovePathAsShortest(gridIndex);
-                            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                            playShortSfx(ShortSfxCode.CursorConfirm01);
                         } else {
-                            actionPlanner.resetMovePathAsShortest(HelpersMisc.getExisted(actionPlanner.getAttackableArea()?.getDataByGridIndex(gridIndex)).movePathDestination);
-                            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                            actionPlanner.resetMovePathAsShortest(getExisted(actionPlanner.getAttackableArea()?.getDataByGridIndex(gridIndex)).movePathDestination);
+                            playShortSfx(ShortSfxCode.CursorConfirm01);
                         }
                     } else {
                         if (war.getTileMap().getTile(gridIndex).getMaxHp() != null) {
-                            actionPlanner.resetMovePathAsShortest(HelpersMisc.getExisted(actionPlanner.getAttackableArea()?.getDataByGridIndex(gridIndex)).movePathDestination);
-                            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                            actionPlanner.resetMovePathAsShortest(getExisted(actionPlanner.getAttackableArea()?.getDataByGridIndex(gridIndex)).movePathDestination);
+                            playShortSfx(ShortSfxCode.CursorConfirm01);
                         } else {
                             actionPlanner.updateMovePathByDestination(gridIndex);
-                            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                            playShortSfx(ShortSfxCode.CursorConfirm01);
                         }
                     }
                 }
             }
 
-        } else if (currState === ActionPlannersConstants.StateId.ChoosingTileProductionTarget) {
-            actionPlanner.setFocusUnitOnMap(HelpersMisc.getExisted(war.getUnitMap().getUnitOnMap(gridIndex)));
+        } else if (currState === StateId.ChoosingTileProductionTarget) {
+            actionPlanner.setFocusUnitOnMap(getExisted(war.getUnitMap().getUnitOnMap(gridIndex)));
             actionPlanner.resetMovableArea();
             actionPlanner.resetAttackableArea();
             actionPlanner.resetMovePathAsShortest(gridIndex);
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+            playShortSfx(ShortSfxCode.CursorConfirm01);
 
-        } else if (currState === ActionPlannersConstants.StateId.PreviewingUnitAttackableArea) {
-            actionPlanner.setFocusUnitOnMap(HelpersMisc.getExisted(war.getUnitMap().getUnitOnMap(gridIndex)));
+        } else if (currState === StateId.PreviewingUnitAttackableArea) {
+            actionPlanner.setFocusUnitOnMap(getExisted(war.getUnitMap().getUnitOnMap(gridIndex)));
             actionPlanner.resetMovableArea();
             actionPlanner.resetAttackableArea();
             actionPlanner.resetMovePathAsShortest(gridIndex);
             actionPlanner.clearDataForPreviewingAttackableArea();
             actionPlanner.clearDataForPreviewingVisibleArea();
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+            playShortSfx(ShortSfxCode.CursorConfirm01);
 
-        } else if (currState === ActionPlannersConstants.StateId.PreviewingUnitMovableArea) {
-            actionPlanner.setFocusUnitOnMap(HelpersMisc.getExisted(war.getUnitMap().getUnitOnMap(gridIndex)));
+        } else if (currState === StateId.PreviewingUnitMovableArea) {
+            actionPlanner.setFocusUnitOnMap(getExisted(war.getUnitMap().getUnitOnMap(gridIndex)));
             actionPlanner.resetMovableArea();
             actionPlanner.resetAttackableArea();
             actionPlanner.resetMovePathAsShortest(gridIndex);
             actionPlanner.clearDataForPreviewingMovableArea();
             actionPlanner.clearDataForPreviewingVisibleArea();
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+            playShortSfx(ShortSfxCode.CursorConfirm01);
 
-        } else if (currState === ActionPlannersConstants.StateId.PreviewingUnitVisibleArea) {
-            actionPlanner.setFocusUnitOnMap(HelpersMisc.getExisted(war.getUnitMap().getUnitOnMap(gridIndex)));
+        } else if (currState === StateId.PreviewingUnitVisibleArea) {
+            actionPlanner.setFocusUnitOnMap(getExisted(war.getUnitMap().getUnitOnMap(gridIndex)));
             actionPlanner.resetMovableArea();
             actionPlanner.resetAttackableArea();
             actionPlanner.resetMovePathAsShortest(gridIndex);
             actionPlanner.clearDataForPreviewingMovableArea();
             actionPlanner.clearDataForPreviewingVisibleArea();
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+            playShortSfx(ShortSfxCode.CursorConfirm01);
 
-        } else if (currState === ActionPlannersConstants.StateId.PreviewingTileAttackableArea) {
-            actionPlanner.setFocusUnitOnMap(HelpersMisc.getExisted(war.getUnitMap().getUnitOnMap(gridIndex)));
+        } else if (currState === StateId.PreviewingTileAttackableArea) {
+            actionPlanner.setFocusUnitOnMap(getExisted(war.getUnitMap().getUnitOnMap(gridIndex)));
             actionPlanner.resetMovableArea();
             actionPlanner.resetAttackableArea();
             actionPlanner.resetMovePathAsShortest(gridIndex);
             actionPlanner.clearDataForPreviewingAttackableArea();
             actionPlanner.clearDataForPreviewingVisibleArea();
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+            playShortSfx(ShortSfxCode.CursorConfirm01);
 
         } else {
-            throw HelpersMisc.newError(`McwActionPlanner._setStateMakingMovePathOnTap() error 6, currState: ${currState}`);
+            throw newError(`McwActionPlanner._setStateMakingMovePathOnTap() error 6, currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitMovePath);
+        actionPlanner.setStateId(StateId.ChoosingUnitMovePath);
         actionPlanner.updateView();
     }
 
-    public doApplyOnDrag(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnDrag(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
         const currState = actionPlanner.getStateId();
-        if (currState === ActionPlannersConstants.StateId.ChoosingUnitMovePath) {
-            const focusUnit = HelpersMisc.getExisted(actionPlanner.getFocusUnit());
+        if (currState === StateId.ChoosingUnitMovePath) {
+            const focusUnit = getExisted(actionPlanner.getFocusUnit());
             if (focusUnit.checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
                 // Do nothing.
             } else {
-                const movableArea = HelpersMisc.getExisted(actionPlanner.getMovableArea());
+                const movableArea = getExisted(actionPlanner.getMovableArea());
                 if (movableArea.checkHasGridByGridIndex(gridIndex)) {
                     actionPlanner.updateMovePathByDestination(gridIndex);
                 } else {
-                    const attackableArea = HelpersMisc.getExisted(actionPlanner.getAttackableArea());
+                    const attackableArea = getExisted(actionPlanner.getAttackableArea());
                     if (!attackableArea.checkHasGridByGridIndex(gridIndex)) {
                         // Do nothing.
                     } else {
-                        const newPath = movableArea.createShortestMovePath(HelpersMisc.getExisted(attackableArea.getDataByGridIndex(gridIndex)?.movePathDestination));
+                        const newPath = movableArea.createShortestMovePath(getExisted(attackableArea.getDataByGridIndex(gridIndex)?.movePathDestination));
                         if (focusUnit.checkCanAttackTargetAfterMovePath(newPath.map(v => v.getGridIndex()), gridIndex)) {
                             actionPlanner.setMovePath(newPath);
                         } else {
@@ -325,20 +325,20 @@ export class ChoosingUnitMovePath implements ActionPlannersStatesIState.IState {
                 }
             }
 
-        } else if (currState === ActionPlannersConstants.StateId.ChoosingUnitAction) {
-            const focusUnit = HelpersMisc.getExisted(actionPlanner.getFocusUnit());
+        } else if (currState === StateId.ChoosingUnitAction) {
+            const focusUnit = getExisted(actionPlanner.getFocusUnit());
             if (focusUnit.checkCanAttackTargetAfterMovePath(actionPlanner.getMovePath().map(v => v.getGridIndex()), gridIndex)) {
                 // Do nothing.
             } else {
-                const movableArea = HelpersMisc.getExisted(actionPlanner.getMovableArea());
+                const movableArea = getExisted(actionPlanner.getMovableArea());
                 if (movableArea.checkHasGridByGridIndex(gridIndex)) {
                     actionPlanner.updateMovePathByDestination(gridIndex);
                 } else {
-                    const attackableArea = HelpersMisc.getExisted(actionPlanner.getAttackableArea());
+                    const attackableArea = getExisted(actionPlanner.getAttackableArea());
                     if (!attackableArea.checkHasGridByGridIndex(gridIndex)) {
                         // Do nothing.
                     } else {
-                        const newPath = movableArea.createShortestMovePath(HelpersMisc.getExisted(attackableArea.getDataByGridIndex(gridIndex)?.movePathDestination));
+                        const newPath = movableArea.createShortestMovePath(getExisted(attackableArea.getDataByGridIndex(gridIndex)?.movePathDestination));
                         if (focusUnit.checkCanAttackTargetAfterMovePath(newPath.map(v => v.getGridIndex()), gridIndex)) {
                             actionPlanner.setMovePath(newPath);
                         } else {
@@ -349,24 +349,24 @@ export class ChoosingUnitMovePath implements ActionPlannersStatesIState.IState {
             }
 
         } else {
-            throw HelpersMisc.newError(`Invalid currState: ${currState}`);
+            throw newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitMovePath);
+        actionPlanner.setStateId(StateId.ChoosingUnitMovePath);
         actionPlanner.updateView();
     }
 
     public doApplyOnDragEnded(): void {
-        throw HelpersMisc.newError(`ChoosingUnitMovePathState: Not expected to apply on drag ended!`);
+        throw newError(`ChoosingUnitMovePathState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, unitForLaunch: UnitsIUnit.IUnit): void {
+    public doApplyOnChooseAction(actionPlanner: IActionPlanner, unitForLaunch: IUnit): void {
         const currStateId = actionPlanner.getStateId();
-        if (currStateId !== ActionPlannersConstants.StateId.ChoosingUnitAction) {
-            throw HelpersMisc.newError(`Invalid currState: ${currStateId}`);
+        if (currStateId !== StateId.ChoosingUnitAction) {
+            throw newError(`Invalid currState: ${currStateId}`);
         } else {
             if (actionPlanner.getFocusUnitLoaded()) {
-                throw HelpersMisc.newError(`Invalid currState: ${currStateId}`);
+                throw newError(`Invalid currState: ${currStateId}`);
             } else {
                 actionPlanner.setFocusUnitLoaded(unitForLaunch);
                 actionPlanner.resetMovableArea();
@@ -375,7 +375,7 @@ export class ChoosingUnitMovePath implements ActionPlannersStatesIState.IState {
             }
         }
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitMovePath);
+        actionPlanner.setStateId(StateId.ChoosingUnitMovePath);
         actionPlanner.updateView();
     }
 }

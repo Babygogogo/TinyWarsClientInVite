@@ -1,118 +1,122 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as ExpressionParsersEnums from "../../expressionParsers/Enums.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventAction from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetCustomCrystalStateExpr from "../../proto/schema/CommonProto/WarEvent/WeaSetCustomCrystalStateExpr.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import * as WarEventsActionsConstantsSetCustomCrystalStateExpr from "../../warEvents/actions/constants/SetCustomCrystalStateExpr.ts";
-import * as WarEventsActionsUtilsCommon from "../../warEvents/actions/utils/Common.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { ContextType } from "../../expressionParsers/Enums.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type {
+    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type {
+    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WeaSetCustomCrystalStateExpr } from "../../proto/schema/CommonProto/WarEvent/WeaSetCustomCrystalStateExpr.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import { ExpressionInfoDict } from "../../warEvents/actions/constants/SetCustomCrystalStateExpr.ts";
+import { getErrorTipForAction, getBriefDescForAction } from "../../warEvents/actions/utils/Common.ts";
 
-type WarEventFullData                   = ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
-type WarEventAction                     = ProtoSchemaCommonProtoWarEventWarEventAction.WarEventAction;
+type WarEventFullData                   = ProtoSchemaCommonProtoWarEventWarEventFullData;
+type WarEventAction                     = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
-    war         : MapEditorInterfaceIMeWar.IMeWar;
+    war         : IMeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                                      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnType!                                      : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                                     : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnIdentifier!                                : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                                      : IUiImage;
+    private readonly _group!                                        : IUiContainer;
+    private readonly _labelTitle!                                   : IUiLabel;
+    private readonly _btnType!                                      : IUiButton;
+    private readonly _btnClose!                                     : IUiButton;
+    private readonly _btnIdentifier!                                : IUiButton;
 
-    private readonly _groupDesc!                                    : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelDesc!                                    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelError!                                   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDesc!                                    : IUiLayout;
+    private readonly _labelDesc!                                    : IUiLabel;
+    private readonly _labelError!                                   : IUiLabel;
 
-    private readonly _scrExpression!                                : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiLayout.IUiLayout>;
-    private readonly _groupExpression!                              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _groupCon!                                     : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _groupAct!                                     : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _scrExpression!                                : IUiScroller<IUiLayout>;
+    private readonly _groupExpression!                              : IUiLayout;
+    private readonly _groupCon!                                     : IUiLayout;
+    private readonly _groupAct!                                     : IUiLayout;
 
-    private readonly _groupConTileFilter!                           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyConTileFilter!                     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnConTileFilter!                             : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConTileFilter!                           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupConTileFilter!                           : IUiContainer;
+    private readonly _groupModifyConTileFilter!                     : IUiContainer;
+    private readonly _btnConTileFilter!                             : IUiButton;
+    private readonly _labelConTileFilter!                           : IUiLabel;
 
-    private readonly _groupActRadius!                               : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActRadius!                         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActRadius!                                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActRadius!                               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActRadius!                               : IUiContainer;
+    private readonly _groupModifyActRadius!                         : IUiContainer;
+    private readonly _btnActRadius!                                 : IUiButton;
+    private readonly _labelActRadius!                               : IUiLabel;
 
-    private readonly _groupActPriority!                             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActPriority!                       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActPriority!                               : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActPriority!                             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActPriority!                             : IUiContainer;
+    private readonly _groupModifyActPriority!                       : IUiContainer;
+    private readonly _btnActPriority!                               : IUiButton;
+    private readonly _labelActPriority!                             : IUiLabel;
 
-    private readonly _groupActCanAffectSelf!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActCanAffectSelf!                  : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActCanAffectSelf!                          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActCanAffectSelf!                        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActCanAffectSelf!                        : IUiContainer;
+    private readonly _groupModifyActCanAffectSelf!                  : IUiContainer;
+    private readonly _btnActCanAffectSelf!                          : IUiButton;
+    private readonly _labelActCanAffectSelf!                        : IUiLabel;
 
-    private readonly _groupActCanAffectAlly!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActCanAffectAlly!                  : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActCanAffectAlly!                          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActCanAffectAlly!                        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActCanAffectAlly!                        : IUiContainer;
+    private readonly _groupModifyActCanAffectAlly!                  : IUiContainer;
+    private readonly _btnActCanAffectAlly!                          : IUiButton;
+    private readonly _labelActCanAffectAlly!                        : IUiLabel;
 
-    private readonly _groupActCanAffectEnemy!                       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActCanAffectEnemy!                 : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActCanAffectEnemy!                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActCanAffectEnemy!                       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActCanAffectEnemy!                       : IUiContainer;
+    private readonly _groupModifyActCanAffectEnemy!                 : IUiContainer;
+    private readonly _btnActCanAffectEnemy!                         : IUiButton;
+    private readonly _labelActCanAffectEnemy!                       : IUiLabel;
 
-    private readonly _groupActOffsetFund!                           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActOffsetFund!                     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActOffsetFund!                             : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActOffsetFund!                           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActOffsetFund!                           : IUiContainer;
+    private readonly _groupModifyActOffsetFund!                     : IUiContainer;
+    private readonly _btnActOffsetFund!                             : IUiButton;
+    private readonly _labelActOffsetFund!                           : IUiLabel;
 
-    private readonly _groupActOffsetEnergyPercentage!               : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActOffsetEnergyPercentage!         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActOffsetEnergyPercentage!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActOffsetEnergyPercentage!               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActOffsetEnergyPercentage!               : IUiContainer;
+    private readonly _groupModifyActOffsetEnergyPercentage!         : IUiContainer;
+    private readonly _btnActOffsetEnergyPercentage!                 : IUiButton;
+    private readonly _labelActOffsetEnergyPercentage!               : IUiLabel;
 
-    private readonly _groupActOffsetHp!                             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActOffsetHp!                       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActOffsetHp!                               : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActOffsetHp!                             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActOffsetHp!                             : IUiContainer;
+    private readonly _groupModifyActOffsetHp!                       : IUiContainer;
+    private readonly _btnActOffsetHp!                               : IUiButton;
+    private readonly _labelActOffsetHp!                             : IUiLabel;
 
-    private readonly _groupActOffsetFuelPercentage!                 : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActOffsetFuelPercentage!           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActOffsetFuelPercentage!                   : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActOffsetFuelPercentage!                 : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActOffsetFuelPercentage!                 : IUiContainer;
+    private readonly _groupModifyActOffsetFuelPercentage!           : IUiContainer;
+    private readonly _btnActOffsetFuelPercentage!                   : IUiButton;
+    private readonly _labelActOffsetFuelPercentage!                 : IUiLabel;
 
-    private readonly _groupActOffsetPrimaryAmmoPercentage!          : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActOffsetPrimaryAmmoPercentage!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActOffsetPrimaryAmmoPercentage!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActOffsetPrimaryAmmoPercentage!          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActOffsetPrimaryAmmoPercentage!          : IUiContainer;
+    private readonly _groupModifyActOffsetPrimaryAmmoPercentage!    : IUiContainer;
+    private readonly _btnActOffsetPrimaryAmmoPercentage!            : IUiButton;
+    private readonly _labelActOffsetPrimaryAmmoPercentage!          : IUiLabel;
 
-    private readonly _groupActCanBeFatal!                           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyActCanBeFatal!                     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnActCanBeFatal!                             : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActCanBeFatal!                           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupActCanBeFatal!                           : IUiContainer;
+    private readonly _groupModifyActCanBeFatal!                     : IUiContainer;
+    private readonly _btnActCanBeFatal!                             : IUiButton;
+    private readonly _labelActCanBeFatal!                           : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
+            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarEventFullDataChanged,             callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                                   callback: this.closePanel },
@@ -176,21 +180,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeActionTypeListPanel, {
+        openPanel(getDict().WeActionTypeListPanel, {
             fullData    : openData.fullData,
             action      : openData.action,
             war         : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonApiPanel, {
-            contextType : ExpressionParsersEnums.ContextType.Tile,
+        openPanel(getDict().CommonApiPanel, {
+            contextType : ContextType.Tile,
         });
     }
 
     private _onTouchedBtnConTileFilter(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0662),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0662),
         });
     }
     private _onTouchedGroupModifyConTileFilter(): void {
@@ -204,24 +208,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getConTileFilter(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ConTileFilter,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ConTileFilter,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getConTileFilter() != text) {
                     action.setConTileFilter(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActRadius(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0670),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0670),
         });
     }
     private _onTouchedGroupModifyActRadius(): void {
@@ -235,24 +239,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActRadius(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActRadius,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActRadius,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActRadius() != text) {
                     action.setActRadius(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActPriority(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0671),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0671),
         });
     }
     private _onTouchedGroupModifyActPriority(): void {
@@ -266,24 +270,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActPriority(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActPriority,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActPriority,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActPriority() != text) {
                     action.setActPriority(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActCanAffectSelf(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0672),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0672),
         });
     }
     private _onTouchedGroupModifyActCanAffectSelf(): void {
@@ -297,24 +301,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanAffectSelf(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectSelf,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActCanAffectSelf,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanAffectSelf() != text) {
                     action.setActCanAffectSelf(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActCanAffectAlly(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0673),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0673),
         });
     }
     private _onTouchedGroupModifyActCanAffectAlly(): void {
@@ -328,24 +332,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanAffectAlly(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectAlly,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActCanAffectAlly,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanAffectAlly() != text) {
                     action.setActCanAffectAlly(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActCanAffectEnemy(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0674),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0674),
         });
     }
     private _onTouchedGroupModifyActCanAffectEnemy(): void {
@@ -359,24 +363,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanAffectEnemy(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectEnemy,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActCanAffectEnemy,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanAffectEnemy() != text) {
                     action.setActCanAffectEnemy(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActOffsetFund(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0675),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0675),
         });
     }
     private _onTouchedGroupModifyActOffsetFund(): void {
@@ -390,24 +394,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetFund(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFund,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActOffsetFund,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetFund() != text) {
                     action.setActOffsetFund(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActOffsetEnergyPercentage(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0676),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0676),
         });
     }
     private _onTouchedGroupModifyActOffsetEnergyPercentage(): void {
@@ -421,24 +425,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetEnergyPercentage(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetEnergyPercentage,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActOffsetEnergyPercentage,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetEnergyPercentage() != text) {
                     action.setActOffsetEnergyPercentage(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActOffsetHp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0677),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0677),
         });
     }
     private _onTouchedGroupModifyActOffsetHp(): void {
@@ -452,24 +456,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetHp(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetHp,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActOffsetHp,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetHp() != text) {
                     action.setActOffsetHp(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActOffsetFuelPercentage(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0677),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0677),
         });
     }
     private _onTouchedGroupModifyActOffsetFuelPercentage(): void {
@@ -483,24 +487,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetFuelPercentage(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActOffsetFuelPercentage,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetFuelPercentage() != text) {
                     action.setActOffsetFuelPercentage(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActOffsetPrimaryAmmoPercentage(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0677),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0677),
         });
     }
     private _onTouchedGroupModifyActOffsetPrimaryAmmoPercentage(): void {
@@ -514,24 +518,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetPrimaryAmmoPercentage(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetPrimaryAmmoPercentage() != text) {
                     action.setActOffsetPrimaryAmmoPercentage(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnActCanBeFatal(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActCanBeFatal.getHelpText,
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : ExpressionInfoDict.ActCanBeFatal.getHelpText,
         });
     }
     private _onTouchedGroupModifyActCanBeFatal(): void {
@@ -545,19 +549,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanBeFatal(),
-            expressionInfo  : WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActCanBeFatal,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            expressionInfo  : ExpressionInfoDict.ActCanBeFatal,
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanBeFatal() != text) {
                     action.setActCanBeFatal(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _updateView(): void {
@@ -569,23 +573,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnClose.setText(LangUtils.getText(LangConstants.TextType.B0146));
-        this._btnType.setText(LangUtils.getText(LangConstants.TextType.B0516));
-        this._btnIdentifier.setText(LangUtils.getText(LangConstants.TextType.B0131));
+        this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnClose.setText(getText(TextType.B0146));
+        this._btnType.setText(getText(TextType.B0516));
+        this._btnIdentifier.setText(getText(TextType.B0131));
 
-        this._btnConTileFilter.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ConTileFilter.getTitleText());
-        this._btnActRadius.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActRadius.getTitleText());
-        this._btnActPriority.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActPriority.getTitleText());
-        this._btnActCanAffectSelf.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectSelf.getTitleText());
-        this._btnActCanAffectAlly.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectAlly.getTitleText());
-        this._btnActCanAffectEnemy.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActCanAffectEnemy.getTitleText());
-        this._btnActOffsetFund.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFund.getTitleText());
-        this._btnActOffsetEnergyPercentage.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetEnergyPercentage.getTitleText());
-        this._btnActOffsetHp.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetHp.getTitleText());
-        this._btnActOffsetFuelPercentage.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage.getTitleText());
-        this._btnActOffsetPrimaryAmmoPercentage.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage.getTitleText());
-        this._btnActCanBeFatal.setText(WarEventsActionsConstantsSetCustomCrystalStateExpr.ExpressionInfoDict.ActCanBeFatal.getTitleText());
+        this._btnConTileFilter.setText(ExpressionInfoDict.ConTileFilter.getTitleText());
+        this._btnActRadius.setText(ExpressionInfoDict.ActRadius.getTitleText());
+        this._btnActPriority.setText(ExpressionInfoDict.ActPriority.getTitleText());
+        this._btnActCanAffectSelf.setText(ExpressionInfoDict.ActCanAffectSelf.getTitleText());
+        this._btnActCanAffectAlly.setText(ExpressionInfoDict.ActCanAffectAlly.getTitleText());
+        this._btnActCanAffectEnemy.setText(ExpressionInfoDict.ActCanAffectEnemy.getTitleText());
+        this._btnActOffsetFund.setText(ExpressionInfoDict.ActOffsetFund.getTitleText());
+        this._btnActOffsetEnergyPercentage.setText(ExpressionInfoDict.ActOffsetEnergyPercentage.getTitleText());
+        this._btnActOffsetHp.setText(ExpressionInfoDict.ActOffsetHp.getTitleText());
+        this._btnActOffsetFuelPercentage.setText(ExpressionInfoDict.ActOffsetFuelPercentage.getTitleText());
+        this._btnActOffsetPrimaryAmmoPercentage.setText(ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage.getTitleText());
+        this._btnActCanBeFatal.setText(ExpressionInfoDict.ActCanBeFatal.getTitleText());
 
         this._updateLabelDescAndLabelError();
     }
@@ -598,11 +602,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const action            = openData.action;
         const war               = openData.war;
-        const errorTip          = WarEventsActionsUtilsCommon.getErrorTipForAction(openData.fullData, action, war);
+        const errorTip          = getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || LangUtils.getText(LangConstants.TextType.B0493));
-        labelError.setTextColor(errorTip ? GraphicsConstants.ColorValue.Red : GraphicsConstants.ColorValue.Green);
-        this._labelDesc.setText(WarEventsActionsUtilsCommon.getBriefDescForAction(action, war.getGcData()) || LangConstants.UndefinedError);
+        labelError.setText(errorTip || getText(TextType.B0493));
+        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
+        this._labelDesc.setText(getBriefDescForAction(action, war.getGcData()) || UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
@@ -682,7 +686,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         scrExpression.setUnscaledManualHeight(Math.min(380, groupExpression.getScaledHeight()));
     }
 
-    private getAction(): AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarEventWeaSetCustomCrystalStateExpr.WeaSetCustomCrystalStateExpr> {
+    private getAction(): Undefinable<WeaSetCustomCrystalStateExpr> {
         return this.getOpenData()?.action.getWeaSetCustomCrystalStateExpr();
     }
 }

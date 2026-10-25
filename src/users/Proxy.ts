@@ -1,83 +1,149 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as HelpersSha1Generator from "../helpers/Sha1Generator.ts";
-import * as NetworksManager from "../networks/Manager.ts";
-import * as NetworksMessageCodes from "../networks/MessageCodes.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserGetBriefInfoS from "../proto/schema/CommonProto/NetMessage/MsgUserGetBriefInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineStateS from "../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineState/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineUserIdArrayS from "../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineUserIdArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoS from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoArrayS from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfoArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserGetUsersByNicknameS from "../proto/schema/CommonProto/NetMessage/MsgUserGetUsersByNickname/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserLoginS from "../proto/schema/CommonProto/NetMessage/MsgUserLogin/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserLoginAsGuestS from "../proto/schema/CommonProto/NetMessage/MsgUserLoginAsGuest/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserLogoutS from "../proto/schema/CommonProto/NetMessage/MsgUserLogout/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserModifyFavoriteReplayIdArrayS from "../proto/schema/CommonProto/NetMessage/MsgUserModifyFavoriteReplayIdArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserRegisterS from "../proto/schema/CommonProto/NetMessage/MsgUserRegister/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserRequestEmailVerificationCodeS from "../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserRequestPasswordVerificationCodeS from "../proto/schema/CommonProto/NetMessage/MsgUserRequestPasswordVerificationCode/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserResetPasswordWithEmailS from "../proto/schema/CommonProto/NetMessage/MsgUserResetPasswordWithEmail/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetAvatarIdS from "../proto/schema/CommonProto/NetMessage/MsgUserSetAvatarId/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetCoBgmSettingsS from "../proto/schema/CommonProto/NetMessage/MsgUserSetCoBgmSettings/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetDiscordInfoS from "../proto/schema/CommonProto/NetMessage/MsgUserSetDiscordInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetMapEditorAutoSaveTimeS from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetMapRatingS from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapRating/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetNicknameS from "../proto/schema/CommonProto/NetMessage/MsgUserSetNickname/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetPasswordS from "../proto/schema/CommonProto/NetMessage/MsgUserSetPassword/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetRelationS from "../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetSceneBgmSettingsS from "../proto/schema/CommonProto/NetMessage/MsgUserSetSceneBgmSettings/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetSettingsS from "../proto/schema/CommonProto/NetMessage/MsgUserSetSettings/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetShowMedalIdArrayS from "../proto/schema/CommonProto/NetMessage/MsgUserSetShowMedalIdArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserVerifyEmailS from "../proto/schema/CommonProto/NetMessage/MsgUserVerifyEmail/S.ts";
-import type * as ProtoSchemaCommonProtoUserUserDiscordInfo from "../proto/schema/CommonProto/User/UserDiscordInfo.ts";
-import type * as ProtoSchemaCommonProtoUserUserSettings from "../proto/schema/CommonProto/User/UserSettings.ts";
-import type * as ProtoSchemaCommonProtoUserUserSettingsSceneBgmSettings from "../proto/schema/CommonProto/User/UserSettings/SceneBgmSettings.ts";
-import * as UsersModel from "./Model.ts";
-import type * as VendorEgretEgret from "../vendor/egret/Egret.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { b64_sha1 } from "../helpers/Sha1Generator.ts";
+import { addListeners, send } from "../networks/Manager.ts";
+import { MessageCodes } from "../networks/MessageCodes.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { S } from "../proto/schema/CommonProto/NetMessage/MsgUserGetBriefInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineStateS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineState/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineUserIdArrayS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineUserIdArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoArrayS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserGetPublicInfoArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserGetUsersByNicknameS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserGetUsersByNickname/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgUserLoginS } from "../proto/schema/CommonProto/NetMessage/MsgUserLogin/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserLoginAsGuestS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserLoginAsGuest/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgUserLogoutS } from "../proto/schema/CommonProto/NetMessage/MsgUserLogout/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserModifyFavoriteReplayIdArrayS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserModifyFavoriteReplayIdArray/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgUserRegisterS } from "../proto/schema/CommonProto/NetMessage/MsgUserRegister/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserRequestEmailVerificationCodeS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserRequestEmailVerificationCode/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserRequestPasswordVerificationCodeS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserRequestPasswordVerificationCode/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserResetPasswordWithEmailS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserResetPasswordWithEmail/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetAvatarIdS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetAvatarId/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetCoBgmSettingsS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetCoBgmSettings/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetDiscordInfoS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetDiscordInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetMapEditorAutoSaveTimeS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapEditorAutoSaveTime/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetMapRatingS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetMapRating/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetNicknameS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetNickname/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetPasswordS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetPassword/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetRelationS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetSceneBgmSettingsS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetSceneBgmSettings/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetSettingsS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetSettings/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserSetShowMedalIdArrayS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserSetShowMedalIdArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgUserVerifyEmailS,
+} from "../proto/schema/CommonProto/NetMessage/MsgUserVerifyEmail/S.ts";
+import type { UserDiscordInfoJson } from "../proto/schema/CommonProto/User/UserDiscordInfo.ts";
+import type { UserSettingsJson } from "../proto/schema/CommonProto/User/UserSettings.ts";
+import type { SceneBgmSettingsJson } from "../proto/schema/CommonProto/User/UserSettings/SceneBgmSettings.ts";
+import {
+    updateOnMsgUserLogin,
+    updateOnMsgUserLoginAsGuest,
+    updateOnFailedMsgUserGetPublicInfo,
+    updateOnMsgUserGetPublicInfo,
+    updateOnFailedMsgUserGetBriefInfo,
+    updateOnMsgUserGetBriefInfo,
+    updateOnFailedMsgUserGetOnlineState,
+    updateOnMsgUserGetOnlineState,
+    updateOnMsgUserSetNickname,
+    updateOnMsgUserSetDiscordInfo,
+    updateOnMsgUserSetSettings,
+    updateOnMsgUserSetMapRating,
+    updateOnMsgUserSetRelation,
+    updateOnMsgUserModifyFavoriteReplayIdArray,
+    updateOnMsgUserSetAvatarId,
+    updateOnMsgUserSetMapEditorAutoSaveTime,
+    updateOnMsgUserSetCoBgmSettings,
+    updateOnMsgUserSetSceneBgmSettings,
+    updateOnMsgUserSetShowMedalIdArray,
+    updateOnMsgUserRequestEmailVerificationCode,
+    updateOnMsgUserVerifyEmail,
+} from "./Model.ts";
+import type { Event } from "../vendor/egret/Egret.ts";
 
 export function init(): void {
-    NetworksManager.addListeners([
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserLogin,                            callback: _onMsgUserLogin, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserLoginAsGuest,                     callback: _onMsgUserLoginAsGuest },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserRegister,                         callback: _onMsgUserRegister, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserLogout,                           callback: _onMsgUserLogout, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserGetPublicInfo,                    callback: _onMsgUserGetPublicInfo, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserGetPublicInfoArray,               callback: _onMsgUserGetPublicInfoArray, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserGetBriefInfo,                     callback: _onMsgUserGetBriefInfo, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserGetOnlineState,                   callback: _onMsgUserGetOnlineState },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserGetUsersByNickname,               callback: _onMsgUserGetUsersByNickname },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetNickname,                      callback: _onMsgUserSetNickname, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetDiscordInfo,                   callback: _onMsgUserSetDiscordInfo, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserGetOnlineUserIdArray,             callback: _onMsgUserGetOnlineUserIdArray, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetPassword,                      callback: _onMsgUserSetPassword, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetSettings,                      callback: _onMsgUserSetSettings, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetMapRating,                     callback: _onMsgUserSetMapRating },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetRelation,                      callback: _onMsgUserSetRelation },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserModifyFavoriteReplayIdArray,      callback: _onMsgUserModifyFavoriteReplayIdArray },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserRequestEmailVerificationCode,     callback: _onMsgUserRequestEmailVerificationCode },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserRequestPasswordVerificationCode,  callback: _onMsgUserRequestPasswordVerificationCode },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserResetPasswordWithEmail,           callback: _onMsgUserResetPasswordWithEmail },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetAvatarId,                      callback: _onMsgUserSetAvatarId },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetMapEditorAutoSaveTime,         callback: _onMsgUserSetMapEditorAutoSaveTime },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetCoBgmSettings,                 callback: _onMsgUserSetCoBgmSettings },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetSceneBgmSettings,              callback: _onMsgUserSetSceneBgmSettings },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserSetShowMedalIdArray,              callback: _onMsgUserSetShowMedalIdArray },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgUserVerifyEmail,                      callback: _onMsgUserVerifyEmail },
+    addListeners([
+        { msgCode: MessageCodes.MsgUserLogin,                            callback: _onMsgUserLogin, },
+        { msgCode: MessageCodes.MsgUserLoginAsGuest,                     callback: _onMsgUserLoginAsGuest },
+        { msgCode: MessageCodes.MsgUserRegister,                         callback: _onMsgUserRegister, },
+        { msgCode: MessageCodes.MsgUserLogout,                           callback: _onMsgUserLogout, },
+        { msgCode: MessageCodes.MsgUserGetPublicInfo,                    callback: _onMsgUserGetPublicInfo, },
+        { msgCode: MessageCodes.MsgUserGetPublicInfoArray,               callback: _onMsgUserGetPublicInfoArray, },
+        { msgCode: MessageCodes.MsgUserGetBriefInfo,                     callback: _onMsgUserGetBriefInfo, },
+        { msgCode: MessageCodes.MsgUserGetOnlineState,                   callback: _onMsgUserGetOnlineState },
+        { msgCode: MessageCodes.MsgUserGetUsersByNickname,               callback: _onMsgUserGetUsersByNickname },
+        { msgCode: MessageCodes.MsgUserSetNickname,                      callback: _onMsgUserSetNickname, },
+        { msgCode: MessageCodes.MsgUserSetDiscordInfo,                   callback: _onMsgUserSetDiscordInfo, },
+        { msgCode: MessageCodes.MsgUserGetOnlineUserIdArray,             callback: _onMsgUserGetOnlineUserIdArray, },
+        { msgCode: MessageCodes.MsgUserSetPassword,                      callback: _onMsgUserSetPassword, },
+        { msgCode: MessageCodes.MsgUserSetSettings,                      callback: _onMsgUserSetSettings, },
+        { msgCode: MessageCodes.MsgUserSetMapRating,                     callback: _onMsgUserSetMapRating },
+        { msgCode: MessageCodes.MsgUserSetRelation,                      callback: _onMsgUserSetRelation },
+        { msgCode: MessageCodes.MsgUserModifyFavoriteReplayIdArray,      callback: _onMsgUserModifyFavoriteReplayIdArray },
+        { msgCode: MessageCodes.MsgUserRequestEmailVerificationCode,     callback: _onMsgUserRequestEmailVerificationCode },
+        { msgCode: MessageCodes.MsgUserRequestPasswordVerificationCode,  callback: _onMsgUserRequestPasswordVerificationCode },
+        { msgCode: MessageCodes.MsgUserResetPasswordWithEmail,           callback: _onMsgUserResetPasswordWithEmail },
+        { msgCode: MessageCodes.MsgUserSetAvatarId,                      callback: _onMsgUserSetAvatarId },
+        { msgCode: MessageCodes.MsgUserSetMapEditorAutoSaveTime,         callback: _onMsgUserSetMapEditorAutoSaveTime },
+        { msgCode: MessageCodes.MsgUserSetCoBgmSettings,                 callback: _onMsgUserSetCoBgmSettings },
+        { msgCode: MessageCodes.MsgUserSetSceneBgmSettings,              callback: _onMsgUserSetSceneBgmSettings },
+        { msgCode: MessageCodes.MsgUserSetShowMedalIdArray,              callback: _onMsgUserSetShowMedalIdArray },
+        { msgCode: MessageCodes.MsgUserVerifyEmail,                      callback: _onMsgUserVerifyEmail },
     ]);
 }
 
 export function reqLogin(account: string, rawPassword: string, isAutoRelogin: boolean): void {
-    NetworksManager.send({
+    send({
         MsgUserLogin: { c: {
             account,
-            password    : HelpersSha1Generator.b64_sha1(rawPassword),
+            password    : b64_sha1(rawPassword),
             isAutoRelogin,
         } },
     });
 }
 export function reqRawLogin(account: string, password: string): void {
-    NetworksManager.send({
+    send({
         MsgUserLogin: { c: {
             account,
             password,
@@ -85,394 +151,394 @@ export function reqRawLogin(account: string, password: string): void {
         } },
     });
 }
-function _onMsgUserLogin(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserLoginS.S;
+function _onMsgUserLogin(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserLoginS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserLogin(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserLogin, data);
+        updateOnMsgUserLogin(data);
+        dispatch(TypeId.MsgUserLogin, data);
     }
 }
 
 export function reqUserLoginAsGuest(userId: number | null, isAutoRelogin: boolean): void {
-    NetworksManager.send({
+    send({
         MsgUserLoginAsGuest: { c: {
             userId,
             isAutoRelogin,
         } },
     });
 }
-function _onMsgUserLoginAsGuest(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserLoginAsGuestS.S;
+function _onMsgUserLoginAsGuest(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserLoginAsGuestS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserLoginAsGuest(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserLoginAsGuest, data);
+        updateOnMsgUserLoginAsGuest(data);
+        dispatch(TypeId.MsgUserLoginAsGuest, data);
     }
 }
 
 export function reqUserRegister(account: string, rawPassword: string, nickname: string): void {
-    NetworksManager.send({
+    send({
         MsgUserRegister: { c: {
             account,
-            password: HelpersSha1Generator.b64_sha1(rawPassword),
+            password: b64_sha1(rawPassword),
             nickname,
         } },
     });
 }
-function _onMsgUserRegister(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserRegisterS.S;
+function _onMsgUserRegister(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserRegisterS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserRegister, data);
+        dispatch(TypeId.MsgUserRegister, data);
     }
 }
 
 export function reqLogout(): void {
-    NetworksManager.send({
+    send({
         MsgUserLogout: { c: {
         } },
     });
 }
-function _onMsgUserLogout(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserLogoutS.S;
+function _onMsgUserLogout(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserLogoutS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserLogout, data);
+        dispatch(TypeId.MsgUserLogout, data);
     }
 }
 
 export function reqUserGetPublicInfo(userId: number): void {
-    NetworksManager.send({
+    send({
         MsgUserGetPublicInfo: { c: {
             userId,
         } },
     });
 }
-function _onMsgUserGetPublicInfo(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoS.S;
+function _onMsgUserGetPublicInfo(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoS;
     if (data.getErrorCode()) {
-        UsersModel.updateOnFailedMsgUserGetPublicInfo(data);
+        updateOnFailedMsgUserGetPublicInfo(data);
     } else {
-        UsersModel.updateOnMsgUserGetPublicInfo(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserGetPublicInfo, data);
+        updateOnMsgUserGetPublicInfo(data);
+        dispatch(TypeId.MsgUserGetPublicInfo, data);
     }
 }
 
 export function reqUserGetPublicInfoArray(userIdArray: number[]): void {
-    NetworksManager.send({
+    send({
         MsgUserGetPublicInfoArray: { c: {
             userIdArray : userIdArray,
         } },
     });
 }
-function _onMsgUserGetPublicInfoArray(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoArrayS.S;
+function _onMsgUserGetPublicInfoArray(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetPublicInfoArrayS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserGetPublicInfoArray, data);
+        dispatch(TypeId.MsgUserGetPublicInfoArray, data);
     }
 }
 
 export function reqUserGetBriefInfo(userId: number): void {
-    NetworksManager.send({
+    send({
         MsgUserGetBriefInfo: { c: {
             userId,
         } },
     });
 }
-function _onMsgUserGetBriefInfo(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetBriefInfoS.S;
+function _onMsgUserGetBriefInfo(e: Event): void {
+    const data = e.data as S;
     if (data.getErrorCode()) {
-        UsersModel.updateOnFailedMsgUserGetBriefInfo(data);
+        updateOnFailedMsgUserGetBriefInfo(data);
     } else {
-        UsersModel.updateOnMsgUserGetBriefInfo(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserGetBriefInfo, data);
+        updateOnMsgUserGetBriefInfo(data);
+        dispatch(TypeId.MsgUserGetBriefInfo, data);
     }
 }
 
 export function reqUserGetOnlineState(userId: number): void {
-    NetworksManager.send({
+    send({
         MsgUserGetOnlineState: { c: {
             userId,
         } },
     });
 }
-function _onMsgUserGetOnlineState(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineStateS.S;
+function _onMsgUserGetOnlineState(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineStateS;
     if (data.getErrorCode()) {
-        UsersModel.updateOnFailedMsgUserGetOnlineState(data);
+        updateOnFailedMsgUserGetOnlineState(data);
     } else {
-        UsersModel.updateOnMsgUserGetOnlineState(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserGetOnlineState, data);
+        updateOnMsgUserGetOnlineState(data);
+        dispatch(TypeId.MsgUserGetOnlineState, data);
     }
 }
 
 export function reqUserGetUsersByNickname(nickname: string, isFollowing: boolean | null): void {
-    NetworksManager.send({
+    send({
         MsgUserGetUsersByNickname: { c: {
             nickname    : nickname,
             isFollowing : isFollowing,
         } },
     });
 }
-function _onMsgUserGetUsersByNickname(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetUsersByNicknameS.S;
+function _onMsgUserGetUsersByNickname(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetUsersByNicknameS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserGetUsersByNickname, data);
+        dispatch(TypeId.MsgUserGetUsersByNickname, data);
     }
 }
 
 export function reqSetNickname(nickname: string): void {
-    NetworksManager.send({
+    send({
         MsgUserSetNickname: { c: {
             nickname,
         }, },
     });
 }
-async function _onMsgUserSetNickname(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetNicknameS.S;
+async function _onMsgUserSetNickname(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetNicknameS;
     if (data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetNicknameFailed, data);
+        dispatch(TypeId.MsgUserSetNicknameFailed, data);
     } else {
-        UsersModel.updateOnMsgUserSetNickname(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetNickname, data);
+        updateOnMsgUserSetNickname(data);
+        dispatch(TypeId.MsgUserSetNickname, data);
     }
 }
 
-export function reqSetDiscordInfo(discordInfo: ProtoSchemaCommonProtoUserUserDiscordInfo.UserDiscordInfoJson): void {
-    NetworksManager.send({
+export function reqSetDiscordInfo(discordInfo: UserDiscordInfoJson): void {
+    send({
         MsgUserSetDiscordInfo: { c: {
             discordInfo : discordInfo,
         }, },
     });
 }
-async function _onMsgUserSetDiscordInfo(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetDiscordInfoS.S;
+async function _onMsgUserSetDiscordInfo(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetDiscordInfoS;
     if (data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetDiscordInfoFailed, data);
+        dispatch(TypeId.MsgUserSetDiscordInfoFailed, data);
     } else {
-        UsersModel.updateOnMsgUserSetDiscordInfo(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetDiscordInfo, data);
+        updateOnMsgUserSetDiscordInfo(data);
+        dispatch(TypeId.MsgUserSetDiscordInfo, data);
     }
 }
 
 export function reqUserGetOnlineUserIdArray(): void {
-    NetworksManager.send({
+    send({
         MsgUserGetOnlineUserIdArray: { c: {} },
     });
 }
-function _onMsgUserGetOnlineUserIdArray(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineUserIdArrayS.S;
+function _onMsgUserGetOnlineUserIdArray(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetOnlineUserIdArrayS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserGetOnlineUserIdArray, data);
+        dispatch(TypeId.MsgUserGetOnlineUserIdArray, data);
     }
 }
 
 export function reqUserSetPassword(oldRawPassword: string, newRawPassword: string): void {
-    NetworksManager.send({ MsgUserSetPassword: { c: {
-        oldPassword : HelpersSha1Generator.b64_sha1(oldRawPassword),
-        newPassword : HelpersSha1Generator.b64_sha1(newRawPassword),
+    send({ MsgUserSetPassword: { c: {
+        oldPassword : b64_sha1(oldRawPassword),
+        newPassword : b64_sha1(newRawPassword),
     } } });
 }
-function _onMsgUserSetPassword(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetPasswordS.S;
+function _onMsgUserSetPassword(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetPasswordS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetPassword, data);
+        dispatch(TypeId.MsgUserSetPassword, data);
     }
 }
 
-export function reqUserSetSettings(userSettings: ProtoSchemaCommonProtoUserUserSettings.UserSettingsJson): void {
-    NetworksManager.send({ MsgUserSetSettings: { c: {
+export function reqUserSetSettings(userSettings: UserSettingsJson): void {
+    send({ MsgUserSetSettings: { c: {
         userSettings    : userSettings,
     } } });
 }
-function _onMsgUserSetSettings(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetSettingsS.S;
+function _onMsgUserSetSettings(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetSettingsS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserSetSettings(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetSettings, data);
+        updateOnMsgUserSetSettings(data);
+        dispatch(TypeId.MsgUserSetSettings, data);
     }
 }
 
 export function reqUserSetMapRating(normalMapId: number, rating: number): void {
-    NetworksManager.send({ MsgUserSetMapRating: { c: {
+    send({ MsgUserSetMapRating: { c: {
         normalMapId : normalMapId,
         rating,
     } } });
 }
-function _onMsgUserSetMapRating(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetMapRatingS.S;
+function _onMsgUserSetMapRating(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetMapRatingS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserSetMapRating(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetMapRating, data);
+        updateOnMsgUserSetMapRating(data);
+        dispatch(TypeId.MsgUserSetMapRating, data);
     }
 }
 
 export function reqUserSetRelation(targetUserId: number, isFollow: boolean, isBlock: boolean): void {
-    NetworksManager.send({ MsgUserSetRelation: { c: {
+    send({ MsgUserSetRelation: { c: {
         targetUserId    : targetUserId,
         isFollowing     : isFollow,
         isBlocking      : isBlock,
     }}});
 }
-function _onMsgUserSetRelation(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetRelationS.S;
+function _onMsgUserSetRelation(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetRelationS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserSetRelation(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetRelation, data);
+        updateOnMsgUserSetRelation(data);
+        dispatch(TypeId.MsgUserSetRelation, data);
     }
 }
 
 export function reqUserModifyFavoriteReplayIdArray(addIdArray: number[], deleteIdArray: number[]): void {
-    NetworksManager.send({ MsgUserModifyFavoriteReplayIdArray: { c: {
+    send({ MsgUserModifyFavoriteReplayIdArray: { c: {
         addIdArray      : addIdArray,
         deleteIdArray   : deleteIdArray,
     }}});
 }
-function _onMsgUserModifyFavoriteReplayIdArray(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserModifyFavoriteReplayIdArrayS.S;
+function _onMsgUserModifyFavoriteReplayIdArray(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserModifyFavoriteReplayIdArrayS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserModifyFavoriteReplayIdArray(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserModifyFavoriteReplayIdArray, data);
+        updateOnMsgUserModifyFavoriteReplayIdArray(data);
+        dispatch(TypeId.MsgUserModifyFavoriteReplayIdArray, data);
     }
 }
 
 export function reqSetAvatarId(avatarId: number): void {
-    NetworksManager.send({
+    send({
         MsgUserSetAvatarId: { c: {
             avatarId,
         }, },
     });
 }
-async function _onMsgUserSetAvatarId(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetAvatarIdS.S;
+async function _onMsgUserSetAvatarId(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetAvatarIdS;
     if (data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetAvatarIdFailed, data);
+        dispatch(TypeId.MsgUserSetAvatarIdFailed, data);
     } else {
-        UsersModel.updateOnMsgUserSetAvatarId(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetAvatarId, data);
+        updateOnMsgUserSetAvatarId(data);
+        dispatch(TypeId.MsgUserSetAvatarId, data);
     }
 }
 
-export function reqSetMapEditorAutoSaveTime(time: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>): void {
-    NetworksManager.send({
+export function reqSetMapEditorAutoSaveTime(time: Undefinable<number>): void {
+    send({
         MsgUserSetMapEditorAutoSaveTime: { c: {
             time,
         }, },
     });
 }
-function _onMsgUserSetMapEditorAutoSaveTime(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetMapEditorAutoSaveTimeS.S;
+function _onMsgUserSetMapEditorAutoSaveTime(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetMapEditorAutoSaveTimeS;
     if (data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetMapEditorAutoSaveTimeFailed, data);
+        dispatch(TypeId.MsgUserSetMapEditorAutoSaveTimeFailed, data);
     } else {
-        UsersModel.updateOnMsgUserSetMapEditorAutoSaveTime(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetMapEditorAutoSaveTime, data);
+        updateOnMsgUserSetMapEditorAutoSaveTime(data);
+        dispatch(TypeId.MsgUserSetMapEditorAutoSaveTime, data);
     }
 }
 
 export function reqUserSetCoBgmSettings(coCategoryId: number, bgmCodeArray: number[] | null): void {
-    NetworksManager.send({
+    send({
         MsgUserSetCoBgmSettings: { c: {
             coCategoryId    : coCategoryId,
             bgmCodeArray    : bgmCodeArray ?? [],
         } }
     });
 }
-function _onMsgUserSetCoBgmSettings(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetCoBgmSettingsS.S;
+function _onMsgUserSetCoBgmSettings(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetCoBgmSettingsS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserSetCoBgmSettings(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetCoBgmSettings, data);
+        updateOnMsgUserSetCoBgmSettings(data);
+        dispatch(TypeId.MsgUserSetCoBgmSettings, data);
     }
 }
 
-export function reqUserSetSceneBgmSettings(settings: ProtoSchemaCommonProtoUserUserSettingsSceneBgmSettings.SceneBgmSettingsJson): void {
-    NetworksManager.send({
+export function reqUserSetSceneBgmSettings(settings: SceneBgmSettingsJson): void {
+    send({
         MsgUserSetSceneBgmSettings: { c: {
             sceneBgmSettings    : settings,
         } },
     });
 }
-function _onMsgUserSetSceneBgmSettings(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetSceneBgmSettingsS.S;
+function _onMsgUserSetSceneBgmSettings(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetSceneBgmSettingsS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserSetSceneBgmSettings(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetSceneBgmSettings, data);
+        updateOnMsgUserSetSceneBgmSettings(data);
+        dispatch(TypeId.MsgUserSetSceneBgmSettings, data);
     }
 }
 
 export function reqUserSetShowMedalIdArray(showMedalIdArray: number[]): void {
-    NetworksManager.send({
+    send({
         MsgUserSetShowMedalIdArray: { c: {
             showMedalIdArray    : showMedalIdArray,
         } },
     });
 }
-function _onMsgUserSetShowMedalIdArray(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetShowMedalIdArrayS.S;
+function _onMsgUserSetShowMedalIdArray(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetShowMedalIdArrayS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserSetShowMedalIdArray(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserSetShowMedalIdArray, data);
+        updateOnMsgUserSetShowMedalIdArray(data);
+        dispatch(TypeId.MsgUserSetShowMedalIdArray, data);
     }
 }
 
 export function reqUserRequestEmailVerificationCode(address: string): void {
-    NetworksManager.send({
+    send({
         MsgUserRequestEmailVerificationCode: { c: {
             emailAddress    : address,
         } },
     });
 }
-function _onMsgUserRequestEmailVerificationCode(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserRequestEmailVerificationCodeS.S;
+function _onMsgUserRequestEmailVerificationCode(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserRequestEmailVerificationCodeS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserRequestEmailVerificationCode(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserRequestEmailVerificationCode, data);
+        updateOnMsgUserRequestEmailVerificationCode(data);
+        dispatch(TypeId.MsgUserRequestEmailVerificationCode, data);
     } else {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserRequestEmailVerificationCodeFailed, data);
+        dispatch(TypeId.MsgUserRequestEmailVerificationCodeFailed, data);
     }
 }
 
 export function reqUserVerifyEmail(code: string): void {
-    NetworksManager.send({
+    send({
         MsgUserVerifyEmail: { c: {
             verificationCode    : code,
         } },
     });
 }
-function _onMsgUserVerifyEmail(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserVerifyEmailS.S;
+function _onMsgUserVerifyEmail(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserVerifyEmailS;
     if (!data.getErrorCode()) {
-        UsersModel.updateOnMsgUserVerifyEmail(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserVerifyEmail, data);
+        updateOnMsgUserVerifyEmail(data);
+        dispatch(TypeId.MsgUserVerifyEmail, data);
     }
 }
 
 export function reqUserRequestPasswordVerificationCode(account: string): void {
-    NetworksManager.send({
+    send({
         MsgUserRequestPasswordVerificationCode: { c: {
             account : account,
         } },
     });
 }
-function _onMsgUserRequestPasswordVerificationCode(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserRequestPasswordVerificationCodeS.S;
+function _onMsgUserRequestPasswordVerificationCode(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserRequestPasswordVerificationCodeS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserRequestPasswordVerificationCode, data);
+        dispatch(TypeId.MsgUserRequestPasswordVerificationCode, data);
     } else {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserRequestPasswordVerificationCodeFailed, data);
+        dispatch(TypeId.MsgUserRequestPasswordVerificationCodeFailed, data);
     }
 }
 
 export function reqUserResetPasswordWithEmail(code: string, account: string, newRawPassword: string): void {
-    NetworksManager.send({
+    send({
         MsgUserResetPasswordWithEmail: { c: {
             verificationCode    : code,
             account             : account,
-            newPassword         : HelpersSha1Generator.b64_sha1(newRawPassword),
+            newPassword         : b64_sha1(newRawPassword),
         } },
     });
 }
-function _onMsgUserResetPasswordWithEmail(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserResetPasswordWithEmailS.S;
+function _onMsgUserResetPasswordWithEmail(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserResetPasswordWithEmailS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgUserResetPasswordWithEmail, data);
+        dispatch(TypeId.MsgUserResetPasswordWithEmail, data);
     }
 }

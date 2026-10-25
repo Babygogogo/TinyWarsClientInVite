@@ -1,32 +1,34 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesMapSize from "../../../auxiliaryTypes/MapSize.ts";
-import * as AuxiliaryTypesPlayerDataForWeaSetPlayerState from "../../../auxiliaryTypes/PlayerDataForWeaSetPlayerState.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as CosUtils from "../../../cos/Utils.ts";
-import * as CoSkillsUtilsCommon from "../../../coSkills/utils/Common.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as MultiplierAndOffsetsUtils from "../../../multiplierAndOffsets/Utils.ts";
-import * as NumbersUtils from "../../../numbers/Utils.ts";
-import * as PlayersConstants from "../../../players/Constants.ts";
-import type * as PlayersIPlayer from "../../../players/IPlayer.ts";
-import * as PlayersUtilsCommon from "../../../players/utils/Common.ts";
-import * as PlayersUtilsFilter from "../../../players/utils/Filter.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetPlayerStateSimple from "../../../proto/schema/CommonProto/WarEvent/WeaSetPlayerStateSimple.ts";
-import * as TilesUtilsFilter from "../../../tiles/utils/Filter.ts";
-import * as UnitsUtilsFilter from "../../../units/utils/Filter.ts";
-import * as ValueAndComparatorsUtils from "../../../valueAndComparators/Utils.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
+import { PlayerDataForWeaSetPlayerState } from "../../../auxiliaryTypes/PlayerDataForWeaSetPlayerState.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { getValidEnergy } from "../../../cos/Utils.ts";
+import { checkIsValidSkillTypeId } from "../../../coSkills/utils/Common.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import { createLazyFunc } from "../../../helpers/Misc.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText, getFormattedText } from "../../../lang/Utils.ts";
+import { checkIsValid as MultiplierAndOffsetsUtilsCheckIsValid, getResultValue } from "../../../multiplierAndOffsets/Utils.ts";
+import { getValueInRange } from "../../../numbers/Utils.ts";
+import { Fund } from "../../../players/Constants.ts";
+import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import { checkIsValidAliveStateId } from "../../../players/utils/Common.ts";
+import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
+import type {
+    WeaSetPlayerStateSimple as ProtoSchemaCommonProtoWarEventWeaSetPlayerStateSimple,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetPlayerStateSimple.ts";
+import { checkIsValid as TilesUtilsFilterCheckIsValid, checkIsMeet as TilesUtilsFilterCheckIsMeet } from "../../../tiles/utils/Filter.ts";
+import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
+import { getDesc, checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet } from "../../../valueAndComparators/Utils.ts";
 
-type WeaSetPlayerStateSimple            = ProtoSchemaCommonProtoWarEventWeaSetPlayerStateSimple.WeaSetPlayerStateSimple;
-type IPlayer                            = PlayersIPlayer.IPlayer;
+type WeaSetPlayerStateSimple            = ProtoSchemaCommonProtoWarEventWeaSetPlayerStateSimple;
+type IPlayer                            = PlayersIPlayer;
 
-export function checkIsValid(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetPlayerStateSimple>, gameConfig: GameConfigGcData.GcData, mapSize: AuxiliaryTypesMapSize.MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetPlayerStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetPlayerStateSimple>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetPlayerStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -34,7 +36,7 @@ export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaS
     const actTextArray: string[] = [];
     {
         if (data.getActFund()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.Fund));
+            actTextArray.push(getText(TextType.Fund));
         }
     }
     {
@@ -44,41 +46,41 @@ export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaS
     }
     {
         if (data.getActCoEnergy()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.CoEnergy));
+            actTextArray.push(getText(TextType.CoEnergy));
         }
     }
     {
         if (data.getActAliveState()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.PlayerAliveState));
+            actTextArray.push(getText(TextType.PlayerAliveState));
         }
     }
     {
         if (data.getActIsSkipTurn()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.SkipATurn));
+            actTextArray.push(getText(TextType.SkipATurn));
         }
     }
     {
         if (data.getActCoUsingSkillType()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.ActivatingCoSkillType));
+            actTextArray.push(getText(TextType.ActivatingCoSkillType));
         }
     }
     {
         if (data.getActActivateCoSkillType()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.TriggerCoSkillType));
+            actTextArray.push(getText(TextType.TriggerCoSkillType));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(LangUtils.getText(LangConstants.TextType.A0957));
+        actTextArray.push(getText(TextType.A0957));
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0254,
-        LangUtils.getText(LangConstants.TextType.Players),
+    return getFormattedText(
+        TextType.F0254,
+        getText(TextType.Players),
         actTextArray.join(`, `),
     );
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetPlayerStateSimple>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetPlayerStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -87,36 +89,36 @@ export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<Wea
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- ${PlayersUtilsFilter.getDescForEmbed(filter)}`);
+            conTextArray.push(`- ${getDescForEmbed(filter)}`);
         }
     }
     {
         const comparator = data.getConTileComparator();
         if (comparator != null) {
-            conTextArray.push(`- ${ValueAndComparatorsUtils.getDesc(
+            conTextArray.push(`- ${getDesc(
                 comparator,
-                LangUtils.getText(data.getConTileFilter() == null ? LangConstants.TextType.B1406 : LangConstants.TextType.B1407)
+                getText(data.getConTileFilter() == null ? TextType.B1406 : TextType.B1407)
             )}`);
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if (comparator != null) {
-            conTextArray.push(`- ${ValueAndComparatorsUtils.getDesc(
+            conTextArray.push(`- ${getDesc(
                 comparator,
-                LangUtils.getText(data.getConUnitFilter() == null ? LangConstants.TextType.B1404 : LangConstants.TextType.B1405)
+                getText(data.getConUnitFilter() == null ? TextType.B1404 : TextType.B1405)
             )}`);
         }
     }
 
     if (!conTextArray.length) {
-        conTextArray.push(`- ${LangUtils.getText(LangConstants.TextType.A0944)}`);
+        conTextArray.push(`- ${getText(TextType.A0944)}`);
     }
 
     const actTextArray: string[] = [];
     {
         if (data.getActFund()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.Fund));
+            actTextArray.push(getText(TextType.Fund));
         }
     }
     {
@@ -126,71 +128,71 @@ export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<Wea
     }
     {
         if (data.getActCoEnergy()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.CoEnergy));
+            actTextArray.push(getText(TextType.CoEnergy));
         }
     }
     {
         if (data.getActAliveState()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.PlayerAliveState));
+            actTextArray.push(getText(TextType.PlayerAliveState));
         }
     }
     {
         if (data.getActIsSkipTurn()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.SkipATurn));
+            actTextArray.push(getText(TextType.SkipATurn));
         }
     }
     {
         if (data.getActCoUsingSkillType()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.ActivatingCoSkillType));
+            actTextArray.push(getText(TextType.ActivatingCoSkillType));
         }
     }
     {
         if (data.getActActivateCoSkillType()) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.TriggerCoSkillType));
+            actTextArray.push(getText(TextType.TriggerCoSkillType));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(LangUtils.getText(LangConstants.TextType.A0957));
+        actTextArray.push(getText(TextType.A0957));
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0255,
-        LangUtils.getText(LangConstants.TextType.Players),
+    return getFormattedText(
+        TextType.F0255,
+        getText(TextType.Players),
         conTextArray.join(`\n`),
-        LangUtils.getText(LangConstants.TextType.Players),
+        getText(TextType.Players),
         actTextArray.join(`, `),
     );
 }
 
-export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: AuxiliaryTypesMapSize.MapSize, playersCountUnneutral: number, gameConfig: GameConfigGcData.GcData): string | null {
+export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!PlayersUtilsFilter.checkIsValid(filter, playersCountUnneutral, gameConfig))
+            (!PlayersUtilsFilterCheckIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.PlayerFilter));
+            return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
         }
     }
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            if (!TilesUtilsFilter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.TileFilter));
+            if (!TilesUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+                return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
             }
             if (data.getConTileComparator() == null) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Comparator));
+                return getFormattedText(TextType.F0091, getText(TextType.Comparator));
             }
         }
     }
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            if (!UnitsUtilsFilter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitFilter));
+            if (!UnitsUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+                return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Comparator));
+                return getFormattedText(TextType.F0091, getText(TextType.Comparator));
             }
         }
     }
@@ -198,9 +200,9 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: AuxiliaryTyp
     {
         const act = data.getActFund();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtils.checkIsValid(act))
+            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Fund));
+            return getFormattedText(TextType.F0091, getText(TextType.Fund));
         }
     }
     {
@@ -208,23 +210,23 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: AuxiliaryTyp
         if ((act != null)                           &&
             (gameConfig.getCoBasicCfg(act) == null)
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, `CO`);
+            return getFormattedText(TextType.F0091, `CO`);
         }
     }
     {
         const act = data.getActCoEnergy();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtils.checkIsValid(act))
+            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.CoEnergy));
+            return getFormattedText(TextType.F0091, getText(TextType.CoEnergy));
         }
     }
     {
         const act = data.getActAliveState();
         if ((act != null)                                       &&
-            (!PlayersUtilsCommon.checkIsValidAliveStateId(act))
+            (!checkIsValidAliveStateId(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.PlayerAliveState));
+            return getFormattedText(TextType.F0091, getText(TextType.PlayerAliveState));
         }
     }
     {
@@ -234,17 +236,17 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: AuxiliaryTyp
     {
         const act = data.getActCoUsingSkillType();
         if ((act != null)                                       &&
-            (!CoSkillsUtilsCommon.checkIsValidSkillTypeId(act))
+            (!checkIsValidSkillTypeId(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.ActivatingCoSkillType));
+            return getFormattedText(TextType.F0091, getText(TextType.ActivatingCoSkillType));
         }
     }
     {
         const act = data.getActActivateCoSkillType();
         if ((act != null)                                       &&
-            (!CoSkillsUtilsCommon.checkIsValidSkillTypeId(act))
+            (!checkIsValidSkillTypeId(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.TriggerCoSkillType));
+            return getFormattedText(TextType.F0091, getText(TextType.TriggerCoSkillType));
         }
     }
 
@@ -257,7 +259,7 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: AuxiliaryTyp
         (data.getActCoUsingSkillType() == null)     &&
         (data.getActActivateCoSkillType() == null)
     ) {
-        return LangUtils.getText(LangConstants.TextType.A0957);
+        return getText(TextType.A0957);
     }
 
     return null;
@@ -267,18 +269,18 @@ export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: AuxiliaryTyp
 export async function applyWithExtraData(_action: WeaSetPlayerStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isFastExecute: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
     const targetPlayerArray: IPlayer[] = [];
     {
-        const getAllTiles       = HelpersMisc.createLazyFunc(() => war.getTileMap().getAllTiles());
-        const getAllUnits       = HelpersMisc.createLazyFunc(() => war.getUnitMap().getAllUnits());
+        const getAllTiles       = createLazyFunc(() => war.getTileMap().getAllTiles());
+        const getAllUnits       = createLazyFunc(() => war.getUnitMap().getAllUnits());
         const conPlayerFilter   = action.getConPlayerFilter();
         const conTileFilter     = action.getConTileFilter();
         const conTileComparator = action.getConTileComparator();
         const conUnitFilter     = action.getConUnitFilter();
         const conUnitComparator = action.getConUnitComparator();
         for (const player of war.getPlayerManager().getAllPlayers()) {
-            if ((conPlayerFilter != null) && (!PlayersUtilsFilter.checkIsMeet(conPlayerFilter, player))) {
+            if ((conPlayerFilter != null) && (!checkIsMeet(conPlayerFilter, player))) {
                 continue;
             }
 
@@ -288,12 +290,12 @@ export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isF
                 for (const tile of getAllTiles()) {
                     if (
                         (tile.getPlayerIndex() === playerIndex)                                                 &&
-                        ((conTileFilter == null) || (TilesUtilsFilter.checkIsMeet(conTileFilter, tile)))
+                        ((conTileFilter == null) || (TilesUtilsFilterCheckIsMeet(conTileFilter, tile)))
                     ) {
                         ++count;
                     }
                 }
-                if (!ValueAndComparatorsUtils.checkIsMeet(conTileComparator, count)) {
+                if (!ValueAndComparatorsUtilsCheckIsMeet(conTileComparator, count)) {
                     continue;
                 }
             }
@@ -304,12 +306,12 @@ export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isF
                 for (const unit of getAllUnits()) {
                     if (
                         (unit.getPlayerIndex() === playerIndex)                                                 &&
-                        ((conUnitFilter == null) || (UnitsUtilsFilter.checkIsMeet(conUnitFilter, unit)))
+                        ((conUnitFilter == null) || (UnitsUtilsFilterCheckIsMeet(conUnitFilter, unit)))
                     ) {
                         ++count;
                     }
                 }
-                if (!ValueAndComparatorsUtils.checkIsMeet(conUnitComparator, count)) {
+                if (!ValueAndComparatorsUtilsCheckIsMeet(conUnitComparator, count)) {
                     continue;
                 }
             }
@@ -322,10 +324,10 @@ export async function applyWithoutExtraData(action: WeaSetPlayerStateSimple, isF
         }
     }
 
-    const dataArray: AuxiliaryTypesPlayerDataForWeaSetPlayerState.PlayerDataForWeaSetPlayerState[] = [];
+    const dataArray: PlayerDataForWeaSetPlayerState[] = [];
     {
         for (const player of targetPlayerArray) {
-            dataArray.push(new AuxiliaryTypesPlayerDataForWeaSetPlayerState.PlayerDataForWeaSetPlayerState({
+            dataArray.push(new PlayerDataForWeaSetPlayerState({
                 playerIndex         : player.getPlayerIndex(),
                 fund                : evalActFund(action, player),
                 aliveState          : evalActAliveState(action, player),
@@ -351,10 +353,10 @@ function evalActFund(action: WeaSetPlayerStateSimple, player: IPlayer): number |
         return null;
     }
 
-    return NumbersUtils.getValueInRange({
-        minValue    : PlayersConstants.Fund.MinFund,
-        maxValue    : PlayersConstants.Fund.MaxFund,
-        rawValue    : MultiplierAndOffsetsUtils.getResultValue(act, player.getFund()),
+    return getValueInRange({
+        minValue    : Fund.MinFund,
+        maxValue    : Fund.MaxFund,
+        rawValue    : getResultValue(act, player.getFund()),
     });
 }
 
@@ -373,7 +375,7 @@ function evalActCoEnergy(action: WeaSetPlayerStateSimple, player: IPlayer): numb
         return null;
     }
 
-    return CosUtils.getValidEnergy(MultiplierAndOffsetsUtils.getResultValue(act, player.getCoCurrentEnergy()));
+    return getValidEnergy(getResultValue(act, player.getCoCurrentEnergy()));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

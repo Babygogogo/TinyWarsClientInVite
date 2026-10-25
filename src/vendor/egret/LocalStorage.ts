@@ -1,5 +1,5 @@
 
-import * as egret from "./Egret";
+import { $warn } from "./Egret";
 
 export function getItem(key: string): string | null {
     return window.localStorage.getItem(key);
@@ -11,7 +11,7 @@ export function setItem(key: string, value: string): boolean {
         return true;
     }
     catch {
-        egret.$warn(1047, key, value);
+        $warn(1047, key, value);
         return false;
     }
 }

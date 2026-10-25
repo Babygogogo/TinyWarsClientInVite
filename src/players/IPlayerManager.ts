@@ -1,20 +1,22 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import type * as PlayersIPlayer from "./IPlayer.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialPlayerManager from "../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import type { IPlayer } from "./IPlayer.ts";
+import type {
+    SerialPlayerManager as ProtoSchemaCommonProtoWarSerializationSerialPlayerManager,
+} from "../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
+import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
-type SerialPlayerManager    = ProtoSchemaCommonProtoWarSerializationSerialPlayerManager.SerialPlayerManager;
-type GcData                 = GameConfigGcData.GcData;
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
+type SerialPlayerManager    = ProtoSchemaCommonProtoWarSerializationSerialPlayerManager;
+type GcData                 = GameConfigGcData;
+type IBwWar                 = BaseWarInterfaceIBwWar;
 
 export interface IPlayerManager {
     getWatcherTeamIndexesForSelf(): Set<number>;
 
-    init(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialPlayerManager>, gameConfig: GcData): void;
+    init(data: Undefinable<SerialPlayerManager>, gameConfig: GcData): void;
     fastInit(data: SerialPlayerManager, gameConfig: GcData): void;
-    initWatcherTeamIndexesForHrw(warData: ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar): void;
+    initWatcherTeamIndexesForHrw(warData: SerialWar): void;
 
     startRunning(war: IBwWar): void;
 
@@ -26,18 +28,18 @@ export interface IPlayerManager {
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////
     checkHasPlayer(playerIndex: number): boolean;
-    getPlayer(playerIndex: number): PlayersIPlayer.IPlayer;
-    getAllPlayersDict(): Map<number, PlayersIPlayer.IPlayer>;
+    getPlayer(playerIndex: number): IPlayer;
+    getAllPlayersDict(): Map<number, IPlayer>;
     /** 返回结果已按playerIndex排序 */
-    getAllPlayers(includeNeutral?: boolean): PlayersIPlayer.IPlayer[];
+    getAllPlayers(includeNeutral?: boolean): IPlayer[];
 
-    getPlayerByUserId(userId: number): PlayersIPlayer.IPlayer | null;
+    getPlayerByUserId(userId: number): IPlayer | null;
 
-    getPlayerInTurn(): PlayersIPlayer.IPlayer;
+    getPlayerInTurn(): IPlayer;
 
-    getHumanPlayers(): PlayersIPlayer.IPlayer[];
+    getHumanPlayers(): IPlayer[];
 
-    getPlayerLoggedIn(): PlayersIPlayer.IPlayer | null;
+    getPlayerLoggedIn(): IPlayer | null;
     getPlayerIndexLoggedIn(): number | null;
 
     getTeamIndex(playerIndex: number): number;
@@ -58,7 +60,7 @@ export interface IPlayerManager {
 
     checkIsSameTeam(playerIndex1: number, playerIndex2: number): boolean;
 
-    forEachPlayer(includeNeutral: boolean, func: (p: PlayersIPlayer.IPlayer) => void): void;
+    forEachPlayer(includeNeutral: boolean, func: (p: IPlayer) => void): void;
 
     checkHasAliveWatcherTeam(watcherUserId: number): boolean;
 }

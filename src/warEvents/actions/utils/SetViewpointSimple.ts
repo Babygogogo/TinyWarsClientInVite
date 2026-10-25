@@ -1,40 +1,52 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "../../../auxiliaryTypes/MapSize.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import type * as PlayersIPlayer from "../../../players/IPlayer.ts";
-import * as PlayersUtilsFilter from "../../../players/utils/Filter.ts";
-import type * as ProtoSchemaCommonProtoStructurePlayerFilter from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetViewpointSimple from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointSimple.ts";
-import * as TilesUtilsFilter from "../../../tiles/utils/Filter.ts";
-import * as UnitsUtilsFilter from "../../../units/utils/Filter.ts";
-import * as ValueAndComparatorsUtils from "../../../valueAndComparators/Utils.ts";
-import * as WarEventsActionsConstantsSetViewpointSimple from "../constants/SetViewpointSimple.ts";
-import * as WarEventsActionsUtilsSetViewpointExpr from "./SetViewpointExpr.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getFormattedText, getText } from "../../../lang/Utils.ts";
+import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
+import type {
+    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
+} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type {
+    WeaSetViewpointSimple as ProtoSchemaCommonProtoWarEventWeaSetViewpointSimple,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointSimple.ts";
+import {
+    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
+    checkIsValid as TilesUtilsFilterCheckIsValid,
+    checkIsMeet as TilesUtilsFilterCheckIsMeet,
+} from "../../../tiles/utils/Filter.ts";
+import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
+import {
+    getDesc,
+    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
+    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
+} from "../../../valueAndComparators/Utils.ts";
+import { Common } from "../constants/SetViewpointSimple.ts";
+import { doApply } from "./SetViewpointExpr.ts";
 
-type PlayerFilter                   = ProtoSchemaCommonProtoStructurePlayerFilter.PlayerFilter;
-type WeaSetViewpointSimple          = ProtoSchemaCommonProtoWarEventWeaSetViewpointSimple.WeaSetViewpointSimple;
-type IPlayer                        = PlayersIPlayer.IPlayer;
+type PlayerFilter                   = ProtoSchemaCommonProtoStructurePlayerFilter;
+type WeaSetViewpointSimple          = ProtoSchemaCommonProtoWarEventWeaSetViewpointSimple;
+type IPlayer                        = PlayersIPlayer;
 
-export function checkIsValid(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetViewpointSimple>, gameConfig: GameConfigGcData.GcData, mapSize: AuxiliaryTypesMapSize.MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetViewpointSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetViewpointSimple>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetViewpointSimple>): string | null {
     if (!data) {
         return null;
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0258,
-        LangUtils.getText(LangConstants.TextType.Tiles),
-        LangUtils.getText(LangConstants.TextType.Tiles),
+    return getFormattedText(
+        TextType.F0258,
+        getText(TextType.Tiles),
+        getText(TextType.Tiles),
     );
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetViewpointSimple>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetViewpointSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -43,71 +55,71 @@ export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<Wea
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            conTextArray.push(`- ${TilesUtilsFilter.getDescForEmbed(filter)}`);
+            conTextArray.push(`- ${TilesUtilsFilterGetDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${LangUtils.getText(LangConstants.TextType.B1421)}) ${PlayersUtilsFilter.getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${getText(TextType.B1421)}) ${getDescForEmbed(filter)}`);
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if (comparator != null) {
-            conTextArray.push(`- ${ValueAndComparatorsUtils.getDesc(
+            conTextArray.push(`- ${getDesc(
                 comparator,
-                LangUtils.getText(data.getConUnitFilter() == null ? LangConstants.TextType.B1418 : LangConstants.TextType.B1419)
+                getText(data.getConUnitFilter() == null ? TextType.B1418 : TextType.B1419)
             )}`);
         }
     }
 
     if (!conTextArray.length) {
-        conTextArray.push(`- ${LangUtils.getText(LangConstants.TextType.A0944)}`);
+        conTextArray.push(`- ${getText(TextType.A0944)}`);
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0259,
-        LangUtils.getText(LangConstants.TextType.Tiles),
+    return getFormattedText(
+        TextType.F0259,
+        getText(TextType.Tiles),
         conTextArray.join(`\n`),
-        LangUtils.getText(LangConstants.TextType.Tiles),
+        getText(TextType.Tiles),
     );
 }
 
-export function getErrorTip(data: WeaSetViewpointSimple, mapSize: AuxiliaryTypesMapSize.MapSize, playersCountUnneutral: number, gameConfig: GameConfigGcData.GcData): string | null {
+export function getErrorTip(data: WeaSetViewpointSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            if (!UnitsUtilsFilter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitFilter));
+            if (!UnitsUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+                return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Comparator));
+                return getFormattedText(TextType.F0091, getText(TextType.Comparator));
             }
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!PlayersUtilsFilter.checkIsValid(filter, playersCountUnneutral, gameConfig))
+            (!PlayersUtilsFilterCheckIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.PlayerFilter));
+            return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
         }
     }
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
-            (!TilesUtilsFilter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!TilesUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.TileFilter));
+            return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if ((comparator != null)                            &&
-            (!ValueAndComparatorsUtils.checkIsValid(comparator))
+            (!ValueAndComparatorsUtilsCheckIsValid(comparator))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Comparator));
+            return getFormattedText(TextType.F0091, getText(TextType.Comparator));
         }
     }
 
@@ -120,23 +132,23 @@ export function getErrorTip(data: WeaSetViewpointSimple, mapSize: AuxiliaryTypes
         const act = data.getActIsOneByOne();
     }
     {
-        const act = data.getActInterval() ?? WarEventsActionsConstantsSetViewpointSimple.Common.DefaultInterval;
+        const act = data.getActInterval() ?? Common.DefaultInterval;
         if (
-            (act > WarEventsActionsConstantsSetViewpointSimple.Common.MaxInterval)    ||
-            (act < WarEventsActionsConstantsSetViewpointSimple.Common.MinInterval)
+            (act > Common.MaxInterval)    ||
+            (act < Common.MinInterval)
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B1035));
+            return getFormattedText(TextType.F0091, getText(TextType.B1035));
         }
     }
 
     return null;
 }
 
-export async function applyWithExtraData(action: WeaSetViewpointSimple, isFast: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
+export async function applyWithExtraData(action: WeaSetViewpointSimple, isFast: boolean, war: IBwWar): Promise<void> {
     return applyWithoutExtraData(action, isFast, war);
 }
-export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastExecute: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
-    const targetGridIndexArray: AuxiliaryTypesGridIndex.GridIndex[] = [];
+export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
+    const targetGridIndexArray: GridIndex[] = [];
     {
         const unitMap           = war.getUnitMap();
         const conTileFilter     = data.getConTileFilter();
@@ -145,7 +157,7 @@ export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastE
         const conUnitComparator = data.getConUnitComparator();
         const playerFilterDict  = new Map<IPlayer, boolean>();
         for (const tile of war.getTileMap().getAllTiles()) {
-            if ((conTileFilter != null) && (!TilesUtilsFilter.checkIsMeet(conTileFilter, tile))) {
+            if ((conTileFilter != null) && (!TilesUtilsFilterCheckIsMeet(conTileFilter, tile))) {
                 continue;
             }
 
@@ -157,11 +169,11 @@ export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastE
             if (conUnitComparator != null) {
                 let count = 0;
                 for (const unit of unitMap.getAllUnitsOnGrid(gridIndex)) {
-                    if ((conUnitFilter == null) || (UnitsUtilsFilter.checkIsMeet(conUnitFilter, unit))) {
+                    if ((conUnitFilter == null) || (UnitsUtilsFilterCheckIsMeet(conUnitFilter, unit))) {
                         ++count;
                     }
                 }
-                if (!ValueAndComparatorsUtils.checkIsMeet(conUnitComparator, count)) {
+                if (!ValueAndComparatorsUtilsCheckIsMeet(conUnitComparator, count)) {
                     continue;
                 }
             }
@@ -174,18 +186,18 @@ export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastE
         }
     }
 
-    return WarEventsActionsUtilsSetViewpointExpr.doApply({
+    return doApply({
         gridIndexArray      : targetGridIndexArray,
         isNeedFocusEffect   : !!data.getActNeedFocusEffect(),
         isOneByOne          : !!data.getActIsOneByOne(),
-        interval            : data.getActInterval() ?? WarEventsActionsConstantsSetViewpointSimple.Common.DefaultInterval,
+        interval            : data.getActInterval() ?? Common.DefaultInterval,
         war                 : war,
         isFastExecute       : isFastExecute,
     });
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, PlayersUtilsFilter.checkIsMeet(filter, player));
+        resultDict.set(player, checkIsMeet(filter, player));
     }
     return !!resultDict.get(player);
 }

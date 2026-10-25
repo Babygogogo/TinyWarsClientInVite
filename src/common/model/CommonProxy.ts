@@ -1,55 +1,59 @@
-import * as CommonModelCommonModel from "./CommonModel.ts";
-import * as NetworksManager from "../../networks/Manager.ts";
-import * as NetworksMessageCodes from "../../networks/MessageCodes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCommonGetCoStatisticsS from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCommonGetRankListS from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetRankList/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCommonGetServerStatusS from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetServerStatus/S.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { setMrwRankArray, setCoStatistics } from "./CommonModel.ts";
+import { addListeners, send } from "../../networks/Manager.ts";
+import { MessageCodes } from "../../networks/MessageCodes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCommonGetRankListS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetRankList/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCommonGetServerStatusS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetServerStatus/S.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export function init(): void {
-    NetworksManager.addListeners([
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCommonError,                  callback: _onMsgCommonError, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCommonGetServerStatus,        callback: _onMsgCommonGetServerStatus, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCommonGetRankList,            callback: _onMsgCommonGetRankList },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCommonGetCoStatistics,        callback: _onMsgCommonGetCoStatistics },
+    addListeners([
+        { msgCode: MessageCodes.MsgCommonError,                  callback: _onMsgCommonError, },
+        { msgCode: MessageCodes.MsgCommonGetServerStatus,        callback: _onMsgCommonGetServerStatus, },
+        { msgCode: MessageCodes.MsgCommonGetRankList,            callback: _onMsgCommonGetRankList },
+        { msgCode: MessageCodes.MsgCommonGetCoStatistics,        callback: _onMsgCommonGetCoStatistics },
     ], null);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function _onMsgCommonError(e: VendorEgretEgret.Event): void {
+function _onMsgCommonError(e: Event): void {
     // TODO: Handle common error message.
 }
 
 export function reqCommonGetServerStatus(): void {
-    NetworksManager.send({ MsgCommonGetServerStatus: { c: {} }, });
+    send({ MsgCommonGetServerStatus: { c: {} }, });
 }
-function _onMsgCommonGetServerStatus(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCommonGetServerStatusS.S;
+function _onMsgCommonGetServerStatus(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCommonGetServerStatusS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCommonGetServerStatus, data);
+        dispatch(TypeId.MsgCommonGetServerStatus, data);
     }
 }
 
 export function reqGetRankList(): void {
-    NetworksManager.send({ MsgCommonGetRankList: { c: {} } });
+    send({ MsgCommonGetRankList: { c: {} } });
 }
-function _onMsgCommonGetRankList(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCommonGetRankListS.S;
+function _onMsgCommonGetRankList(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCommonGetRankListS;
     if (!data.getErrorCode()) {
-        CommonModelCommonModel.setMrwRankArray(data.getMrwRankDataArray());
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCommonGetRankList, data);
+        setMrwRankArray(data.getMrwRankDataArray());
+        dispatch(TypeId.MsgCommonGetRankList, data);
     }
 }
 
 export function reqCommonGetCoStatistics(): void {
-    NetworksManager.send({ MsgCommonGetCoStatistics: { c: {} } });
+    send({ MsgCommonGetCoStatistics: { c: {} } });
 }
-function _onMsgCommonGetCoStatistics(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCommonGetCoStatisticsS.S;
+function _onMsgCommonGetCoStatistics(e: Event): void {
+    const data = e.data as S;
     if (!data.getErrorCode()) {
-        CommonModelCommonModel.setCoStatistics(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCommonGetCoStatistics, data);
+        setCoStatistics(data);
+        dispatch(TypeId.MsgCommonGetCoStatistics, data);
     }
 }

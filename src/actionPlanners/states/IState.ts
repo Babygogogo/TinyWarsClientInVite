@@ -1,20 +1,20 @@
-import type * as ActionPlannersConstants from "../Constants.ts";
-import type * as ActionPlannersIActionPlanner from "../IActionPlanner.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
+import type { StateId } from "../Constants.ts";
+import type { IActionPlanner } from "../IActionPlanner.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 
-type ApStateId  = ActionPlannersConstants.StateId;
-type GridIndex  = AuxiliaryTypesGridIndex.GridIndex;
+type ApStateId  = StateId;
+type GridIndex  = AuxiliaryTypesGridIndex;
 
 export interface IState {
     getStateId(): ApStateId;
 
-    getNextStateIdOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): ApStateId;
-    getNextStateIdOnDrag(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): ApStateId;
-    getNextStateIdOnDragEnded(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): ApStateId;
+    getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): ApStateId;
+    getNextStateIdOnDrag(actionPlanner: IActionPlanner): ApStateId;
+    getNextStateIdOnDragEnded(actionPlanner: IActionPlanner, gridIndex: GridIndex): ApStateId;
 
-    cancel(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void;
+    cancel(actionPlanner: IActionPlanner): void;
 
-    doApplyOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): void;
-    doApplyOnDrag(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): void;
-    doApplyOnDragEnded(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): void;
+    doApplyOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): void;
+    doApplyOnDrag(actionPlanner: IActionPlanner, gridIndex: GridIndex): void;
+    doApplyOnDragEnded(actionPlanner: IActionPlanner, gridIndex: GridIndex): void;
 }

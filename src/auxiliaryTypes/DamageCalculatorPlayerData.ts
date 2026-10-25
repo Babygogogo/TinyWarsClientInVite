@@ -1,20 +1,22 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "./AuxiliaryTypes.ts";
-import type * as CoSkillsConstants from "../coSkills/Constants.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData from "../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import type * as UnitsConstants from "../units/Constants.ts";
+import type { Undefinable } from "./AuxiliaryTypes.ts";
+import type { SkillTypeId } from "../coSkills/Constants.ts";
+import type {
+    TileCustomBuildingData as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData,
+} from "../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import type { WeaponTypeId } from "../units/Constants.ts";
 
-type TileCustomBuildingData = ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData;
+type TileCustomBuildingData = ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData;
 
 export class DamageCalculatorPlayerData {
     public coId                    = 0;
-    public coSkillType             : AuxiliaryTypesAuxiliaryTypes.Undefinable<CoSkillsConstants.SkillTypeId>;
+    public coSkillType             : Undefinable<SkillTypeId>;
     public unitType                = 0;
     public unitHp                  = 0;
-    public unitWeaponType          : AuxiliaryTypesAuxiliaryTypes.Undefinable<UnitsConstants.WeaponTypeId>;
+    public unitWeaponType          : Undefinable<WeaponTypeId>;
     public hasPrimaryAmmo          = false;
     public unitPromotion           = 0;
     public tileType                = 0;
-    public tileCustomBuildingData  : AuxiliaryTypesAuxiliaryTypes.Undefinable<TileCustomBuildingData>;
+    public tileCustomBuildingData  : Undefinable<TileCustomBuildingData>;
     public towersCount             = 0;
     public offenseBonus            = 0;
     public defenseBonus            = 0;

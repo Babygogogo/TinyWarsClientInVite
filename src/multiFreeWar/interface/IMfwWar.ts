@@ -1,9 +1,11 @@
-import type * as MultiPlayerWarInterfaceIMpwWar from "../../multiPlayerWar/interface/IMpwWar.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForMfw from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
+import type { IMpwWar } from "../../multiPlayerWar/interface/IMpwWar.ts";
+import type {
+    SettingsForMfw as ProtoSchemaCommonProtoWarSettingsSettingsForMfw,
+} from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
 
-type SettingsForMfw = ProtoSchemaCommonProtoWarSettingsSettingsForMfw.SettingsForMfw;
+type SettingsForMfw = ProtoSchemaCommonProtoWarSettingsSettingsForMfw;
 
-export interface IMfwWar extends MultiPlayerWarInterfaceIMpwWar.IMpwWar {
+export interface IMfwWar extends IMpwWar {
     getCanCheat(): boolean;
     getShouldSerializeFullInfoForFreeModeGames(): boolean;
 

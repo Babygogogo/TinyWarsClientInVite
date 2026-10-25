@@ -1,13 +1,13 @@
-import type * as AuxiliaryTypesDropDestination from "../../auxiliaryTypes/DropDestination.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as CoSkillsConstants from "../../coSkills/Constants.ts";
-import type * as ProtoSchemaCommonProtoStructureMovePath from "../../proto/schema/CommonProto/Structure/MovePath.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as SinglePlayerWarInterfaceISpwWar from "../interface/ISpwWar.ts";
-import * as SinglePlayerWarModelSpwModel from "./SpwModel.ts";
+import type { DropDestination } from "../../auxiliaryTypes/DropDestination.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { SkillTypeId } from "../../coSkills/Constants.ts";
+import type { MovePath } from "../../proto/schema/CommonProto/Structure/MovePath.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { ISpwWar } from "../interface/ISpwWar.ts";
+import { handlePlayerActionAndAutoActions } from "./SpwModel.ts";
 
-export function reqPlayerDeleteUnit(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqPlayerDeleteUnit(war: ISpwWar, gridIndex: GridIndex): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerDeleteUnit  : {
             gridIndex   : gridIndex.toProto().toJson(),
@@ -15,20 +15,20 @@ export function reqPlayerDeleteUnit(war: SinglePlayerWarInterfaceISpwWar.ISpwWar
     }));
 }
 
-export function reqPlayerEndTurn(war: SinglePlayerWarInterfaceISpwWar.ISpwWar): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqPlayerEndTurn(war: ISpwWar): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerEndTurn  : {},
     }));
 }
 
 export function reqPlayerProduceUnit({ war, gridIndex, unitType, unitHp }: {
-    war         : SinglePlayerWarInterfaceISpwWar.ISpwWar;
-    gridIndex   : AuxiliaryTypesGridIndex.GridIndex;
+    war         : ISpwWar;
+    gridIndex   : GridIndex;
     unitType    : number;
     unitHp      : number;
 }): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                    : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerProduceUnit  : {
             gridIndex   : gridIndex.toProto().toJson(),
@@ -39,11 +39,11 @@ export function reqPlayerProduceUnit({ war, gridIndex, unitType, unitHp }: {
 }
 
 export function reqPlayerUseCoActiveSkill({ war, skillType, targetGridIndexArray }: {
-    war                     : SinglePlayerWarInterfaceISpwWar.ISpwWar;
-    skillType               : CoSkillsConstants.SkillTypeId;
-    targetGridIndexArray    : AuxiliaryTypesGridIndex.GridIndex[] | null;
+    war                     : ISpwWar;
+    skillType               : SkillTypeId;
+    targetGridIndexArray    : GridIndex[] | null;
 }): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerUseCoSkill  : {
             skillType               : skillType,
@@ -52,8 +52,8 @@ export function reqPlayerUseCoActiveSkill({ war, skillType, targetGridIndexArray
     }));
 }
 
-export function reqPlayerVoteForDraw(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, playerIndex: number, isAgree: boolean): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqPlayerVoteForDraw(war: ISpwWar, playerIndex: number, isAgree: boolean): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerVoteForDraw : {
             playerIndex : playerIndex,
@@ -62,8 +62,8 @@ export function reqPlayerVoteForDraw(war: SinglePlayerWarInterfaceISpwWar.ISpwWa
     }));
 }
 
-export function reqPlayerSurrender(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, playerIndex: number): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqPlayerSurrender(war: ISpwWar, playerIndex: number): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                    : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoPlayerSurrender    : {
             playerIndex : playerIndex,
@@ -72,12 +72,12 @@ export function reqPlayerSurrender(war: SinglePlayerWarInterfaceISpwWar.ISpwWar,
 }
 
 export function reqUnitAttackUnit({ war, path, launchUnitId, targetGridIndex }: {
-    war             : SinglePlayerWarInterfaceISpwWar.ISpwWar;
-    path            : ProtoSchemaCommonProtoStructureMovePath.MovePath;
+    war             : ISpwWar;
+    path            : MovePath;
     launchUnitId    : number | null;
-    targetGridIndex : AuxiliaryTypesGridIndex.GridIndex;
+    targetGridIndex : GridIndex;
 }): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitAttackUnit : {
             path            : path.toJson(),
@@ -88,12 +88,12 @@ export function reqUnitAttackUnit({ war, path, launchUnitId, targetGridIndex }: 
 }
 
 export function reqUnitAttackTile({ war, path, launchUnitId, targetGridIndex }: {
-    war             : SinglePlayerWarInterfaceISpwWar.ISpwWar;
-    path            : ProtoSchemaCommonProtoStructureMovePath.MovePath;
+    war             : ISpwWar;
+    path            : MovePath;
     launchUnitId    : number | null;
-    targetGridIndex : AuxiliaryTypesGridIndex.GridIndex;
+    targetGridIndex : GridIndex;
 }): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitAttackTile : {
             path            : path.toJson(),
@@ -103,8 +103,8 @@ export function reqUnitAttackTile({ war, path, launchUnitId, targetGridIndex }: 
     }));
 }
 
-export function reqUnitBeLoaded(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitBeLoaded(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitBeLoaded   : {
             path            : path.toJson(),
@@ -113,8 +113,8 @@ export function reqUnitBeLoaded(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, pa
     }));
 }
 
-export function reqUnitBuildTile(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitBuildTile(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitBuildTile  : {
             path            : path.toJson(),
@@ -123,8 +123,8 @@ export function reqUnitBuildTile(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, p
     }));
 }
 
-export function reqUnitCaptureTile(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitCaptureTile(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitCaptureTile: {
             path            : path.toJson(),
@@ -133,8 +133,8 @@ export function reqUnitCaptureTile(war: SinglePlayerWarInterfaceISpwWar.ISpwWar,
     }));
 }
 
-export function reqUnitCrushUnit(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null, targetGridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitCrushUnit(war: ISpwWar, path: MovePath, launchUnitId: number | null, targetGridIndex: GridIndex): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitCrushUnit     : {
             path            : path.toJson(),
@@ -144,8 +144,8 @@ export function reqUnitCrushUnit(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, p
     }));
 }
 
-export function reqUnitDive(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitDive(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId            : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitDive   : {
             path            : path.toJson(),
@@ -155,12 +155,12 @@ export function reqUnitDive(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: 
 }
 
 export function reqUnitDrop({ war, path, launchUnitId, dropDestinations }: {
-    war             : SinglePlayerWarInterfaceISpwWar.ISpwWar;
-    path            : ProtoSchemaCommonProtoStructureMovePath.MovePath;
+    war             : ISpwWar;
+    path            : MovePath;
     launchUnitId    : number | null;
-    dropDestinations: AuxiliaryTypesDropDestination.DropDestination[];
+    dropDestinations: DropDestination[];
 }): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitDropUnit   : {
             path                : path.toJson(),
@@ -170,8 +170,8 @@ export function reqUnitDrop({ war, path, launchUnitId, dropDestinations }: {
     }));
 }
 
-export function reqUnitJoin(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitJoin(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitJoinUnit   : {
             path            : path.toJson(),
@@ -181,12 +181,12 @@ export function reqUnitJoin(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: 
 }
 
 export function reqUnitLaunchFlare({ war, path, launchUnitId, targetGridIndex }: {
-    war             : SinglePlayerWarInterfaceISpwWar.ISpwWar;
-    path            : ProtoSchemaCommonProtoStructureMovePath.MovePath;
+    war             : ISpwWar;
+    path            : MovePath;
     launchUnitId    : number | null;
-    targetGridIndex : AuxiliaryTypesGridIndex.GridIndex;
+    targetGridIndex : GridIndex;
 }): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                    : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitLaunchFlare    : {
             path            : path.toJson(),
@@ -197,12 +197,12 @@ export function reqUnitLaunchFlare({ war, path, launchUnitId, targetGridIndex }:
 }
 
 export function reqUnitLaunchSilo({ war, path, launchUnitId, targetGridIndex }: {
-    war             : SinglePlayerWarInterfaceISpwWar.ISpwWar;
-    path            : ProtoSchemaCommonProtoStructureMovePath.MovePath;
+    war             : ISpwWar;
+    path            : MovePath;
     launchUnitId    : number | null;
-    targetGridIndex : AuxiliaryTypesGridIndex.GridIndex;
+    targetGridIndex : GridIndex;
 }): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitLaunchSilo : {
             path            : path.toJson(),
@@ -212,8 +212,8 @@ export function reqUnitLaunchSilo({ war, path, launchUnitId, targetGridIndex }: 
     }));
 }
 
-export function reqUnitBoardedByCo(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitBoardedByCo(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId            : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitBoardedByCo : {
             path            : path.toJson(),
@@ -222,8 +222,8 @@ export function reqUnitBoardedByCo(war: SinglePlayerWarInterfaceISpwWar.ISpwWar,
     }));
 }
 
-export function reqUnitProduceUnit(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitProduceUnit(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                    : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitProduceUnit    : {
             path            : path.toJson(),
@@ -232,8 +232,8 @@ export function reqUnitProduceUnit(war: SinglePlayerWarInterfaceISpwWar.ISpwWar,
     }));
 }
 
-export function reqUnitRepairUnit(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null, targetGridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitRepairUnit(war: ISpwWar, path: MovePath, launchUnitId: number | null, targetGridIndex: GridIndex): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitRepairUnit    : {
             path            : path.toJson(),
@@ -243,8 +243,8 @@ export function reqUnitRepairUnit(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, 
     }));
 }
 
-export function reqUnitSelfDetonate(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitSelfDetonate(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitSelfDetonate  : {
             path            : path.toJson(),
@@ -253,8 +253,8 @@ export function reqUnitSelfDetonate(war: SinglePlayerWarInterfaceISpwWar.ISpwWar
     }));
 }
 
-export function reqUnitSupply(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitSupply(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitSupplyUnit : {
             path            : path.toJson(),
@@ -263,8 +263,8 @@ export function reqUnitSupply(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path
     }));
 }
 
-export function reqUnitSurface(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitSurface(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId                : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitSurface    : {
             path            : path.toJson(),
@@ -274,13 +274,13 @@ export function reqUnitSurface(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, pat
 }
 
 export function reqUnitUseCoActiveSkill({ war, skillType, path, launchUnitId, targetGridIndexArray }: {
-    war                     : SinglePlayerWarInterfaceISpwWar.ISpwWar;
-    skillType               : CoSkillsConstants.SkillTypeId;
-    path                    : ProtoSchemaCommonProtoStructureMovePath.MovePath;
+    war                     : ISpwWar;
+    skillType               : SkillTypeId;
+    path                    : MovePath;
     launchUnitId            : number | null;
-    targetGridIndexArray    : AuxiliaryTypesGridIndex.GridIndex[] | null;
+    targetGridIndexArray    : GridIndex[] | null;
 }): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId         : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitUseCoSkill    : {
             skillType               : skillType,
@@ -291,8 +291,8 @@ export function reqUnitUseCoActiveSkill({ war, skillType, path, launchUnitId, ta
     }));
 }
 
-export function reqUnitWait(war: SinglePlayerWarInterfaceISpwWar.ISpwWar, path: ProtoSchemaCommonProtoStructureMovePath.MovePath, launchUnitId: number | null): void {
-    SinglePlayerWarModelSpwModel.handlePlayerActionAndAutoActions(war, ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+export function reqUnitWait(war: ISpwWar, path: MovePath, launchUnitId: number | null): void {
+    handlePlayerActionAndAutoActions(war, WoContainer.fromJson({
         operationId     : war.getExecutedOperationManager().getExecutedOperationsCount(),
         WoUnitWait      : {
             path            : path.toJson(),

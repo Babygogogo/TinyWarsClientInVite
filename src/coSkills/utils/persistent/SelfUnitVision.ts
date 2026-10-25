@@ -1,6 +1,6 @@
-import type * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitVision from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitVision.ts";
+import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { SelfUnitVision } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitVision.ts";
 
 export function getTotalRangeOffset({
     cfg,
@@ -11,13 +11,13 @@ export function getTotalRangeOffset({
     coZoneRadius,
     getCoGridIndexArrayOnMap,
 }: {
-    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitVision.SelfUnitVision | null | undefined;
-    gameConfig                  : GameConfigGcData.GcData;
+    cfg                         : SelfUnitVision | null | undefined;
+    gameConfig                  : GcData;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex                   : GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => AuxiliaryTypesGridIndex.GridIndex[];
+    getCoGridIndexArrayOnMap    : () => GridIndex[];
 }): number {
     if (cfg == null) {
         return 0;
@@ -56,13 +56,13 @@ export function checkCanSeeThrough({
     coZoneRadius,
     getCoGridIndexArrayOnMap,
 }: {
-    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitVision.SelfUnitVision | null | undefined;
-    gameConfig                  : GameConfigGcData.GcData;
+    cfg                         : SelfUnitVision | null | undefined;
+    gameConfig                  : GcData;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex                   : GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => AuxiliaryTypesGridIndex.GridIndex[];
+    getCoGridIndexArrayOnMap    : () => GridIndex[];
 }): boolean {
     if (cfg == null) {
         return false;

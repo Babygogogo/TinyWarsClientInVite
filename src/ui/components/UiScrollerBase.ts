@@ -1,25 +1,25 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GeometriesUtils from "../../geometries/Utils.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as UiComponentsUiContainerBase from "./UiContainerBase.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import type * as UiInterfacesIUiScrollerBase from "../interfaces/IUiScrollerBase.ts";
-import * as UiTypesUiOrientation from "../types/UiOrientation.ts";
-import type * as UiTypesUiScrollerOptions from "../types/UiScrollerOptions.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
-import * as UiUtilsUiTrackPad from "../utils/UiTrackPad.ts";
-import * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { show } from "../../FloatText.ts";
+import { getSquaredPointDistance2 } from "../../geometries/Utils.ts";
+import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import { UiContainerBase } from "./UiContainerBase.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiScrollerBase } from "../interfaces/IUiScrollerBase.ts";
+import { UiOrientation } from "../types/UiOrientation.ts";
+import type { UiScrollerOptions as UiTypesUiScrollerOptions } from "../types/UiScrollerOptions.ts";
+import { getUiLayoutBaseClass } from "../utils/UiFactory.ts";
+import { UiTrackPad } from "../utils/UiTrackPad.ts";
+import { Rectangle, Point, Event } from "../../vendor/egret/Egret.ts";
 
-type UiScrollerOptions  = UiTypesUiScrollerOptions.UiScrollerOptions;
+type UiScrollerOptions  = UiTypesUiScrollerOptions;
 
-export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiContainerBase implements UiInterfacesIUiScrollerBase.IUiScrollerBase {
-    private readonly _borderMask    = new VendorEgretEgret.Rectangle();
-    private readonly _trackPad      = new UiUtilsUiTrackPad.UiTrackPad({});
+export abstract class UiScrollerBase extends UiContainerBase implements IUiScrollerBase {
+    private readonly _borderMask    = new Rectangle();
+    private readonly _trackPad      = new UiTrackPad({});
     private _options                : UiScrollerOptions = {};
 
     private _isScrollable           = true;
     private _isDragging             = 0;    // 0=无点击 1=点击无拖动 2=拖动
-    private _dragStartTouchPoint?   = new VendorEgretEgret.Point();
+    private _dragStartTouchPoint?   = new Point();
 
     public constructor(options?: UiScrollerOptions) {
         super();
@@ -36,7 +36,7 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
         {
             const agent = this.getEventAgent();
             agent.addAutoEnterFrameListener(this._onEnterFrame, this);
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.Wheel, this._onPointerWheel, this);
+            agent.addPointerEventListener(PointerEventType.Wheel, this._onPointerWheel, this);
         }
     }
     private _onEnterFrame(): void {
@@ -49,13 +49,13 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
         trackPad.update();
 
         const orientation = this.getOrientation();
-        if (orientation === UiTypesUiOrientation.UiOrientation.Horizontal) {
+        if (orientation === UiOrientation.Horizontal) {
             const x = trackPad.getX();
             if (viewport.getX() !== x) {
                 viewport.setX(x);
                 this._updateVisibilityForAllItems();
             }
-        } else if (orientation === UiTypesUiOrientation.UiOrientation.Vertical) {
+        } else if (orientation === UiOrientation.Vertical) {
             const y = trackPad.getY();
             if (viewport.getY() !== y) {
                 viewport.setY(y);
@@ -86,22 +86,22 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
             }
         }
     }
-    private _onPointerWheel(e: VendorEgretEgret.Event): void {
+    private _onPointerWheel(e: Event): void {
         e.stopPropagation();
 
         if ((this._isDragging) || (!this.getIsScrollable())) {
             return;
         }
 
-        const value = ((e.data as HelpersPointerInput.PointerUnifiedEventData).wheelValue ?? 0) / 2;
+        const value = ((e.data as PointerUnifiedEventData).wheelValue ?? 0) / 2;
         if (value == 0) {
             return;
         }
 
         const orientation = this.getOrientation();
-        if (orientation === UiTypesUiOrientation.UiOrientation.Horizontal) {
+        if (orientation === UiOrientation.Horizontal) {
             this.setScrollX(this.getScrollX() + value);
-        } else if (orientation === UiTypesUiOrientation.UiOrientation.Vertical) {
+        } else if (orientation === UiOrientation.Vertical) {
             this.setScrollY(this.getScrollY() + value);
         } else {
             const trackPad  = this._getTrackPad();
@@ -123,7 +123,7 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
         }
 
         const viewport = this._getViewport();
-        if (viewport instanceof UiUtilsUiFactory.getUiLayoutBaseClass()) {
+        if (viewport instanceof getUiLayoutBaseClass()) {
             viewport.setUnscaledRequestedSize(this.getUnscaledManualWidth(), this.getUnscaledManualHeight());
         }
 
@@ -138,7 +138,7 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
         }
 
         const viewport = this._getViewport();
-        if (viewport instanceof UiUtilsUiFactory.getUiLayoutBaseClass()) {
+        if (viewport instanceof getUiLayoutBaseClass()) {
             viewport.setUnscaledRequestedWidth(width, needArrange);
         }
 
@@ -154,7 +154,7 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
         }
 
         const viewport = this._getViewport();
-        if (viewport instanceof UiUtilsUiFactory.getUiLayoutBaseClass()) {
+        if (viewport instanceof getUiLayoutBaseClass()) {
             viewport.setUnscaledRequestedHeight(height, needArrange);
         }
 
@@ -180,21 +180,21 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
         return this.getOptions().globalScroll ?? false;
     }
 
-    private _getBorderMask(): VendorEgretEgret.Rectangle {
+    private _getBorderMask(): Rectangle {
         return this._borderMask;
     }
-    private _getTrackPad(): UiUtilsUiTrackPad.UiTrackPad {
+    private _getTrackPad(): UiTrackPad {
         return this._trackPad;
     }
 
-    protected abstract _getViewport(): UiInterfacesIUiComponent.IUiComponent | undefined;
-    public abstract getItem(index: number): UiInterfacesIUiComponent.IUiComponent | undefined;
-    public abstract getAllItems(): UiInterfacesIUiComponent.IUiComponent[] | undefined;
+    protected abstract _getViewport(): IUiComponent | undefined;
+    public abstract getItem(index: number): IUiComponent | undefined;
+    public abstract getAllItems(): IUiComponent[] | undefined;
 
-    public getOrientation(): UiTypesUiOrientation.UiOrientation | undefined {
+    public getOrientation(): UiOrientation | undefined {
         return this.getOptions().orientation;
     }
-    public setOrientation(orientation: UiTypesUiOrientation.UiOrientation | undefined): void {
+    public setOrientation(orientation: UiOrientation | undefined): void {
         if (this.getOrientation() != orientation) {
             this.getOptions().orientation = orientation;
 
@@ -211,16 +211,16 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
         const trackPad      = this._getTrackPad();
         const eventAgent    = this.getEventAgent();
 
-        eventAgent.addPointerEventListener(HelpersPointerInput.PointerEventType.Press, (e: VendorEgretEgret.Event) => {
+        eventAgent.addPointerEventListener(PointerEventType.Press, (e: Event) => {
             e.stopPropagation();
 
             if (!this.getIsScrollable()) {
                 return;
             }
 
-            const data = e.data as HelpersPointerInput.PointerUnifiedEventData;
+            const data = e.data as PointerUnifiedEventData;
             if (window.CLIENT_VERSION === "DEVELOP") {
-                FloatText2.show(`pointer id: ${data.pointerId}`);
+                show(`pointer id: ${data.pointerId}`);
             }
 
             const viewport = this._getViewport();
@@ -234,32 +234,32 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
             trackPad.pointerDown(this._dragStartTouchPoint);
         }, undefined);
 
-        eventAgent.addPointerEventListener(HelpersPointerInput.PointerEventType.ReleaseIn, (e: VendorEgretEgret.Event) => {
+        eventAgent.addPointerEventListener(PointerEventType.ReleaseIn, (e: Event) => {
             e.stopPropagation();
 
             this._isDragging = 0;
             trackPad.pointerUp();
         }, undefined);
 
-        eventAgent.addPointerEventListener(HelpersPointerInput.PointerEventType.ReleaseOut, (e: VendorEgretEgret.Event) => {
+        eventAgent.addPointerEventListener(PointerEventType.ReleaseOut, (e: Event) => {
             e.stopPropagation();
 
             this._isDragging = 0;
             trackPad.pointerUp();
         }, undefined);
 
-        eventAgent.addPointerEventListener(HelpersPointerInput.PointerEventType.PressMove, (e: VendorEgretEgret.Event) => {
+        eventAgent.addPointerEventListener(PointerEventType.PressMove, (e: Event) => {
             e.stopPropagation();
 
             if (!this._isDragging) {
                 return;
             }
 
-            const data              = e.data as HelpersPointerInput.PointerUnifiedEventData;
+            const data              = e.data as PointerUnifiedEventData;
             const touchPoint        = this.globalToLocal(data.stageX, data.stageY);
             const dragStartPoint    = this._dragStartTouchPoint;
             if (dragStartPoint) {
-                const squaredDistance = GeometriesUtils.getSquaredPointDistance2(dragStartPoint, touchPoint);
+                const squaredDistance = getSquaredPointDistance2(dragStartPoint, touchPoint);
                 if (squaredDistance != null) {
                     const trashHold = this.getOptions().dragTrashHold ?? 10;
                     if (squaredDistance > trashHold * trashHold) {
@@ -361,12 +361,12 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
         yAxis.setMin(0);
 
         const orientation = this.getOrientation();
-        if (orientation === UiTypesUiOrientation.UiOrientation.Horizontal) {
+        if (orientation === UiOrientation.Horizontal) {
             const viewportWidth = viewport.getScaledWidth();
             xAxis.setMax(Math.min(0, (this.getUnscaledManualWidth() ?? viewportWidth) - viewportWidth));
             this.setScrollX(this.getScrollX());
             this.setScrollY(0);
-        } else if (orientation === UiTypesUiOrientation.UiOrientation.Vertical) {
+        } else if (orientation === UiOrientation.Vertical) {
             const viewportHeight = viewport.getScaledHeight();
             yAxis.setMax(Math.min(0, (this.getUnscaledManualHeight() ?? viewportHeight) - viewportHeight));
             this.setScrollX(0);
@@ -414,9 +414,9 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
 
         const aabb          = target.getAabbToParent();
         const orientation   = this.getOrientation();
-        if (orientation === UiTypesUiOrientation.UiOrientation.Horizontal) {
+        if (orientation === UiOrientation.Horizontal) {
             this.setScrollX(-(target.getX() + aabb.x));
-        } else if (orientation === UiTypesUiOrientation.UiOrientation.Vertical) {
+        } else if (orientation === UiOrientation.Vertical) {
             this.setScrollY(-(target.getY() + aabb.y));
         } else {
             this.setScrollX(-(target.getX() + aabb.x));
@@ -436,7 +436,7 @@ export abstract class UiScrollerBase extends UiComponentsUiContainerBase.UiConta
         this._getTrackPad().setY(value);
     }
 
-    protected _checkIsItemVisible(item: UiInterfacesIUiComponent.IUiComponent): boolean {
+    protected _checkIsItemVisible(item: IUiComponent): boolean {
         const viewport = this._getViewport();
         if (viewport == null) {
             return false;

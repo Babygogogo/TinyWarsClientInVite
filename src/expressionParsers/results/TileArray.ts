@@ -1,23 +1,23 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import type * as TilesITile from "../../tiles/ITile.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { ITile as TilesITile } from "../../tiles/ITile.ts";
 
-type ITile = TilesITile.ITile;
+type ITile = TilesITile;
 
-export class TileArray extends ExpressionParsersResultsBase.Base {
+export class TileArray extends Base {
     public readonly array: ITile[];
 
-    public constructor(war: BaseWarInterfaceIBwWar.IBwWar, array: ITile[]) {
+    public constructor(war: IBwWar, array: ITile[]) {
         super(war);
 
         this.array = array;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.TileArray;
+    public override getResultType(): ResultType {
+        return ResultType.TileArray;
     }
-    public checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public checkIsEqual(rhs: Base): boolean {
         if (!(rhs instanceof TileArray)) {
             return false;
         }

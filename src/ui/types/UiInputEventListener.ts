@@ -1,11 +1,11 @@
-import type * as UiInterfacesIUiPromptedInput from "../interfaces/IUiPromptedInput.ts";
-import type * as UiInterfacesIUiTextInput from "../interfaces/IUiTextInput.ts";
-import type * as UiTypesUiInputEventType from "./UiInputEventType.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { IUiPromptedInput } from "../interfaces/IUiPromptedInput.ts";
+import type { IUiTextInput } from "../interfaces/IUiTextInput.ts";
+import type { UiInputEventType } from "./UiInputEventType.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface UiInputEventListener {
-    ui          : UiInterfacesIUiTextInput.IUiTextInput | UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    callback    : (e: VendorEgretEgret.Event) => void;
-    eventType   : UiTypesUiInputEventType.UiInputEventType;
+    ui          : IUiTextInput | IUiPromptedInput;
+    callback    : (e: Event) => void;
+    eventType   : UiInputEventType;
     thisObject? : any;
 }

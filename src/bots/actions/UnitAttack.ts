@@ -1,24 +1,24 @@
-import * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMovePathNode from "../../auxiliaryTypes/MovePathNode.ts";
-import type * as BotsCommonParams from "../CommonParams.ts";
-import type * as BotsTypes from "../Types.ts";
-import * as BotsUtils from "../Utils.ts";
-import * as DamageCalculatorsUtils from "../../damageCalculators/Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import type * as ProtoSchemaCommonProtoStructureBattleDamageInfo from "../../proto/schema/CommonProto/Structure/BattleDamageInfo.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as TilesITile from "../../tiles/ITile.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import * as VisibilitiesUtils from "../../visibilities/Utils.ts";
+import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
+import type { CommonParams } from "../CommonParams.ts";
+import type { ScoreAndAction } from "../Types.ts";
+import { IsNeedVisibility, getBestScoreAndAction } from "../Utils.ts";
+import { getEstimatedBattleInfo } from "../../damageCalculators/Utils.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import type { BattleDamageInfo } from "../../proto/schema/CommonProto/Structure/BattleDamageInfo.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { ITile } from "../../tiles/ITile.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
+import type { IUnit } from "../../units/IUnit.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import { checkIsUnitOnMapVisibleToTeam } from "../../visibilities/Utils.ts";
 
-type IBwUnit            = UnitsIUnit.IUnit;
-type IBwTile            = TilesITile.ITile;
-type GrScoreAndAction   = BotsTypes.ScoreAndAction;
+type IBwUnit            = IUnit;
+type IBwTile            = ITile;
+type GrScoreAndAction   = ScoreAndAction;
 
-export async function getScoreAndActionUnitAttack(commonParams: BotsCommonParams.CommonParams, unit: IBwUnit, pathNodes: AuxiliaryTypesMovePathNode.MovePathNode[]): Promise<GrScoreAndAction | null> {
-    await TimerTimerModel.checkAndCallLater();
+export async function getScoreAndActionUnitAttack(commonParams: CommonParams, unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+    await checkAndCallLater();
 
     const minRange = unit.getMinAttackRange();
     if (minRange == null) {
@@ -49,7 +49,7 @@ export async function getScoreAndActionUnitAttack(commonParams: BotsCommonParams
 
         const unitOnDestination = unitMap.getUnitOnMap(destination);
         if ((pathLength > 1) && (unitOnDestination)) {
-            if (VisibilitiesUtils.checkIsUnitOnMapVisibleToTeam({
+            if (checkIsUnitOnMapVisibleToTeam({
                 war                 : war,
                 observerTeamIndex   : teamIndex,
                 gridIndex           : destination,
@@ -67,7 +67,7 @@ export async function getScoreAndActionUnitAttack(commonParams: BotsCommonParams
     const promiseArray  : Promise<GrScoreAndAction>[] = [];
     for (const targetGridIndex of destination.getGridsWithinDistance({ minDistance: minRange, maxDistance: maxRange, mapSize: commonParams.getMapSize() })) {
         const targetUnit = unitMap.getUnitOnMap(targetGridIndex);
-        if ((BotsUtils.IsNeedVisibility) && (targetUnit != null) && (!visibleUnits.has(targetUnit))) {
+        if ((IsNeedVisibility) && (targetUnit != null) && (!visibleUnits.has(targetUnit))) {
             continue;
         }
 
@@ -99,9 +99,9 @@ export async function getScoreAndActionUnitAttack(commonParams: BotsCommonParams
         }
 
         promiseArray.push((async () => {
-            await TimerTimerModel.checkAndCallLater();
+            await checkAndCallLater();
 
-            const battleInfo = DamageCalculatorsUtils.getEstimatedBattleInfo({
+            const battleInfo = getEstimatedBattleInfo({
                 war                         : war,
                 movePath1                   : pathNodes.map(v => v.getGridIndex()),
                 launchUnitId1               : launchUnitId,
@@ -119,7 +119,7 @@ export async function getScoreAndActionUnitAttack(commonParams: BotsCommonParams
                     battleDamageInfoArray   : battleInfo.damageInfoArray,
                 }),
                 action  : unitMap.getUnitOnMap(targetGridIndex) != null
-                    ? ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({ WoUnitAttackUnit: {
+                    ? WoContainer.fromJson({ WoUnitAttackUnit: {
                         path        : {
                             nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                             fuelConsumption : totalMoveCost,
@@ -128,7 +128,7 @@ export async function getScoreAndActionUnitAttack(commonParams: BotsCommonParams
                         targetGridIndex     : targetGridIndex.toProto().toJson(),
                         launchUnitId        : launchUnitId,
                     } })
-                    : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({ WoUnitAttackTile: {
+                    : WoContainer.fromJson({ WoUnitAttackTile: {
                         path        : {
                             nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                             fuelConsumption : totalMoveCost,
@@ -141,16 +141,16 @@ export async function getScoreAndActionUnitAttack(commonParams: BotsCommonParams
         })());
     }
 
-    return BotsUtils.getBestScoreAndAction(await Promise.all(promiseArray), commonParams);
+    return getBestScoreAndAction(await Promise.all(promiseArray), commonParams);
 }
 
 async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitGridIndex, battleDamageInfoArray }: {
-    commonParams            : BotsCommonParams.CommonParams;
+    commonParams            : CommonParams;
     focusUnit               : IBwUnit;
-    focusUnitGridIndex      : AuxiliaryTypesGridIndex.GridIndex;
-    battleDamageInfoArray   : ProtoSchemaCommonProtoStructureBattleDamageInfo.BattleDamageInfo[];
+    focusUnitGridIndex      : GridIndex;
+    battleDamageInfoArray   : BattleDamageInfo[];
 }): Promise<number> {
-    await TimerTimerModel.checkAndCallLater();
+    await checkAndCallLater();
 
     const focusTeamIndex            = focusUnit.getTeamIndex();
     const unitValueRatio            = commonParams.getUnitValueRatio();
@@ -166,15 +166,15 @@ async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitG
 
     let totalScore = 0;
     for (const battleDamageInfo of battleDamageInfoArray) {
-        const damage        = HelpersMisc.getExisted(battleDamageInfo.getDamage(), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_00);
-        const tileGridIndex = AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(battleDamageInfo.getTargetTileGridIndex());
+        const damage        = getExisted(battleDamageInfo.getDamage(), ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_00);
+        const tileGridIndex = GridIndex.convertGridIndex(battleDamageInfo.getTargetTileGridIndex());
         if (tileGridIndex != null) {
             const tile2 = tileMap.getTile(tileGridIndex);
             if (!tileHpDict.has(tile2)) {
                 tileHpDict.set(tile2, tile2.getCurrentHp());
             }
 
-            const tileHp2           = HelpersMisc.getExisted(tileHpDict.get(tile2), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_02);
+            const tileHp2           = getExisted(tileHpDict.get(tile2), ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_02);
             const tileTeamIndex2    = tile2.getTeamIndex();
             const actualDamage      = Math.min(tileHp2, damage);
             tileHpDict.set(tile2, tileHp2 - actualDamage);
@@ -185,12 +185,12 @@ async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitG
 
         const unitId2 = battleDamageInfo.getTargetUnitId();
         if (unitId2 != null) {
-            const unit2 = HelpersMisc.getExisted(unitMap.getUnitById(unitId2), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_03);
+            const unit2 = getExisted(unitMap.getUnitById(unitId2), ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_03);
             if (!unitHpDict.has(unit2)) {
                 unitHpDict.set(unit2, unit2.getCurrentHp());
             }
 
-            const unitHp2               = HelpersMisc.getExisted(unitHpDict.get(unit2), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_04);
+            const unitHp2               = getExisted(unitHpDict.get(unit2), ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_04);
             const unitTeamIndex2        = unit2.getTeamIndex();
             const unitProductionCost2   = unit2.getProductionCfgCost();
             const actualDamage          = Math.min(unitHp2, damage);
@@ -240,7 +240,7 @@ async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitG
             continue;
         }
 
-        throw HelpersMisc.newError(`Invalid battleDamageInfo.`, UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_09);
+        throw newError(`Invalid battleDamageInfo.`, ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_09);
     }
 
     return totalScore;

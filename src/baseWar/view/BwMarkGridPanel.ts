@@ -1,76 +1,80 @@
-import type * as AuxiliaryTypesPositionFilter from "../../auxiliaryTypes/PositionFilter.ts";
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as CommonModelCommonModel from "../../common/model/CommonModel.ts";
-import * as DeprecatedPositionFilterUtils from "../../deprecatedPositionFilter/Utils.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GridMarksConstants from "../../gridMarks/Constants.ts";
-import * as GridMarksUtils from "../../gridMarks/Utils.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as MultiPlayerWarModelMpwProxy from "../../multiPlayerWar/model/MpwProxy.ts";
-import type * as NotificationsDataTypes from "../../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoStructureGridMarkData from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import type * as ProtoSchemaCommonProtoStructureTileFilter from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
-import type * as ProtoSchemaCommonProtoStructureUnitFilter from "../../proto/schema/CommonProto/Structure/UnitFilter.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TilesUtilsFilter from "../../tiles/utils/Filter.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UnitsUtilsFilter from "../../units/utils/Filter.ts";
-import * as VisibilitiesUtils from "../../visibilities/Utils.ts";
+import type { PositionFilter as AuxiliaryTypesPositionFilter } from "../../auxiliaryTypes/PositionFilter.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { getIsTransparentTouchLayerTouched, setIsTransparentTouchLayerTouched } from "../../common/model/CommonModel.ts";
+import { checkIsMeet } from "../../deprecatedPositionFilter/Utils.ts";
+import { showLang, show } from "../../FloatText.ts";
+import { getMpwWarClass, getMeWarClass, getRwWarBaseClass, getSpwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import { TypeId, AllGridMarkTypeId } from "../../gridMarks/Constants.ts";
+import { updateGridMarkList } from "../../gridMarks/Utils.ts";
+import { getNonNullElements, checkIsSameSet } from "../../helpers/Collection.ts";
+import { getGridMark } from "../../helpers/ImageSource.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getFormattedText } from "../../lang/Utils.ts";
+import {
+    reqMpwCommonSetGridMarkList,
+    reqMpwCommonSetHiddenGridMarkTypeIdList,
+    reqMpwCommonMarkGrid,
+} from "../../multiPlayerWar/model/MpwProxy.ts";
+import type { GridMarkListChanged, HiddenGridMarkTypeIdListChanged } from "../../notifications/DataTypes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId as NotificationsTypeId } from "../../notifications/TypeId.ts";
+import { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
+import type { TileFilter as ProtoSchemaCommonProtoStructureTileFilter } from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
+import type { UnitFilter as ProtoSchemaCommonProtoStructureUnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFilter.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { checkIsMeet as TilesUtilsFilterCheckIsMeet, checkIsMeetAsOutOfVision } from "../../tiles/utils/Filter.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../units/utils/Filter.ts";
+import { getAllTilesVisibleToTeam, getAllUnitsOnMapVisibleToTeams } from "../../visibilities/Utils.ts";
 
-type PositionFilter     = AuxiliaryTypesPositionFilter.PositionFilter;
-type UnitFilter         = ProtoSchemaCommonProtoStructureUnitFilter.UnitFilter;
-type TileFilter         = ProtoSchemaCommonProtoStructureTileFilter.TileFilter;
+type PositionFilter     = AuxiliaryTypesPositionFilter;
+type UnitFilter         = ProtoSchemaCommonProtoStructureUnitFilter;
+type TileFilter         = ProtoSchemaCommonProtoStructureTileFilter;
 
-let _selectedMarkTypeId     = GridMarksConstants.TypeId.MinMarkTypeId;
+let _selectedMarkTypeId     = TypeId.MinMarkTypeId;
 
 export interface OpenData {
-    war     : BaseWarInterfaceIBwWar.IBwWar;
+    war     : IBwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnImport!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnExport!            : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _btnImport!            : IUiButton;
+    private readonly _btnExport!            : IUiButton;
 
-    private readonly _labelShow!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listPlayer!           : UiInterfacesIUiScrollList.IUiScrollList<DataForPlayerRenderer>;
-    private readonly _btnShow!              : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelShow!            : IUiLabel;
+    private readonly _listPlayer!           : IUiScrollList<DataForPlayerRenderer>;
+    private readonly _btnShow!              : IUiButton;
 
-    private readonly _groupHelpBatchMark!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelBatchMark!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnPositionFilter!    : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelPositionFilter!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnTileFilter!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTileFilter!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnUnitFilter!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelUnitFilter!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnInVision!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelInVision!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnBatchMark!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnBatchUnmark!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnMarkType!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _imgMarkType!          : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupHelpBatchMark!   : IUiLayout;
+    private readonly _labelBatchMark!       : IUiLabel;
+    private readonly _btnPositionFilter!    : IUiButton;
+    private readonly _labelPositionFilter!  : IUiLabel;
+    private readonly _btnTileFilter!        : IUiButton;
+    private readonly _labelTileFilter!      : IUiLabel;
+    private readonly _btnUnitFilter!        : IUiButton;
+    private readonly _labelUnitFilter!      : IUiLabel;
+    private readonly _btnInVision!          : IUiButton;
+    private readonly _labelInVision!        : IUiLabel;
+    private readonly _btnBatchMark!         : IUiButton;
+    private readonly _btnBatchUnmark!       : IUiButton;
+    private readonly _btnMarkType!          : IUiButton;
+    private readonly _imgMarkType!          : IUiImage;
 
     private _positionFilter : PositionFilter | null = null;
     private _unitFilter     : UnitFilter | null = null;
@@ -79,9 +83,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgMpwCommonSetPlayerIndexesForShowMarkedGrid,   callback: this._onNotifyMsgMpwCommonSetPlayerIndexesForShowMarkedGrid },
-            { type: NotificationsTypeId.TypeId.MsgMpwCommonMarkTile,                            callback: this._onNotifyMsgMpwCommonMarkTile },
+            { type: NotificationsTypeId.LanguageChanged,                                 callback: this._onNotifyLanguageChanged },
+            { type: NotificationsTypeId.MsgMpwCommonSetPlayerIndexesForShowMarkedGrid,   callback: this._onNotifyMsgMpwCommonSetPlayerIndexesForShowMarkedGrid },
+            { type: NotificationsTypeId.MsgMpwCommonMarkTile,                            callback: this._onNotifyMsgMpwCommonMarkTile },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -122,7 +126,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnImport(): void {
         const war = this.getOpenData()?.war;
         if (war == null) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -132,63 +136,63 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 window.focus();
                 text = await navigator.clipboard.readText();
             } catch {
-                FloatText2.showLang(LangConstants.TextType.A0275);
+                showLang(TextType.A0275);
                 return;
             }
 
-            let data: ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData | undefined;
+            let data: GridMarkData | undefined;
             try {
-                data = ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData.fromJson(JSON.parse(text));
+                data = GridMarkData.fromJson(JSON.parse(text));
             } catch {
-                FloatText2.showLang(LangConstants.TextType.A0784);
+                showLang(TextType.A0784);
                 return;
             }
 
             if (data == null) {
-                FloatText2.showLang(LangConstants.TextType.A0784);
+                showLang(TextType.A0784);
                 return;
             }
 
-            if (war instanceof GameHelpersGhFactory.getMpwWarClass()) {
-                MultiPlayerWarModelMpwProxy.reqMpwCommonSetGridMarkList(HelpersMisc.getExisted(war.getWarId()), data.getGridIdAndMarkTypeIdList());
+            if (war instanceof getMpwWarClass()) {
+                reqMpwCommonSetGridMarkList(getExisted(war.getWarId()), data.getGridIdAndMarkTypeIdList());
 
-            } else if ((war instanceof GameHelpersGhFactory.getMeWarClass()) || (war instanceof GameHelpersGhFactory.getRwWarBaseClass())) {
+            } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
                 war.getGridMarkData().setGridIdAndMarkTypeIdList(data.getGridIdAndMarkTypeIdList());
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GridMarkListChanged, {
+                dispatch(NotificationsTypeId.GridMarkListChanged, {
                     war : war,
-                } as NotificationsDataTypes.GridMarkListChanged);
-                FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+                } as GridMarkListChanged);
+                showLang(TextType.OperationSucceeded);
 
-            } else if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
+            } else if (war instanceof getSpwWarClass()) {
                 war.getSaveSlotExtraData().createIfNotExistsGridMarkData().setGridIdAndMarkTypeIdList(data.getGridIdAndMarkTypeIdList());
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GridMarkListChanged, {
+                dispatch(NotificationsTypeId.GridMarkListChanged, {
                     war : war,
-                } as NotificationsDataTypes.GridMarkListChanged);
-                FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+                } as GridMarkListChanged);
+                showLang(TextType.OperationSucceeded);
 
             } else {
                 // TODO
             }
         };
 
-        if (CommonModelCommonModel.getIsTransparentTouchLayerTouched()) {
+        if (getIsTransparentTouchLayerTouched()) {
             callback();
         } else {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent          : () => LangUtils.getText(LangConstants.TextType.A0979),
-                getTextForConfirm   : () => LangUtils.getText(LangConstants.TextType.B0026),
-                getTextForCancel    : () => LangUtils.getText(LangConstants.TextType.B0026),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent          : () => getText(TextType.A0979),
+                getTextForConfirm   : () => getText(TextType.B0026),
+                getTextForCancel    : () => getText(TextType.B0026),
                 showButtonClose     : false,
                 callback            : async () => {
-                    CommonModelCommonModel.setIsTransparentTouchLayerTouched(true);
+                    setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
                 callbackOnCancel    : async () => {
-                    CommonModelCommonModel.setIsTransparentTouchLayerTouched(true);
+                    setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
             });
@@ -197,7 +201,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnExport(): void {
         const war = this.getOpenData()?.war;
         if (war == null) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -205,14 +209,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             try {
                 window.focus();
 
-                const data = new ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData();
-                if (war instanceof GameHelpersGhFactory.getMpwWarClass()) {
+                const data = new GridMarkData();
+                if (war instanceof getMpwWarClass()) {
                     data.setGridIdAndMarkTypeIdList(war.getPlayerLoggedIn()?.getGridMarkList() ?? []);
 
-                } else if ((war instanceof GameHelpersGhFactory.getMeWarClass()) || (war instanceof GameHelpersGhFactory.getRwWarBaseClass())) {
+                } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
                     data.setGridIdAndMarkTypeIdList(war.getGridMarkData().getGridIdAndMarkTypeIdList());
 
-                } else if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
+                } else if (war instanceof getSpwWarClass()) {
                     data.setGridIdAndMarkTypeIdList(war.getSaveSlotExtraData().getGridMarkData()?.getGridIdAndMarkTypeIdList() ?? []);
 
                 } else {
@@ -221,29 +225,29 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 await navigator.clipboard.writeText(JSON.stringify(data.toJson()));
 
             } catch {
-                FloatText2.showLang(LangConstants.TextType.A0275);
+                showLang(TextType.A0275);
                 return;
             }
 
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0235));
+            show(getText(TextType.A0235));
         };
 
-        if (CommonModelCommonModel.getIsTransparentTouchLayerTouched()) {
+        if (getIsTransparentTouchLayerTouched()) {
             callback();
         } else {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent          : () => LangUtils.getText(LangConstants.TextType.A0979),
-                getTextForConfirm   : () => LangUtils.getText(LangConstants.TextType.B0026),
-                getTextForCancel    : () => LangUtils.getText(LangConstants.TextType.B0026),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent          : () => getText(TextType.A0979),
+                getTextForConfirm   : () => getText(TextType.B0026),
+                getTextForCancel    : () => getText(TextType.B0026),
                 showButtonClose     : false,
                 callback            : async () => {
-                    CommonModelCommonModel.setIsTransparentTouchLayerTouched(true);
+                    setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
                 callbackOnCancel    : async () => {
-                    CommonModelCommonModel.setIsTransparentTouchLayerTouched(true);
+                    setIsTransparentTouchLayerTouched(true);
                     await callback();
                 },
             });
@@ -256,32 +260,32 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const visibleMarkTypeIdList = HelpersCollection.getNonNullElements(this._listPlayer.getSelectedItems()?.map(v => v.getOpenData()?.markTypeId) ?? []);
-        const hiddenMarkTypeIdList  = GridMarksConstants.AllGridMarkTypeId.filter(v => !visibleMarkTypeIdList.includes(v));
-        if (war instanceof GameHelpersGhFactory.getMpwWarClass()) {
-            MultiPlayerWarModelMpwProxy.reqMpwCommonSetHiddenGridMarkTypeIdList(HelpersMisc.getExisted(war.getWarId()), hiddenMarkTypeIdList);
+        const visibleMarkTypeIdList = getNonNullElements(this._listPlayer.getSelectedItems()?.map(v => v.getOpenData()?.markTypeId) ?? []);
+        const hiddenMarkTypeIdList  = AllGridMarkTypeId.filter(v => !visibleMarkTypeIdList.includes(v));
+        if (war instanceof getMpwWarClass()) {
+            reqMpwCommonSetHiddenGridMarkTypeIdList(getExisted(war.getWarId()), hiddenMarkTypeIdList);
 
-        } else if ((war instanceof GameHelpersGhFactory.getMeWarClass()) || (war instanceof GameHelpersGhFactory.getRwWarBaseClass())) {
+        } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
             const data = war.getGridMarkData();
-            if (!HelpersCollection.checkIsSameSet(new Set(data.getHiddenMarkTypeIdList()), new Set(hiddenMarkTypeIdList))) {
+            if (!checkIsSameSet(new Set(data.getHiddenMarkTypeIdList()), new Set(hiddenMarkTypeIdList))) {
                 data.setHiddenMarkTypeIdList(hiddenMarkTypeIdList);
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.HiddenGridMarkTypeIdListChanged, {
+                dispatch(NotificationsTypeId.HiddenGridMarkTypeIdListChanged, {
                     war : war,
-                } as NotificationsDataTypes.HiddenGridMarkTypeIdListChanged);
+                } as HiddenGridMarkTypeIdListChanged);
             }
-            FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+            showLang(TextType.OperationSucceeded);
 
-        } else if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
+        } else if (war instanceof getSpwWarClass()) {
             const data = war.getSaveSlotExtraData().createIfNotExistsGridMarkData();
-            if (!HelpersCollection.checkIsSameSet(new Set(data.getHiddenMarkTypeIdList()), new Set(hiddenMarkTypeIdList))) {
+            if (!checkIsSameSet(new Set(data.getHiddenMarkTypeIdList()), new Set(hiddenMarkTypeIdList))) {
                 data.setHiddenMarkTypeIdList(hiddenMarkTypeIdList);
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.HiddenGridMarkTypeIdListChanged, {
+                dispatch(NotificationsTypeId.HiddenGridMarkTypeIdListChanged, {
                     war : war,
-                } as NotificationsDataTypes.HiddenGridMarkTypeIdListChanged);
+                } as HiddenGridMarkTypeIdListChanged);
             }
-            FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+            showLang(TextType.OperationSucceeded);
 
         } else {
             // TODO
@@ -289,10 +293,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupHelpBatchMark(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0850),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0850),
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedBtnPositionFilter(): void {
@@ -301,7 +305,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WePositionFilterPanel, {
+        openPanel(getDict().WePositionFilterPanel, {
             currentFilter   : this._positionFilter,
             mapSize         : mapSize,
             callback        : positionFilter => {
@@ -317,7 +321,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeUnitFilterPanel, {
+        openPanel(getDict().WeUnitFilterPanel, {
             currentFilter           : this._unitFilter,
             playersCountUnneutral   : war.getPlayersCountUnneutral(),
             gameConfig              : war.getGcData(),
@@ -335,7 +339,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeTileFilterPanel, {
+        openPanel(getDict().WeTileFilterPanel, {
             currentFilter           : this._tileFilter,
             playersCountUnneutral   : war.getPlayersCountUnneutral(),
             gameConfig              : war.getGcData(),
@@ -365,7 +369,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const player = war instanceof GameHelpersGhFactory.getMpwWarClass() ? war.getPlayerLoggedIn() : war.getPlayerInTurn();
+        const player = war instanceof getMpwWarClass() ? war.getPlayerLoggedIn() : war.getPlayerInTurn();
         if (player == null) {
             return;
         }
@@ -373,29 +377,29 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const metGridIdArray = this._getMetGridIdArray(player.getTeamIndex());
         const addGridIdArray = metGridIdArray.filter(v => player.getMarkTypeId(v) != _selectedMarkTypeId);
         if (addGridIdArray.length <= 0) {
-            FloatText2.showLang(LangConstants.TextType.A0090);
+            showLang(TextType.A0090);
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent     : () => LangUtils.getFormattedText(LangConstants.TextType.F0193, metGridIdArray.length, addGridIdArray.length),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent     : () => getFormattedText(TextType.F0193, metGridIdArray.length, addGridIdArray.length),
                 callback    : () => {
-                    if (war instanceof GameHelpersGhFactory.getMpwWarClass()) {
-                        MultiPlayerWarModelMpwProxy.reqMpwCommonMarkGrid(HelpersMisc.getExisted(war.getWarId()), addGridIdArray, [], _selectedMarkTypeId);
+                    if (war instanceof getMpwWarClass()) {
+                        reqMpwCommonMarkGrid(getExisted(war.getWarId()), addGridIdArray, [], _selectedMarkTypeId);
 
-                    } else if ((war instanceof GameHelpersGhFactory.getMeWarClass()) || (war instanceof GameHelpersGhFactory.getRwWarBaseClass())) {
-                        GridMarksUtils.updateGridMarkList(war.getGridMarkData().getGridIdAndMarkTypeIdList(), addGridIdArray, [], _selectedMarkTypeId);
+                    } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
+                        updateGridMarkList(war.getGridMarkData().getGridIdAndMarkTypeIdList(), addGridIdArray, [], _selectedMarkTypeId);
 
-                        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GridMarkListChanged, {
+                        dispatch(NotificationsTypeId.GridMarkListChanged, {
                             war : war,
-                        } as NotificationsDataTypes.GridMarkListChanged);
-                        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+                        } as GridMarkListChanged);
+                        showLang(TextType.OperationSucceeded);
 
-                    } else if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
-                        GridMarksUtils.updateGridMarkList(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), addGridIdArray, [], _selectedMarkTypeId);
+                    } else if (war instanceof getSpwWarClass()) {
+                        updateGridMarkList(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), addGridIdArray, [], _selectedMarkTypeId);
 
-                        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GridMarkListChanged, {
+                        dispatch(NotificationsTypeId.GridMarkListChanged, {
                             war : war,
-                        } as NotificationsDataTypes.GridMarkListChanged);
-                        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+                        } as GridMarkListChanged);
+                        showLang(TextType.OperationSucceeded);
 
                     } else {
                         // TODO
@@ -412,7 +416,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const player = war instanceof GameHelpersGhFactory.getMpwWarClass() ? war.getPlayerLoggedIn() : war.getPlayerInTurn();
+        const player = war instanceof getMpwWarClass() ? war.getPlayerLoggedIn() : war.getPlayerInTurn();
         if (player == null) {
             return;
         }
@@ -420,29 +424,29 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const metGridIdArray    = this._getMetGridIdArray(player.getTeamIndex());
         const deleteGridIdArray = metGridIdArray.filter(v => player.getMarkTypeId(v) != null);
         if (deleteGridIdArray.length <= 0) {
-            FloatText2.showLang(LangConstants.TextType.A0090);
+            showLang(TextType.A0090);
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent     : () => LangUtils.getFormattedText(LangConstants.TextType.F0193, metGridIdArray.length, deleteGridIdArray.length),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent     : () => getFormattedText(TextType.F0193, metGridIdArray.length, deleteGridIdArray.length),
                 callback    : () => {
-                    if (war instanceof GameHelpersGhFactory.getMpwWarClass()) {
-                        MultiPlayerWarModelMpwProxy.reqMpwCommonMarkGrid(HelpersMisc.getExisted(war.getWarId()), [], deleteGridIdArray, _selectedMarkTypeId);
+                    if (war instanceof getMpwWarClass()) {
+                        reqMpwCommonMarkGrid(getExisted(war.getWarId()), [], deleteGridIdArray, _selectedMarkTypeId);
 
-                    } else if ((war instanceof GameHelpersGhFactory.getMeWarClass()) || (war instanceof GameHelpersGhFactory.getRwWarBaseClass())) {
-                        GridMarksUtils.updateGridMarkList(war.getGridMarkData().getGridIdAndMarkTypeIdList(), [], deleteGridIdArray, _selectedMarkTypeId);
+                    } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
+                        updateGridMarkList(war.getGridMarkData().getGridIdAndMarkTypeIdList(), [], deleteGridIdArray, _selectedMarkTypeId);
 
-                        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GridMarkListChanged, {
+                        dispatch(NotificationsTypeId.GridMarkListChanged, {
                             war : war,
-                        } as NotificationsDataTypes.GridMarkListChanged);
-                        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+                        } as GridMarkListChanged);
+                        showLang(TextType.OperationSucceeded);
 
-                    } else if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
-                        GridMarksUtils.updateGridMarkList(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), [], deleteGridIdArray, _selectedMarkTypeId);
+                    } else if (war instanceof getSpwWarClass()) {
+                        updateGridMarkList(war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getGridIdAndMarkTypeIdList(), [], deleteGridIdArray, _selectedMarkTypeId);
 
-                        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GridMarkListChanged, {
+                        dispatch(NotificationsTypeId.GridMarkListChanged, {
                             war : war,
-                        } as NotificationsDataTypes.GridMarkListChanged);
-                        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+                        } as GridMarkListChanged);
+                        showLang(TextType.OperationSucceeded);
 
                     } else {
                         // TODO
@@ -454,12 +458,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnMarkType(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleGridMarkPanel, {
+        openPanel(getDict().CommonChooseSingleGridMarkPanel, {
             currentMarkTypeId   : _selectedMarkTypeId,
             callback            : markTypeId => {
                 _selectedMarkTypeId = markTypeId;
                 this._updateImgMarkType();
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonChooseSingleGridMarkPanel);
+                closePanel(getDict().CommonChooseSingleGridMarkPanel);
             },
         });
     }
@@ -469,28 +473,28 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMpwCommonSetPlayerIndexesForShowMarkedGrid(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
     }
 
     private _onNotifyMsgMpwCommonMarkTile(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1108);
-        this._labelShow.setLangText(LangConstants.TextType.B1309);
-        this._btnShow.setLangText(LangConstants.TextType.B0026);
-        this._btnImport.setLangText(LangConstants.TextType.B1253);
-        this._btnExport.setLangText(LangConstants.TextType.B1479);
+        this._labelTitle.setLangText(TextType.B1108);
+        this._labelShow.setLangText(TextType.B1309);
+        this._btnShow.setLangText(TextType.B0026);
+        this._btnImport.setLangText(TextType.B1253);
+        this._btnExport.setLangText(TextType.B1479);
 
-        this._labelBatchMark.setLangText(LangConstants.TextType.B1109);
-        this._btnPositionFilter.setLangText(LangConstants.TextType.B1073);
-        this._btnUnitFilter.setLangText(LangConstants.TextType.UnitFilter);
-        this._btnTileFilter.setLangText(LangConstants.TextType.TileFilter);
-        this._btnInVision.setLangText(LangConstants.TextType.B1110);
-        this._btnBatchMark.setLangText(LangConstants.TextType.B0914);
-        this._btnBatchUnmark.setLangText(LangConstants.TextType.B0915);
+        this._labelBatchMark.setLangText(TextType.B1109);
+        this._btnPositionFilter.setLangText(TextType.B1073);
+        this._btnUnitFilter.setLangText(TextType.UnitFilter);
+        this._btnTileFilter.setLangText(TextType.TileFilter);
+        this._btnInVision.setLangText(TextType.B1110);
+        this._btnBatchMark.setLangText(TextType.B0914);
+        this._btnBatchUnmark.setLangText(TextType.B0915);
         this._updateLabelPositionFilter();
         this._updateLabelUnitFilter();
         this._updateLabelTileFilter();
@@ -500,7 +504,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateImgMarkType(): void {
-        this._imgMarkType.loadSource(HelpersImageSource.getGridMark(_selectedMarkTypeId));
+        this._imgMarkType.loadSource(getGridMark(_selectedMarkTypeId));
     }
 
     private async _updateListPlayer(): Promise<void> {
@@ -510,10 +514,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const list      = this._listPlayer;
-        const dataArray = GridMarksConstants.AllGridMarkTypeId.map(v => ({ markTypeId: v }));
+        const dataArray = AllGridMarkTypeId.map(v => ({ markTypeId: v }));
         await list.bindData(dataArray);
 
-        if (war instanceof GameHelpersGhFactory.getMpwWarClass()) {
+        if (war instanceof getMpwWarClass()) {
             const hiddenList    = war.getPlayerLoggedIn()?.getHiddenGridMarkTypeIdList() ?? [];
             const itemIndexes   : number[] = [];
             for (let index = 0; index < dataArray.length; index++) {
@@ -523,7 +527,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             }
             list.setSelectedItemIndexes(itemIndexes);
 
-        } else if ((war instanceof GameHelpersGhFactory.getMeWarClass()) || (war instanceof GameHelpersGhFactory.getRwWarBaseClass())) {
+        } else if ((war instanceof getMeWarClass()) || (war instanceof getRwWarBaseClass())) {
             const hiddenList    = war.getGridMarkData().getHiddenMarkTypeIdList();
             const itemIndexes   : number[] = [];
             for (let index = 0; index < dataArray.length; index++) {
@@ -533,7 +537,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             }
             list.setSelectedItemIndexes(itemIndexes);
 
-        } else if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
+        } else if (war instanceof getSpwWarClass()) {
             const hiddenList    = war.getSaveSlotExtraData().createIfNotExistsGridMarkData().getHiddenMarkTypeIdList();
             const itemIndexes   : number[] = [];
             for (let index = 0; index < dataArray.length; index++) {
@@ -549,24 +553,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelPositionFilter(): void {
-        this._labelPositionFilter.setText(LangUtils.getText(this._positionFilter ? LangConstants.TextType.Yes : LangConstants.TextType.No));
+        this._labelPositionFilter.setText(getText(this._positionFilter ? TextType.Yes : TextType.No));
     }
 
     private _updateLabelUnitFilter(): void {
-        this._labelUnitFilter.setText(LangUtils.getText(this._unitFilter ? LangConstants.TextType.Yes : LangConstants.TextType.No));
+        this._labelUnitFilter.setText(getText(this._unitFilter ? TextType.Yes : TextType.No));
     }
 
     private _updateLabelTileFilter(): void {
-        this._labelTileFilter.setText(LangUtils.getText(this._tileFilter ? LangConstants.TextType.Yes : LangConstants.TextType.No));
+        this._labelTileFilter.setText(getText(this._tileFilter ? TextType.Yes : TextType.No));
     }
 
     private _updateLabelInVision(): void {
         const label         = this._labelInVision;
         const isInVision    = this._isInVision;
         if (isInVision == null) {
-            label.setText(LangUtils.getText(LangConstants.TextType.B0776));
+            label.setText(getText(TextType.B0776));
         } else {
-            label.setText(LangUtils.getText(isInVision ? LangConstants.TextType.Yes : LangConstants.TextType.No));
+            label.setText(getText(isInVision ? TextType.Yes : TextType.No));
         }
     }
 
@@ -580,8 +584,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const positionFilter    = this._positionFilter;
         const tileFilter        = this._tileFilter;
         const unitFilter        = this._unitFilter;
-        const tilesInVision     = VisibilitiesUtils.getAllTilesVisibleToTeam(war, teamIndex);
-        const unitsInVision     = VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(war, new Set([teamIndex]));
+        const tilesInVision     = getAllTilesVisibleToTeam(war, teamIndex);
+        const unitsInVision     = getAllUnitsOnMapVisibleToTeams(war, new Set([teamIndex]));
         const unitMap           = war.getUnitMap();
         const mapSize           = unitMap.getMapSize();
         const gridIdArray       : number[] = [];
@@ -591,13 +595,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 continue;
             }
 
-            if ((positionFilter) && (!DeprecatedPositionFilterUtils.checkIsMeet(positionFilter, tile))) {
+            if ((positionFilter) && (!checkIsMeet(positionFilter, tile))) {
                 continue;
             }
 
             if (tileFilter) {
-                if (((isTileInVision) && (!TilesUtilsFilter.checkIsMeet(tileFilter, tile)))              ||
-                    ((!isTileInVision) && (!TilesUtilsFilter.checkIsMeetAsOutOfVision(tileFilter, tile)))
+                if (((isTileInVision) && (!TilesUtilsFilterCheckIsMeet(tileFilter, tile)))              ||
+                    ((!isTileInVision) && (!checkIsMeetAsOutOfVision(tileFilter, tile)))
                 ) {
                     continue;
                 }
@@ -606,7 +610,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             const gridIndex = tile.getGridIndex();
             if (unitFilter) {
                 const unit = unitMap.getUnitOnMap(gridIndex);
-                if ((unit == null) || (!unitsInVision.has(unit)) || (!UnitsUtilsFilter.checkIsMeet(unitFilter, unit))) {
+                if ((unit == null) || (!unitsInVision.has(unit)) || (!UnitsUtilsFilterCheckIsMeet(unitFilter, unit))) {
                     continue;
                 }
             }
@@ -618,15 +622,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForPlayerRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForPlayerRenderer extends UiListItemData {
     markTypeId : number;
 }
 class PlayerRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForPlayerRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForPlayerRenderer>
+    extends     UiListItemRenderer<DataForPlayerRenderer>
+    implements  IUiListItemRenderer<DataForPlayerRenderer>
 {
-    private readonly _groupShow!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgMark!      : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupShow!    : IUiContainer;
+    private readonly _imgMark!      : IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -634,7 +638,7 @@ class PlayerRenderer
     protected override _doApplyOpenData(): void {
         const markTypeId = this.getOpenData()?.markTypeId;
         if (markTypeId != null) {
-            this._imgMark.loadSource(HelpersImageSource.getGridMark(markTypeId));
+            this._imgMark.loadSource(getGridMark(markTypeId));
         }
     }
 }

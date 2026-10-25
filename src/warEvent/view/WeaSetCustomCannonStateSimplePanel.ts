@@ -1,101 +1,105 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as MultiplierAndOffsetsUtils from "../../multiplierAndOffsets/Utils.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoStructureMultiplierAndOffset from "../../proto/schema/CommonProto/Structure/MultiplierAndOffset.ts";
-import * as ProtoSchemaCommonProtoStructureValueAndComparator from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventAction from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetCustomCannonStateSimple from "../../proto/schema/CommonProto/WarEvent/WeaSetCustomCannonStateSimple.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import * as ValueAndComparatorsConstants from "../../valueAndComparators/Constants.ts";
-import * as ValueAndComparatorsUtils from "../../valueAndComparators/Utils.ts";
-import * as WarEventsActionsUtilsCommon from "../../warEvents/actions/utils/Common.ts";
-import * as WarEventsConstants from "../../warEvents/Constants.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getComparatorName, getTextForYesOrNo } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { checkIsDefault, getBriefDesc } from "../../multiplierAndOffsets/Utils.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { MultiplierAndOffset } from "../../proto/schema/CommonProto/Structure/MultiplierAndOffset.ts";
+import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
+import type {
+    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type {
+    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WeaSetCustomCannonStateSimple } from "../../proto/schema/CommonProto/WarEvent/WeaSetCustomCannonStateSimple.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import { ComparatorId, AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
+import { getBriefDesc as ValueAndComparatorsUtilsGetBriefDesc } from "../../valueAndComparators/Utils.ts";
+import { getErrorTipForAction, getDetailDescForAction } from "../../warEvents/actions/utils/Common.ts";
+import { Event } from "../../warEvents/Constants.ts";
 
-type WarEventFullData               = ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
-type WarEventAction                 = ProtoSchemaCommonProtoWarEventWarEventAction.WarEventAction;
+type WarEventFullData               = ProtoSchemaCommonProtoWarEventWarEventFullData;
+type WarEventAction                 = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
-    war         : MapEditorInterfaceIMeWar.IMeWar;
+    war         : IMeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnType!                                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                                  : IUiImage;
+    private readonly _group!                                    : IUiContainer;
+    private readonly _labelTitle!                               : IUiLabel;
+    private readonly _btnType!                                  : IUiButton;
+    private readonly _btnClose!                                 : IUiButton;
 
-    private readonly _groupDesc!                                : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelDesc!                                : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelError!                               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDesc!                                : IUiLayout;
+    private readonly _labelDesc!                                : IUiLabel;
+    private readonly _labelError!                               : IUiLabel;
 
-    private readonly _sclContent!                               : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiContainer.IUiContainer>;
+    private readonly _sclContent!                               : IUiScroller<IUiContainer>;
 
-    private readonly _btnConPlayerFilter!                       : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConPlayerFilter!                     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConPlayerFilter!                       : IUiButton;
+    private readonly _labelConPlayerFilter!                     : IUiLabel;
 
-    private readonly _btnConUnitFilter!                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConUnitFilter!                       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConUnitFilter!                         : IUiButton;
+    private readonly _labelConUnitFilter!                       : IUiLabel;
 
-    private readonly _btnConUnitComparator!                     : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConUnitComparator!                   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConUnitComparator!                     : IUiButton;
+    private readonly _labelConUnitComparator!                   : IUiLabel;
 
-    private readonly _btnConTileFilter!                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConTileFilter!                       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConTileFilter!                         : IUiButton;
+    private readonly _labelConTileFilter!                       : IUiLabel;
 
-    private readonly _btnActRangeForUp!                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActRangeForUp!                       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActRangeForUp!                         : IUiButton;
+    private readonly _labelActRangeForUp!                       : IUiLabel;
 
-    private readonly _btnActRangeForDown!                       : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActRangeForDown!                     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActRangeForDown!                       : IUiButton;
+    private readonly _labelActRangeForDown!                     : IUiLabel;
 
-    private readonly _btnActRangeForLeft!                       : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActRangeForLeft!                     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActRangeForLeft!                       : IUiButton;
+    private readonly _labelActRangeForLeft!                     : IUiLabel;
 
-    private readonly _btnActRangeForRight!                      : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActRangeForRight!                    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActRangeForRight!                      : IUiButton;
+    private readonly _labelActRangeForRight!                    : IUiLabel;
 
-    private readonly _btnActPriority!                           : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActPriority!                         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActPriority!                           : IUiButton;
+    private readonly _labelActPriority!                         : IUiLabel;
 
-    private readonly _btnActCanAffectSelf!                      : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActCanAffectSelf!                    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActCanAffectSelf!                      : IUiButton;
+    private readonly _labelActCanAffectSelf!                    : IUiLabel;
 
-    private readonly _btnActCanAffectAlly!                      : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActCanAffectAlly!                    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActCanAffectAlly!                      : IUiButton;
+    private readonly _labelActCanAffectAlly!                    : IUiLabel;
 
-    private readonly _btnActCanAffectEnemy!                     : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActCanAffectEnemy!                   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActCanAffectEnemy!                     : IUiButton;
+    private readonly _labelActCanAffectEnemy!                   : IUiLabel;
 
-    private readonly _btnActMaxTargetCount!                     : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActMaxTargetCount!                   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActMaxTargetCount!                     : IUiButton;
+    private readonly _labelActMaxTargetCount!                   : IUiLabel;
 
-    private readonly _btnActOffsetHp!                           : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActOffsetHp!                         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActOffsetHp!                           : IUiButton;
+    private readonly _labelActOffsetHp!                         : IUiLabel;
 
-    private readonly _btnActOffsetFuelPercentage!               : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActOffsetFuelPercentage!             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActOffsetFuelPercentage!               : IUiButton;
+    private readonly _labelActOffsetFuelPercentage!             : IUiLabel;
 
-    private readonly _btnActOffsetPrimaryAmmoPercentage!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActOffsetPrimaryAmmoPercentage!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActOffsetPrimaryAmmoPercentage!        : IUiButton;
+    private readonly _labelActOffsetPrimaryAmmoPercentage!      : IUiLabel;
 
-    private readonly _btnActCanBeFatal!                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActCanBeFatal!                       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActCanBeFatal!                         : IUiButton;
+    private readonly _labelActCanBeFatal!                       : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -122,8 +126,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnActCanBeFatal,                       callback: this._onTouchedBtnActCanBeFatal },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -153,7 +157,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeActionTypeListPanel, {
+        openPanel(getDict().WeActionTypeListPanel, {
             war         : openData.war,
             fullData    : openData.fullData,
             action      : openData.action,
@@ -171,13 +175,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WePlayerFilterPanel, {
+        openPanel(getDict().WePlayerFilterPanel, {
             gameConfig              : war.getGcData(),
             playersCountUnneutral   : war.getPlayersCountUnneutral(),
             currentFilter           : action.getConPlayerFilter(),
             callback                : filter => {
                 action.setConPlayerFilter(filter);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -193,7 +197,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeUnitFilterPanel, {
+        openPanel(getDict().WeUnitFilterPanel, {
             gameConfig              : war.getGcData(),
             playersCountUnneutral   : war.getPlayersCountUnneutral(),
             mapSize                 : war.getTileMap().getMapSize(),
@@ -202,13 +206,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 action.setConUnitFilter(filter);
 
                 if ((filter != null) && (!action.getConUnitComparator())) {
-                    action.setConUnitComparator(ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
-                        comparator  : ValueAndComparatorsConstants.ComparatorId.EqualTo,
+                    action.setConUnitComparator(ValueAndComparator.fromJson({
+                        comparator  : ComparatorId.EqualTo,
                         value       : 0,
                     }));
                 }
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -225,14 +229,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const oldCon = action.getConUnitComparator();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.Comparator),
-            availableNumberArray    : ValueAndComparatorsConstants.AllComparatorIdArray,
+        openPanel(getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => getText(TextType.Comparator),
+            availableNumberArray    : AllComparatorIdArray,
             currentNumber           : oldCon?.getComparator(),
-            getNumberMainText       : num => LangUtils.getComparatorName(num) ?? LangConstants.UndefinedError,
+            getNumberMainText       : num => getComparatorName(num) ?? UndefinedError,
             callbackOnConfirm       : sign => {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputNullableIntegerPanel, {
-                    getTitle        : () => LangUtils.getText(LangConstants.TextType.B0160),
+                openPanel(getDict().CommonInputNullableIntegerPanel, {
+                    getTitle        : () => getText(TextType.B0160),
                     currentValue    : oldCon?.getValue() ?? 0,
                     minValue        : 0,
                     maxValue        : 10,
@@ -240,19 +244,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                         if (unitsCount == null) {
                             action.setConUnitComparator(null);
                             action.setConUnitFilter(null);
-                            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                            dispatch(TypeId.WarEventFullDataChanged);
                         } else {
                             if (oldCon) {
                                 oldCon.setValue(unitsCount);
                                 oldCon.setComparator(sign);
                             } else {
-                                action.setConUnitComparator(ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
+                                action.setConUnitComparator(ValueAndComparator.fromJson({
                                     comparator  : sign,
                                     value       : unitsCount,
                                 }));
                             }
 
-                            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                            dispatch(TypeId.WarEventFullDataChanged);
                         }
                     },
                 });
@@ -271,14 +275,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeTileFilterPanel, {
+        openPanel(getDict().WeTileFilterPanel, {
             gameConfig              : war.getGcData(),
             playersCountUnneutral   : war.getPlayersCountUnneutral(),
             mapSize                 : war.getTileMap().getMapSize(),
             currentFilter           : action.getConTileFilter(),
             callback                : filter => {
                 action.setConTileFilter(filter);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -290,27 +294,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const act = action.getActRangeForUp();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.Multiplier),
-            minValue        : -WarEventsConstants.Event.MaxMultiplier,
-            maxValue        : WarEventsConstants.Event.MaxMultiplier,
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.Multiplier),
+            minValue        : -Event.MaxMultiplier,
+            maxValue        : Event.MaxMultiplier,
             currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.Offset),
-                minValue        : -WarEventsConstants.Event.MaxOffset,
-                maxValue        : WarEventsConstants.Event.MaxOffset,
+            callback        : newMultiplierPct => openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getText(TextType.Offset),
+                minValue        : -Event.MaxOffset,
+                maxValue        : Event.MaxOffset,
                 currentValue    : act?.getOffset() ?? 0,
                 callback        : newOffset => {
-                    const multiplierAndOffset = ProtoSchemaCommonProtoStructureMultiplierAndOffset.MultiplierAndOffset.fromJson({
+                    const multiplierAndOffset = MultiplierAndOffset.fromJson({
                         multiplierPct   : newMultiplierPct,
                         offset          : newOffset,
                     });
-                    if (MultiplierAndOffsetsUtils.checkIsDefault(multiplierAndOffset)) {
+                    if (checkIsDefault(multiplierAndOffset)) {
                         action.setActRangeForUp(null);
                     } else {
                         action.setActRangeForUp(multiplierAndOffset);
                     }
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }),
         });
@@ -323,27 +327,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const act = action.getActRangeForDown();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.Multiplier),
-            minValue        : -WarEventsConstants.Event.MaxMultiplier,
-            maxValue        : WarEventsConstants.Event.MaxMultiplier,
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.Multiplier),
+            minValue        : -Event.MaxMultiplier,
+            maxValue        : Event.MaxMultiplier,
             currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.Offset),
-                minValue        : -WarEventsConstants.Event.MaxOffset,
-                maxValue        : WarEventsConstants.Event.MaxOffset,
+            callback        : newMultiplierPct => openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getText(TextType.Offset),
+                minValue        : -Event.MaxOffset,
+                maxValue        : Event.MaxOffset,
                 currentValue    : act?.getOffset() ?? 0,
                 callback        : newOffset => {
-                    const multiplierAndOffset = ProtoSchemaCommonProtoStructureMultiplierAndOffset.MultiplierAndOffset.fromJson({
+                    const multiplierAndOffset = MultiplierAndOffset.fromJson({
                         multiplierPct   : newMultiplierPct,
                         offset          : newOffset,
                     });
-                    if (MultiplierAndOffsetsUtils.checkIsDefault(multiplierAndOffset)) {
+                    if (checkIsDefault(multiplierAndOffset)) {
                         action.setActRangeForDown(null);
                     } else {
                         action.setActRangeForDown(multiplierAndOffset);
                     }
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }),
         });
@@ -356,27 +360,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const act = action.getActRangeForLeft();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.Multiplier),
-            minValue        : -WarEventsConstants.Event.MaxMultiplier,
-            maxValue        : WarEventsConstants.Event.MaxMultiplier,
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.Multiplier),
+            minValue        : -Event.MaxMultiplier,
+            maxValue        : Event.MaxMultiplier,
             currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.Offset),
-                minValue        : -WarEventsConstants.Event.MaxOffset,
-                maxValue        : WarEventsConstants.Event.MaxOffset,
+            callback        : newMultiplierPct => openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getText(TextType.Offset),
+                minValue        : -Event.MaxOffset,
+                maxValue        : Event.MaxOffset,
                 currentValue    : act?.getOffset() ?? 0,
                 callback        : newOffset => {
-                    const multiplierAndOffset = ProtoSchemaCommonProtoStructureMultiplierAndOffset.MultiplierAndOffset.fromJson({
+                    const multiplierAndOffset = MultiplierAndOffset.fromJson({
                         multiplierPct   : newMultiplierPct,
                         offset          : newOffset,
                     });
-                    if (MultiplierAndOffsetsUtils.checkIsDefault(multiplierAndOffset)) {
+                    if (checkIsDefault(multiplierAndOffset)) {
                         action.setActRangeForLeft(null);
                     } else {
                         action.setActRangeForLeft(multiplierAndOffset);
                     }
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }),
         });
@@ -389,27 +393,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const act = action.getActRangeForRight();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.Multiplier),
-            minValue        : -WarEventsConstants.Event.MaxMultiplier,
-            maxValue        : WarEventsConstants.Event.MaxMultiplier,
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.Multiplier),
+            minValue        : -Event.MaxMultiplier,
+            maxValue        : Event.MaxMultiplier,
             currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.Offset),
-                minValue        : -WarEventsConstants.Event.MaxOffset,
-                maxValue        : WarEventsConstants.Event.MaxOffset,
+            callback        : newMultiplierPct => openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getText(TextType.Offset),
+                minValue        : -Event.MaxOffset,
+                maxValue        : Event.MaxOffset,
                 currentValue    : act?.getOffset() ?? 0,
                 callback        : newOffset => {
-                    const multiplierAndOffset = ProtoSchemaCommonProtoStructureMultiplierAndOffset.MultiplierAndOffset.fromJson({
+                    const multiplierAndOffset = MultiplierAndOffset.fromJson({
                         multiplierPct   : newMultiplierPct,
                         offset          : newOffset,
                     });
-                    if (MultiplierAndOffsetsUtils.checkIsDefault(multiplierAndOffset)) {
+                    if (checkIsDefault(multiplierAndOffset)) {
                         action.setActRangeForRight(null);
                     } else {
                         action.setActRangeForRight(multiplierAndOffset);
                     }
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }),
         });
@@ -422,27 +426,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const act = action.getActPriority();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.Multiplier),
-            minValue        : -WarEventsConstants.Event.MaxMultiplier,
-            maxValue        : WarEventsConstants.Event.MaxMultiplier,
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.Multiplier),
+            minValue        : -Event.MaxMultiplier,
+            maxValue        : Event.MaxMultiplier,
             currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.Offset),
-                minValue        : -WarEventsConstants.Event.MaxOffset,
-                maxValue        : WarEventsConstants.Event.MaxOffset,
+            callback        : newMultiplierPct => openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getText(TextType.Offset),
+                minValue        : -Event.MaxOffset,
+                maxValue        : Event.MaxOffset,
                 currentValue    : act?.getOffset() ?? 0,
                 callback        : newOffset => {
-                    const multiplierAndOffset = ProtoSchemaCommonProtoStructureMultiplierAndOffset.MultiplierAndOffset.fromJson({
+                    const multiplierAndOffset = MultiplierAndOffset.fromJson({
                         multiplierPct   : newMultiplierPct,
                         offset          : newOffset,
                     });
-                    if (MultiplierAndOffsetsUtils.checkIsDefault(multiplierAndOffset)) {
+                    if (checkIsDefault(multiplierAndOffset)) {
                         action.setActPriority(null);
                     } else {
                         action.setActPriority(multiplierAndOffset);
                     }
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }),
         });
@@ -462,7 +466,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         } else {
             action.setActCanAffectSelf(null);
         }
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+        dispatch(TypeId.WarEventFullDataChanged);
     }
 
     private _onTouchedBtnActCanAffectAlly(): void {
@@ -479,7 +483,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         } else {
             action.setActCanAffectAlly(null);
         }
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+        dispatch(TypeId.WarEventFullDataChanged);
     }
 
     private _onTouchedBtnActCanAffectEnemy(): void {
@@ -496,7 +500,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         } else {
             action.setActCanAffectEnemy(null);
         }
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+        dispatch(TypeId.WarEventFullDataChanged);
     }
 
     private _onTouchedBtnActMaxTargetCount(): void {
@@ -506,27 +510,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const act = action.getActMaxTargetCount();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.Multiplier),
-            minValue        : -WarEventsConstants.Event.MaxMultiplier,
-            maxValue        : WarEventsConstants.Event.MaxMultiplier,
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.Multiplier),
+            minValue        : -Event.MaxMultiplier,
+            maxValue        : Event.MaxMultiplier,
             currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.Offset),
-                minValue        : -WarEventsConstants.Event.MaxOffset,
-                maxValue        : WarEventsConstants.Event.MaxOffset,
+            callback        : newMultiplierPct => openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getText(TextType.Offset),
+                minValue        : -Event.MaxOffset,
+                maxValue        : Event.MaxOffset,
                 currentValue    : act?.getOffset() ?? 0,
                 callback        : newOffset => {
-                    const multiplierAndOffset = ProtoSchemaCommonProtoStructureMultiplierAndOffset.MultiplierAndOffset.fromJson({
+                    const multiplierAndOffset = MultiplierAndOffset.fromJson({
                         multiplierPct   : newMultiplierPct,
                         offset          : newOffset,
                     });
-                    if (MultiplierAndOffsetsUtils.checkIsDefault(multiplierAndOffset)) {
+                    if (checkIsDefault(multiplierAndOffset)) {
                         action.setActMaxTargetCount(null);
                     } else {
                         action.setActMaxTargetCount(multiplierAndOffset);
                     }
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }),
         });
@@ -539,27 +543,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const act = action.getActOffsetHp();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.Multiplier),
-            minValue        : -WarEventsConstants.Event.MaxMultiplier,
-            maxValue        : WarEventsConstants.Event.MaxMultiplier,
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.Multiplier),
+            minValue        : -Event.MaxMultiplier,
+            maxValue        : Event.MaxMultiplier,
             currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.Offset),
-                minValue        : -WarEventsConstants.Event.MaxOffset,
-                maxValue        : WarEventsConstants.Event.MaxOffset,
+            callback        : newMultiplierPct => openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getText(TextType.Offset),
+                minValue        : -Event.MaxOffset,
+                maxValue        : Event.MaxOffset,
                 currentValue    : act?.getOffset() ?? 0,
                 callback        : newOffset => {
-                    const multiplierAndOffset = ProtoSchemaCommonProtoStructureMultiplierAndOffset.MultiplierAndOffset.fromJson({
+                    const multiplierAndOffset = MultiplierAndOffset.fromJson({
                         multiplierPct   : newMultiplierPct,
                         offset          : newOffset,
                     });
-                    if (MultiplierAndOffsetsUtils.checkIsDefault(multiplierAndOffset)) {
+                    if (checkIsDefault(multiplierAndOffset)) {
                         action.setActOffsetHp(null);
                     } else {
                         action.setActOffsetHp(multiplierAndOffset);
                     }
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }),
         });
@@ -572,27 +576,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const act = action.getActOffsetFuelPercentage();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.Multiplier),
-            minValue        : -WarEventsConstants.Event.MaxMultiplier,
-            maxValue        : WarEventsConstants.Event.MaxMultiplier,
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.Multiplier),
+            minValue        : -Event.MaxMultiplier,
+            maxValue        : Event.MaxMultiplier,
             currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.Offset),
-                minValue        : -WarEventsConstants.Event.MaxOffset,
-                maxValue        : WarEventsConstants.Event.MaxOffset,
+            callback        : newMultiplierPct => openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getText(TextType.Offset),
+                minValue        : -Event.MaxOffset,
+                maxValue        : Event.MaxOffset,
                 currentValue    : act?.getOffset() ?? 0,
                 callback        : newOffset => {
-                    const multiplierAndOffset = ProtoSchemaCommonProtoStructureMultiplierAndOffset.MultiplierAndOffset.fromJson({
+                    const multiplierAndOffset = MultiplierAndOffset.fromJson({
                         multiplierPct   : newMultiplierPct,
                         offset          : newOffset,
                     });
-                    if (MultiplierAndOffsetsUtils.checkIsDefault(multiplierAndOffset)) {
+                    if (checkIsDefault(multiplierAndOffset)) {
                         action.setActOffsetFuelPercentage(null);
                     } else {
                         action.setActOffsetFuelPercentage(multiplierAndOffset);
                     }
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }),
         });
@@ -605,27 +609,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const act = action.getActOffsetPrimaryAmmoPercentage();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.Multiplier),
-            minValue        : -WarEventsConstants.Event.MaxMultiplier,
-            maxValue        : WarEventsConstants.Event.MaxMultiplier,
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.Multiplier),
+            minValue        : -Event.MaxMultiplier,
+            maxValue        : Event.MaxMultiplier,
             currentValue    : act?.getMultiplierPct() ?? 100,
-            callback        : newMultiplierPct => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.Offset),
-                minValue        : -WarEventsConstants.Event.MaxOffset,
-                maxValue        : WarEventsConstants.Event.MaxOffset,
+            callback        : newMultiplierPct => openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getText(TextType.Offset),
+                minValue        : -Event.MaxOffset,
+                maxValue        : Event.MaxOffset,
                 currentValue    : act?.getOffset() ?? 0,
                 callback        : newOffset => {
-                    const multiplierAndOffset = ProtoSchemaCommonProtoStructureMultiplierAndOffset.MultiplierAndOffset.fromJson({
+                    const multiplierAndOffset = MultiplierAndOffset.fromJson({
                         multiplierPct   : newMultiplierPct,
                         offset          : newOffset,
                     });
-                    if (MultiplierAndOffsetsUtils.checkIsDefault(multiplierAndOffset)) {
+                    if (checkIsDefault(multiplierAndOffset)) {
                         action.setActOffsetPrimaryAmmoPercentage(null);
                     } else {
                         action.setActOffsetPrimaryAmmoPercentage(multiplierAndOffset);
                     }
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }),
         });
@@ -645,7 +649,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         } else {
             action.setActCanBeFatal(null);
         }
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+        dispatch(TypeId.WarEventFullDataChanged);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -656,27 +660,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(LangConstants.TextType.B0516);
+        this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(TextType.B0516);
 
-        this._btnConPlayerFilter.setLangText(LangConstants.TextType.PlayerFilter);
-        this._btnConUnitFilter.setLangText(LangConstants.TextType.UnitFilter);
-        this._btnConUnitComparator.setLangText(LangConstants.TextType.Comparator);
-        this._btnConTileFilter.setLangText(LangConstants.TextType.TileFilter);
+        this._btnConPlayerFilter.setLangText(TextType.PlayerFilter);
+        this._btnConUnitFilter.setLangText(TextType.UnitFilter);
+        this._btnConUnitComparator.setLangText(TextType.Comparator);
+        this._btnConTileFilter.setLangText(TextType.TileFilter);
 
-        this._btnActRangeForUp.setLangText(LangConstants.TextType.RangeUp);
-        this._btnActRangeForDown.setLangText(LangConstants.TextType.RangeDown);
-        this._btnActRangeForLeft.setLangText(LangConstants.TextType.RangeLeft);
-        this._btnActRangeForRight.setLangText(LangConstants.TextType.RangeRight);
-        this._btnActPriority.setLangText(LangConstants.TextType.Priority);
-        this._btnActCanAffectSelf.setLangText(LangConstants.TextType.AffectOwner);
-        this._btnActCanAffectAlly.setLangText(LangConstants.TextType.AffectAlly);
-        this._btnActCanAffectEnemy.setLangText(LangConstants.TextType.AffectEnemy);
-        this._btnActMaxTargetCount.setLangText(LangConstants.TextType.MaxTargets);
-        this._btnActOffsetHp.setLangText(LangConstants.TextType.UnitsHpOffset);
-        this._btnActOffsetFuelPercentage.setLangText(LangConstants.TextType.UnitsFuelOffset$);
-        this._btnActOffsetPrimaryAmmoPercentage.setLangText(LangConstants.TextType.UnitsPriAmmoOffset$);
-        this._btnActCanBeFatal.setLangText(LangConstants.TextType.CanBeFatal);
+        this._btnActRangeForUp.setLangText(TextType.RangeUp);
+        this._btnActRangeForDown.setLangText(TextType.RangeDown);
+        this._btnActRangeForLeft.setLangText(TextType.RangeLeft);
+        this._btnActRangeForRight.setLangText(TextType.RangeRight);
+        this._btnActPriority.setLangText(TextType.Priority);
+        this._btnActCanAffectSelf.setLangText(TextType.AffectOwner);
+        this._btnActCanAffectAlly.setLangText(TextType.AffectAlly);
+        this._btnActCanAffectEnemy.setLangText(TextType.AffectEnemy);
+        this._btnActMaxTargetCount.setLangText(TextType.MaxTargets);
+        this._btnActOffsetHp.setLangText(TextType.UnitsHpOffset);
+        this._btnActOffsetFuelPercentage.setLangText(TextType.UnitsFuelOffset$);
+        this._btnActOffsetPrimaryAmmoPercentage.setLangText(TextType.UnitsPriAmmoOffset$);
+        this._btnActCanBeFatal.setLangText(TextType.CanBeFatal);
 
         this._updateLabelDescAndLabelError();
 
@@ -708,36 +712,36 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const action            = openData.action;
         const war               = openData.war;
-        const errorTip          = WarEventsActionsUtilsCommon.getErrorTipForAction(openData.fullData, action, war);
+        const errorTip          = getErrorTipForAction(openData.fullData, action, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || LangUtils.getText(LangConstants.TextType.B0493));
-        labelError.setTextColor(errorTip ? GraphicsConstants.ColorValue.Red : GraphicsConstants.ColorValue.Green);
-        this._labelDesc.setText(WarEventsActionsUtilsCommon.getDetailDescForAction(action, war.getGcData()) || LangConstants.UndefinedError);
+        labelError.setText(errorTip || getText(TextType.B0493));
+        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
+        this._labelDesc.setText(getDetailDescForAction(action, war.getGcData()) || UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
     private _updateLabelConPlayerFilter(): void {
-        this._labelConPlayerFilter.setText(this._getAction()?.getConPlayerFilter() == null ? `` : LangUtils.getText(LangConstants.TextType.B1408));
+        this._labelConPlayerFilter.setText(this._getAction()?.getConPlayerFilter() == null ? `` : getText(TextType.B1408));
     }
 
     private _updateLabelConUnitFilter(): void {
-        this._labelConUnitFilter.setText(this._getAction()?.getConUnitFilter() == null ? `` : LangUtils.getText(LangConstants.TextType.B1408));
+        this._labelConUnitFilter.setText(this._getAction()?.getConUnitFilter() == null ? `` : getText(TextType.B1408));
     }
 
     private _updateLabelConUnitComparator(): void {
         const comparator = this._getAction()?.getConUnitComparator();
-        this._labelConUnitComparator.setText(comparator == null ? `` : ValueAndComparatorsUtils.getBriefDesc(comparator));
+        this._labelConUnitComparator.setText(comparator == null ? `` : ValueAndComparatorsUtilsGetBriefDesc(comparator));
     }
 
     private _updateLabelConTileFilter(): void {
-        this._labelConTileFilter.setText(this._getAction()?.getConTileFilter() == null ? `` : LangUtils.getText(LangConstants.TextType.B1408));
+        this._labelConTileFilter.setText(this._getAction()?.getConTileFilter() == null ? `` : getText(TextType.B1408));
     }
 
     private _updateLabelActRangeForUp(): void {
         const act = this._getAction()?.getActRangeForUp();
         this._labelActRangeForUp.setText(act == null
             ? ``
-            : MultiplierAndOffsetsUtils.getBriefDesc(act)
+            : getBriefDesc(act)
         );
     }
 
@@ -745,7 +749,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActRangeForDown();
         this._labelActRangeForDown.setText(act == null
             ? ``
-            : MultiplierAndOffsetsUtils.getBriefDesc(act)
+            : getBriefDesc(act)
         );
     }
 
@@ -753,7 +757,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActRangeForLeft();
         this._labelActRangeForLeft.setText(act == null
             ? ``
-            : MultiplierAndOffsetsUtils.getBriefDesc(act)
+            : getBriefDesc(act)
         );
     }
 
@@ -761,7 +765,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActRangeForRight();
         this._labelActRangeForRight.setText(act == null
             ? ``
-            : MultiplierAndOffsetsUtils.getBriefDesc(act)
+            : getBriefDesc(act)
         );
     }
 
@@ -769,7 +773,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActPriority();
         this._labelActPriority.setText(act == null
             ? ``
-            : MultiplierAndOffsetsUtils.getBriefDesc(act)
+            : getBriefDesc(act)
         );
     }
 
@@ -777,7 +781,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActCanAffectSelf();
         this._labelActCanAffectSelf.setText(act == null
             ? ``
-            : LangUtils.getTextForYesOrNo(act)
+            : getTextForYesOrNo(act)
         );
     }
 
@@ -785,7 +789,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActCanAffectAlly();
         this._labelActCanAffectAlly.setText(act == null
             ? ``
-            : LangUtils.getTextForYesOrNo(act)
+            : getTextForYesOrNo(act)
         );
     }
 
@@ -793,7 +797,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActCanAffectEnemy();
         this._labelActCanAffectEnemy.setText(act == null
             ? ``
-            : LangUtils.getTextForYesOrNo(act)
+            : getTextForYesOrNo(act)
         );
     }
 
@@ -801,7 +805,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActMaxTargetCount();
         this._labelActMaxTargetCount.setText(act == null
             ? ``
-            : MultiplierAndOffsetsUtils.getBriefDesc(act)
+            : getBriefDesc(act)
         );
     }
 
@@ -809,7 +813,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActOffsetHp();
         this._labelActOffsetHp.setText(act == null
             ? ``
-            : MultiplierAndOffsetsUtils.getBriefDesc(act)
+            : getBriefDesc(act)
         );
     }
 
@@ -817,7 +821,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActOffsetFuelPercentage();
         this._labelActOffsetFuelPercentage.setText(act == null
             ? ``
-            : LangUtils.getTextForYesOrNo(act)
+            : getTextForYesOrNo(act)
         );
     }
 
@@ -825,7 +829,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActOffsetPrimaryAmmoPercentage();
         this._labelActOffsetPrimaryAmmoPercentage.setText(act == null
             ? ``
-            : MultiplierAndOffsetsUtils.getBriefDesc(act)
+            : getBriefDesc(act)
         );
     }
 
@@ -833,11 +837,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const act = this._getAction()?.getActCanBeFatal();
         this._labelActCanBeFatal.setText(act == null
             ? ``
-            : LangUtils.getTextForYesOrNo(act)
+            : getTextForYesOrNo(act)
         );
     }
 
-    private _getAction(): AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarEventWeaSetCustomCannonStateSimple.WeaSetCustomCannonStateSimple> {
+    private _getAction(): Undefinable<WeaSetCustomCannonStateSimple> {
         return this.getOpenData()?.action.getWeaSetCustomCannonStateSimple();
     }
 }

@@ -1,28 +1,30 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersContextsPosition from "../../../expressionParsers/contexts/Position.ts";
-import * as ExpressionParsersParser from "../../../expressionParsers/Parser.ts";
-import * as ExpressionParsersResultsNum from "../../../expressionParsers/results/Num.ts";
-import * as ExpressionParsersResultsNumArray from "../../../expressionParsers/results/NumArray.ts";
-import * as ExpressionParsersResultsPosition from "../../../expressionParsers/results/Position.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NumbersUtils from "../../../numbers/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetUnitMovePathVisibility from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitMovePathVisibility.ts";
-import * as WarEventsActionsConstantsSetUnitMovePathVisibility from "../constants/SetUnitMovePathVisibility.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { Position } from "../../../expressionParsers/contexts/Position.ts";
+import { Parser } from "../../../expressionParsers/Parser.ts";
+import { Num } from "../../../expressionParsers/results/Num.ts";
+import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
+import { Position as ExpressionParsersResultsPosition } from "../../../expressionParsers/results/Position.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getFormattedText } from "../../../lang/Utils.ts";
+import { getValueInInt32 } from "../../../numbers/Utils.ts";
+import type {
+    WeaSetUnitMovePathVisibility as ProtoSchemaCommonProtoWarEventWeaSetUnitMovePathVisibility,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitMovePathVisibility.ts";
+import { ExpressionInfoDict } from "../constants/SetUnitMovePathVisibility.ts";
 
-type WeaSetUnitMovePathVisibility   = ProtoSchemaCommonProtoWarEventWeaSetUnitMovePathVisibility.WeaSetUnitMovePathVisibility;
+type WeaSetUnitMovePathVisibility   = ProtoSchemaCommonProtoWarEventWeaSetUnitMovePathVisibility;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetUnitMovePathVisibility>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: Undefinable<WeaSetUnitMovePathVisibility>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getConPositionFilter(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitMovePathVisibility.ExpressionInfoDict.ConPositionFilter,
+            expressionInfo          : ExpressionInfoDict.ConPositionFilter,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -30,9 +32,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActVisibilityArray(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitMovePathVisibility.ExpressionInfoDict.ActVisibilityArray,
+            expressionInfo          : ExpressionInfoDict.ActVisibilityArray,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -42,64 +44,64 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetUnitMovePathVisibility>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetUnitMovePathVisibility>): string | null {
     if (data == null) {
         return null;
     }
 
-    return LangUtils.getFormattedText(LangConstants.TextType.F0207, data.getConPositionFilter() ?? LangConstants.UndefinedError);
+    return getFormattedText(TextType.F0207, data.getConPositionFilter() ?? UndefinedError);
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetUnitMovePathVisibility>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetUnitMovePathVisibility>): string | null {
     if (data == null) {
         return null;
     }
 
     const additionalText = [
-        data.getActVisibilityArray() ? `${WarEventsActionsConstantsSetUnitMovePathVisibility.ExpressionInfoDict.ActVisibilityArray.getTitleText()}: ${data.getActVisibilityArray()}` : null,
+        data.getActVisibilityArray() ? `${ExpressionInfoDict.ActVisibilityArray.getTitleText()}: ${data.getActVisibilityArray()}` : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${LangUtils.getFormattedText(LangConstants.TextType.F0207, data.getConPositionFilter() ?? LangConstants.UndefinedError)}\n${additionalText}`;
+    return `${getFormattedText(TextType.F0207, data.getConPositionFilter() ?? UndefinedError)}\n${additionalText}`;
 }
 
 export function getErrorTip(data: WeaSetUnitMovePathVisibility, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = WarEventsActionsConstantsSetUnitMovePathVisibility.ExpressionInfoDict.ConPositionFilter;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ConPositionFilter;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getConPositionFilter(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitMovePathVisibility.ExpressionInfoDict.ActVisibilityArray;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActVisibilityArray;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActVisibilityArray(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     return null;
 }
 
-function checkIsMeetConditionForPosition(action: WeaSetUnitMovePathVisibility, war: BaseWarInterfaceIBwWar.IBwWar, x: number, y: number): boolean {
+function checkIsMeetConditionForPosition(action: WeaSetUnitMovePathVisibility, war: IBwWar, x: number, y: number): boolean {
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(action.getConPositionFilter() ?? ``)
-            .eval(new ExpressionParsersContextsPosition.Position(new ExpressionParsersResultsPosition.Position(war, x, y)), false);
-        return (result instanceof ExpressionParsersResultsNum.Num) && (result.num !== 0);
+        const result = Parser.getParseResult(action.getConPositionFilter() ?? ``)
+            .eval(new Position(new ExpressionParsersResultsPosition(war, x, y)), false);
+        return (result instanceof Num) && (result.num !== 0);
     } catch {
         return false;
     }
 }
 
-function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: BaseWarInterfaceIBwWar.IBwWar, gridIndex: AuxiliaryTypesGridIndex.GridIndex): number[] {
+function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: IBwWar, gridIndex: GridIndex): number[] {
     const defaultValue  = war.getFogMap().getRawVisibilityFromPathsForAllPlayers(gridIndex);
     const act           = action.getActVisibilityArray();
     if (!act) {
@@ -107,10 +109,10 @@ function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: BaseW
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act)
-            .eval(new ExpressionParsersContextsPosition.Position(new ExpressionParsersResultsPosition.Position(war, gridIndex.getX(), gridIndex.getY())), false);
-        if (epResult instanceof ExpressionParsersResultsNumArray.NumArray) {
-            return epResult.numberArray.map(v => NumbersUtils.getValueInInt32(v));
+        const epResult = Parser.getParseResult(act)
+            .eval(new Position(new ExpressionParsersResultsPosition(war, gridIndex.getX(), gridIndex.getY())), false);
+        if (epResult instanceof NumArray) {
+            return epResult.numberArray.map(v => getValueInInt32(v));
         } else {
             return defaultValue;
         }
@@ -123,17 +125,17 @@ function evalActVisibilityArray(action: WeaSetUnitMovePathVisibility, war: BaseW
 export function applyWithExtraData(_action: WeaSetUnitMovePathVisibility): void {
     // nothing to do
 }
-export function applyWithoutExtraData(action: WeaSetUnitMovePathVisibility, war: BaseWarInterfaceIBwWar.IBwWar): void {
+export function applyWithoutExtraData(action: WeaSetUnitMovePathVisibility, war: IBwWar): void {
     const fogMap            = war.getFogMap();
     const { width, height } = fogMap.getMapSize().getWH();
-    const newVisibilityDict = new Map<AuxiliaryTypesGridIndex.GridIndex, number[]>();
+    const newVisibilityDict = new Map<GridIndex, number[]>();
     for (let x = 0; x < width; ++x) {
         for (let y = 0; y < height; ++y) {
             if (!checkIsMeetConditionForPosition(action, war, x, y)) {
                 continue;
             }
 
-            const gridIndex = new AuxiliaryTypesGridIndex.GridIndex(x, y);
+            const gridIndex = new GridIndex(x, y);
             newVisibilityDict.set(gridIndex, evalActVisibilityArray(action, war, gridIndex));
         }
     }

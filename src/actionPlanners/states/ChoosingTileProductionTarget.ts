@@ -1,109 +1,109 @@
-import * as ActionPlannersConstants from "../Constants.ts";
-import type * as ActionPlannersIActionPlanner from "../IActionPlanner.ts";
-import * as ActionPlannersStatesIdle from "./Idle.ts";
-import type * as ActionPlannersStatesIState from "./IState.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TurnsConstants from "../../turns/Constants.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
+import { StateId } from "../Constants.ts";
+import type { IActionPlanner } from "../IActionPlanner.ts";
+import { Idle } from "./Idle.ts";
+import type { IState } from "./IState.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import { getMeWarClass, getTwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { PhaseCode } from "../../turns/Constants.ts";
+import { ActionStateId } from "../../units/Constants.ts";
 
-type GridIndex              = AuxiliaryTypesGridIndex.GridIndex;
+type GridIndex              = AuxiliaryTypesGridIndex;
 
-export class ChoosingTileProductionTarget implements ActionPlannersStatesIState.IState {
+export class ChoosingTileProductionTarget implements IState {
     private static readonly _instance = new ChoosingTileProductionTarget();
 
     public static getInstance(): ChoosingTileProductionTarget {
         return ChoosingTileProductionTarget._instance;
     }
 
-    public getStateId(): ActionPlannersConstants.StateId {
-        return ActionPlannersConstants.StateId.ChoosingTileProductionTarget;
+    public getStateId(): StateId {
+        return StateId.ChoosingTileProductionTarget;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): ActionPlannersConstants.StateId {
+    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
         const war = actionPlanner.getWar();
-        if ((war instanceof GameHelpersGhFactory.getMeWarClass()) ||
-            (war instanceof GameHelpersGhFactory.getTwWarClass())
+        if ((war instanceof getMeWarClass()) ||
+            (war instanceof getTwWarClass())
         ) {
-            return ActionPlannersConstants.StateId.Idle;
+            return StateId.Idle;
         }
 
         const selfPlayerIndexSet    = actionPlanner.getSelfPlayerIndexSet();
         const turnManager           = war.getTurnManager();
-        const isSelfInTurn          = (selfPlayerIndexSet.has(turnManager.getPlayerIndexInTurn())) && (turnManager.getPhaseCode() === TurnsConstants.PhaseCode.Main);
+        const isSelfInTurn          = (selfPlayerIndexSet.has(turnManager.getPlayerIndexInTurn())) && (turnManager.getPhaseCode() === PhaseCode.Main);
         const tile                  = war.getTileMap().getTile(gridIndex);
         const unit                  = war.getUnitMap().getVisibleUnitOnMap(gridIndex);
 
         if (war.getCursor().getPreviousGridIndex()?.checkIsEqual(gridIndex)) {
-            return ActionPlannersConstants.StateId.ChoosingTileProductionTarget;
+            return StateId.ChoosingTileProductionTarget;
         } else {
             if (!unit) {
                 if ((isSelfInTurn)                                                              &&
                     ([...selfPlayerIndexSet].some(v => tile.checkIsUnitProducerForPlayer(v)))
                 ) {
-                    return ActionPlannersConstants.StateId.ChoosingTileProductionTarget;
+                    return StateId.ChoosingTileProductionTarget;
                 } else {
                     if (tile.checkIsMapWeapon()) {
-                        return ActionPlannersConstants.StateId.PreviewingTileAttackableArea;
+                        return StateId.PreviewingTileAttackableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.Idle;
+                        return StateId.Idle;
                     }
                 }
 
             } else {
                 if ((isSelfInTurn)                                      &&
-                    (unit.getActionState() === UnitsConstants.ActionStateId.Idle)  &&
+                    (unit.getActionState() === ActionStateId.Idle)  &&
                     (selfPlayerIndexSet.has(unit.getPlayerIndex()))
                 ) {
-                    return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                    return StateId.ChoosingUnitMovePath;
                 } else {
                     if (unit.checkHasWeapon()) {
-                        return ActionPlannersConstants.StateId.PreviewingUnitAttackableArea;
+                        return StateId.PreviewingUnitAttackableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.PreviewingUnitMovableArea;
+                        return StateId.PreviewingUnitMovableArea;
                     }
                 }
             }
         }
     }
 
-    public getNextStateIdOnDrag(): ActionPlannersConstants.StateId {
-        return ActionPlannersConstants.StateId.Idle;
+    public getNextStateIdOnDrag(): StateId {
+        return StateId.Idle;
     }
 
-    public getNextStateIdOnDragEnded(): ActionPlannersConstants.StateId {
+    public getNextStateIdOnDragEnded(): StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
-        ActionPlannersStatesIdle.Idle.getInstance().apply(actionPlanner, SoundsConstants.ShortSfxCode.ButtonCancel01);
+    public cancel(actionPlanner: IActionPlanner): void {
+        Idle.getInstance().apply(actionPlanner, ShortSfxCode.ButtonCancel01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
         actionPlanner.clearAllDataForStates();
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingTileProductionTarget);
+        actionPlanner.setStateId(StateId.ChoosingTileProductionTarget);
         actionPlanner.updateView();
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().BwProduceUnitPanel, {
+        playShortSfx(ShortSfxCode.CursorConfirm01);
+        openPanel(getDict().BwProduceUnitPanel, {
             gridIndex   : gridIndex,
             war         : actionPlanner.getWar(),
         });
     }
 
     public doApplyOnDrag(): void {
-        throw HelpersMisc.newError(`Not expected to apply on drag!`);
+        throw newError(`Not expected to apply on drag!`);
     }
 
     public doApplyOnDragEnded(): void {
-        throw HelpersMisc.newError(`ChoosingTileProductionTargetState: Not expected to apply on drag ended!`);
+        throw newError(`ChoosingTileProductionTargetState: Not expected to apply on drag ended!`);
     }
 }

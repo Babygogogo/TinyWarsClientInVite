@@ -1,75 +1,98 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesCachedDataAccessor from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import * as CampaignsMainsProvider from "../../campaigns/mains/Provider.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as FogMapsConstants from "../../fogMaps/Constants.ts";
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as HelpersGzip from "../../helpers/Gzip.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocalDataStorage2 from "../../localData/Storage.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCampaignCreateWarS from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCampaignSaveWarS from "../../proto/schema/CommonProto/NetMessage/MsgCampaignSaveWar/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmCreateScwS from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSfwS from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSfw/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSrwS from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmGetAllWarSaveSlotTimestampsS from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetAllWarSaveSlotTimestamps/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmGetRankListS from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetRankList/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmGetRankListSpmRankInfoForRule from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetRankList/SpmRankInfoForRule.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmGetReplayDataS from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetReplayData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataS from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetWarSaveSlotFullData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataArrayS from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetWarSaveSlotFullDataArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmSaveScwS from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveScw/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmSaveSfwS from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveSfw/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmSaveSrwS from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveSrw/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmValidateSrwS from "../../proto/schema/CommonProto/NetMessage/MsgSpmValidateSrw/S.ts";
-import * as ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import * as SinglePlayerModeModelSpmProxy from "./SpmProxy.ts";
-import * as TurnsConstants from "../../turns/Constants.ts";
-import * as UsersModel from "../../users/Model.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as WarRulesUtilsInstance from "../../warRules/utils/Instance.ts";
+import type {
+    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+    DecodedSpmWarSaveSlotData,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
+import { getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
+import { show } from "../../FloatText.ts";
+import { ForcedFogCode } from "../../fogMaps/Constants.ts";
+import { SingleRankedWar, SinglePlayerWar } from "../../gameConfig/GcWar.ts";
+import { decompress } from "../../helpers/Gzip.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getNormalMapId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getLanguageText } from "../../lang/Utils.ts";
+import { StoreSpmWarSaveSlotFullData, StoreSpmReplayData } from "../../localData/Storage.ts";
+import { getMapNameInCurrentLanguage, getRawData } from "../../normalMap/model/NormalMapModel.ts";
+import { addEventListeners } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCampaignCreateWar/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCampaignSaveWarS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCampaignSaveWar/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmCreateScwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSfwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSfw/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSrwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgSpmGetAllWarSaveSlotTimestampsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetAllWarSaveSlotTimestamps/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgSpmGetRankListS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetRankList/S.ts";
+import type { SpmRankInfoForRule } from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetRankList/SpmRankInfoForRule.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgSpmGetReplayDataS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetReplayData/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetWarSaveSlotFullData/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgSpmGetWarSaveSlotFullDataArray/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmSaveScwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveScw/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmSaveSfwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveSfw/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgSpmSaveSrwS } from "../../proto/schema/CommonProto/NetMessage/MsgSpmSaveSrw/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgSpmValidateSrwS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgSpmValidateSrw/S.ts";
+import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
+import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import {
+    reqSpmGetAllWarSaveSlotTimestamps,
+    reqSpmGetWarSaveSlotFullData,
+    reqSpmGetWarSaveSlotFullDataArray,
+    reqSpmGetRankList,
+    reqSpmGetReplayData,
+} from "./SpmProxy.ts";
+import { TurnIndex, PhaseCode } from "../../turns/Constants.ts";
+import { getSelfUserId } from "../../users/Model.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
+import { create } from "../../warRules/utils/Instance.ts";
 
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 // 多人模式战局当前数据（需要把后端warID改为数据库自增，下同）
 // 多人模式半路回放
 
-const _allSlotTimestampsAccessor    = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<null, Map<number, number>>({
-    reqData : () => SinglePlayerModeModelSpmProxy.reqSpmGetAllWarSaveSlotTimestamps(),
+const _allSlotTimestampsAccessor    = new CachedDataAccessor<null, Map<number, number>>({
+    reqData : () => reqSpmGetAllWarSaveSlotTimestamps(),
 });
 /** 只用于保证收到过消息 */
-const _dataArrayAccessor            = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<null, boolean>({
+const _dataArrayAccessor            = new CachedDataAccessor<null, boolean>({
     reqData : () => { /** nothing to do */},
 });
-const _slotFullDataAccessor         = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, AuxiliaryTypesAuxiliaryTypes.DecodedSpmWarSaveSlotData>({
-    reqData : (slotIndex) => SinglePlayerModeModelSpmProxy.reqSpmGetWarSaveSlotFullData(slotIndex),
+const _slotFullDataAccessor         = new CachedDataAccessor<number, DecodedSpmWarSaveSlotData>({
+    reqData : (slotIndex) => reqSpmGetWarSaveSlotFullData(slotIndex),
 });
 
 export function init(): void {
-    NotificationsDispatcher.addEventListeners([
-        { type: NotificationsTypeId.TypeId.MsgSpmValidateSrw,   callback: _onNotifyMsgSpmValidateSrw, },
+    addEventListeners([
+        { type: TypeId.MsgSpmValidateSrw,   callback: _onNotifyMsgSpmValidateSrw, },
     ], null);
 }
 
-function _onNotifyMsgSpmValidateSrw(e: VendorEgretEgret.Event): void {
-    const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmValidateSrwS.S;
+function _onNotifyMsgSpmValidateSrw(e: Event): void {
+    const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmValidateSrwS;
     const status    = data.getStatus();
-    if (status === GameConfigGcWar.SingleRankedWar.ValidateStatus.ConfigVersionNotLatest) {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0278));
-    } else if (status === GameConfigGcWar.SingleRankedWar.ValidateStatus.ScoreNotHighest) {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0279));
-    } else if (status === GameConfigGcWar.SingleRankedWar.ValidateStatus.ScoreTooLow) {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0281));
+    if (status === SingleRankedWar.ValidateStatus.ConfigVersionNotLatest) {
+        show(getText(TextType.A0278));
+    } else if (status === SingleRankedWar.ValidateStatus.ScoreNotHighest) {
+        show(getText(TextType.A0279));
+    } else if (status === SingleRankedWar.ValidateStatus.ScoreTooLow) {
+        show(getText(TextType.A0281));
     } else {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0280));
+        show(getText(TextType.A0280));
     }
 }
 
@@ -83,15 +106,15 @@ function setAllSlotTimestamps(dict: Map<number, number>): void {
     _allSlotTimestampsAccessor.setData(null, dict);
 }
 
-export async function getSlotFullData(slotIndex: number): Promise<Undefinable<AuxiliaryTypesAuxiliaryTypes.DecodedSpmWarSaveSlotData>> {
+export async function getSlotFullData(slotIndex: number): Promise<Undefinable<DecodedSpmWarSaveSlotData>> {
     const timestamp = (await getAllSlotTimestamps())?.get(slotIndex);
     if (timestamp == null) {
         return null;
     }
 
-    const userId = UsersModel.getSelfUserId();
+    const userId = getSelfUserId();
     if (userId != null) {
-        const cachedData = await LocalDataStorage2.StoreSpmWarSaveSlotFullData.getData(userId, slotIndex);
+        const cachedData = await StoreSpmWarSaveSlotFullData.getData(userId, slotIndex);
         if (cachedData != null) {
             if ((cachedData.extraData.getTimestamp() ?? 0) === timestamp) {
                 return cachedData;
@@ -102,18 +125,18 @@ export async function getSlotFullData(slotIndex: number): Promise<Undefinable<Au
 
     return _slotFullDataAccessor.getData(slotIndex);
 }
-async function setSlotFullData(slotIndex: number, fullData: AuxiliaryTypesAuxiliaryTypes.DecodedSpmWarSaveSlotData | null): Promise<void> {
+async function setSlotFullData(slotIndex: number, fullData: DecodedSpmWarSaveSlotData | null): Promise<void> {
     _slotFullDataAccessor.setData(slotIndex, fullData);
 
-    const userId = UsersModel.getSelfUserId();
+    const userId = getSelfUserId();
     if (userId != null) {
-        await LocalDataStorage2.StoreSpmWarSaveSlotFullData.setData(userId, slotIndex, fullData);
+        await StoreSpmWarSaveSlotFullData.setData(userId, slotIndex, fullData);
     }
 }
 
-export async function updateOnMsgSpmGetAllWarSaveSlotTimestamps(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetAllWarSaveSlotTimestampsS.S): Promise<void> {
-    const selfUserId            = UsersModel.getSelfUserId();
-    const existingDataDict      = selfUserId == null ? null : await LocalDataStorage2.StoreSpmWarSaveSlotFullData.getAllDataDictForKey1(selfUserId);
+export async function updateOnMsgSpmGetAllWarSaveSlotTimestamps(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetAllWarSaveSlotTimestampsS): Promise<void> {
+    const selfUserId            = getSelfUserId();
+    const existingDataDict      = selfUserId == null ? null : await StoreSpmWarSaveSlotFullData.getAllDataDictForKey1(selfUserId);
     const infoArray             = data.getInfoArray();
     const neededSlotIndexSet    = new Set<number>();
     const resultDict            = new Map<number, number>();
@@ -131,24 +154,24 @@ export async function updateOnMsgSpmGetAllWarSaveSlotTimestamps(data: ProtoSchem
         }
     }
 
-    SinglePlayerModeModelSpmProxy.reqSpmGetWarSaveSlotFullDataArray([...neededSlotIndexSet]);
+    reqSpmGetWarSaveSlotFullDataArray([...neededSlotIndexSet]);
     await _dataArrayAccessor.getData(null);
 
     setAllSlotTimestamps(resultDict);
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function updateOnFailedMsgSpmGetAllWarSaveSlotTimestamps(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetAllWarSaveSlotTimestampsS.S): void {
+export function updateOnFailedMsgSpmGetAllWarSaveSlotTimestamps(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetAllWarSaveSlotTimestampsS): void {
     _allSlotTimestampsAccessor.updateOnRequestFailed(null);
 }
 
-export async function updateOnMsgSpmGetWarSaveSlotFullDataArray(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataArrayS.S): Promise<void> {
+export async function updateOnMsgSpmGetWarSaveSlotFullDataArray(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataArrayS): Promise<void> {
     const promiseArray: Promise<void>[] = [];
     for (const d of data.getSlotDataArray()) {
         const slotIndex = d.getSlotIndex() ?? 0;
         promiseArray.push(setSlotFullData(slotIndex, {
             slotIndex   : slotIndex,
-            warData     : ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(HelpersMisc.getExisted(d.getCompressedWarData()))),
-            extraData   : ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData.SpmWarSaveSlotExtraData.decode(HelpersMisc.getExisted(d.getEncodedExtraData())),
+            warData     : SerialWar.decode(decompress(getExisted(d.getCompressedWarData()))),
+            extraData   : SpmWarSaveSlotExtraData.decode(getExisted(d.getEncodedExtraData())),
         }));
     }
     await Promise.all(promiseArray);
@@ -156,7 +179,7 @@ export async function updateOnMsgSpmGetWarSaveSlotFullDataArray(data: ProtoSchem
     _dataArrayAccessor.setData(null, true);
 }
 
-export function updateOnMsgSpmGetWarSaveSlotFullData(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataS.S): Promise<void> {
+export function updateOnMsgSpmGetWarSaveSlotFullData(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataS): Promise<void> {
     const slotIndex = data.getSlotIndex() ?? 0;
     const slotData  = data.getSlotData();
     if (slotData == null) {
@@ -164,23 +187,23 @@ export function updateOnMsgSpmGetWarSaveSlotFullData(data: ProtoSchemaCommonProt
     } else {
         return setSlotFullData(slotIndex, {
             slotIndex   : slotIndex,
-            warData     : ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(HelpersMisc.getExisted(slotData.getCompressedWarData()))),
-            extraData   : ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData.SpmWarSaveSlotExtraData.decode(HelpersMisc.getExisted(slotData.getEncodedExtraData())),
+            warData     : SerialWar.decode(decompress(getExisted(slotData.getCompressedWarData()))),
+            extraData   : SpmWarSaveSlotExtraData.decode(getExisted(slotData.getEncodedExtraData())),
         });
     }
 }
-export function updateOnFailedMsgSpmGetWarSaveSlotFullData(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataS.S): void {
+export function updateOnFailedMsgSpmGetWarSaveSlotFullData(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetWarSaveSlotFullDataS): void {
     const slotIndex = data.getSlotIndex();
     if (slotIndex != null) {
         _slotFullDataAccessor.updateOnRequestFailed(slotIndex);
     }
 }
 
-export function updateOnMsgSpmCreateScw(data: ProtoSchemaCommonProtoNetMessageMsgSpmCreateScwS.S): Promise<void> {
-    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, HelpersMisc.getExisted(data.getExtraData()), HelpersMisc.getExisted(data.getWarData()));
+export function updateOnMsgSpmCreateScw(data: ProtoSchemaCommonProtoNetMessageMsgSpmCreateScwS): Promise<void> {
+    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, getExisted(data.getExtraData()), getExisted(data.getWarData()));
 }
-export async function updateOnMsgSpmCreateSfw(data: ProtoSchemaCommonProtoNetMessageMsgSpmCreateSfwS.S): Promise<void> {
-    await updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, HelpersMisc.getExisted(data.getExtraData()), HelpersMisc.getExisted(data.getWarData()));
+export async function updateOnMsgSpmCreateSfw(data: ProtoSchemaCommonProtoNetMessageMsgSpmCreateSfwS): Promise<void> {
+    await updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, getExisted(data.getExtraData()), getExisted(data.getWarData()));
 
     // PanelHelpers.open(PanelHelpers.PanelDict.CommonConfirmPanel, {
     //     content : Lang.getText(LangTextType.A0107),
@@ -193,38 +216,38 @@ export async function updateOnMsgSpmCreateSfw(data: ProtoSchemaCommonProtoNetMes
     //     },
     // });
 }
-export function updateOnMsgSpmCreateSrw(data: ProtoSchemaCommonProtoNetMessageMsgSpmCreateSrwS.S): Promise<void> {
-    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, HelpersMisc.getExisted(data.getExtraData()), HelpersMisc.getExisted(data.getWarData()));
+export function updateOnMsgSpmCreateSrw(data: ProtoSchemaCommonProtoNetMessageMsgSpmCreateSrwS): Promise<void> {
+    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, getExisted(data.getExtraData()), getExisted(data.getWarData()));
 }
-export function updateOnMsgCampaignCreateWar(data: ProtoSchemaCommonProtoNetMessageMsgCampaignCreateWarS.S): Promise<void> {
-    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, HelpersMisc.getExisted(data.getSlotExtraData()), HelpersMisc.getExisted(data.getWarData()));
+export function updateOnMsgCampaignCreateWar(data: S): Promise<void> {
+    return updateTimestampAndSlotFullData(data.getSlotIndex() ?? 0, getExisted(data.getSlotExtraData()), getExisted(data.getWarData()));
 }
-export function updateOnMsgSpmSaveScw(data: ProtoSchemaCommonProtoNetMessageMsgSpmSaveScwS.S): Promise<void> {
+export function updateOnMsgSpmSaveScw(data: ProtoSchemaCommonProtoNetMessageMsgSpmSaveScwS): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
-        HelpersMisc.getExisted(data.getSlotExtraData()),
-        ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(HelpersMisc.getExisted(data.getCompressedWarData())))
+        getExisted(data.getSlotExtraData()),
+        SerialWar.decode(decompress(getExisted(data.getCompressedWarData())))
     );
 }
-export function updateOnMsgSpmSaveSfw(data: ProtoSchemaCommonProtoNetMessageMsgSpmSaveSfwS.S): Promise<void> {
+export function updateOnMsgSpmSaveSfw(data: ProtoSchemaCommonProtoNetMessageMsgSpmSaveSfwS): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
-        HelpersMisc.getExisted(data.getSlotExtraData()),
-        ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(HelpersMisc.getExisted(data.getCompressedWarData())))
+        getExisted(data.getSlotExtraData()),
+        SerialWar.decode(decompress(getExisted(data.getCompressedWarData())))
     );
 }
-export function updateOnMsgSpmSaveSrw(data: ProtoSchemaCommonProtoNetMessageMsgSpmSaveSrwS.S): Promise<void> {
+export function updateOnMsgSpmSaveSrw(data: ProtoSchemaCommonProtoNetMessageMsgSpmSaveSrwS): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
-        HelpersMisc.getExisted(data.getSlotExtraData()),
-        ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(HelpersMisc.getExisted(data.getCompressedWarData())))
+        getExisted(data.getSlotExtraData()),
+        SerialWar.decode(decompress(getExisted(data.getCompressedWarData())))
     );
 }
-export function updateOnMsgCampaignSaveWar(data: ProtoSchemaCommonProtoNetMessageMsgCampaignSaveWarS.S): Promise<void> {
+export function updateOnMsgCampaignSaveWar(data: ProtoSchemaCommonProtoNetMessageMsgCampaignSaveWarS): Promise<void> {
     return updateTimestampAndSlotFullData(
         data.getSlotIndex() ?? 0,
-        HelpersMisc.getExisted(data.getSlotExtraData()),
-        ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(HelpersMisc.getExisted(data.getCompressedWarData())))
+        getExisted(data.getSlotExtraData()),
+        SerialWar.decode(decompress(getExisted(data.getCompressedWarData())))
     );
 }
 export async function updateOnMsgSpmDeleteWarSaveSlot(slotIndex: number): Promise<void> {
@@ -232,7 +255,7 @@ export async function updateOnMsgSpmDeleteWarSaveSlot(slotIndex: number): Promis
     await setSlotFullData(slotIndex, null);
 }
 
-async function updateTimestampAndSlotFullData(slotIndex: number, slotExtraData: ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData.SpmWarSaveSlotExtraData, warData: ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar): Promise<void> {
+async function updateTimestampAndSlotFullData(slotIndex: number, slotExtraData: SpmWarSaveSlotExtraData, warData: SerialWar): Promise<void> {
     (await getAllSlotTimestamps())?.set(slotIndex, slotExtraData.getTimestamp() ?? 0);
     await setSlotFullData(slotIndex, {
         slotIndex       : slotIndex,
@@ -247,13 +270,13 @@ export async function checkIsEmpty(slotIndex: number): Promise<boolean> {
 }
 export async function getEmptySlotIndexArray(): Promise<number[]> {
     const promiseArray: Promise<boolean>[] = [];
-    for (let slotIndex = 0; slotIndex < GameConfigGcWar.SinglePlayerWar.MaxSaveSlotCount; ++slotIndex) {
+    for (let slotIndex = 0; slotIndex < SinglePlayerWar.MaxSaveSlotCount; ++slotIndex) {
         promiseArray.push(checkIsEmpty(slotIndex));
     }
 
     const emptyResultArray      = await Promise.all(promiseArray);
     const emptySlotIndexArray   : number[] = [];
-    for (let slotIndex = 0; slotIndex < GameConfigGcWar.SinglePlayerWar.MaxSaveSlotCount; ++slotIndex) {
+    for (let slotIndex = 0; slotIndex < SinglePlayerWar.MaxSaveSlotCount; ++slotIndex) {
         if (emptyResultArray[slotIndex]) {
             emptySlotIndexArray.push(slotIndex);
         }
@@ -279,41 +302,41 @@ export async function getSlotName(slotIndex: number): Promise<string> {
 
     const mpwWarId = slotExtraData.getMpwWarId();
     if (mpwWarId != null) {
-        return `${LangUtils.getText(LangConstants.TextType.B0226)}: ${mpwWarId}`;
+        return `${getText(TextType.B0226)}: ${mpwWarId}`;
     }
 
     const warData       = slotData.warData;
-    const normalMapId   = HelpersProtoSchemaWarSerializationSerialWar.getNormalMapId(warData);
+    const normalMapId   = getNormalMapId(warData);
     if (normalMapId != null) {
-        return (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId)) || LangConstants.UndefinedError;
+        return (await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError;
     }
 
     const settingsForCaw = warData.getSettingsForCaw();
     if (settingsForCaw != null) {
-        const mapRawData = await CampaignsMainsProvider.getCampaignMapRawData(settingsForCaw.getCampaignId() ?? 0, settingsForCaw.getCampaignMapId() ?? 0);
-        return LangUtils.getLanguageText({ textArray: mapRawData?.getMapNameArray() }) ?? LangConstants.UndefinedError;
+        const mapRawData = await getCampaignMapRawData(settingsForCaw.getCampaignId() ?? 0, settingsForCaw.getCampaignMapId() ?? 0);
+        return getLanguageText({ textArray: mapRawData?.getMapNameArray() }) ?? UndefinedError;
     }
 
-    return `(${LangUtils.getText(LangConstants.TextType.B0321)})`;
+    return `(${getText(TextType.B0321)})`;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for rank list.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-const _rankDataGetter = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, ProtoSchemaCommonProtoNetMessageMsgSpmGetRankListSpmRankInfoForRule.SpmRankInfoForRule[]>({
-    reqData : (normalMapId: number) => SinglePlayerModeModelSpmProxy.reqSpmGetRankList(normalMapId),
+const _rankDataGetter = new CachedDataAccessor<number, SpmRankInfoForRule[]>({
+    reqData : (normalMapId: number) => reqSpmGetRankList(normalMapId),
 });
 
-export function getRankData(normalMapId: number): Promise<Undefinable<ProtoSchemaCommonProtoNetMessageMsgSpmGetRankListSpmRankInfoForRule.SpmRankInfoForRule[]>> {
+export function getRankData(normalMapId: number): Promise<Undefinable<SpmRankInfoForRule[]>> {
     return _rankDataGetter.getData(normalMapId);
 }
 
-export function updateOnMsgSpmGetRankList(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetRankListS.S): void {
-    _rankDataGetter.setData(HelpersMisc.getExisted(data.getNormalMapId()), data.getInfoArray());
+export function updateOnMsgSpmGetRankList(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetRankListS): void {
+    _rankDataGetter.setData(getExisted(data.getNormalMapId()), data.getInfoArray());
 }
 
 export async function getRankIndex(normalMapId: number, ruleId: number, score: number): Promise<number | null> {
-    const rankDataArray = (await getRankData(normalMapId))?.find(v => v.getRuleId() === ruleId)?.getInfoArray().concat().sort((v1, v2) => HelpersMisc.getExisted(v2.getScore()) - HelpersMisc.getExisted(v1.getScore()));
+    const rankDataArray = (await getRankData(normalMapId))?.find(v => v.getRuleId() === ruleId)?.getInfoArray().concat().sort((v1, v2) => getExisted(v2.getScore()) - getExisted(v1.getScore()));
     if (rankDataArray == null) {
         return null;
     }
@@ -325,30 +348,30 @@ export async function getRankIndex(normalMapId: number, ruleId: number, score: n
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // Functions for replay data.
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-const _replayDataAccessor = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar>({
-    reqData : (rankId: number) => SinglePlayerModeModelSpmProxy.reqSpmGetReplayData(rankId),
+const _replayDataAccessor = new CachedDataAccessor<number, SerialWar>({
+    reqData : (rankId: number) => reqSpmGetReplayData(rankId),
 });
 
-export async function getReplayData(rankId: number): Promise<Undefinable<ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar>> {
-    return (await LocalDataStorage2.StoreSpmReplayData.getData(rankId)) ?? _replayDataAccessor.getData(rankId);
+export async function getReplayData(rankId: number): Promise<Undefinable<SerialWar>> {
+    return (await StoreSpmReplayData.getData(rankId)) ?? _replayDataAccessor.getData(rankId);
 }
-function setReplayData(rankId: number, data: ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar | null): Promise<void> {
+function setReplayData(rankId: number, data: SerialWar | null): Promise<void> {
     _replayDataAccessor.setData(rankId, data);
-    return LocalDataStorage2.StoreSpmReplayData.setData(rankId, data);
+    return StoreSpmReplayData.setData(rankId, data);
 }
-async function decodeAndReviseReplayData(encodedWar: AuxiliaryTypesAuxiliaryTypes.Undefinable<Uint8Array>): Promise<ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar | null> {
+async function decodeAndReviseReplayData(encodedWar: AuxiliaryTypesAuxiliaryTypesUndefinable<Uint8Array>): Promise<SerialWar | null> {
     if (encodedWar == null) {
         return null;
     }
 
-    const warData               = ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(encodedWar);
-    const settingsForCommon     = HelpersMisc.getExisted(warData.getSettingsForCommon());
+    const warData               = SerialWar.decode(encodedWar);
+    const settingsForCommon     = getExisted(warData.getSettingsForCommon());
     const srcInstanceWarRule    = settingsForCommon.getInstanceWarRule();
     if (srcInstanceWarRule == null) {
         return null;
     }
 
-    const mapRawData = await NormalMapModelNormalMapModel.getRawData(HelpersMisc.getExisted(warData.getSettingsForSrw()?.getNormalMapId()));
+    const mapRawData = await getRawData(getExisted(warData.getSettingsForSrw()?.getNormalMapId()));
     if (mapRawData == null) {
         return null;
     }
@@ -363,7 +386,7 @@ async function decodeAndReviseReplayData(encodedWar: AuxiliaryTypesAuxiliaryType
         return null;
     }
 
-    settingsForCommon.setInstanceWarRule(WarRulesUtilsInstance.create({
+    settingsForCommon.setInstanceWarRule(create({
         templateWarRule             : templateWarRule,
         warEventFullData            : mapRawData.getWarEventFullData(),
         allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
@@ -373,7 +396,7 @@ async function decodeAndReviseReplayData(encodedWar: AuxiliaryTypesAuxiliaryType
     if (!warData.checkHasField()) {
         warData.createIfNotExistsField().loadJson({
             fogMap  : {
-                forceFogCode    : FogMapsConstants.ForcedFogCode.None,
+                forceFogCode    : ForcedFogCode.None,
                 mapsFromPath    : [],
             },
         });
@@ -381,9 +404,9 @@ async function decodeAndReviseReplayData(encodedWar: AuxiliaryTypesAuxiliaryType
 
     if (!warData.checkHasTurnManager()) {
         warData.createIfNotExistsTurnManager().loadJson({
-            turnIndex       : TurnsConstants.TurnIndex.FirstIndex,
-            turnPhaseCode   : TurnsConstants.PhaseCode.WaitBeginTurn,
-            playerIndex     : PlayersConstants.PlayerIndex.Neutral,
+            turnIndex       : TurnIndex.FirstIndex,
+            turnPhaseCode   : PhaseCode.WaitBeginTurn,
+            playerIndex     : PlayerIndex.Neutral,
             enterTurnTime   : 0,
         });
     }
@@ -402,10 +425,10 @@ async function decodeAndReviseReplayData(encodedWar: AuxiliaryTypesAuxiliaryType
     return warData;
 }
 
-export async function updateOnMsgSpmGetReplayData(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetReplayDataS.S): Promise<void> {
+export async function updateOnMsgSpmGetReplayData(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetReplayDataS): Promise<void> {
     await setReplayData(data.getRankId() ?? 0, await decodeAndReviseReplayData(data.getEncodedWar()));
 }
-export function updateOnFailedMsgSpmGetReplayData(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetReplayDataS.S): void {
+export function updateOnFailedMsgSpmGetReplayData(data: ProtoSchemaCommonProtoNetMessageMsgSpmGetReplayDataS): void {
     const rankId = data.getRankId();
     if (rankId != null) {
         _replayDataAccessor.updateOnRequestFailed(rankId);

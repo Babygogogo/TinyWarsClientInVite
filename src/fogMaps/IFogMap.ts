@@ -1,22 +1,24 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "../auxiliaryTypes/MapSize.ts";
-import type * as AuxiliaryTypesUnitVisionInfo from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as FogMapsConstants from "./Constants.ts";
-import type * as GameConfigGcWar from "../gameConfig/GcWar.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialFogMap from "../proto/schema/CommonProto/WarSerialization/SerialFogMap.ts";
-import type * as UnitsIUnit from "../units/IUnit.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { MapSize as AuxiliaryTypesMapSize } from "../auxiliaryTypes/MapSize.ts";
+import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { ForcedFogCode } from "./Constants.ts";
+import type { VisibilityTypeId } from "../gameConfig/GcWar.ts";
+import type {
+    SerialFogMap as ProtoSchemaCommonProtoWarSerializationSerialFogMap,
+} from "../proto/schema/CommonProto/WarSerialization/SerialFogMap.ts";
+import type { IUnit } from "../units/IUnit.ts";
 
-type GridIndex      = AuxiliaryTypesGridIndex.GridIndex;
-type MapSize        = AuxiliaryTypesMapSize.MapSize;
-type VisibilityType = GameConfigGcWar.VisibilityTypeId;
-type ForceFogCode   = FogMapsConstants.ForcedFogCode;
-type SerialFogMap   = ProtoSchemaCommonProtoWarSerializationSerialFogMap.SerialFogMap;
-type Undefinable<T> = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type GridIndex      = AuxiliaryTypesGridIndex;
+type MapSize        = AuxiliaryTypesMapSize;
+type VisibilityType = VisibilityTypeId;
+type ForceFogCode   = ForcedFogCode;
+type SerialFogMap   = ProtoSchemaCommonProtoWarSerializationSerialFogMap;
+type Undefinable<T> = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export interface IFogMap {
-    startRunning(war: BaseWarInterfaceIBwWar.IBwWar): void;
+    startRunning(war: IBwWar): void;
 
     init({ data, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialFogMap>;
@@ -33,7 +35,7 @@ export interface IFogMap {
     serializeForCreateSfw(): SerialFogMap;
     serializeForCreateMfr(): SerialFogMap;
 
-    getWar(): BaseWarInterfaceIBwWar.IBwWar;
+    getWar(): IBwWar;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
@@ -59,8 +61,8 @@ export interface IFogMap {
     resetMapFromPathsForPlayer(playerIndex: number, visibilityList: VisibilityType[] | null): void;
     resetMapFromPathsForPlayerWithEncodedData(playerIndex: number, encodedData?: string): void;
     updateMapFromPathsByUnitAndPath({ unit, unitVisionInfo, path }: {
-        unit            : UnitsIUnit.IUnit;
-        unitVisionInfo  : AuxiliaryTypesUnitVisionInfo.UnitVisionInfo;
+        unit            : IUnit;
+        unitVisionInfo  : UnitVisionInfo;
         path            : GridIndex[];
     }): void;
     updateMapFromPathsByVisibilityArray(playerIndex: number, visibilityArray: Undefinable<number[]>): void;

@@ -1,29 +1,33 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "../auxiliaryTypes/MapSize.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoStructureTileCustomName from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialTileMap from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
-import type * as TilesITile from "./ITile.ts";
-import type * as TilesITileMapView from "./ITileMapView.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { MapSize as AuxiliaryTypesMapSize } from "../auxiliaryTypes/MapSize.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import type {
+    TileCustomName as ProtoSchemaCommonProtoStructureTileCustomName,
+} from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
+import type {
+    SerialTileMap as ProtoSchemaCommonProtoWarSerializationSerialTileMap,
+} from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
+import type { ITile } from "./ITile.ts";
+import type { ITileMapView } from "./ITileMapView.ts";
 
-type MapSize            = AuxiliaryTypesMapSize.MapSize;
-type GcData             = GameConfigGcData.GcData;
-type SerialTileMap      = ProtoSchemaCommonProtoWarSerializationSerialTileMap.SerialTileMap;
-type TileCustomName     = ProtoSchemaCommonProtoStructureTileCustomName.TileCustomName;
-type IBwWar             = BaseWarInterfaceIBwWar.IBwWar;
+type MapSize            = AuxiliaryTypesMapSize;
+type GcData             = GameConfigGcData;
+type SerialTileMap      = ProtoSchemaCommonProtoWarSerializationSerialTileMap;
+type TileCustomName     = ProtoSchemaCommonProtoStructureTileCustomName;
+type IBwWar             = BaseWarInterfaceIBwWar;
 
 export interface ITileMap {
     init({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialTileMap>;
+        data                    : Undefinable<SerialTileMap>;
         gameConfig              : GcData;
         mapSize                 : MapSize;
         playersCountUnneutral   : number;
     }): void;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
-        data                    : AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialTileMap>;
+        data                    : Undefinable<SerialTileMap>;
         gameConfig              : GcData;
         mapSize                 : MapSize;
         playersCountUnneutral   : number;
@@ -39,29 +43,29 @@ export interface ITileMap {
 
     getWar(): IBwWar;
 
-    getMap(): TilesITile.ITile[][];
+    getMap(): ITile[][];
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getView(): TilesITileMapView.ITileMapView;
+    getView(): ITileMapView;
 
-    forEachTile(func: (t: TilesITile.ITile) => any): void;
-    getTile(gridIndex: AuxiliaryTypesGridIndex.GridIndex): TilesITile.ITile;
-    getTileWithGridId(gridId: number): TilesITile.ITile;
-    getAllTiles(): TilesITile.ITile[];
-    getTiles(predicate: (tile: TilesITile.ITile) => boolean): TilesITile.ITile[];
-    getGridIndexListWithAnyLocationId(locationIdArray: number[]): AuxiliaryTypesGridIndex.GridIndex[];
+    forEachTile(func: (t: ITile) => any): void;
+    getTile(gridIndex: GridIndex): ITile;
+    getTileWithGridId(gridId: number): ITile;
+    getAllTiles(): ITile[];
+    getTiles(predicate: (tile: ITile) => boolean): ITile[];
+    getGridIndexListWithAnyLocationId(locationIdArray: number[]): GridIndex[];
 
-    getConnectedGridIndexArrayWithTileType(origin: AuxiliaryTypesGridIndex.GridIndex, tileType: number): AuxiliaryTypesGridIndex.GridIndex[];
+    getConnectedGridIndexArrayWithTileType(origin: GridIndex, tileType: number): GridIndex[];
 
     getMapSize(): MapSize;
 
-    getTileCustomNameArray(): AuxiliaryTypesAuxiliaryTypes.Undefinable<TileCustomName[]>;
-    setTileCustomNameArray(arr: AuxiliaryTypesAuxiliaryTypes.Undefinable<TileCustomName[]>): void;
+    getTileCustomNameArray(): Undefinable<TileCustomName[]>;
+    setTileCustomNameArray(arr: Undefinable<TileCustomName[]>): void;
 
     getTilesCountForPlayer(playerIndex: number): number;
-    getTilesCount(func: (t: TilesITile.ITile) => boolean): number;
+    getTilesCount(func: (t: ITile) => boolean): number;
 
     getTotalIncomeForPlayer(playerIndex: number): number;
 

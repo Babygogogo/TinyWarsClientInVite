@@ -1,56 +1,56 @@
-import * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GeometriesConstants from "../../geometries/Constants.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as MapEditorModelMeHelpers from "../../mapEditor/model/MeHelpers.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as TilesUtilsSerialization from "../../tiles/utils/Serialization.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
+import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import { show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { SymmetryTypeId } from "../../geometries/Constants.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { getSymmetricalGridIndex } from "../../mapEditor/model/MeHelpers.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { create } from "../../tiles/utils/Serialization.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 
 export interface OpenData {
-    war     : MapEditorInterfaceIMeWar.IMeWar;
+    war     : IMeWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                     : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                      : IUiImage;
+    private readonly _group!                        : IUiContainer;
+    private readonly _labelTitle!                   : IUiLabel;
+    private readonly _btnClose!                     : IUiButton;
 
-    private readonly _layoutContent!                : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _layoutContent!                : IUiLayout;
 
-    private readonly _labelFill1!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnUpDown1!                   : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDownUp1!                   : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnLeftRight1!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnRightLeft1!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnUpLeftDownRight1!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDownRightUpLeft1!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnUpRightDownLeft1!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDownLeftUpRight1!          : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelFill1!                   : IUiLabel;
+    private readonly _btnUpDown1!                   : IUiButton;
+    private readonly _btnDownUp1!                   : IUiButton;
+    private readonly _btnLeftRight1!                : IUiButton;
+    private readonly _btnRightLeft1!                : IUiButton;
+    private readonly _btnUpLeftDownRight1!          : IUiButton;
+    private readonly _btnDownRightUpLeft1!          : IUiButton;
+    private readonly _btnUpRightDownLeft1!          : IUiButton;
+    private readonly _btnDownLeftUpRight1!          : IUiButton;
 
-    private readonly _labelFill2!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnUpDown2!                   : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDownUp2!                   : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnLeftRight2!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnRightLeft2!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnUpLeftDownRight2!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDownRightUpLeft2!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnUpRightDownLeft2!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDownLeftUpRight2!          : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelFill2!                   : IUiLabel;
+    private readonly _btnUpDown2!                   : IUiButton;
+    private readonly _btnDownUp2!                   : IUiButton;
+    private readonly _btnLeftRight2!                : IUiButton;
+    private readonly _btnRightLeft2!                : IUiButton;
+    private readonly _btnUpLeftDownRight2!          : IUiButton;
+    private readonly _btnDownRightUpLeft2!          : IUiButton;
+    private readonly _btnUpRightDownLeft2!          : IUiButton;
+    private readonly _btnDownLeftUpRight2!          : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                   callback: this.closePanel },
@@ -88,16 +88,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0864),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0864),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
                 for (let x = 0; x < mapWidth; ++x) {
                     for (let y = Math.floor((mapHeight + 1) / 2); y < mapHeight; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.UpToDown);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.UpToDown);
                     }
                 }
 
@@ -111,16 +111,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0865),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0865),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
                 for (let x = 0; x < mapWidth; ++x) {
                     for (let y = Math.floor(mapHeight / 2) - 1; y >= 0; --y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.UpToDown);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.UpToDown);
                     }
                 }
 
@@ -134,16 +134,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0866),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0866),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
                 for (let x = Math.floor((mapWidth + 1) / 2); x < mapWidth; ++x) {
                     for (let y = 0; y < mapHeight; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.LeftToRight);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.LeftToRight);
                     }
                 }
 
@@ -157,16 +157,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0867),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0867),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
                 for (let x = Math.floor(mapWidth / 2) - 1; x >= 0; --x) {
                     for (let y = 0; y < mapHeight; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.LeftToRight);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.LeftToRight);
                     }
                 }
 
@@ -184,17 +184,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0295));
+            show(getText(TextType.A0295));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0868),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0868),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = mapHeight - x; y < mapHeight; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.UpLeftToDownRight);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.UpLeftToDownRight);
                     }
                 }
 
@@ -212,17 +212,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0295));
+            show(getText(TextType.A0295));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0869),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0869),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = 0; y < mapWidth - x - 1; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.UpLeftToDownRight);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.UpLeftToDownRight);
                     }
                 }
 
@@ -240,17 +240,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0295));
+            show(getText(TextType.A0295));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0870),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0870),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = x + 1; y < mapHeight; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.UpRightToDownLeft);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.UpRightToDownLeft);
                     }
                 }
 
@@ -268,17 +268,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0295));
+            show(getText(TextType.A0295));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0871),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0871),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = 0; y < x; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.UpRightToDownLeft);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.UpRightToDownLeft);
                     }
                 }
 
@@ -293,16 +293,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0864),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0864),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
                 for (let x = 0; x < mapWidth; ++x) {
                     for (let y = Math.floor((mapHeight + 1) / 2); y < mapHeight; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.Rotation);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
                     }
                 }
 
@@ -316,16 +316,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0865),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0865),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
                 for (let x = 0; x < mapWidth; ++x) {
                     for (let y = Math.floor(mapHeight / 2) - 1; y >= 0; --y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.Rotation);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
                     }
                 }
 
@@ -339,16 +339,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0866),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0866),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
                 for (let x = Math.floor((mapWidth + 1) / 2); x < mapWidth; ++x) {
                     for (let y = 0; y < mapHeight; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.Rotation);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
                     }
                 }
 
@@ -362,16 +362,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0867),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0867),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
                 for (let x = Math.floor(mapWidth / 2) - 1; x >= 0; --x) {
                     for (let y = 0; y < mapHeight; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.Rotation);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
                     }
                 }
 
@@ -389,17 +389,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0295));
+            show(getText(TextType.A0295));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0868),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0868),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = mapHeight - x; y < mapHeight; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.Rotation);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
                     }
                 }
 
@@ -417,17 +417,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0295));
+            show(getText(TextType.A0295));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0869),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0869),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = 0; y < mapWidth - x - 1; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.Rotation);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
                     }
                 }
 
@@ -445,17 +445,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0295));
+            show(getText(TextType.A0295));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0870),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0870),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = x + 1; y < mapHeight; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.Rotation);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
                     }
                 }
 
@@ -473,17 +473,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         if (mapWidth !== mapHeight) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0295));
+            show(getText(TextType.A0295));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0871),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0871),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = 0; y < x; ++y) {
-                        autoFillTile(war, new AuxiliaryTypesGridIndex.GridIndex(x, y), GeometriesConstants.SymmetryTypeId.Rotation);
+                        autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
                     }
                 }
 
@@ -497,42 +497,42 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1245);
-        this._labelFill1.setLangText(LangConstants.TextType.B0862);
-        this._labelFill2.setLangText(LangConstants.TextType.B0310);
-        this._btnUpDown1.setLangText(LangConstants.TextType.B0864);
-        this._btnDownUp1.setLangText(LangConstants.TextType.B0865);
-        this._btnLeftRight1.setLangText(LangConstants.TextType.B0866);
-        this._btnRightLeft1.setLangText(LangConstants.TextType.B0867);
-        this._btnUpLeftDownRight1.setLangText(LangConstants.TextType.B0868);
-        this._btnDownRightUpLeft1.setLangText(LangConstants.TextType.B0869);
-        this._btnUpRightDownLeft1.setLangText(LangConstants.TextType.B0870);
-        this._btnDownLeftUpRight1.setLangText(LangConstants.TextType.B0871);
-        this._btnUpDown2.setLangText(LangConstants.TextType.B0864);
-        this._btnDownUp2.setLangText(LangConstants.TextType.B0865);
-        this._btnLeftRight2.setLangText(LangConstants.TextType.B0866);
-        this._btnRightLeft2.setLangText(LangConstants.TextType.B0867);
-        this._btnUpLeftDownRight2.setLangText(LangConstants.TextType.B0868);
-        this._btnDownRightUpLeft2.setLangText(LangConstants.TextType.B0869);
-        this._btnUpRightDownLeft2.setLangText(LangConstants.TextType.B0870);
-        this._btnDownLeftUpRight2.setLangText(LangConstants.TextType.B0871);
+        this._labelTitle.setLangText(TextType.B1245);
+        this._labelFill1.setLangText(TextType.B0862);
+        this._labelFill2.setLangText(TextType.B0310);
+        this._btnUpDown1.setLangText(TextType.B0864);
+        this._btnDownUp1.setLangText(TextType.B0865);
+        this._btnLeftRight1.setLangText(TextType.B0866);
+        this._btnRightLeft1.setLangText(TextType.B0867);
+        this._btnUpLeftDownRight1.setLangText(TextType.B0868);
+        this._btnDownRightUpLeft1.setLangText(TextType.B0869);
+        this._btnUpRightDownLeft1.setLangText(TextType.B0870);
+        this._btnDownLeftUpRight1.setLangText(TextType.B0871);
+        this._btnUpDown2.setLangText(TextType.B0864);
+        this._btnDownUp2.setLangText(TextType.B0865);
+        this._btnLeftRight2.setLangText(TextType.B0866);
+        this._btnRightLeft2.setLangText(TextType.B0867);
+        this._btnUpLeftDownRight2.setLangText(TextType.B0868);
+        this._btnDownRightUpLeft2.setLangText(TextType.B0869);
+        this._btnUpRightDownLeft2.setLangText(TextType.B0870);
+        this._btnDownLeftUpRight2.setLangText(TextType.B0871);
 
         this._layoutContent.arrangeItems();
     }
 }
 
-function autoFillTile(war: MapEditorInterfaceIMeWar.IMeWar, dstGridIndex: AuxiliaryTypesGridIndex.GridIndex, symmetryType: GeometriesConstants.SymmetryTypeId): void {
+function autoFillTile(war: IMeWar, dstGridIndex: GridIndex, symmetryType: SymmetryTypeId): void {
     const tileMap           = war.getTileMap();
     const gameConfig        = war.getGcData();
     const drawer            = war.getDrawer();
     const dstTile           = tileMap.getTile(dstGridIndex);
-    const srcTile           = tileMap.getTile(HelpersMisc.getExisted(MapEditorModelMeHelpers.getSymmetricalGridIndex(dstGridIndex, symmetryType, tileMap.getMapSize())));
+    const srcTile           = tileMap.getTile(getExisted(getSymmetricalGridIndex(dstGridIndex, symmetryType, tileMap.getMapSize())));
     const decorationType    = srcTile.getDecorationType();
     const decorationShapeId = srcTile.getDecorationShapeId();
     const objectType        = srcTile.getObjectType();
     const baseType          = srcTile.getBaseType();
 
-    const tileData = TilesUtilsSerialization.create({
+    const tileData = create({
         gridIndex               : dstGridIndex.toProto().toJson(),
         groupedLocationIdArray  : dstTile.getGroupedLocationIdArray(),
         baseType                : baseType,

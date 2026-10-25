@@ -1,18 +1,18 @@
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMovePathNode from "../../auxiliaryTypes/MovePathNode.ts";
-import type * as BotsCommonParams from "../CommonParams.ts";
-import type * as BotsTypes from "../Types.ts";
-import * as BotsUtils from "../Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
+import type { CommonParams } from "../CommonParams.ts";
+import type { ScoreAndAction } from "../Types.ts";
+import { getBestScoreAndAction } from "../Utils.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = UnitsIUnit.IUnit;
-type GrScoreAndAction   = BotsTypes.ScoreAndAction;
+type IBwUnit            = IUnit;
+type GrScoreAndAction   = ScoreAndAction;
 
-export async function getScoreAndActionUnitRepairUnit(commonParams: BotsCommonParams.CommonParams, focusUnit: IBwUnit, destination: AuxiliaryTypesGridIndex.GridIndex, pathNodes: AuxiliaryTypesMovePathNode.MovePathNode[]): Promise<GrScoreAndAction | null> {
-    await TimerTimerModel.checkAndCallLater();
+export async function getScoreAndActionUnitRepairUnit(commonParams: CommonParams, focusUnit: IBwUnit, destination: GridIndex, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+    await checkAndCallLater();
 
     if (!focusUnit.getTemplateCfg().getCanRepairAdjacentTargetUnit()) {
         return null;
@@ -37,7 +37,7 @@ export async function getScoreAndActionUnitRepairUnit(commonParams: BotsCommonPa
         {
             const maxAmmo = targetUnit.getPrimaryWeaponMaxAmmo();
             if ((maxAmmo) && (targetUnit.checkIsPrimaryWeaponAmmoInShort())) {
-                const currentAmmo = HelpersMisc.getExisted(targetUnit.getPrimaryWeaponCurrentAmmo());
+                const currentAmmo = getExisted(targetUnit.getPrimaryWeaponCurrentAmmo());
                 totalScore          += ((maxAmmo - currentAmmo) / maxAmmo * 10 + (currentAmmo <= 0 ? 40 : 0)) * passiveScaler;
             }
         }
@@ -50,7 +50,7 @@ export async function getScoreAndActionUnitRepairUnit(commonParams: BotsCommonPa
 
         candidates.push({
             score   : totalScore,
-            action  : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({ WoUnitRepairUnit: {
+            action  : WoContainer.fromJson({ WoUnitRepairUnit: {
                 path        : {
                     nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                     fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
@@ -62,5 +62,5 @@ export async function getScoreAndActionUnitRepairUnit(commonParams: BotsCommonPa
         });
     }
 
-    return BotsUtils.getBestScoreAndAction(candidates, commonParams);
+    return getBestScoreAndAction(candidates, commonParams);
 }

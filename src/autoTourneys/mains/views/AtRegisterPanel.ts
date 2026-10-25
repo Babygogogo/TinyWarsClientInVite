@@ -1,46 +1,46 @@
-import * as AutoTourneysConstants from "../../Constants.ts";
-import * as AutoTourneysMainsGateway from "../Gateway.ts";
-import * as AutoTourneysMainsProvider from "../Provider.ts";
-import * as FloatText2 from "../../../FloatText.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgAtGetRegistrationInfoS from "../../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
-import * as TimerTimerModel from "../../../timer/TimerModel.ts";
-import * as UiComponentsUiPanel from "../../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../../ui/interfaces/IUiLabel.ts";
-import type * as VendorEgretEgret from "../../../vendor/egret/Egret.ts";
+import { PhaseId } from "../../Constants.ts";
+import { reqAtRegister } from "../Gateway.ts";
+import { getSinglePhaseInfoArrayForPhase, getAtRegistrationInfo, getAtTourneyInfo } from "../Provider.ts";
+import { showLang } from "../../../FloatText.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText, getLanguageText, getTimeDurationText2 } from "../../../lang/Utils.ts";
+import { TypeId } from "../../../notifications/TypeId.ts";
+import type { S } from "../../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
+import { getServerTimestamp } from "../../../timer/TimerModel.ts";
+import { UiPanel } from "../../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
+import type { Event } from "../../../vendor/egret/Egret.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                     : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTourneyIdTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTourneyId!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnPreviousTourney!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnNextTourney!               : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelRegisteredPlayersTitle!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRegisteredPlayers!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRegisteredTitle!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRegistered!              : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRestTimeTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRestTime!                : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnRegister!                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnUnregister!                : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                      : IUiImage;
+    private readonly _group!                        : IUiContainer;
+    private readonly _labelTitle!                   : IUiLabel;
+    private readonly _btnClose!                     : IUiButton;
+    private readonly _labelTourneyIdTitle!          : IUiLabel;
+    private readonly _labelTourneyId!               : IUiLabel;
+    private readonly _btnPreviousTourney!           : IUiButton;
+    private readonly _btnNextTourney!               : IUiButton;
+    private readonly _labelRegisteredPlayersTitle!  : IUiLabel;
+    private readonly _labelRegisteredPlayers!       : IUiLabel;
+    private readonly _labelRegisteredTitle!         : IUiLabel;
+    private readonly _labelRegistered!              : IUiLabel;
+    private readonly _labelRestTimeTitle!           : IUiLabel;
+    private readonly _labelRestTime!                : IUiLabel;
+    private readonly _btnRegister!                  : IUiButton;
+    private readonly _btnUnregister!                : IUiButton;
 
     private _tourneyId  : number | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.TimeTick,                    callback: this._onNotifyTimeTick },
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgAtRegister,               callback: this._onNotifyMsgAtRegister },
-            { type: NotificationsTypeId.TypeId.MsgAtGetRegistrationInfo,    callback: this._onNotifyMsgAtGetRegistrationInfo },
+            { type: TypeId.TimeTick,                    callback: this._onNotifyTimeTick },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgAtRegister,               callback: this._onNotifyMsgAtRegister },
+            { type: TypeId.MsgAtGetRegistrationInfo,    callback: this._onNotifyMsgAtGetRegistrationInfo },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -55,7 +55,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        const tourneyIdArray    = (await AutoTourneysMainsProvider.getSinglePhaseInfoArrayForPhase(AutoTourneysConstants.PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
+        const tourneyIdArray    = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
         this._tourneyId         = tourneyIdArray.length > 0 ? Math.max(...tourneyIdArray) : null;
         this._updateView();
     }
@@ -69,7 +69,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const tourneyIdArray    = (await AutoTourneysMainsProvider.getSinglePhaseInfoArrayForPhase(AutoTourneysConstants.PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
+        const tourneyIdArray    = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
         if (tourneyIdArray.length <= 1) {
             return;
         }
@@ -84,7 +84,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const tourneyIdArray    = (await AutoTourneysMainsProvider.getSinglePhaseInfoArrayForPhase(AutoTourneysConstants.PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
+        const tourneyIdArray    = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
         if (tourneyIdArray.length <= 1) {
             return;
         }
@@ -96,13 +96,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnRegister(): void {
         const tourneyId = this._tourneyId;
         if (tourneyId != null) {
-            AutoTourneysMainsGateway.reqAtRegister(tourneyId, true);
+            reqAtRegister(tourneyId, true);
         }
     }
     private _onTouchedBtnUnregister(): void {
         const tourneyId = this._tourneyId;
         if (tourneyId != null) {
-            AutoTourneysMainsGateway.reqAtRegister(tourneyId, false);
+            reqAtRegister(tourneyId, false);
         }
     }
 
@@ -115,11 +115,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgAtRegister(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
     }
 
-    private _onNotifyMsgAtGetRegistrationInfo(e: VendorEgretEgret.Event): void {
-        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetRegistrationInfoS.S;
+    private _onNotifyMsgAtGetRegistrationInfo(e: Event): void {
+        const data = e.data as S;
         if (data.getTourneyId() === this._tourneyId) {
             this._updateView();
         }
@@ -134,14 +134,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const tourneyId             = this._tourneyId;
         this._labelTourneyId.setText(tourneyId == null ? `----` : `${tourneyId}`);
 
-        const registrationInfo          = tourneyId == null ? null : await AutoTourneysMainsProvider.getAtRegistrationInfo(tourneyId);
+        const registrationInfo          = tourneyId == null ? null : await getAtRegistrationInfo(tourneyId);
         const labelRegistered           = this._labelRegistered;
         const labelRegisteredPlayers    = this._labelRegisteredPlayers;
         if (registrationInfo == null) {
             labelRegistered.setText(`----`);
             labelRegisteredPlayers.setText(`----`);
         } else {
-            labelRegistered.setText(LangUtils.getText(registrationInfo.isRegistered ? LangConstants.TextType.Yes : LangConstants.TextType.No));
+            labelRegistered.setText(getText(registrationInfo.isRegistered ? TextType.Yes : TextType.No));
             labelRegistered.setTextColor(registrationInfo.isRegistered ? 0x00ff00 : 0xffffff);
             labelRegisteredPlayers.setText(`${registrationInfo.playersCount ?? 0}`);
         }
@@ -152,13 +152,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1025));
-        this._labelTourneyIdTitle.setText(LangUtils.getText(LangConstants.TextType.B1026));
-        this._labelRegisteredPlayersTitle.setText(LangUtils.getText(LangConstants.TextType.B1027));
-        this._labelRegisteredTitle.setText(LangUtils.getText(LangConstants.TextType.B1028));
-        this._labelRestTimeTitle.setText(LangUtils.getText(LangConstants.TextType.B1032));
-        this._btnRegister.setText(LangUtils.getText(LangConstants.TextType.B0174));
-        this._btnUnregister.setText(LangUtils.getText(LangConstants.TextType.B1031));
+        this._labelTitle.setText(getText(TextType.B1025));
+        this._labelTourneyIdTitle.setText(getText(TextType.B1026));
+        this._labelRegisteredPlayersTitle.setText(getText(TextType.B1027));
+        this._labelRegisteredTitle.setText(getText(TextType.B1028));
+        this._labelRestTimeTitle.setText(getText(TextType.B1032));
+        this._btnRegister.setText(getText(TextType.B0174));
+        this._btnUnregister.setText(getText(TextType.B1031));
 
         this._updateLabelTourneyId();
     }
@@ -169,24 +169,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if (tourneyId == null) {
             label.setText(`----`);
         } else {
-            const tourneyName = LangUtils.getLanguageText({ textArray: (await AutoTourneysMainsProvider.getAtTourneyInfo(tourneyId))?.getNameArray() });
+            const tourneyName = getLanguageText({ textArray: (await getAtTourneyInfo(tourneyId))?.getNameArray() });
             this._labelTourneyId.setText(`#${tourneyId} ${tourneyName ?? ``}`);
         }
     }
     private async _updateBtnPreviousAndNext(): Promise<void> {
-        const hasMultipleTourneys = (await AutoTourneysMainsProvider.getSinglePhaseInfoArrayForPhase(AutoTourneysConstants.PhaseId.Registration)).length > 1;
+        const hasMultipleTourneys = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration)).length > 1;
         this._btnNextTourney.setIsVisible(hasMultipleTourneys);
         this._btnPreviousTourney.setIsVisible(hasMultipleTourneys);
     }
 
     private async _updateLabelRestTime(): Promise<void> {
         const tourneyId         = this._tourneyId;
-        const registrationInfo  = tourneyId == null ? null : await AutoTourneysMainsProvider.getAtRegistrationInfo(tourneyId);
+        const registrationInfo  = tourneyId == null ? null : await getAtRegistrationInfo(tourneyId);
         const label             = this._labelRestTime;
         if (registrationInfo == null) {
             label.setText(`----`);
         } else {
-            label.setText(LangUtils.getTimeDurationText2(registrationInfo.endTimestamp - TimerTimerModel.getServerTimestamp()));
+            label.setText(getTimeDurationText2(registrationInfo.endTimestamp - getServerTimestamp()));
         }
     }
 }

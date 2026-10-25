@@ -1,48 +1,48 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as StagesConstants from "../../stages/Constants.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiList from "../../ui/interfaces/IUiList.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getLanguageText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { Dimension } from "../../stages/Constants.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiList } from "../../ui/interfaces/IUiList.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
-    war     : BaseWarInterfaceIBwWar.IBwWar;
+    war     : IBwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData>{
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData>{
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnClose!                 : IUiButton;
 
-    private readonly _labelNoData!              : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelNoData!              : IUiLabel;
 
-    private readonly _sclContent!               : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiLayout.IUiLayout>;
-    private readonly _layoutContent!            : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _sclContent!               : IUiScroller<IUiLayout>;
+    private readonly _layoutContent!            : IUiLayout;
 
-    private readonly _layoutRepeatableDialogue! : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelRepeatableDialogue!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listRepeatableDialogue!   : UiInterfacesIUiList.IUiList<DataForDialogueRenderer>;
+    private readonly _layoutRepeatableDialogue! : IUiLayout;
+    private readonly _labelRepeatableDialogue!  : IUiLabel;
+    private readonly _listRepeatableDialogue!   : IUiList<DataForDialogueRenderer>;
 
-    private readonly _layoutWarEventDialogue!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelWarEventDialogue!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listWarEventDialogue!     : UiInterfacesIUiList.IUiList<DataForDialogueRenderer>;
+    private readonly _layoutWarEventDialogue!   : IUiLayout;
+    private readonly _labelWarEventDialogue!    : IUiLabel;
+    private readonly _listWarEventDialogue!     : IUiList<DataForDialogueRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -74,10 +74,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData>{
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1098);
-        this._labelNoData.setLangText(LangConstants.TextType.B0278);
-        this._labelRepeatableDialogue.setLangText(LangConstants.TextType.B1098);
-        this._labelWarEventDialogue.setLangText(LangConstants.TextType.B0469);
+        this._labelTitle.setLangText(TextType.B1098);
+        this._labelNoData.setLangText(TextType.B0278);
+        this._labelRepeatableDialogue.setLangText(TextType.B1098);
+        this._labelWarEventDialogue.setLangText(TextType.B0469);
     }
     private async _updateComponentsForDialogue(): Promise<void> {
         const war = this.getOpenData()?.war;
@@ -124,10 +124,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData>{
         layoutContent.arrangeItems();
 
         const sclContent    = this._sclContent;
-        const groupHeight   = NumbersUtils.getValueInRange({
+        const groupHeight   = getValueInRange({
             rawValue    : layoutContent.getScaledHeight() + 80,
             minValue    : 140,
-            maxValue    : StagesConstants.Dimension.DesignMinHeight,
+            maxValue    : Dimension.DesignMinHeight,
         });
         sclContent.scrollTop();
         sclContent.setUnscaledManualHeight(groupHeight - 80);
@@ -135,20 +135,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData>{
     }
 }
 
-interface DataForDialogueRenderer extends UiTypesUiListItemData.UiListItemData {
-    war         : BaseWarInterfaceIBwWar.IBwWar;
-    dialogueId  : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    actionId    : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+interface DataForDialogueRenderer extends UiListItemData {
+    war         : IBwWar;
+    dialogueId  : Undefinable<number>;
+    actionId    : Undefinable<number>;
 }
-class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForDialogueRenderer> {
-    private readonly _btnPlay!  : UiInterfacesIUiButton.IUiButton;
+class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
+    private readonly _btnPlay!  : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._btnPlay,  callback: this._onTouchedBtnPlay },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -167,7 +167,7 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             if (dialogueId != null) {
                 const dialogueData = openData.war.getInstanceWarRule().getMapSimpleDialogueArray().find(v => v.getDialogueId() === dialogueId);
                 if (dialogueData) {
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().BwMapSimpleDialoguePanel, {
+                    openPanel(getDict().BwMapSimpleDialoguePanel, {
                         war             : war,
                         dialogueData    : dialogueData,
                         callbackOnClose : () => {
@@ -186,7 +186,7 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
                 {
                     const act = action.getWeaBigDialogueSimple();
                     if (act) {
-                        GamePanelsManager.openPanel(GamePanelsDict.getDict().BwBigDialoguePanel, {
+                        openPanel(getDict().BwBigDialoguePanel, {
                             war         : war,
                             actionData  : act,
                             callbackOnClose : () => {
@@ -199,7 +199,7 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
                 {
                     const act = action.getWeaSmallDialogueSimple();
                     if (act) {
-                        GamePanelsManager.openPanel(GamePanelsDict.getDict().BwSmallDialoguePanel, {
+                        openPanel(getDict().BwSmallDialoguePanel, {
                             war         : war,
                             actionData  : act,
                             callbackOnClose : () => {
@@ -233,16 +233,16 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
         {
             const dialogueId    = openData.dialogueId;
             if (dialogueId != null) {
-                btnPlay.setText(LangUtils.getLanguageText({
+                btnPlay.setText(getLanguageText({
                     textArray: war.getInstanceWarRule().getMapSimpleDialogueArray().find(v => v.getDialogueId() === dialogueId)?.getDialogueNameArray()
-                }) ?? LangConstants.UndefinedError);
+                }) ?? UndefinedError);
                 return;
             }
         }
         {
             const actionId = openData.actionId;
             if (actionId != null) {
-                btnPlay.setText(LangUtils.getLanguageText({ textArray: war.getWarEventManager().getWarEventAction(actionId).getWeaCommonData()?.getActionNameArray() }) ?? `A${actionId}`);
+                btnPlay.setText(getLanguageText({ textArray: war.getWarEventManager().getWarEventAction(actionId).getWeaCommonData()?.getActionNameArray() }) ?? `A${actionId}`);
                 return;
             }
         }

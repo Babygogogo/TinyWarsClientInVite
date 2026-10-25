@@ -1,90 +1,95 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import * as CosConstants from "../cos/Constants.ts";
-import * as CosUtils from "../cos/Utils.ts";
-import * as CoSkillsConstants from "../coSkills/Constants.ts";
-import * as CoSkillsUtilsCommon from "../coSkills/utils/Common.ts";
-import * as CoSkillsUtilsPersistentSelfUnitCost from "../coSkills/utils/persistent/SelfUnitCost.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import * as GridMarksUtils from "../gridMarks/Utils.ts";
-import * as HelpersCollection from "../helpers/Collection.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import type * as NotificationsDataTypes from "../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import * as NumbersConstants from "../numbers/Constants.ts";
-import * as NumbersUtils from "../numbers/Utils.ts";
-import * as PlayersConstants from "./Constants.ts";
-import type * as PlayersIPlayer from "./IPlayer.ts";
-import type * as ProtoSchemaCommonProtoConfigCoBasicCfg from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
-import type * as ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialPlayer from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
-import * as UsersModel from "../users/Model.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import { EnergyTypeId, CoId } from "../cos/Constants.ts";
+import { checkIsValidEnergy, getValidEnergy, getCoMaxEnergy } from "../cos/Utils.ts";
+import { SkillTypeId } from "../coSkills/Constants.ts";
+import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
+import { getTotalMultiplier } from "../coSkills/utils/persistent/SelfUnitCost.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
+import { addGridMark, deleteGridMark, updateGridMarkList } from "../gridMarks/Utils.ts";
+import { checkIsSameSet } from "../helpers/Collection.ts";
+import { newError, getExisted, getDefined } from "../helpers/Misc.ts";
+import type {
+    GridMarkAdded,
+    GridMarkDeleted,
+    GridMarkListChanged,
+    BwPlayerPlayerIndexArrayForShowMarkedGridUpdated,
+} from "../notifications/DataTypes.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import { MaxInt32 } from "../numbers/Constants.ts";
+import { getValueInRange, getValueInInt32 } from "../numbers/Utils.ts";
+import { AliveStateId, PlayerIndex } from "./Constants.ts";
+import type { IPlayer } from "./IPlayer.ts";
+import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
+import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
+import { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
+import { getSelfUserId, getUserNickname } from "../users/Model.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
+type IBwWar                 = BaseWarInterfaceIBwWar;
 
-export class Player implements PlayersIPlayer.IPlayer {
+export class Player implements IPlayer {
     private _playerIndex?               : number;
     private _fund?                      : number;
     private _hasVotedForDraw?           : boolean;
-    private _aliveState?                : PlayersConstants.AliveStateId;
+    private _aliveState?                : AliveStateId;
     private _restTimeToBoot?            : number;
     private _userId?                    : number | null;
     private _unitAndTileSkinId?         : number;
     private _coId?                      : number;
     private _coCurrentEnergy            = 0;
-    private _coUsingSkillType?          : CoSkillsConstants.SkillTypeId;
+    private _coUsingSkillType?          : SkillTypeId;
     private _coIsDestroyedInTurn?       : boolean;
     private _coPowerActivatedCount?     : number;
     private _watchOngoingSrcUserIds?    : Set<number>;
     private _watchRequestSrcUserIds?    : Set<number>;
-    private _markedGridList             = new Array<ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId.GridIdAndMarkTypeId>();
+    private _markedGridList             = new Array<GridIdAndMarkTypeId>();
     private _hiddenGridMarkTypeIdList   = new Array<number>();
     private _isSkipTurn                 = false;
 
     private _war?                       : IBwWar;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public init(data: ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer, gcData: GameConfigGcData.GcData): void {
+    public init(data: SerialPlayer, gcData: GcData): void {
         const coId = data.getCoId();
         if (gcData.getCoBasicCfg(coId) == null) {
-            throw HelpersMisc.newError(`Invalid coId: ${coId}`, UtilsClientErrorCode.ClientErrorCode.BwPlayer_Init_01);
+            throw newError(`Invalid coId: ${coId}`, ClientErrorCode.BwPlayer_Init_01);
         }
 
         const fund              = data.getFund();
         const hasVotedForDraw   = data.getHasVotedForDraw();
         const aliveState        = data.getAliveState();
-        if ((aliveState !== PlayersConstants.AliveStateId.Alive) &&
-            (aliveState !== PlayersConstants.AliveStateId.Dead)  &&
-            (aliveState !== PlayersConstants.AliveStateId.Dying)
+        if ((aliveState !== AliveStateId.Alive) &&
+            (aliveState !== AliveStateId.Dead)  &&
+            (aliveState !== AliveStateId.Dying)
         ) {
-            throw HelpersMisc.newError(`Invalid aliveState: ${aliveState}`, UtilsClientErrorCode.ClientErrorCode.BwPlayer_Init_02);
+            throw newError(`Invalid aliveState: ${aliveState}`, ClientErrorCode.BwPlayer_Init_02);
         }
 
         const playerIndex = data.getPlayerIndex();
-        if ((playerIndex > PlayersConstants.PlayerIndex.Max)   ||
-            (playerIndex < PlayersConstants.PlayerIndex.Neutral)
+        if ((playerIndex > PlayerIndex.Max)   ||
+            (playerIndex < PlayerIndex.Neutral)
         ) {
-            throw HelpersMisc.newError(`Invalid playerIndex: ${playerIndex}`, UtilsClientErrorCode.ClientErrorCode.BwPlayer_Init_03);
+            throw newError(`Invalid playerIndex: ${playerIndex}`, ClientErrorCode.BwPlayer_Init_03);
         }
 
         const restTimeToBoot        = data.getRestTimeToBoot();
         const coIsDestroyedInTurn   = data.getCoIsDestroyedInTurn();
         const unitAndTileSkinId     = data.getUnitAndTileSkinId();
-        if (((unitAndTileSkinId === 0) && (playerIndex !== PlayersConstants.PlayerIndex.Neutral))  ||
-            ((unitAndTileSkinId !== 0) && (playerIndex === PlayersConstants.PlayerIndex.Neutral))
+        if (((unitAndTileSkinId === 0) && (playerIndex !== PlayerIndex.Neutral))  ||
+            ((unitAndTileSkinId !== 0) && (playerIndex === PlayerIndex.Neutral))
         ) {
-            throw HelpersMisc.newError(`Invalid unitAndTileSkinId: ${unitAndTileSkinId}`, UtilsClientErrorCode.ClientErrorCode.BwPlayer_Init_06);
+            throw newError(`Invalid unitAndTileSkinId: ${unitAndTileSkinId}`, ClientErrorCode.BwPlayer_Init_06);
         }
 
         const coUsingSkillType  = data.getCoUsingSkillType();
-        if ((coUsingSkillType !== CoSkillsConstants.SkillTypeId.Passive)  &&
-            (coUsingSkillType !== CoSkillsConstants.SkillTypeId.Power)    &&
-            (coUsingSkillType !== CoSkillsConstants.SkillTypeId.SuperPower)
+        if ((coUsingSkillType !== SkillTypeId.Passive)  &&
+            (coUsingSkillType !== SkillTypeId.Power)    &&
+            (coUsingSkillType !== SkillTypeId.SuperPower)
         ) {
-            throw HelpersMisc.newError(`Invalid coUsingSkillType: ${coUsingSkillType}`, UtilsClientErrorCode.ClientErrorCode.BwPlayer_Init_08);
+            throw newError(`Invalid coUsingSkillType: ${coUsingSkillType}`, ClientErrorCode.BwPlayer_Init_08);
         }
 
         // if (((coUsingSkillType === CoSkillType.Power)       && (!(coConfig.powerSkills || []).length))      ||
@@ -127,8 +132,8 @@ export class Player implements PlayersIPlayer.IPlayer {
         this._setWar(war);
     }
 
-    public serialize(): ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer {
-        return ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer.fromJson({
+    public serialize(): SerialPlayer {
+        return SerialPlayer.fromJson({
             playerIndex                         : this.getPlayerIndex(),
             fund                                : this.getFund(),
             hasVotedForDraw                     : this.getHasVotedForDraw(),
@@ -149,12 +154,12 @@ export class Player implements PlayersIPlayer.IPlayer {
             deprecatedMarkedGridIdArray         : [],
         });
     }
-    public serializeForCreateSfw(): ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer {
+    public serializeForCreateSfw(): SerialPlayer {
         const war                   = this.getWar();
         const playerIndex           = this.getPlayerIndex();
         const teamIndexes           = war.getPlayerManager().getWatcherTeamIndexesForSelf();
         const shouldShowFund        = (war.getShouldSerializeFullInfoForFreeModeGames()) || (!war.getFogMap().checkHasFogCurrently()) || (teamIndexes.has(this.getTeamIndex()));
-        return ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer.fromJson({
+        return SerialPlayer.fromJson({
             playerIndex,
             fund                                : shouldShowFund ? this.getFund() : 0,
             hasVotedForDraw                     : this.getHasVotedForDraw(),
@@ -163,7 +168,7 @@ export class Player implements PlayersIPlayer.IPlayer {
             coUsingSkillType                    : this.getCoUsingSkillType(),
             coIsDestroyedInTurn                 : this.getCoIsDestroyedInTurn(),
             unitAndTileSkinId                   : this.getUnitAndTileSkinId(),
-            userId                              : playerIndex > 0 ? UsersModel.getSelfUserId() : null,
+            userId                              : playerIndex > 0 ? getSelfUserId() : null,
             coId                                : this.getCoId(),
             coCurrentEnergy                     : this.getCoCurrentEnergy(),
             coPowerActivatedCount               : this.getCoPowerActivatedCount(),
@@ -175,12 +180,12 @@ export class Player implements PlayersIPlayer.IPlayer {
             deprecatedMarkedGridIdArray         : [],
         });
     }
-    public serializeForCreateMfr(): ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer {
+    public serializeForCreateMfr(): SerialPlayer {
         const war                   = this.getWar();
         const playerIndex           = this.getPlayerIndex();
         const teamIndexes           = war.getPlayerManager().getWatcherTeamIndexesForSelf();
         const shouldShowFund        = (war.getShouldSerializeFullInfoForFreeModeGames()) || (!war.getFogMap().checkHasFogCurrently()) || (teamIndexes.has(this.getTeamIndex()));
-        return ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer.fromJson({
+        return SerialPlayer.fromJson({
             playerIndex,
             fund                                : shouldShowFund ? this.getFund() : 0,
             hasVotedForDraw                     : this.getHasVotedForDraw(),
@@ -189,7 +194,7 @@ export class Player implements PlayersIPlayer.IPlayer {
             coUsingSkillType                    : this.getCoUsingSkillType(),
             coIsDestroyedInTurn                 : this.getCoIsDestroyedInTurn(),
             unitAndTileSkinId                   : playerIndex,
-            userId                              : playerIndex > 0 ? UsersModel.getSelfUserId() : null,
+            userId                              : playerIndex > 0 ? getSelfUserId() : null,
             coId                                : this.getCoId(),
             coCurrentEnergy                     : this.getCoCurrentEnergy(),
             coPowerActivatedCount               : this.getCoPowerActivatedCount(),
@@ -206,41 +211,41 @@ export class Player implements PlayersIPlayer.IPlayer {
         this._war = war;
     }
     public getWar(): IBwWar {
-        return HelpersMisc.getExisted(this._war);
+        return getExisted(this._war);
     }
 
     public setFund(fund: number): void {
         if (this._fund !== fund) {
             this._fund = fund;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwPlayerFundChanged, this);
+            dispatch(TypeId.BwPlayerFundChanged, this);
         }
     }
     public getFund(): number {
-        return HelpersMisc.getExisted(this._fund);
+        return getExisted(this._fund);
     }
 
     public setHasVotedForDraw(voted: boolean): void {
         this._hasVotedForDraw = voted;
     }
     public getHasVotedForDraw(): boolean {
-        return HelpersMisc.getExisted(this._hasVotedForDraw);
+        return getExisted(this._hasVotedForDraw);
     }
 
-    public setAliveState(alive: PlayersConstants.AliveStateId): void {
+    public setAliveState(alive: AliveStateId): void {
         this._aliveState = alive;
     }
-    public getAliveState(): PlayersConstants.AliveStateId {
-        return HelpersMisc.getExisted(this._aliveState);
+    public getAliveState(): AliveStateId {
+        return getExisted(this._aliveState);
     }
 
     private _setPlayerIndex(index: number): void {
         this._playerIndex = index;
     }
     public getPlayerIndex(): number {
-        return HelpersMisc.getExisted(this._playerIndex);
+        return getExisted(this._playerIndex);
     }
     public checkIsNeutral(): boolean {
-        return this.getPlayerIndex() === PlayersConstants.PlayerIndex.Neutral;
+        return this.getPlayerIndex() === PlayerIndex.Neutral;
     }
 
     public getTeamIndex(): number {
@@ -251,14 +256,14 @@ export class Player implements PlayersIPlayer.IPlayer {
         this._restTimeToBoot = seconds;
     }
     public getRestTimeToBoot(): number {
-        return HelpersMisc.getExisted(this._restTimeToBoot);
+        return getExisted(this._restTimeToBoot);
     }
 
     public setWatchOngoingSrcUserIds(list: number[]): void {
         this._watchOngoingSrcUserIds = new Set(list);
     }
     public getWatchOngoingSrcUserIds(): Set<number> {
-        return HelpersMisc.getExisted(this._watchOngoingSrcUserIds);
+        return getExisted(this._watchOngoingSrcUserIds);
     }
     public addWatchOngoingSrcUserId(userId: number): void {
         this.getWatchOngoingSrcUserIds().add(userId);
@@ -271,7 +276,7 @@ export class Player implements PlayersIPlayer.IPlayer {
         this._watchRequestSrcUserIds = new Set(list);
     }
     public getWatchRequestSrcUserIds(): Set<number> {
-        return HelpersMisc.getExisted(this._watchRequestSrcUserIds);
+        return getExisted(this._watchRequestSrcUserIds);
     }
     public addWatchRequestSrcUserId(userId: number): void {
         this.getWatchRequestSrcUserIds().add(userId);
@@ -283,7 +288,7 @@ export class Player implements PlayersIPlayer.IPlayer {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for marker.
     ////////////////////////////////////////////////////////////////////////////////
-    public setGridMarkList(newMarkedGridList: ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId.GridIdAndMarkTypeId[]): void {
+    public setGridMarkList(newMarkedGridList: GridIdAndMarkTypeId[]): void {
         const list  = this.getGridMarkList();
         list.length = 0;
 
@@ -291,7 +296,7 @@ export class Player implements PlayersIPlayer.IPlayer {
             list.push(gridId);
         }
     }
-    public getGridMarkList(): ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId.GridIdAndMarkTypeId[] {
+    public getGridMarkList(): GridIdAndMarkTypeId[] {
         return this._markedGridList;
     }
     // public getMarkedGridIdArrayForTeamIndexes(teamIndexes: Set<number>): number[] {
@@ -299,7 +304,7 @@ export class Player implements PlayersIPlayer.IPlayer {
     //         ? this._markedGridIdArray
     //         : [];
     // }
-    public getMarkTypeId(gridId: number): AuxiliaryTypesAuxiliaryTypes.Undefinable<number> {
+    public getMarkTypeId(gridId: number): Undefinable<number> {
         for (const data of this.getGridMarkList()) {
             if (data.getGridId() === gridId) {
                 return data.getMarkTypeId();
@@ -309,31 +314,31 @@ export class Player implements PlayersIPlayer.IPlayer {
         return undefined;
     }
     public addGridMark(gridId: number, markTypeId: number): boolean {
-        const isAdded = GridMarksUtils.addGridMark(this.getGridMarkList(), gridId, markTypeId);
+        const isAdded = addGridMark(this.getGridMarkList(), gridId, markTypeId);
         if (isAdded) {
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GridMarkAdded, {
+            dispatch(TypeId.GridMarkAdded, {
                 war     : this.getWar(),
                 gridId  : gridId,
-            } as NotificationsDataTypes.GridMarkAdded);
+            } as GridMarkAdded);
         }
         return isAdded;
     }
     public deleteGridMark(gridId: number): boolean {
-        const isDeleted = GridMarksUtils.deleteGridMark(this.getGridMarkList(), gridId);
+        const isDeleted = deleteGridMark(this.getGridMarkList(), gridId);
         if (isDeleted) {
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GridMarkDeleted, {
+            dispatch(TypeId.GridMarkDeleted, {
                 war     : this.getWar(),
                 gridId  : gridId,
-            } as NotificationsDataTypes.GridMarkDeleted);
+            } as GridMarkDeleted);
         }
         return isDeleted;
     }
     public updateGridMarkList(gridIdArrayForAddMark: number[], gridIdArrayForDeleteMark: number[], markTypeId: number): void {
-        GridMarksUtils.updateGridMarkList(this.getGridMarkList(), gridIdArrayForAddMark, gridIdArrayForDeleteMark, markTypeId);
+        updateGridMarkList(this.getGridMarkList(), gridIdArrayForAddMark, gridIdArrayForDeleteMark, markTypeId);
 
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GridMarkListChanged, {
+        dispatch(TypeId.GridMarkListChanged, {
             war: this.getWar(),
-        } as NotificationsDataTypes.GridMarkListChanged);
+        } as GridMarkListChanged);
     }
 
     private _setHiddenGridMarkTypeIdList(newHiddenGridMarkTypeIdList: number[]): void {
@@ -342,12 +347,12 @@ export class Player implements PlayersIPlayer.IPlayer {
         list.push(...newHiddenGridMarkTypeIdList);
     }
     public updateHiddenGridMarkTypeIdList(playerIndexes: number[]): void {
-        if (!HelpersCollection.checkIsSameSet(new Set(playerIndexes), new Set(this.getHiddenGridMarkTypeIdList()))) {
+        if (!checkIsSameSet(new Set(playerIndexes), new Set(this.getHiddenGridMarkTypeIdList()))) {
             this._setHiddenGridMarkTypeIdList(playerIndexes);
 
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated, {
+            dispatch(TypeId.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated, {
                 player  : this,
-            } as NotificationsDataTypes.BwPlayerPlayerIndexArrayForShowMarkedGridUpdated);
+            } as BwPlayerPlayerIndexArrayForShowMarkedGridUpdated);
         }
     }
     public getHiddenGridMarkTypeIdList(): number[] {
@@ -373,46 +378,46 @@ export class Player implements PlayersIPlayer.IPlayer {
         this._userId = id;
     }
     public getUserId(): number | null {
-        return HelpersMisc.getDefined(this._userId, UtilsClientErrorCode.ClientErrorCode.BwPlayer_GetUserId_00);
+        return getDefined(this._userId, ClientErrorCode.BwPlayer_GetUserId_00);
     }
 
     private _setUnitAndTileSkinId(unitAndTileSkinId: number): void {
         this._unitAndTileSkinId = unitAndTileSkinId;
     }
     public getUnitAndTileSkinId(): number {
-        return HelpersMisc.getExisted(this._unitAndTileSkinId);
+        return getExisted(this._unitAndTileSkinId);
     }
 
     public async getNickname(): Promise<string> {
         const userId = this.getUserId();
         return (userId == null)
             ?  `A.I.`
-            : await UsersModel.getUserNickname(userId) || `??`;
+            : await getUserNickname(userId) || `??`;
     }
 
     public setCoId(coId: number): void {
         if (this._coId !== coId) {
             this._coId = coId;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwCoIdChanged, this);
+            dispatch(TypeId.BwCoIdChanged, this);
         }
     }
     public getCoId(): number {
-        return HelpersMisc.getExisted(this._coId);
+        return getExisted(this._coId);
     }
     public getCoCategoryId(): number {
-        return HelpersMisc.getExisted(this.getWar().getGcData().getCoBasicCfg(this.getCoId())?.getCoCategoryId());
+        return getExisted(this.getWar().getGcData().getCoBasicCfg(this.getCoId())?.getCoCategoryId());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _setCoCurrentEnergy(energy: number): void {
-        if (!CosUtils.checkIsValidEnergy(energy)) {
-            throw HelpersMisc.newError(`Invalid energy: ${energy}`);
+        if (!checkIsValidEnergy(energy)) {
+            throw newError(`Invalid energy: ${energy}`);
         }
         this._coCurrentEnergy = energy;
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwCoEnergyChanged);
+        dispatch(TypeId.BwCoEnergyChanged);
     }
     public setAndValidateCoCurrentEnergy(energy: number): void {
-        this._setCoCurrentEnergy(CosUtils.getValidEnergy(energy));
+        this._setCoCurrentEnergy(getValidEnergy(energy));
     }
     public addAndValidateCoCurrentEnergy(offset: number): void {
         if (offset === 0) {
@@ -425,7 +430,7 @@ export class Player implements PlayersIPlayer.IPlayer {
         if (((offset > 0) && (currentEnergy < maxEnergy)) ||
             ((offset < 0) && (currentEnergy > minEnergy))
         ) {
-            this.setAndValidateCoCurrentEnergy(NumbersUtils.getValueInRange({
+            this.setAndValidateCoCurrentEnergy(getValueInRange({
                 minValue    : minEnergy,
                 maxValue    : maxEnergy,
                 rawValue    : currentEnergy + offset,
@@ -437,7 +442,7 @@ export class Player implements PlayersIPlayer.IPlayer {
         return this._coCurrentEnergy;
     }
     public getCoMaxEnergy(): number {
-        return this._getCoRevisedRequiredEnergy(CosUtils.getCoMaxEnergy(this.getCoBasicCfg()));
+        return this._getCoRevisedRequiredEnergy(getCoMaxEnergy(this.getCoBasicCfg()));
     }
     public getCoZoneExpansionEnergyList(): number[] | null {
         const cfg = this.getCoBasicCfg();
@@ -462,15 +467,15 @@ export class Player implements PlayersIPlayer.IPlayer {
         }
     }
     private _getCoRevisedRequiredEnergy(rawRequiredEnergy: number): number {
-        const cfg = HelpersMisc.getExisted(this.getCoBasicCfg().getCoEnergyRequirementParams(), UtilsClientErrorCode.ClientErrorCode.BwPlayer_GetRevisedEnergy_00);
-        return NumbersUtils.getValueInInt32(rawRequiredEnergy * (Math.min(cfg[1], this.getCoPowerActivatedCount()) * cfg[0] + 100) / 100);
+        const cfg = getExisted(this.getCoBasicCfg().getCoEnergyRequirementParams(), ClientErrorCode.BwPlayer_GetRevisedEnergy_00);
+        return getValueInInt32(rawRequiredEnergy * (Math.min(cfg[1], this.getCoPowerActivatedCount()) * cfg[0] + 100) / 100);
     }
 
-    public getCoEnergyType(): CosConstants.EnergyTypeId {
-        return HelpersMisc.getExisted(this.getCoBasicCfg().getCoEnergyTypeId(), UtilsClientErrorCode.ClientErrorCode.BwPlayer_GetCoEnergyType_00);
+    public getCoEnergyType(): EnergyTypeId {
+        return getExisted(this.getCoBasicCfg().getCoEnergyTypeId(), ClientErrorCode.BwPlayer_GetCoEnergyType_00);
     }
     public getCoPowerActivatedCount(): number {
-        return HelpersMisc.getExisted(this._coPowerActivatedCount, UtilsClientErrorCode.ClientErrorCode.BwPlayer_GetCoPowerActivatedCount_00);
+        return getExisted(this._coPowerActivatedCount, ClientErrorCode.BwPlayer_GetCoPowerActivatedCount_00);
     }
     private _setCoPowerActivatedCount(count: number): void {
         this._coPowerActivatedCount = count;
@@ -479,54 +484,54 @@ export class Player implements PlayersIPlayer.IPlayer {
     public getCoZoneRadius(): number {
         const cfg       = this.getCoBasicCfg();
         const energy    = this.getCoCurrentEnergy();
-        let radius      = HelpersMisc.getExisted(cfg.getZoneRadius());
+        let radius      = getExisted(cfg.getZoneRadius());
         for (const e of cfg.getZoneExpansionEnergyList() ?? []) {
             if (energy >= e) {
                 ++radius;
             }
         }
 
-        return NumbersUtils.getValueInRange({
+        return getValueInRange({
             minValue    : 0,
-            maxValue    : NumbersConstants.MaxInt32,
+            maxValue    : MaxInt32,
             rawValue    : Math.floor(radius + this.getWar().getWarEventManager().getOpaCoZoneRadiusModifier(this.getPlayerIndex())),
         });
     }
-    public getCoGridIndexListOnMap(): AuxiliaryTypesGridIndex.GridIndex[] {
+    public getCoGridIndexListOnMap(): GridIndex[] {
         return this.getWar().getUnitMap().getCoGridIndexListOnMap(this.getPlayerIndex());
     }
-    public getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet: Set<number>): AuxiliaryTypesGridIndex.GridIndex[] {
+    public getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet: Set<number>): GridIndex[] {
         return this.getWar().getUnitMap().getVisibleCoGridIndexArrayOnMap(this.getPlayerIndex(), observerTeamIndexSet);
     }
 
-    public checkIsInCoZone(targetGridIndex: AuxiliaryTypesGridIndex.GridIndex, coGridIndexOnMap: AuxiliaryTypesGridIndex.GridIndex[]): boolean {
+    public checkIsInCoZone(targetGridIndex: GridIndex, coGridIndexOnMap: GridIndex[]): boolean {
         return targetGridIndex.getMinDistance(coGridIndexOnMap) <= this.getCoZoneRadius();
     }
 
-    public getCoUsingSkillType(): CoSkillsConstants.SkillTypeId {
-        return HelpersMisc.getExisted(this._coUsingSkillType);
+    public getCoUsingSkillType(): SkillTypeId {
+        return getExisted(this._coUsingSkillType);
     }
-    public setCoUsingSkillType(skillType: CoSkillsConstants.SkillTypeId): void {
+    public setCoUsingSkillType(skillType: SkillTypeId): void {
         if (this._coUsingSkillType !== skillType) {
             this._coUsingSkillType = skillType;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwCoUsingSkillTypeChanged);
+            dispatch(TypeId.BwCoUsingSkillTypeChanged);
         }
     }
     public getCoCurrentSkills(): number[] {
         return this.getCoSkills(this.getCoUsingSkillType());
     }
-    public getCoSkills(skillType: CoSkillsConstants.SkillTypeId): number[] {
+    public getCoSkills(skillType: SkillTypeId): number[] {
         const cfg = this.getCoBasicCfg();
         switch (skillType) {
-            case CoSkillsConstants.SkillTypeId.Passive      : return cfg.getPassiveSkillIds() || [];
-            case CoSkillsConstants.SkillTypeId.Power        : return cfg.getPowerSkillIds() || [];
-            case CoSkillsConstants.SkillTypeId.SuperPower   : return cfg.getSuperPowerSkillIds() || [];
-            default                             : throw HelpersMisc.newError(`Invalid skillType: ${skillType}`);
+            case SkillTypeId.Passive      : return cfg.getPassiveSkillIds() || [];
+            case SkillTypeId.Power        : return cfg.getPowerSkillIds() || [];
+            case SkillTypeId.SuperPower   : return cfg.getSuperPowerSkillIds() || [];
+            default                             : throw newError(`Invalid skillType: ${skillType}`);
         }
     }
     public checkCoIsUsingActiveSkill(): boolean {
         const t = this.getCoUsingSkillType();
-        return (t === CoSkillsConstants.SkillTypeId.Power) || (t === CoSkillsConstants.SkillTypeId.SuperPower);
+        return (t === SkillTypeId.Power) || (t === SkillTypeId.SuperPower);
     }
     public checkHasZoneSkillForCurrentSkills(): boolean {
         const currentSkills = this.getCoCurrentSkills();
@@ -542,10 +547,10 @@ export class Player implements PlayersIPlayer.IPlayer {
             return false;
         }
     }
-    public checkCanUseCoSkill(skillType: CoSkillsConstants.SkillTypeId): boolean {
+    public checkCanUseCoSkill(skillType: SkillTypeId): boolean {
         const war = this.getWar();
-        if ((this.getCoEnergyType() !== CosConstants.EnergyTypeId.Trilogy)                                                                                           ||
-            (CoSkillsUtilsCommon.getPowerSkillTargetsCount(this.getCoBasicCfg(), skillType) > war.getTileMap().getMapSize().getGridsCount())
+        if ((this.getCoEnergyType() !== EnergyTypeId.Trilogy)                                                                                           ||
+            (getPowerSkillTargetsCount(this.getCoBasicCfg(), skillType) > war.getTileMap().getMapSize().getGridsCount())
         ) {
             return false;
         }
@@ -569,11 +574,11 @@ export class Player implements PlayersIPlayer.IPlayer {
         }
 
         const energy = this.getCoCurrentEnergy();
-        if (skillType === CoSkillsConstants.SkillTypeId.Power) {
+        if (skillType === SkillTypeId.Power) {
             const powerEnergy = this.getCoPowerEnergy();
             return (powerEnergy != null) && (energy >= powerEnergy);
 
-        } else if (skillType === CoSkillsConstants.SkillTypeId.SuperPower) {
+        } else if (skillType === SkillTypeId.SuperPower) {
             const superPowerEnergy = this.getCoSuperPowerEnergy();
             return (superPowerEnergy != null) && (energy >= superPowerEnergy);
 
@@ -586,15 +591,15 @@ export class Player implements PlayersIPlayer.IPlayer {
             || (!this.checkCoIsUsingActiveSkill());
     }
 
-    public updateOnUseCoSkill(skillType: CoSkillsConstants.SkillTypeId): void {
-        if (skillType === CoSkillsConstants.SkillTypeId.Power) {
-            this.addAndValidateCoCurrentEnergy(-HelpersMisc.getExisted(this.getCoPowerEnergy()));
+    public updateOnUseCoSkill(skillType: SkillTypeId): void {
+        if (skillType === SkillTypeId.Power) {
+            this.addAndValidateCoCurrentEnergy(-getExisted(this.getCoPowerEnergy()));
 
-        } else if (skillType === CoSkillsConstants.SkillTypeId.SuperPower) {
-            this.addAndValidateCoCurrentEnergy(-HelpersMisc.getExisted(this.getCoSuperPowerEnergy()));
+        } else if (skillType === SkillTypeId.SuperPower) {
+            this.addAndValidateCoCurrentEnergy(-getExisted(this.getCoSuperPowerEnergy()));
 
         } else {
-            throw HelpersMisc.newError(`Invalid skillType: ${skillType}`, UtilsClientErrorCode.ClientErrorCode.BwPlayer_UpdateOnUseCoSkill_02);
+            throw newError(`Invalid skillType: ${skillType}`, ClientErrorCode.BwPlayer_UpdateOnUseCoSkill_02);
         }
 
         this._setCoPowerActivatedCount(this.getCoPowerActivatedCount() + 1);
@@ -602,18 +607,18 @@ export class Player implements PlayersIPlayer.IPlayer {
     }
 
     public getCoIsDestroyedInTurn(): boolean {
-        return HelpersMisc.getExisted(this._coIsDestroyedInTurn);
+        return getExisted(this._coIsDestroyedInTurn);
     }
     public setCoIsDestroyedInTurn(isDestroyed: boolean): void {
         this._coIsDestroyedInTurn = isDestroyed;
     }
 
     public getCoMaxBoardCount(): number {
-        return HelpersMisc.getExisted(this.getCoBasicCfg().getMaxBoardCount());
+        return getExisted(this.getCoBasicCfg().getMaxBoardCount());
     }
 
     public getUnitCostModifier(unitTypeId: number): number {
-        if (this.getCoId() === CosConstants.CoId.Empty) {
+        if (this.getCoId() === CoId.Empty) {
             return 1;
         }
 
@@ -621,7 +626,7 @@ export class Player implements PlayersIPlayer.IPlayer {
         const gameConfig                = this.getWar().getGcData();
         let modifier                    = 1;
         for (const skillId of this.getCoCurrentSkills()) {
-            modifier *= CoSkillsUtilsPersistentSelfUnitCost.getTotalMultiplier({
+            modifier *= getTotalMultiplier({
                 gameConfig  : gameConfig,
                 cfg         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCost(),
                 unitTypeId  : unitTypeId,
@@ -631,7 +636,7 @@ export class Player implements PlayersIPlayer.IPlayer {
         return modifier;
     }
 
-    public getCoBasicCfg(): ProtoSchemaCommonProtoConfigCoBasicCfg.CoBasicCfg {
-        return HelpersMisc.getExisted(this.getWar().getGcData().getCoBasicCfg(this.getCoId()));
+    public getCoBasicCfg(): CoBasicCfg {
+        return getExisted(this.getWar().getGcData().getCoBasicCfg(this.getCoId()));
     }
 }

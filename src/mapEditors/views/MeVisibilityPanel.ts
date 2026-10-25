@@ -1,54 +1,54 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GameConfigGcMapEditor from "../../gameConfig/GcMapEditor.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocationsConstants from "../../locations/Constants.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as MapEditorModelMeModel from "../../mapEditor/model/MeModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import { show } from "../../FloatText.ts";
+import { DrawerMode } from "../../gameConfig/GcMapEditor.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { MinId, MaxId } from "../../locations/Constants.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { getWar } from "../../mapEditor/model/MeModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
 
-    private readonly _labelTileAndUnit!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupUnit!            : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelUnit!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgUnit!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _groupTileObject!      : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _imgTileObject!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTileObject!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupTileBase!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _imgTileBase!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTileBase!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupTileDecoration!  : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _imgTileDecoration!    : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTileDecoration!  : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelTileAndUnit!     : IUiLabel;
+    private readonly _groupUnit!            : IUiLayout;
+    private readonly _labelUnit!            : IUiLabel;
+    private readonly _imgUnit!              : IUiImage;
+    private readonly _groupTileObject!      : IUiLayout;
+    private readonly _imgTileObject!        : IUiImage;
+    private readonly _labelTileObject!      : IUiLabel;
+    private readonly _groupTileBase!        : IUiLayout;
+    private readonly _imgTileBase!          : IUiImage;
+    private readonly _labelTileBase!        : IUiLabel;
+    private readonly _groupTileDecoration!  : IUiLayout;
+    private readonly _imgTileDecoration!    : IUiImage;
+    private readonly _labelTileDecoration!  : IUiLabel;
 
-    private readonly _labelLocation!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupShowAllLocation! : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _imgShowAllLocation!   : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelShowAllLocation! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listLocation!         : UiInterfacesIUiScrollList.IUiScrollList<DataForLocationRenderer>;
+    private readonly _labelLocation!        : IUiLabel;
+    private readonly _groupShowAllLocation! : IUiLayout;
+    private readonly _imgShowAllLocation!   : IUiImage;
+    private readonly _labelShowAllLocation! : IUiLabel;
+    private readonly _listLocation!         : IUiScrollList<DataForLocationRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -81,8 +81,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         await super._onClosed();
     }
 
-    private _getWar(): MapEditorInterfaceIMeWar.IMeWar {
-        return HelpersMisc.getExisted(MapEditorModelMeModel.getWar());
+    private _getWar(): IMeWar {
+        return getExisted(getWar());
     }
 
     private _onTouchedGroupTileBase(): void {
@@ -90,7 +90,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         view.setTileBasesVisible(!view.getTileBasesVisible());
         this._updateGroupTileBase();
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedGroupTileDecoration(): void {
@@ -98,7 +98,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         view.setTileDecorationsVisible(!view.getTileDecorationsVisible());
         this._updateGroupTileDecoration();
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedGroupTileObject(): void {
@@ -106,7 +106,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         view.setTileObjectsVisible(!view.getTileObjectsVisible());
         this._updateGroupTileObject();
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedGroupUnit(): void {
@@ -114,30 +114,30 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         view.setUnitsVisible(!view.getUnitsVisible());
         this._updateGroupUnit();
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedGroupShowAllLocation(): void {
         const tileMap = this._getWar().getTileMap();
         if (!this._imgShowAllLocation.getIsVisible()) {
-            for (let locationId = LocationsConstants.MinId; locationId <= LocationsConstants.MaxId; ++locationId) {
+            for (let locationId = MinId; locationId <= MaxId; ++locationId) {
                 tileMap.setIsLocationVisible(locationId, true);
             }
         } else {
             const drawer        = this._getWar().getDrawer();
             const drawerMode    = drawer.getMode();
             const forceVisibleLocationIdSet = new Set<number>();
-            if (drawerMode === GameConfigGcMapEditor.DrawerMode.AddTileToLocation) {
+            if (drawerMode === DrawerMode.AddTileToLocation) {
                 for (const locationId of drawer.getDataForAddTileToLocation()?.locationIdArray ?? []) {
                     forceVisibleLocationIdSet.add(locationId);
                 }
-            } else if (drawerMode === GameConfigGcMapEditor.DrawerMode.DeleteTileFromLocation) {
+            } else if (drawerMode === DrawerMode.DeleteTileFromLocation) {
                 for (const locationId of drawer.getDataForDeleteTileFromLocation()?.locationIdArray ?? []) {
                     forceVisibleLocationIdSet.add(locationId);
                 }
             }
 
-            for (let locationId = LocationsConstants.MinId; locationId <= LocationsConstants.MaxId; ++locationId) {
+            for (let locationId = MinId; locationId <= MaxId; ++locationId) {
                 if (!forceVisibleLocationIdSet.has(locationId)) {
                     tileMap.setIsLocationVisible(locationId, false);
                 }
@@ -146,7 +146,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         this.updateImgShowAllLocation();
         this._updateListLocation();
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -154,14 +154,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0301));
-        this._labelTileAndUnit.setText(LangUtils.getText(LangConstants.TextType.B1244));
-        this._labelTileBase.setText(LangUtils.getText(LangConstants.TextType.TileBase));
-        this._labelTileDecoration.setText(LangUtils.getText(LangConstants.TextType.TileDecoration));
-        this._labelTileObject.setText(LangUtils.getText(LangConstants.TextType.TileObject));
-        this._labelUnit.setText(LangUtils.getText(LangConstants.TextType.Units));
-        this._labelLocation.setText(LangUtils.getText(LangConstants.TextType.Location));
-        this._labelShowAllLocation.setText(LangUtils.getText(LangConstants.TextType.B0761));
+        this._labelTitle.setText(getText(TextType.B0301));
+        this._labelTileAndUnit.setText(getText(TextType.B1244));
+        this._labelTileBase.setText(getText(TextType.TileBase));
+        this._labelTileDecoration.setText(getText(TextType.TileDecoration));
+        this._labelTileObject.setText(getText(TextType.TileObject));
+        this._labelUnit.setText(getText(TextType.Units));
+        this._labelLocation.setText(getText(TextType.Location));
+        this._labelShowAllLocation.setText(getText(TextType.B0761));
         // this._btnShowAllLocations.label = Lang.getText(LangTextType.B0757);
         // this._btnHideAllLocations.label = Lang.getText(LangTextType.B0758);
 
@@ -187,7 +187,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     public updateImgShowAllLocation(): void {
         const tileMap   = this._getWar().getTileMap();
         const img       = this._imgShowAllLocation;
-        for (let locationId = LocationsConstants.MinId; locationId <= LocationsConstants.MaxId; ++locationId) {
+        for (let locationId = MinId; locationId <= MaxId; ++locationId) {
             if (!tileMap.getIsLocationVisible(locationId)) {
                 img.setIsVisible(false);
                 return;
@@ -199,7 +199,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private async _updateListLocation(): Promise<void> {
         const dataArray : DataForLocationRenderer[] = [];
         const war       = this._getWar();
-        for (let locationId = LocationsConstants.MinId; locationId <= LocationsConstants.MaxId; ++locationId) {
+        for (let locationId = MinId; locationId <= MaxId; ++locationId) {
             dataArray.push({
                 war         : war,
                 locationId  : locationId,
@@ -210,15 +210,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForLocationRenderer extends UiTypesUiListItemData.UiListItemData {
-    war         : MapEditorInterfaceIMeWar.IMeWar;
+interface DataForLocationRenderer extends UiListItemData {
+    war         : IMeWar;
     locationId  : number;
     panel       : Panel;
 }
-class LocationRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForLocationRenderer> {
-    private readonly _groupShow!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgShow!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelLocationId!  : UiInterfacesIUiLabel.IUiLabel;
+class LocationRenderer extends UiListItemRenderer<DataForLocationRenderer> {
+    private readonly _groupShow!        : IUiContainer;
+    private readonly _imgShow!          : IUiImage;
+    private readonly _labelLocationId!  : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -236,10 +236,10 @@ class LocationRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
         const locationId    = openData.locationId;
         const war           = openData.war;
         const drawer        = war.getDrawer();
-        if (((drawer.getMode() === GameConfigGcMapEditor.DrawerMode.AddTileToLocation) && (drawer.getDataForAddTileToLocation()?.locationIdArray.some(v => v === locationId)))             ||
-            ((drawer.getMode() === GameConfigGcMapEditor.DrawerMode.DeleteTileFromLocation) && (drawer.getDataForDeleteTileFromLocation()?.locationIdArray.some(v => v === locationId)))
+        if (((drawer.getMode() === DrawerMode.AddTileToLocation) && (drawer.getDataForAddTileToLocation()?.locationIdArray.some(v => v === locationId)))             ||
+            ((drawer.getMode() === DrawerMode.DeleteTileFromLocation) && (drawer.getDataForDeleteTileFromLocation()?.locationIdArray.some(v => v === locationId)))
         ) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0267));
+            show(getText(TextType.A0267));
             return;
         }
 

@@ -1,21 +1,21 @@
-import type * as AuxiliaryTypesTreeNode from "../../auxiliaryTypes/TreeNode.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import type * as UiInterfacesIUiSkinInfo from "../interfaces/IUiSkinInfo.ts";
-import type * as UiTypesUiSkin from "../types/UiSkin.ts";
-import type * as UiTypesUiSkinAttrs from "../types/UiSkinAttrs.ts";
+import type { TreeNode } from "../../auxiliaryTypes/TreeNode.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiSkinInfo } from "../interfaces/IUiSkinInfo.ts";
+import type { UiSkin as UiTypesUiSkin } from "../types/UiSkin.ts";
+import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
 
-type UiSkinAttrs    = UiTypesUiSkinAttrs.UiSkinAttrs;
-type UiSkin         = UiTypesUiSkin.UiSkin;
-type IUiSkinLoader  = UiInterfacesIUiComponent.IUiComponent;
+type UiSkinAttrs    = UiTypesUiSkinAttrs;
+type UiSkin         = UiTypesUiSkin;
+type IUiSkinLoader  = IUiComponent;
 
-export class UiSkinInfo implements UiInterfacesIUiSkinInfo.IUiSkinInfo {
+export class UiSkinInfo implements IUiSkinInfo {
     // private _isDestroyed            = false;
     private _isLoaded               = false;
     private _loadedSkinAttrs?       : UiSkinAttrs;
     private _loadedSkinState?       : string;
     private _loadedSkinNestedState? : string;
     private _skin?                  : UiSkin;
-    private _nonNestedSkinChildren? : AuxiliaryTypesTreeNode.TreeNode<WeakRef<IUiSkinLoader>>[];
+    private _nonNestedSkinChildren? : TreeNode<WeakRef<IUiSkinLoader>>[];
     private _directSkinChildren?    : WeakRef<IUiSkinLoader>[];
 
     public constructor(_ui: IUiSkinLoader) {}
@@ -50,10 +50,10 @@ export class UiSkinInfo implements UiInterfacesIUiSkinInfo.IUiSkinInfo {
     public setSkin(skin: UiSkin): void {
         this._skin = skin;
     }
-    public getNonNestedSkinChildren(): AuxiliaryTypesTreeNode.TreeNode<WeakRef<IUiSkinLoader>>[] | undefined {
+    public getNonNestedSkinChildren(): TreeNode<WeakRef<IUiSkinLoader>>[] | undefined {
         return this._nonNestedSkinChildren;
     }
-    public setNonNestedSkinChildren(children: AuxiliaryTypesTreeNode.TreeNode<WeakRef<IUiSkinLoader>>[]): void {
+    public setNonNestedSkinChildren(children: TreeNode<WeakRef<IUiSkinLoader>>[]): void {
         this._nonNestedSkinChildren = children;
     }
     public getDirectSkinChildren(): WeakRef<IUiSkinLoader>[] | undefined {

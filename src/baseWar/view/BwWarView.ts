@@ -1,29 +1,29 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import type * as BaseWarInterfaceIBwWarView from "../interface/IBwWarView.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GraphicsUtils from "../../graphics/Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as NotificationsDataTypes from "../../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as NotificationsTypes from "../../notifications/Types.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as StagesStageManager from "../../stages/StageManager.ts";
-import * as UiComponentsUiContainer from "../../ui/components/UiContainer.ts";
-import type * as UiInterfacesIUiComponent from "../../ui/interfaces/IUiComponent.ts";
-import type * as UiInterfacesIUiZoomableComponent from "../../ui/interfaces/IUiZoomableComponent.ts";
-import * as UiTypesUiHorizontalAlign from "../../ui/types/UiHorizontalAlign.ts";
-import * as UiTypesUiVerticalAlign from "../../ui/types/UiVerticalAlign.ts";
-import * as UiUtilsUiFactory from "../../ui/utils/UiFactory.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { UiListener, Point } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import type { IBwWarView } from "../interface/IBwWarView.ts";
+import { getRwWarBaseClass, getMeWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
+import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
+import { UndefinedError } from "../../lang/Constants.ts";
+import { getLanguageText } from "../../lang/Utils.ts";
+import type { BwFieldZoomedByTouch, BwFieldDragged } from "../../notifications/DataTypes.ts";
+import { addEventListeners, removeEventListeners } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { Listener } from "../../notifications/Types.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { getStage } from "../../stages/StageManager.ts";
+import { UiContainer } from "../../ui/components/UiContainer.ts";
+import type { IUiComponent } from "../../ui/interfaces/IUiComponent.ts";
+import type { IUiZoomableComponent } from "../../ui/interfaces/IUiZoomableComponent.ts";
+import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
+import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
+import { getUiZoomableComponentClass, getUiContainerClass, getUiLabelClass } from "../../ui/utils/UiFactory.ts";
+import { getSelfSettingsIsScreenVibrationEnabled } from "../../users/Model.ts";
+import { Event, setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
 
-const getGridWidth      = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight     = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridHeight);
+const getGridWidth      = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight     = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
 const CENTRAL_PADDING   = 120;
 
 type Padding = {
@@ -44,32 +44,32 @@ const PADDINGS = new Map<PaddingType, Padding>([
     [PaddingType.Replay,    { left: 150,    right: 150,     top: 60,    bottom: 20 }],
 ]);
 
-export class BwWarView extends UiComponentsUiContainer.UiContainer implements BaseWarInterfaceIBwWarView.IBwWarView {
-    private _fieldContainer         = new (UiUtilsUiFactory.getUiZoomableComponentClass())();
-    private _weatherContainer       = new (UiUtilsUiFactory.getUiContainerClass());
-    private _labelPersistentText    = new (UiUtilsUiFactory.getUiLabelClass());
+export class BwWarView extends UiContainer implements IBwWarView {
+    private _fieldContainer         = new (getUiZoomableComponentClass())();
+    private _weatherContainer       = new (getUiContainerClass());
+    private _labelPersistentText    = new (getUiLabelClass());
 
     private _isShowingVibration = false;
     private _vibrationMaxOffset = 4;
     private _vibrationTimeoutId : number | null = null;
 
-    private _war? : BaseWarInterfaceIBwWar.IBwWar;
+    private _war? : IBwWar;
 
-    private _notifyListeners: NotificationsTypes.Listener[] = [
-        { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-        { type: NotificationsTypeId.TypeId.BwFieldZoomedByTouch,    callback: this._onNotifyBwFieldZoomedByTouch },
-        { type: NotificationsTypeId.TypeId.BwFieldDragged,          callback: this._onNotifyBwFieldDragged },
+    private _notifyListeners: Listener[] = [
+        { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+        { type: TypeId.BwFieldZoomedByTouch,    callback: this._onNotifyBwFieldZoomedByTouch },
+        { type: TypeId.BwFieldDragged,          callback: this._onNotifyBwFieldDragged },
     ];
-    private _uiListeners: AuxiliaryTypesAuxiliaryTypes.UiListener[] = [
-        { ui: this,     callback: this._onEnterFrame,   eventType: VendorEgretEgret.Event.ENTER_FRAME },
+    private _uiListeners: UiListener[] = [
+        { ui: this,     callback: this._onEnterFrame,   eventType: Event.ENTER_FRAME },
     ];
 
     public constructor() {
         super();
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
+            verticalAlign   : { align       : UiVerticalAlign.Middle },
+            horizontalAlign : { align       : UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -92,15 +92,15 @@ export class BwWarView extends UiComponentsUiContainer.UiContainer implements Ba
             labelPersistentText.setFontSize(12);
             labelPersistentText.setStrokeWidth(2);
             labelPersistentText.setY(60);
-            labelPersistentText.setHorizontalAlign(UiTypesUiHorizontalAlign.UiHorizontalAlign.Center);
+            labelPersistentText.setHorizontalAlign(UiHorizontalAlign.Center);
             labelPersistentText.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign: { align: UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
+                horizontalAlign: { align: UiHorizontalAlign.Center },
             });
             this.addUiChild(labelPersistentText);
         }
     }
 
-    public init(war: BaseWarInterfaceIBwWar.IBwWar): void {
+    public init(war: IBwWar): void {
         const mapSize           = war.getTileMap().getMapSize();
         const fieldContainer    = this._fieldContainer;
         const padding           = getPadding(war);
@@ -117,14 +117,14 @@ export class BwWarView extends UiComponentsUiContainer.UiContainer implements Ba
         this._weatherContainer.addUiChild(war.getWeatherManager().getView());
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public fastInit(war: BaseWarInterfaceIBwWar.IBwWar): void {
+    public fastInit(war: IBwWar): void {
         // nothing to do
     }
 
     public startRunningView(): void {
-        NotificationsDispatcher.addEventListeners(this._notifyListeners, this);
+        addEventListeners(this._notifyListeners, this);
         for (const listener of this._uiListeners) {
-            listener.ui.addEventListener(HelpersMisc.getExisted(listener.eventType), listener.callback, this);
+            listener.ui.addEventListener(getExisted(listener.eventType), listener.callback, this);
         }
 
         this._fieldContainer.setMouseWheelListenerEnabled(true);
@@ -132,20 +132,20 @@ export class BwWarView extends UiComponentsUiContainer.UiContainer implements Ba
         this.updatePersistentText();
     }
     public stopRunning(): void {
-        NotificationsDispatcher.removeEventListeners(this._notifyListeners, this);
+        removeEventListeners(this._notifyListeners, this);
         for (const listener of this._uiListeners) {
-            listener.ui.removeEventListener(HelpersMisc.getExisted(listener.eventType), listener.callback, this);
+            listener.ui.removeEventListener(getExisted(listener.eventType), listener.callback, this);
         }
 
         this._fieldContainer.setMouseWheelListenerEnabled(false);
     }
 
-    public getFieldContainer(): UiInterfacesIUiZoomableComponent.IUiZoomableComponent {
+    public getFieldContainer(): IUiZoomableComponent {
         return this._fieldContainer;
     }
 
-    public tweenGridToCentralArea(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
-        const stage             = StagesStageManager.getStage();
+    public tweenGridToCentralArea(gridIndex: GridIndex): void {
+        const stage             = getStage();
         const container         = this._fieldContainer;
         const stageWidth        = stage.stageWidth;
         const stageHeight       = stage.stageHeight;
@@ -157,12 +157,12 @@ export class BwWarView extends UiComponentsUiContainer.UiContainer implements Ba
         const currX             = currPoint.x;
         const currY             = currPoint.y;
         // const padding           = this._padding;
-        const newX              = NumbersUtils.getValueInRange({
+        const newX              = getValueInRange({
             minValue    : CENTRAL_PADDING + currX - topLeftPoint.x,
             maxValue    : stageWidth - CENTRAL_PADDING + currX - bottomRightPoint.x,
             rawValue    : currX,
         });
-        const newY              = NumbersUtils.getValueInRange({
+        const newY              = getValueInRange({
             minValue    : CENTRAL_PADDING + currY - topLeftPoint.y,
             maxValue    : stageHeight - CENTRAL_PADDING + currY - bottomRightPoint.y,
             rawValue    : currY,
@@ -170,17 +170,17 @@ export class BwWarView extends UiComponentsUiContainer.UiContainer implements Ba
         const newPoint  = this._getRevisedContentPointForMoveGrid(gridIndex, newX, newY);
         container.tweenContentToPoint(newPoint.x, newPoint.y, false);
     }
-    public moveGridToCenter(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
-        const stage = StagesStageManager.getStage();
+    public moveGridToCenter(gridIndex: GridIndex): void {
+        const stage = getStage();
         this._moveGridToPoint(gridIndex, stage.stageWidth / 2, stage.stageHeight / 2);
     }
-    private _moveGridToPoint(gridIndex: AuxiliaryTypesGridIndex.GridIndex, x: number, y: number): void {
+    private _moveGridToPoint(gridIndex: GridIndex, x: number, y: number): void {
         const point     = this._getRevisedContentPointForMoveGrid(gridIndex, x, y);
         const container = this._fieldContainer;
         container.setContentX(point.x, false);
         container.setContentY(point.y, false);
     }
-    private _getRevisedContentPointForMoveGrid(gridIndex: AuxiliaryTypesGridIndex.GridIndex, x: number, y: number): AuxiliaryTypesAuxiliaryTypes.Point {
+    private _getRevisedContentPointForMoveGrid(gridIndex: GridIndex, x: number, y: number): Point {
         const container = this._fieldContainer;
         const point1    = container.getContentsContainerLocalToGlobal({
             x: (gridIndex.getX() + 0.5) * getGridWidth(),
@@ -196,13 +196,13 @@ export class BwWarView extends UiComponentsUiContainer.UiContainer implements Ba
     public showVibration(duration = 450, maxOffset = 5): void {
         this.stopVibration();
 
-        if (!UsersModel.getSelfSettingsIsScreenVibrationEnabled()) {
+        if (!getSelfSettingsIsScreenVibrationEnabled()) {
             return;
         }
 
         this._isShowingVibration    = true;
         this._vibrationMaxOffset    = maxOffset;
-        this._vibrationTimeoutId    = VendorEgretEgret.setTimeout(() => {
+        this._vibrationTimeoutId    = setTimeout(() => {
             this.stopVibration();
         }, this, duration);
     }
@@ -211,7 +211,7 @@ export class BwWarView extends UiComponentsUiContainer.UiContainer implements Ba
         resetContainer(this._fieldContainer);
 
         if (this._vibrationTimeoutId != null) {
-            VendorEgretEgret.clearTimeout(this._vibrationTimeoutId);
+            clearTimeout(this._vibrationTimeoutId);
             this._vibrationTimeoutId = null;
         }
     }
@@ -241,7 +241,7 @@ export class BwWarView extends UiComponentsUiContainer.UiContainer implements Ba
             const action = warEventManager.getWarEventAction(actionId).getWeaPersistentShowText();
             if (action) {
                 textArray.push(war.getWarEventManager().handleEscapeText(
-                    LangUtils.getLanguageText({ textArray: action.getTextArray() }) ?? LangConstants.UndefinedError,
+                    getLanguageText({ textArray: action.getTextArray() }) ?? UndefinedError,
                 ));
             }
         }
@@ -259,12 +259,12 @@ export class BwWarView extends UiComponentsUiContainer.UiContainer implements Ba
         this.updatePersistentText();
     }
 
-    private _onNotifyBwFieldZoomedByTouch(e: VendorEgretEgret.Event): void {
-        const data = e.data as NotificationsDataTypes.BwFieldZoomedByTouch;
+    private _onNotifyBwFieldZoomedByTouch(e: Event): void {
+        const data = e.data as BwFieldZoomedByTouch;
         this._fieldContainer.setZoomByTouches(data.current, data.previous);
     }
-    private _onNotifyBwFieldDragged(e: VendorEgretEgret.Event): void {
-        const data = e.data as NotificationsDataTypes.BwFieldDragged;
+    private _onNotifyBwFieldDragged(e: Event): void {
+        const data = e.data as BwFieldDragged;
         this._fieldContainer.setDragByTouches(data.current, data.previous);
     }
 
@@ -273,21 +273,21 @@ export class BwWarView extends UiComponentsUiContainer.UiContainer implements Ba
     }
 }
 
-function resetContainer(container: UiInterfacesIUiComponent.IUiComponent): void {
+function resetContainer(container: IUiComponent): void {
     container.checkAndInitSizerInfo().setSizerOptions({
-        verticalAlign   : { align       : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
-        horizontalAlign : { align       : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
+        verticalAlign   : { align       : UiVerticalAlign.Middle },
+        horizontalAlign : { align       : UiHorizontalAlign.Center },
         width           : { percentage  : 100 },
         height          : { percentage  : 100 },
     });
 }
 
-function getPadding(war: BaseWarInterfaceIBwWar.IBwWar): Padding {
-    if (war instanceof GameHelpersGhFactory.getRwWarBaseClass()) {
-        return HelpersMisc.getExisted(PADDINGS.get(PaddingType.Replay));
-    } else if (war instanceof GameHelpersGhFactory.getMeWarClass()) {
-        return HelpersMisc.getExisted(PADDINGS.get(PaddingType.MapEditor));
+function getPadding(war: IBwWar): Padding {
+    if (war instanceof getRwWarBaseClass()) {
+        return getExisted(PADDINGS.get(PaddingType.Replay));
+    } else if (war instanceof getMeWarClass()) {
+        return getExisted(PADDINGS.get(PaddingType.MapEditor));
     } else {
-        return HelpersMisc.getExisted(PADDINGS.get(PaddingType.Default));
+        return getExisted(PADDINGS.get(PaddingType.Default));
     }
 }

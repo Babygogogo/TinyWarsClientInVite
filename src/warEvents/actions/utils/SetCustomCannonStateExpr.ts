@@ -1,31 +1,33 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersContextsTile from "../../../expressionParsers/contexts/Tile.ts";
-import * as ExpressionParsersParser from "../../../expressionParsers/Parser.ts";
-import * as ExpressionParsersResultsNum from "../../../expressionParsers/results/Num.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NumbersUtils from "../../../numbers/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetCustomCannonStateExpr from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCannonStateExpr.ts";
-import * as ProtoSchemaCommonProtoWarSerializationTileCustomCannonData from "../../../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
-import * as TilesConstantsCommon from "../../../tiles/constants/Common.ts";
-import * as TilesConstantsCustomLimits from "../../../tiles/constants/CustomLimits.ts";
-import type * as TilesITile from "../../../tiles/ITile.ts";
-import * as TilesUtilsSerialization from "../../../tiles/utils/Serialization.ts";
-import * as WarEventsActionsConstantsSetCustomCannonStateExpr from "../constants/SetCustomCannonStateExpr.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
+import { Parser } from "../../../expressionParsers/Parser.ts";
+import { Num } from "../../../expressionParsers/results/Num.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getFormattedText } from "../../../lang/Utils.ts";
+import { getValueInRange } from "../../../numbers/Utils.ts";
+import type {
+    WeaSetCustomCannonStateExpr as ProtoSchemaCommonProtoWarEventWeaSetCustomCannonStateExpr,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCannonStateExpr.ts";
+import { TileCustomCannonData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
+import { TileTypeId } from "../../../tiles/constants/Common.ts";
+import { Cannon } from "../../../tiles/constants/CustomLimits.ts";
+import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import { create } from "../../../tiles/utils/Serialization.ts";
+import { ExpressionInfoDict } from "../constants/SetCustomCannonStateExpr.ts";
 
-type WeaSetCustomCannonStateExpr    = ProtoSchemaCommonProtoWarEventWeaSetCustomCannonStateExpr.WeaSetCustomCannonStateExpr;
-type ITile                          = TilesITile.ITile;
+type WeaSetCustomCannonStateExpr    = ProtoSchemaCommonProtoWarEventWeaSetCustomCannonStateExpr;
+type ITile                          = TilesITile;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomCannonStateExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: Undefinable<WeaSetCustomCannonStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getConTileFilter(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ConTileFilter,
+            expressionInfo          : ExpressionInfoDict.ConTileFilter,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -33,9 +35,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActRangeForUp(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForUp,
+            expressionInfo          : ExpressionInfoDict.ActRangeForUp,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -43,9 +45,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActRangeForDown(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForDown,
+            expressionInfo          : ExpressionInfoDict.ActRangeForDown,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -53,9 +55,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActRangeForLeft(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForLeft,
+            expressionInfo          : ExpressionInfoDict.ActRangeForLeft,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -63,9 +65,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActRangeForRight(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForRight,
+            expressionInfo          : ExpressionInfoDict.ActRangeForRight,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -73,9 +75,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActPriority(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActPriority,
+            expressionInfo          : ExpressionInfoDict.ActPriority,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -83,9 +85,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCanAffectSelf(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanAffectSelf,
+            expressionInfo          : ExpressionInfoDict.ActCanAffectSelf,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -93,9 +95,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCanAffectAlly(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanAffectAlly,
+            expressionInfo          : ExpressionInfoDict.ActCanAffectAlly,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -103,9 +105,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCanAffectEnemy(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanAffectEnemy,
+            expressionInfo          : ExpressionInfoDict.ActCanAffectEnemy,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -113,9 +115,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActMaxTargetCount(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActMaxTargetCount,
+            expressionInfo          : ExpressionInfoDict.ActMaxTargetCount,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -123,9 +125,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActOffsetHp(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActOffsetHp,
+            expressionInfo          : ExpressionInfoDict.ActOffsetHp,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -133,9 +135,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCanBeFatal(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanBeFatal,
+            expressionInfo          : ExpressionInfoDict.ActCanBeFatal,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -143,9 +145,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActOffsetFuelPercentage(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage,
+            expressionInfo          : ExpressionInfoDict.ActOffsetFuelPercentage,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -153,9 +155,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActOffsetPrimaryAmmoPercentage(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
+            expressionInfo          : ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -165,202 +167,202 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomCannonStateExpr>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetCustomCannonStateExpr>): string | null {
     if (data == null) {
         return null;
     }
 
-    return LangUtils.getFormattedText(LangConstants.TextType.F0058, data.getConTileFilter() ?? LangConstants.UndefinedError);
+    return getFormattedText(TextType.F0058, data.getConTileFilter() ?? UndefinedError);
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomCannonStateExpr>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetCustomCannonStateExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     const additionalText = [
-        data.getActRangeForUp()                  ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForUp.getTitleText()}: ${data.getActRangeForUp()}`                                   : null,
-        data.getActRangeForDown()                ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForDown.getTitleText()}: ${data.getActRangeForDown()}`                               : null,
-        data.getActRangeForLeft()                ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForLeft.getTitleText()}: ${data.getActRangeForLeft()}`                               : null,
-        data.getActRangeForRight()               ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForRight.getTitleText()}: ${data.getActRangeForRight()}`                             : null,
-        data.getActPriority()                    ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActPriority.getTitleText()}: ${data.getActPriority()}`                                       : null,
-        data.getActCanAffectSelf()               ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanAffectSelf.getTitleText()}: ${data.getActCanAffectSelf()}`                             : null,
-        data.getActCanAffectAlly()               ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanAffectAlly.getTitleText()}: ${data.getActCanAffectAlly()}`                             : null,
-        data.getActCanAffectEnemy()              ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanAffectEnemy.getTitleText()}: ${data.getActCanAffectEnemy()}`                           : null,
-        data.getActMaxTargetCount()              ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActMaxTargetCount.getTitleText()}: ${data.getActMaxTargetCount()}`                           : null,
-        data.getActOffsetHp()                    ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActOffsetHp.getTitleText()}: ${data.getActOffsetHp()}`                                       : null,
-        data.getActCanBeFatal()                  ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanBeFatal.getTitleText()}: ${data.getActCanBeFatal()}`                                   : null,
-        data.getActOffsetFuelPercentage()        ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage.getTitleText()}: ${data.getActOffsetFuelPercentage()}`               : null,
-        data.getActOffsetPrimaryAmmoPercentage() ? `${WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage.getTitleText()}: ${data.getActOffsetPrimaryAmmoPercentage()}` : null,
+        data.getActRangeForUp()                  ? `${ExpressionInfoDict.ActRangeForUp.getTitleText()}: ${data.getActRangeForUp()}`                                   : null,
+        data.getActRangeForDown()                ? `${ExpressionInfoDict.ActRangeForDown.getTitleText()}: ${data.getActRangeForDown()}`                               : null,
+        data.getActRangeForLeft()                ? `${ExpressionInfoDict.ActRangeForLeft.getTitleText()}: ${data.getActRangeForLeft()}`                               : null,
+        data.getActRangeForRight()               ? `${ExpressionInfoDict.ActRangeForRight.getTitleText()}: ${data.getActRangeForRight()}`                             : null,
+        data.getActPriority()                    ? `${ExpressionInfoDict.ActPriority.getTitleText()}: ${data.getActPriority()}`                                       : null,
+        data.getActCanAffectSelf()               ? `${ExpressionInfoDict.ActCanAffectSelf.getTitleText()}: ${data.getActCanAffectSelf()}`                             : null,
+        data.getActCanAffectAlly()               ? `${ExpressionInfoDict.ActCanAffectAlly.getTitleText()}: ${data.getActCanAffectAlly()}`                             : null,
+        data.getActCanAffectEnemy()              ? `${ExpressionInfoDict.ActCanAffectEnemy.getTitleText()}: ${data.getActCanAffectEnemy()}`                           : null,
+        data.getActMaxTargetCount()              ? `${ExpressionInfoDict.ActMaxTargetCount.getTitleText()}: ${data.getActMaxTargetCount()}`                           : null,
+        data.getActOffsetHp()                    ? `${ExpressionInfoDict.ActOffsetHp.getTitleText()}: ${data.getActOffsetHp()}`                                       : null,
+        data.getActCanBeFatal()                  ? `${ExpressionInfoDict.ActCanBeFatal.getTitleText()}: ${data.getActCanBeFatal()}`                                   : null,
+        data.getActOffsetFuelPercentage()        ? `${ExpressionInfoDict.ActOffsetFuelPercentage.getTitleText()}: ${data.getActOffsetFuelPercentage()}`               : null,
+        data.getActOffsetPrimaryAmmoPercentage() ? `${ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage.getTitleText()}: ${data.getActOffsetPrimaryAmmoPercentage()}` : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${LangUtils.getFormattedText(LangConstants.TextType.F0058, data.getConTileFilter() ?? LangConstants.UndefinedError)}\n${additionalText}`;
+    return `${getFormattedText(TextType.F0058, data.getConTileFilter() ?? UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaSetCustomCannonStateExpr, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ConTileFilter;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ConTileFilter;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getConTileFilter(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForUp;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActRangeForUp;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActRangeForUp(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForDown;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActRangeForDown;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActRangeForDown(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForLeft;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActRangeForLeft;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActRangeForLeft(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActRangeForRight;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActRangeForRight;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActRangeForRight(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActPriority;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActPriority;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActPriority(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanAffectSelf;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCanAffectSelf;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCanAffectSelf(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanAffectAlly;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCanAffectAlly;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCanAffectAlly(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanAffectEnemy;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCanAffectEnemy;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCanAffectEnemy(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActMaxTargetCount;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActMaxTargetCount;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActMaxTargetCount(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActOffsetHp;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActOffsetHp;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActOffsetHp(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActCanBeFatal;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCanBeFatal;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCanBeFatal(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActOffsetFuelPercentage;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActOffsetFuelPercentage(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomCannonStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActOffsetPrimaryAmmoPercentage(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -369,13 +371,13 @@ export function getErrorTip(data: WeaSetCustomCannonStateExpr, customCounterName
 
 function checkIsMeetConditionForTile(action: WeaSetCustomCannonStateExpr, tile: ITile): boolean {
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        return (result instanceof ExpressionParsersResultsNum.Num) && (result.num !== 0);
+        const result = Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new Tile(tile), false);
+        return (result instanceof Num) && (result.num !== 0);
     } catch (Exception) {
         return false;
     }
 }
-function evalActRangeForUp(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): number {
+function evalActRangeForUp(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getRangeForUp() ?? 0;
     const act           = action.getActRangeForUp();
     if (!act) {
@@ -383,11 +385,11 @@ function evalActRangeForUp(action: WeaSetCustomCannonStateExpr, tile: ITile, cus
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.Cannon.RangeForUp.MinValue,
-                maxValue    : TilesConstantsCustomLimits.Cannon.RangeForUp.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : Cannon.RangeForUp.MinValue,
+                maxValue    : Cannon.RangeForUp.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -397,7 +399,7 @@ function evalActRangeForUp(action: WeaSetCustomCannonStateExpr, tile: ITile, cus
         return defaultValue;
     }
 }
-function evalActRangeForDown(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): number {
+function evalActRangeForDown(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getRangeForDown() ?? 0;
     const act           = action.getActRangeForDown();
     if (!act) {
@@ -405,11 +407,11 @@ function evalActRangeForDown(action: WeaSetCustomCannonStateExpr, tile: ITile, c
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.Cannon.RangeForDown.MinValue,
-                maxValue    : TilesConstantsCustomLimits.Cannon.RangeForDown.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : Cannon.RangeForDown.MinValue,
+                maxValue    : Cannon.RangeForDown.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -419,7 +421,7 @@ function evalActRangeForDown(action: WeaSetCustomCannonStateExpr, tile: ITile, c
         return defaultValue;
     }
 }
-function evalActRangeForLeft(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): number {
+function evalActRangeForLeft(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getRangeForLeft() ?? 0;
     const act           = action.getActRangeForLeft();
     if (!act) {
@@ -427,11 +429,11 @@ function evalActRangeForLeft(action: WeaSetCustomCannonStateExpr, tile: ITile, c
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.Cannon.RangeForLeft.MinValue,
-                maxValue    : TilesConstantsCustomLimits.Cannon.RangeForLeft.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : Cannon.RangeForLeft.MinValue,
+                maxValue    : Cannon.RangeForLeft.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -441,7 +443,7 @@ function evalActRangeForLeft(action: WeaSetCustomCannonStateExpr, tile: ITile, c
         return defaultValue;
     }
 }
-function evalActRangeForRight(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): number {
+function evalActRangeForRight(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getRangeForRight() ?? 0;
     const act           = action.getActRangeForRight();
     if (!act) {
@@ -449,11 +451,11 @@ function evalActRangeForRight(action: WeaSetCustomCannonStateExpr, tile: ITile, 
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.Cannon.RangeForRight.MinValue,
-                maxValue    : TilesConstantsCustomLimits.Cannon.RangeForRight.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : Cannon.RangeForRight.MinValue,
+                maxValue    : Cannon.RangeForRight.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -463,7 +465,7 @@ function evalActRangeForRight(action: WeaSetCustomCannonStateExpr, tile: ITile, 
         return defaultValue;
     }
 }
-function evalActPriority(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): number {
+function evalActPriority(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getPriority() ?? 0;
     const act           = action.getActPriority();
     if (!act) {
@@ -471,11 +473,11 @@ function evalActPriority(action: WeaSetCustomCannonStateExpr, tile: ITile, custo
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.Cannon.Priority.MinValue,
-                maxValue    : TilesConstantsCustomLimits.Cannon.Priority.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : Cannon.Priority.MinValue,
+                maxValue    : Cannon.Priority.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -485,7 +487,7 @@ function evalActPriority(action: WeaSetCustomCannonStateExpr, tile: ITile, custo
         return defaultValue;
     }
 }
-function evalActCanAffectSelf(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): boolean {
+function evalActCanAffectSelf(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): boolean {
     const defaultValue  = customCannonData.getCanAffectSelf() ?? false;
     const act           = action.getActCanAffectSelf();
     if (!act) {
@@ -493,8 +495,8 @@ function evalActCanAffectSelf(action: WeaSetCustomCannonStateExpr, tile: ITile, 
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -503,7 +505,7 @@ function evalActCanAffectSelf(action: WeaSetCustomCannonStateExpr, tile: ITile, 
         return defaultValue;
     }
 }
-function evalActCanAffectAlly(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): boolean {
+function evalActCanAffectAlly(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): boolean {
     const defaultValue  = customCannonData.getCanAffectAlly() ?? false;
     const act           = action.getActCanAffectAlly();
     if (!act) {
@@ -511,8 +513,8 @@ function evalActCanAffectAlly(action: WeaSetCustomCannonStateExpr, tile: ITile, 
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -521,7 +523,7 @@ function evalActCanAffectAlly(action: WeaSetCustomCannonStateExpr, tile: ITile, 
         return defaultValue;
     }
 }
-function evalActCanAffectEnemy(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): boolean {
+function evalActCanAffectEnemy(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): boolean {
     const defaultValue  = customCannonData.getCanAffectEnemy() ?? false;
     const act           = action.getActCanAffectEnemy();
     if (!act) {
@@ -529,8 +531,8 @@ function evalActCanAffectEnemy(action: WeaSetCustomCannonStateExpr, tile: ITile,
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -539,7 +541,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomCannonStateExpr, tile: ITile,
         return defaultValue;
     }
 }
-function evalActMaxTargetCount(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): number {
+function evalActMaxTargetCount(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getMaxTargetCount() ?? 0;
     const act           = action.getActMaxTargetCount();
     if (!act) {
@@ -547,11 +549,11 @@ function evalActMaxTargetCount(action: WeaSetCustomCannonStateExpr, tile: ITile,
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.Cannon.MaxTargetCount.MinValue,
-                maxValue    : TilesConstantsCustomLimits.Cannon.MaxTargetCount.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : Cannon.MaxTargetCount.MinValue,
+                maxValue    : Cannon.MaxTargetCount.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -561,7 +563,7 @@ function evalActMaxTargetCount(action: WeaSetCustomCannonStateExpr, tile: ITile,
         return defaultValue;
     }
 }
-function evalActOffsetHp(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): number {
+function evalActOffsetHp(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getOffsetHp() ?? 0;
     const act           = action.getActOffsetHp();
     if (!act) {
@@ -569,11 +571,11 @@ function evalActOffsetHp(action: WeaSetCustomCannonStateExpr, tile: ITile, custo
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.Cannon.OffsetHp.MinValue,
-                maxValue    : TilesConstantsCustomLimits.Cannon.OffsetHp.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : Cannon.OffsetHp.MinValue,
+                maxValue    : Cannon.OffsetHp.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -583,7 +585,7 @@ function evalActOffsetHp(action: WeaSetCustomCannonStateExpr, tile: ITile, custo
         return defaultValue;
     }
 }
-function evalActCanBeFatal(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): boolean {
+function evalActCanBeFatal(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): boolean {
     const defaultValue  = !!customCannonData.getCanBeFatal();
     const act           = action.getActCanBeFatal();
     if (!act) {
@@ -591,8 +593,8 @@ function evalActCanBeFatal(action: WeaSetCustomCannonStateExpr, tile: ITile, cus
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
             return !!epResult.num;
         } else {
             return defaultValue;
@@ -601,7 +603,7 @@ function evalActCanBeFatal(action: WeaSetCustomCannonStateExpr, tile: ITile, cus
         return defaultValue;
     }
 }
-function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): number {
+function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getOffsetFuelPercentage() ?? 0;
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
@@ -609,11 +611,11 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateExpr, tile: 
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.Cannon.OffsetFuelPercentage.MinValue,
-                maxValue    : TilesConstantsCustomLimits.Cannon.OffsetFuelPercentage.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : Cannon.OffsetFuelPercentage.MinValue,
+                maxValue    : Cannon.OffsetFuelPercentage.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -623,7 +625,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateExpr, tile: 
         return defaultValue;
     }
 }
-function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): number {
+function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
     const defaultValue  = customCannonData.getOffsetPrimaryAmmoPercentage() ?? 0;
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
@@ -631,11 +633,11 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr,
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.Cannon.OffsetPrimaryAmmoPercentage.MinValue,
-                maxValue    : TilesConstantsCustomLimits.Cannon.OffsetPrimaryAmmoPercentage.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : Cannon.OffsetPrimaryAmmoPercentage.MinValue,
+                maxValue    : Cannon.OffsetPrimaryAmmoPercentage.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -650,15 +652,15 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr,
 export async function applyWithExtraData(_action: WeaSetCustomCannonStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomCannonStateExpr, isFast: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
-    const newTileDataDict = new Map<ITile, ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData>();
+export async function applyWithoutExtraData(action: WeaSetCustomCannonStateExpr, isFast: boolean, war: IBwWar): Promise<void> {
+    const newTileDataDict = new Map<ITile, TileCustomCannonData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customCannonData = tile.getFinalCannonData();
         if (customCannonData == null) {
             continue;
         }
 
-        if ((tile.getTileTypeId() !== TilesConstantsCommon.TileTypeId.CustomCannon) || (!checkIsMeetConditionForTile(action, tile))) {
+        if ((tile.getTileTypeId() !== TileTypeId.CustomCannon) || (!checkIsMeetConditionForTile(action, tile))) {
             continue;
         }
 
@@ -667,7 +669,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomCannonStateExpr,
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
 }
-function createNewTileCustomCannonData(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData): ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData {
+function createNewTileCustomCannonData(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): TileCustomCannonData {
     const rangeForUp                    = evalActRangeForUp(action, tile, customCannonData);
     const rangeForDown                  = evalActRangeForDown(action, tile, customCannonData);
     const rangeForLeft                  = evalActRangeForLeft(action, tile, customCannonData);
@@ -682,7 +684,7 @@ function createNewTileCustomCannonData(action: WeaSetCustomCannonStateExpr, tile
     const offsetFuelPercentage          = evalActOffsetFuelPercentage(action, tile, customCannonData);
     const offsetPrimaryAmmoPercentage   = evalActOffsetPrimaryAmmoPercentage(action, tile, customCannonData);
 
-    return ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData.fromJson({
+    return TileCustomCannonData.fromJson({
         rangeForUp                  : rangeForUp,
         rangeForDown                : rangeForDown,
         rangeForLeft                : rangeForLeft,
@@ -698,10 +700,10 @@ function createNewTileCustomCannonData(action: WeaSetCustomCannonStateExpr, tile
         offsetPrimaryAmmoPercentage : offsetPrimaryAmmoPercentage,
     });
 }
-function applyNewTileDataDict(dict: Map<ITile, ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData>, war: BaseWarInterfaceIBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<ITile, TileCustomCannonData>, war: IBwWar, isFast: boolean): void {
     for (const [tile, tileCustomCannonData] of dict) {
         const cfg       = tile.getTemplateCfg();
-        const newData   = TilesUtilsSerialization.create({
+        const newData   = create({
             gridIndex               : tile.getGridIndex().toProto().toJson(),
             playerIndex             : tile.getPlayerIndex(),
             baseType                : tile.getBaseType(),

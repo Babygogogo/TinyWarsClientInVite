@@ -1,38 +1,38 @@
-import type * as BaseWarInterfaceIBwWarEventManager from "../../baseWar/interface/IBwWarEventManager.ts";
-import * as BaseWarModelBwWar from "../../baseWar/model/BwWar.ts";
-import * as DestructionsUtils from "../../destructions/Utils.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import type * as MultiPlayerWarInterfaceIMpwWar from "../interface/IMpwWar.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as PlayersIPlayer from "../../players/IPlayer.ts";
-import * as TeamsConstants from "../../teams/Constants.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as VisibilitiesUtils from "../../visibilities/Utils.ts";
+import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
+import { BwWar } from "../../baseWar/model/BwWar.ts";
+import { removeUnitOnMap } from "../../destructions/Utils.ts";
+import { getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
+import { deleteElementFromList } from "../../helpers/Collection.ts";
+import type { IMpwWar } from "../interface/IMpwWar.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import type { IPlayer } from "../../players/IPlayer.ts";
+import { TeamIndex } from "../../teams/Constants.ts";
+import { getServerTimestamp } from "../../timer/TimerModel.ts";
+import { getAllUnitsOnMapVisibleToTeams, getAllTilesVisibleToTeams } from "../../visibilities/Utils.ts";
 
-export abstract class MpwWar extends BaseWarModelBwWar.BwWar implements MultiPlayerWarInterfaceIMpwWar.IMpwWar {
-    private readonly _warEventManager       = new (GameHelpersGhFactory.getBwWarEventManagerClass())();
+export abstract class MpwWar extends BwWar implements IMpwWar {
+    private readonly _warEventManager       = new (getBwWarEventManagerClass())();
 
     private _visionTeamIndex    : number | null = null;
 
-    public getWarEventManager(): BaseWarInterfaceIBwWarEventManager.IBwWarEventManager {
+    public getWarEventManager(): IBwWarEventManager {
         return this._warEventManager;
     }
 
     public updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void {
         const watcherTeamIndexes    = this.getPlayerManager().getWatcherTeamIndexesForSelf();
-        const visibleUnitsOnMap     = VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(this, watcherTeamIndexes);
+        const visibleUnitsOnMap     = getAllUnitsOnMapVisibleToTeams(this, watcherTeamIndexes);
         for (const unit of this.getUnitMap().getAllUnitsOnMap()) {
             if (visibleUnitsOnMap.has(unit)) {
                 if (!isFastExecute) {
                     unit.setViewVisible(true);
                 }
             } else {
-                DestructionsUtils.removeUnitOnMap(this, unit.getGridIndex());
+                removeUnitOnMap(this, unit.getGridIndex());
             }
         }
 
-        const visibleTiles  = VisibilitiesUtils.getAllTilesVisibleToTeams(this, watcherTeamIndexes);
+        const visibleTiles  = getAllTilesVisibleToTeams(this, watcherTeamIndexes);
         const tileMap       = this.getTileMap();
         for (const tile of tileMap.getAllTiles()) {
             if (visibleTiles.has(tile)) {
@@ -63,7 +63,7 @@ export abstract class MpwWar extends BaseWarModelBwWar.BwWar implements MultiPla
             return;
         }
 
-        const visibleTiles = VisibilitiesUtils.getAllTilesVisibleToTeams(this, new Set([visionTeamIndex]));
+        const visibleTiles = getAllTilesVisibleToTeams(this, new Set([visionTeamIndex]));
         for (const tile of this.getTileMap().getAllTiles()) {
             tile.setHasFog(!visibleTiles.has(tile));
 
@@ -77,12 +77,12 @@ export abstract class MpwWar extends BaseWarModelBwWar.BwWar implements MultiPla
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getBootRestTime(playerIndex: number): number | null {
-        if (playerIndex === PlayersConstants.PlayerIndex.Neutral) {
+        if (playerIndex === PlayerIndex.Neutral) {
             return null;
         } else {
             const restTime = this.getPlayer(playerIndex).getRestTimeToBoot();
             if (playerIndex === this.getPlayerIndexInTurn()) {
-                return (this.getEnterTurnTime() + restTime - TimerTimerModel.getServerTimestamp()) || null;
+                return (this.getEnterTurnTime() + restTime - getServerTimestamp()) || null;
             } else {
                 return restTime;
             }
@@ -96,7 +96,7 @@ export abstract class MpwWar extends BaseWarModelBwWar.BwWar implements MultiPla
     public getPlayerIndexLoggedIn(): number | null {
         return this.getPlayerManager().getPlayerIndexLoggedIn();
     }
-    public getPlayerLoggedIn(): PlayersIPlayer.IPlayer | null {
+    public getPlayerLoggedIn(): IPlayer | null {
         return this.getPlayerManager().getPlayerLoggedIn();
     }
 
@@ -111,7 +111,7 @@ export abstract class MpwWar extends BaseWarModelBwWar.BwWar implements MultiPla
     }
     public tickVisionTeamIndex(): number | null {
         const teamIndexArray = [...this.getPlayerManager().getWatcherTeamIndexesForSelf()].sort((v1, v2) => v1 - v2);
-        HelpersCollection.deleteElementFromList(teamIndexArray, TeamsConstants.TeamIndex.Neutral);
+        deleteElementFromList(teamIndexArray, TeamIndex.Neutral);
 
         const currentVisionTeamIndex    = this.getVisionTeamIndex();
         const newVisionTeamIndex        = currentVisionTeamIndex == null

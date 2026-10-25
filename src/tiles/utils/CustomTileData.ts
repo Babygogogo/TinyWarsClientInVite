@@ -1,38 +1,51 @@
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomCannonData from "../../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData from "../../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData from "../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
-import * as TilesUtilsCustomLimits from "./CustomLimits.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getFormattedText, getText } from "../../lang/Utils.ts";
+import type {
+    TileCustomBuildingData as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData,
+} from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import type {
+    TileCustomCannonData as ProtoSchemaCommonProtoWarSerializationTileCustomCannonData,
+} from "../../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
+import type {
+    TileCustomCrystalData as ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData,
+} from "../../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
+import type {
+    TileCustomLaserTurretData as ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData,
+} from "../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
+import {
+    Building as TilesUtilsCustomLimitsBuilding,
+    Cannon as TilesUtilsCustomLimitsCannon,
+    Crystal as TilesUtilsCustomLimitsCrystal,
+    LaserTurret as TilesUtilsCustomLimitsLaserTurret,
+} from "./CustomLimits.ts";
 
 export namespace Building {
     
-    type TileCustomBuildingData = ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData;
+    type TileCustomBuildingData = ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData;
 
-    export function checkIsValid(data: TileCustomBuildingData, config: GameConfigGcData.GcData): boolean {
+    export function checkIsValid(data: TileCustomBuildingData, config: GcData): boolean {
         return Building.getErrorTip(data, config) == null;
     }
-    export function getErrorTip(data: TileCustomBuildingData, config: GameConfigGcData.GcData): string | null {
+    export function getErrorTip(data: TileCustomBuildingData, config: GcData): string | null {
         {
             // defenseAmount
-            if (!TilesUtilsCustomLimits.Building.DefenseAmount.checkIsValid(data.getDefenseAmount())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0352));
+            if (!TilesUtilsCustomLimitsBuilding.DefenseAmount.checkIsValid(data.getDefenseAmount())) {
+                return getFormattedText(TextType.F0091, getText(TextType.B0352));
             }
         }
 
         {
             // defenseUnitTypeArray
             if (!config.checkIsValidUnitTypeSubset(data.getDefenseUnitTypeArray())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.DefensibleUnits));
+                return getFormattedText(TextType.F0091, getText(TextType.DefensibleUnits));
             }
         }
 
         {
             // maxCapturePoint
-            if (!TilesUtilsCustomLimits.Building.MaxCapturePoint.checkIsValid(data.getMaxCapturePoint())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.MaxCapturePoint));
+            if (!TilesUtilsCustomLimitsBuilding.MaxCapturePoint.checkIsValid(data.getMaxCapturePoint())) {
+                return getFormattedText(TextType.F0091, getText(TextType.MaxCapturePoint));
             }
         }
 
@@ -42,29 +55,29 @@ export namespace Building {
 
         {
             // repairAmount
-            if (!TilesUtilsCustomLimits.Building.RepairNormalizedHp.checkIsValid(data.getRepairNormalizedHp())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RepairHpAmount));
+            if (!TilesUtilsCustomLimitsBuilding.RepairNormalizedHp.checkIsValid(data.getRepairNormalizedHp())) {
+                return getFormattedText(TextType.F0091, getText(TextType.RepairHpAmount));
             }
         }
 
         {
             // repairUnitTypeArray
             if (!config.checkIsValidUnitTypeSubset(data.getRepairUnitTypeArray())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RepairableUnits));
+                return getFormattedText(TextType.F0091, getText(TextType.RepairableUnits));
             }
         }
 
         {
             // incomePerTurn
-            if (!TilesUtilsCustomLimits.Building.IncomePerTurn.checkIsValid(data.getIncomePerTurn())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0157));
+            if (!TilesUtilsCustomLimitsBuilding.IncomePerTurn.checkIsValid(data.getIncomePerTurn())) {
+                return getFormattedText(TextType.F0091, getText(TextType.B0157));
             }
         }
 
         {
             // visionRange
-            if (!TilesUtilsCustomLimits.Building.VisionRange.checkIsValid(data.getVisionRange())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.VisionRange));
+            if (!TilesUtilsCustomLimitsBuilding.VisionRange.checkIsValid(data.getVisionRange())) {
+                return getFormattedText(TextType.F0091, getText(TextType.VisionRange));
             }
         }
 
@@ -75,42 +88,42 @@ export namespace Building {
         {
             // hideUnitTypeArray
             if (!config.checkIsValidUnitTypeSubset(data.getHideUnitTypeArray())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.HidableUnits));
+                return getFormattedText(TextType.F0091, getText(TextType.HidableUnits));
             }
         }
 
         {
             // produceUnitTypeArray
             if (!config.checkIsValidUnitTypeSubset(data.getProduceUnitTypeArray())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.ProducibleUnits));
+                return getFormattedText(TextType.F0091, getText(TextType.ProducibleUnits));
             }
         }
 
         {
             // globalAttackBonus
-            if (!TilesUtilsCustomLimits.Building.GlobalAttackBonus.checkIsValid(data.getGlobalAttackBonus())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.GlobalAtkBonus));
+            if (!TilesUtilsCustomLimitsBuilding.GlobalAttackBonus.checkIsValid(data.getGlobalAttackBonus())) {
+                return getFormattedText(TextType.F0091, getText(TextType.GlobalAtkBonus));
             }
         }
 
         {
             // globalDefenseBonus
-            if (!TilesUtilsCustomLimits.Building.GlobalDefenseBonus.checkIsValid(data.getGlobalDefenseBonus())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.GlobalDefBonus));
+            if (!TilesUtilsCustomLimitsBuilding.GlobalDefenseBonus.checkIsValid(data.getGlobalDefenseBonus())) {
+                return getFormattedText(TextType.F0091, getText(TextType.GlobalDefBonus));
             }
         }
 
         {
             // unitTypeArrayForCoBoard
             if (!config.checkIsValidUnitTypeSubset(data.getUnitTypeArrayForCoBoard())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.CoBoardableUnit));
+                return getFormattedText(TextType.F0091, getText(TextType.CoBoardableUnit));
             }
         }
 
         {
             // blockEnemyUnitTypeArray
             if (!config.checkIsValidUnitTypeSubset(data.getBlockEnemyUnitTypeArray())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.BlockableEnemyUnits));
+                return getFormattedText(TextType.F0091, getText(TextType.BlockableEnemyUnits));
             }
         }
 
@@ -120,38 +133,38 @@ export namespace Building {
 
 export namespace Cannon {
     
-    type TileCustomCannonData   = ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData;
+    type TileCustomCannonData   = ProtoSchemaCommonProtoWarSerializationTileCustomCannonData;
 
     export function checkIsValid(data: TileCustomCannonData): boolean {
         return Cannon.getErrorTip(data) == null;
     }
     export function getErrorTip(data: TileCustomCannonData): string | null {
-        if (!TilesUtilsCustomLimits.Cannon.Priority.checkIsValid(data.getPriority())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Priority));
+        if (!TilesUtilsCustomLimitsCannon.Priority.checkIsValid(data.getPriority())) {
+            return getFormattedText(TextType.F0091, getText(TextType.Priority));
         }
 
-        if (!TilesUtilsCustomLimits.Cannon.MaxTargetCount.checkIsValid(data.getMaxTargetCount())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.MaxTargets));
+        if (!TilesUtilsCustomLimitsCannon.MaxTargetCount.checkIsValid(data.getMaxTargetCount())) {
+            return getFormattedText(TextType.F0091, getText(TextType.MaxTargets));
         }
 
-        if (!TilesUtilsCustomLimits.Cannon.RangeForUp.checkIsValid(data.getRangeForUp())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RangeUp));
+        if (!TilesUtilsCustomLimitsCannon.RangeForUp.checkIsValid(data.getRangeForUp())) {
+            return getFormattedText(TextType.F0091, getText(TextType.RangeUp));
         }
 
-        if (!TilesUtilsCustomLimits.Cannon.RangeForDown.checkIsValid(data.getRangeForDown())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RangeDown));
+        if (!TilesUtilsCustomLimitsCannon.RangeForDown.checkIsValid(data.getRangeForDown())) {
+            return getFormattedText(TextType.F0091, getText(TextType.RangeDown));
         }
 
-        if (!TilesUtilsCustomLimits.Cannon.RangeForLeft.checkIsValid(data.getRangeForLeft())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RangeLeft));
+        if (!TilesUtilsCustomLimitsCannon.RangeForLeft.checkIsValid(data.getRangeForLeft())) {
+            return getFormattedText(TextType.F0091, getText(TextType.RangeLeft));
         }
 
-        if (!TilesUtilsCustomLimits.Cannon.RangeForRight.checkIsValid(data.getRangeForRight())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RangeRight));
+        if (!TilesUtilsCustomLimitsCannon.RangeForRight.checkIsValid(data.getRangeForRight())) {
+            return getFormattedText(TextType.F0091, getText(TextType.RangeRight));
         }
 
-        if (!TilesUtilsCustomLimits.Cannon.OffsetHp.checkIsValid(data.getOffsetHp())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitsHpOffset));
+        if (!TilesUtilsCustomLimitsCannon.OffsetHp.checkIsValid(data.getOffsetHp())) {
+            return getFormattedText(TextType.F0091, getText(TextType.UnitsHpOffset));
         }
 
         {
@@ -159,12 +172,12 @@ export namespace Cannon {
             const canBeFatal = data.getCanBeFatal();
         }
 
-        if (!TilesUtilsCustomLimits.Cannon.OffsetFuelPercentage.checkIsValid(data.getOffsetFuelPercentage())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitsFuelOffset$));
+        if (!TilesUtilsCustomLimitsCannon.OffsetFuelPercentage.checkIsValid(data.getOffsetFuelPercentage())) {
+            return getFormattedText(TextType.F0091, getText(TextType.UnitsFuelOffset$));
         }
 
-        if (!TilesUtilsCustomLimits.Cannon.OffsetPrimaryAmmoPercentage.checkIsValid(data.getOffsetPrimaryAmmoPercentage())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitsPriAmmoOffset$));
+        if (!TilesUtilsCustomLimitsCannon.OffsetPrimaryAmmoPercentage.checkIsValid(data.getOffsetPrimaryAmmoPercentage())) {
+            return getFormattedText(TextType.F0091, getText(TextType.UnitsPriAmmoOffset$));
         }
 
         return null;
@@ -189,30 +202,30 @@ export namespace Cannon {
 
 export namespace Crystal {
     
-    type TileCustomCrystalData  = ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData;
+    type TileCustomCrystalData  = ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData;
 
     export function checkIsValid(data: TileCustomCrystalData): boolean {
         return Crystal.getErrorTip(data) == null;
     }
     export function getErrorTip(data: TileCustomCrystalData): string | null {
-        if (!TilesUtilsCustomLimits.Crystal.Priority.checkIsValid(data.getPriority())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Priority));
+        if (!TilesUtilsCustomLimitsCrystal.Priority.checkIsValid(data.getPriority())) {
+            return getFormattedText(TextType.F0091, getText(TextType.Priority));
         }
 
-        if (!TilesUtilsCustomLimits.Crystal.Radius.checkIsValid(data.getRadius())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.EffectiveRadius));
+        if (!TilesUtilsCustomLimitsCrystal.Radius.checkIsValid(data.getRadius())) {
+            return getFormattedText(TextType.F0091, getText(TextType.EffectiveRadius));
         }
 
-        if (!TilesUtilsCustomLimits.Crystal.OffsetFund.checkIsValid(data.getOffsetFund())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.FundOffset));
+        if (!TilesUtilsCustomLimitsCrystal.OffsetFund.checkIsValid(data.getOffsetFund())) {
+            return getFormattedText(TextType.F0091, getText(TextType.FundOffset));
         }
 
-        if (!TilesUtilsCustomLimits.Crystal.OffsetEnergyPercentage.checkIsValid(data.getOffsetEnergyPercentage())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.CoEnergyOffset$));
+        if (!TilesUtilsCustomLimitsCrystal.OffsetEnergyPercentage.checkIsValid(data.getOffsetEnergyPercentage())) {
+            return getFormattedText(TextType.F0091, getText(TextType.CoEnergyOffset$));
         }
 
-        if (!TilesUtilsCustomLimits.Crystal.OffsetHp.checkIsValid(data.getOffsetHp())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitsHpOffset));
+        if (!TilesUtilsCustomLimitsCrystal.OffsetHp.checkIsValid(data.getOffsetHp())) {
+            return getFormattedText(TextType.F0091, getText(TextType.UnitsHpOffset));
         }
 
         {
@@ -220,12 +233,12 @@ export namespace Crystal {
             const canBeFatal = data.getCanBeFatal();
         }
 
-        if (!TilesUtilsCustomLimits.Crystal.OffsetFuelPercentage.checkIsValid(data.getOffsetFuelPercentage())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitsFuelOffset$));
+        if (!TilesUtilsCustomLimitsCrystal.OffsetFuelPercentage.checkIsValid(data.getOffsetFuelPercentage())) {
+            return getFormattedText(TextType.F0091, getText(TextType.UnitsFuelOffset$));
         }
 
-        if (!TilesUtilsCustomLimits.Crystal.OffsetPrimaryAmmoPercentage.checkIsValid(data.getOffsetPrimaryAmmoPercentage())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitsPriAmmoOffset$));
+        if (!TilesUtilsCustomLimitsCrystal.OffsetPrimaryAmmoPercentage.checkIsValid(data.getOffsetPrimaryAmmoPercentage())) {
+            return getFormattedText(TextType.F0091, getText(TextType.UnitsPriAmmoOffset$));
         }
 
         return null;
@@ -248,42 +261,42 @@ export namespace Crystal {
 
 export namespace LaserTurret {
     
-    type TileCustomLaserTurretData  = ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData;
+    type TileCustomLaserTurretData  = ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData;
 
     export function checkIsValid(data: TileCustomLaserTurretData): boolean {
         return LaserTurret.getErrorTip(data) == null;
     }
     export function getErrorTip(data: TileCustomLaserTurretData): string | null {
-        if (!TilesUtilsCustomLimits.LaserTurret.Priority.checkIsValid(data.getPriority())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Priority));
+        if (!TilesUtilsCustomLimitsLaserTurret.Priority.checkIsValid(data.getPriority())) {
+            return getFormattedText(TextType.F0091, getText(TextType.Priority));
         }
 
-        if (!TilesUtilsCustomLimits.LaserTurret.RangeForDown.checkIsValid(data.getRangeForDown())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RangeDown));
+        if (!TilesUtilsCustomLimitsLaserTurret.RangeForDown.checkIsValid(data.getRangeForDown())) {
+            return getFormattedText(TextType.F0091, getText(TextType.RangeDown));
         }
 
-        if (!TilesUtilsCustomLimits.LaserTurret.RangeForUp.checkIsValid(data.getRangeForUp())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RangeUp));
+        if (!TilesUtilsCustomLimitsLaserTurret.RangeForUp.checkIsValid(data.getRangeForUp())) {
+            return getFormattedText(TextType.F0091, getText(TextType.RangeUp));
         }
 
-        if (!TilesUtilsCustomLimits.LaserTurret.RangeForLeft.checkIsValid(data.getRangeForLeft())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RangeLeft));
+        if (!TilesUtilsCustomLimitsLaserTurret.RangeForLeft.checkIsValid(data.getRangeForLeft())) {
+            return getFormattedText(TextType.F0091, getText(TextType.RangeLeft));
         }
 
-        if (!TilesUtilsCustomLimits.LaserTurret.RangeForRight.checkIsValid(data.getRangeForRight())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RangeRight));
+        if (!TilesUtilsCustomLimitsLaserTurret.RangeForRight.checkIsValid(data.getRangeForRight())) {
+            return getFormattedText(TextType.F0091, getText(TextType.RangeRight));
         }
 
-        if (!TilesUtilsCustomLimits.LaserTurret.OffsetHp.checkIsValid(data.getOffsetHp())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitsHpOffset));
+        if (!TilesUtilsCustomLimitsLaserTurret.OffsetHp.checkIsValid(data.getOffsetHp())) {
+            return getFormattedText(TextType.F0091, getText(TextType.UnitsHpOffset));
         }
 
-        if (!TilesUtilsCustomLimits.LaserTurret.OffsetFuelPercentage.checkIsValid(data.getOffsetFuelPercentage())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitsFuelOffset$));
+        if (!TilesUtilsCustomLimitsLaserTurret.OffsetFuelPercentage.checkIsValid(data.getOffsetFuelPercentage())) {
+            return getFormattedText(TextType.F0091, getText(TextType.UnitsFuelOffset$));
         }
 
-        if (!TilesUtilsCustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.checkIsValid(data.getOffsetPrimaryAmmoPercentage())) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitsPriAmmoOffset$));
+        if (!TilesUtilsCustomLimitsLaserTurret.OffsetPrimaryAmmoPercentage.checkIsValid(data.getOffsetPrimaryAmmoPercentage())) {
+            return getFormattedText(TextType.F0091, getText(TextType.UnitsPriAmmoOffset$));
         }
 
         {

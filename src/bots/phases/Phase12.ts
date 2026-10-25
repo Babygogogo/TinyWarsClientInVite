@@ -1,10 +1,10 @@
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
 
-export async function getActionForPhase12(): Promise<ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer> {
-    await TimerTimerModel.checkAndCallLater();
+export async function getActionForPhase12(): Promise<WoContainer> {
+    await checkAndCallLater();
 
-    return ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    return WoContainer.fromJson({
         WoPlayerEndTurn: {},
     });
 }

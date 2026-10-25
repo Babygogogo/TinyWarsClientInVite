@@ -1,113 +1,113 @@
-import * as ActionPlannersConstants from "../Constants.ts";
-import type * as ActionPlannersIActionPlanner from "../IActionPlanner.ts";
-import type * as ActionPlannersStatesIState from "./IState.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
+import { StateId } from "../Constants.ts";
+import type { IActionPlanner } from "../IActionPlanner.ts";
+import type { IState } from "./IState.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import { getHrwWarClass, getRwWarClass, getMeWarClass, getTwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 
-type GridIndex      = AuxiliaryTypesGridIndex.GridIndex;
+type GridIndex      = AuxiliaryTypesGridIndex;
 
-export class ChoosingUnitRepairTarget implements ActionPlannersStatesIState.IState {
+export class ChoosingUnitRepairTarget implements IState {
     private static readonly _instance = new ChoosingUnitRepairTarget();
 
     public static getInstance(): ChoosingUnitRepairTarget {
         return ChoosingUnitRepairTarget._instance;
     }
 
-    public getStateId(): ActionPlannersConstants.StateId {
-        return ActionPlannersConstants.StateId.ChoosingUnitRepairTarget;
+    public getStateId(): StateId {
+        return StateId.ChoosingUnitRepairTarget;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): ActionPlannersConstants.StateId {
+    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
         const war = actionPlanner.getWar();
-        if ((war instanceof GameHelpersGhFactory.getHrwWarClass()) ||
-            (war instanceof GameHelpersGhFactory.getRwWarClass())
+        if ((war instanceof getHrwWarClass()) ||
+            (war instanceof getRwWarClass())
         ) {
-            return ActionPlannersConstants.StateId.ChoosingUnitRepairTarget;
+            return StateId.ChoosingUnitRepairTarget;
         }
 
-        if ((war instanceof GameHelpersGhFactory.getMeWarClass()) ||
-            (war instanceof GameHelpersGhFactory.getTwWarClass())
+        if ((war instanceof getMeWarClass()) ||
+            (war instanceof getTwWarClass())
         ) {
-            return ActionPlannersConstants.StateId.Idle;
+            return StateId.Idle;
         }
 
         const targetGridIndex = actionPlanner.getUnitRepairTargetGridIndex();
         if (targetGridIndex == null) {
             if (actionPlanner.getUnitRepairCandidateGridIndexArray().some(v => v.checkIsEqual(gridIndex))) {
-                return ActionPlannersConstants.StateId.ChoosingUnitRepairTarget;
+                return StateId.ChoosingUnitRepairTarget;
             } else {
-                return ActionPlannersConstants.StateId.ChoosingUnitAction;
+                return StateId.ChoosingUnitAction;
             }
         } else {
             if (targetGridIndex.checkIsEqual(gridIndex)) {
-                return ActionPlannersConstants.StateId.RequestingUnitRepairUnit;
+                return StateId.RequestingUnitRepairUnit;
             } else {
-                return ActionPlannersConstants.StateId.ChoosingUnitRepairTarget;
+                return StateId.ChoosingUnitRepairTarget;
             }
         }
     }
 
-    public getNextStateIdOnDrag(): ActionPlannersConstants.StateId {
+    public getNextStateIdOnDrag(): StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): ActionPlannersConstants.StateId {
+    public getNextStateIdOnDragEnded(): StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
+    public cancel(actionPlanner: IActionPlanner): void {
         actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getMovePathDestination().getGridIndex());
         actionPlanner.clearUnitRepairTargetGridIndex();
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitAction);
+        actionPlanner.setStateId(StateId.ChoosingUnitAction);
         actionPlanner.updateView();
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+        playShortSfx(ShortSfxCode.ButtonCancel01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
         const currStateId = actionPlanner.getStateId();
-        if (currStateId === ActionPlannersConstants.StateId.ChoosingUnitRepairTarget) {
+        if (currStateId === StateId.ChoosingUnitRepairTarget) {
             if (actionPlanner.getUnitRepairCandidateGridIndexArray().some(v => v.checkIsEqual(gridIndex))) {
                 actionPlanner.setUnitRepairTargetGridIndex(gridIndex);
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                playShortSfx(ShortSfxCode.CursorConfirm01);
             } else {
                 actionPlanner.clearUnitRepairTargetGridIndex();
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorMove01);
+                playShortSfx(ShortSfxCode.CursorMove01);
             }
 
         } else {
-            throw HelpersMisc.newError(`Invalid currState: ${currStateId}`);
+            throw newError(`Invalid currState: ${currStateId}`);
         }
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitRepairTarget);
+        actionPlanner.setStateId(StateId.ChoosingUnitRepairTarget);
         actionPlanner.updateView();
     }
 
-    public doApplyOnDrag(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
+    public doApplyOnDrag(actionPlanner: IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === ActionPlannersConstants.StateId.ChoosingUnitRepairTarget) {
+        if (currState === StateId.ChoosingUnitRepairTarget) {
             // Nothing to do.
 
         } else {
-            throw HelpersMisc.newError(`Invalid currState: ${currState}`);
+            throw newError(`Invalid currState: ${currState}`);
         }
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitRepairTarget);
+        actionPlanner.setStateId(StateId.ChoosingUnitRepairTarget);
         actionPlanner.updateView();
     }
 
     public doApplyOnDragEnded(): void {
-        throw HelpersMisc.newError(`Not expected to apply on drag ended!`);
+        throw newError(`Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitRepairTarget);
+    public doApplyOnChooseAction(actionPlanner: IActionPlanner): void {
+        actionPlanner.setStateId(StateId.ChoosingUnitRepairTarget);
 
         actionPlanner.updateView();
     }

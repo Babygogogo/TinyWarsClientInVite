@@ -1,107 +1,114 @@
-import * as AuxiliaryTypesReplayFilter from "../../auxiliaryTypes/ReplayFilter.ts";
-import * as CosConstants from "../../cos/Constants.ts";
-import * as CosUtils from "../../cos/Utils.ts";
-import * as CoSkillsConstants from "../../coSkills/Constants.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "./UiListItemRenderer.ts";
-import * as UiComponentsUiOpenableComponent from "./UiOpenableComponent.ts";
-import type * as UiInterfacesIUiButton from "../interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiCoInfo from "../interfaces/IUiCoInfo.ts";
-import type * as UiInterfacesIUiContainer from "../interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollList from "../interfaces/IUiScrollList.ts";
-import type * as UiTypesUiCoData from "../types/UiCoData.ts";
-import * as UiTypesUiCoInfoType from "../types/UiCoInfoType.ts";
-import type * as UiTypesUiListItemData from "../types/UiListItemData.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
+import { ReplayFilter } from "../../auxiliaryTypes/ReplayFilter.ts";
+import { EnergyTypeId } from "../../cos/Constants.ts";
+import { getCoMaxEnergy } from "../../cos/Utils.ts";
+import { SkillTypeId } from "../../coSkills/Constants.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { gotoRwReplayListPanel } from "../../helpers/GameFlow.ts";
+import { getCoBust } from "../../helpers/ImageSource.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getCoSkillDescArray,
+    getCurrentLanguageType,
+    getCoEnergyTypeName,
+    getCoSkillTypeName,
+} from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "./UiListItemRenderer.ts";
+import { UiOpenableComponent } from "./UiOpenableComponent.ts";
+import type { IUiButton } from "../interfaces/IUiButton.ts";
+import type { IUiCoInfo } from "../interfaces/IUiCoInfo.ts";
+import type { IUiContainer } from "../interfaces/IUiContainer.ts";
+import type { IUiImage } from "../interfaces/IUiImage.ts";
+import type { IUiLabel } from "../interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../interfaces/IUiLayout.ts";
+import type { IUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
+import type { IUiScrollList } from "../interfaces/IUiScrollList.ts";
+import type { UiCoData } from "../types/UiCoData.ts";
+import { UiCoInfoType } from "../types/UiCoInfoType.ts";
+import type { UiListItemData } from "../types/UiListItemData.ts";
+import { getUiLayoutClass } from "../utils/UiFactory.ts";
 
-export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponent<UiTypesUiCoData.UiCoData> implements UiInterfacesIUiCoInfo.IUiCoInfo {
-    private readonly _groupDorBasicInfo!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutDorBasicInfo!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _groupDorArtDesigner!          : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelDorArtDesignerTitle!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDorArtDesigner!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupDorDataDesigner!         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelDorDataDesignerTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDorDataDesigner!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnDorReplay!                 : UiInterfacesIUiButton.IUiButton;
+export class UiCoInfo extends UiOpenableComponent<UiCoData> implements IUiCoInfo {
+    private readonly _groupDorBasicInfo!            : IUiContainer;
+    private readonly _layoutDorBasicInfo!           : IUiLayout;
+    private readonly _groupDorArtDesigner!          : IUiContainer;
+    private readonly _labelDorArtDesignerTitle!     : IUiLabel;
+    private readonly _labelDorArtDesigner!          : IUiLabel;
+    private readonly _groupDorDataDesigner!         : IUiContainer;
+    private readonly _labelDorDataDesignerTitle!    : IUiLabel;
+    private readonly _labelDorDataDesigner!         : IUiLabel;
+    private readonly _btnDorReplay!                 : IUiButton;
 
-    private readonly _groupDorCoType!               : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelDorCoTypeTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDorCoType!               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDorCoType!               : IUiContainer;
+    private readonly _labelDorCoTypeTitle!          : IUiLabel;
+    private readonly _labelDorCoType!               : IUiLabel;
 
-    private readonly _groupDorBoardCost!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelDorBoardCostTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDorBoardCost!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDorBoardCost!            : IUiContainer;
+    private readonly _labelDorBoardCostTitle!       : IUiLabel;
+    private readonly _labelDorBoardCost!            : IUiLabel;
 
-    private readonly _groupDorZoneRadius!           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelDorZoneRadiusTitle!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDorZoneRadius!           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDorZoneRadius!           : IUiContainer;
+    private readonly _labelDorZoneRadiusTitle!      : IUiLabel;
+    private readonly _labelDorZoneRadius!           : IUiLabel;
 
-    private readonly _groupDorZoneExpansion!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelDorZoneExpansionTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDorZoneExpansion!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDorZoneExpansion!        : IUiContainer;
+    private readonly _labelDorZoneExpansionTitle!   : IUiLabel;
+    private readonly _labelDorZoneExpansion!        : IUiLabel;
 
-    private readonly _groupDorMaxEnergy!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelDorMaxEnergyTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDorMaxEnergy!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDorMaxEnergy!            : IUiContainer;
+    private readonly _labelDorMaxEnergyTitle!       : IUiLabel;
+    private readonly _labelDorMaxEnergy!            : IUiLabel;
 
-    private readonly _groupDorEnergyBar!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelDorEnergyBarTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDorEnergyBar!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDorEnergyBar!            : IUiContainer;
+    private readonly _labelDorEnergyBarTitle!       : IUiLabel;
+    private readonly _labelDorEnergyBar!            : IUiLabel;
 
-    private readonly _groupTriBasicInfo!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutTriBasicInfo!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTriArtDesignerTitle!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTriArtDesigner!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTriDataDesignerTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTriDataDesigner!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnTriReplay!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupTriBasicInfo!            : IUiContainer;
+    private readonly _layoutTriBasicInfo!           : IUiLayout;
+    private readonly _labelTriArtDesignerTitle!     : IUiLabel;
+    private readonly _labelTriArtDesigner!          : IUiLabel;
+    private readonly _labelTriDataDesignerTitle!    : IUiLabel;
+    private readonly _labelTriDataDesigner!         : IUiLabel;
+    private readonly _btnTriReplay!                 : IUiButton;
 
-    private readonly _groupTriCoType!               : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTriCoTypeTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTriCoType!               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupTriCoType!               : IUiContainer;
+    private readonly _labelTriCoTypeTitle!          : IUiLabel;
+    private readonly _labelTriCoType!               : IUiLabel;
 
-    private readonly _groupTriEnergyBar!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTriEnergyBarTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTriEnergyBar!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupTriEnergyBar!            : IUiContainer;
+    private readonly _labelTriEnergyBarTitle!       : IUiLabel;
+    private readonly _labelTriEnergyBar!            : IUiLabel;
 
-    private readonly _groupTriMaxEnergy!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTriMaxEnergyTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTriMaxEnergy!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupTriMaxEnergy!            : IUiContainer;
+    private readonly _labelTriMaxEnergyTitle!       : IUiLabel;
+    private readonly _labelTriMaxEnergy!            : IUiLabel;
 
-    private readonly _groupSkillInfo!               : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _groupSkillType!               : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelSkillTypeTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelSkillType!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupEnergyCost!              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelEnergyCostTitle!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelEnergyCost!              : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _layoutSkillDesc!              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _layoutSkillDescTitle!         : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelSkillDescTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupSkillDescHelp!           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listSkillDesc!                : UiInterfacesIUiScrollList.IUiScrollList<DataForSkillDescRenderer>;
+    private readonly _groupSkillInfo!               : IUiLayout;
+    private readonly _groupSkillType!               : IUiLayout;
+    private readonly _labelSkillTypeTitle!          : IUiLabel;
+    private readonly _labelSkillType!               : IUiLabel;
+    private readonly _groupEnergyCost!              : IUiLayout;
+    private readonly _labelEnergyCostTitle!         : IUiLabel;
+    private readonly _labelEnergyCost!              : IUiLabel;
+    private readonly _layoutSkillDesc!              : IUiLayout;
+    private readonly _layoutSkillDescTitle!         : IUiLayout;
+    private readonly _labelSkillDescTitle!          : IUiLabel;
+    private readonly _groupSkillDescHelp!           : IUiContainer;
+    private readonly _listSkillDesc!                : IUiScrollList<DataForSkillDescRenderer>;
 
-    private readonly _listInfoType!                 : UiInterfacesIUiScrollList.IUiScrollList<DataForInfoTypeRenderer>;
-    private readonly _imgCoPortrait!                : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelCoName!                  : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _listInfoType!                 : IUiScrollList<DataForInfoTypeRenderer>;
+    private readonly _imgCoPortrait!                : IUiImage;
+    private readonly _labelCoName!                  : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupDorCoType,             callback: this._onTouchedGroupDorCoType },
@@ -144,31 +151,31 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
     }
 
     private _onTouchedGroupDorCoType(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0817),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0817),
         });
     }
     private _onTouchedGroupDorBoardCost(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0813),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0813),
         });
     }
     private _onTouchedGroupDorZoneRadius(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0814),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0814),
         });
     }
     private _onTouchedGroupDorZoneExpansion(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0815),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0815),
         });
     }
     private _onTouchedGroupDorMaxEnergy(): void {
@@ -177,18 +184,18 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const multiplier1 = gameConfig.getDorEnergyGainRateForAttacker();
         const multiplier2 = gameConfig.getDorEnergyGainRateForDefender();
         if ((multiplier1 === 1) && (multiplier2 === 0)) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-                getContent : () => LangUtils.getText(LangConstants.TextType.A0816),
+            openPanel(getDict().CommonHelpPanel, {
+                getContent : () => getText(TextType.A0816),
             });
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-                getContent : () => LangUtils.getFormattedText(
-                    LangConstants.TextType.F0117,
+            openPanel(getDict().CommonHelpPanel, {
+                getContent : () => getFormattedText(
+                    TextType.F0117,
                     multiplier1 === 1 ? `` : ` * ${multiplier1}`,
                     multiplier2 === 1 ? `` : ` * ${multiplier2}`,
                 ),
@@ -196,10 +203,10 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
         }
     }
     private _onTouchedGroupDorEnergyBar(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0874),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0874),
         });
     }
     private _onTouchedBtnDorReplay(): void {
@@ -213,29 +220,29 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent  : () => LangUtils.getText(LangConstants.TextType.A0953),
-            callback    : () => HelpersGameFlow.gotoRwReplayListPanel({
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent  : () => getText(TextType.A0953),
+            callback    : () => gotoRwReplayListPanel({
                 usePreviousFilter       : false,
                 usePreviousPageIndex    : false,
-                filter                  : new AuxiliaryTypesReplayFilter.ReplayFilter({
+                filter                  : new ReplayFilter({
                     coCategoryId    : coCategoryId,
                 }),
             }),
         });
     }
     private _onTouchedGroupTriCoType(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0817),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0817),
         });
     }
     private _onTouchedGroupTriEnergyBar(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0818),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0818),
         });
     }
     private _onTouchedGroupTriMaxEnergy(): void {
@@ -244,14 +251,14 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const gameConfig    = openData.gameConfig;
         const param1        = gameConfig.getTrilogyEnergyGainRateForAttacker();
         const param2        = gameConfig.getTrilogyEnergyGainRateForDefender();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getFormattedText(
-                LangConstants.TextType.F0134,
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getFormattedText(
+                TextType.F0134,
                 param1 === 100 ? `` : ` * ${param1}%`,
                 param2 === 100 ? `` : ` * ${param2}%`,
             ),
@@ -268,22 +275,22 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent  : () => LangUtils.getText(LangConstants.TextType.A0953),
-            callback    : () => HelpersGameFlow.gotoRwReplayListPanel({
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent  : () => getText(TextType.A0953),
+            callback    : () => gotoRwReplayListPanel({
                 usePreviousFilter       : false,
                 usePreviousPageIndex    : false,
-                filter                  : new AuxiliaryTypesReplayFilter.ReplayFilter({
+                filter                  : new ReplayFilter({
                     coCategoryId    : coCategoryId,
                 }),
             }),
         });
     }
     private _onTouchedGroupSkillType(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0819),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0819),
         });
     }
     private _onTouchedLayoutSkillDescTitle(): void {
@@ -297,19 +304,19 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
             return;
         }
 
-        const extraDesc     = LangUtils.getCoSkillDescArray({
+        const extraDesc     = getCoSkillDescArray({
             coId            : openData.coId,
             skillType       : skillType,
             gameConfig      : openData.gameConfig,
-            languageType    : LangUtils.getCurrentLanguageType(),
+            languageType    : getCurrentLanguageType(),
             isExtra         : true,
         });
         if (extraDesc) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
+            openPanel(getDict().CommonHelpPanel, {
                 getContent : () => extraDesc.map(v => `- ${v}`).join(`\n`),
-                getTitle   : () => LangUtils.getText(LangConstants.TextType.B1215),
+                getTitle   : () => getText(TextType.B1215),
             });
         }
     }
@@ -317,7 +324,7 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
     public updateOnSelectedInfoType(): void {
         this._updateComponentsForInfo();
     }
-    public getSelectedInfoType(): UiTypesUiCoInfoType.UiCoInfoType | null {
+    public getSelectedInfoType(): UiCoInfoType | null {
         return this._listInfoType.getFirstSelectedItem()?.getOpenData()?.infoType ?? null;
     }
 
@@ -335,26 +342,26 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
         const coBasicCfg = openData.gameConfig.getCoBasicCfg(openData.coId);
         await this._listInfoType.bindData([
             {
-                infoType    : UiTypesUiCoInfoType.UiCoInfoType.Basic,
+                infoType    : UiCoInfoType.Basic,
                 skillType   : null,
                 component   : this,
                 isDark      : false,
             },
             {
-                infoType    : UiTypesUiCoInfoType.UiCoInfoType.Passive,
-                skillType   : CoSkillsConstants.SkillTypeId.Passive,
+                infoType    : UiCoInfoType.Passive,
+                skillType   : SkillTypeId.Passive,
                 component   : this,
                 isDark      : !coBasicCfg?.getPassiveSkillIds()?.length,
             },
             {
-                infoType    : UiTypesUiCoInfoType.UiCoInfoType.Power,
-                skillType   : CoSkillsConstants.SkillTypeId.Power,
+                infoType    : UiCoInfoType.Power,
+                skillType   : SkillTypeId.Power,
                 component   : this,
                 isDark      : !coBasicCfg?.getPowerSkillIds()?.length,
             },
             {
-                infoType    : UiTypesUiCoInfoType.UiCoInfoType.SuperPower,
-                skillType   : CoSkillsConstants.SkillTypeId.SuperPower,
+                infoType    : UiCoInfoType.SuperPower,
+                skillType   : SkillTypeId.SuperPower,
                 component   : this,
                 isDark      : !coBasicCfg?.getSuperPowerSkillIds()?.length,
             },
@@ -362,25 +369,25 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
     }
 
     private _updateComponentsForLanguage(): void {
-        setTextAndArrange(this._labelDorArtDesignerTitle, LangConstants.TextType.B0839);
-        setTextAndArrange(this._labelDorDataDesignerTitle, LangConstants.TextType.B0840);
-        setTextAndArrange(this._labelDorCoTypeTitle, LangConstants.TextType.B1268);
-        setTextAndArrange(this._labelDorBoardCostTitle, LangConstants.TextType.B0164);
-        setTextAndArrange(this._labelDorZoneRadiusTitle, LangConstants.TextType.B0165);
-        setTextAndArrange(this._labelDorZoneExpansionTitle, LangConstants.TextType.B0166);
-        setTextAndArrange(this._labelDorMaxEnergyTitle, LangConstants.TextType.B1272);
-        setTextAndArrange(this._labelDorEnergyBarTitle, LangConstants.TextType.B1267);
-        setTextAndArrange(this._labelTriArtDesignerTitle, LangConstants.TextType.B0839);
-        setTextAndArrange(this._labelTriDataDesignerTitle, LangConstants.TextType.B0840);
-        setTextAndArrange(this._labelTriCoTypeTitle, LangConstants.TextType.B1268);
-        setTextAndArrange(this._labelTriEnergyBarTitle, LangConstants.TextType.B1271);
-        setTextAndArrange(this._labelTriMaxEnergyTitle, LangConstants.TextType.B1272);
-        setTextAndArrange(this._labelEnergyCostTitle, LangConstants.TextType.B0167);
-        setTextAndArrange(this._labelSkillDescTitle, LangConstants.TextType.B1215);
-        setTextAndArrange(this._labelSkillTypeTitle, LangConstants.TextType.B1273);
+        setTextAndArrange(this._labelDorArtDesignerTitle, TextType.B0839);
+        setTextAndArrange(this._labelDorDataDesignerTitle, TextType.B0840);
+        setTextAndArrange(this._labelDorCoTypeTitle, TextType.B1268);
+        setTextAndArrange(this._labelDorBoardCostTitle, TextType.B0164);
+        setTextAndArrange(this._labelDorZoneRadiusTitle, TextType.B0165);
+        setTextAndArrange(this._labelDorZoneExpansionTitle, TextType.B0166);
+        setTextAndArrange(this._labelDorMaxEnergyTitle, TextType.B1272);
+        setTextAndArrange(this._labelDorEnergyBarTitle, TextType.B1267);
+        setTextAndArrange(this._labelTriArtDesignerTitle, TextType.B0839);
+        setTextAndArrange(this._labelTriDataDesignerTitle, TextType.B0840);
+        setTextAndArrange(this._labelTriCoTypeTitle, TextType.B1268);
+        setTextAndArrange(this._labelTriEnergyBarTitle, TextType.B1271);
+        setTextAndArrange(this._labelTriMaxEnergyTitle, TextType.B1272);
+        setTextAndArrange(this._labelEnergyCostTitle, TextType.B0167);
+        setTextAndArrange(this._labelSkillDescTitle, TextType.B1215);
+        setTextAndArrange(this._labelSkillTypeTitle, TextType.B1273);
 
-        this._btnDorReplay.setLangText(LangConstants.TextType.B0710);
-        this._btnTriReplay.setLangText(LangConstants.TextType.B0710);
+        this._btnDorReplay.setLangText(TextType.B0710);
+        this._btnTriReplay.setLangText(TextType.B0710);
         this._layoutDorBasicInfo.arrangeItems();
         this._layoutTriBasicInfo.arrangeItems();
     }
@@ -401,7 +408,7 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
         const gameConfig        = openData.gameConfig;
         const imgCoPortrait     = this._imgCoPortrait;
         imgCoPortrait.loadSource(``);
-        imgCoPortrait.loadSource(HelpersImageSource.getCoBust(gameConfig, coId) ?? LangConstants.UndefinedError);
+        imgCoPortrait.loadSource(getCoBust(gameConfig, coId) ?? UndefinedError);
 
         const infoType = this.getSelectedInfoType();
         if (infoType == null) {
@@ -413,24 +420,24 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
 
         {
             const label = this._labelCoName;
-            label.setText(gameConfig.getCoBasicCfg(coId)?.getName() ?? LangConstants.UndefinedError);
+            label.setText(gameConfig.getCoBasicCfg(coId)?.getName() ?? UndefinedError);
 
             const parent = label.getParent();
-            if (parent instanceof UiUtilsUiFactory.getUiLayoutClass()) {
+            if (parent instanceof getUiLayoutClass()) {
                 parent.arrangeItems();
             }
         }
 
-        if (infoType === UiTypesUiCoInfoType.UiCoInfoType.Basic) {
+        if (infoType === UiCoInfoType.Basic) {
             const coEnergyType = gameConfig.getCoEnergyType(coId);
-            if (coEnergyType === CosConstants.EnergyTypeId.Dor) {
+            if (coEnergyType === EnergyTypeId.Dor) {
                 groupDorBasicInfo.setIsVisible(true);
                 groupTriBasicInfo.setIsVisible(false);
                 groupSkillInfo.setIsVisible(false);
 
                 this._updateGroupDorBasicInfo();
 
-            } else if (coEnergyType === CosConstants.EnergyTypeId.Trilogy) {
+            } else if (coEnergyType === EnergyTypeId.Trilogy) {
                 groupDorBasicInfo.setIsVisible(false);
                 groupTriBasicInfo.setIsVisible(true);
                 groupSkillInfo.setIsVisible(false);
@@ -460,7 +467,7 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
         const coId          = openData.coId;
         const gameConfig    = openData.gameConfig;
         const coEnergyType  = gameConfig.getCoEnergyType(coId);
-        if (coEnergyType !== CosConstants.EnergyTypeId.Dor) {
+        if (coEnergyType !== EnergyTypeId.Dor) {
             return;
         }
 
@@ -484,9 +491,9 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
 
         this._labelDorArtDesigner.setText(coBasicCfg?.getArtDesigner() ?? ``);
         this._labelDorDataDesigner.setText(coBasicCfg?.getDataDesigner() ?? ``);
-        this._labelDorCoType.setText(LangUtils.getCoEnergyTypeName(coEnergyType) ?? LangConstants.UndefinedError);
+        this._labelDorCoType.setText(getCoEnergyTypeName(coEnergyType) ?? UndefinedError);
         this._labelDorZoneRadius.setText(`${coBasicCfg?.getZoneRadius()}`);
-        this._labelDorMaxEnergy.setText(coBasicCfg == null ? `--` : `${CosUtils.getCoMaxEnergy(coBasicCfg)}`);
+        this._labelDorMaxEnergy.setText(coBasicCfg == null ? `--` : `${getCoMaxEnergy(coBasicCfg)}`);
         this._labelDorZoneExpansion.setText((coBasicCfg?.getZoneExpansionEnergyList() || []).join(` / `) || `--`);
 
         {
@@ -517,15 +524,15 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
         const coId          = openData.coId;
         const gameConfig    = openData.gameConfig;
         const coEnergyType  = gameConfig.getCoEnergyType(coId);
-        if (coEnergyType !== CosConstants.EnergyTypeId.Trilogy) {
+        if (coEnergyType !== EnergyTypeId.Trilogy) {
             return;
         }
 
         const coBasicCfg                = gameConfig.getCoBasicCfg(coId);
         this._labelTriArtDesigner.setText(coBasicCfg?.getArtDesigner() ?? ``);
         this._labelTriDataDesigner.setText(coBasicCfg?.getDataDesigner() ?? ``);
-        this._labelTriCoType.setText(LangUtils.getCoEnergyTypeName(coEnergyType) ?? LangConstants.UndefinedError);
-        this._labelTriMaxEnergy.setText(coBasicCfg == null ? `--` : `${CosUtils.getCoMaxEnergy(coBasicCfg)}`);
+        this._labelTriCoType.setText(getCoEnergyTypeName(coEnergyType) ?? UndefinedError);
+        this._labelTriMaxEnergy.setText(coBasicCfg == null ? `--` : `${getCoMaxEnergy(coBasicCfg)}`);
 
         const parameters        = coBasicCfg?.getCoEnergyRequirementParams();
         const labelTriEnergyBar = this._labelTriEnergyBar;
@@ -545,10 +552,10 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
 
         const coId                  = openData.coId;
         const gameConfig            = openData.gameConfig;
-        const skillType             = HelpersMisc.getExisted(this._listInfoType.getFirstSelectedItem()?.getOpenData()?.skillType);
+        const skillType             = getExisted(this._listInfoType.getFirstSelectedItem()?.getOpenData()?.skillType);
         const skillIdArray          = gameConfig.getCoSkillArray(coId, skillType) ?? [];
         const hasSkill              = !!skillIdArray.length;
-        this._labelSkillType.setText(LangUtils.getCoSkillTypeName(skillType) ?? LangConstants.UndefinedError);
+        this._labelSkillType.setText(getCoSkillTypeName(skillType) ?? UndefinedError);
 
         {
             const groupEnergyCost = this._groupEnergyCost;
@@ -557,12 +564,12 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
             } else {
                 const labelEnergyCost = this._labelEnergyCost;
                 const powerEnergyList = gameConfig.getCoBasicCfg(coId)?.getPowerEnergyList() ?? [];
-                if (skillType === CoSkillsConstants.SkillTypeId.Passive) {
+                if (skillType === SkillTypeId.Passive) {
                     groupEnergyCost.setIsVisible(false);
-                } else if (skillType === CoSkillsConstants.SkillTypeId.Power) {
+                } else if (skillType === SkillTypeId.Power) {
                     groupEnergyCost.setIsVisible(true);
                     labelEnergyCost.setText(`${powerEnergyList[0]}`);
-                } else if (skillType === CoSkillsConstants.SkillTypeId.SuperPower) {
+                } else if (skillType === SkillTypeId.SuperPower) {
                     groupEnergyCost.setIsVisible(true);
                     labelEnergyCost.setText(`${powerEnergyList[1]}`);
                 }
@@ -570,11 +577,11 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
         }
 
         {
-            const hasExtraDesc = LangUtils.getCoSkillDescArray({
+            const hasExtraDesc = getCoSkillDescArray({
                 coId            : coId,
                 skillType       : skillType,
                 gameConfig      : gameConfig,
-                languageType    : LangUtils.getCurrentLanguageType(),
+                languageType    : getCurrentLanguageType(),
                 isExtra         : true,
             }) != null;
             this._groupSkillDescHelp.setIsVisible(hasExtraDesc);
@@ -583,15 +590,15 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
 
         {
             const dataArrayForListSkillDesc : DataForSkillDescRenderer[] = [];
-            const descArray                 = LangUtils.getCoSkillDescArray({
+            const descArray                 = getCoSkillDescArray({
                 coId            : coId,
                 skillType       : skillType,
                 gameConfig      : gameConfig,
-                languageType    : LangUtils.getCurrentLanguageType(),
+                languageType    : getCurrentLanguageType(),
                 isExtra         : false
             });
             if (!descArray?.length) {
-                dataArrayForListSkillDesc.push({ desc: LangConstants.UndefinedError });
+                dataArrayForListSkillDesc.push({ desc: UndefinedError });
             } else {
                 for (const desc of descArray) {
                     dataArrayForListSkillDesc.push({
@@ -609,17 +616,17 @@ export class UiCoInfo extends UiComponentsUiOpenableComponent.UiOpenableComponen
     }
 }
 
-interface DataForInfoTypeRenderer extends UiTypesUiListItemData.UiListItemData {
-    infoType    : UiTypesUiCoInfoType.UiCoInfoType;
-    skillType   : CoSkillsConstants.SkillTypeId | null;
-    component   : UiInterfacesIUiCoInfo.IUiCoInfo;
+interface DataForInfoTypeRenderer extends UiListItemData {
+    infoType    : UiCoInfoType;
+    skillType   : SkillTypeId | null;
+    component   : IUiCoInfo;
     isDark      : boolean;
 }
 class InfoTypeRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForInfoTypeRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForInfoTypeRenderer>
+    extends     UiListItemRenderer<DataForInfoTypeRenderer>
+    implements  IUiListItemRenderer<DataForInfoTypeRenderer>
 {
-    private readonly _labelType!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelType!    : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -632,7 +639,7 @@ class InfoTypeRenderer
         }
 
         const labelType = this._labelType;
-        labelType.setText(getInfoTypeName(openData.infoType) ?? LangConstants.UndefinedError);
+        labelType.setText(getInfoTypeName(openData.infoType) ?? UndefinedError);
         labelType.setAlpha(openData.isDark ? 0.25 : 1);
     }
 
@@ -644,37 +651,37 @@ class InfoTypeRenderer
     }
 }
 
-interface DataForSkillDescRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForSkillDescRenderer extends UiListItemData {
     // skillId         : number;
     // configVersion   : string;
     desc            : string;
 }
-class SkillDescRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForSkillDescRenderer> {
-    private readonly _labelDesc!    : UiInterfacesIUiLabel.IUiLabel;
+class SkillDescRenderer extends UiListItemRenderer<DataForSkillDescRenderer> {
+    private readonly _labelDesc!    : IUiLabel;
 
     protected override _doApplyOpenData(): void {
         const label = this._labelDesc;
-        label.setText(`- ${this.getOpenData()?.desc || LangConstants.UndefinedError}`);
+        label.setText(`- ${this.getOpenData()?.desc || UndefinedError}`);
 
         this.setUnscaledManualHeight(label.getScaledHeight());
     }
 }
 
-function getInfoTypeName(infoType: UiTypesUiCoInfoType.UiCoInfoType): string | null {
+function getInfoTypeName(infoType: UiCoInfoType): string | null {
     switch (infoType) {
-        case UiTypesUiCoInfoType.UiCoInfoType.Basic         : return `INFO`;
-        case UiTypesUiCoInfoType.UiCoInfoType.Passive       : return LangUtils.getText(LangConstants.TextType.B0576);
-        case UiTypesUiCoInfoType.UiCoInfoType.Power         : return LangUtils.getText(LangConstants.TextType.B0577);
-        case UiTypesUiCoInfoType.UiCoInfoType.SuperPower    : return LangUtils.getText(LangConstants.TextType.B0578);
+        case UiCoInfoType.Basic         : return `INFO`;
+        case UiCoInfoType.Passive       : return getText(TextType.B0576);
+        case UiCoInfoType.Power         : return getText(TextType.B0577);
+        case UiCoInfoType.SuperPower    : return getText(TextType.B0578);
         default                                 : return null;
     }
 }
 
-function setTextAndArrange(label: UiInterfacesIUiLabel.IUiLabel, langTextType: LangConstants.TextType): void {
+function setTextAndArrange(label: IUiLabel, langTextType: TextType): void {
     label.setLangText(langTextType);
 
     const parent        = label.getParent();
-    const layoutClass   = UiUtilsUiFactory.getUiLayoutClass();
+    const layoutClass   = getUiLayoutClass();
     if (parent instanceof layoutClass) {
         parent.arrangeItems();
 

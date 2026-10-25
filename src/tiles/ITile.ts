@@ -1,28 +1,32 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import type * as LangConstants from "../lang/Constants.ts";
-import type * as PlayersIPlayer from "../players/IPlayer.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfTileEnabledForUnitProduction from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
-import type * as ProtoSchemaCommonProtoConfigTileTemplateCfg from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type * as ProtoSchemaCommonProtoStructureTileBuff from "../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialTile from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData from "../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomCannonData from "../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData from "../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData from "../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
-import type * as TilesITileView from "./ITileView.ts";
-import type * as UnitsIUnit from "../units/IUnit.ts";
-import type * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
+import type { LanguageType } from "../lang/Constants.ts";
+import type { IPlayer as PlayersIPlayer } from "../players/IPlayer.ts";
+import type {
+    SelfTileEnabledForUnitProduction,
+} from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import type { TileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
+import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type {
+    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
+} from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { TileCustomBuildingData } from "../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import type { TileCustomCannonData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
+import type { TileCustomCrystalData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
+import type { TileCustomLaserTurretData } from "../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
+import type { ITileView } from "./ITileView.ts";
+import type { IUnit as UnitsIUnit } from "../units/IUnit.ts";
+import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile.SerialTile;
-type TileBuff               = ProtoSchemaCommonProtoStructureTileBuff.TileBuff;
-type GameConfiguration      = GameConfigGcData.GcData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type IPlayer                = PlayersIPlayer.IPlayer;
-type IUnit                  = UnitsIUnit.IUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
+type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
+type TileBuff               = ProtoSchemaCommonProtoStructureTileBuff;
+type GameConfiguration      = GcData;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type IPlayer                = PlayersIPlayer;
+type IUnit                  = UnitsIUnit;
+type IBwWar                 = BaseWarInterfaceIBwWar;
 
 export interface ITile {
     init(data: SerialTile, gameConfig: GameConfiguration): void;
@@ -31,7 +35,7 @@ export interface ITile {
     startRunning(war: IBwWar): void;
     startRunningView(): void;
 
-    getErrorCodeForTileData(data: SerialTile, playersCountUnneutral: number, gameConfig: GameConfiguration): UtilsClientErrorCode.ClientErrorCode;
+    getErrorCodeForTileData(data: SerialTile, playersCountUnneutral: number, gameConfig: GameConfiguration): ClientErrorCode;
     deserialize(data: SerialTile, gameConfig: GameConfiguration): void;
     serialize(): SerialTile;
     serializeForCreateSfw(): SerialTile;
@@ -42,14 +46,14 @@ export interface ITile {
 
     getGameConfig(): GameConfiguration;
 
-    getTemplateCfg(): ProtoSchemaCommonProtoConfigTileTemplateCfg.TileTemplateCfg;
+    getTemplateCfg(): TileTemplateCfg;
 
     updateOnUnitLeave(): void;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////
-    getView(): TilesITileView.ITileView;
+    getView(): ITileView;
     flushDataToView(): void;
 
     setBaseType(baseType: number): void;
@@ -153,7 +157,7 @@ export interface ITile {
 
     getGridY(): number;
 
-    getGridIndex(): AuxiliaryTypesGridIndex.GridIndex;
+    getGridIndex(): GridIndex;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for type.
@@ -205,7 +209,7 @@ export interface ITile {
     checkCanRepairOrSupplyUnitType(unitType: number): boolean;
     getRepairUnitTypeArray(): Undefinable<number[]>;
 
-    getRepairHpAndCostForUnit(unit: IUnit): Undefinable<AuxiliaryTypesAuxiliaryTypes.RepairHpAndCost>;
+    getRepairHpAndCostForUnit(unit: IUnit): Undefinable<RepairHpAndCost>;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for hide unit.
@@ -217,7 +221,7 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for produce unit.
     ////////////////////////////////////////////////////////////////////////////////
-    getEffectiveSelfUnitProductionSkillCfg(playerIndex: number): Undefinable<ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfTileEnabledForUnitProduction.SelfTileEnabledForUnitProduction>;
+    getEffectiveSelfUnitProductionSkillCfg(playerIndex: number): Undefinable<SelfTileEnabledForUnitProduction>;
 
     /** 把co技能，事件，规则，buff全都考虑了进去 */
     checkIsUnitProducerForPlayer(playerIndex: number): boolean;
@@ -253,20 +257,20 @@ export interface ITile {
     getCustomNameId(): Undefinable<number>;
     setCustomNameId(nameId: Undefinable<number>): void;
 
-    getCustomName(languageType?: LangConstants.LanguageType): AuxiliaryTypesAuxiliaryTypes.Undefinable<string>;
+    getCustomName(languageType?: LanguageType): AuxiliaryTypesAuxiliaryTypesUndefinable<string>;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for map weapon.
     ////////////////////////////////////////////////////////////////////////////////
-    getMapWeaponType(): AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    getMapWeaponType(): AuxiliaryTypesAuxiliaryTypesUndefinable<number>;
     checkIsMapWeapon(): boolean;
     checkIsCustomMapWeapon(): boolean;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for crystal data.
     ////////////////////////////////////////////////////////////////////////////////
-    getFinalCrystalData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData>;
-    getCustomCrystalData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData>;
+    getFinalCrystalData(): Undefinable<TileCustomCrystalData>;
+    getCustomCrystalData(): Undefinable<TileCustomCrystalData>;
 
     checkIsNormalCrystal(): boolean;
     setCustomCrystalRadius(radius: number): void;
@@ -284,8 +288,8 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for cannon data.
     ////////////////////////////////////////////////////////////////////////////////
-    getFinalCannonData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData>;
-    getCustomCannonData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData>;
+    getFinalCannonData(): Undefinable<TileCustomCannonData>;
+    getCustomCannonData(): Undefinable<TileCustomCannonData>;
 
     checkIsNormalCannon(): boolean;
 
@@ -309,8 +313,8 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for cannon data.
     ////////////////////////////////////////////////////////////////////////////////
-    getFinalLaserTurretData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData>;
-    getCustomLaserTurretData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData>;
+    getFinalLaserTurretData(): Undefinable<TileCustomLaserTurretData>;
+    getCustomLaserTurretData(): Undefinable<TileCustomLaserTurretData>;
 
     checkIsNormalLaserTurret(): boolean;
 
@@ -333,8 +337,8 @@ export interface ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for custom building data.
     ////////////////////////////////////////////////////////////////////////////////
-    setCustomBuildingData(data: Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData>): void;
-    getCustomBuildingData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData>;
+    setCustomBuildingData(data: Undefinable<TileCustomBuildingData>): void;
+    getCustomBuildingData(): Undefinable<TileCustomBuildingData>;
 
     getIsCustomizableBuilding(): boolean;
 

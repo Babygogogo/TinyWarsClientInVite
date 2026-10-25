@@ -1,15 +1,17 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoStructureValueArrayAndPredicate from "../proto/schema/CommonProto/Structure/ValueArrayAndPredicate.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { TextType, UndefinedError } from "../lang/Constants.ts";
+import { getFormattedText } from "../lang/Utils.ts";
+import type {
+    ValueArrayAndPredicate as ProtoSchemaCommonProtoStructureValueArrayAndPredicate,
+} from "../proto/schema/CommonProto/Structure/ValueArrayAndPredicate.ts";
 
-type ValueArrayAndPredicate = ProtoSchemaCommonProtoStructureValueArrayAndPredicate.ValueArrayAndPredicate;
+type ValueArrayAndPredicate = ProtoSchemaCommonProtoStructureValueArrayAndPredicate;
 
-export function getDesc(data: ValueArrayAndPredicate, valueName: string, getValueText: (v: number) => AuxiliaryTypesAuxiliaryTypes.Undefinable<string>): string {
-    return LangUtils.getFormattedText(
-        data.getIsOneOf() ? LangConstants.TextType.F0228 : LangConstants.TextType.F0229,
+export function getDesc(data: ValueArrayAndPredicate, valueName: string, getValueText: (v: number) => Undefinable<string>): string {
+    return getFormattedText(
+        data.getIsOneOf() ? TextType.F0228 : TextType.F0229,
         valueName,
-        data.getValueArray()?.map(v => getValueText(v)).join(`, `) ?? LangConstants.UndefinedError
+        data.getValueArray()?.map(v => getValueText(v)).join(`, `) ?? UndefinedError
     );
 }
 

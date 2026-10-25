@@ -1,31 +1,47 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesMapSize from "../../../auxiliaryTypes/MapSize.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NumbersConstants from "../../../numbers/Constants.ts";
-import type * as PlayersIPlayer from "../../../players/IPlayer.ts";
-import * as PlayersUtilsFilter from "../../../players/utils/Filter.ts";
-import type * as ProtoSchemaCommonProtoStructurePlayerFilter from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type * as ProtoSchemaCommonProtoStructureUnitBuff from "../../../proto/schema/CommonProto/Structure/UnitBuff.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaDeleteUnitBuffSimple from "../../../proto/schema/CommonProto/WarEvent/WeaDeleteUnitBuffSimple.ts";
-import * as TilesUtilsFilter from "../../../tiles/utils/Filter.ts";
-import * as UnitBuffsUtilsFilter from "../../../unitBuffs/utils/Filter.ts";
-import type * as UnitsIUnit from "../../../units/IUnit.ts";
-import * as UnitsUtilsFilter from "../../../units/utils/Filter.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getFormattedText, getText } from "../../../lang/Utils.ts";
+import { MaxInt32 } from "../../../numbers/Constants.ts";
+import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
+import type {
+    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
+} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { UnitBuff as ProtoSchemaCommonProtoStructureUnitBuff } from "../../../proto/schema/CommonProto/Structure/UnitBuff.ts";
+import type {
+    WeaDeleteUnitBuffSimple as ProtoSchemaCommonProtoWarEventWeaDeleteUnitBuffSimple,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaDeleteUnitBuffSimple.ts";
+import {
+    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
+    checkIsValid as TilesUtilsFilterCheckIsValid,
+    checkIsMeet as TilesUtilsFilterCheckIsMeet,
+} from "../../../tiles/utils/Filter.ts";
+import {
+    getDescForEmbed as UnitBuffsUtilsFilterGetDescForEmbed,
+    checkIsValid as UnitBuffsUtilsFilterCheckIsValid,
+    checkIsMeet as UnitBuffsUtilsFilterCheckIsMeet,
+} from "../../../unitBuffs/utils/Filter.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
+import {
+    getDescForEmbed as UnitsUtilsFilterGetDescForEmbed,
+    checkIsValid as UnitsUtilsFilterCheckIsValid,
+    checkIsMeet as UnitsUtilsFilterCheckIsMeet,
+} from "../../../units/utils/Filter.ts";
 
-type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type PlayerFilter               = ProtoSchemaCommonProtoStructurePlayerFilter.PlayerFilter;
-type UnitBuff                   = ProtoSchemaCommonProtoStructureUnitBuff.UnitBuff;
-type WeaDeleteUnitBuffSimple    = ProtoSchemaCommonProtoWarEventWeaDeleteUnitBuffSimple.WeaDeleteUnitBuffSimple;
-type IPlayer                    = PlayersIPlayer.IPlayer;
+type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type PlayerFilter               = ProtoSchemaCommonProtoStructurePlayerFilter;
+type UnitBuff                   = ProtoSchemaCommonProtoStructureUnitBuff;
+type WeaDeleteUnitBuffSimple    = ProtoSchemaCommonProtoWarEventWeaDeleteUnitBuffSimple;
+type IPlayer                    = PlayersIPlayer;
 
 export function checkIsValid(
     data                    : Undefinable<WeaDeleteUnitBuffSimple>,
-    mapSize                 : AuxiliaryTypesMapSize.MapSize,
+    mapSize                 : MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GameConfigGcData.GcData
+    gcData                  : GcData
 ): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gcData) == null);
 }
@@ -35,9 +51,9 @@ export function getBriefDesc(data: Undefinable<WeaDeleteUnitBuffSimple>): string
         return null;
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0262,
-        LangUtils.getText(LangConstants.TextType.B1468),
+    return getFormattedText(
+        TextType.F0262,
+        getText(TextType.B1468),
     );
 }
 export function getDetailDesc(data: Undefinable<WeaDeleteUnitBuffSimple>): string | null {
@@ -50,82 +66,82 @@ export function getDetailDesc(data: Undefinable<WeaDeleteUnitBuffSimple>): strin
         {
             const filter = data.getConUnitBuffFilter();
             if (filter != null) {
-                conTextArray.push(`- ${UnitBuffsUtilsFilter.getDescForEmbed(filter)}`);
+                conTextArray.push(`- ${UnitBuffsUtilsFilterGetDescForEmbed(filter)}`);
             }
         }
         {
             const filter = data.getConUnitFilter();
             if (filter != null) {
-                conTextArray.push(`- ${UnitsUtilsFilter.getDescForEmbed(filter)}`);
+                conTextArray.push(`- ${UnitsUtilsFilterGetDescForEmbed(filter)}`);
             }
         }
         {
             const filter = data.getConTileFilter();
             if (filter != null) {
-                conTextArray.push(`- (${LangUtils.getText(LangConstants.TextType.B1423)}) ${TilesUtilsFilter.getDescForEmbed(filter)}`);
+                conTextArray.push(`- (${getText(TextType.B1423)}) ${TilesUtilsFilterGetDescForEmbed(filter)}`);
             }
         }
         {
             const filter = data.getConPlayerFilter();
             if (filter != null) {
-                conTextArray.push(`- (${LangUtils.getText(LangConstants.TextType.B1422)}) ${PlayersUtilsFilter.getDescForEmbed(filter)}`);
+                conTextArray.push(`- (${getText(TextType.B1422)}) ${getDescForEmbed(filter)}`);
             }
         }
 
         if (!conTextArray.length) {
-            conTextArray.push(`- ${LangUtils.getText(LangConstants.TextType.A0944)}`);
+            conTextArray.push(`- ${getText(TextType.A0944)}`);
         }
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0263,
-        LangUtils.getText(LangConstants.TextType.B1468),
+    return getFormattedText(
+        TextType.F0263,
+        getText(TextType.B1468),
         conTextArray.join(`\n`),
     );
 }
 
 export function getErrorTip(
     data                    : WeaDeleteUnitBuffSimple,
-    mapSize                 : AuxiliaryTypesMapSize.MapSize,
+    mapSize                 : MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GameConfigGcData.GcData
+    gcData                  : GcData
 ): string | null {
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                            &&
-            (!PlayersUtilsFilter.checkIsValid(filter, playersCountUnneutral, gcData))
+            (!PlayersUtilsFilterCheckIsValid(filter, playersCountUnneutral, gcData))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.PlayerFilter));
+            return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
         }
     }
     {
         const filter = data.getConUnitFilter();
         if ((filter != null) &&
-            (!UnitsUtilsFilter.checkIsValid(filter, playersCountUnneutral, mapSize, gcData))
+            (!UnitsUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gcData))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitFilter));
+            return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
         }
     }
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                    &&
-            (!TilesUtilsFilter.checkIsValid(filter, playersCountUnneutral, mapSize, gcData))
+            (!TilesUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gcData))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.TileFilter));
+            return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
         }
     }
     {
         const filter = data.getConUnitBuffFilter();
         if ((filter != null)                                &&
-            (!UnitBuffsUtilsFilter.checkIsValid(filter))
+            (!UnitBuffsUtilsFilterCheckIsValid(filter))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B1235));
+            return getFormattedText(TextType.F0091, getText(TextType.B1235));
         }
     }
     {
         const con = data.getConMaxDeleteCount();
         if ((con != null) && (con <= 0)) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B1457));
+            return getFormattedText(TextType.F0091, getText(TextType.B1457));
         }
     }
 
@@ -137,19 +153,19 @@ export async function applyWithExtraData(_action: WeaDeleteUnitBuffSimple): Prom
     // nothing to do
 }
 
-export async function applyWithoutExtraData(action: WeaDeleteUnitBuffSimple, isFastExecute: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
-    const targetUnitDict = new Map<UnitsIUnit.IUnit, UnitBuff[]>();
+export async function applyWithoutExtraData(action: WeaDeleteUnitBuffSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
+    const targetUnitDict = new Map<IUnit, UnitBuff[]>();
     {
         const tileMap               = war.getTileMap();
         const conTileFilter         = action.getConTileFilter();
         const conUnitFilter         = action.getConUnitFilter();
         const conPlayerFilter       = action.getConPlayerFilter();
         const conUnitBuffFilter     = action.getConUnitBuffFilter();
-        const conMaxDeleteCount     = action.getConMaxDeleteCount() ?? NumbersConstants.MaxInt32;
+        const conMaxDeleteCount     = action.getConMaxDeleteCount() ?? MaxInt32;
         const playerFilterDict      = new Map<IPlayer, boolean>();
         for (const unit of war.getUnitMap().getAllUnits()) {
             if ((conUnitFilter != null) &&
-                (!UnitsUtilsFilter.checkIsMeet(conUnitFilter, unit))
+                (!UnitsUtilsFilterCheckIsMeet(conUnitFilter, unit))
             ) {
                 continue;
             }
@@ -162,7 +178,7 @@ export async function applyWithoutExtraData(action: WeaDeleteUnitBuffSimple, isF
             }
 
             if ((conTileFilter != null)                                                                 &&
-                (!TilesUtilsFilter.checkIsMeet(conTileFilter, tileMap.getTile(unit.getGridIndex())))
+                (!TilesUtilsFilterCheckIsMeet(conTileFilter, tileMap.getTile(unit.getGridIndex())))
             ) {
                 continue;
             }
@@ -182,7 +198,7 @@ export async function applyWithoutExtraData(action: WeaDeleteUnitBuffSimple, isF
                 }
 
                 if ((conUnitBuffFilter != null)                                             &&
-                    (!UnitBuffsUtilsFilter.checkIsMeet(conUnitBuffFilter, oldBuff, war))
+                    (!UnitBuffsUtilsFilterCheckIsMeet(conUnitBuffFilter, oldBuff, war))
                 ) {
                     newBuffList.push(oldBuff);
                 } else {
@@ -213,7 +229,7 @@ export async function applyWithoutExtraData(action: WeaDeleteUnitBuffSimple, isF
 
 function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, PlayersUtilsFilter.checkIsMeet(filter, player));
+        resultDict.set(player, checkIsMeet(filter, player));
     }
     return !!resultDict.get(player);
 }

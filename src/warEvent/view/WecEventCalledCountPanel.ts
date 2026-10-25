@@ -1,68 +1,72 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersText from "../../helpers/Text.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventCondition from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarEventWecEventCalledCount from "../../proto/schema/CommonProto/WarEvent/WecEventCalledCount.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as ValueAndComparatorsUtils from "../../valueAndComparators/Utils.ts";
-import * as WarEventsConditionsUtilsCommon from "../../warEvents/conditions/utils/Common.ts";
-import * as WarEventsConstants from "../../warEvents/Constants.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { getNonNullElements } from "../../helpers/Collection.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getTruncatedText } from "../../helpers/Text.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getFormattedText, getText, getLanguageText, getComparatorName } from "../../lang/Utils.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type {
+    WarEventCondition as ProtoSchemaCommonProtoWarEventWarEventCondition,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import type {
+    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WecEventCalledCount } from "../../proto/schema/CommonProto/WarEvent/WecEventCalledCount.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { getNextComparatorId } from "../../valueAndComparators/Utils.ts";
+import { getErrorTipForCondition, getDetailedDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
+import { Event } from "../../warEvents/Constants.ts";
 
-type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
-type WarEventCondition          = ProtoSchemaCommonProtoWarEventWarEventCondition.WarEventCondition;
+type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData;
+type WarEventCondition          = ProtoSchemaCommonProtoWarEventWarEventCondition;
 
 export interface OpenData {
-    war         : BaseWarInterfaceIBwWar.IBwWar;
+    war         : IBwWar;
     fullData    : WarEventFullData;
     condition   : WarEventCondition;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnType!                          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                          : IUiImage;
+    private readonly _group!                            : IUiContainer;
+    private readonly _labelTitle!                       : IUiLabel;
+    private readonly _btnType!                          : IUiButton;
+    private readonly _btnClose!                         : IUiButton;
 
-    private readonly _groupDesc!                        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelDesc!                        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelError!                       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDesc!                        : IUiLayout;
+    private readonly _labelDesc!                        : IUiLabel;
+    private readonly _labelError!                       : IUiLabel;
 
-    private readonly _btnEventId!                       : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelEventId!                     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnEventId!                       : IUiButton;
+    private readonly _labelEventId!                     : IUiLabel;
 
-    private readonly _btnTimesInTurn!                   : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTimesInTurn!                 : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnTimesInTurnComparator!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTimesInTurnComparator!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnTimesInTurn!                   : IUiButton;
+    private readonly _labelTimesInTurn!                 : IUiLabel;
+    private readonly _btnTimesInTurnComparator!         : IUiButton;
+    private readonly _labelTimesInTurnComparator!       : IUiLabel;
 
-    private readonly _btnTimesTotal!                    : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTimesTotal!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnTimesTotalComparator!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTimesTotalComparator!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnTimesTotal!                    : IUiButton;
+    private readonly _labelTimesTotal!                  : IUiLabel;
+    private readonly _btnTimesTotalComparator!          : IUiButton;
+    private readonly _labelTimesTotalComparator!        : IUiLabel;
 
-    private readonly _btnEventsCount!                   : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelEventsCount!                 : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnEventsCountComparator!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelEventsCountComparator!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnEventsCount!                   : IUiButton;
+    private readonly _labelEventsCount!                 : IUiLabel;
+    private readonly _btnEventsCountComparator!         : IUiButton;
+    private readonly _labelEventsCountComparator!       : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                       callback: this.closePanel },
@@ -96,7 +100,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeConditionTypeListPanel, {
+        openPanel(getDict().WeConditionTypeListPanel, {
             fullData    : openData.fullData,
             condition   : openData.condition,
             war         : openData.war,
@@ -109,76 +113,76 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const condition = this._getCondition();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiNumberPanel, {
+        openPanel(getDict().CommonChooseMultiNumberPanel, {
             currentNumberArray          : condition.getEventIdArray(),
-            availableNumberArray        : HelpersCollection.getNonNullElements(fullData.getEventArray()?.map(v => v.getEventId()) ?? []),
+            availableNumberArray        : getNonNullElements(fullData.getEventArray()?.map(v => v.getEventId()) ?? []),
             showNumber                  : true,
-            getTitleText                : () => LangUtils.getFormattedText(LangConstants.TextType.F0092, LangUtils.getText(LangConstants.TextType.B0461)),
-            getNumberMainText           : warEventId => HelpersText.getTruncatedText(
-                LangUtils.getLanguageText({
+            getTitleText                : () => getFormattedText(TextType.F0092, getText(TextType.B0461)),
+            getNumberMainText           : warEventId => getTruncatedText(
+                getLanguageText({
                     textArray: fullData.getEventArray()?.find(v => v.getEventId() === warEventId)?.getEventNameArray()
-                }) ?? LangConstants.UndefinedError,
+                }) ?? UndefinedError,
                 15
             ),
             callbackOnConfirm           : eventIdArray => {
                 condition.setEventIdArray(eventIdArray);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
     private _onTouchedBtnTimesInTurn(): void {
         const condition = this._getCondition();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.B0790),
+        openPanel(getDict().CommonInputNullableIntegerPanel, {
+            getTitle        : () => getText(TextType.B0790),
             minValue        : 0,
-            maxValue        : WarEventsConstants.Event.MaxCallCountInPlayerTurn,
+            maxValue        : Event.MaxCallCountInPlayerTurn,
             currentValue    : condition.getTimesInTurn(),
             callback        : value => {
                 condition.setTimesInTurn(value);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
     private _onTouchedBtnTimesInTurnComparator(): void {
         const condition = this._getCondition();
-        condition.setTimesInTurnComparator(ValueAndComparatorsUtils.getNextComparatorId(condition.getTimesInTurnComparator()));
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+        condition.setTimesInTurnComparator(getNextComparatorId(condition.getTimesInTurnComparator()));
+        dispatch(TypeId.WarEventFullDataChanged);
     }
     private _onTouchedBtnTimesTotal(): void {
         const condition = this._getCondition();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.B0791),
+        openPanel(getDict().CommonInputNullableIntegerPanel, {
+            getTitle        : () => getText(TextType.B0791),
             minValue        : 0,
-            maxValue        : WarEventsConstants.Event.MaxCallCountTotal,
+            maxValue        : Event.MaxCallCountTotal,
             currentValue    : condition.getTimesTotal(),
             callback        : value => {
                 condition.setTimesTotal(value);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
     private _onTouchedBtnTimesTotalComparator(): void {
         const condition = this._getCondition();
-        condition.setTimesTotalComparator(ValueAndComparatorsUtils.getNextComparatorId(condition.getTimesTotalComparator()));
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+        condition.setTimesTotalComparator(getNextComparatorId(condition.getTimesTotalComparator()));
+        dispatch(TypeId.WarEventFullDataChanged);
     }
     private _onTouchedBtnEventsCount(): void {
         const condition = this._getCondition();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.B0788),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.B0788),
             minValue        : 0,
-            maxValue        : WarEventsConstants.Event.MaxEventsPerMap,
+            maxValue        : Event.MaxEventsPerMap,
             currentValue    : condition.getEventsCount() ?? 0,
             callback        : value => {
                 condition.setEventsCount(value);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
     private _onTouchedBtnEventsCountComparator(): void {
         const condition = this._getCondition();
-        condition.setEventsCountComparator(ValueAndComparatorsUtils.getNextComparatorId(condition.getEventsCountComparator()));
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+        condition.setEventsCountComparator(getNextComparatorId(condition.getEventsCountComparator()));
+        dispatch(TypeId.WarEventFullDataChanged);
     }
 
     private _updateView(): void {
@@ -195,16 +199,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
-        this._btnClose.setLangText(LangConstants.TextType.B0146);
-        this._btnType.setLangText(LangConstants.TextType.B0516);
-        this._btnEventId.setLangText(LangConstants.TextType.B0462);
-        this._btnTimesInTurn.setLangText(LangConstants.TextType.B0790);
-        this._btnTimesInTurnComparator.setLangText(LangConstants.TextType.Comparator);
-        this._btnTimesTotal.setLangText(LangConstants.TextType.B0791);
-        this._btnTimesTotalComparator.setLangText(LangConstants.TextType.Comparator);
-        this._btnEventsCount.setLangText(LangConstants.TextType.B0788);
-        this._btnEventsCountComparator.setLangText(LangConstants.TextType.Comparator);
+        this._labelTitle.setText(`${getText(TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
+        this._btnClose.setLangText(TextType.B0146);
+        this._btnType.setLangText(TextType.B0516);
+        this._btnEventId.setLangText(TextType.B0462);
+        this._btnTimesInTurn.setLangText(TextType.B0790);
+        this._btnTimesInTurnComparator.setLangText(TextType.Comparator);
+        this._btnTimesTotal.setLangText(TextType.B0791);
+        this._btnTimesTotalComparator.setLangText(TextType.Comparator);
+        this._btnEventsCount.setLangText(TextType.B0788);
+        this._btnEventsCountComparator.setLangText(TextType.Comparator);
 
         this._updateLabelDescAndLabelError();
     }
@@ -216,43 +220,43 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
         const condition     = openData.condition;
         const war           = openData.war;
-        const errorTip      = WarEventsConditionsUtilsCommon.getErrorTipForCondition(openData.fullData, condition, war);
+        const errorTip      = getErrorTipForCondition(openData.fullData, condition, war);
         const labelError    = this._labelError;
-        labelError.setText(errorTip || LangUtils.getText(LangConstants.TextType.B0493));
-        labelError.setTextColor(errorTip ? GraphicsConstants.ColorValue.Red : GraphicsConstants.ColorValue.Green);
-        this._labelDesc.setText(WarEventsConditionsUtilsCommon.getDetailedDescForCondition(condition, war.getGcData()) || LangConstants.UndefinedError);
+        labelError.setText(errorTip || getText(TextType.B0493));
+        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
+        this._labelDesc.setText(getDetailedDescForCondition(condition, war.getGcData()) || UndefinedError);
         this._groupDesc.arrangeItems();
     }
     private _updateLabelEventId(): void {
         const eventIdArray = this._getCondition().getEventIdArray();
-        this._labelEventId.setText(eventIdArray?.length ? eventIdArray.map(v => `${v}`).join(`, `) : LangUtils.getText(LangConstants.TextType.B0776));
+        this._labelEventId.setText(eventIdArray?.length ? eventIdArray.map(v => `${v}`).join(`, `) : getText(TextType.B0776));
     }
     private _updateInputTimesInTurn(): void {
         const timesInTurn = this._getCondition().getTimesInTurn();
         this._labelTimesInTurn.setText(timesInTurn == null ? `` : `${timesInTurn}`);
     }
     private _updateLabelTimesInTurnComparator(): void {
-        const comparator = HelpersMisc.getExisted(this._getCondition().getTimesInTurnComparator());
-        this._labelTimesInTurnComparator.setText(LangUtils.getComparatorName(comparator) ?? LangConstants.UndefinedError);
+        const comparator = getExisted(this._getCondition().getTimesInTurnComparator());
+        this._labelTimesInTurnComparator.setText(getComparatorName(comparator) ?? UndefinedError);
     }
     private _updateInputTimesTotal(): void {
         const timesTotal = this._getCondition().getTimesTotal();
         this._labelTimesTotal.setText(timesTotal == null ? `` : `${timesTotal}`);
     }
     private _updateLabelTimesTotalComparator(): void {
-        const comparator = HelpersMisc.getExisted(this._getCondition().getTimesTotalComparator());
-        this._labelTimesTotalComparator.setText(LangUtils.getComparatorName(comparator) ?? LangConstants.UndefinedError);
+        const comparator = getExisted(this._getCondition().getTimesTotalComparator());
+        this._labelTimesTotalComparator.setText(getComparatorName(comparator) ?? UndefinedError);
     }
     private _updateInputEventsCount(): void {
         const eventsCount = this._getCondition().getEventsCount();
         this._labelEventsCount.setText(eventsCount == null ? `` : `${eventsCount}`);
     }
     private _updateEventsCountComparator(): void {
-        const comparator = HelpersMisc.getExisted(this._getCondition().getEventsCountComparator());
-        this._labelEventsCountComparator.setText(LangUtils.getComparatorName(comparator) ?? LangConstants.UndefinedError);
+        const comparator = getExisted(this._getCondition().getEventsCountComparator());
+        this._labelEventsCountComparator.setText(getComparatorName(comparator) ?? UndefinedError);
     }
 
-    private _getCondition(): ProtoSchemaCommonProtoWarEventWecEventCalledCount.WecEventCalledCount {
-        return HelpersMisc.getExisted(this.getOpenData()?.condition.getWecEventCalledCount());
+    private _getCondition(): WecEventCalledCount {
+        return getExisted(this.getOpenData()?.condition.getWecEventCalledCount());
     }
 }

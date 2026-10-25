@@ -1,54 +1,80 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesCachedDataAccessor from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import type * as AuxiliaryTypesMapFilter from "../../auxiliaryTypes/MapFilter.ts";
-import * as GameConfigGcMap from "../../gameConfig/GcMap.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocalDataStorage2 from "../../localData/Storage.ts";
-import * as NormalMapModelNormalMapProxy from "./NormalMapProxy.ts";
-import type * as ProtoSchemaCommonProtoMapMapEditorData from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
-import type * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type * as ProtoSchemaCommonProtoMapMapTag from "../../proto/schema/CommonProto/Map/MapTag.ts";
-import * as ProtoSchemaCommonProtoMapNormalMapBriefData from "../../proto/schema/CommonProto/Map/NormalMapBriefData.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMapGetRawDataS from "../../proto/schema/CommonProto/NetMessage/MsgMapGetRawData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmAddWarRuleS from "../../proto/schema/CommonProto/NetMessage/MsgMmAddWarRule/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmDeleteWarRuleS from "../../proto/schema/CommonProto/NetMessage/MsgMmDeleteWarRule/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapName/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagIdFlagsS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapTagIdFlags/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleAvailability/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleFixedTileTheme/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleName/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetAllEnabledBriefDataVersionsS from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetAllEnabledBriefDataVersions/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataArrayS from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataVersion/S.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
+import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
+import { SortType } from "../../gameConfig/GcMap.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getLanguageText } from "../../lang/Utils.ts";
+import { StoreNormalMapBriefData, StoreNormalMapRawData } from "../../localData/Storage.ts";
+import {
+    reqMapGetMapTag,
+    reqMmGetReviewingMaps,
+    reqNormalMapGetAllEnabledBriefDataVersions,
+    reqNormalMapGetBriefDataVersion,
+    reqNormalMapGetBriefData,
+    reqGetMapRawData,
+    reqNormalMapGetBriefDataArray,
+} from "./NormalMapProxy.ts";
+import type { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { MapTag } from "../../proto/schema/CommonProto/Map/MapTag.ts";
+import { NormalMapBriefData } from "../../proto/schema/CommonProto/Map/NormalMapBriefData.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMapGetRawData/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMmAddWarRuleS } from "../../proto/schema/CommonProto/NetMessage/MsgMmAddWarRule/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmDeleteWarRuleS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmDeleteWarRule/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapName/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagIdFlagsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapTagIdFlags/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleAvailability/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleFixedTileTheme/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleName/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetAllEnabledBriefDataVersionsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetAllEnabledBriefDataVersions/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefData/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataVersion/S.ts";
+import { getMapRating, getIsSelfMapCommittee } from "../../users/Model.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-const _mapTagAccessor   = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<null, ProtoSchemaCommonProtoMapMapTag.MapTag>({
-    reqData : () => NormalMapModelNormalMapProxy.reqMapGetMapTag(),
+const _mapTagAccessor   = new CachedDataAccessor<null, MapTag>({
+    reqData : () => reqMapGetMapTag(),
 });
-const _reviewingMapsAccessor = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<null, ProtoSchemaCommonProtoMapMapEditorData.MapEditorData[]>({
-    reqData         : () => NormalMapModelNormalMapProxy.reqMmGetReviewingMaps(),
+const _reviewingMapsAccessor = new CachedDataAccessor<null, MapEditorData[]>({
+    reqData         : () => reqMmGetReviewingMaps(),
     dataExpireTime  : 60,
 });
-const _enabledNormalMapIdSetAccessor = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<null, Set<number>>({
-    reqData : () => NormalMapModelNormalMapProxy.reqNormalMapGetAllEnabledBriefDataVersions(),
+const _enabledNormalMapIdSetAccessor = new CachedDataAccessor<null, Set<number>>({
+    reqData : () => reqNormalMapGetAllEnabledBriefDataVersions(),
 });
-const _briefDataVersionAccessor = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, number>({
-    reqData : (normalMapId: number) => NormalMapModelNormalMapProxy.reqNormalMapGetBriefDataVersion(normalMapId),
+const _briefDataVersionAccessor = new CachedDataAccessor<number, number>({
+    reqData : (normalMapId: number) => reqNormalMapGetBriefDataVersion(normalMapId),
 });
 /** 只用于保证收到过消息 */
-const _briefDataArrayAccessor = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<null, boolean>({
+const _briefDataArrayAccessor = new CachedDataAccessor<null, boolean>({
     reqData : () => { /** nothing to do */ },
 });
-const _briefDataAccessor = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, ProtoSchemaCommonProtoMapNormalMapBriefData.NormalMapBriefData>({
-    reqData : (normalMapId: number) => NormalMapModelNormalMapProxy.reqNormalMapGetBriefData(normalMapId),
+const _briefDataAccessor = new CachedDataAccessor<number, NormalMapBriefData>({
+    reqData : (normalMapId: number) => reqNormalMapGetBriefData(normalMapId),
 });
-const _rawDataAccessor = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, ProtoSchemaCommonProtoMapMapRawData.MapRawData>({
-    reqData : (normalMapId: number) => NormalMapModelNormalMapProxy.reqGetMapRawData(normalMapId),
+const _rawDataAccessor = new CachedDataAccessor<number, MapRawData>({
+    reqData : (normalMapId: number) => reqGetMapRawData(normalMapId),
 });
 
 export function init(): void {
@@ -56,7 +82,7 @@ export function init(): void {
 }
 
 export async function getEnabledNormalMapIdSet(): Promise<Set<number>> {
-    return HelpersMisc.getExisted(await _enabledNormalMapIdSetAccessor.getData(null));
+    return getExisted(await _enabledNormalMapIdSetAccessor.getData(null));
 }
 export async function getNormalMapIdArrayForRankedMatch(hasFog: boolean): Promise<number[]> {
     const normalMapIdArray  : number[] = [];
@@ -93,13 +119,13 @@ function setBriefDataVersion(normalMapId: number, dataVersion: number): void {
     _briefDataVersionAccessor.setData(normalMapId, dataVersion);
 }
 
-export async function getBriefData(normalMapId: number): Promise<Undefinable<ProtoSchemaCommonProtoMapNormalMapBriefData.NormalMapBriefData>> {
+export async function getBriefData(normalMapId: number): Promise<Undefinable<NormalMapBriefData>> {
     const dataVersion = await getBriefDataVersion(normalMapId);
     if (dataVersion == null) {
         return null;
     }
 
-    const cachedData = await LocalDataStorage2.StoreNormalMapBriefData.getData(normalMapId);
+    const cachedData = await StoreNormalMapBriefData.getData(normalMapId);
     if (cachedData != null) {
         if ((cachedData.getDataVersion() ?? 0) === dataVersion) {
             return cachedData;
@@ -109,18 +135,18 @@ export async function getBriefData(normalMapId: number): Promise<Undefinable<Pro
 
     return _briefDataAccessor.getData(normalMapId);
 }
-function setBriefData(normalMapId: number, data: ProtoSchemaCommonProtoMapNormalMapBriefData.NormalMapBriefData | null): Promise<void> {
+function setBriefData(normalMapId: number, data: NormalMapBriefData | null): Promise<void> {
     _briefDataAccessor.setData(normalMapId, data);
-    return LocalDataStorage2.StoreNormalMapBriefData.setData(normalMapId, data);
+    return StoreNormalMapBriefData.setData(normalMapId, data);
 }
 
-export async function getRawData(normalMapId: number): Promise<Undefinable<ProtoSchemaCommonProtoMapMapRawData.MapRawData>> {
+export async function getRawData(normalMapId: number): Promise<Undefinable<MapRawData>> {
     const mapBriefData = await getBriefData(normalMapId);
     if (mapBriefData == null) {
         return null;
     }
 
-    const cachedData = await LocalDataStorage2.StoreNormalMapRawData.getData(normalMapId);
+    const cachedData = await StoreNormalMapRawData.getData(normalMapId);
     if (cachedData != null) {
         if ((cachedData.getModifiedTime() ?? 0) === (mapBriefData.getMapModifiedTime() ?? 0)) {
             return cachedData;
@@ -130,13 +156,13 @@ export async function getRawData(normalMapId: number): Promise<Undefinable<Proto
 
     return _rawDataAccessor.getData(normalMapId);
 }
-function setRawData(normalMapId: number, mapRawData: ProtoSchemaCommonProtoMapMapRawData.MapRawData | null): Promise<void> {
+function setRawData(normalMapId: number, mapRawData: MapRawData | null): Promise<void> {
     _rawDataAccessor.setData(normalMapId, mapRawData);
-    return LocalDataStorage2.StoreNormalMapRawData.setData(normalMapId, mapRawData);
+    return StoreNormalMapRawData.setData(normalMapId, mapRawData);
 }
 
-export async function updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetAllEnabledBriefDataVersionsS.S): Promise<void> {
-    const existingDataDict      = await LocalDataStorage2.StoreNormalMapBriefData.getAllDataDict();
+export async function updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetAllEnabledBriefDataVersionsS): Promise<void> {
+    const existingDataDict      = await StoreNormalMapBriefData.getAllDataDict();
     const neededNormalMapIdSet  = new Set<number>();
     const infoArray             = data.getInfoArray();
     for (const info of infoArray) {
@@ -151,16 +177,16 @@ export async function updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data: P
         }
     }
 
-    NormalMapModelNormalMapProxy.reqNormalMapGetBriefDataArray([...neededNormalMapIdSet]);
+    reqNormalMapGetBriefDataArray([...neededNormalMapIdSet]);
     await _briefDataArrayAccessor.getData(null);
 
     _enabledNormalMapIdSetAccessor.setData(null, new Set(infoArray.map(v => v.getNormalMapId() ?? 0)));
 }
 
-export async function updateOnMsgNormalMapGetBriefDataArray(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataArrayS.S): Promise<void> {
+export async function updateOnMsgNormalMapGetBriefDataArray(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataArrayS): Promise<void> {
     const promiseArray: Promise<void>[] = [];
     for (const encodedData of data.getEncodedBriefDataArray()) {
-        const briefData = ProtoSchemaCommonProtoMapNormalMapBriefData.NormalMapBriefData.decode(encodedData);
+        const briefData = NormalMapBriefData.decode(encodedData);
         promiseArray.push(setBriefData(briefData.getNormalMapExtraData()?.getNormalMapId() ?? 0, briefData));
     }
     await Promise.all(promiseArray);
@@ -168,7 +194,7 @@ export async function updateOnMsgNormalMapGetBriefDataArray(data: ProtoSchemaCom
     _briefDataArrayAccessor.setData(null, true);
 }
 
-export async function updateOnMsgNormalMapGetBriefDataVersion(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS.S): Promise<void> {
+export async function updateOnMsgNormalMapGetBriefDataVersion(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS): Promise<void> {
     const normalMapId = data.getNormalMapId() ?? 0;
     setBriefDataVersion(normalMapId, data.getDataVersion() ?? 0);
 
@@ -178,14 +204,14 @@ export async function updateOnMsgNormalMapGetBriefDataVersion(data: ProtoSchemaC
         (await getEnabledNormalMapIdSet()).delete(normalMapId);
     }
 }
-export function updateOnFailedMsgNormalMapGetBriefDataVersion(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS.S): void {
+export function updateOnFailedMsgNormalMapGetBriefDataVersion(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS): void {
     const normalMapId = data.getNormalMapId();
     if (normalMapId != null) {
         _briefDataVersionAccessor.updateOnRequestFailed(normalMapId);
     }
 }
 
-export function updateOnMsgNormalMapGetBriefData(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS.S): Promise<void> {
+export function updateOnMsgNormalMapGetBriefData(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS): Promise<void> {
     const normalMapId           = data.getNormalMapId() ?? 0;
     const normalMapBriefData    = data.getNormalMapBriefData() ?? null;
     // if (normalMapBriefData?.normalMapExtraData?.isEnabled) {
@@ -196,60 +222,60 @@ export function updateOnMsgNormalMapGetBriefData(data: ProtoSchemaCommonProtoNet
 
     return setBriefData(normalMapId, normalMapBriefData);
 }
-export function updateOnFailedMsgNormalMapGetBriefData(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS.S): void {
+export function updateOnFailedMsgNormalMapGetBriefData(data: ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS): void {
     const normalMapId = data.getNormalMapId();
     if (normalMapId != null) {
         _briefDataAccessor.updateOnRequestFailed(normalMapId);
     }
 }
 
-export function updateOnMsgMapGetRawData(data: ProtoSchemaCommonProtoNetMessageMsgMapGetRawDataS.S): Promise<void> {
+export function updateOnMsgMapGetRawData(data: S): Promise<void> {
     return setRawData(data.getNormalMapId() ?? 0, data.getMapRawData() ?? null);
 }
-export function updateOnFailedMsgMapGetRawData(data: ProtoSchemaCommonProtoNetMessageMsgMapGetRawDataS.S): void {
+export function updateOnFailedMsgMapGetRawData(data: S): void {
     const normalMapId = data.getNormalMapId();
     if (normalMapId != null) {
         _rawDataAccessor.updateOnRequestFailed(normalMapId);
     }
 }
 
-export async function updateOnMsgMmSetMapName(data: ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS.S): Promise<void> {
-    const normalMapId   = HelpersMisc.getExisted(data.getNormalMapId(), UtilsClientErrorCode.ClientErrorCode.WarMapModel_UpdateOnSetMapName_00);
-    const mapNameArray  = HelpersMisc.getExisted(data.getMapNameArray(), UtilsClientErrorCode.ClientErrorCode.WarMapModel_UpdateOnSetMapName_01);
+export async function updateOnMsgMmSetMapName(data: ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS): Promise<void> {
+    const normalMapId   = getExisted(data.getNormalMapId(), ClientErrorCode.WarMapModel_UpdateOnSetMapName_00);
+    const mapNameArray  = getExisted(data.getMapNameArray(), ClientErrorCode.WarMapModel_UpdateOnSetMapName_01);
     const mapBriefData  = await getBriefData(normalMapId);
     (mapBriefData) && (mapBriefData.setMapNameArray(mapNameArray));
 
     const mapRawData = await getRawData(normalMapId);
     (mapRawData) && (mapRawData.setMapNameArray(mapNameArray));
 }
-export async function updateOnMsgMmAddWarRule(data: ProtoSchemaCommonProtoNetMessageMsgMmAddWarRuleS.S): Promise<void> {
-    const normalMapId       = HelpersMisc.getExisted(data.getNormalMapId());
-    const templateWarRule   = HelpersMisc.getExisted(data.getTemplateWarRule());
-    HelpersMisc.getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray()).push(templateWarRule);
+export async function updateOnMsgMmAddWarRule(data: ProtoSchemaCommonProtoNetMessageMsgMmAddWarRuleS): Promise<void> {
+    const normalMapId       = getExisted(data.getNormalMapId());
+    const templateWarRule   = getExisted(data.getTemplateWarRule());
+    getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray()).push(templateWarRule);
 }
-export async function updateOnMsgMmDeleteWarRule(data: ProtoSchemaCommonProtoNetMessageMsgMmDeleteWarRuleS.S): Promise<void> {
-    const normalMapId           = HelpersMisc.getExisted(data.getNormalMapId());
-    const ruleId                = HelpersMisc.getExisted(data.getRuleId());
-    const templateWarRuleArray  = HelpersMisc.getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray());
+export async function updateOnMsgMmDeleteWarRule(data: ProtoSchemaCommonProtoNetMessageMsgMmDeleteWarRuleS): Promise<void> {
+    const normalMapId           = getExisted(data.getNormalMapId());
+    const ruleId                = getExisted(data.getRuleId());
+    const templateWarRuleArray  = getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray());
     const index                 = templateWarRuleArray.findIndex(v => v.getRuleId() === ruleId);
     (index >= 0) && (templateWarRuleArray.splice(index, 1));
 }
-export async function updateOnMsgMmSetWarRuleName(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS.S): Promise<void> {
+export async function updateOnMsgMmSetWarRuleName(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS): Promise<void> {
     const ruleId            = data.getRuleId() ?? 0;
     const templateWarRule   = (await getRawData(data.getNormalMapId() ?? 0))?.getTemplateWarRuleArray()?.find(v => (v.getRuleId() ?? 0) === ruleId);
     (templateWarRule) && (templateWarRule.setRuleNameArray(data.getRuleNameArray()));
 }
-export async function updateOnMsgMmSetWarRuleFixedTileTheme(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS.S): Promise<void> {
+export async function updateOnMsgMmSetWarRuleFixedTileTheme(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS): Promise<void> {
     const ruleId            = data.getRuleId() ?? 0;
     const templateWarRule   = (await getRawData(data.getNormalMapId() ?? 0))?.getTemplateWarRuleArray().find(v => (v.getRuleId() ?? 0) === ruleId);
     (templateWarRule) && (templateWarRule.createIfNotExistsWarRuleCommonData().setFixedTileTheme(data.getTileTheme()));
 }
-export async function updateOnMsgMmSetWarRuleAvailability(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS.S): Promise<void> {
-    const templateWarRule = HelpersMisc.getExisted((await getRawData(HelpersMisc.getExisted(data.getNormalMapId())))?.getTemplateWarRuleArray()?.find(v => v.getRuleId() === data.getRuleId()));
+export async function updateOnMsgMmSetWarRuleAvailability(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS): Promise<void> {
+    const templateWarRule = getExisted((await getRawData(getExisted(data.getNormalMapId())))?.getTemplateWarRuleArray()?.find(v => v.getRuleId() === data.getRuleId()));
     templateWarRule.setRuleAvailability(data.getAvailability());
 }
-export async function updateOnMsgMmSetMapTagIdFlags(data: ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagIdFlagsS.S): Promise<void> {
-    HelpersMisc.getExisted(await getRawData(HelpersMisc.getExisted(data.getNormalMapId()))).setMapTagIdFlags(data.getMapTagIdFlags());
+export async function updateOnMsgMmSetMapTagIdFlags(data: ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagIdFlagsS): Promise<void> {
+    getExisted(await getRawData(getExisted(data.getNormalMapId()))).setMapTagIdFlags(data.getMapTagIdFlags());
 }
 
 export async function getMapNameInCurrentLanguage(normalMapId: number): Promise<string | null> {
@@ -257,14 +283,14 @@ export async function getMapNameInCurrentLanguage(normalMapId: number): Promise<
     if (!mapBriefData) {
         return null;
     } else {
-        return LangUtils.getLanguageText({ textArray: mapBriefData.getMapNameArray() });
+        return getLanguageText({ textArray: mapBriefData.getMapNameArray() });
     }
 }
 export async function getDesignerName(normalMapId: number): Promise<Undefinable<string>> {
     return (await getRawData(normalMapId))?.getDesignerName();
 }
 export async function getTotalPlayedTimes(normalMapId: number): Promise<number> {
-    const mapBriefData  = HelpersMisc.getExisted(await getBriefData(normalMapId));
+    const mapBriefData  = getExisted(await getBriefData(normalMapId));
     let totalTimes      = 0;
     for (const statisticsForRule of mapBriefData.getNormalMapExtraData()?.getMapWarStatistics()?.getStatisticsForRuleArray() ?? []) {
         for (const info of statisticsForRule.getStatisticsForTurnArray()) {
@@ -287,21 +313,21 @@ export async function getTotalRatersCount(normalMapId: number): Promise<number |
     return mapBriefData ? mapBriefData.getNormalMapExtraData()?.getTotalRaters() ?? 0 : null;
 }
 
-export function setMapTag(mapTag: ProtoSchemaCommonProtoMapMapTag.MapTag): void {
+export function setMapTag(mapTag: MapTag): void {
     _mapTagAccessor.setData(null, mapTag);
 }
-export function getMapTag(): Promise<Undefinable<ProtoSchemaCommonProtoMapMapTag.MapTag>> {
+export function getMapTag(): Promise<Undefinable<MapTag>> {
     return _mapTagAccessor.getData(null);
 }
 
-export async function sortMapArray<T>(dataArray: { normalMapId: number, extraData: T }[], sorter: AuxiliaryTypesAuxiliaryTypes.MapSorter | null): Promise<{ normalMapId: number, extraData: T }[]> {
+export async function sortMapArray<T>(dataArray: { normalMapId: number, extraData: T }[], sorter: MapSorter | null): Promise<{ normalMapId: number, extraData: T }[]> {
     if (dataArray.length <= 1) {
         return dataArray.concat();
     }
 
-    const sortType      = sorter?.sortType ?? GameConfigGcMap.SortType.MapName;
+    const sortType      = sorter?.sortType ?? SortType.MapName;
     const isAscending   = sorter?.isAscending ?? true;
-    if (sortType === GameConfigGcMap.SortType.MapName) {
+    if (sortType === SortType.MapName) {
         const tempArray: { normalMapId: number, extraData: T, name: string }[] = [];
         for (const data of dataArray) {
             tempArray.push({
@@ -313,12 +339,12 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const result = tempArray.sort((v1, v2) => (v1.name.localeCompare(v2.name)) || (v1.normalMapId - v2.normalMapId)).map(v => ({ normalMapId: v.normalMapId, extraData: v.extraData }));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === GameConfigGcMap.SortType.NormalMapId) {
+    } else if (sortType === SortType.NormalMapId) {
         return isAscending
             ? dataArray.concat().sort((v1, v2) => v1.normalMapId - v2.normalMapId)
             : dataArray.concat().sort((v1, v2) => v2.normalMapId - v1.normalMapId);
 
-    } else if (sortType === GameConfigGcMap.SortType.DesignerName) {
+    } else if (sortType === SortType.DesignerName) {
         const tempArray: { normalMapId: number, extraData: T, name: string }[] = [];
         for (const data of dataArray) {
             tempArray.push({
@@ -330,7 +356,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const result = tempArray.sort((v1, v2) => (v1.name.localeCompare(v2.name)) || (v1.normalMapId - v2.normalMapId)).map(v => ({ normalMapId: v.normalMapId, extraData: v.extraData }));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === GameConfigGcMap.SortType.Popularity) {
+    } else if (sortType === SortType.Popularity) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
@@ -342,7 +368,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const result = tempArray.sort((v1, v2) => (v1.num - v2.num) || (v1.normalMapId - v2.normalMapId));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === GameConfigGcMap.SortType.GlobalRating) {
+    } else if (sortType === SortType.GlobalRating) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
@@ -354,19 +380,19 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const result = tempArray.sort((v1, v2) => (v1.num - v2.num) || (v1.normalMapId - v2.normalMapId));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === GameConfigGcMap.SortType.MyRating) {
+    } else if (sortType === SortType.MyRating) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
                 normalMapId       : data.normalMapId,
                 extraData   : data.extraData,
-                num         : UsersModel.getMapRating(data.normalMapId) ?? 0,
+                num         : getMapRating(data.normalMapId) ?? 0,
             });
         }
         const result = tempArray.sort((v1, v2) => (v1.num - v2.num) || (v1.normalMapId - v2.normalMapId));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === GameConfigGcMap.SortType.PlayersCountUnneutral) {
+    } else if (sortType === SortType.PlayersCountUnneutral) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             tempArray.push({
@@ -378,7 +404,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
         const result = tempArray.sort((v1, v2) => (v1.num - v2.num) || (v1.normalMapId - v2.normalMapId));
         return isAscending ? result : result.reverse();
 
-    } else if (sortType === GameConfigGcMap.SortType.GridsCount) {
+    } else if (sortType === SortType.GridsCount) {
         const tempArray: { normalMapId: number, extraData: T, num: number }[] = [];
         for (const data of dataArray) {
             const info = await getBriefData(data.normalMapId);
@@ -396,7 +422,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
     }
 }
 
-export async function checkIsMeetFilter(normalMapId: number, filter: AuxiliaryTypesAuxiliaryTypes.Undefinable<AuxiliaryTypesMapFilter.MapFilter>): Promise<boolean> {
+export async function checkIsMeetFilter(normalMapId: number, filter: AuxiliaryTypesAuxiliaryTypesUndefinable<MapFilter>): Promise<boolean> {
     const mapBriefData = await getBriefData(normalMapId);
     if (mapBriefData == null) {
         return false;
@@ -460,7 +486,7 @@ export async function checkIsMeetFilter(normalMapId: number, filter: AuxiliaryTy
     {
         const filterMapName = filter.mapName?.trim().toLocaleLowerCase();
         if (filterMapName) {
-            const realMapName = HelpersMisc.getExisted(await getMapNameInCurrentLanguage(normalMapId)).toLocaleLowerCase();
+            const realMapName = getExisted(await getMapNameInCurrentLanguage(normalMapId)).toLocaleLowerCase();
             if (realMapName.indexOf(filterMapName) < 0) {
                 return false;
             }
@@ -490,14 +516,14 @@ export async function checkIsMeetFilter(normalMapId: number, filter: AuxiliaryTy
     return true;
 }
 
-export async function getMmReviewingMaps(): Promise<ProtoSchemaCommonProtoMapMapEditorData.MapEditorData[]> {
-    if (!UsersModel.getIsSelfMapCommittee()) {
+export async function getMmReviewingMaps(): Promise<MapEditorData[]> {
+    if (!getIsSelfMapCommittee()) {
         return [];
     } else {
         return await _reviewingMapsAccessor.getData(null) ?? [];
     }
 }
-export function updateOnMsgMmGetReviewingMaps(maps: ProtoSchemaCommonProtoMapMapEditorData.MapEditorData[]): void {
+export function updateOnMsgMmGetReviewingMaps(maps: MapEditorData[]): void {
     _reviewingMapsAccessor.setData(null, maps);
 }
 

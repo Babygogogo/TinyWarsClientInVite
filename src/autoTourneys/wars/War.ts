@@ -1,22 +1,26 @@
-import type * as AutoTourneysWarsIWar from "./IWar.ts";
-import * as BootTimersConstants from "../../bootTimers/Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import * as MultiPlayerWarModelMpwWar from "../../multiPlayerWar/model/MpwWar.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForAtw from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
+import type { IWar } from "./IWar.ts";
+import { DefaultParams } from "../../bootTimers/Constants.ts";
+import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
+import type {
+    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type {
+    SettingsForAtw as ProtoSchemaCommonProtoWarSettingsSettingsForAtw,
+} from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
 
-type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
-type SettingsForAtw     = ProtoSchemaCommonProtoWarSettingsSettingsForAtw.SettingsForAtw;
-type GcData             = GameConfigGcData.GcData;
+type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar;
+type SettingsForAtw     = ProtoSchemaCommonProtoWarSettingsSettingsForAtw;
+type GcData             = GameConfigGcData;
 
-export class War extends MultiPlayerWarModelMpwWar.MpwWar implements AutoTourneysWarsIWar.IWar {
+export class War extends MpwWar implements IWar {
     private _settingsForAtw?    : SettingsForAtw;
 
     public init(data: SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, HelpersProtoSchemaWarSerializationSerialWar.getWarTypeId(data));
-        this._setSettingsForAtw(HelpersMisc.getExisted(data.getSettingsForAtw()));
+        this._baseInit(data, gameConfig, getWarTypeId(data));
+        this._setSettingsForAtw(getExisted(data.getSettingsForAtw()));
 
         this._initView();
     }
@@ -42,13 +46,13 @@ export class War extends MultiPlayerWarModelMpwWar.MpwWar implements AutoTourney
         this._settingsForAtw = settings;
     }
     public getSettingsForAtw(): SettingsForAtw {
-        return HelpersMisc.getExisted(this._settingsForAtw);
+        return getExisted(this._settingsForAtw);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getSettingsBootTimerParams(): number[] {
-        return this.getSettingsForAtw().getBootTimerParams() ?? BootTimersConstants.DefaultParams.concat();
+        return this.getSettingsForAtw().getBootTimerParams() ?? DefaultParams.concat();
     }
 }

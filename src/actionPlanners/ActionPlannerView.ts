@@ -1,81 +1,81 @@
-import * as ActionPlannersConstants from "./Constants.ts";
-import type * as ActionPlannersIActionPlanner from "./IActionPlanner.ts";
-import type * as ActionPlannersIActionPlannerView from "./IActionPlannerView.ts";
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import * as CommonModelCommonModel from "../common/model/CommonModel.ts";
-import * as GameHelpersGhFactory from "../gameHelpers/GhFactory.ts";
-import * as GeometriesConstants from "../geometries/Constants.ts";
-import * as GraphicsUtils from "../graphics/Utils.ts";
-import * as HelpersCollection from "../helpers/Collection.ts";
-import * as HelpersImageSource from "../helpers/ImageSource.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import type * as NotificationsTypes from "../notifications/Types.ts";
-import type * as UiInterfacesIUiContainer from "../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../ui/interfaces/IUiImage.ts";
-import * as UiUtilsUiFactory from "../ui/utils/UiFactory.ts";
-import * as UnitsConstants from "../units/Constants.ts";
-import type * as UnitsIUnit from "../units/IUnit.ts";
-import type * as UnitsIUnitView from "../units/IUnitView.ts";
+import { StateId } from "./Constants.ts";
+import type { IActionPlanner } from "./IActionPlanner.ts";
+import type { IActionPlannerView } from "./IActionPlannerView.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import { getGridAnimationTickCount } from "../common/model/CommonModel.ts";
+import { getRwWarBaseClass, getUnitViewClass } from "../gameHelpers/GhFactory.ts";
+import { DirectionId } from "../geometries/Constants.ts";
+import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
+import { createEmptyMap } from "../helpers/Collection.ts";
+import { getMovePath, getMovableAreaByTick, getAttackableAreaByTick, getVisibleAreaByTick } from "../helpers/ImageSource.ts";
+import { createLazyFunc, getExisted } from "../helpers/Misc.ts";
+import { addEventListeners, removeEventListeners } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { Listener } from "../notifications/Types.ts";
+import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
+import { getUiContainerClass, getUiImageClass } from "../ui/utils/UiFactory.ts";
+import { AnimationTypeId } from "../units/Constants.ts";
+import type { IUnit } from "../units/IUnit.ts";
+import type { IUnitView } from "../units/IUnitView.ts";
 
-type IBwUnit                = UnitsIUnit.IUnit;
-type IBwUnitView            = UnitsIUnitView.IUnitView;
+type IBwUnit                = IUnit;
+type IBwUnitView            = IUnitView;
 
-const getGridWidth                          = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight                         = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridHeight);
-const getImageSourceMovePathEmpty           = HelpersMisc.createLazyFunc(() => ``);
-const getImageSourceMovePathLineVertical    = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(1));
-const getImageSourceMovePathLineHorizontal  = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(2));
-const getImageSourceMovePathLineUp          = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(11));
-const getImageSourceMovePathLineDown        = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(12));
-const getImageSourceMovePathLineLeft        = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(13));
-const getImageSourceMovePathLineRight       = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(14));
-const getImageSourceMovePathArrowUp         = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(3));
-const getImageSourceMovePathArrowDown       = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(4));
-const getImageSourceMovePathArrowLeft       = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(5));
-const getImageSourceMovePathArrowRight      = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(6));
-const getImageSourceMovePathCornerDownLeft  = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(7));
-const getImageSourceMovePathCornerDownRight = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(8));
-const getImageSourceMovePathCornerUpLeft    = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(9));
-const getImageSourceMovePathCornerUpRight   = HelpersMisc.createLazyFunc(() => HelpersImageSource.getMovePath(10));
+const getGridWidth                          = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight                         = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
+const getImageSourceMovePathEmpty           = createLazyFunc(() => ``);
+const getImageSourceMovePathLineVertical    = createLazyFunc(() => getMovePath(1));
+const getImageSourceMovePathLineHorizontal  = createLazyFunc(() => getMovePath(2));
+const getImageSourceMovePathLineUp          = createLazyFunc(() => getMovePath(11));
+const getImageSourceMovePathLineDown        = createLazyFunc(() => getMovePath(12));
+const getImageSourceMovePathLineLeft        = createLazyFunc(() => getMovePath(13));
+const getImageSourceMovePathLineRight       = createLazyFunc(() => getMovePath(14));
+const getImageSourceMovePathArrowUp         = createLazyFunc(() => getMovePath(3));
+const getImageSourceMovePathArrowDown       = createLazyFunc(() => getMovePath(4));
+const getImageSourceMovePathArrowLeft       = createLazyFunc(() => getMovePath(5));
+const getImageSourceMovePathArrowRight      = createLazyFunc(() => getMovePath(6));
+const getImageSourceMovePathCornerDownLeft  = createLazyFunc(() => getMovePath(7));
+const getImageSourceMovePathCornerDownRight = createLazyFunc(() => getMovePath(8));
+const getImageSourceMovePathCornerUpLeft    = createLazyFunc(() => getMovePath(9));
+const getImageSourceMovePathCornerUpRight   = createLazyFunc(() => getMovePath(10));
 
-const getImageSourcesMovePath               = HelpersMisc.createLazyFunc(() => new Map<GeometriesConstants.DirectionId, Map<GeometriesConstants.DirectionId, string>>([
-    [GeometriesConstants.DirectionId.Undefined, new Map([
-        [GeometriesConstants.DirectionId.Undefined,   getImageSourceMovePathEmpty()],
-        [GeometriesConstants.DirectionId.Up,          getImageSourceMovePathLineUp()],
-        [GeometriesConstants.DirectionId.Down,        getImageSourceMovePathLineDown()],
-        [GeometriesConstants.DirectionId.Left,        getImageSourceMovePathLineLeft()],
-        [GeometriesConstants.DirectionId.Right,       getImageSourceMovePathLineRight()],
+const getImageSourcesMovePath               = createLazyFunc(() => new Map<DirectionId, Map<DirectionId, string>>([
+    [DirectionId.Undefined, new Map([
+        [DirectionId.Undefined,   getImageSourceMovePathEmpty()],
+        [DirectionId.Up,          getImageSourceMovePathLineUp()],
+        [DirectionId.Down,        getImageSourceMovePathLineDown()],
+        [DirectionId.Left,        getImageSourceMovePathLineLeft()],
+        [DirectionId.Right,       getImageSourceMovePathLineRight()],
     ])],
-    [GeometriesConstants.DirectionId.Up, new Map([
-        [GeometriesConstants.DirectionId.Undefined,   getImageSourceMovePathArrowDown()],
-        [GeometriesConstants.DirectionId.Up,          getImageSourceMovePathEmpty()],
-        [GeometriesConstants.DirectionId.Down,        getImageSourceMovePathLineVertical()],
-        [GeometriesConstants.DirectionId.Left,        getImageSourceMovePathCornerUpLeft()],
-        [GeometriesConstants.DirectionId.Right,       getImageSourceMovePathCornerUpRight()],
+    [DirectionId.Up, new Map([
+        [DirectionId.Undefined,   getImageSourceMovePathArrowDown()],
+        [DirectionId.Up,          getImageSourceMovePathEmpty()],
+        [DirectionId.Down,        getImageSourceMovePathLineVertical()],
+        [DirectionId.Left,        getImageSourceMovePathCornerUpLeft()],
+        [DirectionId.Right,       getImageSourceMovePathCornerUpRight()],
     ])],
-    [GeometriesConstants.DirectionId.Down, new Map([
-        [GeometriesConstants.DirectionId.Undefined,   getImageSourceMovePathArrowUp()],
-        [GeometriesConstants.DirectionId.Up,          getImageSourceMovePathLineVertical()],
-        [GeometriesConstants.DirectionId.Down,        getImageSourceMovePathEmpty()],
-        [GeometriesConstants.DirectionId.Left,        getImageSourceMovePathCornerDownLeft()],
-        [GeometriesConstants.DirectionId.Right,       getImageSourceMovePathCornerDownRight()],
+    [DirectionId.Down, new Map([
+        [DirectionId.Undefined,   getImageSourceMovePathArrowUp()],
+        [DirectionId.Up,          getImageSourceMovePathLineVertical()],
+        [DirectionId.Down,        getImageSourceMovePathEmpty()],
+        [DirectionId.Left,        getImageSourceMovePathCornerDownLeft()],
+        [DirectionId.Right,       getImageSourceMovePathCornerDownRight()],
     ])],
-    [GeometriesConstants.DirectionId.Left, new Map([
-        [GeometriesConstants.DirectionId.Undefined,   getImageSourceMovePathArrowRight()],
-        [GeometriesConstants.DirectionId.Up,          getImageSourceMovePathCornerUpLeft()],
-        [GeometriesConstants.DirectionId.Down,        getImageSourceMovePathCornerDownLeft()],
-        [GeometriesConstants.DirectionId.Left,        getImageSourceMovePathEmpty()],
-        [GeometriesConstants.DirectionId.Right,       getImageSourceMovePathLineHorizontal()],
+    [DirectionId.Left, new Map([
+        [DirectionId.Undefined,   getImageSourceMovePathArrowRight()],
+        [DirectionId.Up,          getImageSourceMovePathCornerUpLeft()],
+        [DirectionId.Down,        getImageSourceMovePathCornerDownLeft()],
+        [DirectionId.Left,        getImageSourceMovePathEmpty()],
+        [DirectionId.Right,       getImageSourceMovePathLineHorizontal()],
     ])],
-    [GeometriesConstants.DirectionId.Right, new Map([
-        [GeometriesConstants.DirectionId.Undefined,   getImageSourceMovePathArrowLeft()],
-        [GeometriesConstants.DirectionId.Up,          getImageSourceMovePathCornerUpRight()],
-        [GeometriesConstants.DirectionId.Down,        getImageSourceMovePathCornerDownRight()],
-        [GeometriesConstants.DirectionId.Left,        getImageSourceMovePathLineHorizontal()],
-        [GeometriesConstants.DirectionId.Right,       getImageSourceMovePathEmpty()],
+    [DirectionId.Right, new Map([
+        [DirectionId.Undefined,   getImageSourceMovePathArrowLeft()],
+        [DirectionId.Up,          getImageSourceMovePathCornerUpRight()],
+        [DirectionId.Down,        getImageSourceMovePathCornerDownRight()],
+        [DirectionId.Left,        getImageSourceMovePathLineHorizontal()],
+        [DirectionId.Right,       getImageSourceMovePathEmpty()],
     ])],
 ]));
 const ALPHA_FOR_MOVABLE_GRIDS           = 0.5;
@@ -83,27 +83,27 @@ const ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL = 0.6;
 const ALPHA_FOR_ATTACKABLE_GRIDS_SILO   = 0.15;
 const ALPHA_FOR_VISIBLE_GRIDS_NORMAL    = 0.6;
 
-export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActionPlannerView {
-    private _actionPlanner?                 : ActionPlannersIActionPlanner.IActionPlanner;
+export class ActionPlannerView implements IActionPlannerView {
+    private _actionPlanner?                 : IActionPlanner;
 
-    private _conForGrids                    = new (UiUtilsUiFactory.getUiContainerClass())();
-    private _conForMovableGrids             = new (UiUtilsUiFactory.getUiContainerClass())();
-    private _conForMoveDestination          = new (UiUtilsUiFactory.getUiContainerClass())();
-    private _conForAttackableGrids          = new (UiUtilsUiFactory.getUiContainerClass())();
-    private _conForVisibleGrids             = new (UiUtilsUiFactory.getUiContainerClass())();
-    private _conForMovePath                 = new (UiUtilsUiFactory.getUiContainerClass())();
-    private _imgsForMovableGrids?           : UiInterfacesIUiImage.IUiImage[][];
-    private _imgsForAttackableGrids?        : UiInterfacesIUiImage.IUiImage[][];
-    private _imgsForVisibleGrids?           : UiInterfacesIUiImage.IUiImage[][];
-    private readonly _imgForMoveDestination = new (UiUtilsUiFactory.getUiImageClass())({
-        textureSourceName: HelpersImageSource.getMovableAreaByTick(0)
+    private _conForGrids                    = new (getUiContainerClass())();
+    private _conForMovableGrids             = new (getUiContainerClass())();
+    private _conForMoveDestination          = new (getUiContainerClass())();
+    private _conForAttackableGrids          = new (getUiContainerClass())();
+    private _conForVisibleGrids             = new (getUiContainerClass())();
+    private _conForMovePath                 = new (getUiContainerClass())();
+    private _imgsForMovableGrids?           : IUiImage[][];
+    private _imgsForAttackableGrids?        : IUiImage[][];
+    private _imgsForVisibleGrids?           : IUiImage[][];
+    private readonly _imgForMoveDestination = new (getUiImageClass())({
+        textureSourceName: getMovableAreaByTick(0)
     });
 
-    private _conForUnits            = new (UiUtilsUiFactory.getUiContainerClass())();
+    private _conForUnits            = new (getUiContainerClass())();
     private _focusUnitViews         = new Map<number, IBwUnitView>();
 
-    private _notifyEvents: NotificationsTypes.Listener[] = [
-        { type: NotificationsTypeId.TypeId.GridAnimationTick,       callback: this._onNotifyGridAnimationTick },
+    private _notifyEvents: Listener[] = [
+        { type: TypeId.GridAnimationTick,       callback: this._onNotifyGridAnimationTick },
     ];
 
     public constructor() {
@@ -118,10 +118,10 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
         this._conForUnits.setIsTouchChildrenEnabled(false);
     }
 
-    public init(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
+    public init(actionPlanner: IActionPlanner): void {
         this._actionPlanner = actionPlanner;
     }
-    public fastInit(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
+    public fastInit(actionPlanner: IActionPlanner): void {
         this._actionPlanner = actionPlanner;
     }
 
@@ -132,35 +132,35 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
         this._initConForMovePath();
         this._initConForVisibleGrids();
 
-        NotificationsDispatcher.addEventListeners(this._notifyEvents, this);
+        addEventListeners(this._notifyEvents, this);
         this.updateView();
     }
     public stopRunningView(): void {
-        NotificationsDispatcher.removeEventListeners(this._notifyEvents, this);
+        removeEventListeners(this._notifyEvents, this);
     }
 
-    private _getActionPlanner(): ActionPlannersIActionPlanner.IActionPlanner {
-        return HelpersMisc.getExisted(this._actionPlanner);
+    private _getActionPlanner(): IActionPlanner {
+        return getExisted(this._actionPlanner);
     }
 
-    public getContainerForGrids(): UiInterfacesIUiContainer.IUiContainer {
+    public getContainerForGrids(): IUiContainer {
         return this._conForGrids;
     }
-    public getContainerForUnits(): UiInterfacesIUiContainer.IUiContainer {
+    public getContainerForUnits(): IUiContainer {
         return this._conForUnits;
     }
 
-    private _getImgsForMovableGrids(): UiInterfacesIUiImage.IUiImage[][] {
-        return HelpersMisc.getExisted(this._imgsForMovableGrids);
+    private _getImgsForMovableGrids(): IUiImage[][] {
+        return getExisted(this._imgsForMovableGrids);
     }
-    private _getImgsForAttackableGrids(): UiInterfacesIUiImage.IUiImage[][] {
-        return HelpersMisc.getExisted(this._imgsForAttackableGrids);
+    private _getImgsForAttackableGrids(): IUiImage[][] {
+        return getExisted(this._imgsForAttackableGrids);
     }
-    private _getImgForMoveDestination(): UiInterfacesIUiImage.IUiImage {
-        return HelpersMisc.getExisted(this._imgForMoveDestination);
+    private _getImgForMoveDestination(): IUiImage {
+        return getExisted(this._imgForMoveDestination);
     }
-    private _getImgsForVisibleGrids(): UiInterfacesIUiImage.IUiImage[][] {
-        return HelpersMisc.getExisted(this._imgsForVisibleGrids);
+    private _getImgsForVisibleGrids(): IUiImage[][] {
+        return getExisted(this._imgsForVisibleGrids);
     }
 
     private _initConForMovableGrids(): void {
@@ -169,11 +169,11 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
         con.setAlpha(ALPHA_FOR_MOVABLE_GRIDS);
 
         const { width, height } = this._getActionPlanner().getWar().getTileMap().getMapSize().getWH();
-        const images            = HelpersCollection.createEmptyMap<UiInterfacesIUiImage.IUiImage>(width, height);
+        const images            = createEmptyMap<IUiImage>(width, height);
         for (let x = 0; x < width; ++x) {
             for (let y = 0; y < height; ++y) {
-                const image     = new (UiUtilsUiFactory.getUiImageClass())({
-                    textureSourceName: HelpersImageSource.getMovableAreaByTick(0)
+                const image     = new (getUiImageClass())({
+                    textureSourceName: getMovableAreaByTick(0)
                 });
                 images[x][y]    = image;
                 image.setIsSmoothing(false);
@@ -199,11 +199,11 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
         con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
         const { width, height } = this._getActionPlanner().getWar().getTileMap().getMapSize().getWH();
-        const images            = HelpersCollection.createEmptyMap<UiInterfacesIUiImage.IUiImage>(width, height);
+        const images            = createEmptyMap<IUiImage>(width, height);
         for (let x = 0; x < width; ++x) {
             for (let y = 0; y < height; ++y) {
-                const image     = new (UiUtilsUiFactory.getUiImageClass())({
-                    textureSourceName: HelpersImageSource.getAttackableAreaByTick(0)
+                const image     = new (getUiImageClass())({
+                    textureSourceName: getAttackableAreaByTick(0)
                 });
                 images[x][y]    = image;
                 image.setIsSmoothing(false);
@@ -224,11 +224,11 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
         con.setAlpha(ALPHA_FOR_VISIBLE_GRIDS_NORMAL);
 
         const { width, height } = this._getActionPlanner().getWar().getTileMap().getMapSize().getWH();
-        const images            = HelpersCollection.createEmptyMap<UiInterfacesIUiImage.IUiImage>(width, height);
+        const images            = createEmptyMap<IUiImage>(width, height);
         for (let x = 0; x < width; ++x) {
             for (let y = 0; y < height; ++y) {
-                const image     = new (UiUtilsUiFactory.getUiImageClass())({
-                    textureSourceName: HelpersImageSource.getVisibleAreaByTick(0)
+                const image     = new (getUiImageClass())({
+                    textureSourceName: getVisibleAreaByTick(0)
                 });
                 images[x][y]    = image;
                 image.setIsSmoothing(false);
@@ -246,14 +246,14 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onNotifyGridAnimationTick(): void {
         const war = this._getActionPlanner().getWar();
-        if ((war instanceof GameHelpersGhFactory.getRwWarBaseClass()) && (war.getIsBatchExecuteAction())){
+        if ((war instanceof getRwWarBaseClass()) && (war.getIsBatchExecuteAction())){
             return;
         }
 
-        const tick                  = CommonModelCommonModel.getGridAnimationTickCount();
-        const sourceForMovable      = HelpersImageSource.getMovableAreaByTick(tick);
-        const sourceForAttackable   = HelpersImageSource.getAttackableAreaByTick(tick);
-        const sourceForVisible      = HelpersImageSource.getVisibleAreaByTick(tick);
+        const tick                  = getGridAnimationTickCount();
+        const sourceForMovable      = getMovableAreaByTick(tick);
+        const sourceForAttackable   = getAttackableAreaByTick(tick);
+        const sourceForVisible      = getVisibleAreaByTick(tick);
         const imgsForMovable        = this._getImgsForMovableGrids();
         const imgsForAttackable     = this._getImgsForAttackableGrids();
         const imgsForVisible        = this._getImgsForVisibleGrids();
@@ -285,18 +285,18 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
         const actionPlanner = this._getActionPlanner();
         const state         = actionPlanner.getStateId();
 
-        if (state === ActionPlannersConstants.StateId.Idle) {
+        if (state === StateId.Idle) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ExecutingAction) {
+        } else if (state === StateId.ExecutingAction) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitMovePath) {
+        } else if (state === StateId.ChoosingUnitMovePath) {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
-            const movableArea               = HelpersMisc.getExisted(actionPlanner.getMovableArea());
-            const attackableArea            = HelpersMisc.getExisted(actionPlanner.getAttackableArea());
+            const movableArea               = getExisted(actionPlanner.getMovableArea());
+            const attackableArea            = getExisted(actionPlanner.getAttackableArea());
             const { width, height }         = actionPlanner.getWar().getTileMap().getMapSize().getWH();
             const imgsForAttackableGrids    = this._getImgsForAttackableGrids();
             for (let x = 0; x < width; ++x) {
@@ -305,12 +305,12 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 }
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAction) {
+        } else if (state === StateId.ChoosingUnitAction) {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
-            const movableArea               = HelpersMisc.getExisted(actionPlanner.getMovableArea());
-            const attackableArea            = HelpersMisc.getExisted(actionPlanner.getAttackableArea());
+            const movableArea               = getExisted(actionPlanner.getMovableArea());
+            const attackableArea            = getExisted(actionPlanner.getAttackableArea());
             const { width, height }         = actionPlanner.getWar().getTileMap().getMapSize().getWH();
             const imgsForAttackableGrids    = this._getImgsForAttackableGrids();
             for (let x = 0; x < width; ++x) {
@@ -319,7 +319,7 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 }
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAttackTarget) {
+        } else if (state === StateId.ChoosingUnitAttackTarget) {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
@@ -330,11 +330,11 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                     imgsForAttackableGrids[x][y].setIsVisible(false);
                 }
             }
-            for (const grid of HelpersMisc.getExisted(actionPlanner.getAttackableGridsForUnitWeapon())) {
+            for (const grid of getExisted(actionPlanner.getAttackableGridsForUnitWeapon())) {
                 imgsForAttackableGrids[grid.getX()][grid.getY()].setIsVisible(true);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitCrushTarget) {
+        } else if (state === StateId.ChoosingUnitCrushTarget) {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
@@ -351,26 +351,26 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 imgsForAttackableGrids[grid.getX()][grid.getY()].setIsVisible(true);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget) {
+        } else if (state === StateId.ChoosingCoActiveSkillTarget) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitDropDestination) {
+        } else if (state === StateId.ChoosingUnitDropDestination) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitFlareDestination) {
+        } else if (state === StateId.ChoosingUnitFlareDestination) {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
             const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
             const imgs              = this._getImgsForAttackableGrids();
             const destination       = actionPlanner.getMovePathDestination().getGridIndex();
-            const range             = HelpersMisc.getExisted(actionPlanner.getFocusUnit()?.getFlareMaxRange(destination));
+            const range             = getExisted(actionPlanner.getFocusUnit()?.getFlareMaxRange(destination));
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
-                    imgs[x][y].setIsVisible(destination.getDistance(new AuxiliaryTypesGridIndex.GridIndex(x, y)) <= range);
+                    imgs[x][y].setIsVisible(destination.getDistance(new GridIndex(x, y)) <= range);
                 }
             }
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitRepairTarget) {
+        } else if (state === StateId.ChoosingUnitRepairTarget) {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
@@ -387,7 +387,7 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 imgsForAttackableGrids[grid.getX()][grid.getY()].setIsVisible(true);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitSiloDestination) {
+        } else if (state === StateId.ChoosingUnitSiloDestination) {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_SILO);
 
@@ -399,10 +399,10 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 }
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingTileProductionTarget) {
+        } else if (state === StateId.ChoosingTileProductionTarget) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitAttackableArea) {
+        } else if (state === StateId.PreviewingUnitAttackableArea) {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
@@ -415,13 +415,13 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 }
             }
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitMovableArea) {
+        } else if (state === StateId.PreviewingUnitMovableArea) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitVisibleArea) {
+        } else if (state === StateId.PreviewingUnitVisibleArea) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingTileAttackableArea) {
+        } else if (state === StateId.PreviewingTileAttackableArea) {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
@@ -444,16 +444,16 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
         const actionPlanner = this._getActionPlanner();
         const state         = actionPlanner.getStateId();
 
-        if (state === ActionPlannersConstants.StateId.Idle) {
+        if (state === StateId.Idle) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ExecutingAction) {
+        } else if (state === StateId.ExecutingAction) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitMovePath) {
+        } else if (state === StateId.ChoosingUnitMovePath) {
             con.setIsVisible(true);
 
-            const movableArea       = HelpersMisc.getExisted(actionPlanner.getMovableArea());
+            const movableArea       = getExisted(actionPlanner.getMovableArea());
             const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
             const imgs              = this._getImgsForMovableGrids();
             for (let x = 0; x < width; ++x) {
@@ -462,10 +462,10 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 }
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAction) {
+        } else if (state === StateId.ChoosingUnitAction) {
             con.setIsVisible(true);
 
-            const movableArea       = HelpersMisc.getExisted(actionPlanner.getMovableArea());
+            const movableArea       = getExisted(actionPlanner.getMovableArea());
             const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
             const imgs              = this._getImgsForMovableGrids();
             for (let x = 0; x < width; ++x) {
@@ -474,16 +474,16 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 }
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAttackTarget) {
+        } else if (state === StateId.ChoosingUnitAttackTarget) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitCrushTarget) {
+        } else if (state === StateId.ChoosingUnitCrushTarget) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget) {
+        } else if (state === StateId.ChoosingCoActiveSkillTarget) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitDropDestination) {
+        } else if (state === StateId.ChoosingUnitDropDestination) {
             con.setIsVisible(true);
 
             const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
@@ -493,29 +493,29 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                     imgs[x][y].setIsVisible(false);
                 }
             }
-            for (const grid of HelpersMisc.getExisted(actionPlanner.getAvailableDropDestinations())) {
+            for (const grid of getExisted(actionPlanner.getAvailableDropDestinations())) {
                 imgs[grid.getX()][grid.getY()].setIsVisible(true);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitFlareDestination) {
+        } else if (state === StateId.ChoosingUnitFlareDestination) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitRepairTarget) {
+        } else if (state === StateId.ChoosingUnitRepairTarget) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitSiloDestination) {
+        } else if (state === StateId.ChoosingUnitSiloDestination) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingTileProductionTarget) {
+        } else if (state === StateId.ChoosingTileProductionTarget) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitAttackableArea) {
+        } else if (state === StateId.PreviewingUnitAttackableArea) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitMovableArea) {
+        } else if (state === StateId.PreviewingUnitMovableArea) {
             con.setIsVisible(true);
 
-            const area              = HelpersMisc.getExisted(actionPlanner.getAreaForPreviewingMovableArea());
+            const area              = getExisted(actionPlanner.getAreaForPreviewingMovableArea());
             const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
             const imgs              = this._getImgsForMovableGrids();
             for (let x = 0; x < width; ++x) {
@@ -524,10 +524,10 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 }
             }
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitVisibleArea) {
+        } else if (state === StateId.PreviewingUnitVisibleArea) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingTileAttackableArea) {
+        } else if (state === StateId.PreviewingTileAttackableArea) {
             con.setIsVisible(false);
 
         } else {
@@ -540,22 +540,22 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
         const actionPlanner = this._getActionPlanner();
         const state         = actionPlanner.getStateId();
 
-        if (state === ActionPlannersConstants.StateId.Idle) {
+        if (state === StateId.Idle) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ExecutingAction) {
+        } else if (state === StateId.ExecutingAction) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitMovePath) {
+        } else if (state === StateId.ChoosingUnitMovePath) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAction) {
+        } else if (state === StateId.ChoosingUnitAction) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAttackTarget) {
+        } else if (state === StateId.ChoosingUnitAttackTarget) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitCrushTarget) {
+        } else if (state === StateId.ChoosingUnitCrushTarget) {
             con.setIsVisible(true);
 
             const mapSize           = actionPlanner.getWar().getTileMap().getMapSize();
@@ -573,7 +573,7 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 imgs[targetGridIndex.getX()][targetGridIndex.getY()].setIsVisible(true);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget) {
+        } else if (state === StateId.ChoosingCoActiveSkillTarget) {
             con.setIsVisible(true);
 
             const mapSize           = actionPlanner.getWar().getTileMap().getMapSize();
@@ -590,13 +590,13 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 imgs[targetGridIndex.getX()][targetGridIndex.getY()].setIsVisible(true);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitDropDestination) {
+        } else if (state === StateId.ChoosingUnitDropDestination) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitFlareDestination) {
+        } else if (state === StateId.ChoosingUnitFlareDestination) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitRepairTarget) {
+        } else if (state === StateId.ChoosingUnitRepairTarget) {
             con.setIsVisible(true);
 
             const mapSize           = actionPlanner.getWar().getTileMap().getMapSize();
@@ -614,19 +614,19 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 imgs[targetGridIndex.getX()][targetGridIndex.getY()].setIsVisible(true);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitSiloDestination) {
+        } else if (state === StateId.ChoosingUnitSiloDestination) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingTileProductionTarget) {
+        } else if (state === StateId.ChoosingTileProductionTarget) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitAttackableArea) {
+        } else if (state === StateId.PreviewingUnitAttackableArea) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitMovableArea) {
+        } else if (state === StateId.PreviewingUnitMovableArea) {
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitVisibleArea) {
+        } else if (state === StateId.PreviewingUnitVisibleArea) {
             con.setIsVisible(true);
 
             const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
@@ -636,11 +636,11 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                     imgs[x][y].setIsVisible(false);
                 }
             }
-            for (const gridIndex of HelpersMisc.getExisted(actionPlanner.getAreaForPreviewingVisible())) {
+            for (const gridIndex of getExisted(actionPlanner.getAreaForPreviewingVisible())) {
                 imgs[gridIndex.getX()][gridIndex.getY()].setIsVisible(true);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingTileAttackableArea) {
+        } else if (state === StateId.PreviewingTileAttackableArea) {
             con.setIsVisible(false);
 
         } else {
@@ -661,85 +661,85 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
         const actionPlanner = this._getActionPlanner();
         const state         = actionPlanner.getStateId();
 
-        if (state == ActionPlannersConstants.StateId.Idle) {
+        if (state == StateId.Idle) {
             con.removeUiChildren();
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ExecutingAction) {
+        } else if (state === StateId.ExecutingAction) {
             con.removeUiChildren();
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitMovePath) {
+        } else if (state === StateId.ChoosingUnitMovePath) {
             con.removeUiChildren();
             con.setIsVisible(true);
 
             this._addMovePathView();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAction) {
+        } else if (state === StateId.ChoosingUnitAction) {
             con.removeUiChildren();
             con.setIsVisible(true);
 
             this._addMovePathView();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAttackTarget) {
+        } else if (state === StateId.ChoosingUnitAttackTarget) {
             con.removeUiChildren();
             con.setIsVisible(true);
 
             this._addMovePathView();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitCrushTarget) {
+        } else if (state === StateId.ChoosingUnitCrushTarget) {
             con.removeUiChildren();
             con.setIsVisible(true);
 
             this._addMovePathView();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget) {
+        } else if (state === StateId.ChoosingCoActiveSkillTarget) {
             con.removeUiChildren();
             con.setIsVisible(true);
 
             this._addMovePathView();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitDropDestination) {
+        } else if (state === StateId.ChoosingUnitDropDestination) {
             con.removeUiChildren();
             con.setIsVisible(true);
 
             this._addMovePathView();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitFlareDestination) {
+        } else if (state === StateId.ChoosingUnitFlareDestination) {
             con.removeUiChildren();
             con.setIsVisible(true);
 
             this._addMovePathView();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitRepairTarget) {
+        } else if (state === StateId.ChoosingUnitRepairTarget) {
             con.removeUiChildren();
             con.setIsVisible(true);
 
             this._addMovePathView();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitSiloDestination) {
+        } else if (state === StateId.ChoosingUnitSiloDestination) {
             con.removeUiChildren();
             con.setIsVisible(true);
 
             this._addMovePathView();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingTileProductionTarget) {
+        } else if (state === StateId.ChoosingTileProductionTarget) {
             con.removeUiChildren();
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitAttackableArea) {
+        } else if (state === StateId.PreviewingUnitAttackableArea) {
             con.removeUiChildren();
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitMovableArea) {
+        } else if (state === StateId.PreviewingUnitMovableArea) {
             con.removeUiChildren();
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitVisibleArea) {
+        } else if (state === StateId.PreviewingUnitVisibleArea) {
             con.removeUiChildren();
             con.setIsVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingTileAttackableArea) {
+        } else if (state === StateId.PreviewingTileAttackableArea) {
             con.removeUiChildren();
             con.setIsVisible(false);
 
@@ -753,22 +753,22 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
         const actionPlanner = this._getActionPlanner();
         const state         = actionPlanner.getStateId();
 
-        if (state === ActionPlannersConstants.StateId.Idle) {
+        if (state === StateId.Idle) {
             con.removeUiChildren();
             con.setIsVisible(false);
             this._clearFocusUnitViews();
 
-        } else if (state === ActionPlannersConstants.StateId.ExecutingAction) {
+        } else if (state === StateId.ExecutingAction) {
             con.removeUiChildren();
             con.setIsVisible(false);
             this._clearFocusUnitViews();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitMovePath) {
+        } else if (state === StateId.ChoosingUnitMovePath) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const unitOnMap     = HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap());
+            const unitOnMap     = getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
@@ -778,12 +778,12 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAction) {
+        } else if (state === StateId.ChoosingUnitAction) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const unitOnMap     = HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap());
+            const unitOnMap     = getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
@@ -797,12 +797,12 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 this._addUnitView(data.unit, data.destination);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAttackTarget) {
+        } else if (state === StateId.ChoosingUnitAttackTarget) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const unitOnMap     = HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap());
+            const unitOnMap     = getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
@@ -812,12 +812,12 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitCrushTarget) {
+        } else if (state === StateId.ChoosingUnitCrushTarget) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const unitOnMap     = HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap());
+            const unitOnMap     = getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
@@ -827,12 +827,12 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget) {
+        } else if (state === StateId.ChoosingCoActiveSkillTarget) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const unitOnMap     = HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap());
+            const unitOnMap     = getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
@@ -842,12 +842,12 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitDropDestination) {
+        } else if (state === StateId.ChoosingUnitDropDestination) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const focusUnitOnMap    = HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap());
+            const focusUnitOnMap    = getExisted(actionPlanner.getFocusUnitOnMap());
             const focusUnitLoaded   = actionPlanner.getFocusUnitLoaded();
             const movePath          = actionPlanner.getMovePath();
             if (!focusUnitLoaded) {
@@ -863,15 +863,15 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
 
             const cursorGridIndex = actionPlanner.getWar().getCursor().getGridIndex();
             if (actionPlanner.getAvailableDropDestinations()?.some(grid => grid.checkIsEqual(cursorGridIndex))) {
-                this._addUnitView(HelpersMisc.getExisted(actionPlanner.getChoosingUnitForDrop()), cursorGridIndex);
+                this._addUnitView(getExisted(actionPlanner.getChoosingUnitForDrop()), cursorGridIndex);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitFlareDestination) {
+        } else if (state === StateId.ChoosingUnitFlareDestination) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const unitOnMap     = HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap());
+            const unitOnMap     = getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
@@ -881,12 +881,12 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitRepairTarget) {
+        } else if (state === StateId.ChoosingUnitRepairTarget) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const unitOnMap     = HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap());
+            const unitOnMap     = getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
@@ -896,12 +896,12 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitSiloDestination) {
+        } else if (state === StateId.ChoosingUnitSiloDestination) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const unitOnMap     = HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap());
+            const unitOnMap     = getExisted(actionPlanner.getFocusUnitOnMap());
             const unitLoaded    = actionPlanner.getFocusUnitLoaded();
             const movePath      = actionPlanner.getMovePath();
             if (!unitLoaded) {
@@ -911,12 +911,12 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 this._addUnitView(unitLoaded, movePath[movePath.length - 1].getGridIndex());
             }
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingTileProductionTarget) {
+        } else if (state === StateId.ChoosingTileProductionTarget) {
             con.removeUiChildren();
             con.setIsVisible(false);
             this._clearFocusUnitViews();
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitAttackableArea) {
+        } else if (state === StateId.PreviewingUnitAttackableArea) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
@@ -925,23 +925,23 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
                 this._addUnitView(unit, unit.getGridIndex());
             }
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitMovableArea) {
+        } else if (state === StateId.PreviewingUnitMovableArea) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const unit = HelpersMisc.getExisted(actionPlanner.getUnitForPreviewingMovableArea());
+            const unit = getExisted(actionPlanner.getUnitForPreviewingMovableArea());
             this._addUnitView(unit, unit.getGridIndex());
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitVisibleArea) {
+        } else if (state === StateId.PreviewingUnitVisibleArea) {
             con.removeUiChildren();
             con.setIsVisible(true);
             this._clearFocusUnitViews();
 
-            const unit = HelpersMisc.getExisted(actionPlanner.getUnitForPreviewingVisibleArea());
+            const unit = getExisted(actionPlanner.getUnitForPreviewingVisibleArea());
             this._addUnitView(unit, unit.getGridIndex());
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingTileAttackableArea) {
+        } else if (state === StateId.PreviewingTileAttackableArea) {
             con.removeUiChildren();
             con.setIsVisible(false);
             this._clearFocusUnitViews();
@@ -955,11 +955,11 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    private _addUnitView(unit: IBwUnit, gridIndex: AuxiliaryTypesGridIndex.GridIndex, _alpha = 1): void {
-        const view = new (GameHelpersGhFactory.getUnitViewClass())().init(unit).startRunningView();
+    private _addUnitView(unit: IBwUnit, gridIndex: GridIndex, _alpha = 1): void {
+        const view = new (getUnitViewClass())().init(unit).startRunningView();
         // view.alpha = alpha;
         _resetUnitViewXy(view, gridIndex);
-        view.showUnitAnimation(UnitsConstants.AnimationTypeId.MoveHorizontal);
+        view.showUnitAnimation(AnimationTypeId.MoveHorizontal);
         this._focusUnitViews.set(unit.getUnitId(), view);
         this._conForUnits.addUiChild(view);
     }
@@ -981,12 +981,12 @@ export class ActionPlannerView implements ActionPlannersIActionPlannerView.IActi
     }
 }
 
-function _createImgForMovePathGrid(prev: AuxiliaryTypesAuxiliaryTypes.Undefinable<AuxiliaryTypesGridIndex.GridIndex>, curr: AuxiliaryTypesGridIndex.GridIndex, next: AuxiliaryTypesAuxiliaryTypes.Undefinable<AuxiliaryTypesGridIndex.GridIndex>): UiInterfacesIUiImage.IUiImage | null {
-    const source = HelpersMisc.getExisted(getImageSourcesMovePath().get(prev?.getAdjacentDirection(curr) ?? GeometriesConstants.DirectionId.Undefined)).get(next?.getAdjacentDirection(curr) ?? GeometriesConstants.DirectionId.Undefined);
+function _createImgForMovePathGrid(prev: Undefinable<GridIndex>, curr: GridIndex, next: Undefinable<GridIndex>): IUiImage | null {
+    const source = getExisted(getImageSourcesMovePath().get(prev?.getAdjacentDirection(curr) ?? DirectionId.Undefined)).get(next?.getAdjacentDirection(curr) ?? DirectionId.Undefined);
     if (!source) {
         return null;
     } else {
-        const image = new (UiUtilsUiFactory.getUiImageClass())({ textureSourceName: source });
+        const image = new (getUiImageClass())({ textureSourceName: source });
         image.setIsSmoothing(false);
         image.setX(curr.getX() * getGridWidth());
         image.setY(curr.getY() * getGridHeight());
@@ -994,7 +994,7 @@ function _createImgForMovePathGrid(prev: AuxiliaryTypesAuxiliaryTypes.Undefinabl
     }
 }
 
-function _resetUnitViewXy(view: IBwUnitView, gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+function _resetUnitViewXy(view: IBwUnitView, gridIndex: GridIndex): void {
     view.setX(gridIndex.getX() * getGridWidth());
     view.setY(gridIndex.getY() * getGridHeight());
 }

@@ -1,31 +1,31 @@
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GameVersionsConstants from "../../gameVersions/Constants.ts";
-import * as GameVersionsUtils from "../../gameVersions/Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TypeName } from "../../gameVersions/Constants.ts";
+import { getGameEssentialConfig } from "../../gameVersions/Utils.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getGameVersionName, getGameVersionDesc } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgMask!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!     : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp!      : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _group!        : IUiContainer;
+    private readonly _imgMask!      : IUiImage;
+    private readonly _labelTitle!   : IUiLabel;
+    private readonly _btnClose!     : IUiButton;
+    private readonly _btnHelp!      : IUiButton;
 
-    private readonly _btnDownload!  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!   : UiInterfacesIUiButton.IUiButton;
-    private readonly _listVersion!  : UiInterfacesIUiScrollList.IUiScrollList<DataForVersionRenderer>;
+    private readonly _btnDownload!  : IUiButton;
+    private readonly _btnConfirm!   : IUiButton;
+    private readonly _listVersion!  : IUiScrollList<DataForVersionRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -35,7 +35,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnDownload,    callback: this._onTouchedBtnDownload },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -55,7 +55,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         await super._onClosed();
     }
 
-    private _getSelectedGameVersion(): GameVersionsConstants.TypeName | null {
+    private _getSelectedGameVersion(): TypeName | null {
         const selectedData = this._listVersion.getFirstSelectedData();
         return selectedData ? selectedData.gameVersion : null;
     }
@@ -64,8 +64,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0219),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0219),
         });
     }
 
@@ -76,9 +76,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const url = GameVersionsUtils.getGameEssentialConfig(selectedVersion)?.clientUrl;
+        const url = getGameEssentialConfig(selectedVersion)?.clientUrl;
         if (url == null) {
-            throw HelpersMisc.newError(`CommonChangeVersionPanel._onTouchedBtnConfirm() empty url.`);
+            throw newError(`CommonChangeVersionPanel._onTouchedBtnConfirm() empty url.`);
         } else {
             window.open(url);
         }
@@ -95,8 +95,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0555),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => getText(TextType.A0555),
             callback    : () => {
                 downloadFile(filename);
                 this.closePanel();
@@ -112,10 +112,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1277));
-        this._btnClose.setText(LangUtils.getText(LangConstants.TextType.B0154));
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0520));
-        this._btnDownload.setText(LangUtils.getText(LangConstants.TextType.B1179));
+        this._labelTitle.setText(getText(TextType.B1277));
+        this._btnClose.setText(getText(TextType.B0154));
+        this._btnConfirm.setText(getText(TextType.B0520));
+        this._btnDownload.setText(getText(TextType.B1179));
     }
 
     private async _initListVersion(): Promise<void> {
@@ -128,19 +128,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _createDataForListVersion(): DataForVersionRenderer[] {
         return [
             {
-                gameVersion : GameVersionsConstants.TypeName.Legacy,
+                gameVersion : TypeName.Legacy,
             },
             {
-                gameVersion : GameVersionsConstants.TypeName.Test,
+                gameVersion : TypeName.Test,
             },
             {
-                gameVersion : GameVersionsConstants.TypeName.Dor,
+                gameVersion : TypeName.Dor,
             },
             {
-                gameVersion : GameVersionsConstants.TypeName.Trilogy,
+                gameVersion : TypeName.Trilogy,
             },
             {
-                gameVersion : GameVersionsConstants.TypeName.TinyWars2,
+                gameVersion : TypeName.TinyWars2,
             },
             // {
             //     gameVersion : GameVersion.Awbw,
@@ -149,17 +149,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForVersionRenderer extends UiTypesUiListItemData.UiListItemData {
-    gameVersion : GameVersionsConstants.TypeName;
+interface DataForVersionRenderer extends UiListItemData {
+    gameVersion : TypeName;
 }
-class VersionRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForVersionRenderer> {
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDesc!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelCurrent! : UiInterfacesIUiLabel.IUiLabel;
+class VersionRenderer extends UiListItemRenderer<DataForVersionRenderer> {
+    private readonly _labelName!    : IUiLabel;
+    private readonly _labelDesc!    : IUiLabel;
+    private readonly _labelCurrent! : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -179,11 +179,11 @@ class VersionRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
         }
 
         const gameVersion = openData.gameVersion;
-        this._labelName.setText(LangUtils.getGameVersionName(gameVersion) || LangConstants.UndefinedError);
-        this._labelDesc.setText(LangUtils.getGameVersionDesc(gameVersion) || LangConstants.UndefinedError);
+        this._labelName.setText(getGameVersionName(gameVersion) || UndefinedError);
+        this._labelDesc.setText(getGameVersionDesc(gameVersion) || UndefinedError);
 
         const labelCurrent = this._labelCurrent;
-        labelCurrent.setText(`(${LangUtils.getText(LangConstants.TextType.B0623)})`);
+        labelCurrent.setText(`(${getText(TextType.B0623)})`);
         labelCurrent.setIsVisible(gameVersion === window.GAME_VERSION);
     }
 }
@@ -211,13 +211,13 @@ function downloadFile(filename: string): void {
     // }
 }
 
-function getDownloadFilename(version: GameVersionsConstants.TypeName): string | null {
+function getDownloadFilename(version: TypeName): string | null {
     switch (version) {
-        case GameVersionsConstants.TypeName.Legacy     : return `TinyWars_Classic_Landscape.apk`;
-        case GameVersionsConstants.TypeName.Test       : return `TinyWars_Experimental_Landscape.apk`;
-        case GameVersionsConstants.TypeName.Dor        : return `TinyWars_DoR_Landscape.apk`;
-        case GameVersionsConstants.TypeName.Trilogy    : return `TinyWars_Trilogy_Landscape.apk`;
-        case GameVersionsConstants.TypeName.TinyWars2  : return `TinyWars2_Landscape.apk`;
+        case TypeName.Legacy     : return `TinyWars_Classic_Landscape.apk`;
+        case TypeName.Test       : return `TinyWars_Experimental_Landscape.apk`;
+        case TypeName.Dor        : return `TinyWars_DoR_Landscape.apk`;
+        case TypeName.Trilogy    : return `TinyWars_Trilogy_Landscape.apk`;
+        case TypeName.TinyWars2  : return `TinyWars2_Landscape.apk`;
         default                         : return null;
     }
 }

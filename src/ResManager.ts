@@ -1,5 +1,5 @@
 
-import * as Res from "./vendor/egret/Res";
+import { registerVersionController, loadConfig, loadGroup, getResByUrl, type IVersionController } from "./vendor/egret/Res";
 
 import type { UiSkin } from "./ui/types/UiSkin.ts";
 import { error } from "./Logger.ts";
@@ -22,9 +22,9 @@ const _modules              = import.meta.glob(
 );
 
 export async function init(): Promise<void> {
-    Res.registerVersionController(new VersionController());
+    registerVersionController(new VersionController());
 
-    await Res.loadConfig("default.res.json", "resource/");
+    await loadConfig("default.res.json", "resource/");
     await Promise.all([
         _initAllSkins(),
     ]);
@@ -33,7 +33,7 @@ export async function init(): Promise<void> {
 
 export function loadMainRes(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-        Res.loadGroup("main")?.then(
+        loadGroup("main")?.then(
             () => {
                 _isLoadedMainResource = true;
                 resolve();
@@ -52,7 +52,7 @@ export function checkIsLoadedMainResource(): boolean {
 
 async function _initAllSkins(): Promise<void> {
     const skinDict      = _getSkinDict();
-    const rawSkinDict   = await Res.getResByUrl(ALL_SKINS_FILENAME) as Record<string, UiSkin>;
+    const rawSkinDict   = await getResByUrl(ALL_SKINS_FILENAME) as Record<string, UiSkin>;
     for (const key in rawSkinDict) {
         const skin = rawSkinDict[key];
         skinDict.set(key, skin);
@@ -70,7 +70,7 @@ export function getSkin(alias: string): UiSkin | undefined {
     return _getSkinDict().get(alias);
 }
 
-class VersionController implements Res.IVersionController {
+class VersionController implements IVersionController {
     public async init(): Promise<void> {
         // nothing to do
     }

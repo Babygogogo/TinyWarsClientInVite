@@ -1,26 +1,28 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "../../../auxiliaryTypes/MapSize.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import * as GameHelpersGhFactory from "../../../gameHelpers/GhFactory.ts";
-import * as HelpersCollection from "../../../helpers/Collection.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as HelpersTeam from "../../../helpers/Team.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as PlayersConstants from "../../../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaFillUnitOnMapSimple from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitOnMapSimple.ts";
-import * as ProtoSchemaCommonProtoWarSerializationWsUnitStatistics from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type * as TilesITileMap from "../../../tiles/ITileMap.ts";
-import * as TilesUtilsFilter from "../../../tiles/utils/Filter.ts";
-import type * as UnitsIUnitMap from "../../../units/IUnitMap.ts";
-import * as UnitsUtilsSerialization from "../../../units/utils/Serialization.ts";
-import * as VisibilitiesUtils from "../../../visibilities/Utils.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
+import { getNonNullElements } from "../../../helpers/Collection.ts";
+import { getExisted, newError } from "../../../helpers/Misc.ts";
+import { encodeTeamIndex } from "../../../helpers/Team.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText, getUnitName, getFormattedText } from "../../../lang/Utils.ts";
+import { PlayerIndex } from "../../../players/Constants.ts";
+import type {
+    WeaFillUnitOnMapSimple as ProtoSchemaCommonProtoWarEventWeaFillUnitOnMapSimple,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitOnMapSimple.ts";
+import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+import type { ITileMap } from "../../../tiles/ITileMap.ts";
+import { checkIsValid as TilesUtilsFilterCheckIsValid, checkIsEmpty, checkIsMeet } from "../../../tiles/utils/Filter.ts";
+import type { IUnitMap } from "../../../units/IUnitMap.ts";
+import { getErrorCodeForUnitDataIgnoringUnitId } from "../../../units/utils/Serialization.ts";
+import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 
-type WeaFillUnitOnMapSimple = ProtoSchemaCommonProtoWarEventWeaFillUnitOnMapSimple.WeaFillUnitOnMapSimple;
+type WeaFillUnitOnMapSimple = ProtoSchemaCommonProtoWarEventWeaFillUnitOnMapSimple;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GameConfigGcData.GcData, mapSize: AuxiliaryTypesMapSize.MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(action: Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     if (action == null) {
         return false;
     }
@@ -34,14 +36,14 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
 
     {
         const conTileFilter = action.getConTileFilter();
-        if ((conTileFilter != null) && (!TilesUtilsFilter.checkIsValid(conTileFilter, playersCountUnneutral, mapSize, gameConfig))) {
+        if ((conTileFilter != null) && (!TilesUtilsFilterCheckIsValid(conTileFilter, playersCountUnneutral, mapSize, gameConfig))) {
             return false;
         }
     }
 
     const unitData = rawUnitData.clone();
     unitData.createIfNotExistsGridIndex().loadJson({x: 0, y: 0});
-    if (UnitsUtilsSerialization.getErrorCodeForUnitDataIgnoringUnitId({
+    if (getErrorCodeForUnitDataIgnoringUnitId({
         unitData                : unitData,
         gameConfig              : gameConfig,
         mapSize                 : mapSize,
@@ -53,66 +55,66 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GameConfigGcData.GcData): string | null {
+export function getBriefDesc(data: Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GcData): string | null {
     if (!data) {
         return null;
     }
 
     const conTileFilter         = data.getConTileFilter();
-    const textForConTileFilter  = ((conTileFilter == null) || (TilesUtilsFilter.checkIsEmpty(conTileFilter)))
+    const textForConTileFilter  = ((conTileFilter == null) || (checkIsEmpty(conTileFilter)))
         ? null
-        : LangUtils.getText(LangConstants.TextType.B1068);
+        : getText(TextType.B1068);
 
-    const textArray = HelpersCollection.getNonNullElements([
+    const textArray = getNonNullElements([
         textForConTileFilter,
     ]);
 
     const actIsInTurn           = data.getActIsInTurn();
     const textForActIsInTurn    = actIsInTurn
-        ? LangUtils.getText(LangConstants.TextType.A0419)
+        ? getText(TextType.A0419)
         : null;
 
     const unitType          = data.getActUnitData()?.getUnitType();
-    const textForUnitType   = unitType == null ? `??` : (LangUtils.getUnitName(unitType, gameConfig) ?? `??`);
+    const textForUnitType   = unitType == null ? `??` : (getUnitName(unitType, gameConfig) ?? `??`);
     if (textArray.length <= 0) {
-        return LangUtils.getFormattedText(
-            LangConstants.TextType.F0180,
+        return getFormattedText(
+            TextType.F0180,
             textForUnitType,
         ) + (textForActIsInTurn ? ` ${textForActIsInTurn}` : ``);
     } else {
-        return LangUtils.getFormattedText(
-            LangConstants.TextType.F0166,
-            textArray.join(`${LangUtils.getText(LangConstants.TextType.B0783)}`),
+        return getFormattedText(
+            TextType.F0166,
+            textArray.join(`${getText(TextType.B0783)}`),
             textForUnitType,
         ) + (textForActIsInTurn ? ` ${textForActIsInTurn}` : ``);
     }
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GameConfigGcData.GcData): string | null {
+export function getDetailDesc(data: Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GcData): string | null {
     return getBriefDesc(data, gameConfig);
 }
 
-export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: AuxiliaryTypesMapSize.MapSize, playersCountUnneutral: number, gameConfig: GameConfigGcData.GcData): string | null {
+export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
     {
         const conTileFilter = data.getConTileFilter();
-        if ((conTileFilter != null) && (!TilesUtilsFilter.checkIsValid(conTileFilter, playersCountUnneutral, mapSize, gameConfig))) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.TileFilter));
+        if ((conTileFilter != null) && (!TilesUtilsFilterCheckIsValid(conTileFilter, playersCountUnneutral, mapSize, gameConfig))) {
+            return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
         }
     }
 
     const rawUnitData = data.getActUnitData();
     if ((rawUnitData == null) || (rawUnitData.getLoaderUnitId() != null)) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B1058));
+        return getFormattedText(TextType.F0091, getText(TextType.B1058));
     }
 
     const unitData = rawUnitData.clone();
     unitData.createIfNotExistsGridIndex().loadJson({ x: 0, y: 0 });
-    if (UnitsUtilsSerialization.getErrorCodeForUnitDataIgnoringUnitId({
+    if (getErrorCodeForUnitDataIgnoringUnitId({
         unitData                : unitData,
         mapSize                 : mapSize,
         playersCountUnneutral   : playersCountUnneutral,
         gameConfig              : gameConfig,
     })) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B1058));
+        return getFormattedText(TextType.F0091, getText(TextType.B1058));
     }
 
     return null;
@@ -122,14 +124,14 @@ export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: AuxiliaryType
 export async function applyWithExtraData(_action: WeaFillUnitOnMapSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFastExecute: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
-    const rawUnitData = HelpersMisc.getExisted(action.getActUnitData());
+export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
+    const rawUnitData = getExisted(action.getActUnitData());
     if (rawUnitData.getLoaderUnitId() != null) {
-        throw HelpersMisc.newError(`non-null loaderUnitId.`);
+        throw newError(`non-null loaderUnitId.`);
     }
 
-    const playerIndex = action.getActIsInTurn() ? war.getPlayerIndexInTurn() : (rawUnitData.getPlayerIndex() ?? PlayersConstants.PlayerIndex.Neutral);
-    if (playerIndex === PlayersConstants.PlayerIndex.Neutral) {
+    const playerIndex = action.getActIsInTurn() ? war.getPlayerIndexInTurn() : (rawUnitData.getPlayerIndex() ?? PlayerIndex.Neutral);
+    if (playerIndex === PlayerIndex.Neutral) {
         return;
     }
 
@@ -139,9 +141,9 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
     const warStatisticsManager      = war.getWarStatisticsManager();
     const canBeBlockedByUnit        = action.getActCanBeBlockedByUnit() ?? false;
     const needMovableTile           = action.getActNeedMovableTile() ?? false;
-    const moveType                  = HelpersMisc.getExisted(gameConfig.getUnitTemplateCfg(HelpersMisc.getExisted(rawUnitData.getUnitType()))?.getMoveTypeId());
+    const moveType                  = getExisted(gameConfig.getUnitTemplateCfg(getExisted(rawUnitData.getUnitType()))?.getMoveTypeId());
     const conTileFilter             = action.getConTileFilter();
-    const candidateGridIndexArray   = tileMap.getTiles(t => (conTileFilter == null) || (TilesUtilsFilter.checkIsMeet(conTileFilter, t))).map(v => v.getGridIndex());
+    const candidateGridIndexArray   = tileMap.getTiles(t => (conTileFilter == null) || (checkIsMeet(conTileFilter, t))).map(v => v.getGridIndex());
 
     for (const gridIndex of candidateGridIndexArray) {
         const targetGridIndex = getGridIndexForAddUnit({
@@ -162,7 +164,7 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
         revisedUnitData.setPlayerIndex(playerIndex);
         revisedUnitData.setUnitId(unitId);
 
-        const unit = new (GameHelpersGhFactory.getUnitClass())();
+        const unit = new (getUnitClass())();
         unit.init(revisedUnitData, gameConfig);
         unit.startRunning(war);
         unit.startRunningView();
@@ -171,29 +173,29 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
         (!isFastExecute) && (unit.updateView());
 
         {
-            const observerTeamIndexes = VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+            const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
             if (observerTeamIndexes != null) {
-                warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                    : unit.getUnitType(),
                     dstPlayerIndex              : playerIndex,
                     unitGain                    : 1,
                     unitLoss                    : 0,
                     normalizedHpGain            : unit.getNormalizedCurrentHp(),
                     normalizedHpLoss            : 0,
-                    groupedObserverTeamIndexes  : HelpersTeam.encodeTeamIndex(observerTeamIndexes),
+                    groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
                 }));
             }
         }
     }
 }
 function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovableTile, canBeBlockedByUnit }: {
-    origin              : AuxiliaryTypesGridIndex.GridIndex;
-    unitMap             : UnitsIUnitMap.IUnitMap;
-    tileMap             : TilesITileMap.ITileMap;
+    origin              : GridIndex;
+    unitMap             : IUnitMap;
+    tileMap             : ITileMap;
     moveType            : number;
     needMovableTile     : boolean;
     canBeBlockedByUnit  : boolean;
-}): AuxiliaryTypesGridIndex.GridIndex | null {
+}): GridIndex | null {
     const mapSize = tileMap.getMapSize();
     if ((canBeBlockedByUnit) && (unitMap.getUnitOnMap(origin))) {
         return null;
@@ -201,10 +203,10 @@ function getGridIndexForAddUnit({ origin, unitMap, tileMap, moveType, needMovabl
 
     const { width, height } = mapSize.getWH();
     const maxDistance = Math.max(
-        origin.getDistance(new AuxiliaryTypesGridIndex.GridIndex(0,         0           )),
-        origin.getDistance(new AuxiliaryTypesGridIndex.GridIndex(0,         height - 1  )),
-        origin.getDistance(new AuxiliaryTypesGridIndex.GridIndex(width - 1, 0           )),
-        origin.getDistance(new AuxiliaryTypesGridIndex.GridIndex(width - 1, height - 1  )),
+        origin.getDistance(new GridIndex(0,         0           )),
+        origin.getDistance(new GridIndex(0,         height - 1  )),
+        origin.getDistance(new GridIndex(width - 1, 0           )),
+        origin.getDistance(new GridIndex(width - 1, height - 1  )),
     );
 
     for (let distance = 0; distance <= maxDistance; ++distance) {

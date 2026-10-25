@@ -1,9 +1,9 @@
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiProgressBar from "../../ui/interfaces/IUiProgressBar.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiProgressBar } from "../../ui/interfaces/IUiProgressBar.ts";
 
 export interface OpenData {
     maxValue        : number;
@@ -11,15 +11,15 @@ export interface OpenData {
     newValue        : number;
     callbackOnFinish: () => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _pbarProgress! : UiInterfacesIUiProgressBar.IUiProgressBar;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _group!        : IUiContainer;
+    private readonly _pbarProgress! : IUiProgressBar;
 
     public updateOnLoadedSkin(): void {
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-            TweenExecutor.Executor.removeTweens(this._pbarProgress);
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            Executor.removeTweens(this._pbarProgress);
             this.closePanel();
         });
     }
@@ -39,20 +39,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         pbar.setEndValue(maxValue);
         pbar.setCurrentValue(openData.currentValue);
 
-        TweenExecutor.Executor.removeTweens(pbar);
-        TweenExecutor.Executor.get(pbar)
+        Executor.removeTweens(pbar);
+        Executor.get(pbar)
             .wait(250)
             .to({ currentValue: newValue }, 250)
             .wait(500)
             .call(() => {
                 if (newValue >= maxValue) {
-                    SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.Capture);
+                    playShortSfx(ShortSfxCode.Capture);
                 }
                 this.closePanel();
             });
     }
     protected override async _onClosed(): Promise<void> {
-        TweenExecutor.Executor.removeTweens(this._pbarProgress);
+        Executor.removeTweens(this._pbarProgress);
         this.getOpenData()?.callbackOnFinish();
 
         await super._onClosed();

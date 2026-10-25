@@ -1,7 +1,7 @@
-import * as HelpersCollection from "../helpers/Collection.ts";
-import * as ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
+import { deleteElementFromList2 } from "../helpers/Collection.ts";
+import { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
 
-export function addGridMark(list: ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId.GridIdAndMarkTypeId[], gridId: number, markTypeId: number): boolean {
+export function addGridMark(list: GridIdAndMarkTypeId[], gridId: number, markTypeId: number): boolean {
     const existingData = list.find(v => v.getGridId() === gridId);
     if (existingData) {
         if (existingData.getMarkTypeId() === markTypeId) {
@@ -11,27 +11,27 @@ export function addGridMark(list: ProtoSchemaCommonProtoStructureGridIdAndMarkTy
             return true;
         }
     } else {
-        list.push(ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId.GridIdAndMarkTypeId.fromJson({
+        list.push(GridIdAndMarkTypeId.fromJson({
             gridId      : gridId,
             markTypeId  : markTypeId,
         }));
         return true;
     }
 }
-export function deleteGridMark(list: ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId.GridIdAndMarkTypeId[], gridId: number): boolean {
-    return HelpersCollection.deleteElementFromList2(list, v => v.getGridId() === gridId) > 0;
+export function deleteGridMark(list: GridIdAndMarkTypeId[], gridId: number): boolean {
+    return deleteElementFromList2(list, v => v.getGridId() === gridId) > 0;
 }
-export function updateGridMarkList(list: ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId.GridIdAndMarkTypeId[], gridIdArrayForAddMark: number[], gridIdArrayForDeleteMark: number[], markTypeId: number): void {
+export function updateGridMarkList(list: GridIdAndMarkTypeId[], gridIdArrayForAddMark: number[], gridIdArrayForDeleteMark: number[], markTypeId: number): void {
     for (const gridId of gridIdArrayForAddMark) {
         const data = list.find(v => v.getGridId() === gridId);
         if (data) {
             data.setMarkTypeId(markTypeId);
         } else {
-            list.push(ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId.GridIdAndMarkTypeId.fromJson({
+            list.push(GridIdAndMarkTypeId.fromJson({
                 gridId      : gridId,
                 markTypeId  : markTypeId,
             }));
         }
     }
-    HelpersCollection.deleteElementFromList2(list, v => gridIdArrayForDeleteMark.includes(v.getGridId()));
+    deleteElementFromList2(list, v => gridIdArrayForDeleteMark.includes(v.getGridId()));
 }

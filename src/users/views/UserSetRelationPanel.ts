@@ -1,46 +1,46 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserSetRelationS from "../../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import * as UsersModel from "../Model.ts";
-import * as UsersProxy from "../Proxy.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetRelation/S.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import { checkIsFollowingUser, checkIsBlockingUser } from "../Model.ts";
+import { reqUserSetRelation } from "../Proxy.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
     userId  : number;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
 
-    private readonly _groupFollow!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgFollow!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelFollow!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupHelpFollow!  : UiInterfacesIUiContainer.IUiContainer;
+    private readonly _groupFollow!      : IUiContainer;
+    private readonly _imgFollow!        : IUiImage;
+    private readonly _labelFollow!      : IUiLabel;
+    private readonly _groupHelpFollow!  : IUiContainer;
 
-    private readonly _groupBlock!       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBlock!         : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelBlock!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupHelpBlock!   : UiInterfacesIUiContainer.IUiContainer;
+    private readonly _groupBlock!       : IUiContainer;
+    private readonly _imgBlock!         : IUiImage;
+    private readonly _labelBlock!       : IUiLabel;
+    private readonly _groupHelpBlock!   : IUiContainer;
 
-    private readonly _btnConfirm!       : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnConfirm!       : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgUserSetRelation,  callback: this._onNotifyMsgUserSetRelation },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgUserSetRelation,  callback: this._onNotifyMsgUserSetRelation },
         ]);
         this._setUiListenerArray([
             { ui: this._groupFollow,            callback: this._onTouchedGroupFollow },
@@ -65,10 +65,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgUserSetRelation(e: VendorEgretEgret.Event): void {
-        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserSetRelationS.S;
+    private _onNotifyMsgUserSetRelation(e: Event): void {
+        const data = e.data as S;
         if (data.getTargetUserId() === this.getOpenData()?.userId) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0377));
+            show(getText(TextType.A0377));
             this.closePanel();
         }
     }
@@ -76,25 +76,25 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedGroupFollow(): void {
         const img = this._imgFollow;
         img.setIsVisible(!img.getIsVisible());
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupHelpFollow(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0999),
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0375),
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        openPanel(getDict().CommonHelpPanel, {
+            getTitle   : () => getText(TextType.B0999),
+            getContent : () => getText(TextType.A0375),
         });
     }
     private _onTouchedGroupBlock(): void {
         const img = this._imgBlock;
         img.setIsVisible(!img.getIsVisible());
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupHelpBlock(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B1000),
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0376),
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        openPanel(getDict().CommonHelpPanel, {
+            getTitle   : () => getText(TextType.B1000),
+            getContent : () => getText(TextType.A0376),
         });
     }
     private _onTouchedBtnConfirm(): void {
@@ -105,10 +105,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const isFollow  = this._imgFollow.getIsVisible();
         const isBlock   = this._imgBlock.getIsVisible();
-        if ((isFollow === UsersModel.checkIsFollowingUser(userId)) && (isBlock === UsersModel.checkIsBlockingUser(userId))) {
+        if ((isFollow === checkIsFollowingUser(userId)) && (isBlock === checkIsBlockingUser(userId))) {
             this.closePanel();
         } else {
-            UsersProxy.reqUserSetRelation(userId, isFollow, isBlock);
+            reqUserSetRelation(userId, isFollow, isBlock);
         }
     }
 
@@ -116,20 +116,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
 
         const userId = this.getOpenData()?.userId;
-        this._imgFollow.setIsVisible(UsersModel.checkIsFollowingUser(userId));
-        this._imgBlock.setIsVisible(UsersModel.checkIsBlockingUser(userId));
+        this._imgFollow.setIsVisible(checkIsFollowingUser(userId));
+        this._imgBlock.setIsVisible(checkIsBlockingUser(userId));
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1001));
-        this._labelFollow.setText(LangUtils.getText(LangConstants.TextType.B0999));
-        this._labelBlock.setText(LangUtils.getText(LangConstants.TextType.B1000));
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnClose.setText(LangUtils.getText(LangConstants.TextType.B0154));
+        this._labelTitle.setText(getText(TextType.B1001));
+        this._labelFollow.setText(getText(TextType.B0999));
+        this._labelBlock.setText(getText(TextType.B1000));
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._btnClose.setText(getText(TextType.B0154));
     }
 }
 
-function applyTouchEnabled(container: UiInterfacesIUiContainer.IUiContainer): void {
+function applyTouchEnabled(container: IUiContainer): void {
     container.setIsTouchEnabled(true);
     container.setIsTouchChildrenEnabled(false);
 }

@@ -1,44 +1,44 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import * as UsersConstants from "../Constants.ts";
-import * as UsersModel from "../Model.ts";
-import * as UsersProxy from "../Proxy.ts";
-import * as UsersUtils from "../Utils.ts";
+import { showLang, show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import { Common } from "../Constants.ts";
+import { getSelfUserId, getSelfNickname } from "../Model.ts";
+import { reqUserGetPublicInfo, reqSetNickname } from "../Proxy.ts";
+import { checkIsNicknameValid } from "../Utils.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _scroller!                 : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiContainer.IUiContainer>;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnClose!                 : IUiButton;
+    private readonly _group!                    : IUiContainer;
+    private readonly _scroller!                 : IUiScroller<IUiContainer>;
 
-    private readonly _groupButtons!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnChangeAvatar!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnChangeNickname!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnChangePassword!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnChangeDiscordId!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnChangeMedal!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnChangeEmail!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupButtons!             : IUiContainer;
+    private readonly _btnChangeAvatar!          : IUiButton;
+    private readonly _btnChangeNickname!        : IUiButton;
+    private readonly _btnChangePassword!        : IUiButton;
+    private readonly _btnChangeDiscordId!       : IUiButton;
+    private readonly _btnChangeMedal!           : IUiButton;
+    private readonly _btnChangeEmail!           : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgUserGetPublicInfo,            callback: this._onMsgUserGetPublicInfo },
-            { type: NotificationsTypeId.TypeId.MsgUserSetNickname,              callback: this._onMsgUserSetNickname },
-            { type: NotificationsTypeId.TypeId.MsgUserSetDiscordInfo,           callback: this._onMsgUserSetDiscordId },
-            { type: NotificationsTypeId.TypeId.MsgUserSetShowMedalIdArray,      callback: this._onMsgUserSetShowMedalIdArray },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgUserGetPublicInfo,            callback: this._onMsgUserGetPublicInfo },
+            { type: TypeId.MsgUserSetNickname,              callback: this._onMsgUserSetNickname },
+            { type: TypeId.MsgUserSetDiscordInfo,           callback: this._onMsgUserSetDiscordId },
+            { type: TypeId.MsgUserSetShowMedalIdArray,      callback: this._onMsgUserSetShowMedalIdArray },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -65,29 +65,29 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateView();
     }
     private _onMsgUserSetNickname(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
 
-        const selfUserId = HelpersMisc.getExisted(UsersModel.getSelfUserId());
-        UsersProxy.reqUserGetPublicInfo(selfUserId);
+        const selfUserId = getExisted(getSelfUserId());
+        reqUserGetPublicInfo(selfUserId);
     }
     private _onMsgUserSetDiscordId(): void {
-        const selfUserId = HelpersMisc.getExisted(UsersModel.getSelfUserId());
-        UsersProxy.reqUserGetPublicInfo(selfUserId);
+        const selfUserId = getExisted(getSelfUserId());
+        reqUserGetPublicInfo(selfUserId);
     }
     private _onMsgUserSetShowMedalIdArray(): void {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.OperationSucceeded));
+        show(getText(TextType.OperationSucceeded));
     }
 
     private _onTouchedBtnChangeAvatar(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserSetAvatarPanel, void 0);
+        openPanel(getDict().UserSetAvatarPanel, void 0);
     }
     private _onTouchedBtnChangeNickname(): void {
-        const currentNickname = UsersModel.getSelfNickname() ?? ``;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputPanel, {
-            title           : LangUtils.getText(LangConstants.TextType.B0149),
-            tips            : LangUtils.getText(LangConstants.TextType.A0066),
-            minLength       : UsersConstants.Common.NicknameMinLength,
-            maxChars        : UsersConstants.Common.NicknameMaxLength,
+        const currentNickname = getSelfNickname() ?? ``;
+        openPanel(getDict().CommonInputPanel, {
+            title           : getText(TextType.B0149),
+            tips            : getText(TextType.A0066),
+            minLength       : Common.NicknameMinLength,
+            maxChars        : Common.NicknameMaxLength,
             charRestrict    : null,
             currentValue    : currentNickname,
             callback        : panel => {
@@ -96,25 +96,25 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     return;
                 }
 
-                if (!UsersUtils.checkIsNicknameValid(nickname)) {
-                    FloatText2.showLang(LangConstants.TextType.A0002);
+                if (!checkIsNicknameValid(nickname)) {
+                    showLang(TextType.A0002);
                 } else {
-                    UsersProxy.reqSetNickname(nickname);
+                    reqSetNickname(nickname);
                 }
             },
         });
     }
     private _onTouchedBtnChangePassword(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserSetPasswordPanel, void 0);
+        openPanel(getDict().UserSetPasswordPanel, void 0);
     }
     private _onTouchedBtnChangeDiscordId(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserSetDiscordInfoPanel, void 0);
+        openPanel(getDict().UserSetDiscordInfoPanel, void 0);
     }
     private _onTouchedBtnChangeMedal(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserMedalPanel, void 0);
+        openPanel(getDict().UserMedalPanel, void 0);
     }
     private _onTouchedBtnChangeEmail(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserSetEmailPanel, void 0);
+        openPanel(getDict().UserSetEmailPanel, void 0);
     }
 
     private async _updateView(): Promise<void> {
@@ -127,12 +127,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0560));
-        this._btnChangeAvatar.setText(LangUtils.getText(LangConstants.TextType.B0707));
-        this._btnChangeNickname.setText(LangUtils.getText(LangConstants.TextType.B0175));
-        this._btnChangePassword.setText(LangUtils.getText(LangConstants.TextType.B0171));
-        this._btnChangeDiscordId.setText(LangUtils.getText(LangConstants.TextType.B0150));
-        this._btnChangeMedal.setText(LangUtils.getText(LangConstants.TextType.B1018));
-        this._btnChangeEmail.setText(LangUtils.getText(LangConstants.TextType.B1332));
+        this._labelTitle.setText(getText(TextType.B0560));
+        this._btnChangeAvatar.setText(getText(TextType.B0707));
+        this._btnChangeNickname.setText(getText(TextType.B0175));
+        this._btnChangePassword.setText(getText(TextType.B0171));
+        this._btnChangeDiscordId.setText(getText(TextType.B0150));
+        this._btnChangeMedal.setText(getText(TextType.B1018));
+        this._btnChangeEmail.setText(getText(TextType.B1332));
     }
 }

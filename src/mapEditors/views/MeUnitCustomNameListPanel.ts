@@ -1,42 +1,42 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoStructureUnitCustomName from "../../proto/schema/CommonProto/Structure/UnitCustomName.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getCurrentLanguageType, getSecondaryLanguageType, getLanguageText } from "../../lang/Utils.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UnitCustomName } from "../../proto/schema/CommonProto/Structure/UnitCustomName.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { CustomName } from "../../units/Constants.ts";
 
-type IBwWar             = BaseWarInterfaceIBwWar.IBwWar;
+type IBwWar             = BaseWarInterfaceIBwWar;
 
 export interface OpenData {
     war     : IBwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnBatch!             : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _btnBatch!             : IUiButton;
 
-    private readonly _listName!             : UiInterfacesIUiScrollList.IUiScrollList<DataForCustomCounterRenderer>;
-    private readonly _labelTips!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _listName!             : IUiScrollList<DataForCustomCounterRenderer>;
+    private readonly _labelTips!            : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -67,7 +67,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().MeSetUnitCustomNamePanel, {
+        openPanel(getDict().MeSetUnitCustomNamePanel, {
             war : war,
         });
     }
@@ -79,9 +79,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1433);
-        this._labelTips.setLangText(LangConstants.TextType.A0785);
-        this._btnBatch.setLangText(LangConstants.TextType.B1434);
+        this._labelTitle.setLangText(TextType.B1433);
+        this._labelTips.setLangText(TextType.A0785);
+        this._btnBatch.setLangText(TextType.B1434);
     }
     private async _updateListName(): Promise<void> {
         const openData = this.getOpenData();
@@ -91,7 +91,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const war       = openData.war;
         const dataArray : DataForCustomCounterRenderer[] = [];
-        for (let nameId = UnitsConstants.CustomName.MinId; nameId <= UnitsConstants.CustomName.MaxId; ++nameId) {
+        for (let nameId = CustomName.MinId; nameId <= CustomName.MaxId; ++nameId) {
             dataArray.push({
                 war     : war,
                 nameId  : nameId,
@@ -102,24 +102,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForCustomCounterRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForCustomCounterRenderer extends UiListItemData {
     war     : IBwWar;
     nameId  : number;
 }
-class NameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForCustomCounterRenderer> {
-    private readonly _layoutName!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelId!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName1!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName2!   : UiInterfacesIUiLabel.IUiLabel;
+class NameRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
+    private readonly _layoutName!   : IUiLayout;
+    private readonly _labelId!      : IUiLabel;
+    private readonly _labelName1!   : IUiLabel;
+    private readonly _labelName2!   : IUiLabel;
 
-    private readonly _imgSelected!  : UiInterfacesIUiImage.IUiImage;
+    private readonly _imgSelected!  : IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._imgSelected,                        callback: this._onTouchedImgSelected },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.BwUnitCustomNameIdChanged,   callback: this._onNotifyBwUnitCustomNameIdChanged },
+            { type: TypeId.BwUnitCustomNameIdChanged,   callback: this._onNotifyBwUnitCustomNameIdChanged },
         ]);
         this._applySettingsForWholeTouch(undefined, true);
     }
@@ -128,13 +128,13 @@ class NameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        TweenExecutor.Executor.removeTweens(imgSelected);
-        TweenExecutor.Executor.get(imgSelected, { loop: true })
+        Executor.removeTweens(imgSelected);
+        Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        TweenExecutor.Executor.removeTweens(this._imgSelected);
+        Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
     }
@@ -150,7 +150,7 @@ class NameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         }
 
         const war = openData.war;
-        if ((war instanceof GameHelpersGhFactory.getMeWarClass()) &&
+        if ((war instanceof getMeWarClass()) &&
             (war.getIsReviewingMap())
         ) {
             return;
@@ -161,10 +161,10 @@ class NameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const nameArray     = unitMap.getUnitCustomNameArray() ?? [];
         const index         = nameArray.findIndex(v => (v.getNameId() ?? 0) === nameId);
         const nameData      = nameArray[index];
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputShortLangTextPanel, {
-            getTitleText        : () => `${LangUtils.getText(LangConstants.TextType.B1433)} #${nameId}`,
+        openPanel(getDict().CommonInputShortLangTextPanel, {
+            getTitleText        : () => `${getText(TextType.B1433)} #${nameId}`,
             currentTextArray    : nameData?.getNameTextArray() ?? [],
-            maxTextLength       : UnitsConstants.CustomName.MaxLength,
+            maxTextLength       : CustomName.MaxLength,
             allowEmpty          : true,
             callback            : textArray => {
                 if (!textArray.length) {
@@ -174,12 +174,12 @@ class NameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
                         nameData.setNameTextArray(textArray);
                     } else {
                         if (nameArray.length) {
-                            nameArray.push(ProtoSchemaCommonProtoStructureUnitCustomName.UnitCustomName.fromJson({
+                            nameArray.push(UnitCustomName.fromJson({
                                 nameId          : nameId,
                                 nameTextArray   : textArray.map(v => v.toJson()),
                             }));
                         } else {
-                            unitMap.setUnitCustomNameArray([ProtoSchemaCommonProtoStructureUnitCustomName.UnitCustomName.fromJson({
+                            unitMap.setUnitCustomNameArray([UnitCustomName.fromJson({
                                 nameId          : nameId,
                                 nameTextArray   : textArray.map(v => v.toJson()),
                             })]);
@@ -188,7 +188,7 @@ class NameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
                 }
 
                 this._updateView();
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwUnitCustomNameArrayChanged);
+                dispatch(TypeId.BwUnitCustomNameArrayChanged);
             },
         });
     }
@@ -205,14 +205,14 @@ class NameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const nameId        = openData.nameId;
         const unitMap       = openData.war.getUnitMap();
         const nameTextArray = unitMap.getUnitCustomNameArray()?.find(v => (v.getNameId() ?? 0) === nameId)?.getNameTextArray();
-        const languageType1 = LangUtils.getCurrentLanguageType();
-        const languageType2 = LangUtils.getSecondaryLanguageType();
-        this._labelName1.setText(LangUtils.getLanguageText({
+        const languageType1 = getCurrentLanguageType();
+        const languageType2 = getSecondaryLanguageType();
+        this._labelName1.setText(getLanguageText({
             textArray       : nameTextArray,
             languageType    : languageType1,
             useAlternate    : false,
         }) ?? `----`);
-        this._labelName2.setText(LangUtils.getLanguageText({
+        this._labelName2.setText(getLanguageText({
             textArray       : nameTextArray,
             languageType    : languageType2,
             useAlternate    : false,
@@ -228,7 +228,7 @@ class NameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         }
 
         const nameId = openData.nameId;
-        this._labelId.setText(`#${nameId}       ${openData.war.getUnitMap().getAllUnits().filter(v => v.getCustomNameId() === nameId).length} ${LangUtils.getText(LangConstants.TextType.B1431)}`);
+        this._labelId.setText(`#${nameId}       ${openData.war.getUnitMap().getAllUnits().filter(v => v.getCustomNameId() === nameId).length} ${getText(TextType.B1431)}`);
         this._layoutName.arrangeItems();
     }
 }

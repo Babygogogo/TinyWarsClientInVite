@@ -1,35 +1,35 @@
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "../../auxiliaryTypes/MapSize.ts";
-import type * as BaseWarInterfaceIBwCursorView from "./IBwCursorView.ts";
-import type * as BaseWarInterfaceIBwWar from "./IBwWar.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
+import type { IBwCursorView } from "./IBwCursorView.ts";
+import type { IBwWar } from "./IBwWar.ts";
 
 export interface IBwCursor {
-    init(mapSize: AuxiliaryTypesMapSize.MapSize): void;
+    init(mapSize: MapSize): void;
     fastInit(): void;
 
-    startRunning(war: BaseWarInterfaceIBwWar.IBwWar): void;
+    startRunning(war: IBwWar): void;
     startRunningView(): void;
     stopRunning(): void;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getWar(): BaseWarInterfaceIBwWar.IBwWar;
+    getWar(): IBwWar;
 
-    getView(): BaseWarInterfaceIBwCursorView.IBwCursorView;
+    getView(): IBwCursorView;
     updateView(): void;
 
-    getMapSize(): AuxiliaryTypesMapSize.MapSize;
+    getMapSize(): MapSize;
 
     setIsVisible(visible: boolean): void;
     getIsVisible(): boolean;
 
     getGridX(): number;
     getGridY(): number;
-    setGridIndex(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void;
-    getGridIndex(): AuxiliaryTypesGridIndex.GridIndex;
+    setGridIndex(gridIndex: GridIndex): void;
+    getGridIndex(): GridIndex;
 
-    getPreviousGridIndex(): AuxiliaryTypesGridIndex.GridIndex | null;
+    getPreviousGridIndex(): GridIndex | null;
 
     setIsMovableByTouches(isMovable: boolean): void;
     getIsMovableByTouches(): boolean;

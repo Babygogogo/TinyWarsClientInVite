@@ -1,66 +1,66 @@
-import * as ActionPlannersConstants from "../../actionPlanners/Constants.ts";
-import * as AuxiliaryTypesDamageCalculatorPlayerData from "../../auxiliaryTypes/DamageCalculatorPlayerData.ts";
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as CommonModelCommonModel from "../../common/model/CommonModel.ts";
-import * as CoSkillsConstants from "../../coSkills/Constants.ts";
-import * as DamageCalculatorsUtils from "../../damageCalculators/Utils.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsUtils from "../../graphics/Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as StagesStageManager from "../../stages/StageManager.ts";
-import * as TilesConstantsCommon from "../../tiles/constants/Common.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
-import * as UsersModel from "../../users/Model.ts";
+import { StateId } from "../../actionPlanners/Constants.ts";
+import { DamageCalculatorPlayerData } from "../../auxiliaryTypes/DamageCalculatorPlayerData.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { getCachedTileObjectImageSource, getTileAnimationTickCount } from "../../common/model/CommonModel.ts";
+import { SkillTypeId } from "../../coSkills/Constants.ts";
+import { getEstimatedBattleInfo, getAttackAndCounterDamage } from "../../damageCalculators/Utils.ts";
+import { getSpwWarClass, getRwWarBaseClass } from "../../gameHelpers/GhFactory.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
+import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { getStage } from "../../stages/StageManager.ts";
+import { TileTypeId, ThemeTypeId, ObjectTypeId } from "../../tiles/constants/Common.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { WeaponTypeId } from "../../units/Constants.ts";
+import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
 
-const getGridWidth          = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight         = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridHeight);
+const getGridWidth          = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight         = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
 
 export interface OpenData {
-    war: BaseWarInterfaceIBwWar.IBwWar;
+    war: IBwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _group!                : IUiContainer;
 
-    private readonly _layoutAttack!         : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelAttackTitle!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelAttackValue!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _layoutCounter!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelCounterTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelCounterValue!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutAttack!         : IUiLayout;
+    private readonly _labelAttackTitle!     : IUiLabel;
+    private readonly _labelAttackValue!     : IUiLabel;
+    private readonly _layoutCounter!        : IUiLayout;
+    private readonly _labelCounterTitle!    : IUiLabel;
+    private readonly _labelCounterValue!    : IUiLabel;
 
-    private readonly _groupCalculator!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupSettingsSwitch!  : UiInterfacesIUiContainer.IUiContainer;
+    private readonly _groupCalculator!      : IUiContainer;
+    private readonly _groupSettingsSwitch!  : IUiContainer;
 
-    private readonly _groupSettings!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupCoz!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgCoz!               : UiInterfacesIUiImage.IUiImage;
-    private readonly _groupCommandTower!    : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnSubCommandTower!   : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelCommandTower!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgCommandTower!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _btnAddCommandTower!   : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupSettings!        : IUiContainer;
+    private readonly _groupCoz!             : IUiContainer;
+    private readonly _imgCoz!               : IUiImage;
+    private readonly _groupCommandTower!    : IUiLayout;
+    private readonly _btnSubCommandTower!   : IUiButton;
+    private readonly _labelCommandTower!    : IUiLabel;
+    private readonly _imgCommandTower!      : IUiImage;
+    private readonly _btnAddCommandTower!   : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.ZoomableContentsMoved,               callback: this._onNotifyZoomableContentsMoved },
-            { type: NotificationsTypeId.TypeId.TileAnimationTick,                   callback: this._onNotifyTileAnimationTick },
-            { type: NotificationsTypeId.TypeId.UnitAndTileTextureVersionChanged,    callback: this._onNotifyUnitAndTileTextureVersionChanged },
-            { type: NotificationsTypeId.TypeId.BwCursorGridIndexChanged,            callback: this._onNotifyBwCursorGridIndexChanged },
-            { type: NotificationsTypeId.TypeId.ActionPlannerMovePathChanged,        callback: this._onNotifyActionPlannerMovePathChanged },
+            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.ZoomableContentsMoved,               callback: this._onNotifyZoomableContentsMoved },
+            { type: TypeId.TileAnimationTick,                   callback: this._onNotifyTileAnimationTick },
+            { type: TypeId.UnitAndTileTextureVersionChanged,    callback: this._onNotifyUnitAndTileTextureVersionChanged },
+            { type: TypeId.BwCursorGridIndexChanged,            callback: this._onNotifyBwCursorGridIndexChanged },
+            { type: TypeId.ActionPlannerMovePathChanged,        callback: this._onNotifyActionPlannerMovePathChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupCalculator,            callback: this._onTouchedGroupCalculator },
@@ -107,7 +107,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const defenderGridIndex = war.getCursor().getGridIndex();
         const defenderUnit      = war.getUnitMap().getUnitOnMap(defenderGridIndex);
         if (defenderUnit == null) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonForbidden01);
+            playShortSfx(ShortSfxCode.ButtonForbidden01);
             return;
         }
 
@@ -116,9 +116,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const commonSettingsManager = war.getCommonSettingManager();
         const gameConfig            = war.getGcData();
         const allTiles              = tileMap.getAllTiles();
-        const allCities             = allTiles.filter(v => v.getTileTypeId() === TilesConstantsCommon.TileTypeId.City);
-        const allCommandTowers      = allTiles.filter(v => v.getTileTypeId() === TilesConstantsCommon.TileTypeId.CommandTower);
-        const attackerUnit          = HelpersMisc.getExisted(actionPlanner.getFocusUnit());
+        const allCities             = allTiles.filter(v => v.getTileTypeId() === TileTypeId.City);
+        const allCommandTowers      = allTiles.filter(v => v.getTileTypeId() === TileTypeId.CommandTower);
+        const attackerUnit          = getExisted(actionPlanner.getFocusUnit());
         const attackerPlayer        = attackerUnit.getPlayer();
         const attackerGridIndex     = actionPlanner.getMovePathDestination().getGridIndex();
         const attackerPlayerIndex   = attackerUnit.getPlayerIndex();
@@ -134,7 +134,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const canSeeHiddenInfo2     = (!hasFog) || (watcherTeamIndexes.has(defenderPlayer.getTeamIndex()));
         const coSkillType1          = attackerPlayer.getCoUsingSkillType();
         const coSkillType2          = defenderPlayer.getCoUsingSkillType();
-        const getIsAffectedByCo1    = HelpersMisc.createLazyFunc((): boolean => {
+        const getIsAffectedByCo1    = createLazyFunc((): boolean => {
             if ((attackerUnit.getIsCoOnboard()) || (!gameConfig.getCoBasicCfg(attackerPlayer.getCoId())?.getMaxBoardCount())) {
                 return true;
             }
@@ -142,7 +142,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             const distance = attackerGridIndex.getMinDistance(attackerPlayer.getCoGridIndexListOnMap());
             return (distance != null) && (distance <= attackerPlayer.getCoZoneRadius());
         });
-        const getIsAffectedByCo2    = HelpersMisc.createLazyFunc((): boolean => {
+        const getIsAffectedByCo2    = createLazyFunc((): boolean => {
             if ((defenderUnit.getIsCoOnboard())  || (!gameConfig.getCoBasicCfg(defenderPlayer.getCoId())?.getMaxBoardCount())) {
                 return true;
             }
@@ -158,23 +158,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const attackerLowerLuck = attackerRule.getLuckLowerLimit() + warEventManager.getOpaLuckLowerLimitModifier(attackerUnit, attackerGridIndex);
         const defenderUpperLuck = defenderRule.getLuckUpperLimit() + warEventManager.getOpaLuckUpperLimitModifier(defenderUnit, defenderGridIndex);
         const defenderLowerLuck = defenderRule.getLuckLowerLimit() + warEventManager.getOpaLuckLowerLimitModifier(defenderUnit, defenderGridIndex);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonDamageCalculatorPanel, {
+        openPanel(getDict().CommonDamageCalculatorPanel, {
             war,
             needReviseWeaponType    : false,
             data                    : {
                 gameConfig,
                 weatherType     : war.getWeatherManager().getCurrentWeatherType(),
-                attackerData    : new AuxiliaryTypesDamageCalculatorPlayerData.DamageCalculatorPlayerData({
+                attackerData    : new DamageCalculatorPlayerData({
                     coId                    : attackerPlayer.getCoId(),
                     coSkillType             : attackerPlayer.checkCoIsUsingActiveSkill()
                         ? coSkillType1
-                        : (getIsAffectedByCo1() ? CoSkillsConstants.SkillTypeId.Passive : null),
+                        : (getIsAffectedByCo1() ? SkillTypeId.Passive : null),
                     unitType                : attackerUnit.getUnitType(),
                     unitHp                  : attackerUnit.getCurrentHp(),
                     unitWeaponType          : (attackerUnit.getPrimaryWeaponBaseDamage(defenderArmorType) != null)
-                        ? (UnitsConstants.WeaponTypeId.Primary)
+                        ? (WeaponTypeId.Primary)
                         : (attackerUnit.getSecondaryWeaponBaseDamage(defenderArmorType) != null
-                            ? UnitsConstants.WeaponTypeId.Secondary
+                            ? WeaponTypeId.Secondary
                             : null
                         ),
                     unitPromotion           : attackerUnit.getCurrentPromotion(),
@@ -190,17 +190,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     fund                    : canSeeHiddenInfo1 ? attackerPlayer.getFund() : 0,
                     citiesCount             : canSeeHiddenInfo1 ? allCities.filter(v => v.getPlayerIndex() === attackerPlayerIndex).length : 0,
                 }),
-                defenderData    : new AuxiliaryTypesDamageCalculatorPlayerData.DamageCalculatorPlayerData({
+                defenderData    : new DamageCalculatorPlayerData({
                     coId                    : defenderPlayer.getCoId(),
                     coSkillType             : defenderPlayer.checkCoIsUsingActiveSkill()
                         ? coSkillType2
-                        : (getIsAffectedByCo2() ? CoSkillsConstants.SkillTypeId.Passive : null),
+                        : (getIsAffectedByCo2() ? SkillTypeId.Passive : null),
                     unitType                : defenderUnit.getUnitType(),
                     unitHp                  : defenderUnit.getCurrentHp(),
                     unitWeaponType          : (defenderUnit.getPrimaryWeaponBaseDamage(attackerArmorType) != null)
-                        ? (UnitsConstants.WeaponTypeId.Primary)
+                        ? (WeaponTypeId.Primary)
                         : (defenderUnit.getSecondaryWeaponBaseDamage(attackerArmorType) != null
-                            ? UnitsConstants.WeaponTypeId.Secondary
+                            ? WeaponTypeId.Secondary
                             : null
                         ),
                     unitPromotion           : defenderUnit.getCurrentPromotion(),
@@ -218,7 +218,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 }),
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedGroupSettingsSwitch(): void {
@@ -227,11 +227,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         if (!settings.isEnabled) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-                getContent : () => LangUtils.getText(LangConstants.TextType.A0021),
+            openPanel(getDict().CommonHelpPanel, {
+                getContent : () => getText(TextType.A0021),
             });
         }
         settings.isEnabled = !settings.isEnabled;
@@ -244,7 +244,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const targetPlayerIndex = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayerIndex();
         if (targetPlayerIndex != null) {
@@ -326,8 +326,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const stateId       = actionPlanner.getStateId();
         const group         = this._group;
 
-        if ((stateId === ActionPlannersConstants.StateId.ChoosingUnitMovePath)     ||
-            (stateId === ActionPlannersConstants.StateId.ChoosingUnitAttackTarget)
+        if ((stateId === StateId.ChoosingUnitMovePath)     ||
+            (stateId === StateId.ChoosingUnitAttackTarget)
         ) {
             const attackerUnit  = actionPlanner.getFocusUnit();
             if (attackerUnit == null) {
@@ -351,12 +351,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 }
 
                 const attackerUnitId    = attackerUnit.getUnitId();
-                const battleInfo        = DamageCalculatorsUtils.getEstimatedBattleInfo({
+                const battleInfo        = getEstimatedBattleInfo({
                     war                         : war,
                     movePath1                   : movePath,
                     launchUnitId1               : attackerUnit.getLoaderUnitId() == null ? null : attackerUnitId,
                     gridIndex2                  : gridIndex2,
-                    observerTeamIndexSet        : war instanceof GameHelpersGhFactory.getSpwWarClass() ? war.getPlayerManager().getTeamIndexSet([attackerUnit.getPlayerIndex()]) : null,
+                    observerTeamIndexSet        : war instanceof getSpwWarClass() ? war.getPlayerManager().getTeamIndexSet([attackerUnit.getPlayerIndex()]) : null,
                     useDamagePreviewSettings    : true,
                     fuelConsumption             : destinationNode.getTotalMoveCost(),
                     isAttackUnit                : unitMap.getVisibleUnitOnMap(gridIndex2) != null,
@@ -366,7 +366,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 }
 
                 const target                            = unitMap.getUnitOnMap(gridIndex2) || war.getTileMap().getTile(gridIndex2);
-                const { attackDamage, counterDamage }   = DamageCalculatorsUtils.getAttackAndCounterDamage({
+                const { attackDamage, counterDamage }   = getAttackAndCounterDamage({
                     battleDamageInfoArray   : battleInfo.damageInfoArray,
                     attackerUnitId          : attackerUnitId,
                     targetGridIndex         : gridIndex2,
@@ -384,7 +384,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
     private _updateGroupSettingsSwitch(): void {
-        this._groupSettingsSwitch.setIsVisible(!(this.getOpenData()?.war instanceof GameHelpersGhFactory.getRwWarBaseClass()));
+        this._groupSettingsSwitch.setIsVisible(!(this.getOpenData()?.war instanceof getRwWarBaseClass()));
     }
     private _updateGroupSettings(): void {
         const war = this.getOpenData()?.war;
@@ -425,14 +425,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const targetPlayer = war.getUnitMap().getUnitOnMap(war.getCursor().getGridIndex())?.getPlayer();
-        this._imgCommandTower.loadSource(CommonModelCommonModel.getCachedTileObjectImageSource({
-            version     : UsersModel.getSelfSettingsTextureVersion(),
-            themeType   : TilesConstantsCommon.ThemeTypeId.Normal,
+        this._imgCommandTower.loadSource(getCachedTileObjectImageSource({
+            version     : getSelfSettingsTextureVersion(),
+            themeType   : ThemeTypeId.Normal,
             skinId      : targetPlayer?.getUnitAndTileSkinId() ?? 0,
             shapeId     : 0,
-            objectType  : TilesConstantsCommon.ObjectTypeId.CommandTower,
+            objectType  : ObjectTypeId.CommandTower,
             isDark      : false,
-            tickCount   : CommonModelCommonModel.getTileAnimationTickCount(),
+            tickCount   : getTileAnimationTickCount(),
         }));
     }
 
@@ -444,7 +444,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const container     = war.getView().getFieldContainer();
         const gridIndex     = war.getCursor().getGridIndex();
-        const stage         = StagesStageManager.getStage();
+        const stage         = getStage();
         const group         = this._group;
         const groupWidth    = group.getUnscaledWidth();
         const groupHeight   = group.getUnscaledHeight();
@@ -459,8 +459,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelAttackTitle.setText(LangUtils.getText(LangConstants.TextType.B0077));
-        this._labelCounterTitle.setText(LangUtils.getText(LangConstants.TextType.B0078));
+        this._labelAttackTitle.setText(getText(TextType.B0077));
+        this._labelCounterTitle.setText(getText(TextType.B0078));
 
         this._layoutAttack.arrangeItems();
         this._layoutCounter.arrangeItems();

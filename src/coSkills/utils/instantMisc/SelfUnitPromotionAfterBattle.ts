@@ -1,6 +1,8 @@
-import type * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgInstantMiscSelfUnitPromotionAfterBattle from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitPromotionAfterBattle.ts";
+import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import type {
+    SelfUnitPromotionAfterBattle,
+} from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitPromotionAfterBattle.ts";
 
 export function getTotalOffset({
     cfg,
@@ -13,13 +15,13 @@ export function getTotalOffset({
     targetLostNormalizedHp,
     isTargetKilled,
 }: {
-    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgInstantMiscSelfUnitPromotionAfterBattle.SelfUnitPromotionAfterBattle | null | undefined;
-    gameConfig                  : GameConfigGcData.GcData;
+    cfg                         : SelfUnitPromotionAfterBattle | null | undefined;
+    gameConfig                  : GcData;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex                   : GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => AuxiliaryTypesGridIndex.GridIndex[];
+    getCoGridIndexArrayOnMap    : () => GridIndex[];
     targetLostNormalizedHp      : number;
     isTargetKilled              : boolean;
 }): number {

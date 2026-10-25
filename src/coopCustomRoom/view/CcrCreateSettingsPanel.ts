@@ -1,57 +1,66 @@
-import * as BootTimersConstants from "../../bootTimers/Constants.ts";
-import * as CommonViewCommonWarAdvancedSettingsPage from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import * as CommonViewCommonWarBasicSettingsPage from "../../common/view/CommonWarBasicSettingsPage.ts";
-import * as CommonViewCommonWarMapInfoPage from "../../common/view/CommonWarMapInfoPage.ts";
-import * as CoopCustomRoomModelCcrProxy from "../model/CcrProxy.ts";
-import type * as CoopCustomRoomModelCcrRoomCreator from "../model/CcrRoomCreator.ts";
-import * as CoopCustomRoomViewCcrCreatePlayerInfoPage from "./CcrCreatePlayerInfoPage.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as GameModesConstants from "../../gameModes/Constants.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import * as UiComponentsUiTabItemRenderer from "../../ui/components/UiTabItemRenderer.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiTab from "../../ui/interfaces/IUiTab.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as WarRulesUtilsCommonData from "../../warRules/utils/CommonData.ts";
+import { TimerTypeId } from "../../bootTimers/Constants.ts";
+import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
+    Page as CommonViewCommonWarBasicSettingsPage,
+} from "../../common/view/CommonWarBasicSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
+    Page as CommonViewCommonWarMapInfoPage,
+} from "../../common/view/CommonWarMapInfoPage.ts";
+import { reqCreateRoom } from "../model/CcrProxy.ts";
+import type { CcrRoomCreator } from "../model/CcrRoomCreator.ts";
+import {
+    type OpenData as CoopCustomRoomViewCcrCreatePlayerInfoPageOpenData,
+    Page as CoopCustomRoomViewCcrCreatePlayerInfoPage,
+} from "./CcrCreatePlayerInfoPage.ts";
+import { showLang, show } from "../../FloatText.ts";
+import { BasicSettingsType } from "../../gameConfig/GcWar.ts";
+import { ModeId } from "../../gameModes/Constants.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { gotoLobby } from "../../helpers/GameFlow.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import { UiTabItemRenderer } from "../../ui/components/UiTabItemRenderer.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
+import { tickDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
 
-type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPage.OpenData;
-type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPage.OpenData;
-type OpenDataForCommonWarAdvancedSettingsPage   = CommonViewCommonWarAdvancedSettingsPage.OpenData;
-type OpenDataForCcrCreatePlayerInfoPage         = CoopCustomRoomViewCcrCreatePlayerInfoPage.OpenData;
+type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
+type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
+type OpenDataForCommonWarAdvancedSettingsPage   = CommonViewCommonWarAdvancedSettingsPageOpenData;
+type OpenDataForCcrCreatePlayerInfoPage         = CoopCustomRoomViewCcrCreatePlayerInfoPageOpenData;
 
 const CONFIRM_INTERVAL_MS = 5000;
 
 export interface OpenData {
-    roomCreator : CoopCustomRoomModelCcrRoomCreator.CcrRoomCreator;
+    roomCreator : CcrRoomCreator;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _groupNavigator!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMultiPlayer!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelCreateRoom!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelChooseMap!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRoomSettings!    : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _groupNavigator!       : IUiLayout;
+    private readonly _labelMultiPlayer!     : IUiLabel;
+    private readonly _labelCreateRoom!      : IUiLabel;
+    private readonly _labelChooseMap!       : IUiLabel;
+    private readonly _labelRoomSettings!    : IUiLabel;
 
-    private readonly _groupTab!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _tabSettings!          : UiInterfacesIUiTab.IUiTab<DataForTabItemRenderer, void | OpenDataForCommonWarMapInfoPage | OpenDataForCommonWarBasicSettingsPage | OpenDataForCommonWarAdvancedSettingsPage | OpenDataForCcrCreatePlayerInfoPage>;
+    private readonly _groupTab!             : IUiContainer;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, void | OpenDataForCommonWarMapInfoPage | OpenDataForCommonWarBasicSettingsPage | OpenDataForCommonWarAdvancedSettingsPage | OpenDataForCcrCreatePlayerInfoPage>;
 
-    private readonly _btnBack!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnBack!              : IUiButton;
+    private readonly _btnConfirm!           : IUiButton;
 
     private _timeoutIdForBtnConfirm : number | null = null;
     private _isTabInitialized       = false;
@@ -62,11 +71,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,            callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgCcrCreateRoom,           callback: this._onNotifyMsgCcrCreateRoom },
+            { type: TypeId.LanguageChanged,            callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgCcrCreateRoom,           callback: this._onNotifyMsgCcrCreateRoom },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -99,7 +108,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CcrCreateMapListPanel, {
+        openPanel(getDict().CcrCreateMapListPanel, {
             mapFilter               : null,
             mapSorter               : null,
             usePreviousFilter       : true,
@@ -113,11 +122,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (this._timeoutIdForBtnConfirm != null) {
-            FloatText2.showLang(LangConstants.TextType.A0421);
+            showLang(TextType.A0421);
             return;
         }
 
-        CoopCustomRoomModelCcrProxy.reqCreateRoom(openData.roomCreator.generateData());
+        reqCreateRoom(openData.roomCreator.generateData());
         this._resetTimeoutForBtnConfirm();
     }
 
@@ -125,20 +134,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgCcrCreateRoom(): void {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0015));
-        HelpersGameFlow.gotoLobby();
+        show(getText(TextType.A0015));
+        gotoLobby();
     }
 
     private _resetTimeoutForBtnConfirm(): void {
         this._clearTimeoutForBtnConfirm();
-        this._timeoutIdForBtnConfirm = VendorEgretEgret.setTimeout(() => {
+        this._timeoutIdForBtnConfirm = setTimeout(() => {
             this._timeoutIdForBtnConfirm = null;
         }, this, CONFIRM_INTERVAL_MS);
     }
 
     private _clearTimeoutForBtnConfirm(): void {
         if (this._timeoutIdForBtnConfirm != null) {
-            VendorEgretEgret.clearTimeout(this._timeoutIdForBtnConfirm);
+            clearTimeout(this._timeoutIdForBtnConfirm);
             this._timeoutIdForBtnConfirm = null;
         }
     }
@@ -147,12 +156,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Functions for the view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelCreateRoom.setLangText(LangConstants.TextType.B0000);
-        this._labelMultiPlayer.setLangText(LangConstants.TextType.B0646);
-        this._labelChooseMap.setLangText(LangConstants.TextType.B0227);
-        this._labelRoomSettings.setLangText(LangConstants.TextType.B0571);
-        this._btnBack.setLangText(LangConstants.TextType.B0146);
-        this._btnConfirm.setLangText(LangConstants.TextType.B0026);
+        this._labelCreateRoom.setLangText(TextType.B0000);
+        this._labelMultiPlayer.setLangText(TextType.B0646);
+        this._labelChooseMap.setLangText(TextType.B0227);
+        this._labelRoomSettings.setLangText(TextType.B0571);
+        this._btnBack.setLangText(TextType.B0146);
+        this._btnConfirm.setLangText(TextType.B0026);
 
         this._groupNavigator.arrangeItems();
     }
@@ -161,23 +170,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage.Page,
+                tabItemData : { name: getText(TextType.B0002) },
+                pageClass   : CommonViewCommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0003) },
-                pageClass   : CommonViewCommonWarAdvancedSettingsPage.Page,
+                tabItemData : { name: getText(TextType.B0003) },
+                pageClass   : Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0224) },
-                pageClass   : CoopCustomRoomViewCcrCreatePlayerInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0224) },
+                pageClass   : CoopCustomRoomViewCcrCreatePlayerInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0298) },
+                pageClass   : CommonViewCommonWarMapInfoPage,
                 pageData    : null,
             },
         ]);
@@ -228,11 +237,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const bootTimerParams   = roomCreator.getBootTimerParams();
         const gcData            = roomCreator.getGcData();
         const warEventFullData  = roomCreator.getMapRawData().getWarEventFullData();
-        const timerType         = bootTimerParams[0] as BootTimersConstants.TimerTypeId;
+        const timerType         = bootTimerParams[0] as TimerTypeId;
         const openData          : OpenDataForCommonWarBasicSettingsPage = {
             dataArrayForListSettings: [
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.NormalMapId,
+                    settingsType    : BasicSettingsType.NormalMapId,
                     currentValue    : roomCreator.getSettingsForCcw().getNormalMapId(),
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -240,49 +249,49 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.WarName,
+                    settingsType    : BasicSettingsType.WarName,
                     currentValue    : roomCreator.getWarName() ?? null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
                     warEventFullData: warEventFullData,
                     callbackOnModify: (newValue: string | number | null) => {
                         if (typeof newValue === "number") {
-                            throw HelpersMisc.newError(`Invalid newValue: ${newValue}`);
+                            throw newError(`Invalid newValue: ${newValue}`);
                         }
                         roomCreator.setWarName(newValue);
                         this._updateCommonWarBasicSettingsPage();
                     },
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.WarPassword,
+                    settingsType    : BasicSettingsType.WarPassword,
                     currentValue    : roomCreator.getWarPassword() ?? null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
                     warEventFullData: warEventFullData,
                     callbackOnModify: (newValue: string | number | null) => {
                         if (typeof newValue === "number") {
-                            throw HelpersMisc.newError(`Invalid newValue: ${newValue}`);
+                            throw newError(`Invalid newValue: ${newValue}`);
                         }
                         roomCreator.setWarPassword(newValue);
                         this._updateCommonWarBasicSettingsPage();
                     },
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.WarComment,
+                    settingsType    : BasicSettingsType.WarComment,
                     currentValue    : roomCreator.getWarComment() ?? null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
                     warEventFullData: warEventFullData,
                     callbackOnModify: (newValue: string | number | null) => {
                         if (typeof newValue === "number") {
-                            throw HelpersMisc.newError(`Invalid newValue: ${newValue}`);
+                            throw newError(`Invalid newValue: ${newValue}`);
                         }
                         roomCreator.setWarComment(newValue);
                         this._updateCommonWarBasicSettingsPage();
                     },
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.WarRuleTitle,
+                    settingsType    : BasicSettingsType.WarRuleTitle,
                     currentValue    : null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -295,7 +304,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.HasFog,
+                    settingsType    : BasicSettingsType.HasFog,
                     currentValue    : null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -307,26 +316,26 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.Weather,
+                    settingsType    : BasicSettingsType.Weather,
                     currentValue    : null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
                     warEventFullData: warEventFullData,
                     callbackOnModify: () => {
-                        WarRulesUtilsCommonData.tickDefaultWeatherType(warRuleCommonData, gcData);
+                        tickDefaultWeatherType(warRuleCommonData, gcData);
                         instanceWarRule.setTemplateWarRuleId(null);
                         this._updateCommonWarBasicSettingsPage();
                     },
                 },
                 {
-                    settingsType        : GameConfigGcWar.BasicSettingsType.TileTheme,
+                    settingsType        : BasicSettingsType.TileTheme,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gcData,
                     warEventFullData    : warEventFullData,
                     callbackOnModify    : newValue => {
                         if (typeof newValue === "string") {
-                            throw HelpersMisc.newError(`Invalid newValue: ${newValue}`);
+                            throw newError(`Invalid newValue: ${newValue}`);
                         }
 
                         if (warRuleCommonData.getFixedTileTheme() !== newValue) {
@@ -337,7 +346,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.WarEvent,
+                    settingsType    : BasicSettingsType.WarEvent,
                     currentValue    : null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -345,14 +354,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.TurnsAndWarOperationsLimit,
+                    settingsType    : BasicSettingsType.TurnsAndWarOperationsLimit,
                     currentValue    : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
                     warEventFullData: warEventFullData,
                     callbackOnModify: (newValue: string | number | null) => {
                         if (typeof newValue !== "string") {
-                            throw HelpersMisc.newError(`Invalid newValue: ${newValue}`);
+                            throw newError(`Invalid newValue: ${newValue}`);
                         }
 
                         const stringArray = newValue.split(`,`);
@@ -362,7 +371,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.TimerType,
+                    settingsType    : BasicSettingsType.TimerType,
                     currentValue    : timerType,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -374,9 +383,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 },
             ],
         };
-        if (timerType === BootTimersConstants.TimerTypeId.Regular) {
+        if (timerType === TimerTypeId.Regular) {
             openData.dataArrayForListSettings.push({
-                settingsType    : GameConfigGcWar.BasicSettingsType.TimerRegularParam,
+                settingsType    : BasicSettingsType.TimerRegularParam,
                 currentValue    : bootTimerParams[1],
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gcData,
@@ -386,26 +395,26 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     this._updateCommonWarBasicSettingsPage();
                 },
             });
-        } else if (timerType === BootTimersConstants.TimerTypeId.Incremental) {
+        } else if (timerType === TimerTypeId.Incremental) {
             openData.dataArrayForListSettings.push(
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.TimerIncrementalParams,
+                    settingsType    : BasicSettingsType.TimerIncrementalParams,
                     currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
                     warEventFullData: warEventFullData,
                     callbackOnModify: (newValue: number | string | null) => {
                         if (typeof newValue !== "string") {
-                            throw HelpersMisc.newError(`Invalid newValue: ${newValue}`);
+                            throw newError(`Invalid newValue: ${newValue}`);
                         }
 
-                        roomCreator.setBootTimerParams([BootTimersConstants.TimerTypeId.Incremental, ...newValue.split(`,`).map(v => parseInt(v))]);
+                        roomCreator.setBootTimerParams([TimerTypeId.Incremental, ...newValue.split(`,`).map(v => parseInt(v))]);
                         this._updateCommonWarBasicSettingsPage();
                     },
                 },
             );
         } else {
-            throw HelpersMisc.newError(`CcrCreateSettingsPanel._createDataForCommonWarBasicSettingsPage() invalid timerType.`);
+            throw newError(`CcrCreateSettingsPanel._createDataForCommonWarBasicSettingsPage() invalid timerType.`);
         }
 
         return openData;
@@ -419,7 +428,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         return {
             canModify       : true,
             instanceWarRule : roomCreator.getInstanceWarRule(),
-            gameModeId      : GameModesConstants.ModeId.Coop,
+            gameModeId      : ModeId.Coop,
             gcData          : roomCreator.getGcData(),
         };
     }
@@ -453,62 +462,62 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Opening/closing animations.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnConfirm,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 0, },
             endProps    : { customAlpha: 1, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnConfirm,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 1, },
             endProps    : { customAlpha: 0, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 }
 
-interface DataForTabItemRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTabItemRenderer extends UiListItemData {
     name: string;
 }
-class TabItemRenderer extends UiComponentsUiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer> {
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+class TabItemRenderer extends UiTabItemRenderer<DataForTabItemRenderer> {
+    private readonly _labelName!    : IUiLabel;
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? LangConstants.UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
     }
 }

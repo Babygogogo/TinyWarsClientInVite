@@ -1,42 +1,42 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { AllTagIdArray } from "../../units/Constants.ts";
 
 export interface OpenData {
     currentTagIdList    : number[];
-    war                 : BaseWarInterfaceIBwWar.IBwWar;
+    war                 : IBwWar;
     callback            : (tagIdList: number[]) => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
 
-    private readonly _groupSelectAll!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _imgSelectAll!     : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelSelectAll!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listTag!          : UiInterfacesIUiScrollList.IUiScrollList<DataForTagRenderer>;
+    private readonly _groupSelectAll!   : IUiLayout;
+    private readonly _imgSelectAll!     : IUiImage;
+    private readonly _labelSelectAll!   : IUiLabel;
+    private readonly _listTag!          : IUiScrollList<DataForTagRenderer>;
 
-    private readonly _btnConfirm!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCancel!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTips!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConfirm!       : IUiButton;
+    private readonly _btnCancel!        : IUiButton;
+    private readonly _labelTips!        : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnCancel,              callback: this._onTouchedBtnCancel },
@@ -45,11 +45,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         ]);
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnCancel();
         });
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnCancel();
         });
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
@@ -71,12 +71,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedGroupSelectAll(): void {
         const isSelectAll   = !this._imgSelectAll.getIsVisible();
         const list          = this._listTag;
-        list.setSelectedItemIndexes(isSelectAll ? HelpersCollection.createRange(0, (list.getBoundDataArray()?.length ?? 0) + 1, 1) : []);
+        list.setSelectedItemIndexes(isSelectAll ? createRange(0, (list.getBoundDataArray()?.length ?? 0) + 1, 1) : []);
         this.updateImgSelectAll();
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedBtnConfirm(): void {
-        this.getOpenData()?.callback(HelpersCollection.getNonNullElements(this._listTag.getSelectedDataArray()?.map(v => v?.tagId) ?? []));
+        this.getOpenData()?.callback(getNonNullElements(this._listTag.getSelectedDataArray()?.map(v => v?.tagId) ?? []));
         this.closePanel();
     }
     private _onTouchedBtnCancel(): void {
@@ -88,17 +88,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.Tags);
-        this._labelSelectAll.setLangText(LangConstants.TextType.B0761);
-        this._btnConfirm.setLangText(LangConstants.TextType.B0026);
-        this._btnCancel.setLangText(LangConstants.TextType.B0154);
-        this._labelTips.setLangText(LangConstants.TextType.A0983);
+        this._labelTitle.setLangText(TextType.Tags);
+        this._labelSelectAll.setLangText(TextType.B0761);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
+        this._labelTips.setLangText(TextType.A0983);
 
         this._groupSelectAll.arrangeItems();
     }
 
     public updateImgSelectAll(): void {
-        this._imgSelectAll.setIsVisible((this._listTag.getSelectedItems()?.length ?? 0) >= UnitsConstants.AllTagIdArray.length);
+        this._imgSelectAll.setIsVisible((this._listTag.getSelectedItems()?.length ?? 0) >= AllTagIdArray.length);
     }
     private async _updateListTag(): Promise<void> {
         const openData = this.getOpenData();
@@ -116,7 +116,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const selectedItemIndexes   : number[] = [];
         let index                   = 0;
         const dataArray             : DataForTagRenderer[] = [];
-        for (const tagId of UnitsConstants.AllTagIdArray) {
+        for (const tagId of AllTagIdArray) {
             dataArray.push({
                 tagId       : tagId,
                 useCount    : inUseDict.get(tagId) ?? 0,
@@ -134,16 +134,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForTagRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTagRenderer extends UiListItemData {
     tagId       : number;
     useCount    : number;
     panel       : Panel;
 }
-class TagRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForTagRenderer> {
-    private readonly _layoutInfo!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTagId!   : UiInterfacesIUiLabel.IUiLabel;
+class TagRenderer extends UiListItemRenderer<DataForTagRenderer> {
+    private readonly _layoutInfo!   : IUiLayout;
+    private readonly _labelTagId!   : IUiLabel;
 
-    private readonly _labelInUse!   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelInUse!   : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();

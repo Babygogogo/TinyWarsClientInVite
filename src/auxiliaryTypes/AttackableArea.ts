@@ -1,12 +1,12 @@
-import * as AuxiliaryTypesGridIndex from "./GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "./MapSize.ts";
-import type * as AuxiliaryTypesMovableArea from "./MovableArea.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as TilesConstantsMapWeapon from "../tiles/constants/MapWeapon.ts";
-import type * as TilesITile from "../tiles/ITile.ts";
+import { GridIndex } from "./GridIndex.ts";
+import type { MapSize } from "./MapSize.ts";
+import type { MovableArea } from "./MovableArea.ts";
+import { getExisted, newError } from "../helpers/Misc.ts";
+import { TypeId } from "../tiles/constants/MapWeapon.ts";
+import type { ITile } from "../tiles/ITile.ts";
 
 type Data = {
-    movePathDestination : AuxiliaryTypesGridIndex.GridIndex;
+    movePathDestination : GridIndex;
 };
 
 export class AttackableArea {
@@ -25,20 +25,20 @@ export class AttackableArea {
         const column = this._area[x];
         return column ? column[y] : null;
     }
-    public getDataByGridIndex(gridIndex: AuxiliaryTypesGridIndex.GridIndex): Data | null {
+    public getDataByGridIndex(gridIndex: GridIndex): Data | null {
         return this.getData(gridIndex.getX(), gridIndex.getY());
     }
     public checkHasGrid(x: number, y: number): boolean {
         return this.getData(x, y) != null;
     }
-    public checkHasGridByGridIndex(gridIndex: AuxiliaryTypesGridIndex.GridIndex): boolean {
+    public checkHasGridByGridIndex(gridIndex: GridIndex): boolean {
         return this.checkHasGrid(gridIndex.getX(), gridIndex.getY());
     }
     public clear(): void {
         this._area.length = 0;
     }
 
-    public mergeFrom(area: AttackableArea, mapSize: AuxiliaryTypesMapSize.MapSize): void {
+    public mergeFrom(area: AttackableArea, mapSize: MapSize): void {
         const oldAreaData   = this.getArea();
         const newAreaData   = area.getArea();
         if (!oldAreaData.length) {
@@ -60,11 +60,11 @@ export class AttackableArea {
     }
 
     public static create({ movableArea, mapSize, minAttackRange, maxAttackRange, checkCanAttack }: {
-        movableArea         : AuxiliaryTypesMovableArea.MovableArea;
-        mapSize             : AuxiliaryTypesMapSize.MapSize;
+        movableArea         : MovableArea;
+        mapSize             : MapSize;
         minAttackRange      : number | null;
         maxAttackRange      : number | null;
-        checkCanAttack      : (destination: AuxiliaryTypesGridIndex.GridIndex, target: AuxiliaryTypesGridIndex.GridIndex) => boolean;
+        checkCanAttack      : (destination: GridIndex, target: GridIndex) => boolean;
     }): AttackableArea {
         const area: Data[][] = [];
         if ((minAttackRange != null) && (maxAttackRange != null) && (maxAttackRange >= minAttackRange)) {
@@ -75,7 +75,7 @@ export class AttackableArea {
                     for (let moveY = 0; moveY < height; ++moveY) {
                         const movableGrid = column[moveY];
                         if (movableGrid) {
-                            const moveGridIndex = new AuxiliaryTypesGridIndex.GridIndex(moveX, moveY);
+                            const moveGridIndex = new GridIndex(moveX, moveY);
                             for (const attackGridIndex of moveGridIndex.getGridsWithinDistance({ minDistance: minAttackRange, maxDistance: maxAttackRange, mapSize })) {
                                 const attackX = attackGridIndex.getX();
                                 const attackY = attackGridIndex.getY();
@@ -83,10 +83,10 @@ export class AttackableArea {
                                     area[attackX] = area[attackX] || [];
                                     const attackableGrid = area[attackX][attackY];
                                     if ((!attackableGrid)                                                                                                                   ||
-                                        (movableGrid.totalMoveCost < HelpersMisc.getExisted(movableArea.getDataByGridIndex(attackableGrid.movePathDestination)).totalMoveCost)
+                                        (movableGrid.totalMoveCost < getExisted(movableArea.getDataByGridIndex(attackableGrid.movePathDestination)).totalMoveCost)
                                     ) {
                                         area[attackX][attackY] = {
-                                            movePathDestination: new AuxiliaryTypesGridIndex.GridIndex(moveX, moveY),
+                                            movePathDestination: new GridIndex(moveX, moveY),
                                         };
                                     }
                                 }
@@ -100,7 +100,7 @@ export class AttackableArea {
         return new AttackableArea(area);
     }
 
-    public static createForTile(tile: TilesITile.ITile, mapSize: AuxiliaryTypesMapSize.MapSize): AttackableArea {
+    public static createForTile(tile: ITile, mapSize: MapSize): AttackableArea {
         const area          : Data[][] = [];
         const mapWeaponType = tile.getTemplateCfg().getMapWeaponTypeId();
         const tileGridIndex = tile.getGridIndex();
@@ -109,23 +109,23 @@ export class AttackableArea {
         const mapWidth      = mapSize.getWidth();
         const mapHeight     = mapSize.getHeight();
         const addGrid       = (x: number, y: number) => {
-            if (new AuxiliaryTypesGridIndex.GridIndex(x, y).checkIsInsideMap(mapSize)) {
+            if (new GridIndex(x, y).checkIsInsideMap(mapSize)) {
                 if (area[x] == null) {
                     area[x] = [];
                 }
                 area[x][y] = {
-                    movePathDestination: new AuxiliaryTypesGridIndex.GridIndex(tileGridX, tileGridY),
+                    movePathDestination: new GridIndex(tileGridX, tileGridY),
                 };
             }
         };
 
-        if ((mapWeaponType === TilesConstantsMapWeapon.TypeId.Crystal) || (mapWeaponType === TilesConstantsMapWeapon.TypeId.CustomCrystal)) {
-            for (const gridIndex of tileGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: HelpersMisc.getExisted(tile.getFinalCrystalData()).getRadius(), mapSize })) {
+        if ((mapWeaponType === TypeId.Crystal) || (mapWeaponType === TypeId.CustomCrystal)) {
+            for (const gridIndex of tileGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: getExisted(tile.getFinalCrystalData()).getRadius(), mapSize })) {
                 addGrid(gridIndex.getX(), gridIndex.getY());
             }
 
-        } else if ((mapWeaponType === TilesConstantsMapWeapon.TypeId.CustomCannon) || (tile.checkIsNormalCannon())) {
-            const customCannonData  = HelpersMisc.getExisted(tile.getFinalCannonData());
+        } else if ((mapWeaponType === TypeId.CustomCannon) || (tile.checkIsNormalCannon())) {
+            const customCannonData  = getExisted(tile.getFinalCannonData());
             const rangeForDown      = customCannonData.getRangeForDown();
             const rangeForUp        = customCannonData.getRangeForUp();
             const rangeForLeft      = customCannonData.getRangeForLeft();
@@ -191,8 +191,8 @@ export class AttackableArea {
                 }
             }
 
-        } else if ((mapWeaponType === TilesConstantsMapWeapon.TypeId.LaserTurret) || (mapWeaponType === TilesConstantsMapWeapon.TypeId.CustomLaserTurret)) {
-            const customLaserTurretData = HelpersMisc.getExisted(tile.getFinalLaserTurretData());
+        } else if ((mapWeaponType === TypeId.LaserTurret) || (mapWeaponType === TypeId.CustomLaserTurret)) {
+            const customLaserTurretData = getExisted(tile.getFinalLaserTurretData());
             const rangeForDown          = customLaserTurretData.getRangeForDown();
             const rangeForUp            = customLaserTurretData.getRangeForUp();
             const rangeForLeft          = customLaserTurretData.getRangeForLeft();
@@ -236,7 +236,7 @@ export class AttackableArea {
 
         } else {
             // TODO: handle other tile types
-            throw HelpersMisc.newError(`WarCommonHelpers.createAttackableAreaForTile() invalid mapWeaponType: ${mapWeaponType}`);
+            throw newError(`WarCommonHelpers.createAttackableAreaForTile() invalid mapWeaponType: ${mapWeaponType}`);
         }
 
         return new AttackableArea(area);

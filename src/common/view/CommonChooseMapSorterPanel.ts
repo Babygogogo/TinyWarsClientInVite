@@ -1,54 +1,54 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as GameConfigGcMap from "../../gameConfig/GcMap.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import type { MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { SortType } from "../../gameConfig/GcMap.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getMapSortTypeName } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 const MapSortTypeArray = [
-    GameConfigGcMap.SortType.MapName,
-    GameConfigGcMap.SortType.NormalMapId,
-    GameConfigGcMap.SortType.DesignerName,
-    GameConfigGcMap.SortType.Popularity,
-    GameConfigGcMap.SortType.GlobalRating,
-    GameConfigGcMap.SortType.MyRating,
-    GameConfigGcMap.SortType.PlayersCountUnneutral,
-    GameConfigGcMap.SortType.GridsCount,
+    SortType.MapName,
+    SortType.NormalMapId,
+    SortType.DesignerName,
+    SortType.Popularity,
+    SortType.GlobalRating,
+    SortType.MyRating,
+    SortType.PlayersCountUnneutral,
+    SortType.GridsCount,
 ];
 
 export interface OpenData {
-    currentSorter       : AuxiliaryTypesAuxiliaryTypes.MapSorter | null;
-    callbackOnConfirm   : (mapSorter: AuxiliaryTypesAuxiliaryTypes.MapSorter) => void;
+    currentSorter       : MapSorter | null;
+    callbackOnConfirm   : (mapSorter: MapSorter) => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
 
-    private readonly _listSortType!     : UiInterfacesIUiScrollList.IUiScrollList<DataForSortTypeRenderer>;
+    private readonly _listSortType!     : IUiScrollList<DataForSortTypeRenderer>;
 
-    private readonly _groupIsAscending! : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _imgIsAscending!   : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelIsAscending! : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupIsAscending! : IUiLayout;
+    private readonly _imgIsAscending!   : IUiImage;
+    private readonly _labelIsAscending! : IUiLabel;
 
-    private readonly _btnConfirm!       : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnConfirm!       : IUiButton;
 
     private _isAscending    = true;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -78,7 +78,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnConfirm(): void {
         const sortType = this._listSortType.getFirstSelectedData()?.sortType;
         if (sortType == null) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonForbidden01);
+            playShortSfx(ShortSfxCode.ButtonForbidden01);
             return;
         }
 
@@ -93,7 +93,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._isAscending = !this._isAscending;
         this._updateImgIsAscending();
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -101,9 +101,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1049));
-        this._labelIsAscending.setText(LangUtils.getText(LangConstants.TextType.B1106));
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
+        this._labelTitle.setText(getText(TextType.B1049));
+        this._labelIsAscending.setText(getText(TextType.B1106));
+        this._btnConfirm.setText(getText(TextType.B0026));
         this._groupIsAscending.arrangeItems();
     }
 
@@ -116,7 +116,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const list      = this._listSortType;
-        const sortType  = this.getOpenData()?.currentSorter?.sortType ?? GameConfigGcMap.SortType.MapName;
+        const sortType  = this.getOpenData()?.currentSorter?.sortType ?? SortType.MapName;
         await list.bindData(dataArray);
         list.setSelectedItemIndex(Math.max(0, dataArray.findIndex(v => v.sortType === sortType)));
     }
@@ -126,15 +126,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForSortTypeRenderer extends UiTypesUiListItemData.UiListItemData {
-    sortType    : GameConfigGcMap.SortType;
+interface DataForSortTypeRenderer extends UiListItemData {
+    sortType    : SortType;
 }
-class SortTypeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForSortTypeRenderer> {
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+class SortTypeRenderer extends UiListItemRenderer<DataForSortTypeRenderer> {
+    private readonly _labelName!    : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -157,6 +157,6 @@ class SortTypeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        this._labelName.setText(LangUtils.getMapSortTypeName(openData.sortType) ?? LangConstants.UndefinedError);
+        this._labelName.setText(getMapSortTypeName(openData.sortType) ?? UndefinedError);
     }
 }

@@ -1,27 +1,27 @@
-import * as CosConstants from "../../cos/Constants.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiContainer from "../../ui/components/UiContainer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiCoInfo from "../../ui/interfaces/IUiCoInfo.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import * as UiUtilsUiFactory from "../../ui/utils/UiFactory.ts";
-import * as UiUtilsUiSkinHelpers from "../../ui/utils/UiSkinHelpers.ts";
+import { DisplayCategoryArray, ForceArray, CategoryId } from "../../cos/Constants.ts";
+import { show } from "../../FloatText.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getFormattedText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiContainer } from "../../ui/components/UiContainer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiCoInfo } from "../../ui/interfaces/IUiCoInfo.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import { getUiLayoutClass, getUiImageClass } from "../../ui/utils/UiFactory.ts";
+import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 
 // eslint-disable-next-line no-shadow
 const enum InfoType {
@@ -33,7 +33,7 @@ const enum InfoType {
 export interface OpenData {
     currentCoCategoryIdArray        : number[];
     availableCoCategoryIdArray      : number[];
-    gameConfig                      : GameConfigGcData.GcData;
+    gameConfig                      : GcData;
     forceUnchosenCoCategoryIdArray  : number[] | null;
     maxChooseCount                  : number | null;
     isBan                           : boolean;
@@ -43,28 +43,28 @@ export interface OpenData {
     callbackOnMap?                  : (() => void) | null;
     callbackOnConfirm               : (coCategoryIdArray: number[]) => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _scrCoCategory!        : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiLayout.IUiLayout>;
-    private readonly _groupCoCategory!      : UiInterfacesIUiLayout.IUiLayout;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _scrCoCategory!        : IUiScroller<IUiLayout>;
+    private readonly _groupCoCategory!      : IUiLayout;
 
-    private readonly _groupTitleButton!     : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnSwitch!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnMap!               : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupTitleButton!     : IUiLayout;
+    private readonly _btnSwitch!            : IUiButton;
+    private readonly _btnMap!               : IUiButton;
+    private readonly _btnClose!             : IUiButton;
 
-    private readonly _groupSelected!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelSelectedTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelSelected!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupSelected!        : IUiLayout;
+    private readonly _labelSelectedTitle!   : IUiLabel;
+    private readonly _labelSelected!        : IUiLabel;
 
-    private readonly _groupSelectAll!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelSelectAll!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgSelectAll!         : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupSelectAll!       : IUiLayout;
+    private readonly _labelSelectAll!       : IUiLabel;
+    private readonly _imgSelectAll!         : IUiImage;
 
-    private readonly _btnConfirm!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _uiCoInfo!             : UiInterfacesIUiCoInfo.IUiCoInfo;
+    private readonly _btnConfirm!           : IUiButton;
+    private readonly _uiCoInfo!             : IUiCoInfo;
 
     private _renderersForCoNames    : RendererForCoCategory[] = [];
 
@@ -81,7 +81,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._groupSelectAll, callback: this._onTouchedGroupSelectAll },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -144,9 +144,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const chosenCoCategoryIdSet = this._chosenCoCategoryIdSet;
         for (const coCategoryId of openData.forceUnchosenCoCategoryIdArray ?? []) {
             if (chosenCoCategoryIdSet.has(coCategoryId)) {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonAlertPanel, {
-                    getTitle   : () => LangUtils.getText(LangConstants.TextType.B0088),
-                    getContent : () => LangUtils.getFormattedText(LangConstants.TextType.F0133, openData.gameConfig.getCoNameAndTierText(coCategoryId)),
+                openPanel(getDict().CommonAlertPanel, {
+                    getTitle   : () => getText(TextType.B0088),
+                    getContent : () => getFormattedText(TextType.F0133, openData.gameConfig.getCoNameAndTierText(coCategoryId)),
                 });
                 return;
             }
@@ -154,7 +154,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const maxCount = openData.maxChooseCount;
         if ((maxCount != null) && (chosenCoCategoryIdSet.size > maxCount)) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0145, maxCount));
+            show(getFormattedText(TextType.F0145, maxCount));
             return;
         }
 
@@ -200,7 +200,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupSelectAll(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const chosenCoCategoryIdSet = this._chosenCoCategoryIdSet;
         chosenCoCategoryIdSet.clear();
@@ -214,7 +214,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     public updateOnTouchedCoCategoryRenderer(renderer: RendererForCoCategory): void {
-        const coCategoryId = HelpersMisc.getExisted(renderer.getCoCategoryId());
+        const coCategoryId = getExisted(renderer.getCoCategoryId());
         this._setPreviewCoCategoryId(coCategoryId);
 
         const openData = this.getOpenData();
@@ -235,7 +235,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 if (maxCount == 1) {
                     chosenCoCategoryIdSet.clear();
                 } else {
-                    FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0145, maxCount));
+                    show(getFormattedText(TextType.F0145, maxCount));
                     return;
                 }
             }
@@ -249,10 +249,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._labelSelectedTitle.setText(LangUtils.getText(LangConstants.TextType.B1274));
-        this._labelSelectAll.setText(LangUtils.getText(LangConstants.TextType.B0761));
-        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? LangConstants.UndefinedError);
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._labelSelectedTitle.setText(getText(TextType.B1274));
+        this._labelSelectAll.setText(getText(TextType.B0761));
+        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? UndefinedError);
 
         this._groupSelected.arrangeItems();
         this._groupSelectAll.arrangeItems();
@@ -301,14 +301,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const isBan                 = openData.isBan;
         const groupCoCategory       = this._groupCoCategory;
         let isFirstCategory         = true;
-        for (const displayCategory of CosConstants.DisplayCategoryArray) {
+        for (const displayCategory of DisplayCategoryArray) {
             const coIdArray1 = coIdArray.filter(v => gameConfig.getCoBasicCfg(v)?.getDisplayCategoryId() === displayCategory);
             if (coIdArray1.length <= 0) {
                 continue;
             }
 
             let hasCo = false;
-            for (const force of CosConstants.ForceArray) {
+            for (const force of ForceArray) {
                 const coIdArray2 = coIdArray1.filter(v => gameConfig.getCoBasicCfg(v)?.getForce() === force);
                 if (coIdArray2.length <= 0) {
                     continue;
@@ -323,7 +323,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 for (const coId of coIdArray2) {
                     const renderer = new RendererForCoCategory(isBan);
                     renderer.setGameConfig(gameConfig);
-                    renderer.setCoCategoryId(HelpersMisc.getExisted(gameConfig.getCoBasicCfg(coId)?.getCoCategoryId()));
+                    renderer.setCoCategoryId(getExisted(gameConfig.getCoBasicCfg(coId)?.getCoCategoryId()));
                     renderer.setPanel(this);
                     renderer.setIsSelected(false);
                     renderer.setCanSelect(canSelect);
@@ -348,7 +348,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _updateGroupCoNames(): void {
         const chosenCoCategoryIdSet = this._chosenCoCategoryIdSet;
         for (const renderer of this._renderersForCoNames) {
-            renderer.setIsSelected(chosenCoCategoryIdSet.has(HelpersMisc.getExisted(renderer.getCoCategoryId())));
+            renderer.setIsSelected(chosenCoCategoryIdSet.has(getExisted(renderer.getCoCategoryId())));
         }
     }
 
@@ -377,7 +377,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _initComponentsForPreviewCo(): void {
-        this._setPreviewCoCategoryId(CosConstants.CategoryId.Empty);
+        this._setPreviewCoCategoryId(CategoryId.Empty);
     }
 
     private async _updateComponentsForPreviewCoCategoryId(): Promise<void> {
@@ -400,35 +400,35 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
-    private readonly _imgCoForce!       : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgCoHead!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _groupSelect!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupSelected!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
+class RendererForCoCategory extends UiContainer {
+    private readonly _imgCoForce!       : IUiImage;
+    private readonly _imgCoHead!        : IUiImage;
+    private readonly _groupSelect!      : IUiContainer;
+    private readonly _groupSelected!    : IUiContainer;
+    private readonly _labelName!        : IUiLabel;
 
-    private readonly _groupWl!          : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _layoutWin!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelWin!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _layoutLose!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelLose!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupWl!          : IUiLayout;
+    private readonly _layoutWin!        : IUiLayout;
+    private readonly _labelWin!         : IUiLabel;
+    private readonly _layoutLose!       : IUiLayout;
+    private readonly _labelLose!        : IUiLabel;
 
-    private readonly _groupBp!          : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _layoutBan!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelBan!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _layoutPick!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelPick!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupBp!          : IUiLayout;
+    private readonly _layoutBan!        : IUiLayout;
+    private readonly _labelBan!         : IUiLabel;
+    private readonly _layoutPick!       : IUiLayout;
+    private readonly _labelPick!        : IUiLabel;
 
     private _isSelected     = false;
     private _canSelect      = false;
     private _panel          : Panel | null = null;
-    private _gameConfig     : GameConfigGcData.GcData | null = null;
+    private _gameConfig     : GcData | null = null;
     private _coCategoryId   : number | null = null;
 
     public constructor(isBan: boolean) {
         super();
 
-        UiUtilsUiSkinHelpers.loadSkinByPath(
+        loadSkinByPath(
             this,
             isBan ? "component/coInfo/CoHead006.exml" : "component/coInfo/CoHead005.exml"
         );
@@ -437,13 +437,13 @@ class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
     public updateOnLoadedSkin(): void {
         this.setIsTouchEnabled(true);
         this.setIsTouchChildrenEnabled(false);
-        this.setMouseStyle(HelpersPointerInput.MouseStyleType.Pointer);
-        this.getEventAgent().addPointerEventListener(HelpersPointerInput.PointerEventType.Tap, this._onTouchedSelf, this);
+        this.setMouseStyle(MouseStyleType.Pointer);
+        this.getEventAgent().addPointerEventListener(PointerEventType.Tap, this._onTouchedSelf, this);
 
         this.updateView();
     }
     private _onTouchedSelf(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         this.getPanel()?.updateOnTouchedCoCategoryRenderer(this);
     }
 
@@ -454,10 +454,10 @@ class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
         return this._panel;
     }
 
-    public setGameConfig(config: GameConfigGcData.GcData): void {
+    public setGameConfig(config: GcData): void {
         this._gameConfig = config;
     }
-    public getGameConfig(): GameConfigGcData.GcData | null {
+    public getGameConfig(): GcData | null {
         return this._gameConfig;
     }
 
@@ -501,18 +501,18 @@ class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
         const imgCoForce    = this._imgCoForce;
         const imgCoHead     = this._imgCoHead;
         if (coId == null) {
-            labelName.setText(LangConstants.UndefinedError);
+            labelName.setText(UndefinedError);
             imgCoForce.loadSource(``);
             imgCoHead.loadSource(``);
         } else {
-            labelName.setText(gcData?.getCoBasicCfg(coId)?.getName() ?? LangConstants.UndefinedError);
+            labelName.setText(gcData?.getCoBasicCfg(coId)?.getName() ?? UndefinedError);
 
             if (gcData == null) {
                 imgCoForce.loadSource(``);
                 imgCoHead.loadSource(``);
             } else {
-                imgCoForce.loadSource(HelpersImageSource.getCoEyeBackgroundByCoId(gcData, coId) ?? ``);
-                imgCoHead.loadSource(HelpersImageSource.getCoEye(gcData, coId, true) ?? ``);
+                imgCoForce.loadSource(getCoEyeBackgroundByCoId(gcData, coId) ?? ``);
+                imgCoHead.loadSource(getCoEye(gcData, coId, true) ?? ``);
             }
         }
 
@@ -525,14 +525,14 @@ class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
             groupWl.setIsVisible(false);
             groupBp.setIsVisible(false);
 
-            labelName.setText(gcData?.getCoCategoryCfg(HelpersMisc.getExisted(coCategoryId))?.getName() ?? LangConstants.UndefinedError);
+            labelName.setText(gcData?.getCoCategoryCfg(getExisted(coCategoryId))?.getName() ?? UndefinedError);
 
         } else if (showingInfoType === InfoType.BpRates) {
             labelName.setIsVisible(false);
             groupWl.setIsVisible(false);
             groupBp.setIsVisible(true);
 
-            const bpRates           = panel?.getBpRates(HelpersMisc.getExisted(coCategoryId)) ?? [];
+            const bpRates           = panel?.getBpRates(getExisted(coCategoryId)) ?? [];
             const banRate           = bpRates[0];
             const pickRate          = bpRates[1];
             this._labelBan.setText(banRate == null ? `--` : `${Math.floor(banRate * 100 + 0.5)}%`);
@@ -546,7 +546,7 @@ class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
             groupWl.setIsVisible(true);
             groupBp.setIsVisible(false);
 
-            const wlRates           = panel?.getWlRates(HelpersMisc.getExisted(coCategoryId)) ?? [];
+            const wlRates           = panel?.getWlRates(getExisted(coCategoryId)) ?? [];
             const winRate           = wlRates[0];
             const loseRate          = wlRates[1];
             this._labelWin.setText(winRate == null ? `--` : `${Math.floor(winRate * 100 + 0.5)}%`);
@@ -558,8 +558,8 @@ class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
     }
 }
 
-function createCoContainer(): UiInterfacesIUiLayout.IUiLayout {
-    const layout = new (UiUtilsUiFactory.getUiLayoutClass())({
+function createCoContainer(): IUiLayout {
+    const layout = new (getUiLayoutClass())({
         itemsHMargin        : 10,
         itemsVMargin        : 10,
         multiItemsPerBlock  : true,
@@ -569,8 +569,8 @@ function createCoContainer(): UiInterfacesIUiLayout.IUiLayout {
     return layout;
 }
 
-function createSeparator(): UiInterfacesIUiImage.IUiImage {
-    const img = new (UiUtilsUiFactory.getUiImageClass())();
+function createSeparator(): IUiImage {
+    const img = new (getUiImageClass())();
     img.loadSource(`uncompressedColorWhite0000`);
     img.setUnscaledManualWidth(310);
     img.setUnscaledManualHeight(1);

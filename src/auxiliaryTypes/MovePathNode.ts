@@ -1,15 +1,15 @@
-import type * as AuxiliaryTypesGridIndex from "./GridIndex.ts";
+import type { GridIndex } from "./GridIndex.ts";
 
 export class MovePathNode {
-    private _gridIndex      : AuxiliaryTypesGridIndex.GridIndex;
+    private _gridIndex      : GridIndex;
     private _totalMoveCost  : number;
 
-    public constructor(gridIndex: AuxiliaryTypesGridIndex.GridIndex, totalMoveCost: number) {
+    public constructor(gridIndex: GridIndex, totalMoveCost: number) {
         this._gridIndex     = gridIndex;
         this._totalMoveCost = totalMoveCost;
     }
 
-    public getGridIndex(): AuxiliaryTypesGridIndex.GridIndex {
+    public getGridIndex(): GridIndex {
         return this._gridIndex;
     }
     public getTotalMoveCost(): number {

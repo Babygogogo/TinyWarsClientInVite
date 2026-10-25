@@ -1,169 +1,176 @@
-import * as ActionPlannersConstants from "../Constants.ts";
-import type * as ActionPlannersIActionPlanner from "../IActionPlanner.ts";
-import * as ActionPlannersStatesIdle from "./Idle.ts";
-import type * as ActionPlannersStatesIState from "./IState.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TurnsConstants from "../../turns/Constants.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
+import { StateId } from "../Constants.ts";
+import type { IActionPlanner } from "../IActionPlanner.ts";
+import { Idle } from "./Idle.ts";
+import type { IState } from "./IState.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import {
+    getHrwWarClass,
+    getMeWarClass,
+    getMpwWarClass,
+    getRwWarClass,
+    getSpwWarClass,
+    getTwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
+import { newError, getExisted } from "../../helpers/Misc.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { PhaseCode } from "../../turns/Constants.ts";
+import { ActionStateId } from "../../units/Constants.ts";
 
-type GridIndex              = AuxiliaryTypesGridIndex.GridIndex;
+type GridIndex              = AuxiliaryTypesGridIndex;
 
-export class PreviewingUnitMovableArea implements ActionPlannersStatesIState.IState {
+export class PreviewingUnitMovableArea implements IState {
     private static readonly _instance = new PreviewingUnitMovableArea();
 
     public static getInstance(): PreviewingUnitMovableArea {
         return PreviewingUnitMovableArea._instance;
     }
 
-    public getStateId(): ActionPlannersConstants.StateId {
-        return ActionPlannersConstants.StateId.PreviewingUnitMovableArea;
+    public getStateId(): StateId {
+        return StateId.PreviewingUnitMovableArea;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): ActionPlannersConstants.StateId {
+    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
         const war = actionPlanner.getWar();
-        if (war instanceof GameHelpersGhFactory.getHrwWarClass()) {
+        if (war instanceof getHrwWarClass()) {
             const turnManager       = war.getTurnManager();
             const unit              = war.getUnitMap().getUnitOnMap(gridIndex);
             const playerIndexInTurn = war.getPlayerInTurn().getPlayerIndex();
-            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === playerIndexInTurn) && (turnManager.getPhaseCode() === TurnsConstants.PhaseCode.Main);
+            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === playerIndexInTurn) && (turnManager.getPhaseCode() === PhaseCode.Main);
             if (!unit) {
                 const tile = war.getTileMap().getTile(gridIndex);
                 if ((isSelfInTurn) && (tile.checkIsUnitProducerForPlayer(playerIndexInTurn))) {
-                    return ActionPlannersConstants.StateId.ChoosingTileProductionTarget;
+                    return StateId.ChoosingTileProductionTarget;
                 } else {
                     if (tile.checkIsMapWeapon()) {
-                        return ActionPlannersConstants.StateId.PreviewingTileAttackableArea;
+                        return StateId.PreviewingTileAttackableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.Idle;
+                        return StateId.Idle;
                     }
                 }
             } else {
-                if ((isSelfInTurn) && ((unit.getActionState() === UnitsConstants.ActionStateId.Idle) && (unit.getPlayerIndex() === playerIndexInTurn))) {
-                    return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                if ((isSelfInTurn) && ((unit.getActionState() === ActionStateId.Idle) && (unit.getPlayerIndex() === playerIndexInTurn))) {
+                    return StateId.ChoosingUnitMovePath;
                 } else {
                     if (actionPlanner.getUnitForPreviewingMovableArea() !== unit) {
-                        return ActionPlannersConstants.StateId.PreviewingUnitMovableArea;
+                        return StateId.PreviewingUnitMovableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.PreviewingUnitVisibleArea;
+                        return StateId.PreviewingUnitVisibleArea;
                     }
                 }
             }
 
-        } else if (war instanceof GameHelpersGhFactory.getMeWarClass()) {
-            return ActionPlannersConstants.StateId.Idle;
+        } else if (war instanceof getMeWarClass()) {
+            return StateId.Idle;
 
-        } else if (war instanceof GameHelpersGhFactory.getMpwWarClass()) {
+        } else if (war instanceof getMpwWarClass()) {
             const turnManager       = war.getTurnManager();
             const unit              = war.getUnitMap().getUnitOnMap(gridIndex);
             const selfPlayerIndex   = actionPlanner.getPlayerIndexLoggedIn();
-            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === selfPlayerIndex) && (turnManager.getPhaseCode() === TurnsConstants.PhaseCode.Main);
+            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === selfPlayerIndex) && (turnManager.getPhaseCode() === PhaseCode.Main);
             if (!unit) {
                 const tile = war.getTileMap().getTile(gridIndex);
                 if ((isSelfInTurn) && (selfPlayerIndex != null) && (tile.checkIsUnitProducerForPlayer(selfPlayerIndex))) {
-                    return ActionPlannersConstants.StateId.ChoosingTileProductionTarget;
+                    return StateId.ChoosingTileProductionTarget;
                 } else {
                     if (tile.checkIsMapWeapon()) {
-                        return ActionPlannersConstants.StateId.PreviewingTileAttackableArea;
+                        return StateId.PreviewingTileAttackableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.Idle;
+                        return StateId.Idle;
                     }
                 }
             } else {
-                if ((isSelfInTurn) && ((unit.getActionState() === UnitsConstants.ActionStateId.Idle) && (unit.getPlayerIndex() === selfPlayerIndex))) {
-                    return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                if ((isSelfInTurn) && ((unit.getActionState() === ActionStateId.Idle) && (unit.getPlayerIndex() === selfPlayerIndex))) {
+                    return StateId.ChoosingUnitMovePath;
                 } else {
                     if (actionPlanner.getUnitForPreviewingMovableArea() !== unit) {
-                        return ActionPlannersConstants.StateId.PreviewingUnitMovableArea;
+                        return StateId.PreviewingUnitMovableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.PreviewingUnitVisibleArea;
+                        return StateId.PreviewingUnitVisibleArea;
                     }
                 }
             }
 
-        } else if (war instanceof GameHelpersGhFactory.getRwWarClass()) {
+        } else if (war instanceof getRwWarClass()) {
             const turnManager       = war.getTurnManager();
             const unit              = war.getUnitMap().getUnitOnMap(gridIndex);
             const playerIndexInTurn = war.getPlayerInTurn().getPlayerIndex();
-            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === playerIndexInTurn) && (turnManager.getPhaseCode() === TurnsConstants.PhaseCode.Main);
+            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === playerIndexInTurn) && (turnManager.getPhaseCode() === PhaseCode.Main);
             if (!unit) {
                 const tile = war.getTileMap().getTile(gridIndex);
                 if ((isSelfInTurn) && (tile.checkIsUnitProducerForPlayer(playerIndexInTurn))) {
-                    return ActionPlannersConstants.StateId.ChoosingTileProductionTarget;
+                    return StateId.ChoosingTileProductionTarget;
                 } else {
                     if (tile.checkIsMapWeapon()) {
-                        return ActionPlannersConstants.StateId.PreviewingTileAttackableArea;
+                        return StateId.PreviewingTileAttackableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.Idle;
+                        return StateId.Idle;
                     }
                 }
             } else {
-                if ((isSelfInTurn) && ((unit.getActionState() === UnitsConstants.ActionStateId.Idle) && (unit.getPlayerIndex() === playerIndexInTurn))) {
-                    return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                if ((isSelfInTurn) && ((unit.getActionState() === ActionStateId.Idle) && (unit.getPlayerIndex() === playerIndexInTurn))) {
+                    return StateId.ChoosingUnitMovePath;
                 } else {
                     if (actionPlanner.getUnitForPreviewingMovableArea() !== unit) {
-                        return ActionPlannersConstants.StateId.PreviewingUnitMovableArea;
+                        return StateId.PreviewingUnitMovableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.PreviewingUnitVisibleArea;
+                        return StateId.PreviewingUnitVisibleArea;
                     }
                 }
             }
 
-        } else if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
+        } else if (war instanceof getSpwWarClass()) {
             const turnManager       = war.getTurnManager();
             const unit              = war.getUnitMap().getVisibleUnitOnMap(gridIndex);
             const selfPlayerIndex   = war.getPlayerIndexInTurn();
-            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === selfPlayerIndex) && (turnManager.getPhaseCode() === TurnsConstants.PhaseCode.Main);
+            const isSelfInTurn      = (turnManager.getPlayerIndexInTurn() === selfPlayerIndex) && (turnManager.getPhaseCode() === PhaseCode.Main);
             if (!unit) {
                 const tile = war.getTileMap().getTile(gridIndex);
                 if ((isSelfInTurn) && (tile.checkIsUnitProducerForPlayer(selfPlayerIndex))) {
-                    return ActionPlannersConstants.StateId.ChoosingTileProductionTarget;
+                    return StateId.ChoosingTileProductionTarget;
                 } else {
                     if (tile.checkIsMapWeapon()) {
-                        return ActionPlannersConstants.StateId.PreviewingTileAttackableArea;
+                        return StateId.PreviewingTileAttackableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.Idle;
+                        return StateId.Idle;
                     }
                 }
             } else {
-                if ((isSelfInTurn) && ((unit.getActionState() === UnitsConstants.ActionStateId.Idle) && (unit.getPlayerIndex() === selfPlayerIndex))) {
-                    return ActionPlannersConstants.StateId.ChoosingUnitMovePath;
+                if ((isSelfInTurn) && ((unit.getActionState() === ActionStateId.Idle) && (unit.getPlayerIndex() === selfPlayerIndex))) {
+                    return StateId.ChoosingUnitMovePath;
                 } else {
                     if (actionPlanner.getUnitForPreviewingMovableArea() !== unit) {
-                        return ActionPlannersConstants.StateId.PreviewingUnitMovableArea;
+                        return StateId.PreviewingUnitMovableArea;
                     } else {
-                        return ActionPlannersConstants.StateId.PreviewingUnitVisibleArea;
+                        return StateId.PreviewingUnitVisibleArea;
                     }
                 }
             }
 
-        } else if (war instanceof GameHelpersGhFactory.getTwWarClass()) {
-            return ActionPlannersConstants.StateId.Idle;
+        } else if (war instanceof getTwWarClass()) {
+            return StateId.Idle;
 
         } else {
-            throw HelpersMisc.newError(`Unknown actionPlanner.`);
+            throw newError(`Unknown actionPlanner.`);
         }
     }
 
-    public getNextStateIdOnDrag(): ActionPlannersConstants.StateId {
+    public getNextStateIdOnDrag(): StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): ActionPlannersConstants.StateId {
+    public getNextStateIdOnDragEnded(): StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
-        ActionPlannersStatesIdle.Idle.getInstance().apply(actionPlanner, SoundsConstants.ShortSfxCode.ButtonCancel01);
+    public cancel(actionPlanner: IActionPlanner): void {
+        Idle.getInstance().apply(actionPlanner, ShortSfxCode.ButtonCancel01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
         actionPlanner.clearFocusUnitOnMap();
         actionPlanner.clearFocusUnitLoaded();
         actionPlanner.clearChoosingUnitForDrop();
@@ -174,12 +181,12 @@ export class PreviewingUnitMovableArea implements ActionPlannersStatesIState.ISt
         actionPlanner.clearDataForPreviewingAttackableArea();
         actionPlanner.clearDataForPreviewingVisibleArea();
 
-        actionPlanner.setUnitForPreviewingMovableArea(HelpersMisc.getExisted(actionPlanner.getWar().getUnitMap().getUnitOnMap(gridIndex)));
+        actionPlanner.setUnitForPreviewingMovableArea(getExisted(actionPlanner.getWar().getUnitMap().getUnitOnMap(gridIndex)));
         actionPlanner.resetAreaForPreviewingMovableArea();
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.PreviewingUnitMovableArea);
+        actionPlanner.setStateId(StateId.PreviewingUnitMovableArea);
         actionPlanner.updateView();
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+        playShortSfx(ShortSfxCode.CursorConfirm01);
     }
 
     public doApplyOnDrag(): void {
@@ -187,6 +194,6 @@ export class PreviewingUnitMovableArea implements ActionPlannersStatesIState.ISt
     }
 
     public doApplyOnDragEnded(): void {
-        throw HelpersMisc.newError(`PreviewingUnitMovableAreaState: Not expected to apply on drag ended!`);
+        throw newError(`PreviewingUnitMovableAreaState: Not expected to apply on drag ended!`);
     }
 }

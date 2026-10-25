@@ -1,70 +1,70 @@
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as MapEditorModelMeHelpers from "../../mapEditor/model/MeHelpers.ts";
-import * as MapEditorModelMeModel from "../../mapEditor/model/MeModel.ts";
-import type * as MapEditorModelMeTypes from "../../mapEditor/model/MeTypes.ts";
-import type * as NotificationsDataTypes from "../../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TilesUtilsSerialization from "../../tiles/utils/Serialization.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UiUtilsUiFactory from "../../ui/utils/UiFactory.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getTileBaseName } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { getAutoTileBaseShapeId, getAutoTileDecorationTypeAndShapeId } from "../../mapEditor/model/MeHelpers.ts";
+import { getWar } from "../../mapEditor/model/MeModel.ts";
+import type { DataForDrawTileBase as MapEditorModelMeTypesDataForDrawTileBase } from "../../mapEditor/model/MeTypes.ts";
+import type { BwTileChanged } from "../../notifications/DataTypes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { create } from "../../tiles/utils/Serialization.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 
-type DataForDrawTileBase    = MapEditorModelMeTypes.DataForDrawTileBase;
+type DataForDrawTileBase    = MapEditorModelMeTypesDataForDrawTileBase;
 
 const MAX_RECENT_COUNT = 8;
 
 export interface OpenData {
-    war     : MapEditorInterfaceIMeWar.IMeWar;
+    war     : IMeWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnSwitch!                    : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                     : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                      : IUiImage;
+    private readonly _group!                        : IUiContainer;
+    private readonly _labelTitle!                   : IUiLabel;
+    private readonly _btnSwitch!                    : IUiButton;
+    private readonly _btnClose!                     : IUiButton;
 
-    private readonly _listType!                     : UiInterfacesIUiScrollList.IUiScrollList<DataForTypeRenderer>;
-    private readonly _listTileBase!                 : UiInterfacesIUiScrollList.IUiScrollList<DataForTileBaseRenderer>;
-    private readonly _listRecent!                   : UiInterfacesIUiScrollList.IUiScrollList<DataForTileBaseRenderer>;
-    private readonly _labelRecentTitle!             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _listType!                     : IUiScrollList<DataForTypeRenderer>;
+    private readonly _listTileBase!                 : IUiScrollList<DataForTileBaseRenderer>;
+    private readonly _listRecent!                   : IUiScrollList<DataForTileBaseRenderer>;
+    private readonly _labelRecentTitle!             : IUiLabel;
 
-    private readonly _groupBottomRight!             : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _groupFill!                    : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _imgFill!                      : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelFill!                    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupBottomRight!             : IUiLayout;
+    private readonly _groupFill!                    : IUiLayout;
+    private readonly _imgFill!                      : IUiImage;
+    private readonly _labelFill!                    : IUiLabel;
 
-    private readonly _groupRealTimeAdjustContainer! : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _groupRealTimeAdjust!          : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _imgRealTimeAdjust!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelRealTimeAdjust!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnHelpRealTimeAdjust!        : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupRealTimeAdjustContainer! : IUiLayout;
+    private readonly _groupRealTimeAdjust!          : IUiLayout;
+    private readonly _imgRealTimeAdjust!            : IUiImage;
+    private readonly _labelRealTimeAdjust!          : IUiLabel;
+    private readonly _btnHelpRealTimeAdjust!        : IUiButton;
 
-    private readonly _btnRandomize!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnRandomize!                 : IUiButton;
 
     private _needFill           = false;
     private _dataListForRecent  : DataForTileBaseRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                   callback: this.closePanel },
@@ -106,7 +106,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     public async setAndReviseSelectedPlayerIndex(newType: number | null, needScroll: boolean): Promise<void> {
         const listType  = this._listType;
-        const index     = HelpersMisc.getExisted(listType.getRevisedFirstIndex(v => v?.baseType === newType));
+        const index     = getExisted(listType.getRevisedFirstIndex(v => v?.baseType === newType));
         listType.setSelectedItemIndex(index);
         if (needScroll) {
             listType.scrollToItem(index);
@@ -126,7 +126,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         dataList[0]         = {
             dataForDrawTileBase : data,
             panel               : this,
-            gameConfig          : HelpersMisc.getExisted(MapEditorModelMeModel.getWar()?.getGcData()),
+            gameConfig          : getExisted(getWar()?.getGcData()),
         };
         for (const v of filteredList) {
             if (dataList.length < MAX_RECENT_COUNT) {
@@ -152,20 +152,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().MeChooseTileDecorationPanel, {
+        openPanel(getDict().MeChooseTileDecorationPanel, {
             war : war,
         });
         this.closePanel();
     }
 
     private _onTouchedBtnRandomize(): void {
-        const war = MapEditorModelMeModel.getWar();
+        const war = getWar();
         if ((war == null) || (war.getIsReviewingMap())) {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent     : () => LangUtils.getText(LangConstants.TextType.A0657),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent     : () => getText(TextType.A0657),
             callback    : () => {
                 const tileMap   = war.getTileMap();
                 const allTiles  = tileMap.getAllTiles();
@@ -173,13 +173,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     tile.setBaseType(Math.floor(Math.random() * 4) + 1);
                 }
                 for (const tile of allTiles) {
-                    const shapeId = MapEditorModelMeHelpers.getAutoTileBaseShapeId(tileMap, tile) ?? 0;
+                    const shapeId = getAutoTileBaseShapeId(tileMap, tile) ?? 0;
                     if (shapeId != tile.getBaseShapeId()) {
                         tile.setBaseShapeId(shapeId);
                     }
                 }
                 for (const tile of allTiles) {
-                    const { decorationType, shapeId } = MapEditorModelMeHelpers.getAutoTileDecorationTypeAndShapeId(tileMap, tile.getGridIndex());
+                    const { decorationType, shapeId } = getAutoTileDecorationTypeAndShapeId(tileMap, tile.getGridIndex());
                     if ((tile.getDecorationType() !== decorationType) || (tile.getDecorationShapeId() !== shapeId)) {
                         tile.setDecorationType(decorationType);
                         tile.setDecorationShapeId(shapeId);
@@ -198,18 +198,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._needFill = !this._needFill;
         this._updateImgFill();
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedGroupRealTimeAdjust(): void {
         this.getOpenData()?.war.getDrawer().setIsRealTimeAdjust(!this._imgRealTimeAdjust.getIsVisible());
         this._updateImgRealTimeAdjust();
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedBtnHelpRealTimeAdjust(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0032),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0032),
         });
     }
 
@@ -217,10 +217,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0282);
-        this._labelFill.setLangText(LangConstants.TextType.B0294);
-        this._labelRecentTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0372)}:`);
-        this._labelRealTimeAdjust.setLangText(LangConstants.TextType.B1121);
+        this._labelTitle.setLangText(TextType.B0282);
+        this._labelFill.setLangText(TextType.B0294);
+        this._labelRecentTitle.setText(`${getText(TextType.B0372)}:`);
+        this._labelRealTimeAdjust.setLangText(TextType.B1121);
 
         this._groupFill.arrangeItems();
         this._groupRealTimeAdjust.arrangeItems();
@@ -243,11 +243,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _createDataForListTileBase(): DataForTileBaseRenderer[] {
-        const gameConfig    = HelpersMisc.getExisted(MapEditorModelMeModel.getWar()?.getGcData());
+        const gameConfig    = getExisted(getWar()?.getGcData());
         const baseType      = this._listType.getFirstSelectedData()?.baseType;
         const dataList      : DataForTileBaseRenderer[] = [];
         if (baseType != null) {
-            const cfg = HelpersMisc.getExisted(gameConfig.getTileBaseCfg(baseType));
+            const cfg = getExisted(gameConfig.getTileBaseCfg(baseType));
             for (let shapeId = 0; shapeId < cfg.shapesCount; ++shapeId) {
                 dataList.push({
                     panel               : this,
@@ -264,7 +264,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private async _updateListType(selectedType: number | undefined): Promise<void> {
-        const gameConfig    = HelpersMisc.getExisted(MapEditorModelMeModel.getWar()?.getGcData());
+        const gameConfig    = getExisted(getWar()?.getGcData());
         const dataArray     : DataForTypeRenderer[] = [];
         for (const cfg of gameConfig.getAllEnabledTileBaseCfgArray()) {
             dataArray.push({
@@ -294,15 +294,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForTypeRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTypeRenderer extends UiListItemData {
     baseType        : number;
-    gameConfig      : GameConfigGcData.GcData;
+    gameConfig      : GcData;
     panel           : Panel;
 }
-class TypeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForTypeRenderer> {
-    private readonly _labelType!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgBg!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgSelected!  : UiInterfacesIUiImage.IUiImage;
+class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
+    private readonly _labelType!    : IUiLabel;
+    private readonly _imgBg!        : IUiImage;
+    private readonly _imgSelected!  : IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -312,13 +312,13 @@ class TypeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        TweenExecutor.Executor.removeTweens(imgSelected);
-        TweenExecutor.Executor.get(imgSelected, { loop: true })
+        Executor.removeTweens(imgSelected);
+        Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        TweenExecutor.Executor.removeTweens(this._imgSelected);
+        Executor.removeTweens(this._imgSelected);
         await super._onClosed();
     }
 
@@ -328,7 +328,7 @@ class TypeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             return;
         }
 
-        this._labelType.setText(LangUtils.getTileBaseName(openData.baseType, openData.gameConfig) ?? LangConstants.UndefinedError);
+        this._labelType.setText(getTileBaseName(openData.baseType, openData.gameConfig) ?? UndefinedError);
     }
 
     public onItemTapEvent(): void {
@@ -337,20 +337,20 @@ class TypeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
     }
 }
 
-interface DataForTileBaseRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTileBaseRenderer extends UiListItemData {
     dataForDrawTileBase : DataForDrawTileBase;
     panel               : Panel;
-    gameConfig          : GameConfigGcData.GcData;
+    gameConfig          : GcData;
 }
-class TileBaseRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForTileBaseRenderer> {
-    private readonly _labelShapeId! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _conTileView!  : UiInterfacesIUiContainer.IUiContainer;
+class TileBaseRenderer extends UiListItemRenderer<DataForTileBaseRenderer> {
+    private readonly _labelShapeId! : IUiLabel;
+    private readonly _conTileView!  : IUiContainer;
 
-    private _tileView   = new (UiUtilsUiFactory.getUiTileViewClass())();
+    private _tileView   = new (getUiTileViewClass())();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.TileAnimationTick,  callback: this._onNotifyTileAnimationTick },
+            { type: TypeId.TileAnimationTick,  callback: this._onNotifyTileAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -383,7 +383,7 @@ class TileBaseRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             tileDecorationShapeId   : null,
             tileObjectShapeId       : null,
             tileObjectType          : null,
-            skinId                  : PlayersConstants.PlayerIndex.Neutral,
+            skinId                  : PlayerIndex.Neutral,
             overridingSkinId        : undefined,
             gameConfig              : openData.gameConfig,
         });
@@ -401,20 +401,20 @@ class TileBaseRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
         if (!panel.getNeedFill()) {
             panel.updateOnChooseTileBase(dataForDrawTileBase);
             panel.closePanel();
-            HelpersMisc.getExisted(MapEditorModelMeModel.getWar()).getDrawer().setModeDrawTileBase(dataForDrawTileBase);
+            getExisted(getWar()).getDrawer().setModeDrawTileBase(dataForDrawTileBase);
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent : () => LangUtils.getText(LangConstants.TextType.A0089),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent : () => getText(TextType.A0089),
                 callback: () => {
-                    const war           = HelpersMisc.getExisted(MapEditorModelMeModel.getWar());
+                    const war           = getExisted(getWar());
                     const gameConfig    = war.getGcData();
                     const baseType      = dataForDrawTileBase.baseType;
                     const baseShapeId   = dataForDrawTileBase.shapeId;
 
                     for (const tile of war.getTileMap().getAllTiles()) {
-                        const tileData = TilesUtilsSerialization.create({
+                        const tileData = create({
                             gridIndex               : tile.getGridIndex().toProto().toJson(),
-                            playerIndex             : PlayersConstants.PlayerIndex.Neutral,
+                            playerIndex             : PlayerIndex.Neutral,
                             baseType                : baseType,
                             baseShapeId             : baseShapeId,
                             groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
@@ -444,7 +444,7 @@ class TileBaseRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
 
                     panel.updateOnChooseTileBase(dataForDrawTileBase);
                     panel.closePanel();
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileChanged, { gridIndex: war.getCursor().getGridIndex() } as NotificationsDataTypes.BwTileChanged);
+                    dispatch(TypeId.BwTileChanged, { gridIndex: war.getCursor().getGridIndex() } as BwTileChanged);
                 },
             });
         }

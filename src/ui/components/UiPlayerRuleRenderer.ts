@@ -1,48 +1,64 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as CosConstants from "../../cos/Constants.ts";
-import * as ForceSkinsUtils from "../../forceSkins/Utils.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameModesConstants from "../../gameModes/Constants.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersText from "../../helpers/Text.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as NotificationsDataTypes from "../../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayerRulesConstants from "../../playerRules/Constants.ts";
-import type * as ProtoSchemaCommonProtoWarRuleInstanceWarRule from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import type * as ProtoSchemaCommonProtoWarRulePlayerRule from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
-import type * as ProtoSchemaCommonProtoWarRuleWarRuleCommonData from "../../proto/schema/CommonProto/WarRule/WarRuleCommonData.ts";
-import * as UiComponentsUiListItemRenderer from "./UiListItemRenderer.ts";
-import type * as UiInterfacesIUiLabel from "../interfaces/IUiLabel.ts";
-import type * as UiTypesUiListItemData from "../types/UiListItemData.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { CategoryId } from "../../cos/Constants.ts";
+import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { ModeId } from "../../gameModes/Constants.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { getNonNullElements } from "../../helpers/Collection.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { getTextColor } from "../../helpers/Text.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getPlayerRuleName, getPlayerTeamName, getTextForYesOrNo, getUnitAndTileSkinName } from "../../lang/Utils.ts";
+import type { RuleEditor_PlayerRuleChanged } from "../../notifications/DataTypes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import {
+    RuleTypeId,
+    InitialFund,
+    MaxUnitsCount,
+    IncomeMultiplier,
+    EnergyAddPctOnCoBoard,
+    EnergyLossPctOnCoDie,
+    EnergyGrowthMultiplier,
+    MoveRangeModifier,
+    UnitVisionRangeModifier,
+    TileVisionRangeModifier,
+    AttackPowerModifier,
+    DefenseModifier,
+    Luck,
+} from "../../playerRules/Constants.ts";
+import type {
+    InstanceWarRule as ProtoSchemaCommonProtoWarRuleInstanceWarRule,
+} from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
+import type { PlayerRule as ProtoSchemaCommonProtoWarRulePlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
+import type { WarRuleCommonData } from "../../proto/schema/CommonProto/WarRule/WarRuleCommonData.ts";
+import { UiListItemRenderer } from "./UiListItemRenderer.ts";
+import type { IUiLabel } from "../interfaces/IUiLabel.ts";
+import type { UiListItemData } from "../types/UiListItemData.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
-type InstanceWarRule        = ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule;
-type PlayerRule             = ProtoSchemaCommonProtoWarRulePlayerRule.PlayerRule;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type InstanceWarRule        = ProtoSchemaCommonProtoWarRuleInstanceWarRule;
+type PlayerRule             = ProtoSchemaCommonProtoWarRulePlayerRule;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-export interface DataForUiPlayerRuleRenderer extends UiTypesUiListItemData.UiListItemData {
+export interface DataForUiPlayerRuleRenderer extends UiListItemData {
     canModify               : boolean;
-    gcData                  : GameConfigGcData.GcData;
-    gameModeId              : Undefinable<GameModesConstants.ModeId>;
+    gcData                  : GcData;
+    gameModeId              : Undefinable<ModeId>;
     instanceWarRule         : Undefinable<InstanceWarRule>;
-    warRuleCommonData       : ProtoSchemaCommonProtoWarRuleWarRuleCommonData.WarRuleCommonData;
+    warRuleCommonData       : WarRuleCommonData;
     playerRule              : PlayerRule;
-    playerRuleType          : PlayerRulesConstants.RuleTypeId;
+    playerRuleType          : RuleTypeId;
     getIsBatch              : () => boolean;
 }
-export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForUiPlayerRuleRenderer> {
-    private readonly _labelValue!       : UiInterfacesIUiLabel.IUiLabel;
+export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRuleRenderer> {
+    private readonly _labelValue!       : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged, callback: this._onNotifyMePlayerRuleChanged },
+            { type: TypeId.RuleEditor_PlayerRuleChanged, callback: this._onNotifyMePlayerRuleChanged },
         ]);
     }
 
@@ -53,8 +69,8 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
     public onItemTapEvent(): void {
         this._callbackOnTap();
     }
-    private _onNotifyMePlayerRuleChanged(e: VendorEgretEgret.Event): void {
-        const eventData = e.data as NotificationsDataTypes.RuleEditor_PlayerRuleChanged;
+    private _onNotifyMePlayerRuleChanged(e: Event): void {
+        const eventData = e.data as RuleEditor_PlayerRuleChanged;
         const data      = this.getOpenData();
         if ((eventData.playerIndex === data?.playerRule.getPlayerIndex()) &&
             (data.playerRuleType === data.playerRuleType)
@@ -72,37 +88,37 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
 
         const playerRuleType = openData.playerRuleType;
         switch (playerRuleType) {
-            case PlayerRulesConstants.RuleTypeId.TeamIndex                       : return this._onTapAsTeamIndex(openData);
-            case PlayerRulesConstants.RuleTypeId.BannedCoCategoryIdArray         : return this._onTapAsBannedCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.BannedUnitTypeArray             : return this._onTapAsBannedUnitTypeArray(openData);
-            case PlayerRulesConstants.RuleTypeId.InitialFund                     : return this._onTapAsInitialFund(openData);
-            case PlayerRulesConstants.RuleTypeId.IncomeMultiplier                : return this._onTapAsIncomeMultiplier(openData);
-            case PlayerRulesConstants.RuleTypeId.MaxUnitsCount                   : return this._onTapAsMaxUnitsCount(openData);
-            case PlayerRulesConstants.RuleTypeId.EnergyAddPctOnCoBoard           : return this._onTapAsEnergyAddPctOnCoBoard(openData);
-            case PlayerRulesConstants.RuleTypeId.EnergyLossPctOnCoDie            : return this._onTapAsEnergyLossPctOnCoDie(openData);
-            case PlayerRulesConstants.RuleTypeId.EnergyGrowthMultiplier          : return this._onTapAsEnergyGrowthMultiplier(openData);
-            case PlayerRulesConstants.RuleTypeId.CanActivateCoSkill              : return this._onTapAsCanActivateCoSkill(openData);
-            case PlayerRulesConstants.RuleTypeId.CanCoBoard                      : return this._onTapAsCanCoBoard(openData);
-            case PlayerRulesConstants.RuleTypeId.CanUnitJoin                     : return this._onTapAsCanUnitJoin(openData);
-            case PlayerRulesConstants.RuleTypeId.MoveRangeModifier               : return this._onTapAsMoveRangeModifier(openData);
-            case PlayerRulesConstants.RuleTypeId.UnitVisionRangeModifier         : return this._onTapAsUnitVisionRangeModifier(openData);
-            case PlayerRulesConstants.RuleTypeId.TileVisionRangeModifier         : return this._onTapAsTileVisionRangeModifier(openData);
-            case PlayerRulesConstants.RuleTypeId.McwHumanCoCategoryIdArray       : return this._onTapAsMcwHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.MmwHumanCoCategoryIdArray       : return this._onTapAsMmwHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.MrwHumanCoCategoryIdArray       : return this._onTapAsMrwHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.AtwHumanCoCategoryIdArray       : return this._onTapAsAtwHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.CcwHumanCoCategoryIdArray       : return this._onTapAsCcwHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.WarRoomHumanCoCategoryIdArray   : return this._onTapAsWarRoomHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.CampaignHumanCoIdArray          : return this._onTapAsCampaignHumanCoIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.CcwAiCoId                       : return this._onTapAsCcwAiCoId(openData);
-            case PlayerRulesConstants.RuleTypeId.WarRoomAiCoId                   : return this._onTapAsWarRoomAiCoId(openData);
-            case PlayerRulesConstants.RuleTypeId.CampaignAiCoId                  : return this._onTapAsCampaignAiCoId(openData);
-            case PlayerRulesConstants.RuleTypeId.CampaignSkinId                  : return this._onTapAsCampaignSkinId(openData);
-            case PlayerRulesConstants.RuleTypeId.AttackPowerModifier             : return this._onTapAsAttackPowerModifier(openData);
-            case PlayerRulesConstants.RuleTypeId.DefenseModifier                 : return this._onTapAsDefenseModifier(openData);
-            case PlayerRulesConstants.RuleTypeId.LuckLowerLimit                  : return this._onTapAsLuckLowerLimit(openData);
-            case PlayerRulesConstants.RuleTypeId.LuckUpperLimit                  : return this._onTapAsLuckUpperLimit(openData);
-            default                                             : throw HelpersMisc.newError(`Unknown ruleType: ${playerRuleType}`);
+            case RuleTypeId.TeamIndex                       : return this._onTapAsTeamIndex(openData);
+            case RuleTypeId.BannedCoCategoryIdArray         : return this._onTapAsBannedCoCategoryIdArray(openData);
+            case RuleTypeId.BannedUnitTypeArray             : return this._onTapAsBannedUnitTypeArray(openData);
+            case RuleTypeId.InitialFund                     : return this._onTapAsInitialFund(openData);
+            case RuleTypeId.IncomeMultiplier                : return this._onTapAsIncomeMultiplier(openData);
+            case RuleTypeId.MaxUnitsCount                   : return this._onTapAsMaxUnitsCount(openData);
+            case RuleTypeId.EnergyAddPctOnCoBoard           : return this._onTapAsEnergyAddPctOnCoBoard(openData);
+            case RuleTypeId.EnergyLossPctOnCoDie            : return this._onTapAsEnergyLossPctOnCoDie(openData);
+            case RuleTypeId.EnergyGrowthMultiplier          : return this._onTapAsEnergyGrowthMultiplier(openData);
+            case RuleTypeId.CanActivateCoSkill              : return this._onTapAsCanActivateCoSkill(openData);
+            case RuleTypeId.CanCoBoard                      : return this._onTapAsCanCoBoard(openData);
+            case RuleTypeId.CanUnitJoin                     : return this._onTapAsCanUnitJoin(openData);
+            case RuleTypeId.MoveRangeModifier               : return this._onTapAsMoveRangeModifier(openData);
+            case RuleTypeId.UnitVisionRangeModifier         : return this._onTapAsUnitVisionRangeModifier(openData);
+            case RuleTypeId.TileVisionRangeModifier         : return this._onTapAsTileVisionRangeModifier(openData);
+            case RuleTypeId.McwHumanCoCategoryIdArray       : return this._onTapAsMcwHumanCoCategoryIdArray(openData);
+            case RuleTypeId.MmwHumanCoCategoryIdArray       : return this._onTapAsMmwHumanCoCategoryIdArray(openData);
+            case RuleTypeId.MrwHumanCoCategoryIdArray       : return this._onTapAsMrwHumanCoCategoryIdArray(openData);
+            case RuleTypeId.AtwHumanCoCategoryIdArray       : return this._onTapAsAtwHumanCoCategoryIdArray(openData);
+            case RuleTypeId.CcwHumanCoCategoryIdArray       : return this._onTapAsCcwHumanCoCategoryIdArray(openData);
+            case RuleTypeId.WarRoomHumanCoCategoryIdArray   : return this._onTapAsWarRoomHumanCoCategoryIdArray(openData);
+            case RuleTypeId.CampaignHumanCoIdArray          : return this._onTapAsCampaignHumanCoIdArray(openData);
+            case RuleTypeId.CcwAiCoId                       : return this._onTapAsCcwAiCoId(openData);
+            case RuleTypeId.WarRoomAiCoId                   : return this._onTapAsWarRoomAiCoId(openData);
+            case RuleTypeId.CampaignAiCoId                  : return this._onTapAsCampaignAiCoId(openData);
+            case RuleTypeId.CampaignSkinId                  : return this._onTapAsCampaignSkinId(openData);
+            case RuleTypeId.AttackPowerModifier             : return this._onTapAsAttackPowerModifier(openData);
+            case RuleTypeId.DefenseModifier                 : return this._onTapAsDefenseModifier(openData);
+            case RuleTypeId.LuckLowerLimit                  : return this._onTapAsLuckLowerLimit(openData);
+            case RuleTypeId.LuckUpperLimit                  : return this._onTapAsLuckUpperLimit(openData);
+            default                                             : throw newError(`Unknown ruleType: ${playerRuleType}`);
         }
     }
     private _onTapAsTeamIndex(openData: DataForUiPlayerRuleRenderer): void {
@@ -110,9 +126,9 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
             playerRule.setTeamIndex(playerRule.getTeamIndex() % openData.warRuleCommonData.getPlayerRuleList().length + 1);
 
-            NotificationsDispatcher.dispatch(
-                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                { playerIndex: playerRule.getPlayerIndex(), ruleType: openData.playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+            dispatch(
+                TypeId.RuleEditor_PlayerRuleChanged,
+                { playerIndex: playerRule.getPlayerIndex(), ruleType: openData.playerRuleType } as RuleEditor_PlayerRuleChanged
             );
         });
     }
@@ -126,39 +142,39 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
             : gcData.getEnabledCoCategoryIdArrayByGameModeId(gameModeId);
 
         if (!openData.canModify) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowCoCategoryIdPanel, {
+            openPanel(getDict().CommonShowCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : availableCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentBannedCoCategoryIdArray,
                 isBan                           : true,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0590),
+                getTitleText                    : () => getText(TextType.B0590),
             });
             return;
         }
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiCoCategoryIdPanel, {
+            openPanel(getDict().CommonChooseMultiCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : availableCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentBannedCoCategoryIdArray,
                 forceUnchosenCoCategoryIdArray  : null,
                 maxChooseCount                  : null,
                 isBan                           : true,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0590),
+                getTitleText                    : () => getText(TextType.B0590),
                 callbackOnConfirm               : bannedCoCategoryIdArray => {
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setBannedCoCategoryIdArray(bannedCoCategoryIdArray);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setBannedCoCategoryIdArray(bannedCoCategoryIdArray);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -173,7 +189,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currentBannedUnitTypeArray    = playerRule.getBannedUnitTypeArray();
 
         if (!openData.canModify) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowUnitTypePanel, {
+            openPanel(getDict().CommonShowUnitTypePanel, {
                 gameConfig                  : gcData,
                 availableUnitTypeArray      : availableUnitTypeArray,
                 currentUnitTypeArray        : currentBannedUnitTypeArray,
@@ -182,7 +198,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         }
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiUnitTypePanel, {
+            openPanel(getDict().CommonChooseMultiUnitTypePanel, {
                 currentUnitTypeArray    : currentBannedUnitTypeArray,
                 availableUnitTypeArray  : availableUnitTypeArray,
                 gameConfig              : gcData,
@@ -190,16 +206,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setBannedUnitTypeArray(bannedUnitTypeArray);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setBannedUnitTypeArray(bannedUnitTypeArray);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -211,25 +227,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule    = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.InitialFund.MaxLimit,
-                minValue        : PlayerRulesConstants.InitialFund.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : InitialFund.MaxLimit,
+                minValue        : InitialFund.MinLimit,
                 currentValue    : playerRule.getInitialFund(),
                 callback        : value => {
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setInitialFund(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setInitialFund(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -242,24 +258,24 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRuleType    = openData.playerRuleType;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.MaxUnitsCount.MaxLimit,
-                minValue        : PlayerRulesConstants.MaxUnitsCount.MinLimit,
+            openPanel(getDict().CommonInputNullableIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(playerRuleType) ?? UndefinedError,
+                maxValue        : MaxUnitsCount.MaxLimit,
+                minValue        : MaxUnitsCount.MinLimit,
                 currentValue    : playerRule.getMaxUnitsCount(),
                 callback        : value => {
                     if (!openData.getIsBatch()) {
                         playerRule.setMaxUnitsCount(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: playerRuleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setMaxUnitsCount(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: playerRuleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -271,25 +287,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.IncomeMultiplier.MaxLimit,
-                minValue        : PlayerRulesConstants.IncomeMultiplier.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : IncomeMultiplier.MaxLimit,
+                minValue        : IncomeMultiplier.MinLimit,
                 currentValue    : playerRule.getIncomeMultiplier(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setIncomeMultiplier(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setIncomeMultiplier(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -301,25 +317,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule    = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.EnergyAddPctOnCoBoard.MaxLimit,
-                minValue        : PlayerRulesConstants.EnergyAddPctOnCoBoard.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : EnergyAddPctOnCoBoard.MaxLimit,
+                minValue        : EnergyAddPctOnCoBoard.MinLimit,
                 currentValue    : playerRule.getEnergyAddPctOnCoBoard(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setEnergyAddPctOnCoBoard(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setEnergyAddPctOnCoBoard(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -331,25 +347,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule    = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.EnergyLossPctOnCoDie.MaxLimit,
-                minValue        : PlayerRulesConstants.EnergyLossPctOnCoDie.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : EnergyLossPctOnCoDie.MaxLimit,
+                minValue        : EnergyLossPctOnCoDie.MinLimit,
                 currentValue    : playerRule.getEnergyLossPctOnCoDie(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setEnergyLossPctOnCoDie(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of  openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setEnergyLossPctOnCoDie(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -361,25 +377,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule    = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.EnergyGrowthMultiplier.MaxLimit,
-                minValue        : PlayerRulesConstants.EnergyGrowthMultiplier.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : EnergyGrowthMultiplier.MaxLimit,
+                minValue        : EnergyGrowthMultiplier.MinLimit,
                 currentValue    : playerRule.getEnergyGrowthMultiplier(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setEnergyGrowthMultiplier(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setEnergyGrowthMultiplier(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -395,16 +411,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
             const ruleType = openData.playerRuleType;
             if (!openData.getIsBatch()) {
                 playerRule.setCanActivateCoSkill(!canActivateCoSkill);
-                NotificationsDispatcher.dispatch(
-                    NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                    { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                dispatch(
+                    TypeId.RuleEditor_PlayerRuleChanged,
+                    { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                 );
             } else {
                 for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                     p.setCanActivateCoSkill(!canActivateCoSkill);
-                    NotificationsDispatcher.dispatch(
-                        NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                        { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                    dispatch(
+                        TypeId.RuleEditor_PlayerRuleChanged,
+                        { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                     );
                 }
             }
@@ -418,16 +434,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
             const ruleType = openData.playerRuleType;
             if (!openData.getIsBatch()) {
                 playerRule.setCanCoBoard(!canCoBoard);
-                NotificationsDispatcher.dispatch(
-                    NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                    { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                dispatch(
+                    TypeId.RuleEditor_PlayerRuleChanged,
+                    { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                 );
             } else {
                 for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                     p.setCanCoBoard(!canCoBoard);
-                    NotificationsDispatcher.dispatch(
-                        NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                        { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                    dispatch(
+                        TypeId.RuleEditor_PlayerRuleChanged,
+                        { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                     );
                 }
             }
@@ -441,16 +457,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
             const ruleType = openData.playerRuleType;
             if (!openData.getIsBatch()) {
                 playerRule.setCanUnitJoin(!canUnitJoin);
-                NotificationsDispatcher.dispatch(
-                    NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                    { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                dispatch(
+                    TypeId.RuleEditor_PlayerRuleChanged,
+                    { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                 );
             } else {
                 for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                     p.setCanUnitJoin(!canUnitJoin);
-                    NotificationsDispatcher.dispatch(
-                        NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                        { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                    dispatch(
+                        TypeId.RuleEditor_PlayerRuleChanged,
+                        { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                     );
                 }
             }
@@ -460,25 +476,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule    = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.MoveRangeModifier.MaxLimit,
-                minValue        : PlayerRulesConstants.MoveRangeModifier.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : MoveRangeModifier.MaxLimit,
+                minValue        : MoveRangeModifier.MinLimit,
                 currentValue    : playerRule.getMoveRangeModifier(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setMoveRangeModifier(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setMoveRangeModifier(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -490,25 +506,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule        = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.UnitVisionRangeModifier.MaxLimit,
-                minValue        : PlayerRulesConstants.UnitVisionRangeModifier.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : UnitVisionRangeModifier.MaxLimit,
+                minValue        : UnitVisionRangeModifier.MinLimit,
                 currentValue    : playerRule.getUnitVisionRangeModifier(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setUnitVisionRangeModifier(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setUnitVisionRangeModifier(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -520,25 +536,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule        = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.TileVisionRangeModifier.MaxLimit,
-                minValue        : PlayerRulesConstants.TileVisionRangeModifier.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : TileVisionRangeModifier.MaxLimit,
+                minValue        : TileVisionRangeModifier.MinLimit,
                 currentValue    : playerRule.getTileVisionRangeModifier(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setTileVisionRangeModifier(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setTileVisionRangeModifier(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -556,25 +572,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
             : gcData.getEnabledCoCategoryIdArrayByGameModeId(gameModeId);
 
         if (!openData.canModify) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowCoCategoryIdPanel, {
+            openPanel(getDict().CommonShowCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
             });
             return;
         }
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiCoCategoryIdPanel, {
+            openPanel(getDict().CommonChooseMultiCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray.length ? currentHumanCoCategoryIdArray : allCoCategoryIdArray,
                 forceUnchosenCoCategoryIdArray  : null,
                 maxChooseCount                  : null,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
                 callbackOnConfirm               : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -583,16 +599,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setMcwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setMcwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -610,25 +626,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
             : gcData.getEnabledCoCategoryIdArrayByGameModeId(gameModeId);
 
         if (!openData.canModify) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowCoCategoryIdPanel, {
+            openPanel(getDict().CommonShowCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
             });
             return;
         }
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiCoCategoryIdPanel, {
+            openPanel(getDict().CommonChooseMultiCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray.length ? currentHumanCoCategoryIdArray : allCoCategoryIdArray,
                 forceUnchosenCoCategoryIdArray  : null,
                 maxChooseCount                  : null,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
                 callbackOnConfirm               : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -637,16 +653,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setMmwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setMmwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -664,25 +680,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
             : gcData.getEnabledCoCategoryIdArrayByGameModeId(gameModeId);
 
         if (!openData.canModify) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowCoCategoryIdPanel, {
+            openPanel(getDict().CommonShowCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
             });
             return;
         }
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiCoCategoryIdPanel, {
+            openPanel(getDict().CommonChooseMultiCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray.length ? currentHumanCoCategoryIdArray : allCoCategoryIdArray,
                 forceUnchosenCoCategoryIdArray  : null,
                 maxChooseCount                  : null,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
                 callbackOnConfirm               : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -691,16 +707,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setMrwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setMrwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -718,25 +734,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
             : gcData.getEnabledCoCategoryIdArrayByGameModeId(gameModeId);
 
         if (!openData.canModify) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowCoCategoryIdPanel, {
+            openPanel(getDict().CommonShowCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
             });
             return;
         }
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiCoCategoryIdPanel, {
+            openPanel(getDict().CommonChooseMultiCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray.length ? currentHumanCoCategoryIdArray : allCoCategoryIdArray,
                 forceUnchosenCoCategoryIdArray  : null,
                 maxChooseCount                  : null,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
                 callbackOnConfirm               : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -745,16 +761,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setAtwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setAtwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -772,25 +788,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
             : gcData.getEnabledCoCategoryIdArrayByGameModeId(gameModeId);
 
         if (!openData.canModify) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowCoCategoryIdPanel, {
+            openPanel(getDict().CommonShowCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
             });
             return;
         }
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiCoCategoryIdPanel, {
+            openPanel(getDict().CommonChooseMultiCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray.length ? currentHumanCoCategoryIdArray : allCoCategoryIdArray,
                 forceUnchosenCoCategoryIdArray  : null,
                 maxChooseCount                  : null,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
                 callbackOnConfirm               : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -799,16 +815,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setCcwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setCcwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -820,29 +836,29 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const gcData                        = openData.gcData;
         const playerRule                    = openData.playerRule;
         const currentHumanCoCategoryIdArray = playerRule.getSrwHumanCoCategoryIdArray();
-        const allCoCategoryIdArray          = gcData.getEnabledCoArrayByGameModeId(GameModesConstants.ModeId.WarRoom)
-            .filter(v => v.getCoCategoryId() !== CosConstants.CategoryId.Random).map(v => v.getCoCategoryId());
+        const allCoCategoryIdArray          = gcData.getEnabledCoArrayByGameModeId(ModeId.WarRoom)
+            .filter(v => v.getCoCategoryId() !== CategoryId.Random).map(v => v.getCoCategoryId());
 
         if (!openData.canModify) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowCoCategoryIdPanel, {
+            openPanel(getDict().CommonShowCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
             });
             return;
         }
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiCoCategoryIdPanel, {
+            openPanel(getDict().CommonChooseMultiCoCategoryIdPanel, {
                 gameConfig                      : gcData,
                 availableCoCategoryIdArray      : allCoCategoryIdArray,
                 currentCoCategoryIdArray        : currentHumanCoCategoryIdArray.length ? currentHumanCoCategoryIdArray : allCoCategoryIdArray,
                 forceUnchosenCoCategoryIdArray  : null,
                 maxChooseCount                  : null,
                 isBan                           : false,
-                getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText                    : () => getText(TextType.B0238),
                 callbackOnConfirm               : newHumanCoCategoryIdArray => {
                     if (newHumanCoCategoryIdArray.length >= allCoCategoryIdArray.length) {
                         newHumanCoCategoryIdArray = [];
@@ -851,16 +867,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setSrwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setSrwHumanCoCategoryIdArray(newHumanCoCategoryIdArray);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -872,22 +888,22 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const gcData                = openData.gcData;
         const playerRule            = openData.playerRule;
         const currentHumanCoIdArray = playerRule.getCampaignHumanCoIdArray();
-        const allCoIdArray          = gcData.getEnabledCoArrayByGameModeId(GameModesConstants.ModeId.SingleCampaign)
-            .filter(v => v.getCoCategoryId() !== CosConstants.CategoryId.Random).map(v => v.getCoId());
+        const allCoIdArray          = gcData.getEnabledCoArrayByGameModeId(ModeId.SingleCampaign)
+            .filter(v => v.getCoCategoryId() !== CategoryId.Random).map(v => v.getCoId());
 
         if (!openData.canModify) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowCoIdPanel, {
+            openPanel(getDict().CommonShowCoIdPanel, {
                 gameConfig          : gcData,
                 availableCoIdArray  : allCoIdArray,
                 currentCoIdArray    : currentHumanCoIdArray,
                 isBan               : false,
-                getTitleText        : () => LangUtils.getText(LangConstants.TextType.B0238),
+                getTitleText        : () => getText(TextType.B0238),
             });
             return;
         }
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiCoIdPanel, {
+            openPanel(getDict().CommonChooseMultiCoIdPanel, {
                 gameConfig          : gcData,
                 availableCoIdArray  : allCoIdArray,
                 currentCoIdArray    : currentHumanCoIdArray,
@@ -898,16 +914,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setCampaignHumanCoIdArray(newHumanCoIdArray);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setCampaignHumanCoIdArray(newHumanCoIdArray);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -922,30 +938,30 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerIndex       = playerRule.getPlayerIndex();
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent          : () => LangUtils.getText(LangConstants.TextType.A0808),
-                getTextForConfirm   : () => LangUtils.getText(LangConstants.TextType.Yes),
-                getTextForCancel    : () => LangUtils.getText(LangConstants.TextType.No),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent          : () => getText(TextType.A0808),
+                getTextForConfirm   : () => getText(TextType.Yes),
+                getTextForCancel    : () => getText(TextType.No),
                 showButtonClose     : true,
                 callback            : () => {
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleCoIdPanel, {
+                    openPanel(getDict().CommonChooseSingleCoIdPanel, {
                         gameConfig          : gcData,
                         currentCoId         : playerRule.getCcwAiCoId() ?? null,
-                        availableCoIdArray  : gcData.getEnabledCoArrayForAi().filter(v => v.getCoCategoryId() !== CosConstants.CategoryId.Random).map(v => v.getCoId()),
+                        availableCoIdArray  : gcData.getEnabledCoArrayForAi().filter(v => v.getCoCategoryId() !== CategoryId.Random).map(v => v.getCoId()),
                         isBan               : false,
                         callbackOnConfirm   : newCoId => {
                             if (!openData.getIsBatch()) {
                                 playerRule.setCcwAiCoId(newCoId);
-                                NotificationsDispatcher.dispatch(
-                                    NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                    { playerIndex: playerIndex, ruleType: playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                                dispatch(
+                                    TypeId.RuleEditor_PlayerRuleChanged,
+                                    { playerIndex: playerIndex, ruleType: playerRuleType } as RuleEditor_PlayerRuleChanged
                                 );
                             } else {
                                 for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                                     p.setCcwAiCoId(newCoId);
-                                    NotificationsDispatcher.dispatch(
-                                        NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                        { playerIndex: p.getPlayerIndex(), ruleType: playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                                    dispatch(
+                                        TypeId.RuleEditor_PlayerRuleChanged,
+                                        { playerIndex: p.getPlayerIndex(), ruleType: playerRuleType } as RuleEditor_PlayerRuleChanged
                                     );
                                 }
                             }
@@ -955,16 +971,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                 callbackOnCancel    : () => {
                     if (!openData.getIsBatch()) {
                         playerRule.setCcwAiCoId(null);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerIndex, ruleType: playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerIndex, ruleType: playerRuleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setCcwAiCoId(null);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: playerRuleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -979,30 +995,30 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerIndex       = playerRule.getPlayerIndex();
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent          : () => LangUtils.getText(LangConstants.TextType.A0808),
-                getTextForConfirm   : () => LangUtils.getText(LangConstants.TextType.Yes),
-                getTextForCancel    : () => LangUtils.getText(LangConstants.TextType.No),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent          : () => getText(TextType.A0808),
+                getTextForConfirm   : () => getText(TextType.Yes),
+                getTextForCancel    : () => getText(TextType.No),
                 showButtonClose     : true,
                 callback            : () => {
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleCoIdPanel, {
+                    openPanel(getDict().CommonChooseSingleCoIdPanel, {
                         gameConfig          : gcData,
                         currentCoId         : playerRule.getSrwAiCoId() ?? null,
-                        availableCoIdArray  : gcData.getEnabledCoArrayForAi().filter(v => v.getCoCategoryId() !== CosConstants.CategoryId.Random).map(v => v.getCoId()),
+                        availableCoIdArray  : gcData.getEnabledCoArrayForAi().filter(v => v.getCoCategoryId() !== CategoryId.Random).map(v => v.getCoId()),
                         isBan               : false,
                         callbackOnConfirm   : newCoId => {
                             if (!openData.getIsBatch()) {
                                 playerRule.setSrwAiCoId(newCoId);
-                                NotificationsDispatcher.dispatch(
-                                    NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                    { playerIndex: playerIndex, ruleType: playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                                dispatch(
+                                    TypeId.RuleEditor_PlayerRuleChanged,
+                                    { playerIndex: playerIndex, ruleType: playerRuleType } as RuleEditor_PlayerRuleChanged
                                 );
                             } else {
                                 for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                                     p.setSrwAiCoId(newCoId);
-                                    NotificationsDispatcher.dispatch(
-                                        NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                        { playerIndex: p.getPlayerIndex(), ruleType: playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                                    dispatch(
+                                        TypeId.RuleEditor_PlayerRuleChanged,
+                                        { playerIndex: p.getPlayerIndex(), ruleType: playerRuleType } as RuleEditor_PlayerRuleChanged
                                     );
                                 }
                             }
@@ -1012,16 +1028,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                 callbackOnCancel    : () => {
                     if (!openData.getIsBatch()) {
                         playerRule.setSrwAiCoId(null);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerIndex, ruleType: playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerIndex, ruleType: playerRuleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setSrwAiCoId(null);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: playerRuleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: playerRuleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -1034,10 +1050,10 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule    = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiCoIdPanel, {
+            openPanel(getDict().CommonChooseMultiCoIdPanel, {
                 gameConfig          : gcData,
-                currentCoIdArray    : HelpersCollection.getNonNullElements([playerRule.getCampaignAiCoId()]),
-                availableCoIdArray  : gcData.getEnabledCoArrayForAi().filter(v => v.getCoCategoryId() !== CosConstants.CategoryId.Random).map(v => v.getCoId()),
+                currentCoIdArray    : getNonNullElements([playerRule.getCampaignAiCoId()]),
+                availableCoIdArray  : gcData.getEnabledCoArrayForAi().filter(v => v.getCoCategoryId() !== CategoryId.Random).map(v => v.getCoId()),
                 minChooseCount      : null,
                 maxChooseCount      : 1,
                 isBan               : false,
@@ -1045,16 +1061,16 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
                     const ruleType = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setCampaignAiCoId(newCoIdArray[0]);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setCampaignAiCoId(newCoIdArray[0]);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -1066,15 +1082,15 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleSkinIdPanel, {
+            openPanel(getDict().CommonChooseSingleSkinIdPanel, {
                 currentSkinId           : playerRule.getCampaignSkinId() ?? null,
-                availableSkinIdArray    : ForceSkinsUtils.getAllSkinIdArray(false),
+                availableSkinIdArray    : getAllSkinIdArray(false),
                 callback                : newSkinId => {
                     const ruleType = openData.playerRuleType;
                     playerRule.setCampaignSkinId(newSkinId);
-                    NotificationsDispatcher.dispatch(
-                        NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                        { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                    dispatch(
+                        TypeId.RuleEditor_PlayerRuleChanged,
+                        { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                     );
                 },
             });
@@ -1084,25 +1100,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule    = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.AttackPowerModifier.MaxLimit,
-                minValue        : PlayerRulesConstants.AttackPowerModifier.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : AttackPowerModifier.MaxLimit,
+                minValue        : AttackPowerModifier.MinLimit,
                 currentValue    : playerRule.getAttackPowerModifier(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setAttackPowerModifier(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setAttackPowerModifier(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -1114,25 +1130,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule    = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.DefenseModifier.MaxLimit,
-                minValue        : PlayerRulesConstants.DefenseModifier.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : DefenseModifier.MaxLimit,
+                minValue        : DefenseModifier.MinLimit,
                 currentValue    : playerRule.getDefenseModifier(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setDefenseModifier(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setDefenseModifier(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -1144,25 +1160,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule    = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : Math.min(PlayerRulesConstants.Luck.MaxLimit, playerRule.getLuckUpperLimit()),
-                minValue        : PlayerRulesConstants.Luck.MinLimit,
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : Math.min(Luck.MaxLimit, playerRule.getLuckUpperLimit()),
+                minValue        : Luck.MinLimit,
                 currentValue    : playerRule.getLuckLowerLimit(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setLuckLowerLimit(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setLuckLowerLimit(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -1174,25 +1190,25 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const playerRule        = openData.playerRule;
 
         checkAndSetCustomWarRuleId(openData.instanceWarRule, () => {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle        : () => LangUtils.getPlayerRuleName(openData.playerRuleType) ?? LangConstants.UndefinedError,
-                maxValue        : PlayerRulesConstants.Luck.MaxLimit,
-                minValue        : Math.max(PlayerRulesConstants.Luck.MinLimit, playerRule.getLuckLowerLimit()),
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle        : () => getPlayerRuleName(openData.playerRuleType) ?? UndefinedError,
+                maxValue        : Luck.MaxLimit,
+                minValue        : Math.max(Luck.MinLimit, playerRule.getLuckLowerLimit()),
                 currentValue    : playerRule.getLuckUpperLimit(),
                 callback        : value => {
                     const ruleType  = openData.playerRuleType;
                     if (!openData.getIsBatch()) {
                         playerRule.setLuckUpperLimit(value);
-                        NotificationsDispatcher.dispatch(
-                            NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                        dispatch(
+                            TypeId.RuleEditor_PlayerRuleChanged,
+                            { playerIndex: playerRule.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                         );
                     } else {
                         for (const p of openData.warRuleCommonData.getPlayerRuleList()) {
                             p.setLuckUpperLimit(value);
-                            NotificationsDispatcher.dispatch(
-                                NotificationsTypeId.TypeId.RuleEditor_PlayerRuleChanged,
-                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as NotificationsDataTypes.RuleEditor_PlayerRuleChanged
+                            dispatch(
+                                TypeId.RuleEditor_PlayerRuleChanged,
+                                { playerIndex: p.getPlayerIndex(), ruleType: ruleType } as RuleEditor_PlayerRuleChanged
                             );
                         }
                     }
@@ -1212,43 +1228,43 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
 
         const playerRuleType = openData.playerRuleType;
         switch (playerRuleType) {
-            case PlayerRulesConstants.RuleTypeId.TeamIndex                       : return this._updateViewAsTeamIndex(openData);
-            case PlayerRulesConstants.RuleTypeId.BannedCoCategoryIdArray         : return this._updateViewAsBannedCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.BannedUnitTypeArray             : return this._updateViewAsBannedUnitTypeArray(openData);
-            case PlayerRulesConstants.RuleTypeId.InitialFund                     : return this._updateViewAsInitialFund(openData);
-            case PlayerRulesConstants.RuleTypeId.IncomeMultiplier                : return this._updateViewAsIncomeMultiplier(openData);
-            case PlayerRulesConstants.RuleTypeId.MaxUnitsCount                   : return this._updateViewAsMaxUnitsCount(openData);
-            case PlayerRulesConstants.RuleTypeId.EnergyAddPctOnCoBoard           : return this._updateViewAsEnergyAddPctOnCoBoard(openData);
-            case PlayerRulesConstants.RuleTypeId.EnergyLossPctOnCoDie            : return this._updateViewAsEnergyLossPctOnCoDie(openData);
-            case PlayerRulesConstants.RuleTypeId.EnergyGrowthMultiplier          : return this._updateViewAsEnergyGrowthMultiplier(openData);
-            case PlayerRulesConstants.RuleTypeId.CanActivateCoSkill              : return this._updateViewAsCanActivateCoSkill(openData);
-            case PlayerRulesConstants.RuleTypeId.CanCoBoard                      : return this._updateViewAsCanCoBoard(openData);
-            case PlayerRulesConstants.RuleTypeId.CanUnitJoin                     : return this._updateViewAsCanUnitJoin(openData);
-            case PlayerRulesConstants.RuleTypeId.MoveRangeModifier               : return this._updateViewAsMoveRangeModifier(openData);
-            case PlayerRulesConstants.RuleTypeId.UnitVisionRangeModifier         : return this._updateViewAsUnitVisionRangeModifier(openData);
-            case PlayerRulesConstants.RuleTypeId.TileVisionRangeModifier         : return this._updateViewAsTileVisionRangeModifier(openData);
-            case PlayerRulesConstants.RuleTypeId.McwHumanCoCategoryIdArray       : return this._updateViewAsMcwHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.MmwHumanCoCategoryIdArray       : return this._updateViewAsMmwHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.MrwHumanCoCategoryIdArray       : return this._updateViewAsMrwHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.AtwHumanCoCategoryIdArray       : return this._updateViewAsAtwHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.CcwHumanCoCategoryIdArray       : return this._updateViewAsCcwHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.WarRoomHumanCoCategoryIdArray   : return this._updateViewAsWarRoomHumanCoCategoryIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.CampaignHumanCoIdArray          : return this._updateViewAsCampaignHumanCoIdArray(openData);
-            case PlayerRulesConstants.RuleTypeId.CcwAiCoId                       : return this._updateViewAsCcwAiCoId(openData);
-            case PlayerRulesConstants.RuleTypeId.WarRoomAiCoId                   : return this._updateViewAsWarRoomAiCoId(openData);
-            case PlayerRulesConstants.RuleTypeId.CampaignAiCoId                  : return this._updateViewAsCampaignAiCoId(openData);
-            case PlayerRulesConstants.RuleTypeId.CampaignSkinId                  : return this._updateViewAsCampaignSkinId(openData);
-            case PlayerRulesConstants.RuleTypeId.AttackPowerModifier             : return this._updateViewAsAttackPowerModifier(openData);
-            case PlayerRulesConstants.RuleTypeId.DefenseModifier                 : return this._updateViewAsDefenseModifier(openData);
-            case PlayerRulesConstants.RuleTypeId.LuckLowerLimit                  : return this._updateViewAsLuckLowerLimit(openData);
-            case PlayerRulesConstants.RuleTypeId.LuckUpperLimit                  : return this._updateViewAsLuckUpperLimit(openData);
-            default                                             : throw HelpersMisc.newError(`Unknown ruleType: ${playerRuleType}`);
+            case RuleTypeId.TeamIndex                       : return this._updateViewAsTeamIndex(openData);
+            case RuleTypeId.BannedCoCategoryIdArray         : return this._updateViewAsBannedCoCategoryIdArray(openData);
+            case RuleTypeId.BannedUnitTypeArray             : return this._updateViewAsBannedUnitTypeArray(openData);
+            case RuleTypeId.InitialFund                     : return this._updateViewAsInitialFund(openData);
+            case RuleTypeId.IncomeMultiplier                : return this._updateViewAsIncomeMultiplier(openData);
+            case RuleTypeId.MaxUnitsCount                   : return this._updateViewAsMaxUnitsCount(openData);
+            case RuleTypeId.EnergyAddPctOnCoBoard           : return this._updateViewAsEnergyAddPctOnCoBoard(openData);
+            case RuleTypeId.EnergyLossPctOnCoDie            : return this._updateViewAsEnergyLossPctOnCoDie(openData);
+            case RuleTypeId.EnergyGrowthMultiplier          : return this._updateViewAsEnergyGrowthMultiplier(openData);
+            case RuleTypeId.CanActivateCoSkill              : return this._updateViewAsCanActivateCoSkill(openData);
+            case RuleTypeId.CanCoBoard                      : return this._updateViewAsCanCoBoard(openData);
+            case RuleTypeId.CanUnitJoin                     : return this._updateViewAsCanUnitJoin(openData);
+            case RuleTypeId.MoveRangeModifier               : return this._updateViewAsMoveRangeModifier(openData);
+            case RuleTypeId.UnitVisionRangeModifier         : return this._updateViewAsUnitVisionRangeModifier(openData);
+            case RuleTypeId.TileVisionRangeModifier         : return this._updateViewAsTileVisionRangeModifier(openData);
+            case RuleTypeId.McwHumanCoCategoryIdArray       : return this._updateViewAsMcwHumanCoCategoryIdArray(openData);
+            case RuleTypeId.MmwHumanCoCategoryIdArray       : return this._updateViewAsMmwHumanCoCategoryIdArray(openData);
+            case RuleTypeId.MrwHumanCoCategoryIdArray       : return this._updateViewAsMrwHumanCoCategoryIdArray(openData);
+            case RuleTypeId.AtwHumanCoCategoryIdArray       : return this._updateViewAsAtwHumanCoCategoryIdArray(openData);
+            case RuleTypeId.CcwHumanCoCategoryIdArray       : return this._updateViewAsCcwHumanCoCategoryIdArray(openData);
+            case RuleTypeId.WarRoomHumanCoCategoryIdArray   : return this._updateViewAsWarRoomHumanCoCategoryIdArray(openData);
+            case RuleTypeId.CampaignHumanCoIdArray          : return this._updateViewAsCampaignHumanCoIdArray(openData);
+            case RuleTypeId.CcwAiCoId                       : return this._updateViewAsCcwAiCoId(openData);
+            case RuleTypeId.WarRoomAiCoId                   : return this._updateViewAsWarRoomAiCoId(openData);
+            case RuleTypeId.CampaignAiCoId                  : return this._updateViewAsCampaignAiCoId(openData);
+            case RuleTypeId.CampaignSkinId                  : return this._updateViewAsCampaignSkinId(openData);
+            case RuleTypeId.AttackPowerModifier             : return this._updateViewAsAttackPowerModifier(openData);
+            case RuleTypeId.DefenseModifier                 : return this._updateViewAsDefenseModifier(openData);
+            case RuleTypeId.LuckLowerLimit                  : return this._updateViewAsLuckLowerLimit(openData);
+            case RuleTypeId.LuckUpperLimit                  : return this._updateViewAsLuckUpperLimit(openData);
+            default                                             : throw newError(`Unknown ruleType: ${playerRuleType}`);
         }
     }
     private _updateViewAsTeamIndex(openData: DataForUiPlayerRuleRenderer): void {
         const label = this._labelValue;
-        label.setText(LangUtils.getPlayerTeamName(openData.playerRule.getTeamIndex()) ?? LangConstants.UndefinedError);
-        label.setTextColor(GraphicsConstants.ColorValue.White);
+        label.setText(getPlayerTeamName(openData.playerRule.getTeamIndex()) ?? UndefinedError);
+        label.setTextColor(ColorValue.White);
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1256,7 +1272,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const label     = this._labelValue;
         const currValue = openData.playerRule.getBannedCoCategoryIdArray().length;
         label.setText(`${currValue}`);
-        label.setTextColor(currValue <= 0 ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Red);
+        label.setTextColor(currValue <= 0 ? ColorValue.White : ColorValue.Red);
 
         this._applySettingsForWholeTouch(true);
     }
@@ -1264,7 +1280,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const label     = this._labelValue;
         const currValue = openData.playerRule.getBannedUnitTypeArray().length;
         label.setText(`${currValue}`);
-        label.setTextColor(currValue <= 0 ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Red);
+        label.setTextColor(currValue <= 0 ? ColorValue.White : ColorValue.Red);
 
         this._applySettingsForWholeTouch(true);
     }
@@ -1272,7 +1288,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getInitialFund();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.InitialFund.Default));
+        label.setTextColor(getTextColor(currValue, InitialFund.Default));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1280,7 +1296,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getIncomeMultiplier();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.IncomeMultiplier.Default));
+        label.setTextColor(getTextColor(currValue, IncomeMultiplier.Default));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1288,7 +1304,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getMaxUnitsCount();
         const label         = this._labelValue;
         label.setText(`${currValue ?? `--`}`);
-        label.setTextColor(currValue == null ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Red);
+        label.setTextColor(currValue == null ? ColorValue.White : ColorValue.Red);
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1296,7 +1312,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getEnergyAddPctOnCoBoard();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.EnergyAddPctOnCoBoard.Default));
+        label.setTextColor(getTextColor(currValue, EnergyAddPctOnCoBoard.Default));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1304,7 +1320,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getEnergyLossPctOnCoDie();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.EnergyLossPctOnCoDie.Default, true));
+        label.setTextColor(getTextColor(currValue, EnergyLossPctOnCoDie.Default, true));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1312,31 +1328,31 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getEnergyGrowthMultiplier();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.EnergyGrowthMultiplier.Default));
+        label.setTextColor(getTextColor(currValue, EnergyGrowthMultiplier.Default));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
     private _updateViewAsCanActivateCoSkill(openData: DataForUiPlayerRuleRenderer): void {
         const canActivateCoSkill    = openData.playerRule.getCanActivateCoSkill();
         const label                 = this._labelValue;
-        label.setText(LangUtils.getTextForYesOrNo(canActivateCoSkill));
-        label.setTextColor(canActivateCoSkill ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Red);
+        label.setText(getTextForYesOrNo(canActivateCoSkill));
+        label.setTextColor(canActivateCoSkill ? ColorValue.White : ColorValue.Red);
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
     private _updateViewAsCanCoBoard(openData: DataForUiPlayerRuleRenderer): void {
         const canCoBoard    = openData.playerRule.getCanCoBoard();
         const label         = this._labelValue;
-        label.setText(LangUtils.getTextForYesOrNo(canCoBoard));
-        label.setTextColor(canCoBoard ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Red);
+        label.setText(getTextForYesOrNo(canCoBoard));
+        label.setTextColor(canCoBoard ? ColorValue.White : ColorValue.Red);
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
     private _updateViewAsCanUnitJoin(openData: DataForUiPlayerRuleRenderer): void {
         const currValue     = openData.playerRule.getCanUnitJoin();
         const label         = this._labelValue;
-        label.setText(LangUtils.getTextForYesOrNo(currValue));
-        label.setTextColor(currValue ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Red);
+        label.setText(getTextForYesOrNo(currValue));
+        label.setTextColor(currValue ? ColorValue.White : ColorValue.Red);
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1344,7 +1360,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getMoveRangeModifier();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.MoveRangeModifier.Default));
+        label.setTextColor(getTextColor(currValue, MoveRangeModifier.Default));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1352,7 +1368,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getUnitVisionRangeModifier();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.UnitVisionRangeModifier.Default));
+        label.setTextColor(getTextColor(currValue, UnitVisionRangeModifier.Default));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1360,7 +1376,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getTileVisionRangeModifier();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.TileVisionRangeModifier.Default));
+        label.setTextColor(getTextColor(currValue, TileVisionRangeModifier.Default));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1368,11 +1384,11 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currentValue  = openData.playerRule.getMcwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(LangUtils.getText(LangConstants.TextType.B0120));
-            label.setTextColor(GraphicsConstants.ColorValue.White);
+            label.setText(getText(TextType.B0120));
+            label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
-            label.setTextColor(GraphicsConstants.ColorValue.Red);
+            label.setTextColor(ColorValue.Red);
         }
 
         this._applySettingsForWholeTouch(true);
@@ -1381,11 +1397,11 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currentValue  = openData.playerRule.getMmwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(LangUtils.getText(LangConstants.TextType.B0120));
-            label.setTextColor(GraphicsConstants.ColorValue.White);
+            label.setText(getText(TextType.B0120));
+            label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
-            label.setTextColor(GraphicsConstants.ColorValue.Red);
+            label.setTextColor(ColorValue.Red);
         }
 
         this._applySettingsForWholeTouch(true);
@@ -1394,11 +1410,11 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currentValue  = openData.playerRule.getMrwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(LangUtils.getText(LangConstants.TextType.B0120));
-            label.setTextColor(GraphicsConstants.ColorValue.White);
+            label.setText(getText(TextType.B0120));
+            label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
-            label.setTextColor(GraphicsConstants.ColorValue.Red);
+            label.setTextColor(ColorValue.Red);
         }
 
         this._applySettingsForWholeTouch(true);
@@ -1407,11 +1423,11 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currentValue  = openData.playerRule.getAtwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(LangUtils.getText(LangConstants.TextType.B0120));
-            label.setTextColor(GraphicsConstants.ColorValue.White);
+            label.setText(getText(TextType.B0120));
+            label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
-            label.setTextColor(GraphicsConstants.ColorValue.Red);
+            label.setTextColor(ColorValue.Red);
         }
 
         this._applySettingsForWholeTouch(true);
@@ -1420,11 +1436,11 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currentValue  = openData.playerRule.getCcwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(LangUtils.getText(LangConstants.TextType.B0120));
-            label.setTextColor(GraphicsConstants.ColorValue.White);
+            label.setText(getText(TextType.B0120));
+            label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
-            label.setTextColor(GraphicsConstants.ColorValue.Red);
+            label.setTextColor(ColorValue.Red);
         }
 
         this._applySettingsForWholeTouch(true);
@@ -1433,11 +1449,11 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currentValue  = openData.playerRule.getSrwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(LangUtils.getText(LangConstants.TextType.B0120));
-            label.setTextColor(GraphicsConstants.ColorValue.White);
+            label.setText(getText(TextType.B0120));
+            label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
-            label.setTextColor(GraphicsConstants.ColorValue.Red);
+            label.setTextColor(ColorValue.Red);
         }
 
         this._applySettingsForWholeTouch(true);
@@ -1446,11 +1462,11 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currentValue  = openData.playerRule.getCampaignHumanCoIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(LangUtils.getText(LangConstants.TextType.B0120));
-            label.setTextColor(GraphicsConstants.ColorValue.White);
+            label.setText(getText(TextType.B0120));
+            label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
-            label.setTextColor(GraphicsConstants.ColorValue.Red);
+            label.setTextColor(ColorValue.Red);
         }
 
         this._applySettingsForWholeTouch(true);
@@ -1458,32 +1474,32 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
     private _updateViewAsCcwAiCoId(openData: DataForUiPlayerRuleRenderer): void {
         const ccwAiCoId = openData.playerRule.getCcwAiCoId();
         const label     = this._labelValue;
-        label.setText(ccwAiCoId == null ? `--` : openData.gcData.getCoNameAndTierText(ccwAiCoId) ?? LangConstants.UndefinedError);
-        label.setTextColor(ccwAiCoId == null ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Green);
+        label.setText(ccwAiCoId == null ? `--` : openData.gcData.getCoNameAndTierText(ccwAiCoId) ?? UndefinedError);
+        label.setTextColor(ccwAiCoId == null ? ColorValue.White : ColorValue.Green);
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
     private _updateViewAsWarRoomAiCoId(openData: DataForUiPlayerRuleRenderer): void {
         const srwAiCoId = openData.playerRule.getSrwAiCoId();
         const label     = this._labelValue;
-        label.setText(srwAiCoId == null ? `--` : openData.gcData.getCoNameAndTierText(srwAiCoId) ?? LangConstants.UndefinedError);
-        label.setTextColor(srwAiCoId == null ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Green);
+        label.setText(srwAiCoId == null ? `--` : openData.gcData.getCoNameAndTierText(srwAiCoId) ?? UndefinedError);
+        label.setTextColor(srwAiCoId == null ? ColorValue.White : ColorValue.Green);
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
     private _updateViewAsCampaignAiCoId(openData: DataForUiPlayerRuleRenderer): void {
         const coId      = openData.playerRule.getCampaignAiCoId();
         const label     = this._labelValue;
-        label.setText(coId == null ? `--` : (openData.gcData.getCoNameAndTierText(coId) ?? LangConstants.UndefinedError));
-        label.setTextColor(coId == null ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Green);
+        label.setText(coId == null ? `--` : (openData.gcData.getCoNameAndTierText(coId) ?? UndefinedError));
+        label.setTextColor(coId == null ? ColorValue.White : ColorValue.Green);
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
     private _updateViewAsCampaignSkinId(openData: DataForUiPlayerRuleRenderer): void {
         const skinId    = openData.playerRule.getCampaignSkinId();
         const label     = this._labelValue;
-        label.setText(skinId == null ? `--` : (LangUtils.getUnitAndTileSkinName(skinId) ?? LangConstants.UndefinedError));
-        label.setTextColor(skinId == null ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Green);
+        label.setText(skinId == null ? `--` : (getUnitAndTileSkinName(skinId) ?? UndefinedError));
+        label.setTextColor(skinId == null ? ColorValue.White : ColorValue.Green);
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1491,7 +1507,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue = openData.playerRule.getAttackPowerModifier();
         const label     = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.AttackPowerModifier.Default));
+        label.setTextColor(getTextColor(currValue, AttackPowerModifier.Default));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1499,7 +1515,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getDefenseModifier();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.DefenseModifier.Default));
+        label.setTextColor(getTextColor(currValue, DefenseModifier.Default));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1507,7 +1523,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getLuckLowerLimit();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, PlayerRulesConstants.Luck.DefaultLowerLimit));
+        label.setTextColor(getTextColor(currValue, Luck.DefaultLowerLimit));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1515,7 +1531,7 @@ export class UiPlayerRuleRenderer extends UiComponentsUiListItemRenderer.UiListI
         const currValue     = openData.playerRule.getLuckUpperLimit();
         const label         = this._labelValue;
         label.setText(`${currValue}`);
-        label.setTextColor(HelpersText.getTextColor(currValue, openData.gcData.getSystemCfg().getDefaultLuckUpperLimit()));
+        label.setTextColor(getTextColor(currValue, openData.gcData.getSystemCfg().getDefaultLuckUpperLimit()));
 
         this._applySettingsForWholeTouch(openData.canModify);
     }
@@ -1525,8 +1541,8 @@ function checkAndSetCustomWarRuleId(instanceWarRule: Undefinable<InstanceWarRule
     if ((!instanceWarRule) || (instanceWarRule.getTemplateWarRuleId() == null)) {
         callback();
     } else {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent  : () => LangUtils.getText(LangConstants.TextType.A0129),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent  : () => getText(TextType.A0129),
             callback    : () => {
                 instanceWarRule.setTemplateWarRuleId(null);
                 callback();

@@ -1,42 +1,42 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as MapTagsConstants from "../../mapTags/Constants.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NormalMapModelNormalMapProxy from "../../normalMap/model/NormalMapProxy.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoMapMapTagMapTagSingleData from "../../proto/schema/CommonProto/Map/MapTag/MapTagSingleData.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import { showLang } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getLanguageText } from "../../lang/Utils.ts";
+import { Constants } from "../../mapTags/Constants.ts";
+import { getMapTag } from "../../normalMap/model/NormalMapModel.ts";
+import { reqMmSetMapTagSingleData } from "../../normalMap/model/NormalMapProxy.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { MapTagSingleData } from "../../proto/schema/CommonProto/Map/MapTag/MapTagSingleData.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
 
-    private readonly _listMapTag!           : UiInterfacesIUiScrollList.IUiScrollList<DataForMapTagRenderer>;
+    private readonly _listMapTag!           : IUiScrollList<DataForMapTagRenderer>;
 
-    private readonly _btnRename!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnEnable!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDisable!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnRename!            : IUiButton;
+    private readonly _btnEnable!            : IUiButton;
+    private readonly _btnDisable!           : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgMmSetMapTagSingleData,    callback: this._onNotifyMsgMmSetMapTagSingleData },
-            { type: NotificationsTypeId.TypeId.MsgMapGetMapTag,             callback: this._onNotifyMsgMapGetMapTag },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgMmSetMapTagSingleData,    callback: this._onNotifyMsgMmSetMapTagSingleData },
+            { type: TypeId.MsgMapGetMapTag,             callback: this._onNotifyMsgMapGetMapTag },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -70,7 +70,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgMmSetMapTagSingleData(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
     }
     private async _onNotifyMsgMapGetMapTag(): Promise<void> {
         await this._updateListMapTag();
@@ -80,16 +80,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnRename(): Promise<void> {
         const mapTagId = this._listMapTag.getFirstSelectedData()?.mapTagId;
         if (mapTagId == null) {
-            FloatText2.showLang(LangConstants.TextType.A0856);
+            showLang(TextType.A0856);
             return;
         }
 
-        const mapTagData = (await NormalMapModelNormalMapModel.getMapTag())?.getMapTagDataArray()?.find(v => v.getMapTagId() === mapTagId);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputShortLangTextPanel, {
+        const mapTagData = (await getMapTag())?.getMapTagDataArray()?.find(v => v.getMapTagId() === mapTagId);
+        openPanel(getDict().CommonInputShortLangTextPanel, {
             currentTextArray    : mapTagData?.getNameArray() ?? [],
-            maxTextLength       : MapTagsConstants.Constants.MaxNameLength,
-            getHelpText         : () => LangUtils.getText(LangConstants.TextType.A0313),
-            callback            : textArray => NormalMapModelNormalMapProxy.reqMmSetMapTagSingleData(ProtoSchemaCommonProtoMapMapTagMapTagSingleData.MapTagSingleData.fromJson({
+            maxTextLength       : Constants.MaxNameLength,
+            getHelpText         : () => getText(TextType.A0313),
+            callback            : textArray => reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
                 mapTagId    : mapTagId,
                 isEnabled   : !!mapTagData?.getIsEnabled(),
                 nameArray   : textArray.map(v => v.toJson()),
@@ -99,25 +99,25 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnEnable(): Promise<void> {
         const mapTagId = this._listMapTag.getFirstSelectedData()?.mapTagId;
         if (mapTagId == null) {
-            FloatText2.showLang(LangConstants.TextType.A0856);
+            showLang(TextType.A0856);
             return;
         }
 
-        const mapTagData = (await NormalMapModelNormalMapModel.getMapTag())?.getMapTagDataArray().find(v => v.getMapTagId() === mapTagId);
+        const mapTagData = (await getMapTag())?.getMapTagDataArray().find(v => v.getMapTagId() === mapTagId);
         if ((mapTagData == null) || (mapTagData.getIsEnabled())) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const nameArray = mapTagData.getNameArray();
-        if (LangUtils.getLanguageText({ textArray: nameArray }) == null) {
-            FloatText2.showLang(LangConstants.TextType.A0311);
+        if (getLanguageText({ textArray: nameArray }) == null) {
+            showLang(TextType.A0311);
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent  : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => NormalMapModelNormalMapProxy.reqMmSetMapTagSingleData(ProtoSchemaCommonProtoMapMapTagMapTagSingleData.MapTagSingleData.fromJson({
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent  : () => getText(TextType.AreYouSureYouWantToContinue),
+            callback    : () => reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
                 mapTagId    : mapTagId,
                 isEnabled   : !mapTagData.getIsEnabled(),
                 nameArray   : nameArray.map(v => v.toJson()),
@@ -127,25 +127,25 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnDisable(): Promise<void> {
         const mapTagId = this._listMapTag.getFirstSelectedData()?.mapTagId;
         if (mapTagId == null) {
-            FloatText2.showLang(LangConstants.TextType.A0856);
+            showLang(TextType.A0856);
             return;
         }
 
-        const mapTagData = (await NormalMapModelNormalMapModel.getMapTag())?.getMapTagDataArray().find(v => v.getMapTagId() === mapTagId);
+        const mapTagData = (await getMapTag())?.getMapTagDataArray().find(v => v.getMapTagId() === mapTagId);
         if ((mapTagData == null) || (!mapTagData.getIsEnabled())) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const nameArray = mapTagData.getNameArray();
-        if (LangUtils.getLanguageText({ textArray: nameArray }) == null) {
-            FloatText2.showLang(LangConstants.TextType.A0311);
+        if (getLanguageText({ textArray: nameArray }) == null) {
+            showLang(TextType.A0311);
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent  : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => NormalMapModelNormalMapProxy.reqMmSetMapTagSingleData(ProtoSchemaCommonProtoMapMapTagMapTagSingleData.MapTagSingleData.fromJson({
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent  : () => getText(TextType.AreYouSureYouWantToContinue),
+            callback    : () => reqMmSetMapTagSingleData(MapTagSingleData.fromJson({
                 mapTagId    : mapTagId,
                 isEnabled   : !mapTagData.getIsEnabled(),
                 nameArray   : nameArray.map(v => v.toJson()),
@@ -160,15 +160,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateBtnEnable();
     }
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0445);
-        this._btnEnable.setLangText(LangConstants.TextType.B0433);
-        this._btnDisable.setLangText(LangConstants.TextType.B0434);
-        this._btnRename.setLangText(LangConstants.TextType.B0495);
+        this._labelTitle.setLangText(TextType.B0445);
+        this._btnEnable.setLangText(TextType.B0433);
+        this._btnDisable.setLangText(TextType.B0434);
+        this._btnRename.setLangText(TextType.B0495);
     }
 
     private async _updateListMapTag(): Promise<void> {
         const dataArray : DataForMapTagRenderer[] = [];
-        for (let mapTagId = MapTagsConstants.Constants.MinId; mapTagId <= MapTagsConstants.Constants.MaxId; ++mapTagId) {
+        for (let mapTagId = Constants.MinId; mapTagId <= Constants.MaxId; ++mapTagId) {
             dataArray.push({
                 mapTagId    : mapTagId,
                 panel       : this,
@@ -184,27 +184,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if (mapTagId == null) {
             btnEnable.setIsVisible(true);
         } else {
-            const mapTag        = (await NormalMapModelNormalMapModel.getMapTag())?.getMapTagDataArray().find(v => v.getMapTagId() === mapTagId);
+            const mapTag        = (await getMapTag())?.getMapTagDataArray().find(v => v.getMapTagId() === mapTagId);
             btnEnable.setIsVisible((mapTag == null) || (!mapTag.getIsEnabled()));
         }
     }
 }
 
-interface DataForMapTagRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForMapTagRenderer extends UiListItemData {
     mapTagId    : number;
     panel       : Panel;
 }
-class MapTagRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForMapTagRenderer> {
-    private readonly _imgSelected!      : UiInterfacesIUiImage.IUiImage;
+class MapTagRenderer extends UiListItemRenderer<DataForMapTagRenderer> {
+    private readonly _imgSelected!      : IUiImage;
 
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMapTagId!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelIsEnabled!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapTagName!  : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelMapTagId!    : IUiLabel;
+    private readonly _labelIsEnabled!   : IUiLabel;
+    private readonly _labelMapTagName!  : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -213,13 +213,13 @@ class MapTagRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        TweenExecutor.Executor.removeTweens(imgSelected);
-        TweenExecutor.Executor.get(imgSelected, { loop: true })
+        Executor.removeTweens(imgSelected);
+        Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        TweenExecutor.Executor.removeTweens(this._imgSelected);
+        Executor.removeTweens(this._imgSelected);
         await super._onClosed();
     }
 
@@ -245,16 +245,16 @@ class MapTagRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
         const mapTagId = openData.mapTagId;
         this._labelMapTagId.setText(`#${mapTagId}`);
 
-        const mapTagData = (await NormalMapModelNormalMapModel.getMapTag())?.getMapTagDataArray().find(v => v.getMapTagId() === mapTagId);
+        const mapTagData = (await getMapTag())?.getMapTagDataArray().find(v => v.getMapTagId() === mapTagId);
         if (this.getOpenData()?.mapTagId !== mapTagId) {
             return;
         }
 
         const isEnabled         = !!mapTagData?.getIsEnabled();
         const labelIsEnabled    = this._labelIsEnabled;
-        labelIsEnabled.setText(LangUtils.getText(isEnabled ? LangConstants.TextType.B0431 : LangConstants.TextType.B0432));
+        labelIsEnabled.setText(getText(isEnabled ? TextType.B0431 : TextType.B0432));
         labelIsEnabled.setTextColor(isEnabled ? 0x00FF00 : 0xC9D3DF);
-        this._labelMapTagName.setText(LangUtils.getLanguageText({ textArray: mapTagData?.getNameArray() }) ?? '--');
+        this._labelMapTagName.setText(getLanguageText({ textArray: mapTagData?.getNameArray() }) ?? '--');
         this._layoutName.arrangeItems();
     }
 }

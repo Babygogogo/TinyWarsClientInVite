@@ -1,47 +1,47 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesChatToTarget from "../../auxiliaryTypes/ChatToTarget.ts";
-import * as ChatConstants from "../../chat/Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as StagesConstants from "../../stages/Constants.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
+import type { PlayerInfo2, Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
+import { Common } from "../../chat/Constants.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getCoEyeBackground, getCoEye } from "../../helpers/ImageSource.ts";
+import { MouseStyleType } from "../../helpers/PointerInput.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getPlayerTeamName } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { Dimension } from "../../stages/Constants.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getSelfUserId, getUserNickname } from "../../users/Model.ts";
 
-type PlayerInfo     = AuxiliaryTypesAuxiliaryTypes.PlayerInfo2;
+type PlayerInfo     = PlayerInfo2;
 
 export interface OpenData {
-    gameConfig      : GameConfigGcData.GcData;
-    warId           : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    gameConfig      : GcData;
+    warId           : Undefinable<number>;
     playerInfoArray : PlayerInfo[];
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!     : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!      : IUiImage;
+    private readonly _group!        : IUiContainer;
+    private readonly _labelTitle!   : IUiLabel;
+    private readonly _btnClose!     : IUiButton;
 
-    private readonly _listPlayer!   : UiInterfacesIUiScrollList.IUiScrollList<DataForPlayerRenderer>;
+    private readonly _listPlayer!   : IUiScrollList<DataForPlayerRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -76,9 +76,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private async _updateOnOpenDataChanged(): Promise<void> {
         const dataArray     = this._generateDataForListPlayer();
         const dataCount     = dataArray.length;
-        const listHeight    = NumbersUtils.getValueInRange({
+        const listHeight    = getValueInRange({
             minValue    : 80,
-            maxValue    : StagesConstants.Dimension.DesignMinHeight - 80,
+            maxValue    : Dimension.DesignMinHeight - 80,
             rawValue    : dataCount * 40 + (dataCount - 1) * 6,
         });
         this._group.setUnscaledManualHeight(listHeight + 80);
@@ -89,7 +89,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0229));
+        this._labelTitle.setText(getText(TextType.B0229));
     }
 
     private _generateDataForListPlayer(): DataForPlayerRenderer[] {
@@ -113,26 +113,26 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForPlayerRenderer extends UiTypesUiListItemData.UiListItemData {
-    gameConfig  : GameConfigGcData.GcData;
-    warId       : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+interface DataForPlayerRenderer extends UiListItemData {
+    gameConfig  : GcData;
+    warId       : Undefinable<number>;
     playerInfo  : PlayerInfo;
 }
-class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForPlayerRenderer> {
-    private readonly _groupCo!          : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgForce!         : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgCo!            : UiInterfacesIUiImage.IUiImage;
+class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
+    private readonly _groupCo!          : IUiContainer;
+    private readonly _imgForce!         : IUiImage;
+    private readonly _imgCo!            : IUiImage;
 
-    private readonly _groupPlayer!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutTeam!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelPlayerIndex! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTeam!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelUserId!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupPlayer!      : IUiContainer;
+    private readonly _layoutTeam!       : IUiLayout;
+    private readonly _labelPlayerIndex! : IUiLabel;
+    private readonly _labelTeam!        : IUiLabel;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelUserId!      : IUiLabel;
+    private readonly _labelName!        : IUiLabel;
 
-    private readonly _btnChat!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnRelation!      : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnChat!          : IUiButton;
+    private readonly _btnRelation!      : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -151,8 +151,8 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
 
         const playerInfo    = openData.playerInfo;
         const playerIndex   = playerInfo.playerIndex;
-        this._imgForce.loadSource(HelpersImageSource.getCoEyeBackground(playerInfo.skinId));
-        this._imgCo.loadSource(HelpersImageSource.getCoEye(openData.gameConfig, playerInfo.coId, playerInfo.isAlive) ?? ``);
+        this._imgForce.loadSource(getCoEyeBackground(playerInfo.skinId));
+        this._imgCo.loadSource(getCoEye(openData.gameConfig, playerInfo.coId, playerInfo.isAlive) ?? ``);
 
         {
             const layoutTeam = this._layoutTeam;
@@ -165,7 +165,7 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             const teamIndex = playerInfo.teamIndex;
             const labelTeam = this._labelTeam;
             if (teamIndex != null) {
-                labelTeam.setText(LangUtils.getPlayerTeamName(teamIndex) ?? ``);
+                labelTeam.setText(getPlayerTeamName(teamIndex) ?? ``);
                 layoutTeam.addItem(labelTeam, false);
             }
 
@@ -173,12 +173,12 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
         }
 
         const userId        = playerInfo.userId;
-        const selfUserId    = UsersModel.getSelfUserId();
-        this._groupPlayer.setMouseStyle(userId == null ? HelpersPointerInput.MouseStyleType.Default : HelpersPointerInput.MouseStyleType.Pointer);
+        const selfUserId    = getSelfUserId();
+        this._groupPlayer.setMouseStyle(userId == null ? MouseStyleType.Default : MouseStyleType.Pointer);
         this._btnChat.setIsVisible((userId != null) && ((openData.warId != null) || (userId !== selfUserId)));
         this._btnRelation.setIsVisible((userId != null) && (userId !== selfUserId));
         this._labelUserId.setText(`#${userId ?? `----`}`);
-        this._labelName.setText(userId == null ? LangUtils.getText(LangConstants.TextType.B0607) : await UsersModel.getUserNickname(userId) ?? LangConstants.UndefinedError);
+        this._labelName.setText(userId == null ? getText(TextType.B0607) : await getUserNickname(userId) ?? UndefinedError);
         this._layoutName.arrangeItems();
     }
 
@@ -188,9 +188,9 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonCoInfoPanel, {
+        openPanel(getDict().CommonCoInfoPanel, {
             gameConfig  : openData.gameConfig,
             coId        : openData.playerInfo.coId,
         });
@@ -204,8 +204,8 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
 
         const userId = openData.playerInfo.userId;
         if (userId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: userId });
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            openPanel(getDict().UserPanel, { userId: userId });
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
 
@@ -222,18 +222,18 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        if (userId !== UsersModel.getSelfUserId()) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().ChatPanel, {
-                toTarget    : new AuxiliaryTypesChatToTarget.ChatToTarget({
+        if (userId !== getSelfUserId()) {
+            openPanel(getDict().ChatPanel, {
+                toTarget    : new ChatToTarget({
                     toUserId    : userId,
                 }),
             });
         } else {
             const warId = openData.warId;
             if (warId != null) {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().ChatPanel, {
-                    toTarget    : new AuxiliaryTypesChatToTarget.ChatToTarget({
-                        toWarAndSelf    : warId * ChatConstants.Common.TeamDivider + playerIndex,
+                openPanel(getDict().ChatPanel, {
+                    toTarget    : new ChatToTarget({
+                        toWarAndSelf    : warId * Common.TeamDivider + playerIndex,
                     }),
                 });
             }
@@ -248,7 +248,7 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
 
         const userId = openData.playerInfo.userId;
         if (userId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().UserSetRelationPanel, { userId: userId });
+            openPanel(getDict().UserSetRelationPanel, { userId: userId });
         }
     }
 }

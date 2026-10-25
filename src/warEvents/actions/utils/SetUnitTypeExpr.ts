@@ -1,34 +1,36 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersContextsUnit from "../../../expressionParsers/contexts/Unit.ts";
-import * as ExpressionParsersParser from "../../../expressionParsers/Parser.ts";
-import * as ExpressionParsersResultsNullableUnit from "../../../expressionParsers/results/NullableUnit.ts";
-import * as ExpressionParsersResultsNum from "../../../expressionParsers/results/Num.ts";
-import * as HelpersTeam from "../../../helpers/Team.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetUnitTypeExpr from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitTypeExpr.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialUnit from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-import * as ProtoSchemaCommonProtoWarSerializationWsUnitStatistics from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import * as UnitsConstants from "../../../units/Constants.ts";
-import type * as UnitsIUnit from "../../../units/IUnit.ts";
-import * as UnitsUtilsCommon from "../../../units/utils/Common.ts";
-import * as UnitsUtilsSerialization from "../../../units/utils/Serialization.ts";
-import * as VisibilitiesUtils from "../../../visibilities/Utils.ts";
-import * as WarEventsActionsConstantsSetUnitTypeExpr from "../constants/SetUnitTypeExpr.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { Unit } from "../../../expressionParsers/contexts/Unit.ts";
+import { Parser } from "../../../expressionParsers/Parser.ts";
+import { NullableUnit } from "../../../expressionParsers/results/NullableUnit.ts";
+import { Num } from "../../../expressionParsers/results/Num.ts";
+import { encodeTeamIndex } from "../../../helpers/Team.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getFormattedText } from "../../../lang/Utils.ts";
+import type {
+    WeaSetUnitTypeExpr as ProtoSchemaCommonProtoWarEventWeaSetUnitTypeExpr,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitTypeExpr.ts";
+import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
+import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+import { Hp } from "../../../units/Constants.ts";
+import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import { getNormalizedHp } from "../../../units/utils/Common.ts";
+import { createNewUnitDataForChangeType } from "../../../units/utils/Serialization.ts";
+import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
+import { ExpressionInfoDict } from "../constants/SetUnitTypeExpr.ts";
 
-type WeaSetUnitTypeExpr = ProtoSchemaCommonProtoWarEventWeaSetUnitTypeExpr.WeaSetUnitTypeExpr;
-type IUnit              = UnitsIUnit.IUnit;
+type WeaSetUnitTypeExpr = ProtoSchemaCommonProtoWarEventWeaSetUnitTypeExpr;
+type IUnit              = UnitsIUnit;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetUnitTypeExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: Undefinable<WeaSetUnitTypeExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getConUnitFilter(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitTypeExpr.ExpressionInfoDict.ConUnitFilter,
+            expressionInfo          : ExpressionInfoDict.ConUnitFilter,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -36,9 +38,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActUnitType(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitTypeExpr.ExpressionInfoDict.ActUnitType,
+            expressionInfo          : ExpressionInfoDict.ActUnitType,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -48,46 +50,46 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetUnitTypeExpr>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetUnitTypeExpr>): string | null {
     if (data == null) {
         return null;
     }
 
-    return LangUtils.getFormattedText(LangConstants.TextType.F0051, data.getConUnitFilter() ?? LangConstants.UndefinedError);
+    return getFormattedText(TextType.F0051, data.getConUnitFilter() ?? UndefinedError);
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetUnitTypeExpr>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetUnitTypeExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     const additionalText = [
-        data.getActUnitType()    ? `${WarEventsActionsConstantsSetUnitTypeExpr.ExpressionInfoDict.ActUnitType.getTitleText()}: ${data.getActUnitType()}`   : null,
+        data.getActUnitType()    ? `${ExpressionInfoDict.ActUnitType.getTitleText()}: ${data.getActUnitType()}`   : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${LangUtils.getFormattedText(LangConstants.TextType.F0051, data.getConUnitFilter() ?? LangConstants.UndefinedError)}\n${additionalText}`;
+    return `${getFormattedText(TextType.F0051, data.getConUnitFilter() ?? UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaSetUnitTypeExpr, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = WarEventsActionsConstantsSetUnitTypeExpr.ExpressionInfoDict.ConUnitFilter;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ConUnitFilter;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getConUnitFilter(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitTypeExpr.ExpressionInfoDict.ActUnitType;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActUnitType;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActUnitType(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -96,8 +98,8 @@ export function getErrorTip(data: WeaSetUnitTypeExpr, customCounterNameSet: Set<
 
 function checkIsMeetConditionForUnit(action: WeaSetUnitTypeExpr, unit: IUnit): boolean {
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        return (result instanceof ExpressionParsersResultsNum.Num) && (result.num !== 0);
+        const result = Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        return (result instanceof Num) && (result.num !== 0);
     } catch (Exception) {
         return false;
     }
@@ -109,8 +111,8 @@ function evalActUnitType(action: WeaSetUnitTypeExpr, unit: IUnit): number | null
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
             const newUnitType = Math.floor(epResult.num);
             if (newUnitType === unit.getUnitType()) {
                 return null;
@@ -165,8 +167,8 @@ function evalActUnitType(action: WeaSetUnitTypeExpr, unit: IUnit): number | null
 export async function applyWithExtraData(_action: WeaSetUnitTypeExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetUnitTypeExpr, isFast: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
-    const newUnitDataDict = new Map<IUnit, ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit>();
+export async function applyWithoutExtraData(action: WeaSetUnitTypeExpr, isFast: boolean, war: IBwWar): Promise<void> {
+    const newUnitDataDict = new Map<IUnit, SerialUnit>();
     for (const unit of war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId())) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
             continue;
@@ -180,22 +182,22 @@ export async function applyWithoutExtraData(action: WeaSetUnitTypeExpr, isFast: 
 
     applyNewUnitDataDict(newUnitDataDict, war, isFast);
 }
-function createNewUnitData(action: WeaSetUnitTypeExpr, unit: IUnit): ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit | null {
+function createNewUnitData(action: WeaSetUnitTypeExpr, unit: IUnit): SerialUnit | null {
     const newUnitType = evalActUnitType(action, unit);
     if (newUnitType == null) {
         return null;
     }
 
-    return UnitsUtilsSerialization.createNewUnitDataForChangeType(unit, newUnitType);
+    return createNewUnitDataForChangeType(unit, newUnitType);
 }
-function applyNewUnitDataDict(dict: Map<IUnit, ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit>, war: BaseWarInterfaceIBwWar.IBwWar, isFast: boolean): void {
+function applyNewUnitDataDict(dict: Map<IUnit, SerialUnit>, war: IBwWar, isFast: boolean): void {
     const mapSize                 = war.getTileMap().getMapSize();
     const observerTeamIndexesDict = new Map<number, number[] | null>();
     for (const [unit] of dict) {
         const gridIndex   = unit.getGridIndex();
         const gridId      = gridIndex.getGridId(mapSize);
         if (!observerTeamIndexesDict.has(gridId)) {
-            observerTeamIndexesDict.set(gridId, VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex }));
+            observerTeamIndexesDict.set(gridId, getObserverTeamIndexListForUnitOnMap({ war, gridIndex }));
         }
     }
 
@@ -205,8 +207,8 @@ function applyNewUnitDataDict(dict: Map<IUnit, ProtoSchemaCommonProtoWarSerializ
         {
             const observerTeamIndexes = observerTeamIndexesDict.get(unit.getGridIndex().getGridId(mapSize));
             if (observerTeamIndexes != null) {
-                const groupedObserverTeamIndexes = HelpersTeam.encodeTeamIndex(observerTeamIndexes);
-                warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                const groupedObserverTeamIndexes = encodeTeamIndex(observerTeamIndexes);
+                warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                    : unit.getUnitType(),
                     dstPlayerIndex              : unit.getPlayerIndex(),
                     normalizedHpGain            : 0,
@@ -217,10 +219,10 @@ function applyNewUnitDataDict(dict: Map<IUnit, ProtoSchemaCommonProtoWarSerializ
                 }));
 
                 const newUnitType = unitData.getUnitType() ?? 0;
-                warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                    : newUnitType,
                     dstPlayerIndex              : unitData.getPlayerIndex() ?? 0,
-                    normalizedHpGain            : UnitsUtilsCommon.getNormalizedHp(unitData.getCurrentHp() ?? UnitsConstants.Hp.MaxHp),
+                    normalizedHpGain            : getNormalizedHp(unitData.getCurrentHp() ?? Hp.MaxHp),
                     normalizedHpLoss            : 0,
                     unitGain                    : 1,
                     unitLoss                    : 0,

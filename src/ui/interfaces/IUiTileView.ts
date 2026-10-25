@@ -1,16 +1,16 @@
-import type * as UiInterfacesIUiImage from "./IUiImage.ts";
-import type * as UiTypesUiTileViewData from "../types/UiTileViewData.ts";
+import type { IUiImage } from "./IUiImage.ts";
+import type { UiTileViewData } from "../types/UiTileViewData.ts";
 
 export interface IUiTileView {
-    init(data: UiTypesUiTileViewData.UiTileViewData): IUiTileView;
+    init(data: UiTileViewData): IUiTileView;
 
     startRunningView(): void;
 
     updateView(): void;
 
-    getImgObject(): UiInterfacesIUiImage.IUiImage;
-    getImgBase(): UiInterfacesIUiImage.IUiImage;
-    getImgDecoration(): UiInterfacesIUiImage.IUiImage;
+    getImgObject(): IUiImage;
+    getImgBase(): IUiImage;
+    getImgDecoration(): IUiImage;
 
     updateOnAnimationTick(): void;
 }

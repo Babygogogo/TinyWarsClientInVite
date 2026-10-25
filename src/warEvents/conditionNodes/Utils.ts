@@ -1,34 +1,38 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as ProtoSchemaCommonProtoWarEventConditionIdAndFlags from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
-import * as ProtoSchemaCommonProtoWarEventConditionNodeAndActions from "../../proto/schema/CommonProto/WarEvent/ConditionNodeAndActions.ts";
-import * as ProtoSchemaCommonProtoWarEventNodeIdAndFlags from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventCondition from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import * as ProtoSchemaCommonProtoWarEventWarEventConditionNode from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import * as WarEventsActionsConstantsCommon from "../actions/constants/Common.ts";
-import * as WarEventsConditionsUtilsCommon from "../conditions/utils/Common.ts";
-import * as WarEventsConstants from "../Constants.ts";
-import * as WarEventsFullDatasUtils from "../fullDatas/Utils.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { checkIsValidLanguageTextArray, getFormattedText, getText } from "../../lang/Utils.ts";
+import { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
+import { ConditionNodeAndActions } from "../../proto/schema/CommonProto/WarEvent/ConditionNodeAndActions.ts";
+import { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
+import type {
+    WarEventCondition as ProtoSchemaCommonProtoWarEventWarEventCondition,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
+import type {
+    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import { MaxCounts } from "../actions/constants/Common.ts";
+import { cloneCondition } from "../conditions/utils/Common.ts";
+import { Event, ConditionNode } from "../Constants.ts";
+import { getNode, getEvent } from "../fullDatas/Utils.ts";
 
-type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
-type WarEventCondition          = ProtoSchemaCommonProtoWarEventWarEventCondition.WarEventCondition;
+type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData;
+type WarEventCondition          = ProtoSchemaCommonProtoWarEventWarEventCondition;
 
 export function checkIsValidWarEventConditionNode({ conditionNode, conditionDict, nodeDict }: {    // DONE
-    conditionNode   : ProtoSchemaCommonProtoWarEventWarEventConditionNode.WarEventConditionNode;
+    conditionNode   : WarEventConditionNode;
     conditionDict   : Map<number, WarEventCondition>;
-    nodeDict        : Map<number, ProtoSchemaCommonProtoWarEventWarEventConditionNode.WarEventConditionNode>;
+    nodeDict        : Map<number, WarEventConditionNode>;
 }): boolean {
     const currNodeId = conditionNode.getNodeId();
     if (currNodeId == null) {
         return false;
     }
 
-    if (!LangUtils.checkIsValidLanguageTextArray({
+    if (!checkIsValidLanguageTextArray({
         list            : conditionNode.getNodeNameArray(),
-        maxTextLength   : WarEventsConstants.Event.MaxNameLength,
+        maxTextLength   : Event.MaxNameLength,
         minTextLength   : 1,
         minTextCount    : 0,
     })) {
@@ -81,38 +85,38 @@ export function checkIsValidWarEventConditionNode({ conditionNode, conditionDict
     return true;
 }
 
-export function getErrorTipForConditionNode(fullData: WarEventFullData, node: ProtoSchemaCommonProtoWarEventWarEventConditionNode.WarEventConditionNode): string | null {
+export function getErrorTipForConditionNode(fullData: WarEventFullData, node: WarEventConditionNode): string | null {
     const nodeId = node.getNodeId();
     for (const warEvent of fullData.getEventArray()) {
         for (const rootNodeAndActions of warEvent.getRootNodeAndActionsArray()) {
             if (rootNodeAndActions.getNodeIdAndFlags()?.getNodeId() === nodeId) {
                 const count     = rootNodeAndActions.getActionIdArray().length;
                 const minCount  = 1;
-                const maxCount  = WarEventsActionsConstantsCommon.MaxCounts.PerEvent;
+                const maxCount  = MaxCounts.PerEvent;
                 if ((count < minCount) || (count > maxCount)) {
-                    return LangUtils.getFormattedText(LangConstants.TextType.F0268, `N${nodeId}`, `E${warEvent.getEventId()}`, minCount, maxCount, count);
+                    return getFormattedText(TextType.F0268, `N${nodeId}`, `E${warEvent.getEventId()}`, minCount, maxCount, count);
                 }
             }
         }
     }
 
     const nodesCount = fullData.getConditionNodeArray().length;
-    if (nodesCount > WarEventsConstants.ConditionNode.MaxCountPerMap) {
-        return `${LangUtils.getText(LangConstants.TextType.A0183)} (${nodesCount}/${WarEventsConstants.ConditionNode.MaxCountPerMap})`;
+    if (nodesCount > ConditionNode.MaxCountPerMap) {
+        return `${getText(TextType.A0183)} (${nodesCount}/${ConditionNode.MaxCountPerMap})`;
     }
 
     if ((node.getSubNodeIdAndFlagsArray().length + node.getConditionIdAndFlagsArray().length) <= 0) {
-        return LangUtils.getText(LangConstants.TextType.A0161);
+        return getText(TextType.A0161);
     }
 
     const duplicatedNodeId  = getDuplicatedSubNodeId(fullData, nodeId);
     if (duplicatedNodeId != null) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0061, `N${duplicatedNodeId}`);
+        return getFormattedText(TextType.F0061, `N${duplicatedNodeId}`);
     }
 
     const duplicatedConditionId = getDuplicatedConditionId(fullData, nodeId);
     if (duplicatedConditionId != null) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0062, `C${duplicatedConditionId}`);
+        return getFormattedText(TextType.F0062, `C${duplicatedConditionId}`);
     }
 
     return null;
@@ -127,7 +131,7 @@ function getDuplicatedSubNodeId(fullData: WarEventFullData, parentNodeId: number
         }
         usedNodeIdSet.add(nodeId);
 
-        nodeIdArray.push(...WarEventsFullDatasUtils.getNode(fullData, nodeId)?.getSubNodeIdAndFlagsArray().map(v => v.getNodeId()) ?? []);
+        nodeIdArray.push(...getNode(fullData, nodeId)?.getSubNodeIdAndFlagsArray().map(v => v.getNodeId()) ?? []);
     }
     return null;
 }
@@ -135,7 +139,7 @@ function getDuplicatedConditionId(fullData: WarEventFullData, parentNodeId: numb
     const nodeIdArray           = [parentNodeId];
     const usedConditionIdSet    = new Set<number>();
     for (const nodeId of nodeIdArray) {
-        const node = WarEventsFullDatasUtils.getNode(fullData, nodeId);
+        const node = getNode(fullData, nodeId);
         if (node) {
             nodeIdArray.push(...node.getSubNodeIdAndFlagsArray().map(v => v.getNodeId()));
             for (const conditionId of node.getConditionIdAndFlagsArray().map(v => v.getConditionId())) {
@@ -151,7 +155,7 @@ function getDuplicatedConditionId(fullData: WarEventFullData, parentNodeId: numb
 
 export function cloneNode(fullData: WarEventFullData, srcNodeId: number, isShallowClone: boolean): number {
     const nodeArray = fullData.getConditionNodeArray();
-    const srcNode   = HelpersMisc.getExisted(nodeArray.find(v => v.getNodeId() === srcNodeId));
+    const srcNode   = getExisted(nodeArray.find(v => v.getNodeId() === srcNodeId));
     for (let nodeId = 1; ; ++nodeId) {
         if (nodeArray.some(v => v.getNodeId() === nodeId)) {
             continue;
@@ -162,10 +166,10 @@ export function cloneNode(fullData: WarEventFullData, srcNodeId: number, isShall
         nodeArray.push(newNode);
         if (!isShallowClone) {
             {
-                const newConditionIdAndFlagsArray: ProtoSchemaCommonProtoWarEventConditionIdAndFlags.ConditionIdAndFlags[] = [];
+                const newConditionIdAndFlagsArray: ConditionIdAndFlags[] = [];
                 for (const conditionIdAndFlags of srcNode.getConditionIdAndFlagsArray()) {
-                    newConditionIdAndFlagsArray.push(ProtoSchemaCommonProtoWarEventConditionIdAndFlags.ConditionIdAndFlags.fromJson({
-                        conditionId : WarEventsConditionsUtilsCommon.cloneCondition(fullData, conditionIdAndFlags.getConditionId()),
+                    newConditionIdAndFlagsArray.push(ConditionIdAndFlags.fromJson({
+                        conditionId : cloneCondition(fullData, conditionIdAndFlags.getConditionId()),
                         isNegated   : conditionIdAndFlags.getIsNegated(),
                     }));
                 }
@@ -173,9 +177,9 @@ export function cloneNode(fullData: WarEventFullData, srcNodeId: number, isShall
             }
 
             {
-                const newSubNodeIdAndFlagsArray: ProtoSchemaCommonProtoWarEventNodeIdAndFlags.NodeIdAndFlags[] = [];
+                const newSubNodeIdAndFlagsArray: NodeIdAndFlags[] = [];
                 for (const subNodeIdAndFlags of srcNode.getSubNodeIdAndFlagsArray()) {
-                    newSubNodeIdAndFlagsArray.push(ProtoSchemaCommonProtoWarEventNodeIdAndFlags.NodeIdAndFlags.fromJson({
+                    newSubNodeIdAndFlagsArray.push(NodeIdAndFlags.fromJson({
                         nodeId      : cloneNode(fullData, subNodeIdAndFlags.getNodeId(), isShallowClone),
                         isNegated   : subNodeIdAndFlags.getIsNegated(),
                     }));
@@ -184,7 +188,7 @@ export function cloneNode(fullData: WarEventFullData, srcNodeId: number, isShall
             }
         }
 
-        nodeArray.sort((v1, v2) => HelpersMisc.getExisted(v1.getNodeId()) - HelpersMisc.getExisted(v2.getNodeId()));
+        nodeArray.sort((v1, v2) => getExisted(v1.getNodeId()) - getExisted(v2.getNodeId()));
         return nodeId;
     }
 }
@@ -192,25 +196,25 @@ export function cloneNode(fullData: WarEventFullData, srcNodeId: number, isShall
 export function createAndAddRootNodeInEvent({ fullData, eventId, isNeedAnd, isNeedFalse, conditionIdAndFlagsArray = [], subNodeIdAndFlagsArray = [] }: {   // DONE
     fullData                    : WarEventFullData;
     eventId                     : number;
-    isNeedAnd                   : AuxiliaryTypesAuxiliaryTypes.Undefinable<boolean>;
-    isNeedFalse                 : AuxiliaryTypesAuxiliaryTypes.Undefinable<boolean>;
-    conditionIdAndFlagsArray?   : ProtoSchemaCommonProtoWarEventConditionIdAndFlags.ConditionIdAndFlags[];
-    subNodeIdAndFlagsArray?     : ProtoSchemaCommonProtoWarEventNodeIdAndFlags.NodeIdAndFlags[];
+    isNeedAnd                   : Undefinable<boolean>;
+    isNeedFalse                 : Undefinable<boolean>;
+    conditionIdAndFlagsArray?   : ConditionIdAndFlags[];
+    subNodeIdAndFlagsArray?     : NodeIdAndFlags[];
 }): number | null {
-    const event = WarEventsFullDatasUtils.getEvent(fullData, eventId);
+    const event = getEvent(fullData, eventId);
     if (event == null) {
         return null;
     }
 
     const rootNodeAndActionsArray = event.getRootNodeAndActionsArray();
-    if (rootNodeAndActionsArray.length >= WarEventsConstants.ConditionNode.MaxCountPerEventRoot) {
+    if (rootNodeAndActionsArray.length >= ConditionNode.MaxCountPerEventRoot) {
         return null;
     }
 
     const nodeArray = fullData.getConditionNodeArray();
     for (let newNodeId = 1; ; ++newNodeId) {
         if (!nodeArray.some(v => v.getNodeId() === newNodeId)) {
-            nodeArray.push(ProtoSchemaCommonProtoWarEventWarEventConditionNode.WarEventConditionNode.fromJson({
+            nodeArray.push(WarEventConditionNode.fromJson({
                 nodeId                      : newNodeId,
                 isNeedAnd                   : isNeedAnd,
                 isNeedFalse                 : isNeedFalse,
@@ -220,10 +224,10 @@ export function createAndAddRootNodeInEvent({ fullData, eventId, isNeedAnd, isNe
                 deprecatedSubNodeIdArray    : [],
                 deprecatedConditionIdArray  : [],
             }));
-            nodeArray.sort((v1, v2) => HelpersMisc.getExisted(v1.getNodeId()) - HelpersMisc.getExisted(v2.getNodeId()));
+            nodeArray.sort((v1, v2) => getExisted(v1.getNodeId()) - getExisted(v2.getNodeId()));
 
             // const oldNodeId         = event.conditionNodeId;
-            rootNodeAndActionsArray.push(ProtoSchemaCommonProtoWarEventConditionNodeAndActions.ConditionNodeAndActions.fromJson({
+            rootNodeAndActionsArray.push(ConditionNodeAndActions.fromJson({
                 nodeIdAndFlags  : {
                     nodeId      : newNodeId,
                     isNegated   : false,
@@ -240,12 +244,12 @@ export function createAndReplaceRootNodeInEvent({ fullData, eventId, oldRootNode
     fullData                    : WarEventFullData;
     eventId                     : number;
     oldRootNodeId               : number;
-    isNeedAnd                   : AuxiliaryTypesAuxiliaryTypes.Undefinable<boolean>;
-    isNeedFalse                 : AuxiliaryTypesAuxiliaryTypes.Undefinable<boolean>;
-    conditionIdAndFlagsArray?   : ProtoSchemaCommonProtoWarEventConditionIdAndFlags.ConditionIdAndFlags[];
-    subNodeIdAndFlagsArray?     : ProtoSchemaCommonProtoWarEventNodeIdAndFlags.NodeIdAndFlags[];
+    isNeedAnd                   : Undefinable<boolean>;
+    isNeedFalse                 : Undefinable<boolean>;
+    conditionIdAndFlagsArray?   : ConditionIdAndFlags[];
+    subNodeIdAndFlagsArray?     : NodeIdAndFlags[];
 }): number | null {
-    const event = WarEventsFullDatasUtils.getEvent(fullData, eventId);
+    const event = getEvent(fullData, eventId);
     if (event == null) {
         return null;
     }
@@ -258,7 +262,7 @@ export function createAndReplaceRootNodeInEvent({ fullData, eventId, oldRootNode
     const nodeArray = fullData.getConditionNodeArray();
     for (let nodeId = 1; ; ++nodeId) {
         if (!nodeArray.some(v => v.getNodeId() === nodeId)) {
-            nodeArray.push(ProtoSchemaCommonProtoWarEventWarEventConditionNode.WarEventConditionNode.fromJson({
+            nodeArray.push(WarEventConditionNode.fromJson({
                 nodeId                      : nodeId,
                 isNeedAnd                   : isNeedAnd,
                 isNeedFalse                 : isNeedFalse,
@@ -268,7 +272,7 @@ export function createAndReplaceRootNodeInEvent({ fullData, eventId, oldRootNode
                 deprecatedSubNodeIdArray    : [],
                 deprecatedConditionIdArray  : [],
             }));
-            nodeArray.sort((v1, v2) => HelpersMisc.getExisted(v1.getNodeId()) - HelpersMisc.getExisted(v2.getNodeId()));
+            nodeArray.sort((v1, v2) => getExisted(v1.getNodeId()) - getExisted(v2.getNodeId()));
 
             // const oldNodeId         = event.conditionNodeId;
             existingRootNodeAndActions.getNodeIdAndFlags()?.setNodeId(nodeId);

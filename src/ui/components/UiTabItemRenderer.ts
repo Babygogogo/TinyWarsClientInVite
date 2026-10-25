@@ -1,10 +1,10 @@
-import * as UiComponentsUiListItemRenderer from "./UiListItemRenderer.ts";
-import type * as UiInterfacesIUiTabItemRenderer from "../interfaces/IUiTabItemRenderer.ts";
-import type * as UiTypesUiListItemData from "../types/UiListItemData.ts";
+import { UiListItemRenderer } from "./UiListItemRenderer.ts";
+import type { IUiTabItemRenderer } from "../interfaces/IUiTabItemRenderer.ts";
+import type { UiListItemData } from "../types/UiListItemData.ts";
 
-export abstract class UiTabItemRenderer<DataForRenderer extends UiTypesUiListItemData.UiListItemData>
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForRenderer>
-    implements  UiInterfacesIUiTabItemRenderer.IUiTabItemRenderer<DataForRenderer>
+export abstract class UiTabItemRenderer<DataForRenderer extends UiListItemData>
+    extends     UiListItemRenderer<DataForRenderer>
+    implements  IUiTabItemRenderer<DataForRenderer>
 {
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();

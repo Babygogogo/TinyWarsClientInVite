@@ -1,57 +1,57 @@
-import * as EmailsConstants from "../../emails/Constants.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserRequestPasswordVerificationCodeS from "../../proto/schema/CommonProto/NetMessage/MsgUserRequestPasswordVerificationCode/S.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
-import * as UiTypesUiInputEventType from "../../ui/types/UiInputEventType.ts";
-import * as UsersConstants from "../Constants.ts";
-import * as UsersProxy from "../Proxy.ts";
-import * as UsersUtils from "../Utils.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { Common } from "../../emails/Constants.ts";
+import { showLang, show } from "../../FloatText.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getFormattedText, getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserRequestPasswordVerificationCode/S.ts";
+import { getServerTimestamp } from "../../timer/TimerModel.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
+import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
+import { Common as UsersConstantsCommon } from "../Constants.ts";
+import { reqUserRequestPasswordVerificationCode, reqUserResetPasswordWithEmail } from "../Proxy.ts";
+import { checkIsAccountValid } from "../Utils.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 let _lastRequestTimestamp = 0;
 
 export interface OpenData {
     account     : string;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _layoutContent!            : UiInterfacesIUiLayout.IUiLayout;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnClose!                 : IUiButton;
+    private readonly _layoutContent!            : IUiLayout;
 
-    private readonly _layoutStep1!              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelStep1!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelAccount!             : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputAccount!             : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _btnRequest!               : UiInterfacesIUiButton.IUiButton;
+    private readonly _layoutStep1!              : IUiLayout;
+    private readonly _labelStep1!               : IUiLabel;
+    private readonly _labelAccount!             : IUiLabel;
+    private readonly _inputAccount!             : IUiPromptedInput;
+    private readonly _btnRequest!               : IUiButton;
 
-    private readonly _layoutStep2!              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelStep2!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelVerificationCode!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputVerificationCode!    : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelPassword0!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputPassword0!           : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelPassword1!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputPassword1!           : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _btnReset!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _layoutStep2!              : IUiLayout;
+    private readonly _labelStep2!               : IUiLabel;
+    private readonly _labelVerificationCode!    : IUiLabel;
+    private readonly _inputVerificationCode!    : IUiPromptedInput;
+    private readonly _labelPassword0!           : IUiLabel;
+    private readonly _inputPassword0!           : IUiPromptedInput;
+    private readonly _labelPassword1!           : IUiLabel;
+    private readonly _inputPassword1!           : IUiPromptedInput;
+    private readonly _btnReset!                 : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgUserRequestPasswordVerificationCode,          callback: this._onNotifyMsgUserRequestPasswordVerificationCode },
-            { type: NotificationsTypeId.TypeId.MsgUserRequestPasswordVerificationCodeFailed,    callback: this._onNotifyMsgUserRequestPasswordVerificationCodeFailed },
-            { type: NotificationsTypeId.TypeId.MsgUserResetPasswordWithEmail,                   callback: this._onNotifyMsgUserResetPasswordWithEmail },
+            { type: TypeId.LanguageChanged,                                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgUserRequestPasswordVerificationCode,          callback: this._onNotifyMsgUserRequestPasswordVerificationCode },
+            { type: TypeId.MsgUserRequestPasswordVerificationCodeFailed,    callback: this._onNotifyMsgUserRequestPasswordVerificationCodeFailed },
+            { type: TypeId.MsgUserResetPasswordWithEmail,                   callback: this._onNotifyMsgUserResetPasswordWithEmail },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -59,20 +59,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnReset,               callback: this._onTouchedBtnReset },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputAccount,           callback: this._onFocusOutInputAccount,             eventType: UiTypesUiInputEventType.UiInputEventType.FocusOut },
-            { ui: this._inputVerificationCode,  callback: this._onFocusOutInputVerificationCode,    eventType: UiTypesUiInputEventType.UiInputEventType.FocusOut },
-            { ui: this._inputPassword0,         callback: this._onFocusOutInputPassword0,           eventType: UiTypesUiInputEventType.UiInputEventType.FocusOut },
-            { ui: this._inputPassword1,         callback: this._onFocusOutInputPassword1,           eventType: UiTypesUiInputEventType.UiInputEventType.FocusOut },
+            { ui: this._inputAccount,           callback: this._onFocusOutInputAccount,             eventType: UiInputEventType.FocusOut },
+            { ui: this._inputVerificationCode,  callback: this._onFocusOutInputVerificationCode,    eventType: UiInputEventType.FocusOut },
+            { ui: this._inputPassword0,         callback: this._onFocusOutInputPassword0,           eventType: UiInputEventType.FocusOut },
+            { ui: this._inputPassword1,         callback: this._onFocusOutInputPassword1,           eventType: UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
-        this._inputAccount.setInputMaxLength(UsersConstants.Common.AccountMaxLength);
-        this._inputPassword0.setInputMaxLength(UsersConstants.Common.RawPasswordMaxLength);
-        this._inputPassword1.setInputMaxLength(UsersConstants.Common.RawPasswordMaxLength);
-        this._inputVerificationCode.setInputMaxLength(EmailsConstants.Common.VerificationCodeLength);
+        this._inputAccount.setInputMaxLength(UsersConstantsCommon.AccountMaxLength);
+        this._inputPassword0.setInputMaxLength(UsersConstantsCommon.RawPasswordMaxLength);
+        this._inputPassword1.setInputMaxLength(UsersConstantsCommon.RawPasswordMaxLength);
+        this._inputVerificationCode.setInputMaxLength(Common.VerificationCodeLength);
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
@@ -80,17 +80,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateInputAccount();
     }
 
-    private _onNotifyMsgUserRequestPasswordVerificationCode(e: VendorEgretEgret.Event): void {
-        FloatText2.showLang(LangConstants.TextType.A0863);
+    private _onNotifyMsgUserRequestPasswordVerificationCode(e: Event): void {
+        showLang(TextType.A0863);
 
-        _lastRequestTimestamp = ((e.data as ProtoSchemaCommonProtoNetMessageMsgUserRequestPasswordVerificationCodeS.S).getEndTimestamp() ?? 0) - EmailsConstants.Common.VerificationCodeExpiration;
+        _lastRequestTimestamp = ((e.data as S).getEndTimestamp() ?? 0) - Common.VerificationCodeExpiration;
     }
     private _onNotifyMsgUserRequestPasswordVerificationCodeFailed(): void {
         // nothing to do
     }
 
     private _onNotifyMsgUserResetPasswordWithEmail(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -103,17 +103,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnRequest(): void {
         const account = this._inputAccount.getInputText()?.trim() ?? ``;
-        if (!UsersUtils.checkIsAccountValid(account)) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0170)));
+        if (!checkIsAccountValid(account)) {
+            show(getFormattedText(TextType.F0091, getText(TextType.B0170)));
             return;
         }
 
-        const cd = EmailsConstants.Common.VerificationCodeRefreshInterval - (TimerTimerModel.getServerTimestamp() - _lastRequestTimestamp);
+        const cd = Common.VerificationCodeRefreshInterval - (getServerTimestamp() - _lastRequestTimestamp);
         if (cd >= 0) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0204, cd));
+            show(getFormattedText(TextType.F0204, cd));
         } else {
-            UsersProxy.reqUserRequestPasswordVerificationCode(account);
-            FloatText2.showLang(LangConstants.TextType.A0867);
+            reqUserRequestPasswordVerificationCode(account);
+            showLang(TextType.A0867);
         }
     }
 
@@ -131,36 +131,36 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnReset(): void {
         const verificationCode = this._inputVerificationCode.getInputText()?.trim() ?? ``;
-        if (verificationCode.length !== EmailsConstants.Common.VerificationCodeLength) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B1334)));
+        if (verificationCode.length !== Common.VerificationCodeLength) {
+            show(getFormattedText(TextType.F0091, getText(TextType.B1334)));
             return;
         }
 
         const account = this._inputAccount.getInputText()?.trim() ?? ``;
-        if (!UsersUtils.checkIsAccountValid(account)) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0170)));
+        if (!checkIsAccountValid(account)) {
+            show(getFormattedText(TextType.F0091, getText(TextType.B0170)));
             return;
         }
 
         const password = this._inputPassword0.getInputText()?.trim() ?? ``;
         if (password !== this._inputPassword1.getInputText()?.trim()) {
-            FloatText2.showLang(LangConstants.TextType.A0147);
+            showLang(TextType.A0147);
             return;
         }
 
-        UsersProxy.reqUserResetPasswordWithEmail(verificationCode, account, password);
+        reqUserResetPasswordWithEmail(verificationCode, account, password);
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1336));
-        this._labelAccount.setText(LangUtils.getText(LangConstants.TextType.B0170));
-        this._labelVerificationCode.setText(LangUtils.getText(LangConstants.TextType.B1334));
-        this._labelPassword0.setText(LangUtils.getText(LangConstants.TextType.B0171));
-        this._labelPassword1.setText(LangUtils.getText(LangConstants.TextType.B0429));
-        this._btnRequest.setText(LangUtils.getText(LangConstants.TextType.B0382));
-        this._btnReset.setText(LangUtils.getText(LangConstants.TextType.B0567));
-        this._labelStep1.setText(LangUtils.getText(LangConstants.TextType.A0868));
-        this._labelStep2.setText(LangUtils.getText(LangConstants.TextType.A0869));
+        this._labelTitle.setText(getText(TextType.B1336));
+        this._labelAccount.setText(getText(TextType.B0170));
+        this._labelVerificationCode.setText(getText(TextType.B1334));
+        this._labelPassword0.setText(getText(TextType.B0171));
+        this._labelPassword1.setText(getText(TextType.B0429));
+        this._btnRequest.setText(getText(TextType.B0382));
+        this._btnReset.setText(getText(TextType.B0567));
+        this._labelStep1.setText(getText(TextType.A0868));
+        this._labelStep2.setText(getText(TextType.A0869));
 
         this._layoutStep1.arrangeItems();
         this._layoutStep2.arrangeItems();

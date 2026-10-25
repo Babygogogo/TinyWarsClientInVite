@@ -1,31 +1,33 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersContextsTile from "../../../expressionParsers/contexts/Tile.ts";
-import * as ExpressionParsersParser from "../../../expressionParsers/Parser.ts";
-import * as ExpressionParsersResultsNum from "../../../expressionParsers/results/Num.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NumbersUtils from "../../../numbers/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetCustomLaserTurretStateExpr from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomLaserTurretStateExpr.ts";
-import * as ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData from "../../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
-import * as TilesConstantsCommon from "../../../tiles/constants/Common.ts";
-import * as TilesConstantsCustomLimits from "../../../tiles/constants/CustomLimits.ts";
-import type * as TilesITile from "../../../tiles/ITile.ts";
-import * as TilesUtilsSerialization from "../../../tiles/utils/Serialization.ts";
-import * as WarEventsActionsConstantsSetCustomLaserTurretStateExpr from "../constants/SetCustomLaserTurretStateExpr.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
+import { Parser } from "../../../expressionParsers/Parser.ts";
+import { Num } from "../../../expressionParsers/results/Num.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getFormattedText } from "../../../lang/Utils.ts";
+import { getValueInRange } from "../../../numbers/Utils.ts";
+import type {
+    WeaSetCustomLaserTurretStateExpr as ProtoSchemaCommonProtoWarEventWeaSetCustomLaserTurretStateExpr,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomLaserTurretStateExpr.ts";
+import { TileCustomLaserTurretData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
+import { TileTypeId } from "../../../tiles/constants/Common.ts";
+import { LaserTurret } from "../../../tiles/constants/CustomLimits.ts";
+import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import { create } from "../../../tiles/utils/Serialization.ts";
+import { ExpressionInfoDict } from "../constants/SetCustomLaserTurretStateExpr.ts";
 
-type WeaSetCustomLaserTurretStateExpr   = ProtoSchemaCommonProtoWarEventWeaSetCustomLaserTurretStateExpr.WeaSetCustomLaserTurretStateExpr;
-type ITile                              = TilesITile.ITile;
+type WeaSetCustomLaserTurretStateExpr   = ProtoSchemaCommonProtoWarEventWeaSetCustomLaserTurretStateExpr;
+type ITile                              = TilesITile;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomLaserTurretStateExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: Undefinable<WeaSetCustomLaserTurretStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getConTileFilter(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ConTileFilter,
+            expressionInfo          : ExpressionInfoDict.ConTileFilter,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -33,9 +35,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActRangeForUp(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForUp,
+            expressionInfo          : ExpressionInfoDict.ActRangeForUp,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -43,9 +45,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActRangeForDown(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForDown,
+            expressionInfo          : ExpressionInfoDict.ActRangeForDown,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -53,9 +55,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActRangeForLeft(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForLeft,
+            expressionInfo          : ExpressionInfoDict.ActRangeForLeft,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -63,9 +65,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActRangeForRight(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForRight,
+            expressionInfo          : ExpressionInfoDict.ActRangeForRight,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -73,9 +75,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActPriority(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActPriority,
+            expressionInfo          : ExpressionInfoDict.ActPriority,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -83,9 +85,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCanAffectSelf(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectSelf,
+            expressionInfo          : ExpressionInfoDict.ActCanAffectSelf,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -93,9 +95,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCanAffectAlly(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectAlly,
+            expressionInfo          : ExpressionInfoDict.ActCanAffectAlly,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -103,9 +105,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCanAffectEnemy(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectEnemy,
+            expressionInfo          : ExpressionInfoDict.ActCanAffectEnemy,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -113,9 +115,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActOffsetHp(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetHp,
+            expressionInfo          : ExpressionInfoDict.ActOffsetHp,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -123,9 +125,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCanBeFatal(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanBeFatal,
+            expressionInfo          : ExpressionInfoDict.ActCanBeFatal,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -133,9 +135,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActOffsetFuelPercentage(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage,
+            expressionInfo          : ExpressionInfoDict.ActOffsetFuelPercentage,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -143,9 +145,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActOffsetPrimaryAmmoPercentage(),
-            expressionInfo          : WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
+            expressionInfo          : ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -155,189 +157,189 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomLaserTurretStateExpr>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetCustomLaserTurretStateExpr>): string | null {
     if (data == null) {
         return null;
     }
 
-    return LangUtils.getFormattedText(LangConstants.TextType.F0058, data.getConTileFilter() ?? LangConstants.UndefinedError);
+    return getFormattedText(TextType.F0058, data.getConTileFilter() ?? UndefinedError);
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomLaserTurretStateExpr>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetCustomLaserTurretStateExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     const additionalText = [
-        data.getActRangeForUp()                  ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForUp.getTitleText()}: ${data.getActRangeForUp()}`                                   : null,
-        data.getActRangeForDown()                ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForDown.getTitleText()}: ${data.getActRangeForDown()}`                               : null,
-        data.getActRangeForLeft()                ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForLeft.getTitleText()}: ${data.getActRangeForLeft()}`                               : null,
-        data.getActRangeForRight()               ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForRight.getTitleText()}: ${data.getActRangeForRight()}`                             : null,
-        data.getActPriority()                    ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActPriority.getTitleText()}: ${data.getActPriority()}`                                       : null,
-        data.getActCanAffectSelf()               ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectSelf.getTitleText()}: ${data.getActCanAffectSelf()}`                             : null,
-        data.getActCanAffectAlly()               ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectAlly.getTitleText()}: ${data.getActCanAffectAlly()}`                             : null,
-        data.getActCanAffectEnemy()              ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectEnemy.getTitleText()}: ${data.getActCanAffectEnemy()}`                           : null,
-        data.getActOffsetHp()                    ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetHp.getTitleText()}: ${data.getActOffsetHp()}`                                       : null,
-        data.getActCanBeFatal()                  ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanBeFatal.getTitleText()}: ${data.getActCanBeFatal()}`                                   : null,
-        data.getActOffsetFuelPercentage()        ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage.getTitleText()}: ${data.getActOffsetFuelPercentage()}`               : null,
-        data.getActOffsetPrimaryAmmoPercentage() ? `${WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage.getTitleText()}: ${data.getActOffsetPrimaryAmmoPercentage()}` : null,
+        data.getActRangeForUp()                  ? `${ExpressionInfoDict.ActRangeForUp.getTitleText()}: ${data.getActRangeForUp()}`                                   : null,
+        data.getActRangeForDown()                ? `${ExpressionInfoDict.ActRangeForDown.getTitleText()}: ${data.getActRangeForDown()}`                               : null,
+        data.getActRangeForLeft()                ? `${ExpressionInfoDict.ActRangeForLeft.getTitleText()}: ${data.getActRangeForLeft()}`                               : null,
+        data.getActRangeForRight()               ? `${ExpressionInfoDict.ActRangeForRight.getTitleText()}: ${data.getActRangeForRight()}`                             : null,
+        data.getActPriority()                    ? `${ExpressionInfoDict.ActPriority.getTitleText()}: ${data.getActPriority()}`                                       : null,
+        data.getActCanAffectSelf()               ? `${ExpressionInfoDict.ActCanAffectSelf.getTitleText()}: ${data.getActCanAffectSelf()}`                             : null,
+        data.getActCanAffectAlly()               ? `${ExpressionInfoDict.ActCanAffectAlly.getTitleText()}: ${data.getActCanAffectAlly()}`                             : null,
+        data.getActCanAffectEnemy()              ? `${ExpressionInfoDict.ActCanAffectEnemy.getTitleText()}: ${data.getActCanAffectEnemy()}`                           : null,
+        data.getActOffsetHp()                    ? `${ExpressionInfoDict.ActOffsetHp.getTitleText()}: ${data.getActOffsetHp()}`                                       : null,
+        data.getActCanBeFatal()                  ? `${ExpressionInfoDict.ActCanBeFatal.getTitleText()}: ${data.getActCanBeFatal()}`                                   : null,
+        data.getActOffsetFuelPercentage()        ? `${ExpressionInfoDict.ActOffsetFuelPercentage.getTitleText()}: ${data.getActOffsetFuelPercentage()}`               : null,
+        data.getActOffsetPrimaryAmmoPercentage() ? `${ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage.getTitleText()}: ${data.getActOffsetPrimaryAmmoPercentage()}` : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${LangUtils.getFormattedText(LangConstants.TextType.F0058, data.getConTileFilter() ?? LangConstants.UndefinedError)}\n${additionalText}`;
+    return `${getFormattedText(TextType.F0058, data.getConTileFilter() ?? UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaSetCustomLaserTurretStateExpr, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ConTileFilter;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ConTileFilter;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getConTileFilter(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForUp;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActRangeForUp;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActRangeForUp(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForDown;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActRangeForDown;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActRangeForDown(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForLeft;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActRangeForLeft;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActRangeForLeft(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActRangeForRight;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActRangeForRight;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActRangeForRight(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActPriority;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActPriority;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActPriority(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectSelf;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCanAffectSelf;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCanAffectSelf(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectAlly;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCanAffectAlly;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCanAffectAlly(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanAffectEnemy;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCanAffectEnemy;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCanAffectEnemy(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetHp;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActOffsetHp;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActOffsetHp(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActCanBeFatal;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCanBeFatal;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCanBeFatal(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetFuelPercentage;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActOffsetFuelPercentage;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActOffsetFuelPercentage(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetCustomLaserTurretStateExpr.ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActOffsetPrimaryAmmoPercentage(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -346,13 +348,13 @@ export function getErrorTip(data: WeaSetCustomLaserTurretStateExpr, customCounte
 
 function checkIsMeetConditionForTile(action: WeaSetCustomLaserTurretStateExpr, tile: ITile): boolean {
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        return (result instanceof ExpressionParsersResultsNum.Num) && (result.num !== 0);
+        const result = Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new Tile(tile), false);
+        return (result instanceof Num) && (result.num !== 0);
     } catch (Exception) {
         return false;
     }
 }
-function evalActRangeForUp(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): number {
+function evalActRangeForUp(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): number {
     const defaultValue  = customLaserTurretData.getRangeForUp() ?? 0;
     const act           = action.getActRangeForUp();
     if (!act) {
@@ -360,11 +362,11 @@ function evalActRangeForUp(action: WeaSetCustomLaserTurretStateExpr, tile: ITile
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.LaserTurret.RangeForUp.MinValue,
-                maxValue    : TilesConstantsCustomLimits.LaserTurret.RangeForUp.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : LaserTurret.RangeForUp.MinValue,
+                maxValue    : LaserTurret.RangeForUp.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -374,7 +376,7 @@ function evalActRangeForUp(action: WeaSetCustomLaserTurretStateExpr, tile: ITile
         return defaultValue;
     }
 }
-function evalActRangeForDown(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): number {
+function evalActRangeForDown(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): number {
     const defaultValue  = customLaserTurretData.getRangeForDown() ?? 0;
     const act           = action.getActRangeForDown();
     if (!act) {
@@ -382,11 +384,11 @@ function evalActRangeForDown(action: WeaSetCustomLaserTurretStateExpr, tile: ITi
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.LaserTurret.RangeForDown.MinValue,
-                maxValue    : TilesConstantsCustomLimits.LaserTurret.RangeForDown.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : LaserTurret.RangeForDown.MinValue,
+                maxValue    : LaserTurret.RangeForDown.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -396,7 +398,7 @@ function evalActRangeForDown(action: WeaSetCustomLaserTurretStateExpr, tile: ITi
         return defaultValue;
     }
 }
-function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): number {
+function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): number {
     const defaultValue  = customLaserTurretData.getRangeForLeft() ?? 0;
     const act           = action.getActRangeForLeft();
     if (!act) {
@@ -404,11 +406,11 @@ function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateExpr, tile: ITi
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.LaserTurret.RangeForLeft.MinValue,
-                maxValue    : TilesConstantsCustomLimits.LaserTurret.RangeForLeft.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : LaserTurret.RangeForLeft.MinValue,
+                maxValue    : LaserTurret.RangeForLeft.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -418,7 +420,7 @@ function evalActRangeForLeft(action: WeaSetCustomLaserTurretStateExpr, tile: ITi
         return defaultValue;
     }
 }
-function evalActRangeForRight(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): number {
+function evalActRangeForRight(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): number {
     const defaultValue  = customLaserTurretData.getRangeForRight() ?? 0;
     const act           = action.getActRangeForRight();
     if (!act) {
@@ -426,11 +428,11 @@ function evalActRangeForRight(action: WeaSetCustomLaserTurretStateExpr, tile: IT
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.LaserTurret.RangeForRight.MinValue,
-                maxValue    : TilesConstantsCustomLimits.LaserTurret.RangeForRight.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : LaserTurret.RangeForRight.MinValue,
+                maxValue    : LaserTurret.RangeForRight.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -440,7 +442,7 @@ function evalActRangeForRight(action: WeaSetCustomLaserTurretStateExpr, tile: IT
         return defaultValue;
     }
 }
-function evalActPriority(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): number {
+function evalActPriority(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): number {
     const defaultValue  = customLaserTurretData.getPriority() ?? 0;
     const act           = action.getActPriority();
     if (!act) {
@@ -448,11 +450,11 @@ function evalActPriority(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, 
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.LaserTurret.Priority.MinValue,
-                maxValue    : TilesConstantsCustomLimits.LaserTurret.Priority.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : LaserTurret.Priority.MinValue,
+                maxValue    : LaserTurret.Priority.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -462,7 +464,7 @@ function evalActPriority(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, 
         return defaultValue;
     }
 }
-function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): boolean {
+function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): boolean {
     const defaultValue  = customLaserTurretData.getCanAffectSelf() ?? false;
     const act           = action.getActCanAffectSelf();
     if (!act) {
@@ -470,8 +472,8 @@ function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateExpr, tile: IT
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -480,7 +482,7 @@ function evalActCanAffectSelf(action: WeaSetCustomLaserTurretStateExpr, tile: IT
         return defaultValue;
     }
 }
-function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): boolean {
+function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): boolean {
     const defaultValue  = customLaserTurretData.getCanAffectAlly() ?? false;
     const act           = action.getActCanAffectAlly();
     if (!act) {
@@ -488,8 +490,8 @@ function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateExpr, tile: IT
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -498,7 +500,7 @@ function evalActCanAffectAlly(action: WeaSetCustomLaserTurretStateExpr, tile: IT
         return defaultValue;
     }
 }
-function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): boolean {
+function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): boolean {
     const defaultValue  = customLaserTurretData.getCanAffectEnemy() ?? false;
     const act           = action.getActCanAffectEnemy();
     if (!act) {
@@ -506,8 +508,8 @@ function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateExpr, tile: I
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -516,7 +518,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomLaserTurretStateExpr, tile: I
         return defaultValue;
     }
 }
-function evalActOffsetHp(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): number {
+function evalActOffsetHp(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): number {
     const defaultValue  = customLaserTurretData.getOffsetHp() ?? 0;
     const act           = action.getActOffsetHp();
     if (!act) {
@@ -524,11 +526,11 @@ function evalActOffsetHp(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, 
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.LaserTurret.OffsetHp.MinValue,
-                maxValue    : TilesConstantsCustomLimits.LaserTurret.OffsetHp.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : LaserTurret.OffsetHp.MinValue,
+                maxValue    : LaserTurret.OffsetHp.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -538,7 +540,7 @@ function evalActOffsetHp(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, 
         return defaultValue;
     }
 }
-function evalActCanBeFatal(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customCannonData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): boolean {
+function evalActCanBeFatal(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customCannonData: TileCustomLaserTurretData): boolean {
     const defaultValue  = !!customCannonData.getCanBeFatal();
     const act           = action.getActCanBeFatal();
     if (!act) {
@@ -546,8 +548,8 @@ function evalActCanBeFatal(action: WeaSetCustomLaserTurretStateExpr, tile: ITile
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
             return !!epResult.num;
         } else {
             return defaultValue;
@@ -556,7 +558,7 @@ function evalActCanBeFatal(action: WeaSetCustomLaserTurretStateExpr, tile: ITile
         return defaultValue;
     }
 }
-function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): number {
+function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): number {
     const defaultValue  = customLaserTurretData.getOffsetFuelPercentage() ?? 0;
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
@@ -564,11 +566,11 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateExpr, t
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.LaserTurret.OffsetFuelPercentage.MinValue,
-                maxValue    : TilesConstantsCustomLimits.LaserTurret.OffsetFuelPercentage.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : LaserTurret.OffsetFuelPercentage.MinValue,
+                maxValue    : LaserTurret.OffsetFuelPercentage.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -578,7 +580,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomLaserTurretStateExpr, t
         return defaultValue;
     }
 }
-function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): number {
+function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): number {
     const defaultValue  = customLaserTurretData.getOffsetPrimaryAmmoPercentage() ?? 0;
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
@@ -586,11 +588,11 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretState
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsTile.Tile(tile), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : TilesConstantsCustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MinValue,
-                maxValue    : TilesConstantsCustomLimits.LaserTurret.OffsetPrimaryAmmoPercentage.MaxValue,
+        const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : LaserTurret.OffsetPrimaryAmmoPercentage.MinValue,
+                maxValue    : LaserTurret.OffsetPrimaryAmmoPercentage.MaxValue,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -605,15 +607,15 @@ function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomLaserTurretState
 export async function applyWithExtraData(_action: WeaSetCustomLaserTurretStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretStateExpr, isFast: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
-    const newTileDataDict = new Map<ITile, ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData>();
+export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretStateExpr, isFast: boolean, war: IBwWar): Promise<void> {
+    const newTileDataDict = new Map<ITile, TileCustomLaserTurretData>();
     for (const tile of war.getTileMap().getAllTiles()) {
         const customLaserTurretData = tile.getFinalLaserTurretData();
         if (customLaserTurretData == null) {
             continue;
         }
 
-        if ((tile.getTileTypeId() !== TilesConstantsCommon.TileTypeId.CustomLaserTurret) || (!checkIsMeetConditionForTile(action, tile))) {
+        if ((tile.getTileTypeId() !== TileTypeId.CustomLaserTurret) || (!checkIsMeetConditionForTile(action, tile))) {
             continue;
         }
 
@@ -622,7 +624,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomLaserTurretState
 
     applyNewTileDataDict(newTileDataDict, war, isFast);
 }
-function createNewTileCustomLaserTurretData(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData): ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData {
+function createNewTileCustomLaserTurretData(action: WeaSetCustomLaserTurretStateExpr, tile: ITile, customLaserTurretData: TileCustomLaserTurretData): TileCustomLaserTurretData {
     const rangeForUp                    = evalActRangeForUp(action, tile, customLaserTurretData);
     const rangeForDown                  = evalActRangeForDown(action, tile, customLaserTurretData);
     const rangeForLeft                  = evalActRangeForLeft(action, tile, customLaserTurretData);
@@ -636,7 +638,7 @@ function createNewTileCustomLaserTurretData(action: WeaSetCustomLaserTurretState
     const offsetFuelPercentage          = evalActOffsetFuelPercentage(action, tile, customLaserTurretData);
     const offsetPrimaryAmmoPercentage   = evalActOffsetPrimaryAmmoPercentage(action, tile, customLaserTurretData);
 
-    return ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData.fromJson({
+    return TileCustomLaserTurretData.fromJson({
         rangeForUp                  : rangeForUp,
         rangeForDown                : rangeForDown,
         rangeForLeft                : rangeForLeft,
@@ -651,10 +653,10 @@ function createNewTileCustomLaserTurretData(action: WeaSetCustomLaserTurretState
         offsetPrimaryAmmoPercentage : offsetPrimaryAmmoPercentage,
     });
 }
-function applyNewTileDataDict(dict: Map<ITile, ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData>, war: BaseWarInterfaceIBwWar.IBwWar, isFast: boolean): void {
+function applyNewTileDataDict(dict: Map<ITile, TileCustomLaserTurretData>, war: IBwWar, isFast: boolean): void {
     for (const [tile, tileCustomLaserTurretData] of dict) {
         const cfg       = tile.getTemplateCfg();
-        const newData   = TilesUtilsSerialization.create({
+        const newData   = create({
             gridIndex               : tile.getGridIndex().toProto().toJson(),
             playerIndex             : tile.getPlayerIndex(),
             baseType                : tile.getBaseType(),

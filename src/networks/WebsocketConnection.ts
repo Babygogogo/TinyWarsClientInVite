@@ -1,27 +1,27 @@
-import * as Logger2 from "../Logger.ts";
-import * as ProtoSchemaCommonProtoNetMessageMessageContainer from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
-import * as VendorEgretEgret from "../vendor/egret/Egret.ts";
+import { log } from "../Logger.ts";
+import { MessageContainer } from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
+import { WebSocket, Event, IOErrorEvent, ProgressEvent, ByteArray } from "../vendor/egret/Egret.ts";
 
-export class WebsocketConnection extends VendorEgretEgret.WebSocket {
+export class WebsocketConnection extends WebSocket {
     private _callbackOnConnectionOpened     : (connection: WebsocketConnection) => void;
     private _callbackOnConnectionClosed     : (connection: WebsocketConnection) => void;
     private _callbackOnConnectionErrored    : (connection: WebsocketConnection) => void;
-    private _callbackOnConnectionData       : (connection: WebsocketConnection, container: ProtoSchemaCommonProtoNetMessageMessageContainer.MessageContainer) => void;
+    private _callbackOnConnectionData       : (connection: WebsocketConnection, container: MessageContainer) => void;
 
 
     public constructor({ callbackOnConnectionOpened, callbackOnConnectionClosed, callbackOnConnectionErrored, callbackOnConnectionData }: {
         callbackOnConnectionOpened  : (connection: WebsocketConnection) => void;
         callbackOnConnectionClosed  : (connection: WebsocketConnection) => void;
         callbackOnConnectionErrored : (connection: WebsocketConnection) => void;
-        callbackOnConnectionData    : (connection: WebsocketConnection, container: ProtoSchemaCommonProtoNetMessageMessageContainer.MessageContainer) => void;
+        callbackOnConnectionData    : (connection: WebsocketConnection, container: MessageContainer) => void;
     }) {
         super();
 
-        this.type = VendorEgretEgret.WebSocket.TYPE_BINARY;
-        this.addEventListener(VendorEgretEgret.Event.CONNECT,              this._onWebSocketConnectionOpened,  this);
-        this.addEventListener(VendorEgretEgret.Event.CLOSE,                this._onWebSocketConnectionClosed,  this);
-        this.addEventListener(VendorEgretEgret.IOErrorEvent.IO_ERROR,      this._onWebSocketConnectionError,   this);
-        this.addEventListener(VendorEgretEgret.ProgressEvent.SOCKET_DATA,  this._onWebSocketConnectionData,    this);
+        this.type = WebSocket.TYPE_BINARY;
+        this.addEventListener(Event.CONNECT,              this._onWebSocketConnectionOpened,  this);
+        this.addEventListener(Event.CLOSE,                this._onWebSocketConnectionClosed,  this);
+        this.addEventListener(IOErrorEvent.IO_ERROR,      this._onWebSocketConnectionError,   this);
+        this.addEventListener(ProgressEvent.SOCKET_DATA,  this._onWebSocketConnectionData,    this);
 
         this._callbackOnConnectionOpened    = callbackOnConnectionOpened;
         this._callbackOnConnectionClosed    = callbackOnConnectionClosed;
@@ -30,10 +30,10 @@ export class WebsocketConnection extends VendorEgretEgret.WebSocket {
     }
 
     public destroy(): void {
-        this.removeEventListener(VendorEgretEgret.Event.CONNECT,               this._onWebSocketConnectionOpened,  this);
-        this.removeEventListener(VendorEgretEgret.Event.CLOSE,                 this._onWebSocketConnectionClosed,  this);
-        this.removeEventListener(VendorEgretEgret.IOErrorEvent.IO_ERROR,       this._onWebSocketConnectionError,   this);
-        this.removeEventListener(VendorEgretEgret.ProgressEvent.SOCKET_DATA,   this._onWebSocketConnectionData,    this);
+        this.removeEventListener(Event.CONNECT,               this._onWebSocketConnectionOpened,  this);
+        this.removeEventListener(Event.CLOSE,                 this._onWebSocketConnectionClosed,  this);
+        this.removeEventListener(IOErrorEvent.IO_ERROR,       this._onWebSocketConnectionError,   this);
+        this.removeEventListener(ProgressEvent.SOCKET_DATA,   this._onWebSocketConnectionData,    this);
 
         this.close();
     }
@@ -48,12 +48,12 @@ export class WebsocketConnection extends VendorEgretEgret.WebSocket {
         this._callbackOnConnectionErrored(this);
     }
     private _onWebSocketConnectionData(): void {
-        const data = new VendorEgretEgret.ByteArray();
+        const data = new ByteArray();
         this.readBytes(data);
 
-        const msgContainer  = ProtoSchemaCommonProtoNetMessageMessageContainer.MessageContainer.decode(new Uint8Array(data.rawBuffer));
+        const msgContainer  = MessageContainer.decode(new Uint8Array(data.rawBuffer));
         const msgData       = msgContainer.getMessageData();
-        Logger2.log(
+        log(
             "%cNetManager receive: ",
             "background:#FFD777",
             msgData?.getSchemaName(),

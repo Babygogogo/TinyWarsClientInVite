@@ -1,77 +1,77 @@
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoUserUserOpacitySettings from "../../proto/schema/CommonProto/User/UserOpacitySettings.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as UsersModel from "../Model.ts";
-import * as UsersProxy from "../Proxy.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UserOpacitySettings } from "../../proto/schema/CommonProto/User/UserOpacitySettings.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { getSelfSettingsOpacitySettings, setSelfSettingsOpacitySettings } from "../Model.ts";
+import { reqUserSetSettings } from "../Proxy.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                     : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                      : IUiImage;
+    private readonly _group!                        : IUiContainer;
+    private readonly _labelTitle!                   : IUiLabel;
+    private readonly _btnClose!                     : IUiButton;
 
-    private readonly _layoutContent!                : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _layoutContent!                : IUiLayout;
 
-    private readonly _layoutUnit!                   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelUnitTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupUnitOpacity!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgUnitBar!                   : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgUnitPoint!                 : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelUnitOpacity!             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutUnit!                   : IUiLayout;
+    private readonly _labelUnitTitle!               : IUiLabel;
+    private readonly _groupUnitOpacity!             : IUiContainer;
+    private readonly _imgUnitBar!                   : IUiImage;
+    private readonly _imgUnitPoint!                 : IUiImage;
+    private readonly _labelUnitOpacity!             : IUiLabel;
 
-    private readonly _layoutTileBase!               : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTileBaseTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupTileBaseOpacity!         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgTileBaseBar!               : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgTileBasePoint!             : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTileBaseOpacity!         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutTileBase!               : IUiLayout;
+    private readonly _labelTileBaseTitle!           : IUiLabel;
+    private readonly _groupTileBaseOpacity!         : IUiContainer;
+    private readonly _imgTileBaseBar!               : IUiImage;
+    private readonly _imgTileBasePoint!             : IUiImage;
+    private readonly _labelTileBaseOpacity!         : IUiLabel;
 
-    private readonly _layoutTileObject!             : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTileObjectTitle!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupTileObjectOpacity!       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgTileObjectBar!             : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgTileObjectPoint!           : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTileObjectOpacity!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutTileObject!             : IUiLayout;
+    private readonly _labelTileObjectTitle!         : IUiLabel;
+    private readonly _groupTileObjectOpacity!       : IUiContainer;
+    private readonly _imgTileObjectBar!             : IUiImage;
+    private readonly _imgTileObjectPoint!           : IUiImage;
+    private readonly _labelTileObjectOpacity!       : IUiLabel;
 
-    private readonly _layoutTileDecoration!         : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTileDecoratorTitle!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupTileDecoratorOpacity!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgTileDecoratorBar!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgTileDecoratorPoint!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTileDecoratorOpacity!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutTileDecoration!         : IUiLayout;
+    private readonly _labelTileDecoratorTitle!      : IUiLabel;
+    private readonly _groupTileDecoratorOpacity!    : IUiContainer;
+    private readonly _imgTileDecoratorBar!          : IUiImage;
+    private readonly _imgTileDecoratorPoint!        : IUiImage;
+    private readonly _labelTileDecoratorOpacity!    : IUiLabel;
 
-    private readonly _btnDefault!                   : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!                   : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnDefault!                   : IUiButton;
+    private readonly _btnConfirm!                   : IUiButton;
 
-    private _prevOpacitySettings                    = new ProtoSchemaCommonProtoUserUserOpacitySettings.UserOpacitySettings();
+    private _prevOpacitySettings                    = new UserOpacitySettings();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupUnitOpacity,           callback: this._onTouchedGroupUnitOpacity },
-            { ui: this._groupUnitOpacity,           callback: this._onTouchMoveGroupUnitOpacity,            eventType: HelpersPointerInput.PointerEventType.PressMove },
+            { ui: this._groupUnitOpacity,           callback: this._onTouchMoveGroupUnitOpacity,            eventType: PointerEventType.PressMove },
 
             { ui: this._groupTileBaseOpacity,       callback: this._onTouchedGroupTileBaseOpacity },
-            { ui: this._groupTileBaseOpacity,       callback: this._onTouchMoveGroupTileBaseOpacity,        eventType: HelpersPointerInput.PointerEventType.PressMove },
+            { ui: this._groupTileBaseOpacity,       callback: this._onTouchMoveGroupTileBaseOpacity,        eventType: PointerEventType.PressMove },
 
             { ui: this._groupTileObjectOpacity,     callback: this._onTouchedGroupTileObjectOpacity },
-            { ui: this._groupTileObjectOpacity,     callback: this._onTouchMoveGroupTileObjectOpacity,      eventType: HelpersPointerInput.PointerEventType.PressMove },
+            { ui: this._groupTileObjectOpacity,     callback: this._onTouchMoveGroupTileObjectOpacity,      eventType: PointerEventType.PressMove },
 
             { ui: this._groupTileDecoratorOpacity,  callback: this._onTouchedGroupTileDecorationOpacity },
-            { ui: this._groupTileDecoratorOpacity,  callback: this._onTouchMoveGroupTileDecorationOpacity,  eventType: HelpersPointerInput.PointerEventType.PressMove },
+            { ui: this._groupTileDecoratorOpacity,  callback: this._onTouchMoveGroupTileDecorationOpacity,  eventType: PointerEventType.PressMove },
 
             { ui: this._btnClose,                   callback: this._onTouchedBtnClose },
             { ui: this._btnDefault,                 callback: this._onTouchedBtnDefault },
@@ -79,13 +79,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnClose();
         });
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._prevOpacitySettings = UsersModel.getSelfSettingsOpacitySettings()?.clone() ?? new ProtoSchemaCommonProtoUserUserOpacitySettings.UserOpacitySettings();
+        this._prevOpacitySettings = getSelfSettingsOpacitySettings()?.clone() ?? new UserOpacitySettings();
 
         this._updateView();
     }
@@ -97,84 +97,84 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onTouchedGroupUnitOpacity(e: VendorEgretEgret.Event): void {
+    private _onTouchedGroupUnitOpacity(e: Event): void {
         this._handleTouchGroupUnitOpacity(e);
     }
-    private _onTouchMoveGroupUnitOpacity(e: VendorEgretEgret.Event): void {
+    private _onTouchMoveGroupUnitOpacity(e: Event): void {
         this._handleTouchGroupUnitOpacity(e);
     }
-    private _handleTouchGroupUnitOpacity(e: VendorEgretEgret.Event): void {
-        const data              = e.data as HelpersPointerInput.PointerUnifiedEventData;
+    private _handleTouchGroupUnitOpacity(e: Event): void {
+        const data              = e.data as PointerUnifiedEventData;
         const group             = this._groupUnitOpacity;
         const width             = group.getUnscaledWidth();
         const point             = group.globalToLocal(data.stageX, data.stageY);
-        const opacitySettings   = UsersModel.getSelfSettingsOpacitySettings() ?? new ProtoSchemaCommonProtoUserUserOpacitySettings.UserOpacitySettings();
+        const opacitySettings   = getSelfSettingsOpacitySettings() ?? new UserOpacitySettings();
         opacitySettings.setUnitOpacity(Math.round(Math.max(0, Math.min(point.x, width)) / width * 100));
-        UsersModel.setSelfSettingsOpacitySettings(opacitySettings);
+        setSelfSettingsOpacitySettings(opacitySettings);
 
         this._updateGroupUnitOpacity();
     }
 
-    private _onTouchedGroupTileBaseOpacity(e: VendorEgretEgret.Event): void {
+    private _onTouchedGroupTileBaseOpacity(e: Event): void {
         this._handleTouchGroupTileBaseOpacity(e);
     }
-    private _onTouchMoveGroupTileBaseOpacity(e: VendorEgretEgret.Event): void {
+    private _onTouchMoveGroupTileBaseOpacity(e: Event): void {
         this._handleTouchGroupTileBaseOpacity(e);
     }
-    private _handleTouchGroupTileBaseOpacity(e: VendorEgretEgret.Event): void {
-        const data              = e.data as HelpersPointerInput.PointerUnifiedEventData;
+    private _handleTouchGroupTileBaseOpacity(e: Event): void {
+        const data              = e.data as PointerUnifiedEventData;
         const group             = this._groupTileBaseOpacity;
         const width             = group.getUnscaledWidth();
         const point             = group.globalToLocal(data.stageX, data.stageY);
-        const opacitySettings   = UsersModel.getSelfSettingsOpacitySettings() ?? new ProtoSchemaCommonProtoUserUserOpacitySettings.UserOpacitySettings();
+        const opacitySettings   = getSelfSettingsOpacitySettings() ?? new UserOpacitySettings();
         opacitySettings.setTileBaseOpacity(Math.round(Math.max(0, Math.min(point.x, width)) / width * 100));
-        UsersModel.setSelfSettingsOpacitySettings(opacitySettings);
+        setSelfSettingsOpacitySettings(opacitySettings);
 
         this._updateGroupTileBaseOpacity();
     }
 
-    private _onTouchedGroupTileObjectOpacity(e: VendorEgretEgret.Event): void {
+    private _onTouchedGroupTileObjectOpacity(e: Event): void {
         this._handleTouchGroupTileObjectOpacity(e);
     }
-    private _onTouchMoveGroupTileObjectOpacity(e: VendorEgretEgret.Event): void {
+    private _onTouchMoveGroupTileObjectOpacity(e: Event): void {
         this._handleTouchGroupTileObjectOpacity(e);
     }
-    private _handleTouchGroupTileObjectOpacity(e: VendorEgretEgret.Event): void {
-        const data              = e.data as HelpersPointerInput.PointerUnifiedEventData;
+    private _handleTouchGroupTileObjectOpacity(e: Event): void {
+        const data              = e.data as PointerUnifiedEventData;
         const group             = this._groupTileObjectOpacity;
         const width             = group.getUnscaledWidth();
         const point             = group.globalToLocal(data.stageX, data.stageY);
-        const opacitySettings   = UsersModel.getSelfSettingsOpacitySettings() ?? new ProtoSchemaCommonProtoUserUserOpacitySettings.UserOpacitySettings();
+        const opacitySettings   = getSelfSettingsOpacitySettings() ?? new UserOpacitySettings();
         opacitySettings.setTileObjectOpacity(Math.round(Math.max(0, Math.min(point.x, width)) / width * 100));
-        UsersModel.setSelfSettingsOpacitySettings(opacitySettings);
+        setSelfSettingsOpacitySettings(opacitySettings);
 
         this._updateGroupTileObjectOpacity();
     }
 
-    private _onTouchedGroupTileDecorationOpacity(e: VendorEgretEgret.Event): void {
+    private _onTouchedGroupTileDecorationOpacity(e: Event): void {
         this._handleTouchGroupTileDecorationOpacity(e);
     }
-    private _onTouchMoveGroupTileDecorationOpacity(e: VendorEgretEgret.Event): void {
+    private _onTouchMoveGroupTileDecorationOpacity(e: Event): void {
         this._handleTouchGroupTileDecorationOpacity(e);
     }
-    private _handleTouchGroupTileDecorationOpacity(e: VendorEgretEgret.Event): void {
-        const data              = e.data as HelpersPointerInput.PointerUnifiedEventData;
+    private _handleTouchGroupTileDecorationOpacity(e: Event): void {
+        const data              = e.data as PointerUnifiedEventData;
         const group             = this._groupTileDecoratorOpacity;
         const width             = group.getUnscaledWidth();
         const point             = group.globalToLocal(data.stageX, data.stageY);
-        const opacitySettings   = UsersModel.getSelfSettingsOpacitySettings() ?? new ProtoSchemaCommonProtoUserUserOpacitySettings.UserOpacitySettings();
+        const opacitySettings   = getSelfSettingsOpacitySettings() ?? new UserOpacitySettings();
         opacitySettings.setTileDecorationOpacity(Math.round(Math.max(0, Math.min(point.x, width)) / width * 100));
-        UsersModel.setSelfSettingsOpacitySettings(opacitySettings);
+        setSelfSettingsOpacitySettings(opacitySettings);
 
         this._updateGroupTileDecorationOpacity();
     }
 
     private _onTouchedBtnClose(): void {
-        UsersModel.setSelfSettingsOpacitySettings(this._prevOpacitySettings);
+        setSelfSettingsOpacitySettings(this._prevOpacitySettings);
         this.closePanel();
     }
     private _onTouchedBtnDefault(): void {
-        UsersModel.setSelfSettingsOpacitySettings(ProtoSchemaCommonProtoUserUserOpacitySettings.UserOpacitySettings.fromJson({
+        setSelfSettingsOpacitySettings(UserOpacitySettings.fromJson({
             unitOpacity             : 100,
             tileBaseOpacity         : 100,
             tileDecorationOpacity   : 100,
@@ -184,14 +184,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateView();
     }
     private _onTouchedBtnConfirm(): void {
-        const opacitySettings       = UsersModel.getSelfSettingsOpacitySettings() ?? new ProtoSchemaCommonProtoUserUserOpacitySettings.UserOpacitySettings();
+        const opacitySettings       = getSelfSettingsOpacitySettings() ?? new UserOpacitySettings();
         const prevOpacitySettings   = this._prevOpacitySettings;
         if (((opacitySettings.getTileBaseOpacity() ?? 100) !== (prevOpacitySettings.getTileBaseOpacity() ?? 100))             ||
             ((opacitySettings.getTileDecorationOpacity() ?? 100) !== (prevOpacitySettings.getTileDecorationOpacity() ?? 100)) ||
             ((opacitySettings.getTileObjectOpacity() ?? 100) !== (prevOpacitySettings.getTileObjectOpacity() ?? 100))         ||
             ((opacitySettings.getUnitOpacity() ?? 100) !== (prevOpacitySettings.getUnitOpacity() ?? 100))
         ) {
-            UsersProxy.reqUserSetSettings({
+            reqUserSetSettings({
                 opacitySettings : opacitySettings.toJson(),
                 coBgmSettings   : [],
             });
@@ -210,14 +210,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0827);
-        this._labelUnitTitle.setLangText(LangConstants.TextType.Units);
-        this._labelTileBaseTitle.setLangText(LangConstants.TextType.TileBase);
-        this._labelTileObjectTitle.setLangText(LangConstants.TextType.TileObject);
-        this._labelTileDecoratorTitle.setLangText(LangConstants.TextType.TileDecoration);
-        this._btnConfirm.setLangText(LangConstants.TextType.B0026);
-        this._btnDefault.setLangText(LangConstants.TextType.B0543);
-        this._btnClose.setLangText(LangConstants.TextType.B0154);
+        this._labelTitle.setLangText(TextType.B0827);
+        this._labelUnitTitle.setLangText(TextType.Units);
+        this._labelTileBaseTitle.setLangText(TextType.TileBase);
+        this._labelTileObjectTitle.setLangText(TextType.TileObject);
+        this._labelTileDecoratorTitle.setLangText(TextType.TileDecoration);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnDefault.setLangText(TextType.B0543);
+        this._btnClose.setLangText(TextType.B0154);
 
         this._layoutUnit.arrangeItems();
         this._layoutTileBase.arrangeItems();
@@ -227,28 +227,28 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateGroupUnitOpacity(): void {
-        const opacity   = UsersModel.getSelfSettingsOpacitySettings()?.getUnitOpacity() ?? 100;
+        const opacity   = getSelfSettingsOpacitySettings()?.getUnitOpacity() ?? 100;
         const pos       = this._groupUnitOpacity.getUnscaledWidth() * opacity / 100;
         this._imgUnitPoint.setX(pos);
         this._imgUnitBar.setUnscaledManualWidth(pos);
         this._labelUnitOpacity.setText(`${opacity}%`);
     }
     private _updateGroupTileBaseOpacity(): void {
-        const opacity   = UsersModel.getSelfSettingsOpacitySettings()?.getTileBaseOpacity() ?? 100;
+        const opacity   = getSelfSettingsOpacitySettings()?.getTileBaseOpacity() ?? 100;
         const pos       = this._groupTileBaseOpacity.getUnscaledWidth() * opacity / 100;
         this._imgTileBasePoint.setX(pos);
         this._imgTileBaseBar.setUnscaledManualWidth(pos);
         this._labelTileBaseOpacity.setText(`${opacity}%`);
     }
     private _updateGroupTileObjectOpacity(): void {
-        const opacity   = UsersModel.getSelfSettingsOpacitySettings()?.getTileObjectOpacity() ?? 100;
+        const opacity   = getSelfSettingsOpacitySettings()?.getTileObjectOpacity() ?? 100;
         const pos       = this._groupTileObjectOpacity.getUnscaledWidth() * opacity / 100;
         this._imgTileObjectPoint.setX(pos);
         this._imgTileObjectBar.setUnscaledManualWidth(pos);
         this._labelTileObjectOpacity.setText(`${opacity}%`);
     }
     private _updateGroupTileDecorationOpacity(): void {
-        const opacity   = UsersModel.getSelfSettingsOpacitySettings()?.getTileDecorationOpacity() ?? 100;
+        const opacity   = getSelfSettingsOpacitySettings()?.getTileDecorationOpacity() ?? 100;
         const pos       = this._groupTileDecoratorOpacity.getUnscaledWidth() * opacity / 100;
         this._imgTileDecoratorPoint.setX(pos);
         this._imgTileDecoratorBar.setUnscaledManualWidth(pos);

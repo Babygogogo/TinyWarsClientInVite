@@ -1,11 +1,11 @@
-import type * as UiInterfacesIUiComponent from "./IUiComponent.ts";
-import type * as UiInterfacesIUiContainer from "./IUiContainer.ts";
-import type * as UiInterfacesIUiLayout from "./IUiLayout.ts";
-import type * as UiInterfacesIUiScrollerBase from "./IUiScrollerBase.ts";
+import type { IUiComponent as UiInterfacesIUiComponent } from "./IUiComponent.ts";
+import type { IUiContainer } from "./IUiContainer.ts";
+import type { IUiLayout } from "./IUiLayout.ts";
+import type { IUiScrollerBase } from "./IUiScrollerBase.ts";
 
-type IUiComponent = UiInterfacesIUiComponent.IUiComponent;
+type IUiComponent = UiInterfacesIUiComponent;
 
-export interface IUiScroller<T extends UiInterfacesIUiContainer.IUiContainer | UiInterfacesIUiLayout.IUiLayout> extends UiInterfacesIUiScrollerBase.IUiScrollerBase {
+export interface IUiScroller<T extends IUiContainer | IUiLayout> extends IUiScrollerBase {
     initViewport(viewport: T): void;
 
     addItems(items: IUiComponent[]): void;

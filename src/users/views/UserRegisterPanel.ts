@@ -1,45 +1,45 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocalDataStorage2 from "../../localData/Storage.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserRegisterS from "../../proto/schema/CommonProto/NetMessage/MsgUserRegister/S.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
-import * as UsersModel from "../Model.ts";
-import * as UsersProxy from "../Proxy.ts";
-import * as UsersUtils from "../Utils.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { setAccount, setPassword } from "../../localData/Storage.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserRegister/S.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
+import { setSelfAccount, setSelfPassword } from "../Model.ts";
+import { reqLogin, reqUserRegister } from "../Proxy.ts";
+import { checkIsAccountValid, checkIsPasswordValid, checkIsNicknameValid } from "../Utils.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp!          : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
+    private readonly _btnHelp!          : IUiButton;
 
-    private readonly _labelAccount!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputAccount!     : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelPassword!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputPassword!    : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelNickname!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputNickname!    : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _btnRegister!      : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelAccount!     : IUiLabel;
+    private readonly _inputAccount!     : IUiPromptedInput;
+    private readonly _labelPassword!    : IUiLabel;
+    private readonly _inputPassword!    : IUiPromptedInput;
+    private readonly _labelNickname!    : IUiLabel;
+    private readonly _inputNickname!    : IUiPromptedInput;
+    private readonly _btnRegister!      : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgUserRegister, callback: this._onMsgUserRegister },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgUserRegister, callback: this._onMsgUserRegister },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -51,30 +51,30 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
-        this._btnRegister.setShortSfxCode(SoundsConstants.ShortSfxCode.ButtonConfirm01);
+        this._btnRegister.setShortSfxCode(ShortSfxCode.ButtonConfirm01);
 
         this._updateComponentsForLanguage();
     }
 
-    private _onMsgUserRegister(e: VendorEgretEgret.Event): void {
-        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgUserRegisterS.S;
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0004));
+    private _onMsgUserRegister(e: Event): void {
+        const data = e.data as S;
+        show(getText(TextType.A0004));
 
-        const account   = HelpersMisc.getExisted(data.getAccount(), UtilsClientErrorCode.ClientErrorCode.UserRegisterPanel_OnMsgUserRegister_00);
+        const account   = getExisted(data.getAccount(), ClientErrorCode.UserRegisterPanel_OnMsgUserRegister_00);
         const password  = this._inputPassword.getInputText() ?? ``;
-        LocalDataStorage2.setAccount(account);
-        LocalDataStorage2.setPassword(password);
-        UsersModel.setSelfAccount(account);
-        UsersModel.setSelfPassword(password);
-        UsersProxy.reqLogin(account, password, false);
+        setAccount(account);
+        setPassword(password);
+        setSelfAccount(account);
+        setSelfPassword(password);
+        reqLogin(account, password, false);
     }
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
 
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.R0005),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.R0005),
         });
     }
 
@@ -82,27 +82,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const account  = this._inputAccount.getInputText() ?? ``;
         const password = this._inputPassword.getInputText() ?? ``;
         const nickname = this._inputNickname.getInputText() ?? ``;
-        if (!UsersUtils.checkIsAccountValid(account)) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0001));
+        if (!checkIsAccountValid(account)) {
+            show(getText(TextType.A0001));
         } else if (account.toLocaleLowerCase().indexOf("guest_") === 0) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0367));
-        } else if (!UsersUtils.checkIsPasswordValid(password)) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0003));
-        } else if (!UsersUtils.checkIsNicknameValid(nickname)) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0002));
+            show(getText(TextType.A0367));
+        } else if (!checkIsPasswordValid(password)) {
+            show(getText(TextType.A0003));
+        } else if (!checkIsNicknameValid(nickname)) {
+            show(getText(TextType.A0002));
         } else if (nickname.toLocaleLowerCase().indexOf("guest_") === 0) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0368));
+            show(getText(TextType.A0368));
         } else {
-            UsersProxy.reqUserRegister(account, password, nickname);
+            reqUserRegister(account, password, nickname);
         }
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnRegister.setLangText(LangConstants.TextType.B0174);
-        this._btnClose.setLangText(LangConstants.TextType.B0154);
-        this._labelTitle.setLangText(LangConstants.TextType.B0174);
-        this._labelAccount.setLangText(LangConstants.TextType.B0170);
-        this._labelPassword.setLangText(LangConstants.TextType.B0171);
-        this._labelNickname.setLangText(LangConstants.TextType.B0175);
+        this._btnRegister.setLangText(TextType.B0174);
+        this._btnClose.setLangText(TextType.B0154);
+        this._labelTitle.setLangText(TextType.B0174);
+        this._labelAccount.setLangText(TextType.B0170);
+        this._labelPassword.setLangText(TextType.B0171);
+        this._labelNickname.setLangText(TextType.B0175);
     }
 }

@@ -1,14 +1,14 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 
 export interface UiTileViewData {
-    gameConfig              : GameConfigGcData.GcData;
-    tileBaseType            : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    tileBaseShapeId         : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    tileDecorationType      : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    tileDecorationShapeId   : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    tileObjectType          : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    tileObjectShapeId       : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    gameConfig              : GcData;
+    tileBaseType            : Undefinable<number>;
+    tileBaseShapeId         : Undefinable<number>;
+    tileDecorationType      : Undefinable<number>;
+    tileDecorationShapeId   : Undefinable<number>;
+    tileObjectType          : Undefinable<number>;
+    tileObjectShapeId       : Undefinable<number>;
     skinId                  : number;
-    overridingSkinId        : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    overridingSkinId        : Undefinable<number>;
 }

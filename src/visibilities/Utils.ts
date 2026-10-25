@@ -1,20 +1,20 @@
-import * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "../auxiliaryTypes/MapSize.ts";
-import type * as AuxiliaryTypesUnitVisionInfo from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import * as GameConfigGcWar from "../gameConfig/GcWar.ts";
-import * as HelpersCollection from "../helpers/Collection.ts";
-import type * as TilesITile from "../tiles/ITile.ts";
-import type * as UnitsIUnit from "../units/IUnit.ts";
-import type * as UnitsIUnitMap from "../units/IUnitMap.ts";
+import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
+import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
+import { VisibilityTypeId } from "../gameConfig/GcWar.ts";
+import { createEmptyMap } from "../helpers/Collection.ts";
+import type { ITile as TilesITile } from "../tiles/ITile.ts";
+import type { IUnit as UnitsIUnit } from "../units/IUnit.ts";
+import type { IUnitMap as UnitsIUnitMap } from "../units/IUnitMap.ts";
 
-type IUnit              = UnitsIUnit.IUnit;
-type IUnitMap           = UnitsIUnitMap.IUnitMap;
-type ITile              = TilesITile.ITile;
+type IUnit              = UnitsIUnit;
+type IUnitMap           = UnitsIUnitMap;
+type ITile              = TilesITile;
 
 export function checkIsUnitOnMapVisibleToTeam({ war, gridIndex, unitType, isDiving, isInvisible, unitPlayerIndex, observerTeamIndex }: {
-    war                 : BaseWarInterfaceIBwWar.IBwWar;
-    gridIndex           : AuxiliaryTypesGridIndex.GridIndex;
+    war                 : IBwWar;
+    gridIndex           : GridIndex;
     unitType            : number;
     isDiving            : boolean;
     isInvisible         : boolean;
@@ -32,8 +32,8 @@ export function checkIsUnitOnMapVisibleToTeam({ war, gridIndex, unitType, isDivi
     });
 }
 export function checkIsUnitOnMapVisibleToTeams({ war, gridIndex, unitType, isDiving, isInvisible, unitPlayerIndex, observerTeamIndexes }: {
-    war                 : BaseWarInterfaceIBwWar.IBwWar;
-    gridIndex           : AuxiliaryTypesGridIndex.GridIndex;
+    war                 : IBwWar;
+    gridIndex           : GridIndex;
     unitType            : number;
     isDiving            : boolean;
     isInvisible         : boolean;
@@ -67,27 +67,27 @@ export function checkIsUnitOnMapVisibleToTeams({ war, gridIndex, unitType, isDiv
     const canTileHideUnit = tile.checkCanHideUnitType(unitType);
     for (const playerIndex of playerManager.getPlayerIndexesInTeams(observerTeamIndexes)) {
         const visibilityFromPaths = fogMap.getVisibilityFromPathsForPlayer(gridIndex, playerIndex);
-        if (visibilityFromPaths === GameConfigGcWar.VisibilityTypeId.Penetrating) {
+        if (visibilityFromPaths === VisibilityTypeId.Penetrating) {
             return true;
-        } else if (visibilityFromPaths === GameConfigGcWar.VisibilityTypeId.Inside) {
+        } else if (visibilityFromPaths === VisibilityTypeId.Inside) {
             if (!canTileHideUnit) {
                 return true;
             }
         }
 
         const visibilityFromUnits = fogMap.getVisibilityFromUnitsForPlayer(gridIndex, playerIndex);
-        if (visibilityFromUnits === GameConfigGcWar.VisibilityTypeId.Penetrating) {
+        if (visibilityFromUnits === VisibilityTypeId.Penetrating) {
             return true;
-        } else if (visibilityFromUnits === GameConfigGcWar.VisibilityTypeId.Inside) {
+        } else if (visibilityFromUnits === VisibilityTypeId.Inside) {
             if (!canTileHideUnit) {
                 return true;
             }
         }
 
         const visibilityFromTiles = fogMap.getVisibilityFromTilesForPlayer(gridIndex, playerIndex);
-        if (visibilityFromTiles === GameConfigGcWar.VisibilityTypeId.Penetrating) {
+        if (visibilityFromTiles === VisibilityTypeId.Penetrating) {
             return true;
-        } else if (visibilityFromTiles === GameConfigGcWar.VisibilityTypeId.Inside) {
+        } else if (visibilityFromTiles === VisibilityTypeId.Inside) {
             if (!canTileHideUnit) {
                 return true;
             }
@@ -97,8 +97,8 @@ export function checkIsUnitOnMapVisibleToTeams({ war, gridIndex, unitType, isDiv
     return false;
 }
 export function getObserverTeamIndexListForUnitOnMap({ war, gridIndex }: {
-    war             : BaseWarInterfaceIBwWar.IBwWar;
-    gridIndex       : AuxiliaryTypesGridIndex.GridIndex;
+    war             : IBwWar;
+    gridIndex       : GridIndex;
 }): number[] | null {
     const unit = war.getUnitMap().getUnitOnMap(gridIndex);
     if (unit == null) {
@@ -126,7 +126,7 @@ export function getObserverTeamIndexListForUnitOnMap({ war, gridIndex }: {
     return teamIndexList;
 }
 
-export function getAllUnitsOnMapVisibleToTeams(war: BaseWarInterfaceIBwWar.IBwWar, teamIndexes: Set<number>): Set<IUnit> {
+export function getAllUnitsOnMapVisibleToTeams(war: IBwWar, teamIndexes: Set<number>): Set<IUnit> {
     const fogMap                = war.getFogMap();
     const visibilityFromPaths   = fogMap.getVisibilityMapFromPathsForTeams(teamIndexes);
     const visibilityFromTiles   = fogMap.getVisibilityMapFromTilesForTeams(teamIndexes);
@@ -154,8 +154,8 @@ export function getAllUnitsOnMapVisibleToTeams(war: BaseWarInterfaceIBwWar.IBwWa
                     visibilityFromTiles[x][y],
                     visibilityFromUnits[x][y],
                 );
-                if ((visibility === GameConfigGcWar.VisibilityTypeId.Penetrating)                                          ||
-                    ((visibility === GameConfigGcWar.VisibilityTypeId.Inside) && (!tile.checkCanHideUnitType(unitType)))
+                if ((visibility === VisibilityTypeId.Penetrating)                                          ||
+                    ((visibility === VisibilityTypeId.Inside) && (!tile.checkCanHideUnitType(unitType)))
                 ) {
                     units.add(unit);
                 }
@@ -165,7 +165,7 @@ export function getAllUnitsOnMapVisibleToTeams(war: BaseWarInterfaceIBwWar.IBwWa
     return units;
 }
 
-export function checkIsTileVisibleToTeams(war: BaseWarInterfaceIBwWar.IBwWar, gridIndex: AuxiliaryTypesGridIndex.GridIndex, observerTeamIndexes: Set<number>): boolean {
+export function checkIsTileVisibleToTeams(war: IBwWar, gridIndex: GridIndex, observerTeamIndexes: Set<number>): boolean {
     const fogMap = war.getFogMap();
     if (!fogMap.checkHasFogCurrently()) {
         return true;
@@ -188,27 +188,27 @@ export function checkIsTileVisibleToTeams(war: BaseWarInterfaceIBwWar.IBwWar, gr
     const isUnitHider = tile.checkIsUnitHider();
     for (const playerIndex of playerManager.getPlayerIndexesInTeams(observerTeamIndexes)) {
         const visibilityFromPaths = fogMap.getVisibilityFromPathsForPlayer(gridIndex, playerIndex);
-        if (visibilityFromPaths === GameConfigGcWar.VisibilityTypeId.Penetrating) {
+        if (visibilityFromPaths === VisibilityTypeId.Penetrating) {
             return true;
-        } else if (visibilityFromPaths === GameConfigGcWar.VisibilityTypeId.Inside) {
+        } else if (visibilityFromPaths === VisibilityTypeId.Inside) {
             if (!isUnitHider) {
                 return true;
             }
         }
 
         const visibilityFromUnits = fogMap.getVisibilityFromUnitsForPlayer(gridIndex, playerIndex);
-        if (visibilityFromUnits === GameConfigGcWar.VisibilityTypeId.Penetrating) {
+        if (visibilityFromUnits === VisibilityTypeId.Penetrating) {
             return true;
-        } else if (visibilityFromUnits === GameConfigGcWar.VisibilityTypeId.Inside) {
+        } else if (visibilityFromUnits === VisibilityTypeId.Inside) {
             if (!isUnitHider) {
                 return true;
             }
         }
 
         const visibilityFromTiles = fogMap.getVisibilityFromTilesForPlayer(gridIndex, playerIndex);
-        if (visibilityFromTiles === GameConfigGcWar.VisibilityTypeId.Penetrating) {
+        if (visibilityFromTiles === VisibilityTypeId.Penetrating) {
             return true;
-        } else if (visibilityFromTiles === GameConfigGcWar.VisibilityTypeId.Inside) {
+        } else if (visibilityFromTiles === VisibilityTypeId.Inside) {
             if (!isUnitHider) {
                 return true;
             }
@@ -219,12 +219,12 @@ export function checkIsTileVisibleToTeams(war: BaseWarInterfaceIBwWar.IBwWar, gr
 }
 
 export function getDiscoveredUnitsByPath({ war, path, movingUnit, isUnitDestroyed, visibleUnits, unitVisionInfo }: {
-    war             : BaseWarInterfaceIBwWar.IBwWar;
-    path            : AuxiliaryTypesGridIndex.GridIndex[];
+    war             : IBwWar;
+    path            : GridIndex[];
     movingUnit      : IUnit;
     isUnitDestroyed : boolean;
     visibleUnits    : Set<IUnit>;
-    unitVisionInfo  : AuxiliaryTypesUnitVisionInfo.UnitVisionInfo;
+    unitVisionInfo  : UnitVisionInfo;
 }): Set<IUnit> {
     const observerTeamIndex                         = movingUnit.getTeamIndex();
     const tileMap                                   = war.getTileMap();
@@ -238,7 +238,7 @@ export function getDiscoveredUnitsByPath({ war, path, movingUnit, isUnitDestroye
         for (let y = 0; y < mapHeight; ++y) {
             const visibility = visibilityMap[x][y];
             if ((visibility != null) && (visibility > 0)) {
-                const gridIndex = new AuxiliaryTypesGridIndex.GridIndex(x, y);
+                const gridIndex = new GridIndex(x, y);
                 const unit      = unitMap.getUnitOnMap(gridIndex);
                 if ((unit) && (!visibleUnits.has(unit))) {
                     if ((unit.getIsDiving()) || (unit.checkIsInvisible(gridIndex))) {
@@ -262,7 +262,7 @@ export function getDiscoveredUnitsByPath({ war, path, movingUnit, isUnitDestroye
     return discoveredUnits;
 }
 
-export function getVisibilityArrayWithMapFromPath(map: GameConfigGcWar.VisibilityTypeId[][], mapSize: AuxiliaryTypesMapSize.MapSize): GameConfigGcWar.VisibilityTypeId[] | null {
+export function getVisibilityArrayWithMapFromPath(map: VisibilityTypeId[][], mapSize: MapSize): VisibilityTypeId[] | null {
     const { width, height } = mapSize.getWH();
     const data              = new Array(width * height);
     let needSerialize       = false;
@@ -270,7 +270,7 @@ export function getVisibilityArrayWithMapFromPath(map: GameConfigGcWar.Visibilit
     for (let x = 0; x < width; ++x) {
         for (let y = 0; y < height; ++y) {
             data[x + y * width] = map[x][y];
-            if ((!needSerialize) && (map[x][y] !== GameConfigGcWar.VisibilityTypeId.Outside)) {
+            if ((!needSerialize) && (map[x][y] !== VisibilityTypeId.Outside)) {
                 needSerialize = true;
             }
         }
@@ -279,7 +279,7 @@ export function getVisibilityArrayWithMapFromPath(map: GameConfigGcWar.Visibilit
     return needSerialize ? data : null;
 }
 
-function _checkHasUnitWithTeamIndexesOnAdjacentGrids(unitMap: IUnitMap, origin: AuxiliaryTypesGridIndex.GridIndex, teamIndexes: Set<number>): boolean {
+function _checkHasUnitWithTeamIndexesOnAdjacentGrids(unitMap: IUnitMap, origin: GridIndex, teamIndexes: Set<number>): boolean {
     for (const adjacentGrid of origin.getAdjacentGrids(unitMap.getMapSize())) {
         const unit = unitMap.getUnitOnMap(adjacentGrid);
         if ((unit) && (teamIndexes.has(unit.getTeamIndex()))) {
@@ -289,12 +289,12 @@ function _checkHasUnitWithTeamIndexesOnAdjacentGrids(unitMap: IUnitMap, origin: 
     return false;
 }
 
-function _checkHasUnitWithTeamIndexesOnGrid(unitMap: IUnitMap, gridIndex: AuxiliaryTypesGridIndex.GridIndex, teamIndexes: Set<number>): boolean {
+function _checkHasUnitWithTeamIndexesOnGrid(unitMap: IUnitMap, gridIndex: GridIndex, teamIndexes: Set<number>): boolean {
     const unit = unitMap.getUnitOnMap(gridIndex);
     return (unit != null) && (teamIndexes.has(unit.getTeamIndex()));
 }
 
-function _checkIsUnitHiddenByTileToTeam(war: BaseWarInterfaceIBwWar.IBwWar, unit: IUnit, teamIndex: number): boolean {
+function _checkIsUnitHiddenByTileToTeam(war: IBwWar, unit: IUnit, teamIndex: number): boolean {
     const gridIndex = unit.getGridIndex();
     const tileMap   = war.getTileMap();
     const tile      = tileMap.getTile(gridIndex);
@@ -302,9 +302,9 @@ function _checkIsUnitHiddenByTileToTeam(war: BaseWarInterfaceIBwWar.IBwWar, unit
     return (tile.getTeamIndex() !== teamIndex) && (tile.checkCanHideUnitType(unitType));
 }
 
-function _createVisibilityMapFromPath(war: BaseWarInterfaceIBwWar.IBwWar, path: AuxiliaryTypesGridIndex.GridIndex[], unit: IUnit, unitVisionInfo: AuxiliaryTypesUnitVisionInfo.UnitVisionInfo): GameConfigGcWar.VisibilityTypeId[][] {
+function _createVisibilityMapFromPath(war: IBwWar, path: GridIndex[], unit: IUnit, unitVisionInfo: UnitVisionInfo): VisibilityTypeId[][] {
     const mapSize       = war.getTileMap().getMapSize();
-    const visibilityMap = HelpersCollection.createEmptyMap(mapSize.getWidth(), mapSize.getHeight(), GameConfigGcWar.VisibilityTypeId.Outside);
+    const visibilityMap = createEmptyMap(mapSize.getWidth(), mapSize.getHeight(), VisibilityTypeId.Outside);
     const isPenetrating = unitVisionInfo.isPenetrating;
     for (const node of path) {
         const visionRange = unit.getFinalVisionRange(unitVisionInfo, node);
@@ -313,14 +313,14 @@ function _createVisibilityMapFromPath(war: BaseWarInterfaceIBwWar.IBwWar, path: 
         }
 
         for (const grid of node.getGridsWithinDistance({ minDistance: 0, maxDistance: 1, mapSize })) {
-            visibilityMap[grid.getX()][grid.getY()] = GameConfigGcWar.VisibilityTypeId.Penetrating;
+            visibilityMap[grid.getX()][grid.getY()] = VisibilityTypeId.Penetrating;
         }
         for (const grid of node.getGridsWithinDistance({ minDistance: 2, maxDistance: visionRange, mapSize })) {
             if (isPenetrating) {
-                visibilityMap[grid.getX()][grid.getY()] = GameConfigGcWar.VisibilityTypeId.Penetrating;
+                visibilityMap[grid.getX()][grid.getY()] = VisibilityTypeId.Penetrating;
             } else {
-                if (visibilityMap[grid.getX()][grid.getY()] === GameConfigGcWar.VisibilityTypeId.Outside) {
-                    visibilityMap[grid.getX()][grid.getY()] = GameConfigGcWar.VisibilityTypeId.Inside;
+                if (visibilityMap[grid.getX()][grid.getY()] === VisibilityTypeId.Outside) {
+                    visibilityMap[grid.getX()][grid.getY()] = VisibilityTypeId.Inside;
                 }
             }
         }
@@ -329,10 +329,10 @@ function _createVisibilityMapFromPath(war: BaseWarInterfaceIBwWar.IBwWar, path: 
     return visibilityMap;
 }
 
-export function getAllTilesVisibleToTeam(war: BaseWarInterfaceIBwWar.IBwWar, teamIndex: number): Set<ITile> {
+export function getAllTilesVisibleToTeam(war: IBwWar, teamIndex: number): Set<ITile> {
     return getAllTilesVisibleToTeams(war, new Set([teamIndex]));
 }
-export function getAllTilesVisibleToTeams(war: BaseWarInterfaceIBwWar.IBwWar, teamIndexes: Set<number>): Set<ITile> {
+export function getAllTilesVisibleToTeams(war: IBwWar, teamIndexes: Set<number>): Set<ITile> {
     const fogMap                = war.getFogMap();
     const visibilityFromPaths   = fogMap.getVisibilityMapFromPathsForTeams(teamIndexes);
     const visibilityFromTiles   = fogMap.getVisibilityMapFromTilesForTeams(teamIndexes);
@@ -357,8 +357,8 @@ export function getAllTilesVisibleToTeams(war: BaseWarInterfaceIBwWar.IBwWar, te
                 visibilityFromTiles[x][y],
                 visibilityFromUnits[x][y],
             );
-            if ((visibility === GameConfigGcWar.VisibilityTypeId.Penetrating)                                  ||
-                ((visibility === GameConfigGcWar.VisibilityTypeId.Inside) && (!tile.checkIsUnitHider()))
+            if ((visibility === VisibilityTypeId.Penetrating)                                  ||
+                ((visibility === VisibilityTypeId.Inside) && (!tile.checkIsUnitHider()))
             ) {
                 tiles.add(tile);
             }

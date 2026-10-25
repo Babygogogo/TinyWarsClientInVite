@@ -1,15 +1,15 @@
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as UiComponentsUiContainer from "./UiContainer.ts";
-import type * as UiInterfacesIUiImage from "../interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiProgressBar from "../interfaces/IUiProgressBar.ts";
-import * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { UiContainer } from "./UiContainer.ts";
+import type { IUiImage } from "../interfaces/IUiImage.ts";
+import type { IUiLabel } from "../interfaces/IUiLabel.ts";
+import type { IUiProgressBar } from "../interfaces/IUiProgressBar.ts";
+import { Rectangle } from "../../vendor/egret/Egret.ts";
 
-export class UiProgressBar extends UiComponentsUiContainer.UiContainer implements UiInterfacesIUiProgressBar.IUiProgressBar {
-    private readonly _labelDisplay? : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgThumb?     : UiInterfacesIUiImage.IUiImage;
+export class UiProgressBar extends UiContainer implements IUiProgressBar {
+    private readonly _labelDisplay? : IUiLabel;
+    private readonly _imgThumb?     : IUiImage;
 
-    private readonly _graphicMask   = new VendorEgretEgret.Rectangle(-1, -1, 1, 1);    // xy设为-1用于补偿egret的遮罩bug
+    private readonly _graphicMask   = new Rectangle(-1, -1, 1, 1);    // xy设为-1用于补偿egret的遮罩bug
     private _startValue             = 0;
     private _endValue               = 100;
     private _currentValue           = 0;
@@ -87,7 +87,7 @@ export class UiProgressBar extends UiComponentsUiContainer.UiContainer implement
             const isNegative            = startValue > endValue;
             const revisedStartValue     = isNegative ? -startValue : startValue;
             const revisedEndValue       = isNegative ? -endValue : endValue;
-            const revisedCurrentValue   = NumbersUtils.getValueInRange({
+            const revisedCurrentValue   = getValueInRange({
                 minValue    : revisedStartValue,
                 maxValue    : revisedEndValue,
                 rawValue    : this.getCurrentValue() * (isNegative ? -1 : 1),

@@ -1,79 +1,83 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as ExpressionParsersParser from "../expressionParsers/Parser.ts";
-import * as GameConfigGcWar from "../gameConfig/GcWar.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoTaskObjectivesTaskObjective from "../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
-import * as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
-import type * as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
-import * as TaskObjectivesConstants from "./Constants.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { Parser } from "../expressionParsers/Parser.ts";
+import { TaskObjectives } from "../gameConfig/GcWar.ts";
+import { TextType, UndefinedError } from "../lang/Constants.ts";
+import { checkIsValidLanguageTextArray, getFormattedText, getText, getTextForYesOrNo } from "../lang/Utils.ts";
+import type {
+    TaskObjective as ProtoSchemaCommonProtoTaskObjectivesTaskObjective,
+} from "../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
+import { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
+import type {
+    TaskObjectiveState as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState,
+} from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
+import { ExpressionInfoDict } from "./Constants.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type TaskObjective              = ProtoSchemaCommonProtoTaskObjectivesTaskObjective.TaskObjective;
-type TaskObjectiveState         = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState;
+type TaskObjective              = ProtoSchemaCommonProtoTaskObjectivesTaskObjective;
+type TaskObjectiveState         = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState;
 
 export function checkIsValid(data: TaskObjective, customCounterNameSet: Set<string>): boolean {
-    return getErrorCode(data, customCounterNameSet) === UtilsClientErrorCode.ClientErrorCode.NoError;
+    return getErrorCode(data, customCounterNameSet) === ClientErrorCode.NoError;
 }
-export function getErrorCode(data: TaskObjective, customCounterNameSet: Set<string>): UtilsClientErrorCode.ClientErrorCode {
+export function getErrorCode(data: TaskObjective, customCounterNameSet: Set<string>): ClientErrorCode {
     if ((data.getObjectiveId() ?? 0) < 0) {
-        return UtilsClientErrorCode.ClientErrorCode.PhTaskObjective_GetErrorCode_00;
+        return ClientErrorCode.PhTaskObjective_GetErrorCode_00;
     }
 
-    if (!LangUtils.checkIsValidLanguageTextArray({
+    if (!checkIsValidLanguageTextArray({
         list            : data.getDesc(),
         minTextLength   : 1,
-        maxTextLength   : GameConfigGcWar.TaskObjectives.MaxDescLength,
+        maxTextLength   : TaskObjectives.MaxDescLength,
         minTextCount    : 1
     })) {
-        return UtilsClientErrorCode.ClientErrorCode.PhTaskObjective_GetErrorCode_01;
+        return ClientErrorCode.PhTaskObjective_GetErrorCode_01;
     }
 
     const maxProgress = data.getMaxProgress();
     if ((maxProgress != null) && (maxProgress <= 0)) {
-        return UtilsClientErrorCode.ClientErrorCode.PhTaskObjective_GetErrorCode_02;
+        return ClientErrorCode.PhTaskObjective_GetErrorCode_02;
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : data.getUpdaterForCurrentProgress(),
-            expressionInfo          : TaskObjectivesConstants.ExpressionInfoDict.UpdaterForCurrentProgress,
+            expressionInfo          : ExpressionInfoDict.UpdaterForCurrentProgress,
             customCounterNameSet    : customCounterNameSet,
         })) {
-            return UtilsClientErrorCode.ClientErrorCode.PhTaskObjective_GetErrorCode_03;
+            return ClientErrorCode.PhTaskObjective_GetErrorCode_03;
         }
     }
 
-    return UtilsClientErrorCode.ClientErrorCode.NoError;
+    return ClientErrorCode.NoError;
 }
 export function getErrorText(data: TaskObjective, customCounterNameSet: Set<string>): string | null {
     if ((data.getObjectiveId() ?? 0) < 0) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0792));
+        return getFormattedText(TextType.F0091, getText(TextType.B0792));
     }
 
-    if (!LangUtils.checkIsValidLanguageTextArray({
+    if (!checkIsValidLanguageTextArray({
         list            : data.getDesc(),
         minTextLength   : 1,
-        maxTextLength   : GameConfigGcWar.TaskObjectives.MaxDescLength,
+        maxTextLength   : TaskObjectives.MaxDescLength,
         minTextCount    : 1
     })) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B1215));
+        return getFormattedText(TextType.F0091, getText(TextType.B1215));
     }
 
     const maxProgress = data.getMaxProgress();
     if ((maxProgress != null) && (maxProgress <= 0)) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B1216));
+        return getFormattedText(TextType.F0091, getText(TextType.B1216));
     }
 
     {
-        const info      = TaskObjectivesConstants.ExpressionInfoDict.UpdaterForCurrentProgress;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.UpdaterForCurrentProgress;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getUpdaterForCurrentProgress(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -81,23 +85,23 @@ export function getErrorText(data: TaskObjective, customCounterNameSet: Set<stri
 }
 export function getFullDesc(data: TaskObjective): string {
     return [
-        `${LangUtils.getText(LangConstants.TextType.B1215)}: ${data.getDesc()?.map(v => v.getText()).join(`\n${LangUtils.getText(LangConstants.TextType.B1215)}: `) ?? LangConstants.UndefinedError}`,
-        `${LangUtils.getText(LangConstants.TextType.B1217)}: ${LangUtils.getTextForYesOrNo(data.getIsMain())}`,
-        `${LangUtils.getText(LangConstants.TextType.B1216)}: ${data.getMaxProgress() ?? `--`}`,
-        `${LangUtils.getText(LangConstants.TextType.B1218)}: ${data.getScoreForCompletion() ?? 0}`,
-        `${LangUtils.getText(LangConstants.TextType.B1219)}: ${data.getScoreForProgress() ?? 0}`,
-        `${LangUtils.getText(LangConstants.TextType.B1226)}: ${data.getUpdaterForCurrentProgress() ?? `--`}`,
+        `${getText(TextType.B1215)}: ${data.getDesc()?.map(v => v.getText()).join(`\n${getText(TextType.B1215)}: `) ?? UndefinedError}`,
+        `${getText(TextType.B1217)}: ${getTextForYesOrNo(data.getIsMain())}`,
+        `${getText(TextType.B1216)}: ${data.getMaxProgress() ?? `--`}`,
+        `${getText(TextType.B1218)}: ${data.getScoreForCompletion() ?? 0}`,
+        `${getText(TextType.B1219)}: ${data.getScoreForProgress() ?? 0}`,
+        `${getText(TextType.B1226)}: ${data.getUpdaterForCurrentProgress() ?? `--`}`,
     ].join(`\n`);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function checkIsValidFullData(data: ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData, customCounterNameSet: Set<string>): boolean {
-    return getErrorCodeForFullData(data, customCounterNameSet) === UtilsClientErrorCode.ClientErrorCode.NoError;
+export function checkIsValidFullData(data: TaskObjectiveFullData, customCounterNameSet: Set<string>): boolean {
+    return getErrorCodeForFullData(data, customCounterNameSet) === ClientErrorCode.NoError;
 }
-export function getErrorCodeForFullData(data: ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData, customCounterNameSet: Set<string>): UtilsClientErrorCode.ClientErrorCode {
+export function getErrorCodeForFullData(data: TaskObjectiveFullData, customCounterNameSet: Set<string>): ClientErrorCode {
     const array = data.getTaskObjectiveArray();
-    if (array.length > GameConfigGcWar.TaskObjectives.MaxObjectivesCount) {
-        return UtilsClientErrorCode.ClientErrorCode.PhTaskObjectiveFullData_GetErrorCode_00;
+    if (array.length > TaskObjectives.MaxObjectivesCount) {
+        return ClientErrorCode.PhTaskObjectiveFullData_GetErrorCode_00;
     }
 
     const objectiveIdSet = new Set<number>();
@@ -109,15 +113,15 @@ export function getErrorCodeForFullData(data: ProtoSchemaCommonProtoTaskObjectiv
 
         const objectiveId = taskObjective.getObjectiveId() ?? 0;
         if (objectiveIdSet.has(objectiveId)) {
-            return UtilsClientErrorCode.ClientErrorCode.PhTaskObjectiveFullData_GetErrorCode_01;
+            return ClientErrorCode.PhTaskObjectiveFullData_GetErrorCode_01;
         }
         objectiveIdSet.add(objectiveId);
     }
 
-    return UtilsClientErrorCode.ClientErrorCode.NoError;
+    return ClientErrorCode.NoError;
 }
 
-export function trimAndClone(srcData: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData>, objectiveIds: AuxiliaryTypesAuxiliaryTypes.Undefinable<number[]>): ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData | null {
+export function trimAndClone(srcData: Undefinable<TaskObjectiveFullData>, objectiveIds: Undefinable<number[]>): TaskObjectiveFullData | null {
     if ((srcData == null) || (objectiveIds == null)) {
         return null;
     }
@@ -131,19 +135,19 @@ export function trimAndClone(srcData: AuxiliaryTypesAuxiliaryTypes.Undefinable<P
         }
     }
 
-    return ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData.fromJson({
+    return TaskObjectiveFullData.fromJson({
         taskObjectiveArray  : dstTaskObjectiveArray.map(v => v.toJson()),
     });
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function checkIsValidState(data: TaskObjectiveState, fullData: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData>): boolean {
-    return getErrorCodeForState(data, fullData) === UtilsClientErrorCode.ClientErrorCode.NoError;
+export function checkIsValidState(data: TaskObjectiveState, fullData: Undefinable<TaskObjectiveFullData>): boolean {
+    return getErrorCodeForState(data, fullData) === ClientErrorCode.NoError;
 }
-export function getErrorCodeForState(data: TaskObjectiveState, fullData: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData>): UtilsClientErrorCode.ClientErrorCode {
+export function getErrorCodeForState(data: TaskObjectiveState, fullData: Undefinable<TaskObjectiveFullData>): ClientErrorCode {
     const objectiveId = data.getObjectiveId() ?? 0;
     if (objectiveId < 0) {
-        return UtilsClientErrorCode.ClientErrorCode.PhTaskObjectiveState_GetErrorCode_00;
+        return ClientErrorCode.PhTaskObjectiveState_GetErrorCode_00;
     }
 
     // const currentProgress = data.getCurrentProgress() ?? 0;
@@ -153,7 +157,7 @@ export function getErrorCodeForState(data: TaskObjectiveState, fullData: Auxilia
 
     const taskObjective = fullData?.getTaskObjectiveArray().find(v => (v.getObjectiveId() ?? 0) === objectiveId);
     if (taskObjective == null) {
-        return UtilsClientErrorCode.ClientErrorCode.PhTaskObjectiveState_GetErrorCode_02;
+        return ClientErrorCode.PhTaskObjectiveState_GetErrorCode_02;
     }
 
     // const maxProgress = taskObjective.maxProgress;
@@ -161,5 +165,5 @@ export function getErrorCodeForState(data: TaskObjectiveState, fullData: Auxilia
     //     return ClientErrorCode.PhTaskObjectiveState_GetErrorCode_03;
     // }
 
-    return UtilsClientErrorCode.ClientErrorCode.NoError;
+    return ClientErrorCode.NoError;
 }

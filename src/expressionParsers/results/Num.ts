@@ -1,24 +1,24 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import { newError } from "../../helpers/Misc.ts";
 
-export class Num extends ExpressionParsersResultsBase.Base {
+export class Num extends Base {
     public readonly num: number;
 
-    public constructor(war: BaseWarInterfaceIBwWar.IBwWar, num: number) {
+    public constructor(war: IBwWar, num: number) {
         super(war);
 
         if (!isFinite(num)) {
-            throw HelpersMisc.newError(`Invalid num: ${num}`);
+            throw newError(`Invalid num: ${num}`);
         }
         this.num = num;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.Number;
+    public override getResultType(): ResultType {
+        return ResultType.Number;
     }
-    public checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public checkIsEqual(rhs: Base): boolean {
         return (rhs instanceof Num)
             && (this.num === rhs.num);
     }

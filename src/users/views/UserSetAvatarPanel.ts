@@ -1,38 +1,38 @@
-import * as AvatarsUtils from "../../avatars/Utils.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../Model.ts";
-import * as UsersProxy from "../Proxy.ts";
+import { getAvailableUserAvatarIdArray } from "../../avatars/Utils.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getUserAvatar } from "../../helpers/ImageSource.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getSelfAvatarId } from "../Model.ts";
+import { reqSetAvatarId } from "../Proxy.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
 
-    private readonly _sclAvatar!        : UiInterfacesIUiScrollList.IUiScrollList<DataForAvatarRenderer>;
-    private readonly _imgAvatar!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _btnConfirm!       : UiInterfacesIUiButton.IUiButton;
+    private readonly _sclAvatar!        : IUiScrollList<DataForAvatarRenderer>;
+    private readonly _imgAvatar!        : IUiImage;
+    private readonly _btnConfirm!       : IUiButton;
 
-    private _gameConfig : GameConfigGcData.GcData | null = null;
+    private _gameConfig : GcData | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
@@ -46,7 +46,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._sclAvatar.setItemRendererClass(AvatarRenderer);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._gameConfig = await GameConfigGcModel.getLatestGameConfig();
+        this._gameConfig = await getLatestGameConfig();
         this._updateView();
     }
     protected override async _onClosed(): Promise<void> {
@@ -64,8 +64,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnConfirm(): void {
         const avatarId = this._sclAvatar.getFirstSelectedData()?.avatarId;
-        if ((avatarId != null) && (avatarId !== UsersModel.getSelfAvatarId())) {
-            UsersProxy.reqSetAvatarId(avatarId);
+        if ((avatarId != null) && (avatarId !== getSelfAvatarId())) {
+            reqSetAvatarId(avatarId);
         }
         this.closePanel();
     }
@@ -77,23 +77,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0707));
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
+        this._labelTitle.setText(getText(TextType.B0707));
+        this._btnConfirm.setText(getText(TextType.B0026));
     }
 
     private _updateImgAvatar(): void {
-        this._imgAvatar.loadSource(HelpersImageSource.getUserAvatar(this._sclAvatar.getFirstSelectedData()?.avatarId ?? UsersModel.getSelfAvatarId() ?? 1));
+        this._imgAvatar.loadSource(getUserAvatar(this._sclAvatar.getFirstSelectedData()?.avatarId ?? getSelfAvatarId() ?? 1));
     }
     private async _updateSclAvatar(): Promise<void> {
         const dataArray: DataForAvatarRenderer[] = [];
-        for (const avatarId of AvatarsUtils.getAvailableUserAvatarIdArray()) {
+        for (const avatarId of getAvailableUserAvatarIdArray()) {
             dataArray.push({
                 avatarId,
                 panel   : this,
             });
         }
 
-        const selfAvatarId  = UsersModel.getSelfAvatarId() ?? 1;
+        const selfAvatarId  = getSelfAvatarId() ?? 1;
         const list          = this._sclAvatar;
         await list.bindData(dataArray);
 
@@ -103,15 +103,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForAvatarRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForAvatarRenderer extends UiListItemData {
     avatarId    : number;
     panel       : Panel;
 }
 class AvatarRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForAvatarRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForAvatarRenderer>
+    extends     UiListItemRenderer<DataForAvatarRenderer>
+    implements  IUiListItemRenderer<DataForAvatarRenderer>
 {
-    private readonly _imgAvatar!    : UiInterfacesIUiImage.IUiImage;
+    private readonly _imgAvatar!    : IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -123,7 +123,7 @@ class AvatarRenderer
             return;
         }
 
-        this._imgAvatar.loadSource(HelpersImageSource.getUserAvatar(openData.avatarId));
+        this._imgAvatar.loadSource(getUserAvatar(openData.avatarId));
     }
 
     public onItemTapEvent(): void {

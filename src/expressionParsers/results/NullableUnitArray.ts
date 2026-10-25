@@ -1,21 +1,21 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import type * as ExpressionParsersResultsNullableUnit from "./NullableUnit.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { NullableUnit } from "./NullableUnit.ts";
 
-export class NullableUnitArray extends ExpressionParsersResultsBase.Base {
-    public readonly array: ExpressionParsersResultsNullableUnit.NullableUnit[];
+export class NullableUnitArray extends Base {
+    public readonly array: NullableUnit[];
 
-    public constructor(war: BaseWarInterfaceIBwWar.IBwWar, array: ExpressionParsersResultsNullableUnit.NullableUnit[]) {
+    public constructor(war: IBwWar, array: NullableUnit[]) {
         super(war);
 
         this.array = array;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.UnitArray;
+    public override getResultType(): ResultType {
+        return ResultType.UnitArray;
     }
-    public checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public checkIsEqual(rhs: Base): boolean {
         if (!(rhs instanceof NullableUnitArray)) {
             return false;
         }

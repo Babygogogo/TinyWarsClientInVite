@@ -1,23 +1,31 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesTaskQueue from "../../auxiliaryTypes/TaskQueue.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import type * as UiInterfacesIUiEventAgent from "../interfaces/IUiEventAgent.ts";
-import type * as UiInterfacesIUiImage from "../interfaces/IUiImage.ts";
-import type * as UiTypesUiSkinAttrs from "../types/UiSkinAttrs.ts";
-import * as UiUtilsUiAabbCache from "../utils/UiAabbCache.ts";
-import * as UiUtilsUiEventAgent from "../utils/UiEventAgent.ts";
-import * as UiUtilsUiSizerHelpers from "../utils/UiSizerHelpers.ts";
-import * as UiUtilsUiSizerInfo from "../utils/UiSizerInfo.ts";
-import * as UiUtilsUiSkinHelpers from "../utils/UiSkinHelpers.ts";
-import * as UiUtilsUiSkinInfo from "../utils/UiSkinInfo.ts";
-import * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as VendorEgretRes from "../../vendor/egret/Res.ts";
+import type { Rectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { TaskQueue } from "../../auxiliaryTypes/TaskQueue.ts";
+import { checkIsSameList } from "../../helpers/Collection.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { MouseStyleType, getMouseExpectedStyleType, setMouseExpectedStyleType } from "../../helpers/PointerInput.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiEventAgent } from "../interfaces/IUiEventAgent.ts";
+import type { IUiImage as UiInterfacesIUiImage } from "../interfaces/IUiImage.ts";
+import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import { UiAabbCache } from "../utils/UiAabbCache.ts";
+import { UiEventAgent } from "../utils/UiEventAgent.ts";
+import { loadSizerOptions, checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
+import { UiSizerInfo } from "../utils/UiSizerInfo.ts";
+import { getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
+import { UiSkinInfo } from "../utils/UiSkinInfo.ts";
+import {
+    Bitmap,
+    DisplayObjectContainer,
+    Texture,
+    is,
+    Event,
+    Rectangle as VendorEgretEgretRectangle,
+    DisplayObject,
+} from "../../vendor/egret/Egret.ts";
+import { hasRes, getResByUrl, ResourceItemHelper, getRes, getResAsync } from "../../vendor/egret/Res.ts";
 
-type UiSkinAttrs    = UiTypesUiSkinAttrs.UiSkinAttrs;
-type IUiImage       = UiInterfacesIUiImage.IUiImage;
+type UiSkinAttrs    = UiTypesUiSkinAttrs;
+type IUiImage       = UiInterfacesIUiImage;
 
 // const obj = new egret.DisplayObject;
 // obj.x;
@@ -34,20 +42,20 @@ type IUiImage       = UiInterfacesIUiImage.IUiImage;
 // obj.parent;
 // obj.visible;
 
-export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
+export class UiImage extends Bitmap implements IUiImage {
     private _unscaledManualWidth?   : number;
     private _unscaledManualHeight?  : number;
     private _source?                : string;
     private _scale9Grid?            : number[];
 
-    private _eventAgent?            : UiInterfacesIUiEventAgent.IUiEventAgent;
-    private _skinInfo?              : UiUtilsUiSkinInfo.UiSkinInfo;
-    private _sizerInfo?             : UiUtilsUiSizerInfo.UiSizerInfo;
-    private _aabbCache?             : UiUtilsUiAabbCache.UiAabbCache;
-    private _taskQueue?             : AuxiliaryTypesTaskQueue.TaskQueue<void>;
+    private _eventAgent?            : IUiEventAgent;
+    private _skinInfo?              : UiSkinInfo;
+    private _sizerInfo?             : UiSizerInfo;
+    private _aabbCache?             : UiAabbCache;
+    private _taskQueue?             : TaskQueue<void>;
 
-    private _callbackOnAppliedSizeFromSizerInfo?        : (component: UiInterfacesIUiComponent.IUiComponent, width: number | undefined, height: number | undefined) => void;
-    private _callbackOnAppliedPositionFromSizerInfo?    : (component: UiInterfacesIUiComponent.IUiComponent, x: number | undefined, y: number | undefined) => void;
+    private _callbackOnAppliedSizeFromSizerInfo?        : (component: IUiComponent, width: number | undefined, height: number | undefined) => void;
+    private _callbackOnAppliedPositionFromSizerInfo?    : (component: IUiComponent, x: number | undefined, y: number | undefined) => void;
 
     public constructor({
         textureSourceName,
@@ -67,41 +75,41 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         }
     }
 
-    public getEventAgent(): UiInterfacesIUiEventAgent.IUiEventAgent {
-        return this._eventAgent ??= new UiUtilsUiEventAgent.UiEventAgent(this);
+    public getEventAgent(): IUiEventAgent {
+        return this._eventAgent ??= new UiEventAgent(this);
     }
 
-    public checkAndInitSkinInfo(): UiUtilsUiSkinInfo.UiSkinInfo {
-        return this._skinInfo ??= new UiUtilsUiSkinInfo.UiSkinInfo(this);
+    public checkAndInitSkinInfo(): UiSkinInfo {
+        return this._skinInfo ??= new UiSkinInfo(this);
     }
-    public getSkinInfo(): UiUtilsUiSkinInfo.UiSkinInfo | undefined {
+    public getSkinInfo(): UiSkinInfo | undefined {
         return this._skinInfo;
     }
     public loadSkinAttrs(oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
-        const source        = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "source");
-        const width         = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "width");
-        const height        = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "height");
-        const x             = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "x");
-        const y             = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "y");
-        const alpha         = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "alpha");
-        const visible       = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "visible");
-        const rotation      = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "rotation");
-        const pivotX        = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetX");
-        const pivotY        = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetY");
-        const scale9Grid    = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scale9Grid");
-        const scaleX        = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleX");
-        const scaleY        = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleY");
-        const smoothing     = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "smoothing");
+        const source        = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "source");
+        const width         = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "width");
+        const height        = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "height");
+        const x             = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "x");
+        const y             = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "y");
+        const alpha         = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "alpha");
+        const visible       = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "visible");
+        const rotation      = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "rotation");
+        const pivotX        = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetX");
+        const pivotY        = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetY");
+        const scale9Grid    = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scale9Grid");
+        const scaleX        = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleX");
+        const scaleY        = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleY");
+        const smoothing     = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "smoothing");
 
-        (x.needChange)          && (this.setX(HelpersMisc.getExisted(x.value)));
-        (y.needChange)          && (this.setY(HelpersMisc.getExisted(y.value)));
-        (scaleX.needChange)     && (this.setScaleX(HelpersMisc.getExisted(scaleX.value)));
-        (scaleY.needChange)     && (this.setScaleY(HelpersMisc.getExisted(scaleY.value)));
-        (pivotX.needChange)     && (this.setAnchorOffsetX(HelpersMisc.getExisted(pivotX.value)));
-        (pivotY.needChange)     && (this.setAnchorOffsetY(HelpersMisc.getExisted(pivotY.value)));
-        (alpha.needChange)      && (this.setAlpha(HelpersMisc.getExisted(alpha.value)));
+        (x.needChange)          && (this.setX(getExisted(x.value)));
+        (y.needChange)          && (this.setY(getExisted(y.value)));
+        (scaleX.needChange)     && (this.setScaleX(getExisted(scaleX.value)));
+        (scaleY.needChange)     && (this.setScaleY(getExisted(scaleY.value)));
+        (pivotX.needChange)     && (this.setAnchorOffsetX(getExisted(pivotX.value)));
+        (pivotY.needChange)     && (this.setAnchorOffsetY(getExisted(pivotY.value)));
+        (alpha.needChange)      && (this.setAlpha(getExisted(alpha.value)));
         (visible.needChange)    && (this.setIsVisible(!!visible.value));
-        (rotation.needChange)   && (this.setRotationInDegree(HelpersMisc.getExisted(rotation.value)));
+        (rotation.needChange)   && (this.setRotationInDegree(getExisted(rotation.value)));
         (width.needChange)      && (this.setUnscaledManualWidth(width.value));
         (height.needChange)     && (this.setUnscaledManualHeight(height.value));
         (smoothing.needChange)  && (this.setIsSmoothing(!!smoothing.value));
@@ -115,13 +123,13 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
             this.applyScale9Grid(scale9Grid.value);
         }
 
-        UiUtilsUiSizerHelpers.loadSizerOptions(this, newSkinAttrs);
+        loadSizerOptions(this, newSkinAttrs);
     }
 
-    public checkAndInitSizerInfo(): UiUtilsUiSizerInfo.UiSizerInfo {
-        return this._sizerInfo ??= new UiUtilsUiSizerInfo.UiSizerInfo(this);
+    public checkAndInitSizerInfo(): UiSizerInfo {
+        return this._sizerInfo ??= new UiSizerInfo(this);
     }
-    public getSizerInfo(): UiUtilsUiSizerInfo.UiSizerInfo | undefined {
+    public getSizerInfo(): UiSizerInfo | undefined {
         return this._sizerInfo;
     }
     public destroySizerInfo(): void {
@@ -158,15 +166,15 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         this._callbackOnAppliedPositionFromSizerInfo?.(this, x, y);
     }
 
-    public setCallbackOnAppliedSizeFromSizerInfo(callback: (component: UiInterfacesIUiComponent.IUiComponent, width: number | undefined, height: number | undefined) => void): void {
+    public setCallbackOnAppliedSizeFromSizerInfo(callback: (component: IUiComponent, width: number | undefined, height: number | undefined) => void): void {
         this._callbackOnAppliedSizeFromSizerInfo = callback;
     }
-    public setCallbackOnAppliedPositionFromSizerInfo(callback: (component: UiInterfacesIUiComponent.IUiComponent, x: number | undefined, y: number | undefined) => void): void {
+    public setCallbackOnAppliedPositionFromSizerInfo(callback: (component: IUiComponent, x: number | undefined, y: number | undefined) => void): void {
         this._callbackOnAppliedPositionFromSizerInfo = callback;
     }
 
-    private _getTaskQueue(): AuxiliaryTypesTaskQueue.TaskQueue<void> {
-        return this._taskQueue ??= new AuxiliaryTypesTaskQueue.TaskQueue();
+    private _getTaskQueue(): TaskQueue<void> {
+        return this._taskQueue ??= new TaskQueue();
     }
 
     public getIsTouchEnabled(): boolean {
@@ -175,16 +183,16 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
     public setIsTouchEnabled(enabled: boolean): void {
         this.touchEnabled = enabled;
     }
-    public getMouseStyle(): HelpersPointerInput.MouseStyleType | undefined {
-        return HelpersPointerInput.getMouseExpectedStyleType(this);
+    public getMouseStyle(): MouseStyleType | undefined {
+        return getMouseExpectedStyleType(this);
     }
-    public setMouseStyle(style: HelpersPointerInput.MouseStyleType): void {
-        HelpersPointerInput.setMouseExpectedStyleType(this, style);
+    public setMouseStyle(style: MouseStyleType): void {
+        setMouseExpectedStyleType(this, style);
     }
-    public getParent(): VendorEgretEgret.DisplayObjectContainer | undefined {
+    public getParent(): DisplayObjectContainer | undefined {
         return this.parent ?? undefined;
     }
-    public getAabbToParent(): AuxiliaryTypesAuxiliaryTypes.Rectangle {
+    public getAabbToParent(): Rectangle {
         // return Utils.UiSizerHelpers.getAabbForSizer({
         //     unscaledWidth       : this.getUnscaledWidth(),
         //     unscaledHeight      : this.getUnscaledHeight(),
@@ -194,7 +202,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         //     anchorOffsetX       : this.getAnchorOffsetX(),
         //     anchorOffsetY       : this.getAnchorOffsetY(),
         // });
-        return (this._aabbCache ??= new UiUtilsUiAabbCache.UiAabbCache()).getAabb({
+        return (this._aabbCache ??= new UiAabbCache()).getAabb({
             unscaledWidth       : this.width,
             unscaledHeight      : this.height,
             scaleX              : this.scaleX,
@@ -212,7 +220,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         if (this.getX() !== x) {
             this.x = x;
 
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
+            checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getY(): number {
@@ -222,7 +230,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         if (this.getY() !== y) {
             this.y = y;
 
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
+            checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getAnchorOffsetX(): number {
@@ -232,7 +240,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         if (this.getAnchorOffsetX() !== anchorOffsetX) {
             this.anchorOffsetX = anchorOffsetX;
 
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
+            checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getAnchorOffsetY(): number {
@@ -242,7 +250,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         if (this.getAnchorOffsetY() !== anchorOffsetY) {
             this.anchorOffsetY = anchorOffsetY;
 
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
+            checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getScaleX(): number {
@@ -252,7 +260,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         if (this.getScaleX() !== scaleX) {
             this.scaleX = scaleX;
 
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
+            checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getScaleY(): number {
@@ -262,7 +270,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         if (this.getScaleY() !== scaleY) {
             this.scaleY = scaleY;
 
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
+            checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getRotationInDegree(): number {
@@ -272,7 +280,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         if (this.getRotationInDegree() !== rotation) {
             this.rotation = rotation;
 
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
+            checkAndAddAutoSizerInfo(this, false);
         }
     }
     public getIsVisible(): boolean {
@@ -304,7 +312,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
     }
     public setUnscaledManualWidth(width: number | undefined): boolean {
         if ((width != null) && (width < 0)) {
-            throw HelpersMisc.newError(`Invalid width: ${width}`);
+            throw newError(`Invalid width: ${width}`);
         }
 
         if (this.getUnscaledManualWidth() == width) {
@@ -317,14 +325,14 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
     }
     private _doApplyUnscaledManualWidth(): void {
         this.width = this.getUnscaledManualWidth() ?? NaN;
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+        checkAndAddAutoSizerInfo(this, true);
     }
     public getUnscaledManualHeight(): number | undefined {
         return this._unscaledManualHeight;
     }
     public setUnscaledManualHeight(height: number | undefined): boolean {
         if ((height != null) && (height < 0)) {
-            throw HelpersMisc.newError(`Invalid height: ${height}`);
+            throw newError(`Invalid height: ${height}`);
         }
 
         if (this.getUnscaledManualHeight() == height) {
@@ -337,7 +345,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
     }
     private _doApplyUnscaledManualHeight(): void {
         this.height = this.getUnscaledManualHeight() ?? NaN;
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+        checkAndAddAutoSizerInfo(this, true);
     }
 
     public getSource(): string | undefined {
@@ -361,7 +369,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         const oldScale9Grid = this.getScale9Grid();
         if ((textureSourceName === this.getSource())                                    &&
             ((oldScale9Grid == null) === (scale9Grid == null))                          &&
-            (HelpersCollection.checkIsSameList(oldScale9Grid ?? [], scale9Grid ?? []))
+            (checkIsSameList(oldScale9Grid ?? [], scale9Grid ?? []))
         ) {
             (callbackOnLoaded) && (callbackOnLoaded(this));
             return;
@@ -373,20 +381,20 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         if (textureSourceName == ``) {
             this.$setTexture(`` as any);
         } else {
-            const data = !VendorEgretRes.hasRes(textureSourceName)
-                ? await VendorEgretRes.getResByUrl<VendorEgretEgret.Texture>(textureSourceName, undefined, undefined, VendorEgretRes.ResourceItemHelper.TYPE_IMAGE)
-                : (VendorEgretRes.getRes<VendorEgretEgret.Texture>(textureSourceName) ?? await VendorEgretRes.getResAsync<VendorEgretEgret.Texture>(textureSourceName));
-            if ((data == null) || (!VendorEgretEgret.is(data, "egret.Texture"))) {
-                throw HelpersMisc.newError(`Invalid textureSourceName: ${textureSourceName}`);
+            const data = !hasRes(textureSourceName)
+                ? await getResByUrl<Texture>(textureSourceName, undefined, undefined, ResourceItemHelper.TYPE_IMAGE)
+                : (getRes<Texture>(textureSourceName) ?? await getResAsync<Texture>(textureSourceName));
+            if ((data == null) || (!is(data, "egret.Texture"))) {
+                throw newError(`Invalid textureSourceName: ${textureSourceName}`);
             }
             this.$setTexture(data);
-            this.dispatchEventWith(VendorEgretEgret.Event.COMPLETE);
+            this.dispatchEventWith(Event.COMPLETE);
         }
 
         this._doApplyScale9Grid(scale9Grid);
         this._doApplyUnscaledManualWidth();
         this._doApplyUnscaledManualHeight();
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+        checkAndAddAutoSizerInfo(this, true);
 
         (callbackOnLoaded) && (callbackOnLoaded(this));
     }
@@ -402,7 +410,7 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         if ((oldScale9Grid == null) !== (scale9Grid == null)) {
             this.loadSource(this.getSource() ?? ``, scale9Grid);
         } else {
-            if (!HelpersCollection.checkIsSameList(oldScale9Grid ?? [], scale9Grid ?? [])) {
+            if (!checkIsSameList(oldScale9Grid ?? [], scale9Grid ?? [])) {
                 this._setScale9Grid(scale9Grid);
                 this._doApplyScale9Grid(scale9Grid);
             }
@@ -413,9 +421,9 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
             this.scale9Grid = null as any;
         } else {
             if (newValue.length !== 4) {
-                throw HelpersMisc.newError(`Invalid scale9Grid.`);
+                throw newError(`Invalid scale9Grid.`);
             }
-            this.scale9Grid = new VendorEgretEgret.Rectangle(newValue[0], newValue[1], newValue[2], newValue[3]);
+            this.scale9Grid = new VendorEgretEgretRectangle(newValue[0], newValue[1], newValue[2], newValue[3]);
         }
     }
 
@@ -426,10 +434,10 @@ export class UiImage extends VendorEgretEgret.Bitmap implements IUiImage {
         this.smoothing = value;
     }
 
-    public getMask(): VendorEgretEgret.DisplayObject | VendorEgretEgret.Rectangle | null {
+    public getMask(): DisplayObject | VendorEgretEgretRectangle | null {
         return this.mask;
     }
-    public setMask(mask: VendorEgretEgret.Rectangle | null): void {
+    public setMask(mask: VendorEgretEgretRectangle | null): void {
         (this.mask as any) = mask;
     }
 

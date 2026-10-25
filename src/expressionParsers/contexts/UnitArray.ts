@@ -1,34 +1,40 @@
-import * as ExpressionParsersContextsBase from "./Base.ts";
-import * as ExpressionParsersContextsWar from "./War.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersFunctionInfo from "../FunctionInfo.ts";
-import * as ExpressionParsersNodesLambda from "../nodes/Lambda.ts";
-import type * as ExpressionParsersResultsBase from "../results/Base.ts";
-import * as ExpressionParsersResultsLambda from "../results/Lambda.ts";
-import * as ExpressionParsersResultsNullableUnit from "../results/NullableUnit.ts";
-import * as ExpressionParsersResultsNullableUnitArray from "../results/NullableUnitArray.ts";
-import * as ExpressionParsersResultsNum from "../results/Num.ts";
-import * as ExpressionParsersResultsNumArray from "../results/NumArray.ts";
-import * as ExpressionParsersResultsPlayer from "../results/Player.ts";
-import * as ExpressionParsersResultsPlayerArray from "../results/PlayerArray.ts";
-import * as ExpressionParsersResultsPosition from "../results/Position.ts";
-import * as ExpressionParsersResultsPositionArray from "../results/PositionArray.ts";
-import * as ExpressionParsersResultsTile from "../results/Tile.ts";
-import * as ExpressionParsersResultsTileArray from "../results/TileArray.ts";
-import * as ExpressionParsersResultsTileBuff from "../results/TileBuff.ts";
-import * as ExpressionParsersResultsTileBuffArray from "../results/TileBuffArray.ts";
-import * as ExpressionParsersResultsUnitStatistic from "../results/UnitStatistic.ts";
-import * as ExpressionParsersResultsUnitStatisticArray from "../results/UnitStatisticArray.ts";
-import type * as ExpressionParsersTypes from "../Types.ts";
-import * as ExpressionParsersUtils from "../Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import type * as PlayersIPlayer from "../../players/IPlayer.ts";
-import type * as TilesITile from "../../tiles/ITile.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import { Base } from "./Base.ts";
+import { War } from "./War.ts";
+import { ResultType, ContextType } from "../Enums.ts";
+import { FunctionInfo } from "../FunctionInfo.ts";
+import { Lambda } from "../nodes/Lambda.ts";
+import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import { Lambda as ExpressionParsersResultsLambda } from "../results/Lambda.ts";
+import { NullableUnit } from "../results/NullableUnit.ts";
+import { NullableUnitArray } from "../results/NullableUnitArray.ts";
+import { Num } from "../results/Num.ts";
+import { NumArray } from "../results/NumArray.ts";
+import { Player } from "../results/Player.ts";
+import { PlayerArray } from "../results/PlayerArray.ts";
+import { Position } from "../results/Position.ts";
+import { PositionArray } from "../results/PositionArray.ts";
+import { Tile } from "../results/Tile.ts";
+import { TileArray } from "../results/TileArray.ts";
+import { TileBuff } from "../results/TileBuff.ts";
+import { TileBuffArray } from "../results/TileBuffArray.ts";
+import { UnitStatistic } from "../results/UnitStatistic.ts";
+import { UnitStatisticArray } from "../results/UnitStatisticArray.ts";
+import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
+import {
+    extendVariableInfoDict,
+    extendFunctionInfoDict,
+    getErrorTextForParameterCount,
+    getErrorTextForParameterType,
+    getErrorTextForLambdaResultType,
+} from "../Utils.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getValueInInt32 } from "../../numbers/Utils.ts";
+import type { IPlayer } from "../../players/IPlayer.ts";
+import type { ITile } from "../../tiles/ITile.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class UnitArray extends ExpressionParsersContextsBase.Base {
+export class UnitArray extends Base {
     private static readonly VnLength            = "length";
 
     private static readonly FnGet               = "get";
@@ -39,127 +45,127 @@ export class UnitArray extends ExpressionParsersContextsBase.Base {
 
     public static readonly Variables    = UnitArray.generateVariables();
     public static readonly Functions    = UnitArray.generateFunctions();
-    private static generateVariables(): ExpressionParsersTypes.EpVariableInfoDict {
-        const variables = ExpressionParsersUtils.extendVariableInfoDict(ExpressionParsersContextsWar.War.Variables);
-        variables.set(UnitArray.VnLength,    { desc: LangConstants.TextType.A0480, resultType: ExpressionParsersEnums.ResultType.Number, isExtension: false } );
+    private static generateVariables(): EpVariableInfoDict {
+        const variables = extendVariableInfoDict(War.Variables);
+        variables.set(UnitArray.VnLength,    { desc: TextType.A0480, resultType: ResultType.Number, isExtension: false } );
 
         return variables;
     }
-    private static generateFunctions(): ExpressionParsersTypes.EpFunctionInfoDict {
-        const functions = ExpressionParsersUtils.extendFunctionInfoDict(ExpressionParsersContextsWar.War.Functions);
+    private static generateFunctions(): EpFunctionInfoDict {
+        const functions = extendFunctionInfoDict(War.Functions);
         functions.set(
             UnitArray.FnGet,
-            new ExpressionParsersFunctionInfo.FunctionInfo(
-                LangConstants.TextType.A0481,
+            new FunctionInfo(
+                TextType.A0481,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterCount(UnitArray.FnGet, 1, argArray.length),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_00
+                        throw newError(
+                            getErrorTextForParameterCount(UnitArray.FnGet, 1, argArray.length),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_00
                         );
                     }
 
                     const argType = argArray[0].getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
-                    if (argType !== ExpressionParsersEnums.ResultType.Number) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterType(UnitArray.FnGet, 1, ExpressionParsersEnums.ResultType.Number, argType),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_01
+                    if (argType !== ResultType.Number) {
+                        throw newError(
+                            getErrorTextForParameterType(UnitArray.FnGet, 1, ResultType.Number, argType),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_01
                         );
                     }
 
-                    return ExpressionParsersEnums.ResultType.Unit;
+                    return ResultType.Unit;
                 },
             )
         );
         functions.set(
             UnitArray.FnWhere,
-            new ExpressionParsersFunctionInfo.FunctionInfo(
-                LangConstants.TextType.A0482,
+            new FunctionInfo(
+                TextType.A0482,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterCount(UnitArray.FnWhere, 1, argArray.length),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_02
+                        throw newError(
+                            getErrorTextForParameterCount(UnitArray.FnWhere, 1, argArray.length),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_02
                         );
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof ExpressionParsersNodesLambda.Lambda)) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterType(UnitArray.FnWhere, 1, ExpressionParsersEnums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_03
+                    if (!(lambda instanceof Lambda)) {
+                        throw newError(
+                            getErrorTextForParameterType(UnitArray.FnWhere, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_03
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
                         contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsersEnums.ResultType.Unit],
+                        directLambdaArgumentInfoArray   : [ResultType.Unit],
                         indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
                         localVariableDict               : localVariableDict,
                         customCounterNameSet            : customCounterNameSet,
                     });
-                    if (lambdaResultType !== ExpressionParsersEnums.ResultType.Number) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForLambdaResultType(UnitArray.FnWhere, 1, [ExpressionParsersEnums.ResultType.Number], lambdaResultType),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_04
+                    if (lambdaResultType !== ResultType.Number) {
+                        throw newError(
+                            getErrorTextForLambdaResultType(UnitArray.FnWhere, 1, [ResultType.Number], lambdaResultType),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_04
                         );
                     }
 
-                    return ExpressionParsersEnums.ResultType.UnitArray;
+                    return ResultType.UnitArray;
                 },
             )
         );
         functions.set(
             UnitArray.FnSelect,
-            new ExpressionParsersFunctionInfo.FunctionInfo(
-                LangConstants.TextType.A0483,
+            new FunctionInfo(
+                TextType.A0483,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterCount(UnitArray.FnSelect, 1, argArray.length),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_05
+                        throw newError(
+                            getErrorTextForParameterCount(UnitArray.FnSelect, 1, argArray.length),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_05
                         );
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof ExpressionParsersNodesLambda.Lambda)) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterType(UnitArray.FnSelect, 1, ExpressionParsersEnums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_06
+                    if (!(lambda instanceof Lambda)) {
+                        throw newError(
+                            getErrorTextForParameterType(UnitArray.FnSelect, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_06
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
                         contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsersEnums.ResultType.Unit],
+                        directLambdaArgumentInfoArray   : [ResultType.Unit],
                         indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
                         localVariableDict               : localVariableDict,
                         customCounterNameSet            : customCounterNameSet,
                     });
                     switch (lambdaResultType) {
-                        case ExpressionParsersEnums.ResultType.Number        : return ExpressionParsersEnums.ResultType.NumberArray;
-                        case ExpressionParsersEnums.ResultType.Tile          : return ExpressionParsersEnums.ResultType.TileArray;
-                        case ExpressionParsersEnums.ResultType.TileBuff      : return ExpressionParsersEnums.ResultType.TileBuffArray;
-                        case ExpressionParsersEnums.ResultType.Unit          : return ExpressionParsersEnums.ResultType.UnitArray;
-                        case ExpressionParsersEnums.ResultType.UnitStatistic : return ExpressionParsersEnums.ResultType.UnitStatisticArray;
-                        case ExpressionParsersEnums.ResultType.Player        : return ExpressionParsersEnums.ResultType.PlayerArray;
-                        case ExpressionParsersEnums.ResultType.Position      : return ExpressionParsersEnums.ResultType.PositionArray;
-                        default                         : throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForLambdaResultType(
+                        case ResultType.Number        : return ResultType.NumberArray;
+                        case ResultType.Tile          : return ResultType.TileArray;
+                        case ResultType.TileBuff      : return ResultType.TileBuffArray;
+                        case ResultType.Unit          : return ResultType.UnitArray;
+                        case ResultType.UnitStatistic : return ResultType.UnitStatisticArray;
+                        case ResultType.Player        : return ResultType.PlayerArray;
+                        case ResultType.Position      : return ResultType.PositionArray;
+                        default                         : throw newError(
+                            getErrorTextForLambdaResultType(
                                 UnitArray.FnSelect,
                                 1,
                                 [
-                                    ExpressionParsersEnums.ResultType.Number,
-                                    ExpressionParsersEnums.ResultType.Tile,
-                                    ExpressionParsersEnums.ResultType.TileBuff,
-                                    ExpressionParsersEnums.ResultType.Unit,
-                                    ExpressionParsersEnums.ResultType.UnitStatistic,
-                                    ExpressionParsersEnums.ResultType.Player,
-                                    ExpressionParsersEnums.ResultType.Position,
+                                    ResultType.Number,
+                                    ResultType.Tile,
+                                    ResultType.TileBuff,
+                                    ResultType.Unit,
+                                    ResultType.UnitStatistic,
+                                    ResultType.Player,
+                                    ResultType.Position,
                                 ],
                                 lambdaResultType
                             ),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_07
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_07
                         );
                     }
                 },
@@ -167,77 +173,77 @@ export class UnitArray extends ExpressionParsersContextsBase.Base {
         );
         functions.set(
             UnitArray.FnAll,
-            new ExpressionParsersFunctionInfo.FunctionInfo(
-                LangConstants.TextType.A0505,
+            new FunctionInfo(
+                TextType.A0505,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterCount(UnitArray.FnAll, 1, argArray.length),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_08
+                        throw newError(
+                            getErrorTextForParameterCount(UnitArray.FnAll, 1, argArray.length),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_08
                         );
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof ExpressionParsersNodesLambda.Lambda)) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterType(UnitArray.FnAll, 1, ExpressionParsersEnums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_09
+                    if (!(lambda instanceof Lambda)) {
+                        throw newError(
+                            getErrorTextForParameterType(UnitArray.FnAll, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_09
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
                         contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsersEnums.ResultType.Unit],
+                        directLambdaArgumentInfoArray   : [ResultType.Unit],
                         indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
                         localVariableDict               : localVariableDict,
                         customCounterNameSet            : customCounterNameSet,
                     });
-                    if (lambdaResultType !== ExpressionParsersEnums.ResultType.Number) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForLambdaResultType(UnitArray.FnAll, 1, [ExpressionParsersEnums.ResultType.Number], lambdaResultType),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_10
+                    if (lambdaResultType !== ResultType.Number) {
+                        throw newError(
+                            getErrorTextForLambdaResultType(UnitArray.FnAll, 1, [ResultType.Number], lambdaResultType),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_10
                         );
                     }
 
-                    return ExpressionParsersEnums.ResultType.Number;
+                    return ResultType.Number;
                 },
             )
         );
         functions.set(
             UnitArray.FnAny,
-            new ExpressionParsersFunctionInfo.FunctionInfo(
-                LangConstants.TextType.A0506,
+            new FunctionInfo(
+                TextType.A0506,
                 (argArray, contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet) => {
                     if (argArray.length !== 1) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterCount(UnitArray.FnAny, 1, argArray.length),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_11
+                        throw newError(
+                            getErrorTextForParameterCount(UnitArray.FnAny, 1, argArray.length),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_11
                         );
                     }
 
                     const lambda = argArray[0];
-                    if (!(lambda instanceof ExpressionParsersNodesLambda.Lambda)) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterType(UnitArray.FnAny, 1, ExpressionParsersEnums.ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_12
+                    if (!(lambda instanceof Lambda)) {
+                        throw newError(
+                            getErrorTextForParameterType(UnitArray.FnAny, 1, ResultType.Lambda, lambda.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet })),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_12
                         );
                     }
 
                     const lambdaResultType = lambda.getLambdaResultType({
                         contextType                     : contextType,
-                        directLambdaArgumentInfoArray   : [ExpressionParsersEnums.ResultType.Unit],
+                        directLambdaArgumentInfoArray   : [ResultType.Unit],
                         indirectLambdaArgumentInfoDict  : lambdaArgumentInfoDict,
                         localVariableDict               : localVariableDict,
                         customCounterNameSet            : customCounterNameSet,
                     });
-                    if (lambdaResultType !== ExpressionParsersEnums.ResultType.Number) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForLambdaResultType(UnitArray.FnAny, 1, [ExpressionParsersEnums.ResultType.Number], lambdaResultType),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_GenerateFunctions_13
+                    if (lambdaResultType !== ResultType.Number) {
+                        throw newError(
+                            getErrorTextForLambdaResultType(UnitArray.FnAny, 1, [ResultType.Number], lambdaResultType),
+                            ClientErrorCode.EpContextUnitArray_GenerateFunctions_13
                         );
                     }
 
-                    return ExpressionParsersEnums.ResultType.Number;
+                    return ResultType.Number;
                 },
             )
         );
@@ -245,75 +251,75 @@ export class UnitArray extends ExpressionParsersContextsBase.Base {
         return functions;
     }
 
-    private _unitArray  : ExpressionParsersResultsNullableUnit.NullableUnit[];
-    private _contextWar : ExpressionParsersContextsWar.War | null = null;
+    private _unitArray  : NullableUnit[];
+    private _contextWar : War | null = null;
 
-    public constructor(data: ExpressionParsersResultsNullableUnitArray.NullableUnitArray) {
+    public constructor(data: NullableUnitArray) {
         super(data.war);
 
         this._unitArray = data.array;
     }
 
-    public getContextType(): ExpressionParsersEnums.ContextType {
-        return ExpressionParsersEnums.ContextType.UnitArray;
+    public getContextType(): ContextType {
+        return ContextType.UnitArray;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase.Base {
+    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
         switch (identifierName) {
-            case UnitArray.VnLength    : return new ExpressionParsersResultsNum.Num(this.getWar(), this._unitArray.length);
-            default                             : return (this._contextWar ??= new ExpressionParsersContextsWar.War(this.getWar())).resolveVariable(identifierName);
+            case UnitArray.VnLength    : return new Num(this.getWar(), this._unitArray.length);
+            default                             : return (this._contextWar ??= new War(this.getWar())).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase.Base[], rootCtx: ExpressionParsersContextsBase.Base, localVariableDict: Map<string, ExpressionParsersResultsBase.Base> | null, isRestricted: boolean): ExpressionParsersResultsBase.Base {
+    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
         switch (identifierName) {
             case UnitArray.FnGet       : return this.callGet(argumentArray[0]);
             case UnitArray.FnWhere     : return this.callWhere(argumentArray[0], rootCtx, localVariableDict, isRestricted);
             case UnitArray.FnSelect    : return this.callSelect(argumentArray[0], rootCtx, localVariableDict, isRestricted);
             case UnitArray.FnAll       : return this.callAll(argumentArray[0], rootCtx, localVariableDict, isRestricted);
             case UnitArray.FnAny       : return this.callAny(argumentArray[0], rootCtx, localVariableDict, isRestricted);
-            default                             : return (this._contextWar ??= new ExpressionParsersContextsWar.War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
+            default                             : return (this._contextWar ??= new War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }
     }
 
-    public callGet(arg: ExpressionParsersResultsBase.Base): ExpressionParsersResultsNullableUnit.NullableUnit {
-        if (!(arg instanceof ExpressionParsersResultsNum.Num)) {
-            throw HelpersMisc.newError(`Unexpected arg.`);
+    public callGet(arg: ExpressionParsersResultsBase): NullableUnit {
+        if (!(arg instanceof Num)) {
+            throw newError(`Unexpected arg.`);
         }
 
         const array     = this._unitArray;
         const length    = array.length;
         if (!length) {
-            throw HelpersMisc.newError(`Empty array.`);
+            throw newError(`Empty array.`);
         }
 
-        const rawIndex  = NumbersUtils.getValueInInt32(arg.num);
+        const rawIndex  = getValueInInt32(arg.num);
         const index     = rawIndex >= 0 ? rawIndex : rawIndex + length;
         const result    = array[index];
         if (result == null) {
-            throw HelpersMisc.newError(`Invalid index: ${index}`);
+            throw newError(`Invalid index: ${index}`);
         }
 
         return result;
     }
 
-    public callWhere(arg: ExpressionParsersResultsBase.Base, rootCtx: ExpressionParsersContextsBase.Base, localVariableDict: Map<string, ExpressionParsersResultsBase.Base> | null, isRestricted: boolean): ExpressionParsersResultsNullableUnitArray.NullableUnitArray {
-        if (!(arg instanceof ExpressionParsersResultsLambda.Lambda)) {
-            throw HelpersMisc.newError(`Unexpected arg.`);
+    public callWhere(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): NullableUnitArray {
+        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+            throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof ExpressionParsersNodesLambda.Lambda)) {
-            throw HelpersMisc.newError(`Unexpected node.`);
+        if (!(node instanceof Lambda)) {
+            throw newError(`Unexpected node.`);
         }
 
         const war           = this.getWar();
         const units         = this._unitArray;
-        const resultArray   : ExpressionParsersResultsNullableUnit.NullableUnit[] = [];
+        const resultArray   : NullableUnit[] = [];
         for (const unit of units) {
             const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
-            if (!(result instanceof ExpressionParsersResultsNum.Num)) {
-                throw HelpersMisc.newError(`Invalid lambda result.`, UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_CallWhere_00);
+            if (!(result instanceof Num)) {
+                throw newError(`Invalid lambda result.`, ClientErrorCode.EpContextUnitArray_CallWhere_00);
             }
 
             if (result.num !== 0) {
@@ -321,171 +327,171 @@ export class UnitArray extends ExpressionParsersContextsBase.Base {
             }
         }
 
-        return new ExpressionParsersResultsNullableUnitArray.NullableUnitArray(war, resultArray);
+        return new NullableUnitArray(war, resultArray);
     }
 
-    public callSelect(arg: ExpressionParsersResultsBase.Base, rootCtx: ExpressionParsersContextsBase.Base, localVariableDict: Map<string, ExpressionParsersResultsBase.Base> | null, isRestricted: boolean): ExpressionParsersResultsBase.Base {
-        if (!(arg instanceof ExpressionParsersResultsLambda.Lambda)) {
-            throw HelpersMisc.newError(`Unexpected arg.`);
+    public callSelect(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
+        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+            throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof ExpressionParsersNodesLambda.Lambda)) {
-            throw HelpersMisc.newError(`Unexpected node.`);
+        if (!(node instanceof Lambda)) {
+            throw newError(`Unexpected node.`);
         }
 
         const war           = this.getWar();
         const units         = this._unitArray;
         const resultType    = node.getLambdaResultType2({
             contextType                     : rootCtx.getContextType(),
-            directLambdaArgumentInfoArray   : [ExpressionParsersEnums.ResultType.Unit],
+            directLambdaArgumentInfoArray   : [ResultType.Unit],
             indirectLambdaArgumentInfoDict  : null,
             localVariableDict               : localVariableDict,
             customCounterNameSet            : new Set(war.getInstanceWarRule().getWarEventFullData()?.getCustomCounterNameArray().map(v => v.getName() ?? ``)),
         });
-        if (resultType === ExpressionParsersEnums.ResultType.Unit) {
-            const resultArray: ExpressionParsersResultsNullableUnit.NullableUnit[] = [];
+        if (resultType === ResultType.Unit) {
+            const resultArray: NullableUnit[] = [];
             for (const unit of units) {
                 const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
-                if (!(result instanceof ExpressionParsersResultsNullableUnit.NullableUnit)) {
-                    throw HelpersMisc.newError(`Invalid lambda result for unit.`, UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_CallSelectNumber_00);
+                if (!(result instanceof NullableUnit)) {
+                    throw newError(`Invalid lambda result for unit.`, ClientErrorCode.EpContextUnitArray_CallSelectNumber_00);
                 }
 
                 resultArray.push(result);
             }
 
-            return new ExpressionParsersResultsNullableUnitArray.NullableUnitArray(war, resultArray);
+            return new NullableUnitArray(war, resultArray);
 
-        } else if (resultType === ExpressionParsersEnums.ResultType.Tile) {
-            const resultArray: TilesITile.ITile[] = [];
+        } else if (resultType === ResultType.Tile) {
+            const resultArray: ITile[] = [];
             for (const unit of units) {
                 const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
-                if (!(result instanceof ExpressionParsersResultsTile.Tile)) {
-                    throw HelpersMisc.newError(`Invalid lambda result for tile.`, UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_CallSelectNumber_01);
+                if (!(result instanceof Tile)) {
+                    throw newError(`Invalid lambda result for tile.`, ClientErrorCode.EpContextUnitArray_CallSelectNumber_01);
                 }
 
                 resultArray.push(result.tile);
             }
 
-            return new ExpressionParsersResultsTileArray.TileArray(war, resultArray);
+            return new TileArray(war, resultArray);
 
-        } else if (resultType === ExpressionParsersEnums.ResultType.TileBuff) {
-            const resultArray: ExpressionParsersResultsTileBuff.TileBuff[] = [];
+        } else if (resultType === ResultType.TileBuff) {
+            const resultArray: TileBuff[] = [];
             for (const unit of units) {
                 const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
-                if (!(result instanceof ExpressionParsersResultsTileBuff.TileBuff)) {
-                    throw HelpersMisc.newError(`Invalid lambda result for tile.`);
+                if (!(result instanceof TileBuff)) {
+                    throw newError(`Invalid lambda result for tile.`);
                 }
 
                 resultArray.push(result);
             }
 
-            return new ExpressionParsersResultsTileBuffArray.TileBuffArray(war, resultArray);
+            return new TileBuffArray(war, resultArray);
 
-        } else if (resultType === ExpressionParsersEnums.ResultType.Player) {
-            const resultArray: PlayersIPlayer.IPlayer[] = [];
+        } else if (resultType === ResultType.Player) {
+            const resultArray: IPlayer[] = [];
             for (const unit of units) {
                 const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
-                if (!(result instanceof ExpressionParsersResultsPlayer.Player)) {
-                    throw HelpersMisc.newError(`Invalid lambda result for player.`, UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_CallSelectNumber_02);
+                if (!(result instanceof Player)) {
+                    throw newError(`Invalid lambda result for player.`, ClientErrorCode.EpContextUnitArray_CallSelectNumber_02);
                 }
 
                 resultArray.push(result.player);
             }
 
-            return new ExpressionParsersResultsPlayerArray.PlayerArray(war, resultArray);
+            return new PlayerArray(war, resultArray);
 
-        } else if (resultType === ExpressionParsersEnums.ResultType.Number) {
+        } else if (resultType === ResultType.Number) {
             const resultArray: number[] = [];
             for (const unit of units) {
                 const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
-                if (!(result instanceof ExpressionParsersResultsNum.Num)) {
-                    throw HelpersMisc.newError(`Invalid lambda result for number.`, UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_CallSelectNumber_03);
+                if (!(result instanceof Num)) {
+                    throw newError(`Invalid lambda result for number.`, ClientErrorCode.EpContextUnitArray_CallSelectNumber_03);
                 }
 
                 resultArray.push(result.num);
             }
 
-            return new ExpressionParsersResultsNumArray.NumArray(war, resultArray);
+            return new NumArray(war, resultArray);
 
-        } else if (resultType === ExpressionParsersEnums.ResultType.Position) {
-            const resultArray: ExpressionParsersResultsPosition.Position[] = [];
+        } else if (resultType === ResultType.Position) {
+            const resultArray: Position[] = [];
             for (const unit of units) {
                 const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
-                if (!(result instanceof ExpressionParsersResultsPosition.Position)) {
-                    throw HelpersMisc.newError(`Invalid lambda result for position.`, UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_CallSelectNumber_04);
+                if (!(result instanceof Position)) {
+                    throw newError(`Invalid lambda result for position.`, ClientErrorCode.EpContextUnitArray_CallSelectNumber_04);
                 }
 
                 resultArray.push(result);
             }
 
-            return new ExpressionParsersResultsPositionArray.PositionArray(war, resultArray);
+            return new PositionArray(war, resultArray);
 
-        } else if (resultType === ExpressionParsersEnums.ResultType.UnitStatistic) {
-            const resultArray: ExpressionParsersResultsUnitStatistic.UnitStatistic[] = [];
+        } else if (resultType === ResultType.UnitStatistic) {
+            const resultArray: UnitStatistic[] = [];
             for (const unit of units) {
                 const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
-                if (!(result instanceof ExpressionParsersResultsUnitStatistic.UnitStatistic)) {
-                    throw HelpersMisc.newError(`Invalid lambda result for position.`, UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_CallSelectNumber_05);
+                if (!(result instanceof UnitStatistic)) {
+                    throw newError(`Invalid lambda result for position.`, ClientErrorCode.EpContextUnitArray_CallSelectNumber_05);
                 }
 
                 resultArray.push(result);
             }
 
-            return new ExpressionParsersResultsUnitStatisticArray.UnitStatisticArray(war, resultArray);
+            return new UnitStatisticArray(war, resultArray);
 
         } else {
-            throw HelpersMisc.newError(`Unexpected resultType: ${resultType}`, UtilsClientErrorCode.ClientErrorCode.EpContextUnitArray_CallSelectNumber_06);
+            throw newError(`Unexpected resultType: ${resultType}`, ClientErrorCode.EpContextUnitArray_CallSelectNumber_06);
         }
     }
 
-    public callAll(arg: ExpressionParsersResultsBase.Base, rootCtx: ExpressionParsersContextsBase.Base, localVariableDict: Map<string, ExpressionParsersResultsBase.Base> | null, isRestricted: boolean): ExpressionParsersResultsNum.Num {
-        if (!(arg instanceof ExpressionParsersResultsLambda.Lambda)) {
-            throw HelpersMisc.newError(`Unexpected arg.`);
+    public callAll(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): Num {
+        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+            throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof ExpressionParsersNodesLambda.Lambda)) {
-            throw HelpersMisc.newError(`Unexpected node.`);
+        if (!(node instanceof Lambda)) {
+            throw newError(`Unexpected node.`);
         }
 
         const war = this.getWar();
         for (const unit of this._unitArray) {
             const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
-            if (!(result instanceof ExpressionParsersResultsNum.Num)) {
-                throw HelpersMisc.newError(`Invalid lambda result.`);
+            if (!(result instanceof Num)) {
+                throw newError(`Invalid lambda result.`);
             }
 
             if (result.num === 0) {
-                return new ExpressionParsersResultsNum.Num(war, 0);
+                return new Num(war, 0);
             }
         }
 
-        return new ExpressionParsersResultsNum.Num(war, 1);
+        return new Num(war, 1);
     }
 
-    public callAny(arg: ExpressionParsersResultsBase.Base, rootCtx: ExpressionParsersContextsBase.Base, localVariableDict: Map<string, ExpressionParsersResultsBase.Base> | null, isRestricted: boolean): ExpressionParsersResultsNum.Num {
-        if (!(arg instanceof ExpressionParsersResultsLambda.Lambda)) {
-            throw HelpersMisc.newError(`Unexpected arg.`);
+    public callAny(arg: ExpressionParsersResultsBase, rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): Num {
+        if (!(arg instanceof ExpressionParsersResultsLambda)) {
+            throw newError(`Unexpected arg.`);
         }
 
         const node = arg.node;
-        if (!(node instanceof ExpressionParsersNodesLambda.Lambda)) {
-            throw HelpersMisc.newError(`Unexpected node.`);
+        if (!(node instanceof Lambda)) {
+            throw newError(`Unexpected node.`);
         }
 
         const war = this.getWar();
         for (const unit of this._unitArray) {
             const result = node.evalLambda(rootCtx, [unit], null, localVariableDict, isRestricted);
-            if (!(result instanceof ExpressionParsersResultsNum.Num)) {
-                throw HelpersMisc.newError(`Invalid lambda result.`);
+            if (!(result instanceof Num)) {
+                throw newError(`Invalid lambda result.`);
             }
 
             if (result.num !== 0) {
-                return new ExpressionParsersResultsNum.Num(war, 1);
+                return new Num(war, 1);
             }
         }
 
-        return new ExpressionParsersResultsNum.Num(war, 0);
+        return new Num(war, 0);
     }
 }

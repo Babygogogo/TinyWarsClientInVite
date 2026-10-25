@@ -1,24 +1,24 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarModelBwWar from "../baseWar/model/BwWar.ts";
-import * as ExpressionParsersContextsTaskObjective from "../expressionParsers/contexts/TaskObjective.ts";
-import * as ExpressionParsersParser from "../expressionParsers/Parser.ts";
-import * as ExpressionParsersResultsNum from "../expressionParsers/results/Num.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as NumbersUtils from "../numbers/Utils.ts";
-import type * as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
-import * as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager from "../proto/schema/CommonProto/WarSerialization/SerialTaskObjectiveManager.ts";
-import type * as TaskObjectivesITaskObjectiveManager from "./ITaskObjectiveManager.ts";
-import * as TaskObjectivesUtils from "./Utils.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { BwWar } from "../baseWar/model/BwWar.ts";
+import { TaskObjective } from "../expressionParsers/contexts/TaskObjective.ts";
+import { Parser } from "../expressionParsers/Parser.ts";
+import { Num } from "../expressionParsers/results/Num.ts";
+import { newError, getExisted } from "../helpers/Misc.ts";
+import { getValueInInt32 } from "../numbers/Utils.ts";
+import type { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
+import { TaskObjectiveState } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
+import { SerialTaskObjectiveManager } from "../proto/schema/CommonProto/WarSerialization/SerialTaskObjectiveManager.ts";
+import type { ITaskObjectiveManager } from "./ITaskObjectiveManager.ts";
+import { getErrorCodeForState } from "./Utils.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type IBwWar                         = BaseWarModelBwWar.BwWar;
+type IBwWar                         = BwWar;
 
-export class TaskObjectiveManager implements TaskObjectivesITaskObjectiveManager.ITaskObjectiveManager {
-    private _stateArray             : ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState[] = [];
+export class TaskObjectiveManager implements ITaskObjectiveManager {
+    private _stateArray             : TaskObjectiveState[] = [];
     private _war?                   : IBwWar;
 
-    public init(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager.SerialTaskObjectiveManager>, taskObjectiveFullData: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData>): void {
+    public init(data: Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: Undefinable<TaskObjectiveFullData>): void {
         if (data == null) {
             return;
         }
@@ -28,31 +28,31 @@ export class TaskObjectiveManager implements TaskObjectivesITaskObjectiveManager
         for (const state of stateArray) {
             const objectiveId = state.getObjectiveId() ?? 0;
             if (taskObjectiveIdSet.has(objectiveId)) {
-                throw HelpersMisc.newError(`Duplicated objectiveId: ${objectiveId}`);
+                throw newError(`Duplicated objectiveId: ${objectiveId}`);
             }
             taskObjectiveIdSet.add(objectiveId);
 
-            const errorCode = TaskObjectivesUtils.getErrorCodeForState(state, taskObjectiveFullData);
+            const errorCode = getErrorCodeForState(state, taskObjectiveFullData);
             if (errorCode) {
-                throw HelpersMisc.newError(`Invalid state.`, errorCode);
+                throw newError(`Invalid state.`, errorCode);
             }
         }
 
         this._setStateArray(stateArray);
     }
-    public fastInit(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager.SerialTaskObjectiveManager>): void {
+    public fastInit(data: Undefinable<SerialTaskObjectiveManager>): void {
         this._setStateArray(data?.getStateArray() ?? []);
     }
 
-    public serialize(): ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager.SerialTaskObjectiveManager {
-        return ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager.SerialTaskObjectiveManager.fromJson({
+    public serialize(): SerialTaskObjectiveManager {
+        return SerialTaskObjectiveManager.fromJson({
             stateArray  : this.getStateArray().map(v => v.toJson()),
         });
     }
-    public serializeForCreateMfr(): ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager.SerialTaskObjectiveManager {
+    public serializeForCreateMfr(): SerialTaskObjectiveManager {
         return this.serialize();
     }
-    public serializeForCreateSfw(): ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager.SerialTaskObjectiveManager {
+    public serializeForCreateSfw(): SerialTaskObjectiveManager {
         return this.serialize();
     }
 
@@ -64,18 +64,18 @@ export class TaskObjectiveManager implements TaskObjectivesITaskObjectiveManager
         this._war = war;
     }
     public getWar(): IBwWar {
-        return HelpersMisc.getExisted(this._war, UtilsClientErrorCode.ClientErrorCode.BwWeatherManager_GetWar_00);
+        return getExisted(this._war, ClientErrorCode.BwWeatherManager_GetWar_00);
     }
 
-    private _setStateArray(stateArray: ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState[]): void {
+    private _setStateArray(stateArray: TaskObjectiveState[]): void {
         const arr = this.getStateArray();
         arr.length = 0;
         arr.push(...stateArray);
     }
-    public getStateArray(): ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState[] {
+    public getStateArray(): TaskObjectiveState[] {
         return this._stateArray;
     }
-    public updateState(state: ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState): boolean {
+    public updateState(state: TaskObjectiveState): boolean {
         const objectiveId   = state.getObjectiveId() ?? 0;
         const array         = this.getStateArray();
         const existingData  = array.find(v => (v.getObjectiveId() ?? 0) === objectiveId);
@@ -117,7 +117,7 @@ export class TaskObjectiveManager implements TaskObjectivesITaskObjectiveManager
             return;
         }
 
-        const newStateList    : ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState[] = [];
+        const newStateList    : TaskObjectiveState[] = [];
         const stateArray      = this.getStateArray();
         for (const taskObjective of allTaskObjectiveArray) {
             const updater = taskObjective.getUpdaterForCurrentProgress();
@@ -134,7 +134,7 @@ export class TaskObjectiveManager implements TaskObjectivesITaskObjectiveManager
             const currentProgress = state?.getCurrentProgress() ?? 0;
             const newProgress     = evalProgress(war, updater, objectiveId, currentProgress);
             if (newProgress != currentProgress) {
-                const newState = state?.clone() ?? new ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState();
+                const newState = state?.clone() ?? new TaskObjectiveState();
                 newState.setObjectiveId(objectiveId);
                 newState.setCurrentProgress(newProgress || null);
                 newStateList.push(newState);
@@ -175,9 +175,9 @@ export class TaskObjectiveManager implements TaskObjectivesITaskObjectiveManager
 
 function evalProgress(war: IBwWar, updater: string, objectiveId: number, defaultValue: number): number {
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(updater).eval(new ExpressionParsersContextsTaskObjective.TaskObjective(war, objectiveId), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInInt32(epResult.num);
+        const epResult = Parser.getParseResult(updater).eval(new TaskObjective(war, objectiveId), false);
+        if (epResult instanceof Num) {
+            return getValueInInt32(epResult.num);
         } else {
             return defaultValue;
         }

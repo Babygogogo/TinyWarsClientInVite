@@ -1,10 +1,10 @@
-import type * as LangConstants from "../../lang/Constants.ts";
-import type * as SoundsConstants from "../../sounds/Constants.ts";
-import type * as UiInterfacesIUiContainer from "./IUiContainer.ts";
+import type { TextType, LanguageType } from "../../lang/Constants.ts";
+import type { ShortSfxCode as SoundsConstantsShortSfxCode } from "../../sounds/Constants.ts";
+import type { IUiContainer } from "./IUiContainer.ts";
 
-type ShortSfxCode = SoundsConstants.ShortSfxCode;
+type ShortSfxCode = SoundsConstantsShortSfxCode;
 
-export interface IUiButton extends UiInterfacesIUiContainer.IUiContainer {
+export interface IUiButton extends IUiContainer {
     getIconSource(): string | undefined;
     setIconSource(source: string): void;
 
@@ -18,10 +18,10 @@ export interface IUiButton extends UiInterfacesIUiContainer.IUiContainer {
     setTextColor(color: number): void;
 
     setText(text: string): void;
-    setLangText(langTextType: LangConstants.TextType, languageType?: LangConstants.LanguageType): void;
+    setLangText(langTextType: TextType, languageType?: LanguageType): void;
 
     setExtraText(text: string): void;
-    setExtraLangText(langTextType: LangConstants.TextType, languageType?: LangConstants.LanguageType): void;
+    setExtraLangText(langTextType: TextType, languageType?: LanguageType): void;
 
     setShortSfxCode(code: ShortSfxCode): void;
     getShortSfxCode(): ShortSfxCode;

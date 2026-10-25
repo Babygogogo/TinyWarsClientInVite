@@ -1,17 +1,17 @@
-import type * as AuxiliaryTypesGridIndex from "./GridIndex.ts";
-import * as ProtoSchemaCommonProtoStructureWeightedGridIndex from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
+import type { GridIndex } from "./GridIndex.ts";
+import { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 
 export class GridIndexAndWeight {
-    public  gridIndex: AuxiliaryTypesGridIndex.GridIndex;
+    public  gridIndex: GridIndex;
     public  weight: number;
 
-    public constructor(gridIndex: AuxiliaryTypesGridIndex.GridIndex, weight: number) {
+    public constructor(gridIndex: GridIndex, weight: number) {
         this.gridIndex  = gridIndex;
         this.weight     = weight;
     }
 
-    public toProto(): ProtoSchemaCommonProtoStructureWeightedGridIndex.WeightedGridIndex {
-        return ProtoSchemaCommonProtoStructureWeightedGridIndex.WeightedGridIndex.fromJson({
+    public toProto(): WeightedGridIndex {
+        return WeightedGridIndex.fromJson({
             gridIndex   : this.gridIndex.toProto().toJson(),
             weight      : this.weight,
         });

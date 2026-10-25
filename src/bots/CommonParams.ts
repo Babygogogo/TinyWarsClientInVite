@@ -1,22 +1,22 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesMapSize from "../auxiliaryTypes/MapSize.ts";
-import type * as AuxiliaryTypesUnitVisionInfo from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as BotsTypes from "./Types.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as PlayersConstants from "../players/Constants.ts";
-import type * as TilesITile from "../tiles/ITile.ts";
-import * as TimerTimerModel from "../timer/TimerModel.ts";
-import * as UnitsConstants from "../units/Constants.ts";
-import type * as UnitsIUnit from "../units/IUnit.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
-import * as VisibilitiesUtils from "../visibilities/Utils.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
+import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { ScoreAndAction } from "./Types.ts";
+import { getExisted } from "../helpers/Misc.ts";
+import { PlayerIndex } from "../players/Constants.ts";
+import type { ITile } from "../tiles/ITile.ts";
+import { checkAndCallLater } from "../timer/TimerModel.ts";
+import { ActionStateId } from "../units/Constants.ts";
+import type { IUnit } from "../units/IUnit.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+import { getAllUnitsOnMapVisibleToTeams } from "../visibilities/Utils.ts";
 
-type IBwUnit            = UnitsIUnit.IUnit;
-type IBwTile            = TilesITile.ITile;
-type IBwWar             = BaseWarInterfaceIBwWar.IBwWar;
-type GrScoreAndAction   = BotsTypes.ScoreAndAction;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type IBwUnit            = IUnit;
+type IBwTile            = ITile;
+type IBwWar             = BaseWarInterfaceIBwWar;
+type GrScoreAndAction   = ScoreAndAction;
+type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 interface UnitsInfo {
     value           : number;
@@ -26,7 +26,7 @@ interface UnitsInfo {
 export class CommonParams {
     private readonly _war                       : IBwWar;
     private readonly _playerIndexInTurn         : number;
-    private readonly _mapSize                   : AuxiliaryTypesMapSize.MapSize;
+    private readonly _mapSize                   : MapSize;
     private readonly _unitsInfoDict             : Map<number, UnitsInfo>;
     private readonly _unitValueRatio            : number;
     private readonly _visibleUnits              : Set<IBwUnit>;
@@ -37,7 +37,7 @@ export class CommonParams {
     private readonly _bestScoreAndActionDict    = new Map<IBwUnit, GrScoreAndAction>();
     private readonly _unitMoveCostDict          = new Map<IBwUnit, Map<IBwTile, Undefinable<number>>>();
     private readonly _canAttackAfterMovingDict  = new Map<IBwUnit, boolean>();
-    private readonly _unitVisionInfoDict        = new Map<IBwUnit, AuxiliaryTypesUnitVisionInfo.UnitVisionInfo>();
+    private readonly _unitVisionInfoDict        = new Map<IBwUnit, UnitVisionInfo>();
 
     public static async create(war: IBwWar): Promise<CommonParams> {
         const playerIndexInTurn     = war.getPlayerIndexInTurn();
@@ -46,21 +46,21 @@ export class CommonParams {
             war                     : war,
             unitsInfoDict           : unitsInfoDict,
             unitValueRatio          : await CommonParams.generateUnitValueRatio(war, unitsInfoDict, playerIndexInTurn),
-            visibleUnits            : VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(war, new Set([war.getPlayer(playerIndexInTurn).getTeamIndex()])),
+            visibleUnits            : getAllUnitsOnMapVisibleToTeams(war, new Set([war.getPlayer(playerIndexInTurn).getTeamIndex()])),
             globalOffenseBonuses    : await CommonParams.generateGlobalOffenseBonuses(war),
             globalDefenseBonuses    : await CommonParams.generateGlobalDefenseBonuses(war),
             settingsLuckValueDict   : await CommonParams.generateSettingsLuckValueDict(war),
         });
     }
     private static async generateUnitsInfoDict(war: IBwWar): Promise<Map<number, UnitsInfo>> {
-        await TimerTimerModel.checkAndCallLater();
+        await checkAndCallLater();
 
         const unitsInfoDict = new Map<number, UnitsInfo>();
         for (const unit of war.getUnitMap().getAllUnits()) {
             const playerIndex   = unit.getPlayerIndex();
             const value         = unit.getProductionCfgCost() * unit.getNormalizedCurrentHp() / unit.getNormalizedMaxHp();
             const isOnMap       = unit.getLoaderUnitId() == null;
-            const isIdle        = unit.getActionState() === UnitsConstants.ActionStateId.Idle;
+            const isIdle        = unit.getActionState() === ActionStateId.Idle;
 
             if (!unitsInfoDict.has(playerIndex)) {
                 unitsInfoDict.set(playerIndex, {
@@ -69,7 +69,7 @@ export class CommonParams {
                     idleCountOnMap  : isOnMap && isIdle ? 1 : 0,
                 });
             } else {
-                const info          = HelpersMisc.getExisted(unitsInfoDict.get(playerIndex), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetUnitsInfoDict_00);
+                const info          = getExisted(unitsInfoDict.get(playerIndex), ClientErrorCode.SpwRobot_GetUnitsInfoDict_00);
                 info.value          += value;
                 info.allCountOnMap  += isOnMap ? 1 : 0;
                 info.idleCountOnMap += isOnMap && isIdle ? 1 : 0;
@@ -88,7 +88,7 @@ export class CommonParams {
         return unitsInfoDict;
     }
     private static async generateUnitValueRatio(war: IBwWar, unitsInfoDict: Map<number, UnitsInfo>, playerIndexInTurn: number): Promise<number> {
-        await TimerTimerModel.checkAndCallLater();
+        await checkAndCallLater();
 
         const playerManager = war.getPlayerManager();
         const playerInTurn  = playerManager.getPlayer(playerIndexInTurn);
@@ -107,13 +107,13 @@ export class CommonParams {
         return enemyValue > 0 ? selfValue / enemyValue : 1;
     }
     private static async generateGlobalOffenseBonuses(war: IBwWar): Promise<Map<number, number>> {
-        await TimerTimerModel.checkAndCallLater();
+        await checkAndCallLater();
 
         const globalOffenseBonuses  = new Map<number, number>();
         const commonSettingManager  = war.getCommonSettingManager();
         for (const player of war.getPlayerManager().getAllPlayers()) {
             const playerIndex = player.getPlayerIndex();
-            if (playerIndex === PlayersConstants.PlayerIndex.Neutral) {
+            if (playerIndex === PlayerIndex.Neutral) {
                 continue;
             }
 
@@ -125,22 +125,22 @@ export class CommonParams {
 
         for (const tile of war.getTileMap().getAllTiles()) {
             const playerIndex = tile.getPlayerIndex();
-            if (playerIndex === PlayersConstants.PlayerIndex.Neutral) {
+            if (playerIndex === PlayerIndex.Neutral) {
                 continue;
             }
 
-            const currentBonus = HelpersMisc.getExisted(globalOffenseBonuses.get(playerIndex), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetGlobalOffenseBonuses_00);
+            const currentBonus = getExisted(globalOffenseBonuses.get(playerIndex), ClientErrorCode.SpwRobot_GetGlobalOffenseBonuses_00);
             globalOffenseBonuses.set(playerIndex, currentBonus + tile.getGlobalAttackBonus());
         }
 
         return globalOffenseBonuses;
     }
     private static async generateGlobalDefenseBonuses(war: IBwWar): Promise<Map<number, number>> {
-        await TimerTimerModel.checkAndCallLater();
+        await checkAndCallLater();
 
         const globalDefenseBonuses  = new Map<number, number>();
         const commonSettingManager  = war.getCommonSettingManager();
-        for (let playerIndex = war.getPlayerManager().getTotalPlayersCount(false); playerIndex > PlayersConstants.PlayerIndex.Neutral; --playerIndex) {
+        for (let playerIndex = war.getPlayerManager().getTotalPlayersCount(false); playerIndex > PlayerIndex.Neutral; --playerIndex) {
             globalDefenseBonuses.set(
                 playerIndex,
                 commonSettingManager.getPlayerRule(playerIndex).getDefenseModifier()
@@ -149,22 +149,22 @@ export class CommonParams {
 
         for (const tile of war.getTileMap().getAllTiles()) {
             const playerIndex = tile.getPlayerIndex();
-            if (playerIndex === PlayersConstants.PlayerIndex.Neutral) {
+            if (playerIndex === PlayerIndex.Neutral) {
                 continue;
             }
 
-            const currentBonus = HelpersMisc.getExisted(globalDefenseBonuses.get(playerIndex), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetGlobalDefenseBonuses_00);
+            const currentBonus = getExisted(globalDefenseBonuses.get(playerIndex), ClientErrorCode.SpwRobot_GetGlobalDefenseBonuses_00);
             globalDefenseBonuses.set(playerIndex, currentBonus + tile.getGlobalDefenseBonus());
         }
 
         return globalDefenseBonuses;
     }
     private static async generateSettingsLuckValueDict(war: IBwWar): Promise<Map<number, number>> {
-        await TimerTimerModel.checkAndCallLater();
+        await checkAndCallLater();
 
         const luckValues            = new Map<number, number>();
         const commonSettingManager  = war.getCommonSettingManager();
-        for (let playerIndex = war.getPlayerManager().getTotalPlayersCount(false); playerIndex > PlayersConstants.PlayerIndex.Neutral; --playerIndex) {
+        for (let playerIndex = war.getPlayerManager().getTotalPlayersCount(false); playerIndex > PlayerIndex.Neutral; --playerIndex) {
             const playerRule = commonSettingManager.getPlayerRule(playerIndex);
             luckValues.set(playerIndex, (playerRule.getLuckUpperLimit() + playerRule.getLuckLowerLimit()) / 2);
         }
@@ -198,7 +198,7 @@ export class CommonParams {
     public getPlayerIndexInTurn(): number {
         return this._playerIndexInTurn;
     }
-    public getMapSize(): AuxiliaryTypesMapSize.MapSize {
+    public getMapSize(): MapSize {
         return this._mapSize;
     }
     public getUnitsInfoDict(): Map<number, UnitsInfo> {
@@ -232,13 +232,13 @@ export class CommonParams {
         return dict.get(unit) ?? false;
     }
 
-    public getUnitVisionInfo(unit: IBwUnit): AuxiliaryTypesUnitVisionInfo.UnitVisionInfo {
+    public getUnitVisionInfo(unit: IBwUnit): UnitVisionInfo {
         const dict = this._unitVisionInfoDict;
         if (!dict.has(unit)) {
             dict.set(unit, unit.getVisionInfo());
         }
 
-        return HelpersMisc.getExisted(dict.get(unit));
+        return getExisted(dict.get(unit));
     }
 
     public getMoveCost(unit: IBwUnit, tile: IBwTile): number | null {
@@ -247,7 +247,7 @@ export class CommonParams {
             moveCostDict.set(unit, new Map());
         }
 
-        const subMap = HelpersMisc.getExisted(moveCostDict.get(unit), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetCachedMoveCost_00);
+        const subMap = getExisted(moveCostDict.get(unit), ClientErrorCode.SpwRobot_GetCachedMoveCost_00);
         if (!subMap.has(tile)) {
             subMap.set(tile, tile.getMoveCostByUnit(unit));
         }

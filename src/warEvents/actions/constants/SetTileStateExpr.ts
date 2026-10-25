@@ -1,72 +1,72 @@
-import * as ExpressionParsersEnums from "../../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../../expressionParsers/Types.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
+import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
-    ConTileFilter                       : ExpressionParsersTypes.EpExpressionInfo;
-    ActPlayerIndex                      : ExpressionParsersTypes.EpExpressionInfo;
-    ActCurrentHp                        : ExpressionParsersTypes.EpExpressionInfo;
-    ActCurrentBuildPoint                : ExpressionParsersTypes.EpExpressionInfo;
-    ActCurrentCapturePoint              : ExpressionParsersTypes.EpExpressionInfo;
-    ActIsHighlighted                    : ExpressionParsersTypes.EpExpressionInfo;
-    ActGroupedLocationIdArray           : ExpressionParsersTypes.EpExpressionInfo;
-    ActCustomNameId                     : ExpressionParsersTypes.EpExpressionInfo;
+    ConTileFilter                       : EpExpressionInfo;
+    ActPlayerIndex                      : EpExpressionInfo;
+    ActCurrentHp                        : EpExpressionInfo;
+    ActCurrentBuildPoint                : EpExpressionInfo;
+    ActCurrentCapturePoint              : EpExpressionInfo;
+    ActIsHighlighted                    : EpExpressionInfo;
+    ActGroupedLocationIdArray           : EpExpressionInfo;
+    ActCustomNameId                     : EpExpressionInfo;
 } = {
     ConTileFilter       : {
-        contextType     : ExpressionParsersEnums.ContextType.Tile,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Tile,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.TileFilter),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0662),
+        getTitleText    : () => getText(TextType.TileFilter),
+        getHelpText     : () => getText(TextType.A0662),
     },
     ActPlayerIndex : {
-        contextType     : ExpressionParsersEnums.ContextType.Tile,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Tile,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.PlayerIndex),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0663),
+        getTitleText    : () => getText(TextType.PlayerIndex),
+        getHelpText     : () => getText(TextType.A0663),
     },
     ActCurrentHp : {
-        contextType     : ExpressionParsersEnums.ContextType.Tile,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Tile,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.Hp),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0664),
+        getTitleText    : () => getText(TextType.Hp),
+        getHelpText     : () => getText(TextType.A0664),
     },
     ActCurrentBuildPoint : {
-        contextType     : ExpressionParsersEnums.ContextType.Tile,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Tile,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.BuildPoint),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0665),
+        getTitleText    : () => getText(TextType.BuildPoint),
+        getHelpText     : () => getText(TextType.A0665),
     },
     ActCurrentCapturePoint : {
-        contextType     : ExpressionParsersEnums.ContextType.Tile,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Tile,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.CapturePoint),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0666),
+        getTitleText    : () => getText(TextType.CapturePoint),
+        getHelpText     : () => getText(TextType.A0666),
     },
     ActIsHighlighted : {
-        contextType     : ExpressionParsersEnums.ContextType.Tile,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Tile,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B0847),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0667),
+        getTitleText    : () => getText(TextType.B0847),
+        getHelpText     : () => getText(TextType.A0667),
     },
     ActGroupedLocationIdArray : {
-        contextType     : ExpressionParsersEnums.ContextType.Tile,
-        resultTypes     : [ExpressionParsersEnums.ResultType.NumberArray],
+        contextType     : ContextType.Tile,
+        resultTypes     : [ResultType.NumberArray],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.Location),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0668),
+        getTitleText    : () => getText(TextType.Location),
+        getHelpText     : () => getText(TextType.A0668),
     },
     ActCustomNameId : {
-        contextType     : ExpressionParsersEnums.ContextType.Tile,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Tile,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.CustomNameId),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0961),
+        getTitleText    : () => getText(TextType.CustomNameId),
+        getHelpText     : () => getText(TextType.A0961),
     },
 };

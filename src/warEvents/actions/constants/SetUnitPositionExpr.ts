@@ -1,32 +1,32 @@
-import * as ExpressionParsersEnums from "../../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../../expressionParsers/Types.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
+import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
-    ConUnitFilter                       : ExpressionParsersTypes.EpExpressionInfo;
-    ActDestination                      : ExpressionParsersTypes.EpExpressionInfo;
-    ActAlternativeTileFilter            : ExpressionParsersTypes.EpExpressionInfo;
+    ConUnitFilter                       : EpExpressionInfo;
+    ActDestination                      : EpExpressionInfo;
+    ActAlternativeTileFilter            : EpExpressionInfo;
 } = {
     ConUnitFilter       : {
-        contextType     : ExpressionParsersEnums.ContextType.Unit,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Unit,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.UnitFilter),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0645),
+        getTitleText    : () => getText(TextType.UnitFilter),
+        getHelpText     : () => getText(TextType.A0645),
     },
     ActDestination : {
-        contextType     : ExpressionParsersEnums.ContextType.Unit,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Tile, ExpressionParsersEnums.ResultType.Position],
+        contextType     : ContextType.Unit,
+        resultTypes     : [ResultType.Tile, ResultType.Position],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1196),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0646),
+        getTitleText    : () => getText(TextType.B1196),
+        getHelpText     : () => getText(TextType.A0646),
     },
     ActAlternativeTileFilter : {
-        contextType     : ExpressionParsersEnums.ContextType.Tile,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Tile,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1197),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0647),
+        getTitleText    : () => getText(TextType.B1197),
+        getHelpText     : () => getText(TextType.A0647),
     },
 };

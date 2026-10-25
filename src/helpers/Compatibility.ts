@@ -1,9 +1,9 @@
-import * as FloatText2 from "../FloatText.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import type * as VendorEgretEgret from "../vendor/egret/Egret.ts";
+import { show } from "../FloatText.ts";
+import { TextType } from "../lang/Constants.ts";
+import { getText } from "../lang/Utils.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { Point } from "../vendor/egret/Egret.ts";
 
 export const isMobileOrTablet   = checkIsMobileOrTablet();
 export const isPc               = !isMobileOrTablet;
@@ -13,7 +13,7 @@ export type WebTouchHandler = {
     onMouseMove     : (e: Event) => void;
     onTouchMove     : (e: Event) => void;
     onTouchEnd      : (e: Event) => void;
-    getLocation     : (e: MouseEvent) => VendorEgretEgret.Point;
+    getLocation     : (e: MouseEvent) => Point;
 };
 export type WebPlayer = {
     canvas          : HTMLCanvasElement;
@@ -152,7 +152,7 @@ function preventBrowserBack(): void {
 
     if (window.addEventListener) {
         window.addEventListener("popstate", () => {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0194));
+            show(getText(TextType.A0194));
         }, false);
     }
 }
@@ -167,9 +167,9 @@ function setIsGameHidden(isHidden: boolean): void {
 
 function onGameHide(): void {
     setIsGameHidden(true);
-    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GameHidden);
+    dispatch(TypeId.GameHidden);
 }
 function onGameShow(): void {
     setIsGameHidden(false);
-    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.GameShown);
+    dispatch(TypeId.GameShown);
 }

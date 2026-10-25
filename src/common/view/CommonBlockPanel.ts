@@ -1,21 +1,21 @@
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as StagesConstants from "../../stages/Constants.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { Dimension } from "../../stages/Constants.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 
 export interface OpenData {
     title  : string;
     content: string;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _scrContent!   : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiContainer.IUiContainer>;
-    private readonly _labelContent! : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!      : IUiImage;
+    private readonly _group!        : IUiContainer;
+    private readonly _labelTitle!   : IUiLabel;
+    private readonly _scrContent!   : IUiScroller<IUiContainer>;
+    private readonly _labelContent! : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._imgMask.setIsTouchEnabled(true);
@@ -31,10 +31,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         labelContent.setText(openData.content);
         this._labelTitle.setText(openData.title);
 
-        const groupHeight = NumbersUtils.getValueInRange({
+        const groupHeight = getValueInRange({
             rawValue    : labelContent.getUnscaledHeight() + 80,
             minValue    : 140,
-            maxValue    : StagesConstants.Dimension.DesignMinHeight,
+            maxValue    : Dimension.DesignMinHeight,
         });
         this._group.setUnscaledManualHeight(groupHeight);
 

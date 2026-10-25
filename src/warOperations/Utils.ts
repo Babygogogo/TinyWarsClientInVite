@@ -1,19 +1,19 @@
-import * as BotsBot from "../bots/Bot.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as PlayersConstants from "../players/Constants.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as SinglePlayerWarInterfaceISpwWar from "../singlePlayerWar/interface/ISpwWar.ts";
-import * as TurnsConstants from "../turns/Constants.ts";
-import * as UsersUtils from "../users/Utils.ts";
-import * as WarOperationsConstants from "./Constants.ts";
-import type * as WarOperationsTypes from "./Types.ts";
+import { getNextOperation } from "../bots/Bot.ts";
+import { newError } from "../helpers/Misc.ts";
+import { AliveStateId } from "../players/Constants.ts";
+import { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { ISpwWar } from "../singlePlayerWar/interface/ISpwWar.ts";
+import { PhaseCode } from "../turns/Constants.ts";
+import { checkIsDummy } from "../users/Utils.ts";
+import { Common } from "./Constants.ts";
+import type { WarOperationAndUserId } from "./Types.ts";
 
 export function checkIsValidWarOperationsLimit(warOperationsLimit: number): boolean {
-    return (warOperationsLimit >= WarOperationsConstants.Common.MinLimit)
-        && (warOperationsLimit <= WarOperationsConstants.Common.MaxLimit);
+    return (warOperationsLimit >= Common.MinLimit)
+        && (warOperationsLimit <= Common.MaxLimit);
 }
 
-export async function getNextSystemOrBotOperation(war: SinglePlayerWarInterfaceISpwWar.ISpwWar): Promise<WarOperationsTypes.WarOperationAndUserId | undefined> {
+export async function getNextSystemOrBotOperation(war: ISpwWar): Promise<WarOperationAndUserId | undefined> {
     if ((war == null) || (war.getIsEnded())) {
         return undefined;
     }
@@ -22,7 +22,7 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWarInterfaceI
     const playerManager     = war.getPlayerManager();
     const turnPhaseCode     = war.getTurnPhaseCode();
     const drawVoteManager   = war.getDrawVoteManager();
-    const resultOperation   = ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    const resultOperation   = WoContainer.fromJson({
         operationId : war.getExecutedOperationManager().getExecutedOperationsCount(),
     });
 
@@ -35,7 +35,7 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWarInterfaceI
             };
         }
 
-        if (turnPhaseCode === TurnsConstants.PhaseCode.WaitBeginTurn) {
+        if (turnPhaseCode === PhaseCode.WaitBeginTurn) {
             resultOperation.createIfNotExistsWoSystemBeginTurn();
             return {
                 warOperation    : resultOperation,
@@ -87,21 +87,21 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWarInterfaceI
     }
 
     // Handle the WaitBeginTurn phase.
-    if (turnPhaseCode === TurnsConstants.PhaseCode.WaitBeginTurn) {
+    if (turnPhaseCode === PhaseCode.WaitBeginTurn) {
         resultOperation.createIfNotExistsWoSystemBeginTurn();
         return {
             warOperation    : resultOperation,
             userId          : undefined,
         };
-    } else if (turnPhaseCode != TurnsConstants.PhaseCode.Main) {
-        throw HelpersMisc.newError(`Invalid turn phase code: ${turnPhaseCode}.`);
+    } else if (turnPhaseCode != PhaseCode.Main) {
+        throw newError(`Invalid turn phase code: ${turnPhaseCode}.`);
     }
 
     // Handle the dying players (destroy force).
     const playerInTurn      = playerManager.getPlayerInTurn();
     const playerIndexInTurn = playerInTurn.getPlayerIndex();
     for (const playerIndex of playerManager.getPlayerIndexArray(playerIndexInTurn + 1, false)) {
-        if (playerManager.getPlayer(playerIndex).getAliveState() === PlayersConstants.AliveStateId.Dying) {
+        if (playerManager.getPlayer(playerIndex).getAliveState() === AliveStateId.Dying) {
             const resultData = resultOperation.createIfNotExistsWoSystemDestroyPlayerForce();
             resultData.setTargetPlayerIndex(playerIndex);
             return {
@@ -149,7 +149,7 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWarInterfaceI
             if (drawVoteManager.checkCanVote(playerIndex, true)) {
                 const userId = player.getUserId();
                 if ((player.checkIsNeutral())                               ||
-                    (player.getAliveState() === PlayersConstants.AliveStateId.Dead)    ||
+                    (player.getAliveState() === AliveStateId.Dead)    ||
                     (userId == null)
                 ) {
                     const resultData = resultOperation.createIfNotExistsWoSystemVoteForDraw();
@@ -160,7 +160,7 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWarInterfaceI
                         userId          : undefined,
                     };
 
-                } else if (UsersUtils.checkIsDummy(userId)) {
+                } else if (checkIsDummy(userId)) {
                     const resultData = resultOperation.createIfNotExistsWoPlayerVoteForDraw();
                     resultData.setPlayerIndex(playerIndex);
                     resultData.setIsAgree(true);
@@ -175,13 +175,13 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWarInterfaceI
 
     // Handle system end turn.
     if ((playerInTurn.checkIsNeutral())                             ||
-        (playerInTurn.getAliveState() === PlayersConstants.AliveStateId.Dead)  ||
+        (playerInTurn.getAliveState() === AliveStateId.Dead)  ||
         (playerInTurn.getIsSkipTurn())
     ) {
         if (drawVoteManager.checkNeedVoteBeforeEndTurn(playerIndexInTurn)) {
             const resultData = resultOperation.createIfNotExistsWoSystemVoteForDraw();
             resultData.setPlayerIndex(playerIndexInTurn);
-            resultData.setIsAgree((playerInTurn.getUserId() == null) || (playerInTurn.getAliveState() === PlayersConstants.AliveStateId.Dead));
+            resultData.setIsAgree((playerInTurn.getUserId() == null) || (playerInTurn.getAliveState() === AliveStateId.Dead));
             return {
                 warOperation    : resultOperation,
                 userId          : undefined,
@@ -201,12 +201,12 @@ export async function getNextSystemOrBotOperation(war: SinglePlayerWarInterfaceI
         const userId = playerInTurn.getUserId();
         if (userId == null) {
             return {
-                warOperation    : await BotsBot.getNextOperation(war),
+                warOperation    : await getNextOperation(war),
                 userId          : undefined,
             };
-        } else if (UsersUtils.checkIsDummy(userId)) {
+        } else if (checkIsDummy(userId)) {
             return {
-                warOperation    : await BotsBot.getNextOperation(war),
+                warOperation    : await getNextOperation(war),
                 userId          : userId,
             };
         }

@@ -1,69 +1,69 @@
-import * as CommonModelCommonModel from "../../common/model/CommonModel.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as GraphicsUtils from "../../graphics/Utils.ts";
-import * as HelpersCompatibility from "../../helpers/Compatibility.ts";
-import * as HelpersGzip from "../../helpers/Gzip.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocalDataDeprecatedStorage from "../../localData/DeprecatedStorage.ts";
-import * as LocalDataStorage2 from "../../localData/Storage.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoMapMapEditorData from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersProxy from "../Proxy.ts";
+import { getIsTransparentTouchLayerTouched, setIsTransparentTouchLayerTouched } from "../../common/model/CommonModel.ts";
+import { showLang } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { Tween } from "../../graphics/Constants.ts";
+import { checkIsWebGl } from "../../graphics/Utils.ts";
+import { isPc } from "../../helpers/Compatibility.ts";
+import { decompress, compress } from "../../helpers/Gzip.ts";
+import { MouseStyleType } from "../../helpers/PointerInput.ts";
+import { TextType, UndefinedError, LanguageType } from "../../lang/Constants.ts";
+import { getText, getGameVersionName, getCurrentLanguageType, getLanguageTypeName, setCurrentLanguageType } from "../../lang/Utils.ts";
+import { StoreNormalMapRawData, StoreCampaignMapRawData, StoreMeFullData } from "../../localData/DeprecatedStorage.ts";
+import { getShowExportMapCachePopup, setShowExportMapCachePopup, setScreenRotation, setLanguageType } from "../../localData/Storage.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
+import { init } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { reqUserLoginAsGuest } from "../Proxy.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBackground!        : UiInterfacesIUiImage.IUiImage;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _group!                : IUiContainer;
+    private readonly _imgBackground!        : IUiImage;
 
-    private readonly _groupTopLeft!         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnGuest!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnTutorial!          : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupTopLeft!         : IUiContainer;
+    private readonly _btnGuest!             : IUiButton;
+    private readonly _btnTutorial!          : IUiButton;
 
-    private readonly _groupTopRight!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnLandscape!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnExportMapCache!    : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupTopRight!        : IUiContainer;
+    private readonly _btnLandscape!         : IUiButton;
+    private readonly _btnExportMapCache!    : IUiButton;
 
-    private readonly _groupRightButton!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnVersion!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSound!             : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupRightButton!     : IUiContainer;
+    private readonly _btnVersion!           : IUiButton;
+    private readonly _btnSound!             : IUiButton;
 
-    private readonly _labelVersion!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listLanguage!         : UiInterfacesIUiScrollList.IUiScrollList<DataForLanguageRenderer>;
-    private readonly _groupUnits!           : UiInterfacesIUiContainer.IUiContainer;
+    private readonly _labelVersion!         : IUiLabel;
+    private readonly _listLanguage!         : IUiScrollList<DataForLanguageRenderer>;
+    private readonly _groupUnits!           : IUiContainer;
 
-    private readonly _groupCopyright!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelWebGl!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPrivacy!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupCopyright1!      : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelCopyright0!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelCopyright1!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupCopyright!       : IUiLayout;
+    private readonly _labelWebGl!           : IUiLabel;
+    private readonly _labelPrivacy!         : IUiLabel;
+    private readonly _groupCopyright1!      : IUiLayout;
+    private readonly _labelCopyright0!      : IUiLabel;
+    private readonly _labelCopyright1!      : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.UnitAnimationTick,              callback: this._onNotifyUnitAnimationTick },
-            { type: NotificationsTypeId.TypeId.MsgCommonLatestConfigVersion,   callback: this._onMsgCommonLatestConfigVersion },
+            { type: TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
+            { type: TypeId.UnitAnimationTick,              callback: this._onNotifyUnitAnimationTick },
+            { type: TypeId.MsgCommonLatestConfigVersion,   callback: this._onMsgCommonLatestConfigVersion },
         ]);
         this._setUiListenerArray([
-            { ui: this._group,              callback: this._onTouchedSelf,          mouseStyle: HelpersPointerInput.MouseStyleType.Default },
+            { ui: this._group,              callback: this._onTouchedSelf,          mouseStyle: MouseStyleType.Default },
             { ui: this._btnGuest,           callback: this._onTouchedBtnGuest },
             { ui: this._btnTutorial,        callback: this._onTouchedBtnTutorial },
             { ui: this._btnLandscape,       callback: this._onTouchedBtnLandscape },
@@ -77,26 +77,26 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         this._updateComponentsForLanguage();
         this._initListLanguage();
-        this._labelWebGl.setIsVisible(!GraphicsUtils.checkIsWebGl());
+        this._labelWebGl.setIsVisible(!checkIsWebGl());
 
         // if (Config.ConfigManager.getLatestConfigVersion()) {
         //     this._initGroupUnits();
         // }
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        if (LocalDataStorage2.getShowExportMapCachePopup()) {
+        if (getShowExportMapCachePopup()) {
             if (!await checkHasMapCache()) {
-                LocalDataStorage2.setShowExportMapCachePopup(false);
+                setShowExportMapCachePopup(false);
             } else {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                    getTitle            : () => LangUtils.getText(LangConstants.TextType.B1470),
-                    getContent          : () => LangUtils.getText(LangConstants.TextType.A0971),
+                openPanel(getDict().CommonConfirmPanel, {
+                    getTitle            : () => getText(TextType.B1470),
+                    getContent          : () => getText(TextType.A0971),
                     callback            : () => openPanelForExportMapCache(),
-                    callbackOnCancel    : () => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                        getTitle            : () => LangUtils.getText(LangConstants.TextType.B1470),
-                        getContent          : () => LangUtils.getText(LangConstants.TextType.A0972),
+                    callbackOnCancel    : () => openPanel(getDict().CommonConfirmPanel, {
+                        getTitle            : () => getText(TextType.B1470),
+                        getContent          : () => getText(TextType.A0972),
                         callback            : () => openPanelForExportMapCache(),
-                        callbackOnCancel    : () => LocalDataStorage2.setShowExportMapCachePopup(false),
+                        callbackOnCancel    : () => setShowExportMapCachePopup(false),
                     }),
                 });
             }
@@ -122,48 +122,48 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         // this._initGroupUnits();
     }
     private _onTouchedSelf(): void {
-        SoundsSoundPlayer.init();
+        init();
     }
     private _onTouchedBtnGuest(): void {
-        UsersProxy.reqUserLoginAsGuest(null, false);
+        reqUserLoginAsGuest(null, false);
     }
     private _onTouchedBtnTutorial(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonTutorialPanel, void 0);
+        openPanel(getDict().CommonTutorialPanel, void 0);
     }
     private _onTouchedBtnLandscape(): void {
         const inject = window.TW_APK_INJECT;
         if (inject == null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-                getContent : () => LangUtils.getText(HelpersCompatibility.isPc ? LangConstants.TextType.A0416 : LangConstants.TextType.A0417),
+            openPanel(getDict().CommonHelpPanel, {
+                getContent : () => getText(isPc ? TextType.A0416 : TextType.A0417),
             });
         } else {
             let currentRotation: number | null = null;
             try {
                 currentRotation = inject.getScreenOrientation();
             } catch {
-                FloatText2.showLang(LangConstants.TextType.A0840);
+                showLang(TextType.A0840);
                 return;
             }
 
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
-                getTitleText            : () => LangUtils.getText(LangConstants.TextType.B0159),
+            openPanel(getDict().CommonChooseSingleNumberPanel, {
+                getTitleText            : () => getText(TextType.B0159),
                 currentNumber           : currentRotation,
                 availableNumberArray    : [0, 1, 2, 3],
                 getNumberMainText       : num => {
                     switch (num) {
-                        case 0  : return LangUtils.getText(LangConstants.TextType.B0377);
-                        case 1  : return LangUtils.getText(LangConstants.TextType.B0419);
-                        case 2  : return LangUtils.getText(LangConstants.TextType.B0591);
-                        case 3  : return LangUtils.getText(LangConstants.TextType.B0597);
-                        default : return LangConstants.UndefinedError;
+                        case 0  : return getText(TextType.B0377);
+                        case 1  : return getText(TextType.B0419);
+                        case 2  : return getText(TextType.B0591);
+                        case 3  : return getText(TextType.B0597);
+                        default : return UndefinedError;
                     }
                 },
                 callbackOnConfirm       : num => {
                     try {
-                        LocalDataStorage2.setScreenRotation(num);
+                        setScreenRotation(num);
                         inject.setScreenOrientation(num);
                     } catch {
-                        FloatText2.showLang(LangConstants.TextType.A0841);
+                        showLang(TextType.A0841);
                     }
                 },
             });
@@ -173,122 +173,122 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         openPanelForExportMapCache();
     }
     private _onTouchedBtnVersion(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChangeVersionPanel, void 0);
+        openPanel(getDict().CommonChangeVersionPanel, void 0);
     }
     private _onTouchedBtnSound(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().SoundsSettingsPanel, void 0);
+        openPanel(getDict().SoundsSettingsPanel, void 0);
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnGuest.setLangText(LangConstants.TextType.B0982);
-        this._btnLandscape.setLangText(LangConstants.TextType.B0159);
-        this._btnExportMapCache.setLangText(LangConstants.TextType.B1470);
-        this._btnVersion.setLangText(LangConstants.TextType.B0620);
-        this._btnSound.setLangText(LangConstants.TextType.B0540);
-        this._btnTutorial.setLangText(LangConstants.TextType.B0978);
-        this._labelWebGl.setLangText(LangConstants.TextType.A0736);
-        this._labelPrivacy.setLangText(LangConstants.TextType.A0733);
-        this._labelCopyright0.setLangText(LangConstants.TextType.A0734);
-        this._labelCopyright1.setLangText(LangConstants.TextType.A0735);
-        this._labelVersion.setText(`${LangUtils.getGameVersionName(window.GAME_VERSION)}\nv.${window.CLIENT_VERSION}`);
+        this._btnGuest.setLangText(TextType.B0982);
+        this._btnLandscape.setLangText(TextType.B0159);
+        this._btnExportMapCache.setLangText(TextType.B1470);
+        this._btnVersion.setLangText(TextType.B0620);
+        this._btnSound.setLangText(TextType.B0540);
+        this._btnTutorial.setLangText(TextType.B0978);
+        this._labelWebGl.setLangText(TextType.A0736);
+        this._labelPrivacy.setLangText(TextType.A0733);
+        this._labelCopyright0.setLangText(TextType.A0734);
+        this._labelCopyright1.setLangText(TextType.A0735);
+        this._labelVersion.setText(`${getGameVersionName(window.GAME_VERSION)}\nv.${window.CLIENT_VERSION}`);
         this._groupCopyright1.arrangeItems();
         this._groupCopyright.arrangeItems();
     }
     private async _initListLanguage(): Promise<void> {
         const listLanguage  = this._listLanguage;
-        const languageType  = LangUtils.getCurrentLanguageType();
+        const languageType  = getCurrentLanguageType();
         const dataArray     : DataForLanguageRenderer[] = [
-            { languageType: LangConstants.LanguageType.Chinese },
-            { languageType: LangConstants.LanguageType.English },
-            { languageType: LangConstants.LanguageType.Spanish },
+            { languageType: LanguageType.Chinese },
+            { languageType: LanguageType.English },
+            { languageType: LanguageType.Spanish },
         ];
         await listLanguage.bindData(dataArray);
         listLanguage.setSelectedItemIndexes([dataArray.findIndex(v => v.languageType === languageType)]);
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._imgBackground,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTopLeft,
             waitTime    : 1400,
             beginProps  : { customX: -40, customAlpha: 0 },
             endProps    : { customX: 0, customAlpha: 1 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._listLanguage,
             waitTime    : 1400,
             beginProps  : { customX: -40, customAlpha: 0 },
             endProps    : { customX: 0, customAlpha: 1 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTopRight,
             waitTime    : 1500,
             beginProps  : { customX: 40, customAlpha: 0 },
             endProps    : { customX: 0, customAlpha: 1 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupRightButton,
             waitTime    : 1500,
             beginProps  : { customX: 40, customAlpha: 0 },
             endProps    : { customX: 0, customAlpha: 1 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._labelVersion,
             waitTime    : 1600,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupCopyright,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
             waitTime    : 1700,
         });
 
-        await TimerTimerModel.wait(1700 + GraphicsConstants.Tween.DefaultDuration);
+        await wait(1700 + Tween.DefaultDuration);
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._imgBackground,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTopLeft,
             beginProps  : { customX: 0, customAlpha: 1 },
             endProps    : { customX: -40, customAlpha: 0 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._listLanguage,
             beginProps  : { customX: 0, customAlpha: 1 },
             endProps    : { customX: -40, customAlpha: 0 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._labelVersion,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTopRight,
             beginProps  : { customX: 0, customAlpha: 1 },
             endProps    : { customX: 40, customAlpha: 0 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupRightButton,
             beginProps  : { customX: 0, customAlpha: 1 },
             endProps    : { customX: 40, customAlpha: 0 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupCopyright,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 
     // private _initGroupUnits(): void {
@@ -312,19 +312,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // }
     private _clearGroupUnits(): void {
         this._groupUnits.removeUiChildren();
-        TweenExecutor.Executor.removeTweens(this._groupUnits);
+        Executor.removeTweens(this._groupUnits);
     }
 }
 
-interface DataForLanguageRenderer extends UiTypesUiListItemData.UiListItemData {
-    languageType: LangConstants.LanguageType;
+interface DataForLanguageRenderer extends UiListItemData {
+    languageType: LanguageType;
 }
-class LanguageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForLanguageRenderer> {
-    private readonly _labelLanguage!    : UiInterfacesIUiLabel.IUiLabel;
+class LanguageRenderer extends UiListItemRenderer<DataForLanguageRenderer> {
+    private readonly _labelLanguage!    : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
 
         this._applySettingsForWholeTouch();
@@ -335,7 +335,7 @@ class LanguageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        this._labelLanguage.setText(LangUtils.getLanguageTypeName(languageType) || `??`);
+        this._labelLanguage.setText(getLanguageTypeName(languageType) || `??`);
 
         this._updateCurrentState();
     }
@@ -350,10 +350,10 @@ class LanguageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        if (LangUtils.getCurrentLanguageType() !== languageType) {
-            LangUtils.setCurrentLanguageType(languageType);
-            LocalDataStorage2.setLanguageType(languageType);
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.LanguageChanged);
+        if (getCurrentLanguageType() !== languageType) {
+            setCurrentLanguageType(languageType);
+            setLanguageType(languageType);
+            dispatch(TypeId.LanguageChanged);
         }
     }
 
@@ -364,15 +364,15 @@ class LanguageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
 
 async function checkHasMapCache(): Promise<boolean> {
     return Math.max(...await Promise.all([
-        LocalDataDeprecatedStorage.StoreNormalMapRawData.getAllDataCount(),
-        LocalDataDeprecatedStorage.StoreCampaignMapRawData.getAllDataCount(),
-        LocalDataDeprecatedStorage.StoreMeFullData.getAllDataCount(),
+        StoreNormalMapRawData.getAllDataCount(),
+        StoreCampaignMapRawData.getAllDataCount(),
+        StoreMeFullData.getAllDataCount(),
     ])) > 0;
 }
 async function openPanelForExportMapCache(): Promise<void> {
     if (!await checkHasMapCache()) {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent: () => LangUtils.getText(LangConstants.TextType.A0976),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent: () => getText(TextType.A0976),
         });
         return;
     }
@@ -385,8 +385,8 @@ async function openPanelForExportMapCache(): Promise<void> {
             exportMapEditorCache(),
         ]));
     } catch {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent: () => LangUtils.getText(LangConstants.TextType.A0974),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent: () => getText(TextType.A0974),
         });
         return;
     }
@@ -395,8 +395,8 @@ async function openPanelForExportMapCache(): Promise<void> {
     const normalMap     = resultArray[1];
     const mapEditor     = resultArray[2];
     if (campaignMap.length + normalMap.length + mapEditor.length === 0) {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent: () => LangUtils.getText(LangConstants.TextType.A0974),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent: () => getText(TextType.A0974),
         });
         return;
     }
@@ -425,34 +425,34 @@ async function openPanelForExportMapCache(): Promise<void> {
                 window.focus();
                 await navigator.clipboard.writeText(resultString);
             } catch {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-                    getContent: () => LangUtils.getText(LangConstants.TextType.A0973),
+                openPanel(getDict().CommonHelpPanel, {
+                    getContent: () => getText(TextType.A0973),
                 });
                 return;
             }
 
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-                getContent: () => LangUtils.getText(LangConstants.TextType.A0975),
+            openPanel(getDict().CommonHelpPanel, {
+                getContent: () => getText(TextType.A0975),
             });
-            LocalDataStorage2.setShowExportMapCachePopup(false);
+            setShowExportMapCachePopup(false);
         };
 
-        if (CommonModelCommonModel.getIsTransparentTouchLayerTouched()) {
+        if (getIsTransparentTouchLayerTouched()) {
             await cb();
         } else {
             window.TRANSPARENT_TOUCH_LAYER.style.pointerEvents = "auto";
 
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent          : () => LangUtils.getText(LangConstants.TextType.A0979),
-                getTextForConfirm   : () => LangUtils.getText(LangConstants.TextType.B0026),
-                getTextForCancel    : () => LangUtils.getText(LangConstants.TextType.B0026),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent          : () => getText(TextType.A0979),
+                getTextForConfirm   : () => getText(TextType.B0026),
+                getTextForCancel    : () => getText(TextType.B0026),
                 showButtonClose     : false,
                 callback            : async () => {
-                    CommonModelCommonModel.setIsTransparentTouchLayerTouched(true);
+                    setIsTransparentTouchLayerTouched(true);
                     await cb();
                 },
                 callbackOnCancel    : async () => {
-                    CommonModelCommonModel.setIsTransparentTouchLayerTouched(true);
+                    setIsTransparentTouchLayerTouched(true);
                     await cb();
                 },
             });
@@ -463,7 +463,7 @@ async function openPanelForExportMapCache(): Promise<void> {
 }
 async function exportCampaignMapCache(): Promise<number[][]> {
     const result: number[][] = [];
-    for (const [, subDict] of await LocalDataDeprecatedStorage.StoreCampaignMapRawData.getAllEncodedDataDict()) {
+    for (const [, subDict] of await StoreCampaignMapRawData.getAllEncodedDataDict()) {
         for (const [, encodedData] of subDict) {
             if (encodedData.length) {
                 result.push(Array.from(encodedData));
@@ -474,7 +474,7 @@ async function exportCampaignMapCache(): Promise<number[][]> {
 }
 async function exportNormalMapCache(): Promise<number[][]> {
     const result: number[][] = [];
-    for (const [, encodedData] of await LocalDataDeprecatedStorage.StoreNormalMapRawData.getAllEncodedDataDict()) {
+    for (const [, encodedData] of await StoreNormalMapRawData.getAllEncodedDataDict()) {
         if (encodedData.length) {
             result.push(Array.from(encodedData));
         }
@@ -483,12 +483,12 @@ async function exportNormalMapCache(): Promise<number[][]> {
 }
 async function exportMapEditorCache(): Promise<number[][]> {
     const result: number[][] = [];
-    for (const [, subDict] of await LocalDataDeprecatedStorage.StoreMeFullData.getAllEncodedDataDict()) {
+    for (const [, subDict] of await StoreMeFullData.getAllEncodedDataDict()) {
         for (const [, encodedMapEditorData] of subDict) {
             if (encodedMapEditorData.length) {
-                const encodedMapRawData = (ProtoSchemaCommonProtoMapMapEditorData.MapEditorData.decode(HelpersGzip.decompress(encodedMapEditorData))).getEncodedMapRawData();
+                const encodedMapRawData = (MapEditorData.decode(decompress(encodedMapEditorData))).getEncodedMapRawData();
                 if (encodedMapRawData?.length) {
-                    result.push(Array.from(HelpersGzip.compress(encodedMapRawData)));
+                    result.push(Array.from(compress(encodedMapRawData)));
                 }
             }
         }

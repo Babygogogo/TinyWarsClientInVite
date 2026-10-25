@@ -1,10 +1,29 @@
 
-import * as egret from "./EgretCore";
-import * as Xml from "./Xml";
+import {
+    SpriteSheet,
+    BitmapFont,
+    type BitmapFontGlyph,
+    type BitmapFontConfig,
+    type IEventDispatcher,
+    Event,
+    IOErrorEvent,
+    Texture,
+    Rectangle,
+    type XML,
+    MovieClipDataFactory,
+    type ImageLoader,
+    getImageLoader,
+    BitmapData,
+    KTXContainer,
+    type HttpRequest,
+    getHttpRequest,
+    HttpResponseType,
+} from "./EgretCore";
+import { parse } from "./Xml";
 import { type ResourceInfo, type ProcessHost, ResourceManagerError, getVirtualUrl, nameSelector, type MovieClipConfig, getConfig, type ConfigData, type FileSystem } from "./ResCore";
 
-export type ResourceSpriteSheet = egret.SpriteSheet & { $resourceInfo: ResourceInfo };
-export type ResourceBitmapFont = egret.BitmapFont & { $resourceInfo: ResourceInfo };
+export type ResourceSpriteSheet = SpriteSheet & { $resourceInfo: ResourceInfo };
+export type ResourceBitmapFont = BitmapFont & { $resourceInfo: ResourceInfo };
 
 export interface Processor<T = unknown> {
     onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<T>;
@@ -13,16 +32,16 @@ export interface Processor<T = unknown> {
 }
 export interface SheetConfig {
     file: string;
-    frames: Record<string, egret.BitmapFontGlyph & { scale9grid?: string }>;
+    frames: Record<string, BitmapFontGlyph & { scale9grid?: string }>;
 }
-export interface FontConfig extends egret.BitmapFontConfig {
+export interface FontConfig extends BitmapFontConfig {
     file: string;
 }
 export interface LegacyConfig {
     groups: { name: string; keys: string }[];
     resources: ResourceInfo[];
 }
-interface DataLoader<T> extends egret.IEventDispatcher {
+interface DataLoader<T> extends IEventDispatcher {
     data?: T | null;
     response?: T | null;
 }
@@ -67,14 +86,14 @@ function promisify<T>(loader: DataLoader<T>, resource: ResourceInfo): Promise<T>
     return new Promise<T>((resolve: (value: T | PromiseLike<T>) => void, reject: (reason: unknown) => void): void => {
         const onSuccess: () => void = (): void => { const texture: T = (loader.data ? loader.data : loader.response) as T; resolve(texture); };
         const onError: () => void = (): void => { const e: ResourceManagerError = new ResourceManagerError(1001, resource.url); reject(e); };
-        loader.addEventListener(egret.Event.COMPLETE, onSuccess, undefined);
-        loader.addEventListener(egret.IOErrorEvent.IO_ERROR, onError, undefined);
+        loader.addEventListener(Event.COMPLETE, onSuccess, undefined);
+        loader.addEventListener(IOErrorEvent.IO_ERROR, onError, undefined);
     });
 }
 
-function applyScale9Grid(texture: egret.Texture, grid: string): void {
+function applyScale9Grid(texture: Texture, grid: string): void {
     const list: string[] = grid.split(",");
-    texture.scale9Grid = new egret.Rectangle(parseInt(list[0]!), parseInt(list[1]!), parseInt(list[2]!), parseInt(list[3]!));
+    texture.scale9Grid = new Rectangle(parseInt(list[0]!), parseInt(list[1]!), parseInt(list[2]!), parseInt(list[3]!));
 }
 
 function fontGetTexturePath(url: string, fntText: string): string {
@@ -93,50 +112,50 @@ function fontGetTexturePath(url: string, fntText: string): string {
 }
 
 export class ResProcessorHelper {
-    private static ImageProcessor: Processor<egret.Texture> | undefined;
-    private static KTXTextureProcessor: Processor<egret.Texture | null> | undefined;
-    private static ETC1KTXProcessor: Processor<egret.Texture | null> | undefined;
+    private static ImageProcessor: Processor<Texture> | undefined;
+    private static KTXTextureProcessor: Processor<Texture | null> | undefined;
+    private static ETC1KTXProcessor: Processor<Texture | null> | undefined;
     private static BinaryProcessor: Processor<ArrayBuffer> | undefined;
     private static TextProcessor: Processor<string> | undefined;
     private static JsonProcessor: Processor | undefined;
-    private static XMLProcessor: Processor<egret.XML | null> | undefined;
+    private static XMLProcessor: Processor<XML | null> | undefined;
     private static CommonJSProcessor: Processor<Record<string, unknown>> | undefined;
     private static SheetProcessor: Processor<ResourceSpriteSheet | null> | undefined;
     private static FontProcessor: Processor<ResourceBitmapFont> | undefined;
     // private static SoundProcessor: Processor<egret.Sound> | undefined;
-    private static MovieClipProcessor: Processor<egret.MovieClipDataFactory> | undefined;
+    private static MovieClipProcessor: Processor<MovieClipDataFactory> | undefined;
     private static MergeJSONProcessor: Processor<Record<string, unknown>> | undefined;
     private static LegacyResourceConfigProcessor: Processor<LegacyConfig> | undefined;
     private static _map: Record<string, Processor<any>> | undefined;
 
-    public static getImageProcessor(): Processor<egret.Texture> {
+    public static getImageProcessor(): Processor<Texture> {
         return ResProcessorHelper.ImageProcessor ??= {
-            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<egret.Texture> {
-                const loader: egret.ImageLoader = new (egret.getImageLoader())();
+            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<Texture> {
+                const loader: ImageLoader = new (getImageLoader())();
                 loader.load(getVirtualUrl(resource.root + resource.url));
-                return promisify<egret.BitmapData>(loader, resource).then((bitmapData: egret.BitmapData): egret.Texture => {
-                    const texture: egret.Texture = new egret.Texture();
+                return promisify<BitmapData>(loader, resource).then((bitmapData: BitmapData): Texture => {
+                    const texture: Texture = new Texture();
                     texture._setBitmapData(bitmapData);
                     const r: ResourceInfo | null = host.resourceConfig.getResource(resource.name);
                     if (r && r.scale9grid) { applyScale9Grid(texture, r.scale9grid); }
                     return texture;
                 });
             },
-            onRemoveStart(host: ProcessHost, resource: ResourceInfo): void { const texture: egret.Texture = host.get<egret.Texture>(resource)!; texture.dispose(); }
+            onRemoveStart(host: ProcessHost, resource: ResourceInfo): void { const texture: Texture = host.get<Texture>(resource)!; texture.dispose(); }
         };
     }
-    public static getKTXTextureProcessor(): Processor<egret.Texture | null> {
+    public static getKTXTextureProcessor(): Processor<Texture | null> {
         return ResProcessorHelper.KTXTextureProcessor ??= {
-            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<egret.Texture | null> {
-                return host.load<ArrayBuffer>(resource, "bin").then((data: ArrayBuffer): egret.Texture | null => {
+            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<Texture | null> {
+                return host.load<ArrayBuffer>(resource, "bin").then((data: ArrayBuffer): Texture | null => {
                     if (!data) { console.error("ktx:" + resource.root + resource.url + " is null"); return null; }
-                    const ktx: egret.KTXContainer = new egret.KTXContainer(data, 1);
+                    const ktx: KTXContainer = new KTXContainer(data, 1);
                     if (ktx.isInvalid) { console.error("ktx:" + resource.root + resource.url + " is invalid"); return null; }
-                    const bitmapData: egret.BitmapData = new egret.BitmapData(data);
+                    const bitmapData: BitmapData = new BitmapData(data);
                     bitmapData.debugCompressedTextureURL = resource.root + resource.url;
                     bitmapData.format = "ktx";
                     ktx.uploadLevels(bitmapData, false);
-                    const texture: egret.Texture = new egret.Texture();
+                    const texture: Texture = new Texture();
                     texture._setBitmapData(bitmapData);
                     const r: ResourceInfo | null = host.resourceConfig.getResource(resource.name);
                     if (r && r.scale9grid) { applyScale9Grid(texture, r.scale9grid); }
@@ -144,17 +163,17 @@ export class ResProcessorHelper {
                     return texture;
                 }, (e: unknown): never => { host.remove(resource); throw e; });
             },
-            onRemoveStart(host: ProcessHost, resource: ResourceInfo): void { const texture: egret.Texture | null | undefined = host.get<egret.Texture | null>(resource); if (texture) { texture.dispose(); } }
+            onRemoveStart(host: ProcessHost, resource: ResourceInfo): void { const texture: Texture | null | undefined = host.get<Texture | null>(resource); if (texture) { texture.dispose(); } }
         };
     }
-    public static getETC1KTXProcessor(): Processor<egret.Texture | null> {
+    public static getETC1KTXProcessor(): Processor<Texture | null> {
         return ResProcessorHelper.ETC1KTXProcessor ??= {
-            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<egret.Texture | null> {
-                return host.load<egret.Texture | null>(resource, "ktx").then((colorTex: egret.Texture | null): egret.Texture | null | Promise<egret.Texture> => {
+            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<Texture | null> {
+                return host.load<Texture | null>(resource, "ktx").then((colorTex: Texture | null): Texture | null | Promise<Texture> => {
                     if (!colorTex) { return null; }
                     if (resource.etc1_alpha_url) {
                         const r: ResourceInfo = makeEtc1SeperatedAlphaResourceInfo(resource);
-                        return host.load<egret.Texture>(r, "ktx").then((alphaMaskTex: egret.Texture): egret.Texture => {
+                        return host.load<Texture>(r, "ktx").then((alphaMaskTex: Texture): Texture => {
                             if (colorTex && colorTex.$bitmapData && alphaMaskTex.$bitmapData) { colorTex.$bitmapData.etcAlphaMask = alphaMaskTex.$bitmapData; host.save(r, alphaMaskTex); }
                             else { host.remove(r); }
                             return colorTex;
@@ -164,11 +183,11 @@ export class ResProcessorHelper {
                 }, (e: unknown): never => { host.remove(resource); throw e; });
             },
             onRemoveStart(host: ProcessHost, resource: ResourceInfo): void {
-                const colorTex: egret.Texture | null | undefined = host.get<egret.Texture | null>(resource);
+                const colorTex: Texture | null | undefined = host.get<Texture | null>(resource);
                 if (colorTex) { colorTex.dispose(); }
                 if (resource.etc1_alpha_url) {
                     const r: ResourceInfo = makeEtc1SeperatedAlphaResourceInfo(resource);
-                    const alphaMaskTex: egret.Texture | undefined = host.get<egret.Texture>(r);
+                    const alphaMaskTex: Texture | undefined = host.get<Texture>(r);
                     if (alphaMaskTex) { alphaMaskTex.dispose(); }
                     host.unload(r);
                 }
@@ -178,8 +197,8 @@ export class ResProcessorHelper {
     public static getBinaryProcessor(): Processor<ArrayBuffer> {
         return ResProcessorHelper.BinaryProcessor ??= {
             onLoadStart(_host: ProcessHost, resource: ResourceInfo): Promise<ArrayBuffer> {
-                const request: egret.HttpRequest = new (egret.getHttpRequest())();
-                request.responseType = egret.HttpResponseType.ARRAY_BUFFER as XMLHttpRequestResponseType;
+                const request: HttpRequest = new (getHttpRequest())();
+                request.responseType = HttpResponseType.ARRAY_BUFFER as XMLHttpRequestResponseType;
                 request.open(getVirtualUrl(resource.root + resource.url), "get"); request.send();
                 return promisify<ArrayBuffer>(request as DataLoader<ArrayBuffer>, resource);
             },
@@ -189,8 +208,8 @@ export class ResProcessorHelper {
     public static getTextProcessor(): Processor<string> {
         return ResProcessorHelper.TextProcessor ??= {
             onLoadStart(_host: ProcessHost, resource: ResourceInfo): Promise<string> {
-                const request: egret.HttpRequest = new (egret.getHttpRequest())();
-                request.responseType = egret.HttpResponseType.TEXT as XMLHttpRequestResponseType;
+                const request: HttpRequest = new (getHttpRequest())();
+                request.responseType = HttpResponseType.TEXT as XMLHttpRequestResponseType;
                 request.open(getVirtualUrl(resource.root + resource.url), "get"); request.send();
                 return promisify<string>(request as DataLoader<string>, resource);
             },
@@ -203,9 +222,9 @@ export class ResProcessorHelper {
             onRemoveStart(_host: ProcessHost, _resource: ResourceInfo): void { }
         };
     }
-    public static getXMLProcessor(): Processor<egret.XML | null> {
+    public static getXMLProcessor(): Processor<XML | null> {
         return ResProcessorHelper.XMLProcessor ??= {
-            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<egret.XML | null> { return host.load<string>(resource, "text").then((text: string): egret.XML | null => Xml.parse(text)); },
+            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<XML | null> { return host.load<string>(resource, "text").then((text: string): XML | null => parse(text)); },
             onRemoveStart(_host: ProcessHost, _resource: ResourceInfo): boolean { return true; }
         };
     }
@@ -230,15 +249,15 @@ export class ResProcessorHelper {
                     let r: ResourceInfo | null = host.resourceConfig.getResource(nameSelector(data.file));
                     if (!r) { const imageName: string = getRelativePath(resource.url, data.file); r = { name: imageName, url: imageName, type: "image", root: resource.root }; }
                     const imageResource: ResourceInfo = r;
-                    return host.load<egret.Texture>(imageResource).then((bitmapData: egret.Texture): ResourceSpriteSheet | null => {
+                    return host.load<Texture>(imageResource).then((bitmapData: Texture): ResourceSpriteSheet | null => {
                         if (!bitmapData) { return null; }
                         const frames: SheetConfig["frames"] = data.frames;
-                        const spriteSheet: ResourceSpriteSheet = new egret.SpriteSheet(bitmapData) as ResourceSpriteSheet;
+                        const spriteSheet: ResourceSpriteSheet = new SpriteSheet(bitmapData) as ResourceSpriteSheet;
                         spriteSheet.$resourceInfo = imageResource;
                         let subkey: string;
                         for (subkey in frames) {
-                            const config: egret.BitmapFontGlyph & { scale9grid?: string } = frames[subkey]!;
-                            const texture: egret.Texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
+                            const config: BitmapFontGlyph & { scale9grid?: string } = frames[subkey]!;
+                            const texture: Texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
                             if (config.scale9grid) { applyScale9Grid(texture, config.scale9grid); }
                         }
                         host.save(imageResource, bitmapData);
@@ -246,7 +265,7 @@ export class ResProcessorHelper {
                     }, (e: unknown): never => { host.remove(imageResource); throw e; });
                 });
             },
-            getData(host: ProcessHost, resource: ResourceInfo, _key: string, subkey: string): egret.Texture | null | undefined { const data: ResourceSpriteSheet | undefined = host.get<ResourceSpriteSheet>(resource); return data ? data.getTexture(subkey) : null; },
+            getData(host: ProcessHost, resource: ResourceInfo, _key: string, subkey: string): Texture | null | undefined { const data: ResourceSpriteSheet | undefined = host.get<ResourceSpriteSheet>(resource); return data ? data.getTexture(subkey) : null; },
             onRemoveStart(host: ProcessHost, resource: ResourceInfo): void {
                 const sheet: ResourceSpriteSheet = host.get<ResourceSpriteSheet>(resource)!;
                 const r: ResourceInfo = sheet.$resourceInfo;
@@ -264,8 +283,8 @@ export class ResProcessorHelper {
                     let r: ResourceInfo | null = host.resourceConfig.getResource(nameSelector(imageName));
                     if (!r) { r = { name: imageName, url: imageName, type: "image", root: resource.root }; }
                     const imageResource: ResourceInfo = r;
-                    return host.load<egret.Texture>(imageResource).then((texture: egret.Texture): ResourceBitmapFont => {
-                        const font: ResourceBitmapFont = new egret.BitmapFont(texture, config) as ResourceBitmapFont;
+                    return host.load<Texture>(imageResource).then((texture: Texture): ResourceBitmapFont => {
+                        const font: ResourceBitmapFont = new BitmapFont(texture, config) as ResourceBitmapFont;
                         font.$resourceInfo = imageResource;
                         host.save(imageResource, texture);
                         return font;
@@ -288,28 +307,28 @@ export class ResProcessorHelper {
     //         }
     //     };
     // }
-    public static getMovieClipProcessor(): Processor<egret.MovieClipDataFactory> {
+    public static getMovieClipProcessor(): Processor<MovieClipDataFactory> {
         return ResProcessorHelper.MovieClipProcessor ??= {
-            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<egret.MovieClipDataFactory> {
+            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<MovieClipDataFactory> {
                 let mcData: MovieClipConfig;
                 let imageResource: ResourceInfo;
-                return host.load<MovieClipConfig>(resource, "json").then((value: MovieClipConfig): Promise<egret.Texture> => {
+                return host.load<MovieClipConfig>(resource, "json").then((value: MovieClipConfig): Promise<Texture> => {
                     mcData = value;
                     const jsonPath: string = resource.name;
                     const imagePath: string = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
                     const image: ResourceInfo | null = host.resourceConfig.getResource(imagePath);
                     if (!image) { throw new ResourceManagerError(1001, imagePath); }
                     imageResource = image;
-                    return host.load<egret.Texture>(imageResource);
-                }).then((value: egret.Texture): egret.MovieClipDataFactory => {
+                    return host.load<Texture>(imageResource);
+                }).then((value: Texture): MovieClipDataFactory => {
                     host.save(imageResource, value);
-                    const mcTexture: egret.Texture = value;
-                    const mcDataFactory: egret.MovieClipDataFactory = new egret.MovieClipDataFactory(mcData, mcTexture);
+                    const mcTexture: Texture = value;
+                    const mcDataFactory: MovieClipDataFactory = new MovieClipDataFactory(mcData, mcTexture);
                     return mcDataFactory;
                 });
             },
             onRemoveStart(host: ProcessHost, resource: ResourceInfo): void {
-                const mcFactory: egret.MovieClipDataFactory = host.get<egret.MovieClipDataFactory>(resource)!;
+                const mcFactory: MovieClipDataFactory = host.get<MovieClipDataFactory>(resource)!;
                 mcFactory.clearCache(); mcFactory.$spriteSheet!.dispose();
                 const jsonPath: string = resource.name;
                 const imagePath: string = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";

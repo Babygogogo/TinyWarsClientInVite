@@ -1,99 +1,145 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import type * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as MultiPlayerWarModelMpwModel from "./MpwModel.ts";
-import * as NetworksManager from "../../networks/Manager.ts";
-import * as NetworksMessageCodes from "../../networks/MessageCodes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonBroadcastGameStartS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonBroadcastGameStart/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonContinueWarS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonContinueWar/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetHalfwayReplayDataS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetHalfwayReplayData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetJoinedMpwIdArrayS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetJoinedMpwIdArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetUnitStatisticsS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarProgressInfoS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetWarProgressInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarSettingsS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetWarSettings/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarTimestampS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetWarTimestamp/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonHandleBootS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonHandleBoot/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonMarkGridS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonMarkGrid/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSetGridMarkListS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSetGridMarkList/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSetHiddenGridMarkTypeIdListS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSetHiddenGridMarkTypeIdList/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSyncWarS from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSyncWar/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMpwExecuteWarOperationS from "../../proto/schema/CommonProto/NetMessage/MsgMpwExecuteWarOperation/S.ts";
-import type * as ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId from "../../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { SyncRequestType } from "../../gameConfig/GcWar.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import {
+    updateOnMsgMpwCommonGetJoinedMpwIdArray,
+    updateOnFailedMsgMpwCommonGetWarTimestamp,
+    updateOnMsgMpwCommonGetWarTimestamp,
+    updateOnMsgMpwCommonBroadcastGameStart,
+    updateOnFailedMsgMpwCommonContinueWar,
+    updateOnMsgMpwCommonContinueWar,
+    updateOnPlayerSyncWar,
+    updateOnFailedMsgMpwCommonGetWarSettings,
+    updateOnMsgMpwCommonGetWarSettings,
+    updateOnFailedMsgMpwCommonGetWarProgressInfo,
+    updateOnMsgMpwCommonGetWarProgressInfo,
+    updateOnMsgMpwCommonMarkGrid,
+    updateOnMsgMpwCommonSetHiddenGridMarkTypeIdList,
+    updateOnMsgMpwCommonSetGridMarkList,
+    updateOnFailedMsgMpwCommonGetHalfwayReplayData,
+    updateOnMsgMpwCommonGetHalfwayReplayData,
+    updateOnFailedMsgMpwCommonGetUnitStatistics,
+    updateOnMsgMpwCommonGetUnitStatistics,
+    updateOnMsgMpwExecuteWarOperation,
+} from "./MpwModel.ts";
+import { addListeners, send } from "../../networks/Manager.ts";
+import { MessageCodes } from "../../networks/MessageCodes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonBroadcastGameStart/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonContinueWarS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonContinueWar/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetHalfwayReplayDataS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetHalfwayReplayData/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetJoinedMpwIdArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetJoinedMpwIdArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetUnitStatisticsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarProgressInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetWarProgressInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarSettingsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetWarSettings/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarTimestampS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetWarTimestamp/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonHandleBootS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonHandleBoot/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonMarkGridS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonMarkGrid/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSetGridMarkListS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSetGridMarkList/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSetHiddenGridMarkTypeIdListS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSetHiddenGridMarkTypeIdList/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSyncWarS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonSyncWar/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMpwExecuteWarOperationS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMpwExecuteWarOperation/S.ts";
+import type { GridIdAndMarkTypeId } from "../../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export function init(): void {
-    NetworksManager.addListeners([
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonGetJoinedMpwIdArray,         callback: _onMsgMpwCommonGetJoinedMpwIdArray },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonGetWarTimestamp,             callback: _onMsgMpwCommonGetWarTimestamp },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonBroadcastGameStart,          callback: _onMsgMpwCommonBroadcastGameStart },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonHandleBoot,                  callback: _onMsgMpwCommonHandleBoot },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonContinueWar,                 callback: _onMsgMpwCommonContinueWar },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonSyncWar,                     callback: _onMsgMpwCommonSyncWar },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonGetWarSettings,              callback: _onMsgMpwCommonGetWarSettings },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonGetWarProgressInfo,          callback: _onMsgMpwCommonGetWarProgressInfo },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonMarkGrid,                    callback: _onMsgMpwCommonMarkGrid },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonSetHiddenGridMarkTypeIdList, callback: _onMsgMpwCommonSetHiddenGridMarkTypeIdList },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonSetGridMarkList,             callback: _onMsgMpwCommonSetGridMarkList },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonGetHalfwayReplayData,        callback: _onMsgMpwCommonGetHalfwayReplayData },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwCommonGetUnitStatistics,           callback: _onMsgMpwCommonGetUnitStatistics },
+    addListeners([
+        { msgCode: MessageCodes.MsgMpwCommonGetJoinedMpwIdArray,         callback: _onMsgMpwCommonGetJoinedMpwIdArray },
+        { msgCode: MessageCodes.MsgMpwCommonGetWarTimestamp,             callback: _onMsgMpwCommonGetWarTimestamp },
+        { msgCode: MessageCodes.MsgMpwCommonBroadcastGameStart,          callback: _onMsgMpwCommonBroadcastGameStart },
+        { msgCode: MessageCodes.MsgMpwCommonHandleBoot,                  callback: _onMsgMpwCommonHandleBoot },
+        { msgCode: MessageCodes.MsgMpwCommonContinueWar,                 callback: _onMsgMpwCommonContinueWar },
+        { msgCode: MessageCodes.MsgMpwCommonSyncWar,                     callback: _onMsgMpwCommonSyncWar },
+        { msgCode: MessageCodes.MsgMpwCommonGetWarSettings,              callback: _onMsgMpwCommonGetWarSettings },
+        { msgCode: MessageCodes.MsgMpwCommonGetWarProgressInfo,          callback: _onMsgMpwCommonGetWarProgressInfo },
+        { msgCode: MessageCodes.MsgMpwCommonMarkGrid,                    callback: _onMsgMpwCommonMarkGrid },
+        { msgCode: MessageCodes.MsgMpwCommonSetHiddenGridMarkTypeIdList, callback: _onMsgMpwCommonSetHiddenGridMarkTypeIdList },
+        { msgCode: MessageCodes.MsgMpwCommonSetGridMarkList,             callback: _onMsgMpwCommonSetGridMarkList },
+        { msgCode: MessageCodes.MsgMpwCommonGetHalfwayReplayData,        callback: _onMsgMpwCommonGetHalfwayReplayData },
+        { msgCode: MessageCodes.MsgMpwCommonGetUnitStatistics,           callback: _onMsgMpwCommonGetUnitStatistics },
 
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMpwExecuteWarOperation,               callback: _onMsgMpwExecuteWarOperation },
+        { msgCode: MessageCodes.MsgMpwExecuteWarOperation,               callback: _onMsgMpwExecuteWarOperation },
     ], null);
 }
 
 export function reqMpwCommonGetJoinedMpwIdArray(): void {
-    NetworksManager.send({ MsgMpwCommonGetJoinedMpwIdArray: { c: {
+    send({ MsgMpwCommonGetJoinedMpwIdArray: { c: {
     } }, });
 }
-function _onMsgMpwCommonGetJoinedMpwIdArray(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetJoinedMpwIdArrayS.S;
+function _onMsgMpwCommonGetJoinedMpwIdArray(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetJoinedMpwIdArrayS;
     if (!data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonGetJoinedMpwIdArray(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonGetJoinedMpwIdArray, data);
+        updateOnMsgMpwCommonGetJoinedMpwIdArray(data);
+        dispatch(TypeId.MsgMpwCommonGetJoinedMpwIdArray, data);
     }
 }
 
 export function reqMpwCommonGetWarTimestamp(warId: number): void {
-    NetworksManager.send({ MsgMpwCommonGetWarTimestamp: { c: {
+    send({ MsgMpwCommonGetWarTimestamp: { c: {
         warId   : warId,
     } } });
 }
-function _onMsgMpwCommonGetWarTimestamp(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarTimestampS.S;
+function _onMsgMpwCommonGetWarTimestamp(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarTimestampS;
     if (data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnFailedMsgMpwCommonGetWarTimestamp(data);
+        updateOnFailedMsgMpwCommonGetWarTimestamp(data);
     } else {
-        MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonGetWarTimestamp(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonGetWarTimestamp, data);
+        updateOnMsgMpwCommonGetWarTimestamp(data);
+        dispatch(TypeId.MsgMpwCommonGetWarTimestamp, data);
     }
 }
 
-async function _onMsgMpwCommonBroadcastGameStart(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonBroadcastGameStartS.S;
-    await MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonBroadcastGameStart(data);
+async function _onMsgMpwCommonBroadcastGameStart(e: Event): Promise<void> {
+    const data = e.data as S;
+    await updateOnMsgMpwCommonBroadcastGameStart(data);
 }
 
 export function reqMpwCommonContinueWar(warId: number): void {
-    NetworksManager.send({ MsgMpwCommonContinueWar: { c: {
+    send({ MsgMpwCommonContinueWar: { c: {
         warId   : warId,
     }, }, });
 }
-async function _onMsgMpwCommonContinueWar(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonContinueWarS.S;
+async function _onMsgMpwCommonContinueWar(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonContinueWarS;
     if (data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnFailedMsgMpwCommonContinueWar(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonContinueWarFailed, data);
+        updateOnFailedMsgMpwCommonContinueWar(data);
+        dispatch(TypeId.MsgMpwCommonContinueWarFailed, data);
     } else {
-        await MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonContinueWar(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonContinueWar, data);
+        await updateOnMsgMpwCommonContinueWar(data);
+        dispatch(TypeId.MsgMpwCommonContinueWar, data);
     }
 }
 
-export function reqMpwCommonSyncWar(war: BaseWarInterfaceIBwWar.IBwWar, requestType: GameConfigGcWar.SyncRequestType): void {
-    NetworksManager.send({
+export function reqMpwCommonSyncWar(war: IBwWar, requestType: SyncRequestType): void {
+    send({
         MsgMpwCommonSyncWar: { c: {
             warId               : war.getWarId(),
             executedActionsCount: war.getExecutedOperationManager().getExecutedOperationsCount(),
@@ -101,50 +147,50 @@ export function reqMpwCommonSyncWar(war: BaseWarInterfaceIBwWar.IBwWar, requestT
         }, }
     });
 }
-function _onMsgMpwCommonSyncWar(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSyncWarS.S;
+function _onMsgMpwCommonSyncWar(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSyncWarS;
     if (!data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnPlayerSyncWar(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonSyncWar);
+        updateOnPlayerSyncWar(data);
+        dispatch(TypeId.MsgMpwCommonSyncWar);
     }
 }
 
 export function reqMpwCommonGetWarSettings(warId: number): void {
-    NetworksManager.send({
+    send({
         MsgMpwCommonGetWarSettings: { c: {
             warId
         } },
     });
 }
-async function _onMsgMpwCommonGetWarSettings(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarSettingsS.S;
+async function _onMsgMpwCommonGetWarSettings(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarSettingsS;
     if (data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnFailedMsgMpwCommonGetWarSettings(data);
+        updateOnFailedMsgMpwCommonGetWarSettings(data);
     } else {
-        await MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonGetWarSettings(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonGetWarSettings, data);
+        await updateOnMsgMpwCommonGetWarSettings(data);
+        dispatch(TypeId.MsgMpwCommonGetWarSettings, data);
     }
 }
 
 export function reqMpwCommonGetWarProgressInfo(warId: number): void {
-    NetworksManager.send({
+    send({
         MsgMpwCommonGetWarProgressInfo: { c: {
             warId
         } },
     });
 }
-async function _onMsgMpwCommonGetWarProgressInfo(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarProgressInfoS.S;
+async function _onMsgMpwCommonGetWarProgressInfo(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetWarProgressInfoS;
     if (data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnFailedMsgMpwCommonGetWarProgressInfo(data);
+        updateOnFailedMsgMpwCommonGetWarProgressInfo(data);
     } else {
-        await MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonGetWarProgressInfo(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonGetWarProgressInfo, data);
+        await updateOnMsgMpwCommonGetWarProgressInfo(data);
+        dispatch(TypeId.MsgMpwCommonGetWarProgressInfo, data);
     }
 }
 
 export function reqMpwCommonMarkGrid(warId: number, gridIdArrayForAddMark: number[], gridIdArrayForDeleteMark: number[], markTypeId: number): void {
-    NetworksManager.send({
+    send({
         MsgMpwCommonMarkGrid: { c: {
             warId                       : warId,
             gridIdArrayForAddMark       : gridIdArrayForAddMark,
@@ -153,106 +199,106 @@ export function reqMpwCommonMarkGrid(warId: number, gridIdArrayForAddMark: numbe
         } },
     });
 }
-function _onMsgMpwCommonMarkGrid(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonMarkGridS.S;
+function _onMsgMpwCommonMarkGrid(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonMarkGridS;
     if (!data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonMarkGrid(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonMarkTile, data);
+        updateOnMsgMpwCommonMarkGrid(data);
+        dispatch(TypeId.MsgMpwCommonMarkTile, data);
     }
 }
 
 export function reqMpwCommonSetHiddenGridMarkTypeIdList(warId: number, hiddenGridMarkTypeIdList: number[]): void {
-    NetworksManager.send({
+    send({
         MsgMpwCommonSetHiddenGridMarkTypeIdList: { c: {
             warId                       : warId,
             hiddenGridMarkTypeIdList    : hiddenGridMarkTypeIdList,
         } },
     });
 }
-function _onMsgMpwCommonSetHiddenGridMarkTypeIdList(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSetHiddenGridMarkTypeIdListS.S;
+function _onMsgMpwCommonSetHiddenGridMarkTypeIdList(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSetHiddenGridMarkTypeIdListS;
     if (!data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonSetHiddenGridMarkTypeIdList(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonSetPlayerIndexesForShowMarkedGrid, data);
+        updateOnMsgMpwCommonSetHiddenGridMarkTypeIdList(data);
+        dispatch(TypeId.MsgMpwCommonSetPlayerIndexesForShowMarkedGrid, data);
     }
 }
 
-export function reqMpwCommonSetGridMarkList(warId: number, list: ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId.GridIdAndMarkTypeId[]): void {
-    NetworksManager.send({
+export function reqMpwCommonSetGridMarkList(warId: number, list: GridIdAndMarkTypeId[]): void {
+    send({
         MsgMpwCommonSetGridMarkList: { c: {
             warId           : warId,
             gridMarkList    : list.map(v => v.toJson()),
         } },
     });
 }
-function _onMsgMpwCommonSetGridMarkList(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSetGridMarkListS.S;
+function _onMsgMpwCommonSetGridMarkList(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonSetGridMarkListS;
     if (!data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonSetGridMarkList(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonSetGridMarkList, data);
+        updateOnMsgMpwCommonSetGridMarkList(data);
+        dispatch(TypeId.MsgMpwCommonSetGridMarkList, data);
     }
 }
 
 export function reqMpwCommonGetHalfwayReplayData(warId: number): void {
-    NetworksManager.send({
+    send({
         MsgMpwCommonGetHalfwayReplayData: { c: {
             warId,
         } },
     });
 }
-async function _onMsgMpwCommonGetHalfwayReplayData(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetHalfwayReplayDataS.S;
+async function _onMsgMpwCommonGetHalfwayReplayData(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetHalfwayReplayDataS;
     if (data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnFailedMsgMpwCommonGetHalfwayReplayData(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwGetHalfwayReplayDataFailed, data);
+        updateOnFailedMsgMpwCommonGetHalfwayReplayData(data);
+        dispatch(TypeId.MsgMpwGetHalfwayReplayDataFailed, data);
     } else {
-        await MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonGetHalfwayReplayData(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwGetHalfwayReplayData, data);
+        await updateOnMsgMpwCommonGetHalfwayReplayData(data);
+        dispatch(TypeId.MsgMpwGetHalfwayReplayData, data);
     }
 }
 
 export function reqMpwCommonGetUnitStatistics(warId: number): void {
-    NetworksManager.send({ MsgMpwCommonGetUnitStatistics: { c: {
+    send({ MsgMpwCommonGetUnitStatistics: { c: {
         warId   : warId,
     } } });
 }
-async function _onMsgMpwCommonGetUnitStatistics(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetUnitStatisticsS.S;
+async function _onMsgMpwCommonGetUnitStatistics(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetUnitStatisticsS;
     if (data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnFailedMsgMpwCommonGetUnitStatistics(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonGetUnitStatisticsFailed, data);
+        updateOnFailedMsgMpwCommonGetUnitStatistics(data);
+        dispatch(TypeId.MsgMpwCommonGetUnitStatisticsFailed, data);
     } else {
-        await MultiPlayerWarModelMpwModel.updateOnMsgMpwCommonGetUnitStatistics(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonGetUnitStatistics, data);
+        await updateOnMsgMpwCommonGetUnitStatistics(data);
+        dispatch(TypeId.MsgMpwCommonGetUnitStatistics, data);
     }
 }
 
 export function reqMpwCommonHandleBoot(warId: number): void {
-    NetworksManager.send({
+    send({
         MsgMpwCommonHandleBoot: { c: {
             warId,
         }, },
     });
 }
-function _onMsgMpwCommonHandleBoot(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonHandleBootS.S;
+function _onMsgMpwCommonHandleBoot(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwCommonHandleBootS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwCommonHandleBoot, data);
+        dispatch(TypeId.MsgMpwCommonHandleBoot, data);
     }
 }
 
-export function reqMpwExecuteWarOperation(war: BaseWarInterfaceIBwWar.IBwWar, actionContainer: ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer): void {
-    NetworksManager.send({
+export function reqMpwExecuteWarOperation(war: IBwWar, actionContainer: WoContainer): void {
+    send({
         MsgMpwExecuteWarOperation: { c: {
             warId           : war.getWarId(),
             actionContainer : actionContainer.toJson(),
         }, },
     });
 }
-function _onMsgMpwExecuteWarOperation(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwExecuteWarOperationS.S;
+function _onMsgMpwExecuteWarOperation(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMpwExecuteWarOperationS;
     if (!data.getErrorCode()) {
-        MultiPlayerWarModelMpwModel.updateOnMsgMpwExecuteWarOperation(HelpersMisc.getExisted(data.getActionContainer()), HelpersMisc.getExisted(data.getWarId()));
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMpwExecuteWarOperation, data);
+        updateOnMsgMpwExecuteWarOperation(getExisted(data.getActionContainer()), getExisted(data.getWarId()));
+        dispatch(TypeId.MsgMpwExecuteWarOperation, data);
     }
 }

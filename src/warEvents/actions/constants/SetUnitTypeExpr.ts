@@ -1,24 +1,24 @@
-import * as ExpressionParsersEnums from "../../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../../expressionParsers/Types.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
+import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
-    ConUnitFilter                       : ExpressionParsersTypes.EpExpressionInfo;
-    ActUnitType                         : ExpressionParsersTypes.EpExpressionInfo;
+    ConUnitFilter                       : EpExpressionInfo;
+    ActUnitType                         : EpExpressionInfo;
 } = {
     ConUnitFilter       : {
-        contextType     : ExpressionParsersEnums.ContextType.Unit,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Unit,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.UnitFilter),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0622),
+        getTitleText    : () => getText(TextType.UnitFilter),
+        getHelpText     : () => getText(TextType.A0622),
     },
     ActUnitType : {
-        contextType     : ExpressionParsersEnums.ContextType.Unit,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Unit,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B0525),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0623),
+        getTitleText    : () => getText(TextType.B0525),
+        getHelpText     : () => getText(TextType.A0623),
     },
 };

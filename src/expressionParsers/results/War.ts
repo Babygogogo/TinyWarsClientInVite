@@ -1,16 +1,16 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
 
-export class War extends ExpressionParsersResultsBase.Base {
-    public constructor(war: BaseWarInterfaceIBwWar.IBwWar) {
+export class War extends Base {
+    public constructor(war: IBwWar) {
         super(war);
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.War;
+    public override getResultType(): ResultType {
+        return ResultType.War;
     }
-    public checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public checkIsEqual(rhs: Base): boolean {
         return (rhs instanceof War)
             && (this.war === rhs.war);
     }

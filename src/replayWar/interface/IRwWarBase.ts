@@ -1,29 +1,33 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwCommonSettingManager from "../../baseWar/interface/IBwCommonSettingManager.ts";
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import type * as BaseWarInterfaceIBwWarEventManager from "../../baseWar/interface/IBwWarEventManager.ts";
-import type * as BaseWarInterfaceIBwWarStatisticsManager from "../../baseWar/interface/IBwWarStatisticsManager.ts";
-import type * as ProtoSchemaCommonProtoStructureGridMarkData from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForAtw from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForCcw from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForMcw from "../../proto/schema/CommonProto/WarSettings/SettingsForMcw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForMfw from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForMmw from "../../proto/schema/CommonProto/WarSettings/SettingsForMmw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForMrw from "../../proto/schema/CommonProto/WarSettings/SettingsForMrw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForScw from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForSfw from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForSrw from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
+import type {
+    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+    ReplayCheckpointData,
+    ReplayCheckpointInfo,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwCommonSettingManager } from "../../baseWar/interface/IBwCommonSettingManager.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
+import type { IBwWarStatisticsManager } from "../../baseWar/interface/IBwWarStatisticsManager.ts";
+import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
+import type { SettingsForCcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
+import type { SettingsForMcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMcw.ts";
+import type { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
+import type { SettingsForMmw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMmw.ts";
+import type { SettingsForMrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMrw.ts";
+import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
+import type { SettingsForSfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
+import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
 
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-export interface IRwWarBase extends BaseWarInterfaceIBwWar.IBwWar {
-    serializeForCheckpoint(): AuxiliaryTypesAuxiliaryTypes.ReplayCheckpointData;
+export interface IRwWarBase extends IBwWar {
+    serializeForCheckpoint(): ReplayCheckpointData;
     tickVisionTeamIndex(): number | null;
 
-    getCommonSettingManager(): BaseWarInterfaceIBwCommonSettingManager.IBwCommonSettingManager;
-    getWarEventManager(): BaseWarInterfaceIBwWarEventManager.IBwWarEventManager;
-    getWarStatisticsManager(): BaseWarInterfaceIBwWarStatisticsManager.IBwWarStatisticsManager;
+    getCommonSettingManager(): IBwCommonSettingManager;
+    getWarEventManager(): IBwWarEventManager;
+    getWarStatisticsManager(): IBwWarStatisticsManager;
 
     getCanCheat(): boolean;
     getIsNeedExecutedOperations(): boolean;
@@ -32,17 +36,17 @@ export interface IRwWarBase extends BaseWarInterfaceIBwWar.IBwWar {
     getNormalMapId(): number | null;
     getWarOperationDescSuffix(): string;
 
-    getSettingsForMcw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMcw.SettingsForMcw>;
-    getSettingsForScw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForScw.SettingsForScw>;
-    getSettingsForSfw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForSfw.SettingsForSfw>;
-    getSettingsForSrw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForSrw.SettingsForSrw>;
-    getSettingsForMrw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMrw.SettingsForMrw>;
-    getSettingsForMmw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMmw.SettingsForMmw>;
-    getSettingsForAtw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForAtw.SettingsForAtw>;
-    getSettingsForCcw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForCcw.SettingsForCcw>;
-    getSettingsForMfw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMfw.SettingsForMfw>;
+    getSettingsForMcw(): Undefinable<SettingsForMcw>;
+    getSettingsForScw(): Undefinable<SettingsForScw>;
+    getSettingsForSfw(): Undefinable<SettingsForSfw>;
+    getSettingsForSrw(): Undefinable<SettingsForSrw>;
+    getSettingsForMrw(): Undefinable<SettingsForMrw>;
+    getSettingsForMmw(): Undefinable<SettingsForMmw>;
+    getSettingsForAtw(): Undefinable<SettingsForAtw>;
+    getSettingsForCcw(): Undefinable<SettingsForCcw>;
+    getSettingsForMfw(): Undefinable<SettingsForMfw>;
 
-    getGridMarkData(): ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData;
+    getGridMarkData(): GridMarkData;
 
     checkIsInBeginning(): boolean;
     checkIsInEnd(): boolean;
@@ -62,9 +66,9 @@ export interface IRwWarBase extends BaseWarInterfaceIBwWar.IBwWar {
 
     getNextOperationId(): number;
     setNextOperationId(nextOperationId: number): void;
-    getNextAction(): ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer | null;
+    getNextAction(): WoContainer | null;
 
-    getAllCheckpointInfoArray(): AuxiliaryTypesAuxiliaryTypes.ReplayCheckpointInfo[];
+    getAllCheckpointInfoArray(): ReplayCheckpointInfo[];
 
     loadCheckpoint(checkpointId: number, floatText?: boolean): Promise<void>;
     loadPreviousCheckpoint(floatText?: boolean): Promise<void>;

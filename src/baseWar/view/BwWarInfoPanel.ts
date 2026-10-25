@@ -1,39 +1,48 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as BootTimersConstants from "../../bootTimers/Constants.ts";
-import * as CosConstants from "../../cos/Constants.ts";
-import * as ForceSkinsUtils from "../../forceSkins/Utils.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GameModesUtils from "../../gameModes/Utils.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as NotificationsDataTypes from "../../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayerRulesConstants from "../../playerRules/Constants.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as SinglePlayerWarModelSpwModel from "../../singlePlayerWar/model/SpwModel.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import * as UiComponentsUiPlayerRuleRenderer from "../../ui/components/UiPlayerRuleRenderer.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiList from "../../ui/interfaces/IUiList.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import * as WarRulesUtilsCommonData from "../../warRules/utils/CommonData.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { TimerTypeId } from "../../bootTimers/Constants.ts";
+import { EnergyHardLimit } from "../../cos/Constants.ts";
+import { getFinalSkinId } from "../../forceSkins/Utils.ts";
+import {
+    getSpwWarClass,
+    getRwWarClass,
+    getScwWarClass,
+    getSfwWarClass,
+    getAtwWarClass,
+    getMrwWarClass,
+    getMmwWarClass,
+    getRwWarBaseClass,
+} from "../../gameHelpers/GhFactory.ts";
+import { getEnum } from "../../gameModes/Utils.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import { getCoEyeBackground, getCoEye } from "../../helpers/ImageSource.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getFormattedText, getPlayerTeamName, getTimeDurationText2, getPlayerRuleName } from "../../lang/Utils.ts";
+import type { BwCursorTapped } from "../../notifications/DataTypes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { RuleTypeId, InitialFund } from "../../playerRules/Constants.ts";
+import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
+import { checkAndHandleAutoActionsAndRobotRecursively } from "../../singlePlayerWar/model/SpwModel.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import { type DataForUiPlayerRuleRenderer, UiPlayerRuleRenderer } from "../../ui/components/UiPlayerRuleRenderer.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiList } from "../../ui/interfaces/IUiList.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getSelfUserId, getUserNickname } from "../../users/Model.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
 
 // eslint-disable-next-line no-shadow
 const enum InfoType {
@@ -66,23 +75,23 @@ const enum InfoType {
     LuckUpperLimit,
 }
 const CommonPlayerRuleTypes = [
-    PlayerRulesConstants.RuleTypeId.BannedUnitTypeArray,
-    PlayerRulesConstants.RuleTypeId.InitialFund,
-    PlayerRulesConstants.RuleTypeId.IncomeMultiplier,
-    PlayerRulesConstants.RuleTypeId.MaxUnitsCount,
-    PlayerRulesConstants.RuleTypeId.EnergyAddPctOnCoBoard,
-    PlayerRulesConstants.RuleTypeId.EnergyLossPctOnCoDie,
-    PlayerRulesConstants.RuleTypeId.EnergyGrowthMultiplier,
-    PlayerRulesConstants.RuleTypeId.CanActivateCoSkill,
-    PlayerRulesConstants.RuleTypeId.CanCoBoard,
-    PlayerRulesConstants.RuleTypeId.CanUnitJoin,
-    PlayerRulesConstants.RuleTypeId.MoveRangeModifier,
-    PlayerRulesConstants.RuleTypeId.UnitVisionRangeModifier,
-    PlayerRulesConstants.RuleTypeId.TileVisionRangeModifier,
-    PlayerRulesConstants.RuleTypeId.AttackPowerModifier,
-    PlayerRulesConstants.RuleTypeId.DefenseModifier,
-    PlayerRulesConstants.RuleTypeId.LuckLowerLimit,
-    PlayerRulesConstants.RuleTypeId.LuckUpperLimit,
+    RuleTypeId.BannedUnitTypeArray,
+    RuleTypeId.InitialFund,
+    RuleTypeId.IncomeMultiplier,
+    RuleTypeId.MaxUnitsCount,
+    RuleTypeId.EnergyAddPctOnCoBoard,
+    RuleTypeId.EnergyLossPctOnCoDie,
+    RuleTypeId.EnergyGrowthMultiplier,
+    RuleTypeId.CanActivateCoSkill,
+    RuleTypeId.CanCoBoard,
+    RuleTypeId.CanUnitJoin,
+    RuleTypeId.MoveRangeModifier,
+    RuleTypeId.UnitVisionRangeModifier,
+    RuleTypeId.TileVisionRangeModifier,
+    RuleTypeId.AttackPowerModifier,
+    RuleTypeId.DefenseModifier,
+    RuleTypeId.LuckLowerLimit,
+    RuleTypeId.LuckUpperLimit,
 ];
 const CommonInfoTypes = [   // 需要和 CommonPlayerRuleTypes 保持一一对应的关系
     InfoType.BannedUnitTypeArray,
@@ -105,60 +114,60 @@ const CommonInfoTypes = [   // 需要和 CommonPlayerRuleTypes 保持一一对�
 ];
 
 export interface OpenData {
-    war : BaseWarInterfaceIBwWar.IBwWar;
+    war : IBwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTips!                : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _labelTips!                : IUiLabel;
 
-    private readonly _groupTopButton!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnSwitch!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnUnits!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnTiles!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnInfo!                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupTopButton!           : IUiLayout;
+    private readonly _btnSwitch!                : IUiButton;
+    private readonly _btnUnits!                 : IUiButton;
+    private readonly _btnTiles!                 : IUiButton;
+    private readonly _btnInfo!                  : IUiButton;
+    private readonly _btnClose!                 : IUiButton;
 
-    private readonly _groupPlayer1!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelPlayerIndex1!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgCo1!                   : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgSkin1!                 : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupPlayer1!             : IUiContainer;
+    private readonly _labelPlayerIndex1!        : IUiLabel;
+    private readonly _imgCo1!                   : IUiImage;
+    private readonly _imgSkin1!                 : IUiImage;
 
-    private readonly _groupPlayer2!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelPlayerIndex2!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgCo2!                   : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgSkin2!                 : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupPlayer2!             : IUiContainer;
+    private readonly _labelPlayerIndex2!        : IUiLabel;
+    private readonly _imgCo2!                   : IUiImage;
+    private readonly _imgSkin2!                 : IUiImage;
 
-    private readonly _groupPlayer3!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelPlayerIndex3!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgCo3!                   : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgSkin3!                 : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupPlayer3!             : IUiContainer;
+    private readonly _labelPlayerIndex3!        : IUiLabel;
+    private readonly _imgCo3!                   : IUiImage;
+    private readonly _imgSkin3!                 : IUiImage;
 
-    private readonly _groupPlayer4!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelPlayerIndex4!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgCo4!                   : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgSkin4!                 : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupPlayer4!             : IUiContainer;
+    private readonly _labelPlayerIndex4!        : IUiLabel;
+    private readonly _imgCo4!                   : IUiImage;
+    private readonly _imgSkin4!                 : IUiImage;
 
-    private readonly _scroller!                 : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiContainer.IUiContainer>;
-    private readonly _listRuleTitle!            : UiInterfacesIUiList.IUiList<DataForRuleTitleRenderer>;
-    private readonly _listPlayerInfo1!          : UiInterfacesIUiList.IUiList<DataForInfoRenderer>;
-    private readonly _listPlayerInfo2!          : UiInterfacesIUiList.IUiList<DataForInfoRenderer>;
-    private readonly _listPlayerInfo3!          : UiInterfacesIUiList.IUiList<DataForInfoRenderer>;
-    private readonly _listPlayerInfo4!          : UiInterfacesIUiList.IUiList<DataForInfoRenderer>;
-    private readonly _groupRule!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listPlayerRule1!          : UiInterfacesIUiList.IUiList<UiComponentsUiPlayerRuleRenderer.DataForUiPlayerRuleRenderer>;
-    private readonly _listPlayerRule2!          : UiInterfacesIUiList.IUiList<UiComponentsUiPlayerRuleRenderer.DataForUiPlayerRuleRenderer>;
-    private readonly _listPlayerRule3!          : UiInterfacesIUiList.IUiList<UiComponentsUiPlayerRuleRenderer.DataForUiPlayerRuleRenderer>;
-    private readonly _listPlayerRule4!          : UiInterfacesIUiList.IUiList<UiComponentsUiPlayerRuleRenderer.DataForUiPlayerRuleRenderer>;
+    private readonly _scroller!                 : IUiScroller<IUiContainer>;
+    private readonly _listRuleTitle!            : IUiList<DataForRuleTitleRenderer>;
+    private readonly _listPlayerInfo1!          : IUiList<DataForInfoRenderer>;
+    private readonly _listPlayerInfo2!          : IUiList<DataForInfoRenderer>;
+    private readonly _listPlayerInfo3!          : IUiList<DataForInfoRenderer>;
+    private readonly _listPlayerInfo4!          : IUiList<DataForInfoRenderer>;
+    private readonly _groupRule!                : IUiContainer;
+    private readonly _listPlayerRule1!          : IUiList<DataForUiPlayerRuleRenderer>;
+    private readonly _listPlayerRule2!          : IUiList<DataForUiPlayerRuleRenderer>;
+    private readonly _listPlayerRule3!          : IUiList<DataForUiPlayerRuleRenderer>;
+    private readonly _listPlayerRule4!          : IUiList<DataForUiPlayerRuleRenderer>;
 
     private _pageIndex                          = 0;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.BwCoIdChanged,               callback: this._onNotifyBwCoIdChanged },
-            { type: NotificationsTypeId.TypeId.BwOverridingSkinIdChanged,   callback: this._onNotifyBwOverridingSkinIdChanged },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.BwCoIdChanged,               callback: this._onNotifyBwCoIdChanged },
+            { type: TypeId.BwOverridingSkinIdChanged,   callback: this._onNotifyBwOverridingSkinIdChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -181,10 +190,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._listPlayerInfo2.setItemRendererClass(InfoRenderer);
         this._listPlayerInfo3.setItemRendererClass(InfoRenderer);
         this._listPlayerInfo4.setItemRendererClass(InfoRenderer);
-        this._listPlayerRule1.setItemRendererClass(UiComponentsUiPlayerRuleRenderer.UiPlayerRuleRenderer);
-        this._listPlayerRule2.setItemRendererClass(UiComponentsUiPlayerRuleRenderer.UiPlayerRuleRenderer);
-        this._listPlayerRule3.setItemRendererClass(UiComponentsUiPlayerRuleRenderer.UiPlayerRuleRenderer);
-        this._listPlayerRule4.setItemRendererClass(UiComponentsUiPlayerRuleRenderer.UiPlayerRuleRenderer);
+        this._listPlayerRule1.setItemRendererClass(UiPlayerRuleRenderer);
+        this._listPlayerRule2.setItemRendererClass(UiPlayerRuleRenderer);
+        this._listPlayerRule3.setItemRendererClass(UiPlayerRuleRenderer);
+        this._listPlayerRule4.setItemRendererClass(UiPlayerRuleRenderer);
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this.getPreviousOpenData()?.war.setIsViewingWarInfo(false);
@@ -197,8 +206,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const war = this.getOpenData()?.war;
         war?.setIsViewingWarInfo(false);
 
-        if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
-            SinglePlayerWarModelSpwModel.checkAndHandleAutoActionsAndRobotRecursively(war);
+        if (war instanceof getSpwWarClass()) {
+            checkAndHandleAutoActionsAndRobotRecursively(war);
         }
 
         await Promise.all([
@@ -231,7 +240,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().BwWarExtraInfoPanel, {
+        openPanel(getDict().BwWarExtraInfoPanel, {
             war : war,
         });
     }
@@ -245,7 +254,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().BwUnitListPanel, {
+        openPanel(getDict().BwUnitListPanel, {
             war                     : war,
             callbackForMoveCursor   : unit => {
                 if ((war.getIsExecutingAction()) || (war.getActionPlanner().checkIsStateRequesting())) {
@@ -258,7 +267,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 cursor.updateView();
                 war.getView().tweenGridToCentralArea(gridIndex);
                 war.getGridVisualEffect().showEffectAiming(gridIndex, 800);
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+                playShortSfx(ShortSfxCode.ButtonNeutral01);
             },
             callbackForSelectUnit   : unit => {
                 if ((war.getIsExecutingAction()) || (war.getActionPlanner().checkIsStateRequesting())) {
@@ -267,11 +276,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
                 const gridIndex = unit.getGridIndex();
                 war.getCursor().setGridIndex(gridIndex);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwCursorTapped, {
+                dispatch(TypeId.BwCursorTapped, {
                     current : gridIndex,
                     tappedOn: gridIndex,
-                } as NotificationsDataTypes.BwCursorTapped);
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().BwUnitListPanel);
+                } as BwCursorTapped);
+                closePanel(getDict().BwUnitListPanel);
             },
         });
         this.closePanel();
@@ -282,7 +291,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().BwTileStatisticsPanel, {
+        openPanel(getDict().BwTileStatisticsPanel, {
             war : war,
         });
         this.closePanel();
@@ -305,11 +314,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonCoListPanel, {
+        openPanel(getDict().CommonCoListPanel, {
             war         : war,
             playerIndex : playerIndex,
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -377,25 +386,25 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const label = this._labelTitle;
-        if (war instanceof GameHelpersGhFactory.getRwWarClass()) {
+        if (war instanceof getRwWarClass()) {
             if (war.getSettingsForSrw()) {
-                label.setText(`${LangUtils.getText(LangConstants.TextType.B1115)}`);
+                label.setText(`${getText(TextType.B1115)}`);
             } else {
-                label.setText(`${LangUtils.getText(LangConstants.TextType.B0710)} #${war.getReplayId()}`);
+                label.setText(`${getText(TextType.B0710)} #${war.getReplayId()}`);
             }
         } else {
             const warId = war.getWarId();
             label.setText(warId == null
-                ? LangUtils.getText(LangConstants.TextType.B0223)
-                : `${LangUtils.getText(LangConstants.TextType.B0719)} #${warId}`
+                ? getText(TextType.B0223)
+                : `${getText(TextType.B0719)} #${warId}`
             );
         }
     }
 
     private _updateLabelTips(): void {
         const war = this.getOpenData()?.war;
-        this._labelTips.setText((war instanceof GameHelpersGhFactory.getScwWarClass()) || (war instanceof GameHelpersGhFactory.getSfwWarClass())
-            ? LangUtils.getText(LangConstants.TextType.A0998)
+        this._labelTips.setText((war instanceof getScwWarClass()) || (war instanceof getSfwWarClass())
+            ? getText(TextType.A0998)
             : ``
         );
     }
@@ -433,7 +442,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     //     this._listPlayerInfo1.bindData(dataArray);
     // }
 
-    private _updateGroupPlayer(playerIndex: number, group: UiInterfacesIUiContainer.IUiContainer, labelPlayerIndex: UiInterfacesIUiLabel.IUiLabel, imgSkin: UiInterfacesIUiImage.IUiImage, imgCo: UiInterfacesIUiImage.IUiImage): void {
+    private _updateGroupPlayer(playerIndex: number, group: IUiContainer, labelPlayerIndex: IUiLabel, imgSkin: IUiImage, imgCo: IUiImage): void {
         const war = this.getOpenData()?.war;
         if (war == null) {
             return;
@@ -445,13 +454,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             group.setIsVisible(true);
 
             const player = war.getPlayer(playerIndex);
-            imgSkin.loadSource(HelpersImageSource.getCoEyeBackground(ForceSkinsUtils.getFinalSkinId(war, playerIndex)));
-            imgCo.loadSource(HelpersImageSource.getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== PlayersConstants.AliveStateId.Dead) ?? LangConstants.UndefinedError);
+            imgSkin.loadSource(getCoEyeBackground(getFinalSkinId(war, playerIndex)));
+            imgCo.loadSource(getCoEye(war.getGcData(), player.getCoId(), player.getAliveState() !== AliveStateId.Dead) ?? UndefinedError);
             labelPlayerIndex.setText(`P${playerIndex}`);
         }
     }
 
-    private async _updateListPlayerInfo(playerIndex: number, list: UiInterfacesIUiList.IUiList<DataForInfoRenderer>, infoTypeArray: InfoType[]): Promise<void> {
+    private async _updateListPlayerInfo(playerIndex: number, list: IUiList<DataForInfoRenderer>, infoTypeArray: InfoType[]): Promise<void> {
         const war = this.getOpenData()?.war;
         if (war == null) {
             return;
@@ -472,7 +481,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
 
-    private async _updateListPlayerRule(playerIndex: number, list: UiInterfacesIUiList.IUiList<UiComponentsUiPlayerRuleRenderer.DataForUiPlayerRuleRenderer>): Promise<void> {
+    private async _updateListPlayerRule(playerIndex: number, list: IUiList<DataForUiPlayerRuleRenderer>): Promise<void> {
         const war = this.getOpenData()?.war;
         if (war == null) {
             return;
@@ -483,11 +492,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         } else {
             const canModify         = war.getCanCheat();
             const gcData            = war.getGcData();
-            const gameModeId        = GameModesUtils.getEnum(war.getWarType());
-            const warRuleCommonData = HelpersMisc.getExisted(war.getCommonSettingManager().getInstanceWarRule().getWarRuleCommonData());
-            const playerRule        = HelpersMisc.getExisted(warRuleCommonData.getPlayerRuleList().find(v => v.getPlayerIndex() === playerIndex));
+            const gameModeId        = getEnum(war.getWarType());
+            const warRuleCommonData = getExisted(war.getCommonSettingManager().getInstanceWarRule().getWarRuleCommonData());
+            const playerRule        = getExisted(warRuleCommonData.getPlayerRuleList().find(v => v.getPlayerIndex() === playerIndex));
             const getIsBatch        = () => false;
-            const dataArray         : UiComponentsUiPlayerRuleRenderer.DataForUiPlayerRuleRenderer[] = [];
+            const dataArray         : DataForUiPlayerRuleRenderer[] = [];
             for (const playerRuleType of CommonPlayerRuleTypes) {
                 dataArray.push({
                     canModify               : canModify,
@@ -508,20 +517,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // RuleTitleRenderer
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-interface DataForRuleTitleRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForRuleTitleRenderer extends UiListItemData {
     index       : number;
     infoType    : InfoType;
-    war         : BaseWarInterfaceIBwWar.IBwWar;
+    war         : IBwWar;
 }
-class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForRuleTitleRenderer> {
-    private readonly _imgBg!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupHelp!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgHelp!      : UiInterfacesIUiImage.IUiImage;
+class RuleTitleRenderer extends UiListItemRenderer<DataForRuleTitleRenderer> {
+    private readonly _imgBg!        : IUiImage;
+    private readonly _labelName!    : IUiLabel;
+    private readonly _groupHelp!    : IUiContainer;
+    private readonly _imgHelp!      : IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupHelp,                  callback: this._onTouchedGroupHelp },
@@ -549,7 +558,7 @@ class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
 
         const infoType = openData.infoType;
         this._imgBg.setIsVisible(openData.index % 2 === 0);
-        this._labelName.setText(getInfoTypeName(infoType) ?? LangConstants.UndefinedError);
+        this._labelName.setText(getInfoTypeName(infoType) ?? UndefinedError);
         this._imgHelp.setIsVisible(infoType === InfoType.BannedCo);
     }
 
@@ -559,19 +568,19 @@ class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const gameConfig    = war.getGcData();
         const dict          = new Map<number, number[]>();
         for (const [playerIndex] of war.getPlayerManager().getAllPlayersDict()) {
-            if (playerIndex === PlayersConstants.PlayerIndex.Neutral) {
+            if (playerIndex === PlayerIndex.Neutral) {
                 continue;
             }
 
             dict.set(playerIndex, getBannedCoCategoryIdArray(war, playerIndex) ?? []);
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowSelectedCoCategoryIdPanel, {
+        openPanel(getDict().CommonShowSelectedCoCategoryIdPanel, {
             selectedCoCategoryIdDict    : dict,
             availableCoCategoryIdArray  : gameConfig.getEnabledCoCategoryIdArray(war.getWarType()),
             isBan                       : true,
@@ -583,22 +592,22 @@ class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // InfoRenderer
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-interface DataForInfoRenderer extends UiTypesUiListItemData.UiListItemData {
-    war                 : BaseWarInterfaceIBwWar.IBwWar;
+interface DataForInfoRenderer extends UiListItemData {
+    war                 : IBwWar;
     infoType            : InfoType;
     playerIndex         : number;
 }
-class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForInfoRenderer> {
-    private readonly _layoutValue!  : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnModify!    : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelValue!   : UiInterfacesIUiLabel.IUiLabel;
+class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
+    private readonly _layoutValue!  : IUiLayout;
+    private readonly _btnModify!    : IUiButton;
+    private readonly _labelValue!   : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._btnModify,          callback: this._onTouchedBtnModify },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.TimeTick,    callback: this._onNotifyTimeTick },
+            { type: TypeId.TimeTick,    callback: this._onNotifyTimeTick },
         ]);
     }
 
@@ -619,7 +628,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             case InfoType.BannedCo      : return this._modifyAsBannedCo();
             case InfoType.Energy        : return this._modifyAsEnergy();
             case InfoType.CurrentFund   : return this._modifyAsCurrentFund();
-            default                     : throw HelpersMisc.newError(`Invalid infoType: ${infoType}`, UtilsClientErrorCode.ClientErrorCode.BwWarInfoPanel_InfoRenderer_OnTouchedBtnModify_00);
+            default                     : throw newError(`Invalid infoType: ${infoType}`, ClientErrorCode.BwWarInfoPanel_InfoRenderer_OnTouchedBtnModify_00);
         }
     }
     private _onNotifyTimeTick(): void {
@@ -636,10 +645,10 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const { playerIndex, war }  = openData;
         const player                = war.getPlayer(playerIndex);
         const isHuman               = player.getUserId() != null;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => isHuman ? LangUtils.getText(LangConstants.TextType.A0110) : LangUtils.getText(LangConstants.TextType.A0111),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => isHuman ? getText(TextType.A0110) : getText(TextType.A0111),
             callback: () => {
-                player.setUserId(isHuman ? null : UsersModel.getSelfUserId());
+                player.setUserId(isHuman ? null : getSelfUserId());
                 this._updateView();
             },
         });
@@ -651,11 +660,11 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         }
 
         const { playerIndex, war }  = openData;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => LangUtils.getFormattedText(LangConstants.TextType.F0072, playerIndex),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => getFormattedText(TextType.F0072, playerIndex),
             callback: () => {
-                const warRuleCommonData = HelpersMisc.getExisted(war.getInstanceWarRule().getWarRuleCommonData());
-                const playerRule        = WarRulesUtilsCommonData.getPlayerRule(warRuleCommonData, playerIndex);
+                const warRuleCommonData = getExisted(war.getInstanceWarRule().getWarRuleCommonData());
+                const playerRule        = getPlayerRule(warRuleCommonData, playerIndex);
                 playerRule.setTeamIndex((playerRule.getTeamIndex() % war.getPlayerManager().getTotalPlayersCount(false)) + 1);
                 this._updateView();
             },
@@ -671,7 +680,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const player                = war.getPlayer(playerIndex);
         const gameConfig            = war.getGcData();
         const currentCoId           = player.getCoId();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleCoIdPanel, {
+        openPanel(getDict().CommonChooseSingleCoIdPanel, {
             gameConfig          : gameConfig,
             currentCoId         : currentCoId,
             availableCoIdArray  : gameConfig.getEnabledCoArray(war.getWarType()).map(v => v.getCoId()),
@@ -694,12 +703,12 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const { playerIndex, war }  = openData;
         const gameConfig            = war.getGcData();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowCoCategoryIdPanel, {
+        openPanel(getDict().CommonShowCoCategoryIdPanel, {
             gameConfig                      : gameConfig,
             availableCoCategoryIdArray      : gameConfig.getAllEnabledCoCategoryIdArray(),
             currentCoCategoryIdArray        : getBannedCoCategoryIdArray(war, playerIndex),
             isBan                           : true,
-            getTitleText                    : () => `${LangUtils.getText(LangConstants.TextType.B0403)} (P${playerIndex})`,
+            getTitleText                    : () => `${getText(TextType.B0403)} (P${playerIndex})`,
         });
     }
     private _modifyAsEnergy(): void {
@@ -711,11 +720,11 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const { playerIndex, war }  = openData;
         const player                = war.getPlayer(playerIndex);
         const currValue             = player.getCoCurrentEnergy();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => `P${playerIndex} ${LangUtils.getText(LangConstants.TextType.B0033)}`,
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => `P${playerIndex} ${getText(TextType.B0033)}`,
             currentValue    : currValue,
-            minValue        : CosConstants.EnergyHardLimit.Min,
-            maxValue        : CosConstants.EnergyHardLimit.Max,
+            minValue        : EnergyHardLimit.Min,
+            maxValue        : EnergyHardLimit.Max,
             callback        : value => {
                 player.setAndValidateCoCurrentEnergy(value);
                 this._updateView();
@@ -731,10 +740,10 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const { playerIndex, war }  = openData;
         const player                = war.getPlayer(playerIndex);
         const currValue             = player.getFund();
-        const maxValue              = PlayerRulesConstants.InitialFund.MaxLimit;
-        const minValue              = PlayerRulesConstants.InitialFund.MinLimit;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => `P${player.getPlayerIndex()} ${LangUtils.getText(LangConstants.TextType.Fund)}`,
+        const maxValue              = InitialFund.MaxLimit;
+        const minValue              = InitialFund.MinLimit;
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle           : () => `P${player.getPlayerIndex()} ${getText(TextType.Fund)}`,
             currentValue    : currValue,
             minValue,
             maxValue,
@@ -761,7 +770,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             case InfoType.BuildingsAndIncome    : this._updateViewAsBuildingsAndIncome();   break;
             case InfoType.UnitsAndValue         : this._updateViewAsUnitsAndValue();        break;
             case InfoType.TimeLimit             : this._updateViewAsTimeLimit();            break;
-            default                             : throw HelpersMisc.newError(`Invalid infoType: ${infoType}`, UtilsClientErrorCode.ClientErrorCode.BwWarInfoPanel_InfoRenderer_UpdateView_00);
+            default                             : throw newError(`Invalid infoType: ${infoType}`, ClientErrorCode.BwWarInfoPanel_InfoRenderer_UpdateView_00);
         }
     }
     private async _updateViewAsPlayer(): Promise<void> {
@@ -774,8 +783,8 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const userId                = war.getPlayer(playerIndex).getUserId();
         const labelValue            = this._labelValue;
         labelValue.setText(userId == null
-            ? LangUtils.getText(LangConstants.TextType.B0607)
-            : HelpersMisc.getExisted(await UsersModel.getUserNickname(userId), UtilsClientErrorCode.ClientErrorCode.BwWarInfoPanel_InfoRenderer_UpdateViewAsPlayer_00)
+            ? getText(TextType.B0607)
+            : getExisted(await getUserNickname(userId), ClientErrorCode.BwWarInfoPanel_InfoRenderer_UpdateViewAsPlayer_00)
         );
         labelValue.setTextColor(0xFFFFFF);
 
@@ -792,7 +801,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const war               = openData.war;
         const teamIndex         = war.getPlayer(openData.playerIndex).getTeamIndex();
         const labelValue        = this._labelValue;
-        labelValue.setText(LangUtils.getPlayerTeamName(teamIndex) ?? LangConstants.UndefinedError);
+        labelValue.setText(getPlayerTeamName(teamIndex) ?? UndefinedError);
         labelValue.setTextColor(0xFFFFFF);
 
         const canModify         = checkCanModifyPlayerInfo(war);
@@ -807,7 +816,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const war           = openData.war;
         const labelValue    = this._labelValue;
-        labelValue.setText(war.getGcData().getCoNameAndTierText(war.getPlayer(openData.playerIndex).getCoId()) ?? LangConstants.UndefinedError);
+        labelValue.setText(war.getGcData().getCoNameAndTierText(war.getPlayer(openData.playerIndex).getCoId()) ?? UndefinedError);
         labelValue.setTextColor(0xFFFFFF);
 
         const canModify = checkCanModifyPlayerInfo(war);
@@ -937,11 +946,11 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             label.setTextColor(0xffffff);
         } else {
             const params            = war.getSettingsBootTimerParams();
-            const textForAddTime    = params[0] === BootTimersConstants.TimerTypeId.Incremental
+            const textForAddTime    = params[0] === TimerTypeId.Incremental
                 ? `(+${params[2] * war.getUnitMap().getAllUnits().filter(v => v.getPlayerIndex() === playerIndex).length + (params[3] ?? 0)}s)`
                 : ``;
 
-            label.setText(`${LangUtils.getTimeDurationText2(restTime)}${textForAddTime}`);
+            label.setText(`${getTimeDurationText2(restTime)}${textForAddTime}`);
             label.setTextColor(restTime >= 30 * 60
                 ? 0xFFFFFF
                 : (restTime >= 5 * 60 ? 0xFFFF00 : 0xFF4400)
@@ -953,7 +962,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
     }
 }
 
-function getInfoTypesForTitleList(war: AuxiliaryTypesAuxiliaryTypes.Undefinable<BaseWarInterfaceIBwWar.IBwWar>): InfoType[] {
+function getInfoTypesForTitleList(war: Undefinable<IBwWar>): InfoType[] {
     if (war == null) {
         return [];
     }
@@ -963,12 +972,12 @@ function getInfoTypesForTitleList(war: AuxiliaryTypesAuxiliaryTypes.Undefinable<
         ...CommonInfoTypes,
     ];
 }
-function getInfoTypesForInfoList(war: AuxiliaryTypesAuxiliaryTypes.Undefinable<BaseWarInterfaceIBwWar.IBwWar>): InfoType[] {
+function getInfoTypesForInfoList(war: Undefinable<IBwWar>): InfoType[] {
     if (war == null) {
         return [];
     }
 
-    if (getBannedCoCategoryIdArray(war, PlayersConstants.PlayerIndex.First)) {
+    if (getBannedCoCategoryIdArray(war, PlayerIndex.First)) {
         return [
             InfoType.Player,
             InfoType.TeamIndex,
@@ -996,43 +1005,43 @@ function getInfoTypesForInfoList(war: AuxiliaryTypesAuxiliaryTypes.Undefinable<B
 
 function getInfoTypeName(type: InfoType): string | null {
     switch (type) {
-        case InfoType.Player                    : return LangUtils.getText(LangConstants.TextType.B0031);
-        case InfoType.TeamIndex                 : return LangUtils.getText(LangConstants.TextType.B0019);
-        case InfoType.Co                        : return LangUtils.getText(LangConstants.TextType.B0425);
-        case InfoType.BannedCo                  : return LangUtils.getText(LangConstants.TextType.B0403);
-        case InfoType.Energy                    : return LangUtils.getText(LangConstants.TextType.B0033);
-        case InfoType.CurrentFund               : return LangUtils.getText(LangConstants.TextType.Fund);
-        case InfoType.BuildingsAndIncome        : return LangUtils.getText(LangConstants.TextType.B0689);
-        case InfoType.UnitsAndValue             : return LangUtils.getText(LangConstants.TextType.B0688);
-        case InfoType.TimeLimit                 : return LangUtils.getText(LangConstants.TextType.B0021);
-        case InfoType.BannedUnitTypeArray       : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.BannedUnitTypeArray);
-        case InfoType.InitialFund               : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.InitialFund);
-        case InfoType.IncomeMultiplier          : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.IncomeMultiplier);
-        case InfoType.MaxUnitsCount             : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.MaxUnitsCount);
-        case InfoType.EnergyAddPctOnCoBoard     : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.EnergyAddPctOnCoBoard);
-        case InfoType.EnergyLossPctOnCoDie      : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.EnergyLossPctOnCoDie);
-        case InfoType.EnergyGrowthMultiplier    : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.EnergyGrowthMultiplier);
-        case InfoType.CanActivateCoSkill        : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.CanActivateCoSkill);
-        case InfoType.CanCoBoard                : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.CanCoBoard);
-        case InfoType.CanUnitJoin               : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.CanUnitJoin);
-        case InfoType.MoveRangeModifier         : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.MoveRangeModifier);
-        case InfoType.UnitVisionRangeModifier   : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.UnitVisionRangeModifier);
-        case InfoType.TileVisionRangeModifier   : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.TileVisionRangeModifier);
-        case InfoType.AttackPowerModifier       : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.AttackPowerModifier);
-        case InfoType.DefenseModifier           : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.DefenseModifier);
-        case InfoType.LuckLowerLimit            : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.LuckLowerLimit);
-        case InfoType.LuckUpperLimit            : return LangUtils.getPlayerRuleName(PlayerRulesConstants.RuleTypeId.LuckUpperLimit);
+        case InfoType.Player                    : return getText(TextType.B0031);
+        case InfoType.TeamIndex                 : return getText(TextType.B0019);
+        case InfoType.Co                        : return getText(TextType.B0425);
+        case InfoType.BannedCo                  : return getText(TextType.B0403);
+        case InfoType.Energy                    : return getText(TextType.B0033);
+        case InfoType.CurrentFund               : return getText(TextType.Fund);
+        case InfoType.BuildingsAndIncome        : return getText(TextType.B0689);
+        case InfoType.UnitsAndValue             : return getText(TextType.B0688);
+        case InfoType.TimeLimit                 : return getText(TextType.B0021);
+        case InfoType.BannedUnitTypeArray       : return getPlayerRuleName(RuleTypeId.BannedUnitTypeArray);
+        case InfoType.InitialFund               : return getPlayerRuleName(RuleTypeId.InitialFund);
+        case InfoType.IncomeMultiplier          : return getPlayerRuleName(RuleTypeId.IncomeMultiplier);
+        case InfoType.MaxUnitsCount             : return getPlayerRuleName(RuleTypeId.MaxUnitsCount);
+        case InfoType.EnergyAddPctOnCoBoard     : return getPlayerRuleName(RuleTypeId.EnergyAddPctOnCoBoard);
+        case InfoType.EnergyLossPctOnCoDie      : return getPlayerRuleName(RuleTypeId.EnergyLossPctOnCoDie);
+        case InfoType.EnergyGrowthMultiplier    : return getPlayerRuleName(RuleTypeId.EnergyGrowthMultiplier);
+        case InfoType.CanActivateCoSkill        : return getPlayerRuleName(RuleTypeId.CanActivateCoSkill);
+        case InfoType.CanCoBoard                : return getPlayerRuleName(RuleTypeId.CanCoBoard);
+        case InfoType.CanUnitJoin               : return getPlayerRuleName(RuleTypeId.CanUnitJoin);
+        case InfoType.MoveRangeModifier         : return getPlayerRuleName(RuleTypeId.MoveRangeModifier);
+        case InfoType.UnitVisionRangeModifier   : return getPlayerRuleName(RuleTypeId.UnitVisionRangeModifier);
+        case InfoType.TileVisionRangeModifier   : return getPlayerRuleName(RuleTypeId.TileVisionRangeModifier);
+        case InfoType.AttackPowerModifier       : return getPlayerRuleName(RuleTypeId.AttackPowerModifier);
+        case InfoType.DefenseModifier           : return getPlayerRuleName(RuleTypeId.DefenseModifier);
+        case InfoType.LuckLowerLimit            : return getPlayerRuleName(RuleTypeId.LuckLowerLimit);
+        case InfoType.LuckUpperLimit            : return getPlayerRuleName(RuleTypeId.LuckUpperLimit);
         default                                 : return null;
     }
 }
-function checkCanModifyPlayerInfo(war: BaseWarInterfaceIBwWar.IBwWar): boolean {
+function checkCanModifyPlayerInfo(war: IBwWar): boolean {
     const warType = war.getWarType();
-    return (warType === WarTypesConstants.WarTypeId.ScwFog)
-        || (warType === WarTypesConstants.WarTypeId.ScwStd)
-        || (warType === WarTypesConstants.WarTypeId.SfwFog)
-        || (warType === WarTypesConstants.WarTypeId.SfwStd);
+    return (warType === WarTypeId.ScwFog)
+        || (warType === WarTypeId.ScwStd)
+        || (warType === WarTypeId.SfwFog)
+        || (warType === WarTypeId.SfwStd);
 }
-function getBannedCoCategoryIdArray(war: BaseWarInterfaceIBwWar.IBwWar, playerIndex: number): number[] | null {
+function getBannedCoCategoryIdArray(war: IBwWar, playerIndex: number): number[] | null {
     const bannedCoIdArray = getBannedCoIdArray(war, playerIndex);
     if (bannedCoIdArray == null) {
         return null;
@@ -1041,14 +1050,14 @@ function getBannedCoCategoryIdArray(war: BaseWarInterfaceIBwWar.IBwWar, playerIn
         return bannedCoIdArray.map(v => gameConfig.getCoBasicCfg(v)?.getCoCategoryId() ?? 0);
     }
 }
-function getBannedCoIdArray(war: BaseWarInterfaceIBwWar.IBwWar, playerIndex: number): number[] | null {
-    if (war instanceof GameHelpersGhFactory.getAtwWarClass()) {
+function getBannedCoIdArray(war: IBwWar, playerIndex: number): number[] | null {
+    if (war instanceof getAtwWarClass()) {
         return war.getSettingsForAtw().getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex() ?? 0) === playerIndex)?.getBannedCoIdArray() ?? [];
-    } else if (war instanceof GameHelpersGhFactory.getMrwWarClass()) {
+    } else if (war instanceof getMrwWarClass()) {
         return war.getSettingsForMrw().getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex() ?? 0) === playerIndex)?.getBannedCoIdArray() ?? [];
-    } else if (war instanceof GameHelpersGhFactory.getMmwWarClass()) {
+    } else if (war instanceof getMmwWarClass()) {
         return war.getSettingsForMmw().getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex() ?? 0) === playerIndex)?.getBannedCoIdArray() ?? [];
-    } else if (war instanceof GameHelpersGhFactory.getRwWarBaseClass()) {
+    } else if (war instanceof getRwWarBaseClass()) {
         {
             const settingsForAtw = war.getSettingsForAtw();
             if (settingsForAtw) {

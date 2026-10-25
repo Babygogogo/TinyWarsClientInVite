@@ -1,10 +1,10 @@
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import type * as FogMapsIFogMap from "../../fogMaps/IFogMap.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { IFogMap as FogMapsIFogMap } from "../../fogMaps/IFogMap.ts";
 
-type IFogMap = FogMapsIFogMap.IFogMap;
+type IFogMap = FogMapsIFogMap;
 
-export class FogMap extends ExpressionParsersResultsBase.Base {
+export class FogMap extends Base {
     public readonly fogMap: IFogMap;
 
     public constructor(fogMap: IFogMap) {
@@ -13,10 +13,10 @@ export class FogMap extends ExpressionParsersResultsBase.Base {
         this.fogMap = fogMap;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.Fog;
+    public override getResultType(): ResultType {
+        return ResultType.Fog;
     }
-    public checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public checkIsEqual(rhs: Base): boolean {
         return (rhs instanceof FogMap)
             && (this.fogMap === rhs.fogMap);
     }

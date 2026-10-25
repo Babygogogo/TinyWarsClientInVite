@@ -1,24 +1,24 @@
-import * as ExpressionParsersEnums from "../../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../../expressionParsers/Types.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
+import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
-    ConUnitFilter           : ExpressionParsersTypes.EpExpressionInfo;
-    ActPlayerAliveState     : ExpressionParsersTypes.EpExpressionInfo;
+    ConUnitFilter           : EpExpressionInfo;
+    ActPlayerAliveState     : EpExpressionInfo;
 } = {
     ConUnitFilter       : {
-        contextType     : ExpressionParsersEnums.ContextType.Unit,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Unit,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.UnitFilter),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0621),
+        getTitleText    : () => getText(TextType.UnitFilter),
+        getHelpText     : () => getText(TextType.A0621),
     },
     ActPlayerAliveState : {
-        contextType     : ExpressionParsersEnums.ContextType.Player,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Player,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.PlayerAliveState),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0884),
+        getTitleText    : () => getText(TextType.PlayerAliveState),
+        getHelpText     : () => getText(TextType.A0884),
     },
 };

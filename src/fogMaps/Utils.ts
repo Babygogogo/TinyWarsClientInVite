@@ -1,5 +1,5 @@
-import * as FogMapsConstants from "./Constants.ts";
+import { AllForcedFogCodeArray } from "./Constants.ts";
 
 export function checkIsValidForcedFogCode(forcedFogCode: number): boolean {
-    return FogMapsConstants.AllForcedFogCodeArray.includes(forcedFogCode);
+    return AllForcedFogCodeArray.includes(forcedFogCode);
 }

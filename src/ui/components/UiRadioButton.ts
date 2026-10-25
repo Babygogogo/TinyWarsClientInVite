@@ -1,25 +1,25 @@
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiOpenableComponent from "./UiOpenableComponent.ts";
-import type * as UiInterfacesIUiContainer from "../interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiRadioButton from "../interfaces/IUiRadioButton.ts";
-import type * as UiTypesUiRadioButtonData from "../types/UiRadioButtonData.ts";
+import { MouseStyleType } from "../../helpers/PointerInput.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiOpenableComponent } from "./UiOpenableComponent.ts";
+import type { IUiContainer } from "../interfaces/IUiContainer.ts";
+import type { IUiImage } from "../interfaces/IUiImage.ts";
+import type { IUiLabel } from "../interfaces/IUiLabel.ts";
+import type { IUiRadioButton } from "../interfaces/IUiRadioButton.ts";
+import type { UiRadioButtonData } from "../types/UiRadioButtonData.ts";
 
-export class UiRadioButton extends UiComponentsUiOpenableComponent.UiOpenableComponent<UiTypesUiRadioButtonData.UiRadioButtonData> implements UiInterfacesIUiRadioButton.IUiRadioButton {
-    private readonly _groupLeft!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgLeftOn?        : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgLeftOff?       : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelLeft?        : UiInterfacesIUiLabel.IUiLabel;
+export class UiRadioButton extends UiOpenableComponent<UiRadioButtonData> implements IUiRadioButton {
+    private readonly _groupLeft!        : IUiContainer;
+    private readonly _imgLeftOn?        : IUiImage;
+    private readonly _imgLeftOff?       : IUiImage;
+    private readonly _labelLeft?        : IUiLabel;
 
-    private readonly _groupRight!       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgRightOn?       : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgRightOff?      : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelRight?       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupRight!       : IUiContainer;
+    private readonly _imgRightOn?       : IUiImage;
+    private readonly _imgRightOff?      : IUiImage;
+    private readonly _labelRight?       : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -27,9 +27,9 @@ export class UiRadioButton extends UiComponentsUiOpenableComponent.UiOpenableCom
             { ui: this._groupRight,     callback: this._onTouchedGroupRight },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
-        this.setMouseStyle(HelpersPointerInput.MouseStyleType.Pointer);
+        this.setMouseStyle(MouseStyleType.Pointer);
 
         {
             const groupLeft = this._groupLeft;
@@ -78,14 +78,14 @@ export class UiRadioButton extends UiComponentsUiOpenableComponent.UiOpenableCom
         {
             const labelLeft = this._labelLeft;
             if (labelLeft) {
-                labelLeft.setText(LangUtils.getText(openData.leftTextType, openData.leftLangType));
+                labelLeft.setText(getText(openData.leftTextType, openData.leftLangType));
                 labelLeft.setTextColor(getTextColor(isLeftOn));
             }
         }
         {
             const labelRight = this._labelRight;
             if (labelRight) {
-                labelRight.setText(LangUtils.getText(openData.rightTextType, openData.rightLangType));
+                labelRight.setText(getText(openData.rightTextType, openData.rightLangType));
                 labelRight.setTextColor(getTextColor(!isLeftOn));
             }
         }
@@ -96,7 +96,7 @@ export class UiRadioButton extends UiComponentsUiOpenableComponent.UiOpenableCom
         if ((data) && (!this._imgLeftOn?.getIsVisible())) {
             data.callbackOnLeft();
             this._updateView();
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
     private _onTouchedGroupRight(): void {
@@ -104,7 +104,7 @@ export class UiRadioButton extends UiComponentsUiOpenableComponent.UiOpenableCom
         if ((data) && (!this._imgRightOn?.getIsVisible())) {
             data.callbackOnRight();
             this._updateView();
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
     private _onNotifyLanguageChanged(): void {

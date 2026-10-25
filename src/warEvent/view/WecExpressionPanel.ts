@@ -1,69 +1,73 @@
-import * as ExpressionParsersEnums from "../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../expressionParsers/Types.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventCondition from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarEventWecExpression from "../../proto/schema/CommonProto/WarEvent/WecExpression.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import * as WarEventsConditionsUtilsCommon from "../../warEvents/conditions/utils/Common.ts";
+import { ContextType, ResultType } from "../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../expressionParsers/Types.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type {
+    WarEventCondition as ProtoSchemaCommonProtoWarEventWarEventCondition,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import type {
+    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WecExpression } from "../../proto/schema/CommonProto/WarEvent/WecExpression.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import { getErrorTipForCondition, getBriefDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
 
-type WarEventFullData   = ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
-type WarEventCondition  = ProtoSchemaCommonProtoWarEventWarEventCondition.WarEventCondition;
+type WarEventFullData   = ProtoSchemaCommonProtoWarEventWarEventFullData;
+type WarEventCondition  = ProtoSchemaCommonProtoWarEventWarEventCondition;
 
-const ExpressionInfo: ExpressionParsersTypes.EpExpressionInfo = {
-    contextType     : ExpressionParsersEnums.ContextType.War,
-    resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+const ExpressionInfo: EpExpressionInfo = {
+    contextType     : ContextType.War,
+    resultTypes     : [ResultType.Number],
     isRequired      : true,
-    getTitleText    : () => LangUtils.getText(LangConstants.TextType.B0129),
-    getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0941),
+    getTitleText    : () => getText(TextType.B0129),
+    getHelpText     : () => getText(TextType.A0941),
 };
 
 export interface OpenData {
-    war         : MapEditorInterfaceIMeWar.IMeWar;
+    war         : IMeWar;
     fullData    : WarEventFullData;
     condition   : WarEventCondition;
 }
 /** WecPlayerIndexInTurnEqualTo */
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnType!                      : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                     : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnIdentifier!                : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                      : IUiImage;
+    private readonly _group!                        : IUiContainer;
+    private readonly _labelTitle!                   : IUiLabel;
+    private readonly _btnType!                      : IUiButton;
+    private readonly _btnClose!                     : IUiButton;
+    private readonly _btnIdentifier!                : IUiButton;
 
-    private readonly _groupDesc!                    : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelDesc!                    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelError!                   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDesc!                    : IUiLayout;
+    private readonly _labelDesc!                    : IUiLabel;
+    private readonly _labelError!                   : IUiLabel;
 
-    private readonly _scrContent!                   : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiLayout.IUiLayout>;
-    private readonly _layoutContent!                : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _scrContent!                   : IUiScroller<IUiLayout>;
+    private readonly _layoutContent!                : IUiLayout;
 
-    private readonly _groupConExpression!           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupModifyConExpression!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelConExpression!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnConExpression!             : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupConExpression!           : IUiContainer;
+    private readonly _groupModifyConExpression!     : IUiContainer;
+    private readonly _labelConExpression!           : IUiLabel;
+    private readonly _btnConExpression!             : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                       callback: this.closePanel },
@@ -94,21 +98,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeConditionTypeListPanel, {
+        openPanel(getDict().WeConditionTypeListPanel, {
             fullData    : openData.fullData,
             condition   : openData.condition,
             war         : openData.war,
         });
     }
     private _onTouchedBtnIdentifier(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonApiPanel, {
-            contextType : ExpressionParsersEnums.ContextType.War,
+        openPanel(getDict().CommonApiPanel, {
+            contextType : ContextType.War,
         });
     }
 
     private _onTouchedBtnConExpression(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0941),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0941),
         });
     }
     private _onTouchedGroupModifyConExpression(): void {
@@ -118,19 +122,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const condition = this._getCondition();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputExpressionPanel, {
+        openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : condition.getExpression(),
             expressionInfo  : ExpressionInfo,
-            fullData        : HelpersMisc.getExisted(openData.fullData),
+            fullData        : getExisted(openData.fullData),
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (condition.getExpression() != text) {
                     condition.setExpression(text);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             },
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _updateView(): void {
@@ -142,11 +146,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
-        this._btnClose.setLangText(LangConstants.TextType.B0146);
-        this._btnType.setLangText(LangConstants.TextType.B0516);
-        this._btnIdentifier.setLangText(LangConstants.TextType.B0131);
-        this._btnConExpression.setLangText(LangConstants.TextType.B0129);
+        this._labelTitle.setText(`${getText(TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
+        this._btnClose.setLangText(TextType.B0146);
+        this._btnType.setLangText(TextType.B0516);
+        this._btnIdentifier.setLangText(TextType.B0131);
+        this._btnConExpression.setLangText(TextType.B0129);
 
         this._updateLabelDescAndLabelError();
     }
@@ -159,11 +163,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const condition         = openData.condition;
         const war               = openData.war;
-        const errorTip          = WarEventsConditionsUtilsCommon.getErrorTipForCondition(openData.fullData, condition, war);
+        const errorTip          = getErrorTipForCondition(openData.fullData, condition, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || LangUtils.getText(LangConstants.TextType.B0493));
-        labelError.setTextColor(errorTip ? GraphicsConstants.ColorValue.Red : GraphicsConstants.ColorValue.Green);
-        this._labelDesc.setText(WarEventsConditionsUtilsCommon.getBriefDescForCondition(condition, war.getGcData()) || LangConstants.UndefinedError);
+        labelError.setText(errorTip || getText(TextType.B0493));
+        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
+        this._labelDesc.setText(getBriefDescForCondition(condition, war.getGcData()) || UndefinedError);
         this._groupDesc.arrangeItems();
     }
 
@@ -183,7 +187,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         scrContent.setUnscaledManualHeight(Math.min(140, layoutContent.getScaledHeight()));
     }
 
-    private _getCondition(): ProtoSchemaCommonProtoWarEventWecExpression.WecExpression {
-        return HelpersMisc.getExisted(this.getOpenData()?.condition.getWecExpression());
+    private _getCondition(): WecExpression {
+        return getExisted(this.getOpenData()?.condition.getWecExpression());
     }
 }

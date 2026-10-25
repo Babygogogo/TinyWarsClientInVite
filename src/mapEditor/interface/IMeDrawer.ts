@@ -1,19 +1,28 @@
-import type * as GameConfigGcMapEditor from "../../gameConfig/GcMapEditor.ts";
-import type * as GeometriesConstants from "../../geometries/Constants.ts";
-import type * as MapEditorInterfaceIMeWar from "./IMeWar.ts";
-import type * as MapEditorModelMeTypes from "../model/MeTypes.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialTile from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
+import type { DrawerMode } from "../../gameConfig/GcMapEditor.ts";
+import type { SymmetryTypeId } from "../../geometries/Constants.ts";
+import type { IMeWar } from "./IMeWar.ts";
+import type {
+    DataForDrawTileObject,
+    DataForDrawTileBase,
+    DataForDrawTileDecoration,
+    DataForDrawUnit,
+    DataForAddTileToLocation,
+    DataForDeleteTileFromLocation,
+} from "../model/MeTypes.ts";
+import type {
+    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
 
-type MapEditorDrawerMode    = GameConfigGcMapEditor.DrawerMode;
-type SymmetryType           = GeometriesConstants.SymmetryTypeId;
-type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile.SerialTile;
-type IUnit                  = UnitsIUnit.IUnit;
+type MapEditorDrawerMode    = DrawerMode;
+type SymmetryType           = SymmetryTypeId;
+type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
+type IUnit                  = UnitsIUnit;
 
 export interface IMeDrawer {
     init(): IMeDrawer;
 
-    startRunning(war: MapEditorInterfaceIMeWar.IMeWar): void;
+    startRunning(war: IMeWar): void;
     stopRunning(): void;
 
     setModeDeleteUnit(): void;
@@ -22,25 +31,25 @@ export interface IMeDrawer {
     setModePreview(): void;
     getMode(): MapEditorDrawerMode;
 
-    setModeDrawTileObject(data: MapEditorModelMeTypes.DataForDrawTileObject): void;
-    setModeDrawTileBase(data: MapEditorModelMeTypes.DataForDrawTileBase): void;
-    setModeDrawTileDecoration(data: MapEditorModelMeTypes.DataForDrawTileDecoration): void;
-    getDrawTargetTileObjectData(): MapEditorModelMeTypes.DataForDrawTileObject | null;
-    getDrawTargetTileBaseData(): MapEditorModelMeTypes.DataForDrawTileBase | null;
-    getDrawTargetTileDecorationData(): MapEditorModelMeTypes.DataForDrawTileDecoration | null;
+    setModeDrawTileObject(data: DataForDrawTileObject): void;
+    setModeDrawTileBase(data: DataForDrawTileBase): void;
+    setModeDrawTileDecoration(data: DataForDrawTileDecoration): void;
+    getDrawTargetTileObjectData(): DataForDrawTileObject | null;
+    getDrawTargetTileBaseData(): DataForDrawTileBase | null;
+    getDrawTargetTileDecorationData(): DataForDrawTileDecoration | null;
     setDataForPasteTile(data: SerialTile): void;
     getDataForPasteTile(): SerialTile | null;
     setDataForPasteUnit(data: IUnit[]): void;
     getDataForPasteUnit(): IUnit[] | null;
 
-    setModeDrawUnit(data: MapEditorModelMeTypes.DataForDrawUnit): void;
+    setModeDrawUnit(data: DataForDrawUnit): void;
     getDrawTargetUnit(): IUnit | null;
 
-    setModeAddTileToLocation(data: MapEditorModelMeTypes.DataForAddTileToLocation): void;
-    getDataForAddTileToLocation(): MapEditorModelMeTypes.DataForAddTileToLocation | null;
+    setModeAddTileToLocation(data: DataForAddTileToLocation): void;
+    getDataForAddTileToLocation(): DataForAddTileToLocation | null;
 
-    setModeDeleteTileFromLocation(data: MapEditorModelMeTypes.DataForDeleteTileFromLocation): void;
-    getDataForDeleteTileFromLocation(): MapEditorModelMeTypes.DataForDeleteTileFromLocation | null;
+    setModeDeleteTileFromLocation(data: DataForDeleteTileFromLocation): void;
+    getDataForDeleteTileFromLocation(): DataForDeleteTileFromLocation | null;
 
     setModePasteTile(): void;
     setModePasteUnit(): void;

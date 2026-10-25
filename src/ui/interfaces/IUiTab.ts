@@ -1,14 +1,14 @@
-import type * as UiInterfacesIUiContainer from "./IUiContainer.ts";
-import type * as UiInterfacesIUiTabItemRenderer from "./IUiTabItemRenderer.ts";
-import type * as UiTypesUiListItemData from "../types/UiListItemData.ts";
-import type * as UiTypesUiTabData from "../types/UiTabData.ts";
+import type { IUiContainer } from "./IUiContainer.ts";
+import type { IUiTabItemRenderer } from "./IUiTabItemRenderer.ts";
+import type { UiListItemData } from "../types/UiListItemData.ts";
+import type { UiTabData } from "../types/UiTabData.ts";
 
-export interface IUiTab<DataForTabItemRenderer extends UiTypesUiListItemData.UiListItemData, DataForPage> extends UiInterfacesIUiContainer.IUiContainer {
+export interface IUiTab<DataForTabItemRenderer extends UiListItemData, DataForPage> extends IUiContainer {
     getSelectedIndex(): number | undefined;
 
-    setBarItemRenderer(itemRenderer: new () => UiInterfacesIUiTabItemRenderer.IUiTabItemRenderer<DataForTabItemRenderer>): void;
+    setBarItemRenderer(itemRenderer: new () => IUiTabItemRenderer<DataForTabItemRenderer>): void;
 
-    bindData(dataArray: UiTypesUiTabData.UiTabData<DataForTabItemRenderer, DataForPage>[], selectedIndex?: number): Promise<void>;
+    bindData(dataArray: UiTabData<DataForTabItemRenderer, DataForPage>[], selectedIndex?: number): Promise<void>;
     updatePageData(index: number, pageData: DataForPage, refreshPage?: boolean): Promise<void>;
 
     clear(): Promise<void>;

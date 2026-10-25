@@ -1,28 +1,28 @@
-import type * as BaseWarInterfaceIBwWarEventManager from "../../baseWar/interface/IBwWarEventManager.ts";
-import * as BaseWarModelBwWar from "../../baseWar/model/BwWar.ts";
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import type * as PlayersIPlayer from "../../players/IPlayer.ts";
-import * as ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as SinglePlayerWarInterfaceISpwRetractManager from "../interface/ISpwRetractManager.ts";
-import type * as SinglePlayerWarInterfaceISpwWar from "../interface/ISpwWar.ts";
-import * as VisibilitiesUtils from "../../visibilities/Utils.ts";
+import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
+import { BwWar } from "../../baseWar/model/BwWar.ts";
+import { SinglePlayerWar } from "../../gameConfig/GcWar.ts";
+import { getBwWarEventManagerClass, getSpwRetractManagerClass } from "../../gameHelpers/GhFactory.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import type { IPlayer } from "../../players/IPlayer.ts";
+import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { ISpwRetractManager } from "../interface/ISpwRetractManager.ts";
+import type { ISpwWar } from "../interface/ISpwWar.ts";
+import { getAllUnitsOnMapVisibleToTeams, getAllTilesVisibleToTeams } from "../../visibilities/Utils.ts";
 
-export abstract class SpwWar extends BaseWarModelBwWar.BwWar implements SinglePlayerWarInterfaceISpwWar.ISpwWar {
-    private readonly _warEventManager       = new (GameHelpersGhFactory.getBwWarEventManagerClass())();
-    private readonly _retractManager        = new (GameHelpersGhFactory.getSpwRetractManagerClass())();
+export abstract class SpwWar extends BwWar implements ISpwWar {
+    private readonly _warEventManager       = new (getBwWarEventManagerClass())();
+    private readonly _retractManager        = new (getSpwRetractManagerClass())();
 
     private _isAiPaused                 = false;
     private _saveSlotIndex              : number | null = null;
-    private readonly _saveSlotExtraData = new ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData.SpmWarSaveSlotExtraData();
+    private readonly _saveSlotExtraData = new SpmWarSaveSlotExtraData();
 
-    public abstract serialize(): ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
+    public abstract serialize(): SerialWar;
 
     public updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void {
         const teamIndexes   = this.getPlayerManager().getWatcherTeamIndexesForSelf();
-        const visibleUnits  = VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(this, teamIndexes);
+        const visibleUnits  = getAllUnitsOnMapVisibleToTeams(this, teamIndexes);
         for (const unit of this.getUnitMap().getAllUnitsOnMap()) {
             if (!isFastExecute) {
                 const isVisible = visibleUnits.has(unit);
@@ -33,7 +33,7 @@ export abstract class SpwWar extends BaseWarModelBwWar.BwWar implements SinglePl
             }
         }
 
-        const visibleTiles  = VisibilitiesUtils.getAllTilesVisibleToTeams(this, teamIndexes);
+        const visibleTiles  = getAllTilesVisibleToTeams(this, teamIndexes);
         const tileMap       = this.getTileMap();
         for (const tile of tileMap.getAllTiles()) {
             tile.setHasFog(!visibleTiles.has(tile));
@@ -48,10 +48,10 @@ export abstract class SpwWar extends BaseWarModelBwWar.BwWar implements SinglePl
         }
     }
 
-    public getWarEventManager(): BaseWarInterfaceIBwWarEventManager.IBwWarEventManager {
+    public getWarEventManager(): IBwWarEventManager {
         return this._warEventManager;
     }
-    public getRetractManager(): SinglePlayerWarInterfaceISpwRetractManager.ISpwRetractManager {
+    public getRetractManager(): ISpwRetractManager {
         return this._retractManager;
     }
 
@@ -77,28 +77,28 @@ export abstract class SpwWar extends BaseWarModelBwWar.BwWar implements SinglePl
         return this._saveSlotIndex;
     }
 
-    public setSaveSlotExtraData(extraData: ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData.SpmWarSaveSlotExtraData | null): void {
+    public setSaveSlotExtraData(extraData: SpmWarSaveSlotExtraData | null): void {
         this._saveSlotExtraData.loadJson(extraData?.toJson() ?? {
             overridingSkinIdArray   : [],
         });
     }
-    public getSaveSlotExtraData(): ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData.SpmWarSaveSlotExtraData {
+    public getSaveSlotExtraData(): SpmWarSaveSlotExtraData {
         return this._saveSlotExtraData;
     }
 
     public getHumanPlayerIndexes(): number[] {
         return this.getPlayerManager().getHumanPlayers().map(v => v.getPlayerIndex());
     }
-    public getHumanPlayers(): PlayersIPlayer.IPlayer[] {
+    public getHumanPlayers(): IPlayer[] {
         return this.getPlayerManager().getHumanPlayers();
     }
 
     public calculateTotalScore(): number {
-        return NumbersUtils.getValueInRange({
-            minValue    : GameConfigGcWar.SinglePlayerWar.PlayerScore.MinScore,
-            maxValue    : GameConfigGcWar.SinglePlayerWar.PlayerScore.MaxScore,
+        return getValueInRange({
+            minValue    : SinglePlayerWar.PlayerScore.MinScore,
+            maxValue    : SinglePlayerWar.PlayerScore.MaxScore,
             rawValue    : Math.floor(
-                GameConfigGcWar.SinglePlayerWar.PlayerScore.BaseScore
+                SinglePlayerWar.PlayerScore.BaseScore
                 - (this.getTurnManager().getTurnIndex() - 1) * 1000
                 - this.getExecutedOperationManager().getExecutedOperationsCount()
                 + this.getTaskObjectiveManager().getScore()

@@ -1,4 +1,11 @@
-import type * as TilesTypes from "../Types.ts";
+import type {
+    TileBaseCfg,
+    TileBaseSymmetryCfg,
+    TileObjectCfg,
+    TileObjectSymmetryCfg,
+    TileDecorationCfg,
+    TileDecorationSymmetryCfg,
+} from "../Types.ts";
 
 // eslint-disable-next-line no-shadow
 export const enum TileTypeId {
@@ -88,7 +95,7 @@ export const enum BaseTypeId {
     Beach               = 4,
 }
 
-export const BaseCfgDict = new Map<number, TilesTypes.TileBaseCfg>([
+export const BaseCfgDict = new Map<number, TileBaseCfg>([
     [ 0,                { tileBaseTypeId: 0,                    isEnabled: false,   isDefault: false,   shapesCount: 1,     animParams: [1, 999999],    animParamsForV0: [1, 999999] } ],
     [ BaseTypeId.Plain, { tileBaseTypeId: BaseTypeId.Plain,     isEnabled: true,    isDefault: true,    shapesCount: 1,     animParams: [1, 999999],    animParamsForV0: [1, 999999] } ],
     [ BaseTypeId.River, { tileBaseTypeId: BaseTypeId.River,     isEnabled: true,    isDefault: false,   shapesCount: 16,    animParams: [4, 2],         animParamsForV0: [1, 999999] } ],
@@ -96,7 +103,7 @@ export const BaseCfgDict = new Map<number, TilesTypes.TileBaseCfg>([
     [ BaseTypeId.Beach, { tileBaseTypeId: BaseTypeId.Beach,     isEnabled: true,    isDefault: false,   shapesCount: 40,    animParams: [6, 1],         animParamsForV0: [6, 1] }      ],
 ]);
 
-export const BaseSymmetryCfgDict = new Map<number, Map<number, TilesTypes.TileBaseSymmetryCfg>>([
+export const BaseSymmetryCfgDict = new Map<number, Map<number, TileBaseSymmetryCfg>>([
     [1, new Map([
         [0,     { tileBaseTypeId: 1,  shapeId: 0,     symmetryShapeIds: [0, 0, 0, 0, 0] }],
     ])],
@@ -194,7 +201,7 @@ export const enum ObjectTypeId {
     PipeJoint           = 34,
 }
 
-export const ObjectCfgDict = new Map<number, TilesTypes.TileObjectCfg>([
+export const ObjectCfgDict = new Map<number, TileObjectCfg>([
     [0,     { tileObjectTypeId: 0,    shapeIdsAfterDestruction: [0],                isNeutralOnly: true,    shapesCount: 4,     shapesCountInEditor: 4,     shapesCountForV0: 4,    shapesCountInEditorForV0: 4,    sortWeight: 17,     nameTextId: 42000,  animParams: [1, 999999],    animParamsForV0: [1, 999999],   symmetryTypes: [0, 0, 0, 0, 0] }],
     [1,     { tileObjectTypeId: 1,    shapeIdsAfterDestruction: [0],                isNeutralOnly: true,    shapesCount: 11,    shapesCountInEditor: 11,    shapesCountForV0: 11,   shapesCountInEditorForV0: 11,   sortWeight: 1,      nameTextId: 42001,  animParams: [1, 999999],    animParamsForV0: [1, 999999],   symmetryTypes: [1, 1, 1, 1, 1] }],
     [2,     { tileObjectTypeId: 2,    shapeIdsAfterDestruction: [0],                isNeutralOnly: true,    shapesCount: 11,    shapesCountInEditor: 11,    shapesCountForV0: 11,   shapesCountInEditorForV0: 11,   sortWeight: 2,      nameTextId: 42002,  animParams: [1, 999999],    animParamsForV0: [1, 999999],   symmetryTypes: [2, 2, 2, 2, 2] }],
@@ -235,7 +242,7 @@ export const ObjectCfgDict = new Map<number, TilesTypes.TileObjectCfg>([
     [37,    { tileObjectTypeId: 37,   shapeIdsAfterDestruction: [0],	            isNeutralOnly: true,    shapesCount: 1,     shapesCountInEditor: 1,     shapesCountForV0: 1,    shapesCountInEditorForV0: 1,    sortWeight: 38,     nameTextId: 42037,  animParams: [1, 999999],    animParamsForV0: [1, 999999],   symmetryTypes: [37, 37, 37, 37, 37] }],
 ]);
 
-export const ObjectSymmetryCfgDict = new Map<number, Map<number, TilesTypes.TileObjectSymmetryCfg>>([
+export const ObjectSymmetryCfgDict = new Map<number, Map<number, TileObjectSymmetryCfg>>([
     [0, new Map([
         [0,     { tileObjectTypeId: 0,    shapeId: 0,     symmetryShapeIds: [0, 0, 0, 0, 0] }],
         [1,     { tileObjectTypeId: 0,    shapeId: 1,     symmetryShapeIds: [1, 2, 1, 2, 1] }],
@@ -437,12 +444,12 @@ export const enum DecorationTypeId {
     Shore               = 1,
 }
 
-export const DecorationCfgDict = new Map<number, TilesTypes.TileDecorationCfg>([
+export const DecorationCfgDict = new Map<number, TileDecorationCfg>([
     [DecorationTypeId.Empty,  {tileDecorationTypeId: DecorationTypeId.Empty,   shapesCount: 1,     animParams: [1, 999999],    animParamsForV0: [1, 999999],   nameTextId: 43000} ],
     [DecorationTypeId.Shore,  {tileDecorationTypeId: DecorationTypeId.Shore,   shapesCount: 47,    animParams: [6, 1],         animParamsForV0: [6, 1],        nameTextId: 43001} ],
 ]);
 
-export const DecorationSymmetryCfgDict = new Map<number, Map<number, TilesTypes.TileDecorationSymmetryCfg>>([
+export const DecorationSymmetryCfgDict = new Map<number, Map<number, TileDecorationSymmetryCfg>>([
     [0, new Map([
         [0,     { tileDecorationTypeId: 1,    shapeId: 0,     symmetryShapeIds: [0, 0, 0, 0, 0] }],
     ])],

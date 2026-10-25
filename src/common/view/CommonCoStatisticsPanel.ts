@@ -1,33 +1,33 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesCoStatisticsFilter from "../../auxiliaryTypes/CoStatisticsFilter.ts";
-import * as CommonModelCommonModel from "../model/CommonModel.ts";
-import * as CosConstants from "../../cos/Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GameModesUtils from "../../gameModes/Utils.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersText from "../../helpers/Text.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCommonGetCoStatisticsGameData from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/GameData.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
-import * as WarTypesUtils from "../../warTypes/Utils.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { CoStatisticsFilter as AuxiliaryTypesCoStatisticsFilter } from "../../auxiliaryTypes/CoStatisticsFilter.ts";
+import { getCoStatistics } from "../model/CommonModel.ts";
+import { DisplayCategoryArray, ForceArray } from "../../cos/Constants.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getEnum } from "../../gameModes/Utils.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getCoHeadBackgroundByCoId, getCoHead } from "../../helpers/ImageSource.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { format } from "../../helpers/Text.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { GameData } from "../../proto/schema/CommonProto/NetMessage/MsgCommonGetCoStatistics/GameData.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
+import { checkIsMrw, checkHasFog } from "../../warTypes/Utils.ts";
 
-type CoStatisticsFilter = AuxiliaryTypesCoStatisticsFilter.CoStatisticsFilter;
+type CoStatisticsFilter = AuxiliaryTypesCoStatisticsFilter;
 
 interface CoData {
     rankedBan           : number;
@@ -39,27 +39,27 @@ interface CoData {
     allDraw             : number;
 }
 
-let _previousFilter     : AuxiliaryTypesAuxiliaryTypes.Undefinable<CoStatisticsFilter>;
+let _previousFilter     : Undefinable<CoStatisticsFilter>;
 
 export interface OpenData {
-    filter              : AuxiliaryTypesAuxiliaryTypes.Undefinable<CoStatisticsFilter>;
+    filter              : Undefinable<CoStatisticsFilter>;
     usePreviousFilter   : boolean;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
 
-    private readonly _layoutTitle!          : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelReplaysCount!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutTitle!          : IUiLayout;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _labelReplaysCount!    : IUiLabel;
 
-    private readonly _btnSearch!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSearch!            : IUiButton;
+    private readonly _btnHelp!              : IUiButton;
+    private readonly _btnClose!             : IUiButton;
 
-    private readonly _listCo!               : UiInterfacesIUiScrollList.IUiScrollList<DataForCoRenderer>;
+    private readonly _listCo!               : IUiScrollList<DataForCoRenderer>;
 
-    private _coStatisticsFilter?            : AuxiliaryTypesAuxiliaryTypes.Undefinable<CoStatisticsFilter>;
+    private _coStatisticsFilter?            : Undefinable<CoStatisticsFilter>;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -68,7 +68,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnClose,               callback: this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -94,7 +94,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSearch(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonCoStatisticsFilterPanel, {
+        openPanel(getDict().CommonCoStatisticsFilterPanel, {
             filter              : this._coStatisticsFilter,
             callbackOnConfirm   : filter => {
                 this.setOpenData({
@@ -107,8 +107,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0903),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0903),
         });
     }
 
@@ -135,9 +135,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private async _updateComponentsForLanguage(): Promise<void> {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1076));
+        this._labelTitle.setText(getText(TextType.B1076));
 
-        const gameDataArray     = (await CommonModelCommonModel.getCoStatistics())?.getGameDataArray();
+        const gameDataArray     = (await getCoStatistics())?.getGameDataArray();
         let rankedReplaysCount  = 0;
         let allReplaysCount     = 0;
         for (const gameData of gameDataArray ?? []) {
@@ -145,12 +145,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 continue;
             }
 
-            if (WarTypesUtils.checkIsMrw(gameData.getWarType() ?? 0)) {
+            if (checkIsMrw(gameData.getWarType() ?? 0)) {
                 ++rankedReplaysCount;
             }
             ++allReplaysCount;
         }
-        this._labelReplaysCount.setText(`(${LangUtils.getText(LangConstants.TextType.B0610)}: ${rankedReplaysCount}, ${LangUtils.getText(LangConstants.TextType.B0877)}: ${allReplaysCount})`);
+        this._labelReplaysCount.setText(`(${getText(TextType.B0610)}: ${rankedReplaysCount}, ${getText(TextType.B0877)}: ${allReplaysCount})`);
         this._layoutTitle.arrangeItems();
     }
 
@@ -165,7 +165,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private async _createDataArrayForListCo(): Promise<DataForCoRenderer[]> {
-        const coStatistics = await CommonModelCommonModel.getCoStatistics();
+        const coStatistics = await getCoStatistics();
         if (coStatistics == null) {
             return [];
         }
@@ -176,7 +176,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const configVersion = coStatistics.getConfigVersion();
-        const gameConfig    = configVersion == null ? null : await GameConfigGcModel.getGameConfig(configVersion);
+        const gameConfig    = configVersion == null ? null : await getGameConfig(configVersion);
         if (gameConfig == null) {
             return [];
         }
@@ -197,7 +197,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             }
 
             const warType   = gameData.getWarType() ?? 0;
-            const isRanked  = (warType === WarTypesConstants.WarTypeId.MrwFog) || (warType === WarTypesConstants.WarTypeId.MrwStd);
+            const isRanked  = (warType === WarTypeId.MrwFog) || (warType === WarTypeId.MrwStd);
             if (isRanked) {
                 ++rankedReplaysCount;
 
@@ -222,7 +222,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     });
                 }
 
-                const coData = HelpersMisc.getExisted(coDataDict.get(coId));
+                const coData = getExisted(coDataDict.get(coId));
                 if (winnerPlayerIndex === 0) {
                     ++coData.allDraw;
                     if (isRanked) {
@@ -251,13 +251,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const showDeprecatedCo      = coStatisticsFilter?.showDeprecatedCo;
         const availableCoIdArray    = [...coDataDict.keys()].sort((v1, v2) => (gameConfig.getCoBasicCfg(v1)?.getName() ?? ``).localeCompare(gameConfig.getCoBasicCfg(v2)?.getName() ?? ``));
         const dataArray             : DataForCoRenderer[] = [];
-        for (const displayCategory of CosConstants.DisplayCategoryArray) {
+        for (const displayCategory of DisplayCategoryArray) {
             const coIdArray1 = availableCoIdArray.filter(v => gameConfig.getCoBasicCfg(v)?.getDisplayCategoryId() === displayCategory);
             if (coIdArray1.length <= 0) {
                 continue;
             }
 
-            for (const force of CosConstants.ForceArray) {
+            for (const force of ForceArray) {
                 const coIdArray2 = coIdArray1.filter(v => gameConfig.getCoBasicCfg(v)?.getForce() === force);
                 if (coIdArray2.length <= 0) {
                     continue;
@@ -290,8 +290,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForCoRenderer extends UiTypesUiListItemData.UiListItemData {
-    gameConfig          : GameConfigGcData.GcData;
+interface DataForCoRenderer extends UiListItemData {
+    gameConfig          : GcData;
     coId                : number;
     allReplaysCount     : number;
     rankedReplaysCount  : number;
@@ -304,27 +304,27 @@ interface DataForCoRenderer extends UiTypesUiListItemData.UiListItemData {
     allDraw             : number;
 }
 class CoRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForCoRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForCoRenderer>
+    extends     UiListItemRenderer<DataForCoRenderer>
+    implements  IUiListItemRenderer<DataForCoRenderer>
 {
-    private readonly _imgCoForce!       : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgCoHead!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelCoId!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _imgCoForce!       : IUiImage;
+    private readonly _imgCoHead!        : IUiImage;
+    private readonly _labelCoId!        : IUiLabel;
+    private readonly _labelName!        : IUiLabel;
 
-    private readonly _labelCountTitle!  : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelCountTitle!  : IUiLabel;
 
-    private readonly _labelRankedTitle! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRankedCount! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRankedPct!   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelRankedTitle! : IUiLabel;
+    private readonly _labelRankedCount! : IUiLabel;
+    private readonly _labelRankedPct!   : IUiLabel;
 
-    private readonly _labelAllTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelAllCount!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelAllPct!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelAllTitle!    : IUiLabel;
+    private readonly _labelAllCount!    : IUiLabel;
+    private readonly _labelAllPct!      : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -345,7 +345,7 @@ class CoRenderer
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonCoInfoPanel, {
+        openPanel(getDict().CommonCoInfoPanel, {
             coId        : openData.coId,
             gameConfig  : openData.gameConfig,
         });
@@ -362,9 +362,9 @@ class CoRenderer
         const coId      = openData.coId;
         const gcData    = openData.gameConfig;
         this._labelCoId.setText(`#${coId}`);
-        this._labelName.setText(gcData.getCoBasicCfg(coId)?.getName() ?? LangConstants.UndefinedError);
-        this._imgCoForce.loadSource(HelpersImageSource.getCoHeadBackgroundByCoId(gcData, coId) ?? ``);
-        this._imgCoHead.loadSource(HelpersImageSource.getCoHead(gcData, coId) ?? ``);
+        this._labelName.setText(gcData.getCoBasicCfg(coId)?.getName() ?? UndefinedError);
+        this._imgCoForce.loadSource(getCoHeadBackgroundByCoId(gcData, coId) ?? ``);
+        this._imgCoHead.loadSource(getCoHead(gcData, coId) ?? ``);
 
         updateLabelStatistics(
             this._labelRankedCount,
@@ -387,15 +387,15 @@ class CoRenderer
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelCountTitle.setText(`${LangUtils.getText(LangConstants.TextType.B1074)}\n${LangUtils.getText(LangConstants.TextType.B0606)}\n${LangUtils.getText(LangConstants.TextType.B0550)}\n${LangUtils.getText(LangConstants.TextType.B0551)}\n${LangUtils.getText(LangConstants.TextType.B0552)}`);
-        this._labelRankedTitle.setText(LangUtils.getText(LangConstants.TextType.B1075));
-        this._labelAllTitle.setText(LangUtils.getText(LangConstants.TextType.B0120));
+        this._labelCountTitle.setText(`${getText(TextType.B1074)}\n${getText(TextType.B0606)}\n${getText(TextType.B0550)}\n${getText(TextType.B0551)}\n${getText(TextType.B0552)}`);
+        this._labelRankedTitle.setText(getText(TextType.B1075));
+        this._labelAllTitle.setText(getText(TextType.B0120));
     }
 }
 
 function updateLabelStatistics(
-    labelCount      : UiInterfacesIUiLabel.IUiLabel,
-    labelPct        : UiInterfacesIUiLabel.IUiLabel,
+    labelCount      : IUiLabel,
+    labelPct        : IUiLabel,
     replaysCount    : number,
     banCount        : number | null,
     win             : number,
@@ -405,15 +405,15 @@ function updateLabelStatistics(
     const gamesCount = win + lose + draw;
     labelCount.setText(`${gamesCount}\n${banCount ?? `--`}\n${win}\n${lose}\n${draw}`);
 
-    const pickPct   = replaysCount == 0 ? `--` : HelpersText.format(`%.2f%%`, gamesCount * 100 / replaysCount);
-    const banPct    = (replaysCount == 0) || (banCount == null) ? `--` : HelpersText.format(`%.2f%%`, banCount * 100 / replaysCount);
-    const winPct    = gamesCount == 0 ? `--` : HelpersText.format(`%.2f%%`, win * 100 / gamesCount);
-    const losePct   = gamesCount == 0 ? `--` : HelpersText.format(`%.2f%%`, lose * 100 / gamesCount);
-    const drawPct   = gamesCount == 0 ? `--` : HelpersText.format(`%.2f%%`, draw * 100 / gamesCount);
+    const pickPct   = replaysCount == 0 ? `--` : format(`%.2f%%`, gamesCount * 100 / replaysCount);
+    const banPct    = (replaysCount == 0) || (banCount == null) ? `--` : format(`%.2f%%`, banCount * 100 / replaysCount);
+    const winPct    = gamesCount == 0 ? `--` : format(`%.2f%%`, win * 100 / gamesCount);
+    const losePct   = gamesCount == 0 ? `--` : format(`%.2f%%`, lose * 100 / gamesCount);
+    const drawPct   = gamesCount == 0 ? `--` : format(`%.2f%%`, draw * 100 / gamesCount);
     labelPct.setText(`${pickPct}\n${banPct}\n${winPct}\n${losePct}\n${drawPct}`);
 }
 
-function checkIsMeetFilter(gameData: ProtoSchemaCommonProtoNetMessageMsgCommonGetCoStatisticsGameData.GameData, filter: AuxiliaryTypesAuxiliaryTypes.Undefinable<CoStatisticsFilter>): boolean {
+function checkIsMeetFilter(gameData: GameData, filter: Undefinable<CoStatisticsFilter>): boolean {
     {
         const normalMapId = filter?.normalMapId;
         if ((normalMapId != null) && ((gameData.getNormalMapId() !== normalMapId))) {
@@ -432,13 +432,13 @@ function checkIsMeetFilter(gameData: ProtoSchemaCommonProtoNetMessageMsgCommonGe
     const warType = gameData.getWarType() ?? 0;
     {
         const gameMode = filter?.gameMode;
-        if ((gameMode != null) && (GameModesUtils.getEnum(warType) !== gameMode)) {
+        if ((gameMode != null) && (getEnum(warType) !== gameMode)) {
             return false;
         }
     }
     {
         const hasFog = filter?.hasFog;
-        if ((hasFog != null) && (WarTypesUtils.checkHasFog(warType) !== hasFog)) {
+        if ((hasFog != null) && (checkHasFog(warType) !== hasFog)) {
             return false;
         }
     }

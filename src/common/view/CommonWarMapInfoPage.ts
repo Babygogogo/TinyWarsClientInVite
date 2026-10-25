@@ -1,73 +1,73 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GameVersionsUtils from "../../gameVersions/Utils.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersText from "../../helpers/Text.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialPlayer from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiOpenableComponent from "../../ui/components/UiOpenableComponent.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiMapInfo from "../../ui/interfaces/IUiMapInfo.ts";
-import type * as UiInterfacesIUiOpenableComponent from "../../ui/interfaces/IUiOpenableComponent.ts";
-import type * as UiInterfacesIUiZoomableMap from "../../ui/interfaces/IUiZoomableMap.ts";
-import * as UiTypesUiHorizontalAlign from "../../ui/types/UiHorizontalAlign.ts";
-import * as UiTypesUiVerticalAlign from "../../ui/types/UiVerticalAlign.ts";
-import * as UiUtilsUiSkinHelpers from "../../ui/utils/UiSkinHelpers.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getCurrentGameEssentialConfig } from "../../gameVersions/Utils.ts";
+import { TextureResolutionId } from "../../graphics/Constants.ts";
+import { getNumText } from "../../helpers/Text.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiMapInfo } from "../../ui/interfaces/IUiMapInfo.ts";
+import type { IUiOpenableComponent } from "../../ui/interfaces/IUiOpenableComponent.ts";
+import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
+import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
+import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
+import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 
 export type OpenData = {
     warInfo?    : {
-        warData             : ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
+        warData             : SerialWar;
         showInitialWarData  : boolean;
-        overridingPlayers   : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer[]>;
+        overridingPlayers   : Undefinable<SerialPlayer[]>;
     },
     mapInfo?    : {
         hasFog              : boolean | null;
-        mapRawData          : ProtoSchemaCommonProtoMapMapRawData.MapRawData;
-        gameConfig          : GameConfigGcData.GcData;
-        overridingPlayers   : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer[]>;
+        mapRawData          : MapRawData;
+        gameConfig          : GcData;
+        overridingPlayers   : Undefinable<SerialPlayer[]>;
     },
 } | null;
 export class Page
-    extends     UiComponentsUiOpenableComponent.UiOpenableComponent<OpenData>
-    implements  UiInterfacesIUiOpenableComponent.IUiOpenableComponent<OpenData>
+    extends     UiOpenableComponent<OpenData>
+    implements  IUiOpenableComponent<OpenData>
 {
-    private readonly _uiMapInfo!    : UiInterfacesIUiMapInfo.IUiMapInfo;
-    private readonly _labelLoading! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelNoData!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupZoomMap! : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _zoomMap!      : UiInterfacesIUiZoomableMap.IUiZoomableMap;
+    private readonly _uiMapInfo!    : IUiMapInfo;
+    private readonly _labelLoading! : IUiLabel;
+    private readonly _labelNoData!  : IUiLabel;
+    private readonly _groupZoomMap! : IUiContainer;
+    private readonly _zoomMap!      : IUiZoomableMap;
 
     public constructor() {
         super();
 
-        const resTypeId = GameVersionsUtils.getCurrentGameEssentialConfig().textureResolutionTypeId;
-        UiUtilsUiSkinHelpers.loadSkinByPath(
+        const resTypeId = getCurrentGameEssentialConfig().textureResolutionTypeId;
+        loadSkinByPath(
             this,
-            resTypeId === GraphicsConstants.TextureResolutionId.Dor
+            resTypeId === TextureResolutionId.Dor
                 ? `common/CommonWarMapInfoPage.exml`
-                : `common/CommonWarMapInfoPage_res${HelpersText.getNumText(resTypeId)}.exml`
+                : `common/CommonWarMapInfoPage_res${getNumText(resTypeId)}.exml`
         );
     }
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupZoomMap,               callback: this._onTouchedGroupZoomMap },
         ]);
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
+            verticalAlign   : { align       : UiVerticalAlign.Middle },
+            horizontalAlign : { align       : UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -101,8 +101,8 @@ export class Page
         {
             const mapInfo = openData.mapInfo;
             if (mapInfo) {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowMapPanel, {
+                playShortSfx(ShortSfxCode.ButtonNeutral01);
+                openPanel(getDict().CommonShowMapPanel, {
                     mapInfo : mapInfo,
                 });
                 return;
@@ -112,8 +112,8 @@ export class Page
         {
             const warInfo = openData.warInfo;
             if (warInfo) {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowMapPanel, {
+                playShortSfx(ShortSfxCode.ButtonNeutral01);
+                openPanel(getDict().CommonShowMapPanel, {
                     warInfo : warInfo,
                 });
                 return;
@@ -122,8 +122,8 @@ export class Page
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(LangUtils.getText(LangConstants.TextType.A0150));
-        this._labelNoData.setText(LangUtils.getText(LangConstants.TextType.B0278));
+        this._labelLoading.setText(getText(TextType.A0150));
+        this._labelNoData.setText(getText(TextType.B0278));
     }
     private async _updateComponentsForRoomInfo(): Promise<void> {
         const zoomMap       = this._zoomMap;

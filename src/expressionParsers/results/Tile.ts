@@ -1,10 +1,10 @@
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import type * as TilesITile from "../../tiles/ITile.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { ITile as TilesITile } from "../../tiles/ITile.ts";
 
-type ITile = TilesITile.ITile;
+type ITile = TilesITile;
 
-export class Tile extends ExpressionParsersResultsBase.Base {
+export class Tile extends Base {
     public readonly tile: ITile;
 
     public constructor(tile: ITile) {
@@ -13,10 +13,10 @@ export class Tile extends ExpressionParsersResultsBase.Base {
         this.tile = tile;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.Tile;
+    public override getResultType(): ResultType {
+        return ResultType.Tile;
     }
-    public checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public checkIsEqual(rhs: Base): boolean {
         return (rhs instanceof Tile)
             && (this.tile === rhs.tile);
     }

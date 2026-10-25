@@ -1,76 +1,76 @@
-import * as ExpressionParsersEnums from "../../expressionParsers/Enums.ts";
-import * as ExpressionParsersUtils from "../../expressionParsers/Utils.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import * as UiTypesUiInputEventType from "../../ui/types/UiInputEventType.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import { ContextType } from "../../expressionParsers/Enums.ts";
+import { getVariableInfoDict, getFunctionInfoDict } from "../../expressionParsers/Utils.ts";
+import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getExpressionParserContextName } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 const ContextTypeArray = [
-    ExpressionParsersEnums.ContextType.CustomCounter,
-    ExpressionParsersEnums.ContextType.Turn,
-    ExpressionParsersEnums.ContextType.Weather,
-    ExpressionParsersEnums.ContextType.WarOperation,
-    ExpressionParsersEnums.ContextType.TaskObjective,
-    ExpressionParsersEnums.ContextType.Fog,
-    ExpressionParsersEnums.ContextType.Player,
-    ExpressionParsersEnums.ContextType.PlayerArray,
-    ExpressionParsersEnums.ContextType.Tile,
-    ExpressionParsersEnums.ContextType.TileArray,
-    ExpressionParsersEnums.ContextType.TileBuff,
-    ExpressionParsersEnums.ContextType.TileBuffArray,
-    ExpressionParsersEnums.ContextType.Unit,
-    ExpressionParsersEnums.ContextType.UnitArray,
-    ExpressionParsersEnums.ContextType.Position,
-    ExpressionParsersEnums.ContextType.PositionArray,
-    ExpressionParsersEnums.ContextType.UnitStatistic,
-    ExpressionParsersEnums.ContextType.UnitStatisticArray,
-    ExpressionParsersEnums.ContextType.Number,
-    ExpressionParsersEnums.ContextType.NumberArray,
-    ExpressionParsersEnums.ContextType.War,
+    ContextType.CustomCounter,
+    ContextType.Turn,
+    ContextType.Weather,
+    ContextType.WarOperation,
+    ContextType.TaskObjective,
+    ContextType.Fog,
+    ContextType.Player,
+    ContextType.PlayerArray,
+    ContextType.Tile,
+    ContextType.TileArray,
+    ContextType.TileBuff,
+    ContextType.TileBuffArray,
+    ContextType.Unit,
+    ContextType.UnitArray,
+    ContextType.Position,
+    ContextType.PositionArray,
+    ContextType.UnitStatistic,
+    ContextType.UnitStatisticArray,
+    ContextType.Number,
+    ContextType.NumberArray,
+    ContextType.War,
     // ContextType.Basis,
 ];
 
 export interface OpenData {
-    contextType : ExpressionParsersEnums.ContextType;
+    contextType : ContextType;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnTypeId!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnOperator!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnExpression!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _imgInnerTouchMask!    : UiInterfacesIUiImage.IUiImage;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _btnTypeId!            : IUiButton;
+    private readonly _btnOperator!          : IUiButton;
+    private readonly _btnExpression!        : IUiButton;
+    private readonly _imgInnerTouchMask!    : IUiImage;
 
-    private readonly _inputFilter!          : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _btnClearFilter!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSwitch!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _listItem!             : UiInterfacesIUiScrollList.IUiScrollList<DataForApiRenderer>;
+    private readonly _inputFilter!          : IUiPromptedInput;
+    private readonly _btnClearFilter!       : IUiButton;
+    private readonly _btnSwitch!            : IUiButton;
+    private readonly _listItem!             : IUiScrollList<DataForApiRenderer>;
 
-    private readonly _scrContent!           : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiContainer.IUiContainer>;
-    private readonly _labelContent!         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _scrContent!           : IUiScroller<IUiContainer>;
+    private readonly _labelContent!         : IUiLabel;
 
-    private _contextType        = ExpressionParsersEnums.ContextType.Unknown;
+    private _contextType        = ContextType.Unknown;
     private _fullItemDataArray  : DataForApiRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClearFilter,             callback: this._onTouchedBtnClearFilter },
@@ -81,7 +81,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnExpression,              callback: this._onTouchedBtnExpression },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputFilter,                callback: this._onFocusOutInputFilter,      eventType: UiTypesUiInputEventType.UiInputEventType.FocusOut },
+            { ui: this._inputFilter,                callback: this._onFocusOutInputFilter,      eventType: UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -93,7 +93,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
 
-        this._contextType       = this.getOpenData()?.contextType ?? ExpressionParsersEnums.ContextType.Unknown;
+        this._contextType       = this.getOpenData()?.contextType ?? ContextType.Unknown;
         this._fullItemDataArray = this._generateFullItemDataArray();
         this._updateListItem();
         this._updateLabelTitle();
@@ -118,13 +118,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
     private _onTouchedBtnSwitch(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
+        openPanel(getDict().CommonChooseSingleNumberPanel, {
             currentNumber           : this._contextType,
             availableNumberArray    : ContextTypeArray,
             keepOrder               : true,
             columnsCount            : 3,
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.B0131),
-            getNumberMainText       : num => LangUtils.getExpressionParserContextName(num) ?? LangConstants.UndefinedError,
+            getTitleText            : () => getText(TextType.B0131),
+            getNumberMainText       : num => getExpressionParserContextName(num) ?? UndefinedError,
             callbackOnConfirm       : contextType => {
                 if (contextType !== this._contextType) {
                     this._contextType       = contextType;
@@ -137,18 +137,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         });
     }
     private async _onTouchedBtnTypeId(): Promise<void> {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonExpressionTypeIdPanel, {
-            gameConfig: await GameConfigGcModel.getLatestGameConfig(),
+        openPanel(getDict().CommonExpressionTypeIdPanel, {
+            gameConfig: await getLatestGameConfig(),
         });
     }
     private _onTouchedBtnOperator(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.R0020),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.R0020),
         });
     }
     private _onTouchedBtnExpression(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0061),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0061),
         });
     }
 
@@ -163,11 +163,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnTypeId.setText(LangUtils.getText(LangConstants.TextType.B1168));
-        this._btnOperator.setText(LangUtils.getText(LangConstants.TextType.B0130));
-        this._btnExpression.setText(LangUtils.getText(LangConstants.TextType.B0129));
-        this._btnSwitch.setText(LangUtils.getText(LangConstants.TextType.B0668));
-        this._inputFilter.setPromptText(LangUtils.getText(LangConstants.TextType.B0132));
+        this._btnTypeId.setText(getText(TextType.B1168));
+        this._btnOperator.setText(getText(TextType.B0130));
+        this._btnExpression.setText(getText(TextType.B0129));
+        this._btnSwitch.setText(getText(TextType.B0668));
+        this._inputFilter.setPromptText(getText(TextType.B0132));
         this._updateLabelTitle();
         this._updateLabelContent();
     }
@@ -183,18 +183,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         );
     }
     private _updateLabelTitle(): void {
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0131)} (${LangUtils.getExpressionParserContextName(this._contextType) ?? LangConstants.UndefinedError})`);
+        this._labelTitle.setText(`${getText(TextType.B0131)} (${getExpressionParserContextName(this._contextType) ?? UndefinedError})`);
     }
     private _updateLabelContent(): void {
         const data = this._listItem.getFirstSelectedData();
-        this._labelContent.setText(data ? LangUtils.getText(data.langTextType) : ``);
+        this._labelContent.setText(data ? getText(data.langTextType) : ``);
         this._scrContent.scrollTop();
     }
 
     private _generateFullItemDataArray(): DataForApiRenderer[] {
         const contextType   = this._contextType;
         const dataArray     : DataForApiRenderer[] = [];
-        for (const [identifierName, data] of ExpressionParsersUtils.getVariableInfoDict(contextType)) {
+        for (const [identifierName, data] of getVariableInfoDict(contextType)) {
             if (!data.isHidden) {
                 dataArray.push({
                     name            : identifierName,
@@ -204,7 +204,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 });
             }
         }
-        for (const [identifierName, data] of ExpressionParsersUtils.getFunctionInfoDict(contextType)) {
+        for (const [identifierName, data] of getFunctionInfoDict(contextType)) {
             dataArray.push({
                 name            : `${identifierName}()`,
                 langTextType    : data.desc,
@@ -223,16 +223,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForApiRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForApiRenderer extends UiListItemData {
     name            : string;
     langTextType    : number;
     isExtension     : boolean;
     panel           : Panel;
 }
-class ApiRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForApiRenderer> {
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelExtension!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
+class ApiRenderer extends UiListItemRenderer<DataForApiRenderer> {
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelExtension!   : IUiLabel;
+    private readonly _labelName!        : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -248,10 +248,10 @@ class ApiRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Data
 
         const labelExtension = this._labelExtension;
         if (openData.isExtension) {
-            labelExtension.setText(LangUtils.getText(LangConstants.TextType.B1161));
+            labelExtension.setText(getText(TextType.B1161));
             labelExtension.setTextColor(0xFFFF00);
         } else {
-            labelExtension.setText(LangUtils.getText(LangConstants.TextType.B1160));
+            labelExtension.setText(getText(TextType.B1160));
             labelExtension.setTextColor(0x00FF00);
         }
         this._layoutName.arrangeItems();

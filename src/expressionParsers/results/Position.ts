@@ -1,33 +1,33 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import { newError } from "../../helpers/Misc.ts";
 
-export class Position extends ExpressionParsersResultsBase.Base {
+export class Position extends Base {
     public readonly x: number;
     public readonly y: number;
 
-    public constructor(war: BaseWarInterfaceIBwWar.IBwWar, x: number, y: number) {
+    public constructor(war: IBwWar, x: number, y: number) {
         super(war);
 
         const newX = Math.floor(x);
         if (!isFinite(newX)) {
-            throw HelpersMisc.newError(`Invalid newX: ${newX}`);
+            throw newError(`Invalid newX: ${newX}`);
         }
 
         const newY = Math.floor(y);
         if (!isFinite(newY)) {
-            throw HelpersMisc.newError(`Invalid newY: ${newY}`);
+            throw newError(`Invalid newY: ${newY}`);
         }
 
         this.x = newX;
         this.y = newY;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.Position;
+    public override getResultType(): ResultType {
+        return ResultType.Position;
     }
-    public override checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public override checkIsEqual(rhs: Base): boolean {
         return (rhs instanceof Position)
             && (this.x === rhs.x)
             && (this.y === rhs.y);

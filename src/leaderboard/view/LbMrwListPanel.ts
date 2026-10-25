@@ -1,68 +1,68 @@
-import * as CommonModelCommonModel from "../../common/model/CommonModel.ts";
-import * as CommonModelCommonProxy from "../../common/model/CommonProxy.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersText from "../../helpers/Text.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LeaderboardModelLeaderboardModel from "../model/LeaderboardModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
+import { getMrwRankList } from "../../common/model/CommonModel.ts";
+import { reqGetRankList } from "../../common/model/CommonProxy.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { MultiRankedWar } from "../../gameConfig/GcWar.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getUserAvatar, getMedal } from "../../helpers/ImageSource.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { format } from "../../helpers/Text.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { getMrwRankIndex } from "../model/LeaderboardModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getSelfUserId, getSelfInfo, getUserPublicInfo } from "../../users/Model.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnSwitch!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnSwitch!        : IUiButton;
+    private readonly _btnClose!         : IUiButton;
 
-    private readonly _labelStdRank!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStdNickname! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStdScore!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStdWin!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStdLose!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStdDraw!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStdWinRate!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listStd!          : UiInterfacesIUiScrollList.IUiScrollList<DataForMrwUserRenderer>;
-    private readonly _labelStdNoData!   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelStdRank!     : IUiLabel;
+    private readonly _labelStdNickname! : IUiLabel;
+    private readonly _labelStdScore!    : IUiLabel;
+    private readonly _labelStdWin!      : IUiLabel;
+    private readonly _labelStdLose!     : IUiLabel;
+    private readonly _labelStdDraw!     : IUiLabel;
+    private readonly _labelStdWinRate!  : IUiLabel;
+    private readonly _listStd!          : IUiScrollList<DataForMrwUserRenderer>;
+    private readonly _labelStdNoData!   : IUiLabel;
 
-    private readonly _groupMyInfo!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMyIndex!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgMyAvatar!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelMyNickname!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgMyMedal!       : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelMyScore!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyWin!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyLose!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyDraw!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyWinRate!   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupMyInfo!      : IUiContainer;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelMyIndex!     : IUiLabel;
+    private readonly _imgMyAvatar!      : IUiImage;
+    private readonly _labelMyNickname!  : IUiLabel;
+    private readonly _imgMyMedal!       : IUiImage;
+    private readonly _labelMyScore!     : IUiLabel;
+    private readonly _labelMyWin!       : IUiLabel;
+    private readonly _labelMyLose!      : IUiLabel;
+    private readonly _labelMyDraw!      : IUiLabel;
+    private readonly _labelMyWinRate!   : IUiLabel;
 
     private _isStd                      = true;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgCommonGetRankList,   callback: this._onMsgCommonGetRankList },
+            { type: TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgCommonGetRankList,   callback: this._onMsgCommonGetRankList },
         ]);
         this._setUiListenerArray([
             { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
@@ -77,7 +77,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._listStd.setItemRendererClass(MrwUserRenderer);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        CommonModelCommonProxy.reqGetRankList();
+        reqGetRankList();
 
         this._updateComponentsForLanguage();
         this._updateComponentsForListStd();
@@ -109,10 +109,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupMyInfo(): void {
-        const userId = UsersModel.getSelfUserId();
+        const userId = getSelfUserId();
         if (userId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: userId });
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            openPanel(getDict().UserPanel, { userId: userId });
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
 
@@ -120,30 +120,30 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelStdNoData.setText(LangUtils.getText(LangConstants.TextType.B0278));
-        this._labelStdRank.setText(LangUtils.getText(LangConstants.TextType.B0904));
-        this._labelStdNickname.setText(LangUtils.getText(LangConstants.TextType.B0175));
-        this._labelStdScore.setText(LangUtils.getText(LangConstants.TextType.B0579));
-        this._labelStdWin.setText(LangUtils.getText(LangConstants.TextType.B0550));
-        this._labelStdLose.setText(LangUtils.getText(LangConstants.TextType.B0551));
-        this._labelStdDraw.setText(LangUtils.getText(LangConstants.TextType.B0552));
-        this._labelStdWinRate.setText(LangUtils.getText(LangConstants.TextType.B0553));
+        this._labelStdNoData.setText(getText(TextType.B0278));
+        this._labelStdRank.setText(getText(TextType.B0904));
+        this._labelStdNickname.setText(getText(TextType.B0175));
+        this._labelStdScore.setText(getText(TextType.B0579));
+        this._labelStdWin.setText(getText(TextType.B0550));
+        this._labelStdLose.setText(getText(TextType.B0551));
+        this._labelStdDraw.setText(getText(TextType.B0552));
+        this._labelStdWinRate.setText(getText(TextType.B0553));
 
         this._updateLabelTitle();
     }
     private _updateLabelTitle(): void {
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B1102)} (${LangUtils.getText(this._isStd ? LangConstants.TextType.B0548 : LangConstants.TextType.B0549)})`);
+        this._labelTitle.setText(`${getText(TextType.B1102)} (${getText(this._isStd ? TextType.B0548 : TextType.B0549)})`);
     }
     private async _updateComponentsForListStd(): Promise<void> {
         const playersCount  = 2;
-        const warType       = this._isStd ? WarTypesConstants.WarTypeId.MrwStd : WarTypesConstants.WarTypeId.MrwFog;
-        const gameConfig    = await GameConfigGcModel.getLatestGameConfig();
+        const warType       = this._isStd ? WarTypeId.MrwStd : WarTypeId.MrwFog;
+        const gameConfig    = await getLatestGameConfig();
         const dataList      : DataForMrwUserRenderer[] = [];
-        for (const data of CommonModelCommonModel.getMrwRankList() || []) {
+        for (const data of getMrwRankList() || []) {
             if ((data.getPlayersCountUnneutral() === playersCount) && (data.getWarType() === warType)) {
                 const userId = data.getUserId();
                 if (userId == null) {
-                    throw HelpersMisc.newError(`LbMrwListPanel._updateComponentsForStd() empty userId.`);
+                    throw newError(`LbMrwListPanel._updateComponentsForStd() empty userId.`);
                 }
 
                 dataList.push({
@@ -165,16 +165,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     private async _updateComponentsForMyInfo(): Promise<void> {
         const group     = this._groupMyInfo;
-        const userInfo  = UsersModel.getSelfInfo();
+        const userInfo  = getSelfInfo();
         if (userInfo == null) {
             group.setIsVisible(false);
             return;
         }
 
         const isStd         = this._isStd;
-        const warType       = isStd ? WarTypesConstants.WarTypeId.MrwStd : WarTypesConstants.WarTypeId.MrwFog;
-        const gameConfig    = await GameConfigGcModel.getLatestGameConfig();
-        const rankIndex     = await LeaderboardModelLeaderboardModel.getMrwRankIndex(warType, userInfo.getUserId() ?? 0);
+        const warType       = isStd ? WarTypeId.MrwStd : WarTypeId.MrwFog;
+        const gameConfig    = await getLatestGameConfig();
+        const rankIndex     = await getMrwRankIndex(warType, userInfo.getUserId() ?? 0);
         if (isStd !== this._isStd) {
             return;
         }
@@ -191,45 +191,45 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const gamesCount        = winCount + loseCount + drawCount;
         const medalId           = (userComplexInfo?.getUserMedalInfo()?.getShowMedalIdArray() ?? [])[0];
         this._labelMyIndex.setText(rankIndex == null ? `--` : `${rankIndex}`);
-        this._imgMyAvatar.loadSource(HelpersImageSource.getUserAvatar(userComplexInfo?.getAvatarId() ?? 1));
-        this._labelMyNickname.setText(userInfo.getNickname() ?? LangConstants.UndefinedError);
-        this._imgMyMedal.loadSource(medalId == null ? `` : HelpersImageSource.getMedal(medalId));
-        this._labelMyScore.setText(`${rankInfo?.getCurrentScore() ?? GameConfigGcWar.MultiRankedWar.InitialScore}`);
+        this._imgMyAvatar.loadSource(getUserAvatar(userComplexInfo?.getAvatarId() ?? 1));
+        this._labelMyNickname.setText(userInfo.getNickname() ?? UndefinedError);
+        this._imgMyMedal.loadSource(medalId == null ? `` : getMedal(medalId));
+        this._labelMyScore.setText(`${rankInfo?.getCurrentScore() ?? MultiRankedWar.InitialScore}`);
         this._labelMyWin.setText(`${winCount}`);
         this._labelMyLose.setText(`${loseCount}`);
         this._labelMyDraw.setText(`${drawCount}`);
-        this._labelMyWinRate.setText(gamesCount > 0 ? `${HelpersText.format(`%.2f`, winCount * 100 / gamesCount)}` : `--`);
+        this._labelMyWinRate.setText(gamesCount > 0 ? `${format(`%.2f`, winCount * 100 / gamesCount)}` : `--`);
 
         this._layoutName.arrangeItems();
     }
 }
 
-interface DataForMrwUserRenderer extends UiTypesUiListItemData.UiListItemData {
-    gameConfig      : GameConfigGcData.GcData;
+interface DataForMrwUserRenderer extends UiListItemData {
+    gameConfig      : GcData;
     rank            : number;
     userId          : number;
     playersCount    : number;
-    warType         : WarTypesConstants.WarTypeId;
+    warType         : WarTypeId;
     isLast          : boolean;
 }
 class MrwUserRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForMrwUserRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForMrwUserRenderer>
+    extends     UiListItemRenderer<DataForMrwUserRenderer>
+    implements  IUiListItemRenderer<DataForMrwUserRenderer>
 {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBottom!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelIndex!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgAvatar!        : UiInterfacesIUiImage.IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _imgBottom!        : IUiImage;
+    private readonly _labelIndex!       : IUiLabel;
+    private readonly _imgAvatar!        : IUiImage;
 
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelNickname!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgMedal!         : UiInterfacesIUiImage.IUiImage;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelNickname!    : IUiLabel;
+    private readonly _imgMedal!         : IUiImage;
 
-    private readonly _labelScore!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelWin!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelLose!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDraw!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelWinRate!     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelScore!       : IUiLabel;
+    private readonly _labelWin!         : IUiLabel;
+    private readonly _labelLose!        : IUiLabel;
+    private readonly _labelDraw!        : IUiLabel;
+    private readonly _labelWinRate!     : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -240,7 +240,7 @@ class MrwUserRenderer
     }
 
     public onItemTapEvent(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: this.getOpenData()?.userId });
+        openPanel(getDict().UserPanel, { userId: this.getOpenData()?.userId });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -273,7 +273,7 @@ class MrwUserRenderer
         labelWinRate.setText(``);
 
         const userId    = openData.userId;
-        const userInfo  = await UsersModel.getUserPublicInfo(userId);
+        const userInfo  = await getUserPublicInfo(userId);
         if ((userInfo == null) || (userId !== this.getOpenData()?.userId)) {
             return;
         }
@@ -287,14 +287,14 @@ class MrwUserRenderer
         const drawCount     = statistics?.getDraws() ?? 0;
         const gamesCount    = winCount + loseCount + drawCount;
         const medalId       = userInfo.getShowMedalIdArray()[0];
-        imgAvatar.loadSource(HelpersImageSource.getUserAvatar(userInfo.getAvatarId() ?? 1));
-        labelNickname.setText(userInfo.getNickname() ?? LangConstants.UndefinedError);
-        imgMedal.loadSource(medalId == null ? `` : HelpersImageSource.getMedal(medalId));
-        labelScore.setText(`${rankInfo?.getCurrentScore() ?? GameConfigGcWar.MultiRankedWar.InitialScore}`);
+        imgAvatar.loadSource(getUserAvatar(userInfo.getAvatarId() ?? 1));
+        labelNickname.setText(userInfo.getNickname() ?? UndefinedError);
+        imgMedal.loadSource(medalId == null ? `` : getMedal(medalId));
+        labelScore.setText(`${rankInfo?.getCurrentScore() ?? MultiRankedWar.InitialScore}`);
         labelWin.setText(`${winCount}`);
         labelLose.setText(`${loseCount}`);
         labelDraw.setText(`${drawCount}`);
-        labelWinRate.setText(gamesCount > 0 ? `${HelpersText.format(`%.2f`, winCount * 100 / gamesCount)}` : `--`);
+        labelWinRate.setText(gamesCount > 0 ? `${format(`%.2f`, winCount * 100 / gamesCount)}` : `--`);
 
         this._layoutName.arrangeItems();
     }

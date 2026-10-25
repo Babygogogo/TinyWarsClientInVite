@@ -1,46 +1,46 @@
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as DialoguesConstants from "../../dialogues/Constants.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSmallDialogueSimple from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import * as UiUtilsUiHelpers from "../../ui/utils/UiHelpers.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { SmallDialogueSideId } from "../../dialogues/Constants.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorId } from "../../graphics/Constants.ts";
+import { getCoHead } from "../../helpers/ImageSource.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getLanguageText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { WeaSmallDialogueSimple } from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import { changeColor } from "../../ui/utils/UiHelpers.ts";
 
 export interface OpenData {
-    war             : BaseWarInterfaceIBwWar.IBwWar;
-    actionData      : ProtoSchemaCommonProtoWarEventWeaSmallDialogueSimple.WeaSmallDialogueSimple;
+    war             : IBwWar;
+    actionData      : WeaSmallDialogueSimple;
     callbackOnClose : () => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnSkip!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _imgTouchMask!     : UiInterfacesIUiImage.IUiImage;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _group!            : IUiContainer;
+    private readonly _btnSkip!          : IUiButton;
+    private readonly _imgTouchMask!     : IUiImage;
 
-    private readonly _groupDialogue1!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupCo1!         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgCo1!           : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelName1!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelContent1!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDialogue1!   : IUiContainer;
+    private readonly _groupCo1!         : IUiContainer;
+    private readonly _imgCo1!           : IUiImage;
+    private readonly _labelName1!       : IUiLabel;
+    private readonly _labelContent1!    : IUiLabel;
 
-    private readonly _groupDialogue2!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupCo2!         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgCo2!           : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelName2!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelContent2!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDialogue2!   : IUiContainer;
+    private readonly _groupCo2!         : IUiContainer;
+    private readonly _imgCo2!           : IUiImage;
+    private readonly _labelName2!       : IUiLabel;
+    private readonly _labelContent2!    : IUiLabel;
 
     private _dialogueIndex  = -1;
 
@@ -50,7 +50,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._imgTouchMask,   callback: this._onTouchedImgTouchMask },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -73,18 +73,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSkip(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0226),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => getText(TextType.A0226),
             callback: () => this.closePanel(),
         });
     }
     private _onTouchedImgTouchMask(): void {
-        if (HelpersMisc.getExisted(this.getOpenData()?.actionData.getDataArray())[this._dialogueIndex + 1]) {
+        if (getExisted(this.getOpenData()?.actionData.getDataArray())[this._dialogueIndex + 1]) {
             this._tickDialogue();
         } else {
             this.closePanel();
         }
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -92,7 +92,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSkip.setText(LangUtils.getText(LangConstants.TextType.B0665));
+        this._btnSkip.setText(getText(TextType.B0665));
 
         this._updateComponentsForDialogue();
     }
@@ -185,85 +185,85 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const gameConfig        = war.getGcData();
         const groupCo1          = this._groupCo1;
         const groupCo2          = this._groupCo2;
-        const dialogueData      = HelpersMisc.getExisted(HelpersMisc.getExisted(openData.actionData.getDataArray())[this._dialogueIndex]);
+        const dialogueData      = getExisted(getExisted(openData.actionData.getDataArray())[this._dialogueIndex]);
         const dataForCoDialogue = dialogueData.getDataForCoDialogue();
         const dataForAside      = dialogueData.getDataForAside();
 
         if (dataForCoDialogue) {
             const playerIndex   = dataForCoDialogue.getPlayerIndex();
-            const coId          = playerIndex == null ? HelpersMisc.getExisted(dataForCoDialogue.getCoId()) : war.getPlayer(playerIndex).getCoId();
-            const coImageSource = HelpersImageSource.getCoHead(gameConfig, coId) ?? LangConstants.UndefinedError;
-            const coName        = LangUtils.getLanguageText({ textArray: dataForCoDialogue.getNameArray() }) ?? gameConfig.getCoNameAndTierText(coId) ?? LangConstants.UndefinedError;
+            const coId          = playerIndex == null ? getExisted(dataForCoDialogue.getCoId()) : war.getPlayer(playerIndex).getCoId();
+            const coImageSource = getCoHead(gameConfig, coId) ?? UndefinedError;
+            const coName        = getLanguageText({ textArray: dataForCoDialogue.getNameArray() }) ?? gameConfig.getCoNameAndTierText(coId) ?? UndefinedError;
             const side          = dataForCoDialogue.getSide();
 
-            if (side === DialoguesConstants.SmallDialogueSideId.Bottom) {
+            if (side === SmallDialogueSideId.Bottom) {
                 this._groupDialogue1.setIsVisible(true);
                 this._labelName1.setText(coName);
                 this._imgCo1.loadSource(coImageSource);
                 this._labelContent1.setText(war.getWarEventManager().handleEscapeText(
-                    HelpersMisc.getExisted(LangUtils.getLanguageText({ textArray: dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
+                    getExisted(getLanguageText({ textArray: dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
                 ));
-                UiUtilsUiHelpers.changeColor(groupCo1, GraphicsConstants.ColorId.Origin);
-                UiUtilsUiHelpers.changeColor(groupCo2, GraphicsConstants.ColorId.Dark);
+                changeColor(groupCo1, ColorId.Origin);
+                changeColor(groupCo2, ColorId.Dark);
 
-            } else if (side === DialoguesConstants.SmallDialogueSideId.Top) {
+            } else if (side === SmallDialogueSideId.Top) {
                 this._groupDialogue2.setIsVisible(true);
                 this._labelName2.setText(coName);
                 this._imgCo2.loadSource(coImageSource);
                 this._labelContent2.setText(war.getWarEventManager().handleEscapeText(
-                    HelpersMisc.getExisted(LangUtils.getLanguageText({ textArray: dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
+                    getExisted(getLanguageText({ textArray: dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
                 ));
-                UiUtilsUiHelpers.changeColor(groupCo1, GraphicsConstants.ColorId.Dark);
-                UiUtilsUiHelpers.changeColor(groupCo2, GraphicsConstants.ColorId.Origin);
+                changeColor(groupCo1, ColorId.Dark);
+                changeColor(groupCo2, ColorId.Origin);
 
             } else {
-                throw HelpersMisc.newError(`BwSimpleDialoguePanel._tickDialogue() invalid side.`);
+                throw newError(`BwSimpleDialoguePanel._tickDialogue() invalid side.`);
             }
 
         } else if (dataForAside) {
             const side = dataForAside.getSide();
-            if (side === DialoguesConstants.SmallDialogueSideId.Bottom) {
+            if (side === SmallDialogueSideId.Bottom) {
                 this._groupDialogue1.setIsVisible(true);
                 this._labelName1.setText(``);
                 this._imgCo1.loadSource(``);
                 this._labelContent1.setText(war.getWarEventManager().handleEscapeText(
-                    HelpersMisc.getExisted(LangUtils.getLanguageText({ textArray: dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
+                    getExisted(getLanguageText({ textArray: dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
                 ));
-                UiUtilsUiHelpers.changeColor(groupCo1, GraphicsConstants.ColorId.Origin);
-                UiUtilsUiHelpers.changeColor(groupCo2, GraphicsConstants.ColorId.Dark);
+                changeColor(groupCo1, ColorId.Origin);
+                changeColor(groupCo2, ColorId.Dark);
 
-            } else if (side === DialoguesConstants.SmallDialogueSideId.Top) {
+            } else if (side === SmallDialogueSideId.Top) {
                 this._groupDialogue2.setIsVisible(true);
                 this._labelName2.setText(``);
                 this._imgCo2.loadSource(``);
                 this._labelContent2.setText(war.getWarEventManager().handleEscapeText(
-                    HelpersMisc.getExisted(LangUtils.getLanguageText({ textArray: dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
+                    getExisted(getLanguageText({ textArray: dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
                 ));
-                UiUtilsUiHelpers.changeColor(groupCo1, GraphicsConstants.ColorId.Dark);
-                UiUtilsUiHelpers.changeColor(groupCo2, GraphicsConstants.ColorId.Origin);
+                changeColor(groupCo1, ColorId.Dark);
+                changeColor(groupCo2, ColorId.Origin);
 
             } else {
-                throw HelpersMisc.newError(`BwSimpleDialoguePanel._tickDialogue() invalid side.`);
+                throw newError(`BwSimpleDialoguePanel._tickDialogue() invalid side.`);
             }
         }
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._group,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._group,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 }

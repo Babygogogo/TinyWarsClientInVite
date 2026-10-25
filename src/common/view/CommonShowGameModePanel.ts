@@ -1,38 +1,38 @@
-import type * as GameModesConstants from "../../gameModes/Constants.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import type { ModeId } from "../../gameModes/Constants.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getGameModeHelpText, getGameModeName } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
-    currentGameModeArray    : GameModesConstants.ModeId[];
-    availableGameModeArray  : GameModesConstants.ModeId[];
+    currentGameModeArray    : ModeId[];
+    availableGameModeArray  : ModeId[];
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
 
-    private readonly _list!                 : UiInterfacesIUiScrollList.IUiScrollList<DataForItemRenderer>;
-    private readonly _labelNoData!          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _list!                 : IUiScrollList<DataForItemRenderer>;
+    private readonly _labelNoData!          : IUiLabel;
 
-    private readonly _selectedGameModeSet   = new Set<GameModesConstants.ModeId>();
+    private readonly _selectedGameModeSet   = new Set<ModeId>();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -60,7 +60,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         await super._onClosed();
     }
 
-    public checkHasSelectedGameMode(gameMode: GameModesConstants.ModeId): boolean {
+    public checkHasSelectedGameMode(gameMode: ModeId): boolean {
         return this._selectedGameModeSet.has(gameMode);
     }
     public updateOnSelectGameMode(gameMode: number): void {
@@ -82,8 +82,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1013));
-        this._labelNoData.setText(LangUtils.getText(LangConstants.TextType.B0278));
+        this._labelTitle.setText(getText(TextType.B1013));
+        this._labelNoData.setText(getText(TextType.B0278));
     }
 
     private async _updateComponentsForList(): Promise<void> {
@@ -100,19 +100,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForItemRenderer extends UiTypesUiListItemData.UiListItemData {
-    gameMode    : GameModesConstants.ModeId;
+interface DataForItemRenderer extends UiListItemData {
+    gameMode    : ModeId;
     panel       : Panel;
 }
-class ItemRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForItemRenderer> {
-    private readonly _groupSelect!  : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupHelp!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgSelected!  : UiInterfacesIUiImage.IUiImage;
+class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
+    private readonly _groupSelect!  : IUiContainer;
+    private readonly _groupHelp!    : IUiContainer;
+    private readonly _labelName!    : IUiLabel;
+    private readonly _imgSelected!  : IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupHelp,      callback: this._onTouchedGroupHelp },
@@ -128,11 +128,11 @@ class ItemRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getGameModeHelpText(gameMode) ?? LangConstants.UndefinedError,
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getGameModeHelpText(gameMode) ?? UndefinedError,
         });
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     protected override _doApplyOpenData(): void {
@@ -147,6 +147,6 @@ class ItemRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const gameMode = openData.gameMode;
         this._imgSelected.setIsVisible(openData.panel.checkHasSelectedGameMode(gameMode));
-        this._labelName.setText(LangUtils.getGameModeName(gameMode) ?? LangConstants.UndefinedError);
+        this._labelName.setText(getGameModeName(gameMode) ?? UndefinedError);
     }
 }

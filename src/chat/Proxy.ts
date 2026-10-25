@@ -1,64 +1,72 @@
-import type * as ChatConstants from "./Constants.ts";
-import * as ChatModel from "./Model.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as NetworksManager from "../networks/Manager.ts";
-import * as NetworksMessageCodes from "../networks/MessageCodes.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgChatAddMessageS from "../proto/schema/CommonProto/NetMessage/MsgChatAddMessage/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgChatDeleteMessageS from "../proto/schema/CommonProto/NetMessage/MsgChatDeleteMessage/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgChatGetAllMessagesS from "../proto/schema/CommonProto/NetMessage/MsgChatGetAllMessages/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgChatGetAllReadProgressListS from "../proto/schema/CommonProto/NetMessage/MsgChatGetAllReadProgressList/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgChatUpdateReadProgressS from "../proto/schema/CommonProto/NetMessage/MsgChatUpdateReadProgress/S.ts";
-import * as TimerTimerModel from "../timer/TimerModel.ts";
-import type * as VendorEgretEgret from "../vendor/egret/Egret.ts";
+import type { ToCategoryId } from "./Constants.ts";
+import { updateOnAddMessage, setAllMessages, setReadProgress, resetAllReadProgress, updateOnDeleteMessage } from "./Model.ts";
+import { getExisted } from "../helpers/Misc.ts";
+import { addListeners, send } from "../networks/Manager.ts";
+import { MessageCodes } from "../networks/MessageCodes.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { S } from "../proto/schema/CommonProto/NetMessage/MsgChatAddMessage/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgChatDeleteMessageS,
+} from "../proto/schema/CommonProto/NetMessage/MsgChatDeleteMessage/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgChatGetAllMessagesS,
+} from "../proto/schema/CommonProto/NetMessage/MsgChatGetAllMessages/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgChatGetAllReadProgressListS,
+} from "../proto/schema/CommonProto/NetMessage/MsgChatGetAllReadProgressList/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgChatUpdateReadProgressS,
+} from "../proto/schema/CommonProto/NetMessage/MsgChatUpdateReadProgress/S.ts";
+import { getServerTimestamp } from "../timer/TimerModel.ts";
+import type { Event } from "../vendor/egret/Egret.ts";
 
 export function init(): void {
-    NetworksManager.addListeners([
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgChatAddMessage,               callback: _onMsgChatAddMessage },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgChatGetAllMessages,           callback: _onMsgChatGetAllMessages },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgChatUpdateReadProgress,       callback: _onMsgChatUpdateReadProgress },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgChatGetAllReadProgressList,   callback: _onMsgChatGetAllReadProgressList },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgChatDeleteMessage,            callback: _onMsgChatDeleteMessage },
+    addListeners([
+        { msgCode: MessageCodes.MsgChatAddMessage,               callback: _onMsgChatAddMessage },
+        { msgCode: MessageCodes.MsgChatGetAllMessages,           callback: _onMsgChatGetAllMessages },
+        { msgCode: MessageCodes.MsgChatUpdateReadProgress,       callback: _onMsgChatUpdateReadProgress },
+        { msgCode: MessageCodes.MsgChatGetAllReadProgressList,   callback: _onMsgChatGetAllReadProgressList },
+        { msgCode: MessageCodes.MsgChatDeleteMessage,            callback: _onMsgChatDeleteMessage },
     ], null);
 }
 
 export function reqChatAddMessage(
     content     : string,
-    toCategory  : ChatConstants.ToCategoryId,
+    toCategory  : ToCategoryId,
     toTarget    : number,
 ): void {
-    NetworksManager.send({ MsgChatAddMessage: { c: {
+    send({ MsgChatAddMessage: { c: {
         toCategory,
         toTarget,
         content,
     }, } });
 }
-function _onMsgChatAddMessage(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChatAddMessageS.S;
+function _onMsgChatAddMessage(e: Event): void {
+    const data = e.data as S;
     if (!data.getErrorCode()) {
-        ChatModel.updateOnAddMessage(HelpersMisc.getExisted(data.getMessage()), true);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgChatAddMessage, data);
+        updateOnAddMessage(getExisted(data.getMessage()), true);
+        dispatch(TypeId.MsgChatAddMessage, data);
     }
 }
 
 export function reqGetAllMessages(): void {
-    NetworksManager.send({ MsgChatGetAllMessages: { c: {} } });
+    send({ MsgChatGetAllMessages: { c: {} } });
 }
-function _onMsgChatGetAllMessages(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChatGetAllMessagesS.S;
+function _onMsgChatGetAllMessages(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChatGetAllMessagesS;
     if (!data.getErrorCode()) {
-        ChatModel.setAllMessages(data.getMessageList());
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgChatGetAllMessages, data);
+        setAllMessages(data.getMessageList());
+        dispatch(TypeId.MsgChatGetAllMessages, data);
     }
 }
 
 export function reqUpdateReadProgress(
-    toCategory  : ChatConstants.ToCategoryId,
+    toCategory  : ToCategoryId,
     toTarget    : number,
-    timestamp   = TimerTimerModel.getServerTimestamp(),
+    timestamp   = getServerTimestamp(),
 ): void {
-    NetworksManager.send({ MsgChatUpdateReadProgress: { c: {
+    send({ MsgChatUpdateReadProgress: { c: {
         progress: {
             toCategory,
             toTarget,
@@ -66,32 +74,32 @@ export function reqUpdateReadProgress(
         }, }
     } });
 }
-function _onMsgChatUpdateReadProgress(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChatUpdateReadProgressS.S;
+function _onMsgChatUpdateReadProgress(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChatUpdateReadProgressS;
     if (!data.getErrorCode()) {
-        ChatModel.setReadProgress(HelpersMisc.getExisted(data.getProgress()));
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgChatUpdateReadProgress, data);
+        setReadProgress(getExisted(data.getProgress()));
+        dispatch(TypeId.MsgChatUpdateReadProgress, data);
     }
 }
 
 export function reqGetAllReadProgressList(): void {
-    NetworksManager.send({ MsgChatGetAllReadProgressList: { c: {} } });
+    send({ MsgChatGetAllReadProgressList: { c: {} } });
 }
-function _onMsgChatGetAllReadProgressList(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChatGetAllReadProgressListS.S;
+function _onMsgChatGetAllReadProgressList(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChatGetAllReadProgressListS;
     if (!data.getErrorCode()) {
-        ChatModel.resetAllReadProgress(data.getList());
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgChatGetAllReadProgressList, data);
+        resetAllReadProgress(data.getList());
+        dispatch(TypeId.MsgChatGetAllReadProgressList, data);
     }
 }
 
 export function reqChatDeleteMessage(messageId: number): void {
-    NetworksManager.send({ MsgChatDeleteMessage: { c: { messageId } } });
+    send({ MsgChatDeleteMessage: { c: { messageId } } });
 }
-function _onMsgChatDeleteMessage(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChatDeleteMessageS.S;
+function _onMsgChatDeleteMessage(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgChatDeleteMessageS;
     if (!data.getErrorCode()) {
-        ChatModel.updateOnDeleteMessage(HelpersMisc.getExisted(data.getMessageId()));
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgChatDeleteMessage, data);
+        updateOnDeleteMessage(getExisted(data.getMessageId()));
+        dispatch(TypeId.MsgChatDeleteMessage, data);
     }
 }

@@ -1,55 +1,55 @@
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoStructureUnitCustomName from "../../proto/schema/CommonProto/Structure/UnitCustomName.ts";
-import * as UnitsConstants from "../Constants.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import { checkIsValidLanguageTextArray } from "../../lang/Utils.ts";
+import type { UnitCustomName } from "../../proto/schema/CommonProto/Structure/UnitCustomName.ts";
+import { CustomName } from "../Constants.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type ProtoUnitCustomName    = ProtoSchemaCommonProtoStructureUnitCustomName.UnitCustomName;
+type ProtoUnitCustomName    = UnitCustomName;
 
 export function checkIsValid(data: ProtoUnitCustomName): boolean {
-    return getErrorCode(data) === UtilsClientErrorCode.ClientErrorCode.NoError;
+    return getErrorCode(data) === ClientErrorCode.NoError;
 }
-export function getErrorCode(data: ProtoUnitCustomName): UtilsClientErrorCode.ClientErrorCode {
+export function getErrorCode(data: ProtoUnitCustomName): ClientErrorCode {
     {
         const nameId = data.getNameId() ?? 0;
-        if ((nameId > UnitsConstants.CustomName.MaxId) ||
-            (nameId < UnitsConstants.CustomName.MinId)
+        if ((nameId > CustomName.MaxId) ||
+            (nameId < CustomName.MinId)
         ) {
-            return UtilsClientErrorCode.ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomName_00;
+            return ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomName_00;
         }
     }
 
     {
-        if (!LangUtils.checkIsValidLanguageTextArray({
+        if (!checkIsValidLanguageTextArray({
             list            : data.getNameTextArray(),
-            minTextLength   : UnitsConstants.CustomName.MinLength,
-            maxTextLength   : UnitsConstants.CustomName.MaxLength,
+            minTextLength   : CustomName.MinLength,
+            maxTextLength   : CustomName.MaxLength,
             minTextCount    : 1
         })) {
-            return UtilsClientErrorCode.ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomName_01;
+            return ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomName_01;
         }
     }
 
-    return UtilsClientErrorCode.ClientErrorCode.NoError;
+    return ClientErrorCode.NoError;
 }
 
-export function getErrorCodeForUnitCustomNameArray(names: ProtoUnitCustomName[]): UtilsClientErrorCode.ClientErrorCode {
+export function getErrorCodeForUnitCustomNameArray(names: ProtoUnitCustomName[]): ClientErrorCode {
     const idSet = new Set<number>();
     for (const nameData of names) {
         if (!checkIsValid(nameData)) {
-            return UtilsClientErrorCode.ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomNameArray_00;
+            return ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomNameArray_00;
         }
 
         const nameId = nameData.getNameId() ?? 0;
         if (idSet.has(nameId)) {
-            return UtilsClientErrorCode.ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomNameArray_01;
+            return ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomNameArray_01;
         }
         idSet.add(nameId);
     }
 
-    return UtilsClientErrorCode.ClientErrorCode.NoError;
+    return ClientErrorCode.NoError;
 }
 
 export function checkIsValidCustomNameId(nameId: number): boolean {
-    return (nameId >= UnitsConstants.CustomName.MinId)
-        && (nameId <= UnitsConstants.CustomName.MaxId);
+    return (nameId >= CustomName.MinId)
+        && (nameId <= CustomName.MaxId);
 }

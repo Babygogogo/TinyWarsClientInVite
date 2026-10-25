@@ -1,6 +1,6 @@
 
-import * as web from "./WebCore";
+import { XML, parseXML } from "./WebCore";
 
-export function parse(text: string): web.XML | null {
-    return web.parseXML(text);
+export function parse(text: string): XML | null {
+    return parseXML(text);
 }

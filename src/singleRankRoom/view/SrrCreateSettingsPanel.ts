@@ -1,60 +1,72 @@
-import * as CommonViewCommonWarAdvancedSettingsPage from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import * as CommonViewCommonWarBasicSettingsPage from "../../common/view/CommonWarBasicSettingsPage.ts";
-import * as CommonViewCommonWarMapInfoPage from "../../common/view/CommonWarMapInfoPage.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as GameModesConstants from "../../gameModes/Constants.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSrwS from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/S.ts";
-import * as SinglePlayerModeModelSpmModel from "../../singlePlayerMode/model/SpmModel.ts";
-import * as SinglePlayerModeModelSpmProxy from "../../singlePlayerMode/model/SpmProxy.ts";
-import * as SinglePlayerModeViewSpmRankPage from "../../singlePlayerMode/view/SpmRankPage.ts";
-import type * as SingleRankRoomModelSrrWarCreator from "../model/SrrWarCreator.ts";
-import * as SingleRankRoomViewSrrCreatePlayerInfoPage from "./SrrCreatePlayerInfoPage.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import * as UiComponentsUiTabItemRenderer from "../../ui/components/UiTabItemRenderer.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiTab from "../../ui/interfaces/IUiTab.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
+    Page as CommonViewCommonWarBasicSettingsPage,
+} from "../../common/view/CommonWarBasicSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
+    Page as CommonViewCommonWarMapInfoPage,
+} from "../../common/view/CommonWarMapInfoPage.ts";
+import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { BasicSettingsType } from "../../gameConfig/GcWar.ts";
+import { ModeId } from "../../gameModes/Constants.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { gotoSinglePlayerWar } from "../../helpers/GameFlow.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/S.ts";
+import { checkIsEmpty } from "../../singlePlayerMode/model/SpmModel.ts";
+import { reqSpmCreateSrw } from "../../singlePlayerMode/model/SpmProxy.ts";
+import {
+    type OpenData as SinglePlayerModeViewSpmRankPageOpenData,
+    Page as SinglePlayerModeViewSpmRankPage,
+} from "../../singlePlayerMode/view/SpmRankPage.ts";
+import type { SrrWarCreator } from "../model/SrrWarCreator.ts";
+import {
+    type OpenData as SingleRankRoomViewSrrCreatePlayerInfoPageOpenData,
+    Page as SingleRankRoomViewSrrCreatePlayerInfoPage,
+} from "./SrrCreatePlayerInfoPage.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import { UiTabItemRenderer } from "../../ui/components/UiTabItemRenderer.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import { Event, setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
 
-type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPage.OpenData;
-type OpenDataForCommonWarAdvancedSettingsPage   = CommonViewCommonWarAdvancedSettingsPage.OpenData;
-type OpenDataForSrrCreatePlayerInfoPage         = SingleRankRoomViewSrrCreatePlayerInfoPage.OpenData;
-type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPage.OpenData;
+type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
+type OpenDataForCommonWarAdvancedSettingsPage   = CommonViewCommonWarAdvancedSettingsPageOpenData;
+type OpenDataForSrrCreatePlayerInfoPage         = SingleRankRoomViewSrrCreatePlayerInfoPageOpenData;
+type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
 
 const CONFIRM_INTERVAL_MS = 5000;
 
 export interface OpenData {
-    warCreator  : SingleRankRoomModelSrrWarCreator.SrrWarCreator;
+    warCreator  : SrrWarCreator;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _groupNavigator!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelSinglePlayer!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelWarRoomMode!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelChooseMap!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelGameSettings!    : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _groupNavigator!       : IUiLayout;
+    private readonly _labelSinglePlayer!    : IUiLabel;
+    private readonly _labelWarRoomMode!     : IUiLabel;
+    private readonly _labelChooseMap!       : IUiLabel;
+    private readonly _labelGameSettings!    : IUiLabel;
 
-    private readonly _groupTab!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _tabSettings!          : UiInterfacesIUiTab.IUiTab<DataForTabItemRenderer, void | OpenDataForCommonWarMapInfoPage | OpenDataForCommonWarBasicSettingsPage | OpenDataForCommonWarAdvancedSettingsPage | SinglePlayerModeViewSpmRankPage.OpenData | OpenDataForSrrCreatePlayerInfoPage>;
+    private readonly _groupTab!             : IUiContainer;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, void | OpenDataForCommonWarMapInfoPage | OpenDataForCommonWarBasicSettingsPage | OpenDataForCommonWarAdvancedSettingsPage | SinglePlayerModeViewSpmRankPageOpenData | OpenDataForSrrCreatePlayerInfoPage>;
 
-    private readonly _btnBack!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnQuickSettings!     : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnBack!              : IUiButton;
+    private readonly _btnQuickSettings!     : IUiButton;
+    private readonly _btnConfirm!           : IUiButton;
 
     private _timeoutIdForBtnConfirm : number | null = null;
     private _isTabInitialized       = false;
@@ -66,13 +78,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgSpmCreateSrw,                         callback: this._onNotifyMsgSpmCreateSrw },
-            { type: NotificationsTypeId.TypeId.WarCreator_TemplateWarRuleIdChanged,  callback: this._onNotifySrrCreateModelTemplateWarRuleIdChanged },
-            { type: NotificationsTypeId.TypeId.WarCreator_SaveSlotIndexChanged,             callback: this._onNotifySrrCreateWarSaveSlotChanged },
+            { type: TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgSpmCreateSrw,                         callback: this._onNotifyMsgSpmCreateSrw },
+            { type: TypeId.WarCreator_TemplateWarRuleIdChanged,  callback: this._onNotifySrrCreateModelTemplateWarRuleIdChanged },
+            { type: TypeId.WarCreator_SaveSlotIndexChanged,             callback: this._onNotifySrrCreateWarSaveSlotChanged },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -105,7 +117,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().SrrCreateMapListPanel, {
+        openPanel(getDict().SrrCreateMapListPanel, {
             mapFilter               : null,
             mapSorter               : null,
             usePreviousFilter       : true,
@@ -113,7 +125,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnQuickSettings(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().SrrCreateQuickSettingsPanel, void 0);
+        openPanel(getDict().SrrCreateQuickSettingsPanel, void 0);
     }
     private async _onTouchedBtnConfirm(): Promise<void> {
         const openData = this.getOpenData();
@@ -123,15 +135,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const warCreator    = openData.warCreator;
         const callback      = () => {
-            SinglePlayerModeModelSpmProxy.reqSpmCreateSrw(warCreator.generateData());
+            reqSpmCreateSrw(warCreator.generateData());
             this._resetTimeoutForBtnConfirm();
         };
 
-        if (await SinglePlayerModeModelSpmModel.checkIsEmpty(HelpersMisc.getExisted(warCreator.getSaveSlotIndex()))) {
+        if (await checkIsEmpty(getExisted(warCreator.getSaveSlotIndex()))) {
             callback();
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent : () => LangUtils.getText(LangConstants.TextType.A0070),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent : () => getText(TextType.A0070),
                 callback,
             });
         }
@@ -140,12 +152,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgSpmCreateSrw(e: VendorEgretEgret.Event): void {
-        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmCreateSrwS.S;
-        HelpersGameFlow.gotoSinglePlayerWar({
-            warData         : HelpersMisc.getExisted(data.getWarData()),
-            slotExtraData   : HelpersMisc.getExisted(data.getExtraData()),
-            slotIndex       : HelpersMisc.getExisted(data.getSlotIndex()),
+    private _onNotifyMsgSpmCreateSrw(e: Event): void {
+        const data = e.data as S;
+        gotoSinglePlayerWar({
+            warData         : getExisted(data.getWarData()),
+            slotExtraData   : getExisted(data.getExtraData()),
+            slotIndex       : getExisted(data.getSlotIndex()),
         });
     }
     private _onNotifySrrCreateModelTemplateWarRuleIdChanged(): void {
@@ -158,14 +170,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _resetTimeoutForBtnConfirm(): void {
         this._clearTimeoutForBtnConfirm();
-        this._timeoutIdForBtnConfirm = VendorEgretEgret.setTimeout(() => {
+        this._timeoutIdForBtnConfirm = setTimeout(() => {
             this._timeoutIdForBtnConfirm = null;
         }, this, CONFIRM_INTERVAL_MS);
     }
 
     private _clearTimeoutForBtnConfirm(): void {
         if (this._timeoutIdForBtnConfirm != null) {
-            VendorEgretEgret.clearTimeout(this._timeoutIdForBtnConfirm);
+            clearTimeout(this._timeoutIdForBtnConfirm);
             this._timeoutIdForBtnConfirm = null;
         }
     }
@@ -174,13 +186,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Functions for the view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelSinglePlayer.setLangText(LangConstants.TextType.B0614);
-        this._labelWarRoomMode.setLangText(LangConstants.TextType.B1372);
-        this._labelChooseMap.setLangText(LangConstants.TextType.B0227);
-        this._labelGameSettings.setLangText(LangConstants.TextType.B0604);
-        this._btnBack.setLangText(LangConstants.TextType.B0146);
-        this._btnConfirm.setLangText(LangConstants.TextType.B0026);
-        this._btnQuickSettings.setLangText(LangConstants.TextType.B0908);
+        this._labelSinglePlayer.setLangText(TextType.B0614);
+        this._labelWarRoomMode.setLangText(TextType.B1372);
+        this._labelChooseMap.setLangText(TextType.B0227);
+        this._labelGameSettings.setLangText(TextType.B0604);
+        this._btnBack.setLangText(TextType.B0146);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnQuickSettings.setLangText(TextType.B0908);
 
         this._groupNavigator.arrangeItems();
     }
@@ -189,28 +201,28 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage.Page,
+                tabItemData : { name: getText(TextType.B0002) },
+                pageClass   : CommonViewCommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0003) },
-                pageClass   : CommonViewCommonWarAdvancedSettingsPage.Page,
+                tabItemData : { name: getText(TextType.B0003) },
+                pageClass   : Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0298) },
+                pageClass   : CommonViewCommonWarMapInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0224) },
-                pageClass   : SingleRankRoomViewSrrCreatePlayerInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0224) },
+                pageClass   : SingleRankRoomViewSrrCreatePlayerInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0436) },
-                pageClass   : SinglePlayerModeViewSpmRankPage.Page,
+                tabItemData : { name: getText(TextType.B0436) },
+                pageClass   : SinglePlayerModeViewSpmRankPage,
                 pageData    : null,
             },
         ]);
@@ -265,7 +277,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const openDataForPage   : OpenDataForCommonWarBasicSettingsPage = {
             dataArrayForListSettings: [
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.NormalMapId,
+                    settingsType    : BasicSettingsType.NormalMapId,
                     currentValue    : mapRawData.getNormalMapId(),
                     instanceWarRule,
                     gameConfig,
@@ -273,7 +285,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : GameConfigGcWar.BasicSettingsType.WarRuleTitle,
+                    settingsType    : BasicSettingsType.WarRuleTitle,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -286,7 +298,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType        : GameConfigGcWar.BasicSettingsType.HasFog,
+                    settingsType        : BasicSettingsType.HasFog,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -294,7 +306,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify    : null,
                 },
                 {
-                    settingsType        : GameConfigGcWar.BasicSettingsType.Weather,
+                    settingsType        : BasicSettingsType.Weather,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -302,7 +314,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify    : null,
                 },
                 {
-                    settingsType        : GameConfigGcWar.BasicSettingsType.TileTheme,
+                    settingsType        : BasicSettingsType.TileTheme,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -310,7 +322,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify    : null,
                 },
                 {
-                    settingsType        : GameConfigGcWar.BasicSettingsType.WarEvent,
+                    settingsType        : BasicSettingsType.WarEvent,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -318,13 +330,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     callbackOnModify    : null,
                 },
                 {
-                    settingsType        : GameConfigGcWar.BasicSettingsType.SpmSaveSlotIndex,
+                    settingsType        : BasicSettingsType.SpmSaveSlotIndex,
                     currentValue        : warCreator.getSaveSlotIndex(),
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
                     warEventFullData    : warEventFullData,
                     callbackOnModify    : () => {
-                        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleSpmSaveSlotPanel, {
+                        openPanel(getDict().CommonChooseSingleSpmSaveSlotPanel, {
                             currentSlotIndex        : warCreator.getSaveSlotIndex(),
                             needComment             : false,
                             needConfirmOverwrite    : true,
@@ -335,14 +347,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType        : GameConfigGcWar.BasicSettingsType.SpmSaveSlotComment,
+                    settingsType        : BasicSettingsType.SpmSaveSlotComment,
                     currentValue        : warCreator.getSlotComment() ?? null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
                     warEventFullData    : warEventFullData,
                     callbackOnModify    : (newValue: string | number | null) => {
                         if (typeof newValue === "number") {
-                            throw HelpersMisc.newError(`Invalid newValue: ${newValue}`, UtilsClientErrorCode.ClientErrorCode.SrrCreateSettingsPanel_CreateDataForCommonWarBasicSettingsPage_00);
+                            throw newError(`Invalid newValue: ${newValue}`, ClientErrorCode.SrrCreateSettingsPanel_CreateDataForCommonWarBasicSettingsPage_00);
                         }
                         warCreator.setSlotComment(newValue);
                         this._updateCommonWarBasicSettingsPage();
@@ -360,13 +372,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const warCreator        = openData.warCreator;
-        const settingsForCommon = HelpersMisc.getExisted(warCreator.getSettingsForCommon());
-        const instanceWarRule   = HelpersMisc.getExisted(settingsForCommon.getInstanceWarRule());
+        const settingsForCommon = getExisted(warCreator.getSettingsForCommon());
+        const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule());
         return {
             canModify       : false,
-            gcData          : await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(settingsForCommon.getConfigVersion())),
+            gcData          : await getGameConfig(getExisted(settingsForCommon.getConfigVersion())),
             instanceWarRule : instanceWarRule,
-            gameModeId      : GameModesConstants.ModeId.WarRoom,
+            gameModeId      : ModeId.WarRoom,
         };
     }
     private async _createDataForCommonWarMapInfoPage(): Promise<OpenDataForCommonWarMapInfoPage> {
@@ -389,7 +401,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const openData = this.getOpenData();
         return openData ? { warCreator: openData.warCreator } : null;
     }
-    private _createDataForSpmRankPage(): SinglePlayerModeViewSpmRankPage.OpenData {
+    private _createDataForSpmRankPage(): SinglePlayerModeViewSpmRankPageOpenData {
         const openData = this.getOpenData();
         if (openData == null) {
             return null;
@@ -405,72 +417,72 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Opening/closing animations.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnQuickSettings,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnConfirm,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 0, },
             endProps    : { customAlpha: 1, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnQuickSettings,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnConfirm,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 1, },
             endProps    : { customAlpha: 0, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 }
 
-interface DataForTabItemRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTabItemRenderer extends UiListItemData {
     name: string;
 }
-class TabItemRenderer extends UiComponentsUiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer> {
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+class TabItemRenderer extends UiTabItemRenderer<DataForTabItemRenderer> {
+    private readonly _labelName!    : IUiLabel;
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? LangConstants.UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
     }
 }

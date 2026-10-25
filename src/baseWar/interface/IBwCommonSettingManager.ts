@@ -1,23 +1,27 @@
-import type * as AuxiliaryTypesMapSize from "../../auxiliaryTypes/MapSize.ts";
-import type * as BaseWarInterfaceIBwWar from "./IBwWar.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoWarRuleInstanceWarRule from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import type * as ProtoSchemaCommonProtoWarRulePlayerRule from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
-import type * as ProtoSchemaCommonProtoWarRuleTemplateWarRule from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import type * as ProtoSchemaCommonProtoWarRuleWarRuleCommonData from "../../proto/schema/CommonProto/WarRule/WarRuleCommonData.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForCommon from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
-import type * as WarTypesConstants from "../../warTypes/Constants.ts";
+import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
+import type { IBwWar } from "./IBwWar.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
+import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
+import type {
+    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
+} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { WarRuleCommonData } from "../../proto/schema/CommonProto/WarRule/WarRuleCommonData.ts";
+import type {
+    SettingsForCommon as ProtoSchemaCommonProtoWarSettingsSettingsForCommon,
+} from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
+import type { WarTypeId } from "../../warTypes/Constants.ts";
 
-type SettingsForCommon  = ProtoSchemaCommonProtoWarSettingsSettingsForCommon.SettingsForCommon;
-type TemplateWarRule    = ProtoSchemaCommonProtoWarRuleTemplateWarRule.TemplateWarRule;
+type SettingsForCommon  = ProtoSchemaCommonProtoWarSettingsSettingsForCommon;
+type TemplateWarRule    = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
 
 export interface IBwCommonSettingManager {
     init({ settings, warType, playersCountUnneutral, gameConfig, mapSize }: {
         settings                : SettingsForCommon;
-        warType                 : WarTypesConstants.WarTypeId;
+        warType                 : WarTypeId;
         playersCountUnneutral   : number;
-        gameConfig              : GameConfigGcData.GcData;
-        mapSize                 : AuxiliaryTypesMapSize.MapSize;
+        gameConfig              : GcData;
+        mapSize                 : MapSize;
     }): void;
 
     serializeForCreateSfw(): SettingsForCommon;
@@ -25,17 +29,17 @@ export interface IBwCommonSettingManager {
     serializeForCreateSfwWithTemplateWarRule(templateWarRule: TemplateWarRule): SettingsForCommon;
     serializeForCreateMfwWithTemplateWarRule(templateWarRule: TemplateWarRule): SettingsForCommon;
 
-    startRunning(war: BaseWarInterfaceIBwWar.IBwWar): void;
+    startRunning(war: IBwWar): void;
 
     getSettingsForCommon(): SettingsForCommon;
     getTurnsLimit(): number;
     getWarOperationsLimit(): number;
 
-    getInstanceWarRule(): ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule;
-    getWarRuleCommonData(): ProtoSchemaCommonProtoWarRuleWarRuleCommonData.WarRuleCommonData;
+    getInstanceWarRule(): InstanceWarRule;
+    getWarRuleCommonData(): WarRuleCommonData;
 
     getSettingsHasFogByDefault(): boolean;
     getSettingsDefaultWeatherType(): number;
 
-    getPlayerRule(playerIndex: number): ProtoSchemaCommonProtoWarRulePlayerRule.PlayerRule;
+    getPlayerRule(playerIndex: number): PlayerRule;
 }

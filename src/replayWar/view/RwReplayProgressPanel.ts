@@ -1,53 +1,53 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ReplayWarInterfaceIRwWarBase from "../interface/IRwWarBase.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { ReplayCheckpointInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { IRwWarBase } from "../interface/IRwWarBase.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
-    war: ReplayWarInterfaceIRwWarBase.IRwWarBase;
+    war: IRwWarBase;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
 
-    private readonly _layoutProgress!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTarget!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutProgress!   : IUiLayout;
+    private readonly _labelTarget!      : IUiLabel;
 
-    private readonly _groupProgress!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgProgressBar!   : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgProgressPoint! : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupProgress!    : IUiContainer;
+    private readonly _imgProgressBar!   : IUiImage;
+    private readonly _imgProgressPoint! : IUiImage;
 
-    private readonly _btnFirst!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnLast!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCancel!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!       : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnFirst!         : IUiButton;
+    private readonly _btnLast!          : IUiButton;
+    private readonly _btnCancel!        : IUiButton;
+    private readonly _btnConfirm!       : IUiButton;
 
-    private _allCheckpointInfoArray?    : AuxiliaryTypesAuxiliaryTypes.ReplayCheckpointInfo[];
+    private _allCheckpointInfoArray?    : ReplayCheckpointInfo[];
     private _selectedCheckpointId?      : number;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupProgress,     callback: this._onTouchedGroupProgress },
-            { ui: this._groupProgress,     callback: this._onTouchMoveGroupProgress,            eventType: HelpersPointerInput.PointerEventType.PressMove },
-            { ui: this._groupProgress,     callback: this._onTouchEndGroupProgress,             eventType: HelpersPointerInput.PointerEventType.ReleaseIn },
-            { ui: this._groupProgress,     callback: this._onTouchReleaseOutsideGroupProgress,  eventType: HelpersPointerInput.PointerEventType.ReleaseOut },
+            { ui: this._groupProgress,     callback: this._onTouchMoveGroupProgress,            eventType: PointerEventType.PressMove },
+            { ui: this._groupProgress,     callback: this._onTouchEndGroupProgress,             eventType: PointerEventType.ReleaseIn },
+            { ui: this._groupProgress,     callback: this._onTouchReleaseOutsideGroupProgress,  eventType: PointerEventType.ReleaseOut },
 
             { ui: this._btnCancel,      callback: this.closePanel },
             { ui: this._btnFirst,       callback: this._onTouchedBtnFirst },
@@ -81,8 +81,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onTouchedGroupProgress(e: VendorEgretEgret.Event): void {
-        const data              = e.data as HelpersPointerInput.PointerUnifiedEventData;
+    private _onTouchedGroupProgress(e: Event): void {
+        const data              = e.data as PointerUnifiedEventData;
         const group             = this._groupProgress;
         const point             = group.globalToLocal(data.stageX, data.stageY);
         const width             = group.getUnscaledWidth();
@@ -92,8 +92,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateGroupProgress();
         this._updateLabelTarget();
     }
-    private _onTouchMoveGroupProgress(e: VendorEgretEgret.Event): void {
-        const data              = e.data as HelpersPointerInput.PointerUnifiedEventData;
+    private _onTouchMoveGroupProgress(e: Event): void {
+        const data              = e.data as PointerUnifiedEventData;
         const group             = this._groupProgress;
         const point             = group.globalToLocal(data.stageX, data.stageY);
         const width             = group.getUnscaledWidth();
@@ -120,12 +120,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateLabelTarget();
     }
     private async _onTouchedBtnConfirm(): Promise<void> {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonBlockPanel, {
-            title   : LangUtils.getText(LangConstants.TextType.B0088),
-            content : LangUtils.getText(LangConstants.TextType.A0040),
+        openPanel(getDict().CommonBlockPanel, {
+            title   : getText(TextType.B0088),
+            content : getText(TextType.A0040),
         });
         await this.getOpenData()?.war.loadCheckpoint(this._getSelectedCheckpointId());
-        GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonBlockPanel);
+        closePanel(getDict().CommonBlockPanel);
         this.closePanel();
     }
 
@@ -137,9 +137,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0712));
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnCancel.setText(LangUtils.getText(LangConstants.TextType.B0154));
+        this._labelTitle.setText(getText(TextType.B0712));
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._btnCancel.setText(getText(TextType.B0154));
 
         this._updateLabelTarget();
     }
@@ -153,13 +153,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._imgProgressBar.setUnscaledManualWidth(pos);
     }
     private _updateLabelTarget(): void {
-        const checkpointInfo = HelpersMisc.getExisted(this._allCheckpointInfoArray, UtilsClientErrorCode.ClientErrorCode.RwReplayProgressPanel_UpdateGroupProgress_00)[this._getSelectedCheckpointId()];
-        this._labelTarget.setText(`${LangUtils.getText(LangConstants.TextType.B0191)}${checkpointInfo.turnIndex}  P${checkpointInfo.playerIndex}  ${LangUtils.getText(LangConstants.TextType.B0616)}${checkpointInfo.nextOperationId}`);
+        const checkpointInfo = getExisted(this._allCheckpointInfoArray, ClientErrorCode.RwReplayProgressPanel_UpdateGroupProgress_00)[this._getSelectedCheckpointId()];
+        this._labelTarget.setText(`${getText(TextType.B0191)}${checkpointInfo.turnIndex}  P${checkpointInfo.playerIndex}  ${getText(TextType.B0616)}${checkpointInfo.nextOperationId}`);
         this._layoutProgress.arrangeItems();
     }
 
     private _getSelectedCheckpointId(): number {
-        return HelpersMisc.getExisted(this._selectedCheckpointId, UtilsClientErrorCode.ClientErrorCode.RwReplayProgressPanel_GetSelectedCheckpointId_00);
+        return getExisted(this._selectedCheckpointId, ClientErrorCode.RwReplayProgressPanel_GetSelectedCheckpointId_00);
     }
     private _setSelectedCheckpointId(checkpointId: number): void {
         this._selectedCheckpointId = checkpointId;
@@ -168,6 +168,6 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         return 0;
     }
     private _getMaxCheckpointId(): number {
-        return HelpersMisc.getExisted(this._allCheckpointInfoArray?.length, UtilsClientErrorCode.ClientErrorCode.RwReplayProgressPanel_GetMaxCheckpointId_00) - 1;
+        return getExisted(this._allCheckpointInfoArray?.length, ClientErrorCode.RwReplayProgressPanel_GetMaxCheckpointId_00) - 1;
     }
 }

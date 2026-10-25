@@ -1,24 +1,24 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitDefense from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitDefense.ts";
-import * as UnitsUtilsCommon from "../../../units/utils/Common.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { SelfUnitDefense } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitDefense.ts";
+import { getNormalizedHp } from "../../../units/utils/Common.ts";
 
-function getTotalPctFromOwnTiles(cfg: AuxiliaryTypesAuxiliaryTypes.Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
+function getTotalPctFromOwnTiles(cfg: Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
     if (!cfg?.length) {
         return 0;
     } else {
         return getOwnTilesCount(cfg[0]) * cfg[1];
     }
 }
-function getTotalPctFromTileDefense(cfg: AuxiliaryTypesAuxiliaryTypes.Undefinable<number[]>, tileDefenseAmount: number, canTileDefendUnit: boolean): number {
+function getTotalPctFromTileDefense(cfg: Undefinable<number[]>, tileDefenseAmount: number, canTileDefendUnit: boolean): number {
     if (!cfg?.length) {
         return 0;
     } else {
         return ((canTileDefendUnit) || (!cfg[1])) ? cfg[0] / 100 * tileDefenseAmount : 0;
     }
 }
-function getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig: GameConfigGcData.GcData, cfg: AuxiliaryTypesAuxiliaryTypes.Undefinable<number[]>, attackerUnitTypeId: number | null): number {
+function getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig: GcData, cfg: Undefinable<number[]>, attackerUnitTypeId: number | null): number {
     if ((!cfg) || (cfg.length !== 2) || (attackerUnitTypeId == null)) {
         return 0;
     }
@@ -46,17 +46,17 @@ export function getTotalOffsetPct({
     tileDefenseAmount,
     canTileDefendUnit,
 }: {
-    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitDefense.SelfUnitDefense | null | undefined;
-    gameConfig                  : GameConfigGcData.GcData;
+    cfg                         : SelfUnitDefense | null | undefined;
+    gameConfig                  : GcData;
     unitTypeId1                 : number | null;
     unitTypeId2                 : number;
     tileTypeId2                 : number;
     weatherTypeId               : number;
     isCoOnboard                 : boolean;
     isInCozByPreviewSettings    : boolean;
-    gridIndex                   : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex                   : GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => AuxiliaryTypesGridIndex.GridIndex[];
+    getCoGridIndexArrayOnMap    : () => GridIndex[];
     getOwnTilesCount            : (tileCategoryId: number) => number;
     fund                        : number;
     promotion                   : number;
@@ -104,7 +104,7 @@ export function getTotalOffsetPct({
         + (cfg.getFundConversion() ?? 0) * fund / 10000
         + ((cfg.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
         + getTotalPctFromTileDefense(cfg.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (cfg.getOffsetPctFromHp() ?? [])[UnitsUtilsCommon.getNormalizedHp(hp) - 1] ?? 0 : 0)
+        + (hp > 0 ? (cfg.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0)
         + getTotalPctFromOwnTiles(cfg.getOffsetPctFromOwnTile(), getOwnTilesCount)
         + getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig, cfg.getOffsetPctAgainstSpecificEnemy(), unitTypeId1)
         + (unitTypeId1 != unitTypeId2 ? 0 : cfg.getOffsetPctAgainstSameEnemy());
@@ -124,8 +124,8 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
     canTileDefendUnit,
     getOwnTilesCount,
 }: {
-    cfg                 : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitDefense.SelfUnitDefense | null | undefined;
-    gameConfig          : GameConfigGcData.GcData;
+    cfg                 : SelfUnitDefense | null | undefined;
+    gameConfig          : GcData;
     unitTypeId1         : number;
     unitTypeId2         : number;
     tileTypeId2         : number;
@@ -166,7 +166,7 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
         + (cfg.getFundConversion() ?? 0) * fund / 10000
         + ((cfg.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
         + getTotalPctFromTileDefense(cfg.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (cfg.getOffsetPctFromHp() ?? [])[UnitsUtilsCommon.getNormalizedHp(hp) - 1] ?? 0 : 0)
+        + (hp > 0 ? (cfg.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0)
         + getTotalPctFromOwnTiles(cfg.getOffsetPctFromOwnTile(), getOwnTilesCount)
         + getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig, cfg.getOffsetPctAgainstSpecificEnemy(), unitTypeId1)
         + (unitTypeId1 != unitTypeId2 ? 0 : cfg.getOffsetPctAgainstSameEnemy());

@@ -1,5 +1,5 @@
-import * as PlayersConstants from "../players/Constants.ts";
-import * as ProtoSchemaCommonProtoWarRulePlayerRule from "../proto/schema/CommonProto/WarRule/PlayerRule.ts";
+import { PlayerIndex } from "../players/Constants.ts";
+import { PlayerRule } from "../proto/schema/CommonProto/WarRule/PlayerRule.ts";
 
 // eslint-disable-next-line no-shadow
 export const enum RuleTypeId {
@@ -125,8 +125,8 @@ export const enum MaxUnitsCount {
     MaxLimit        = 10000,
 }
 
-export const NeutralPlayerRule = ProtoSchemaCommonProtoWarRulePlayerRule.PlayerRule.fromJson({
-    playerIndex                 : PlayersConstants.PlayerIndex.Neutral,
+export const NeutralPlayerRule = PlayerRule.fromJson({
+    playerIndex                 : PlayerIndex.Neutral,
     teamIndex                   : 0,
     bannedCoCategoryIdArray     : [],
     bannedUnitTypeArray         : [],

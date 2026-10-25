@@ -1,27 +1,27 @@
-import * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "../auxiliaryTypes/MapSize.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoStructureGridIndexArrayAndPredicate from "../proto/schema/CommonProto/Structure/GridIndexArrayAndPredicate.ts";
+import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
+import { TextType, UndefinedError } from "../lang/Constants.ts";
+import { getFormattedText } from "../lang/Utils.ts";
+import type { GridIndexArrayAndPredicate } from "../proto/schema/CommonProto/Structure/GridIndexArrayAndPredicate.ts";
 
-type GridIndexArrayAndPredicateSchema = ProtoSchemaCommonProtoStructureGridIndexArrayAndPredicate.GridIndexArrayAndPredicate;
+type GridIndexArrayAndPredicateSchema = GridIndexArrayAndPredicate;
 
 export function getDesc(data: GridIndexArrayAndPredicateSchema, valueName: string): string {
-    return LangUtils.getFormattedText(
-        data.getIsOneOf() ? LangConstants.TextType.F0228 : LangConstants.TextType.F0229,
+    return getFormattedText(
+        data.getIsOneOf() ? TextType.F0228 : TextType.F0229,
         valueName,
-        data.getGridIndexArray()?.map(v => `(${v.getX()},${v.getY()})`).join(`, `) ?? LangConstants.UndefinedError
+        data.getGridIndexArray()?.map(v => `(${v.getX()},${v.getY()})`).join(`, `) ?? UndefinedError
     );
 }
 
-export function checkIsValid(data: GridIndexArrayAndPredicateSchema, mapSize: AuxiliaryTypesMapSize.MapSize): boolean {
+export function checkIsValid(data: GridIndexArrayAndPredicateSchema, mapSize: MapSize): boolean {
     const rawArray = data.getGridIndexArray();
     if ((rawArray == null) || (!rawArray.length)) {
         return false;
     }
 
     const gridIdSet = new Set<number>();
-    for (const gridIndex of rawArray.map(v => AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(v))) {
+    for (const gridIndex of rawArray.map(v => GridIndex.convertGridIndex(v))) {
         if ((gridIndex == null) || (!gridIndex.checkIsInsideMap(mapSize))) {
             return false;
         }
@@ -36,7 +36,7 @@ export function checkIsValid(data: GridIndexArrayAndPredicateSchema, mapSize: Au
     return true;
 }
 
-export function checkIsMeet(data: GridIndexArrayAndPredicateSchema, value: AuxiliaryTypesGridIndex.GridIndex): boolean {
+export function checkIsMeet(data: GridIndexArrayAndPredicateSchema, value: GridIndex): boolean {
     const gridIndexArray = data.getGridIndexArray();
     return data.getIsOneOf()
         ? !!gridIndexArray?.some(v => value.checkIsEqual2(v))

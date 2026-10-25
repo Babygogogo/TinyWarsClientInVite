@@ -1,47 +1,47 @@
-import * as ExpressionParsersEnums from "../../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../../expressionParsers/Types.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
+import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
-    Targets             : ExpressionParsersTypes.EpExpressionInfo;
-    NeedFocusEffect     : ExpressionParsersTypes.EpExpressionInfo;
-    IsOneByOne          : ExpressionParsersTypes.EpExpressionInfo;
-    Interval            : ExpressionParsersTypes.EpExpressionInfo;
+    Targets             : EpExpressionInfo;
+    NeedFocusEffect     : EpExpressionInfo;
+    IsOneByOne          : EpExpressionInfo;
+    Interval            : EpExpressionInfo;
 } = {
     Targets       : {
-        contextType     : ExpressionParsersEnums.ContextType.War,
+        contextType     : ContextType.War,
         resultTypes     : [
-            ExpressionParsersEnums.ResultType.Position,
-            ExpressionParsersEnums.ResultType.PositionArray,
-            ExpressionParsersEnums.ResultType.Unit,
-            ExpressionParsersEnums.ResultType.UnitArray,
-            ExpressionParsersEnums.ResultType.Tile,
-            ExpressionParsersEnums.ResultType.TileArray,
+            ResultType.Position,
+            ResultType.PositionArray,
+            ResultType.Unit,
+            ResultType.UnitArray,
+            ResultType.Tile,
+            ResultType.TileArray,
         ],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1183),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0580),
+        getTitleText    : () => getText(TextType.B1183),
+        getHelpText     : () => getText(TextType.A0580),
     },
     NeedFocusEffect : {
-        contextType     : ExpressionParsersEnums.ContextType.War,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.War,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B0714),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0581),
+        getTitleText    : () => getText(TextType.B0714),
+        getHelpText     : () => getText(TextType.A0581),
     },
     IsOneByOne : {
-        contextType     : ExpressionParsersEnums.ContextType.War,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.War,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1184),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0582),
+        getTitleText    : () => getText(TextType.B1184),
+        getHelpText     : () => getText(TextType.A0582),
     },
     Interval : {
-        contextType     : ExpressionParsersEnums.ContextType.War,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.War,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1035),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0583),
+        getTitleText    : () => getText(TextType.B1035),
+        getHelpText     : () => getText(TextType.A0583),
     },
 };

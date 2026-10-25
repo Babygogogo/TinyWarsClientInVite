@@ -1,32 +1,41 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as HelpersCookies from "../helpers/Cookies.ts";
-import * as HelpersGzip from "../helpers/Gzip.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import * as LocalDataConstants from "./Constants.ts";
-import * as Logger2 from "../Logger.ts";
-import * as ProtoSchemaCommonProtoCoopCustomRoomCcrRoomStaticInfo from "../proto/schema/CommonProto/CoopCustomRoom/CcrRoomStaticInfo.ts";
-import * as ProtoSchemaCommonProtoMapMapEditorData from "../proto/schema/CommonProto/Map/MapEditorData.ts";
-import * as ProtoSchemaCommonProtoMapMapRawData from "../proto/schema/CommonProto/Map/MapRawData.ts";
-import * as ProtoSchemaCommonProtoMapNormalMapBriefData from "../proto/schema/CommonProto/Map/NormalMapBriefData.ts";
-import * as ProtoSchemaCommonProtoMultiCustomRoomMcrRoomStaticInfo from "../proto/schema/CommonProto/MultiCustomRoom/McrRoomStaticInfo.ts";
-import * as ProtoSchemaCommonProtoMultiFreeRoomMfrRoomStaticInfo from "../proto/schema/CommonProto/MultiFreeRoom/MfrRoomStaticInfo.ts";
-import * as ProtoSchemaCommonProtoMultiPlayerWarMpwWarProgressInfo from "../proto/schema/CommonProto/MultiPlayerWar/MpwWarProgressInfo.ts";
-import * as ProtoSchemaCommonProtoMultiPlayerWarMpwWarSettings from "../proto/schema/CommonProto/MultiPlayerWar/MpwWarSettings.ts";
-import * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetUnitStatisticsS from "../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/S.ts";
-import * as ProtoSchemaCommonProtoReplayReplayInfo from "../proto/schema/CommonProto/Replay/ReplayInfo.ts";
-import * as ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import * as ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotFullData from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotFullData.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import * as StagesConstants from "../stages/Constants.ts";
-import * as VendorEgretLocalStorage from "../vendor/egret/LocalStorage.ts";
+import type {
+    DecodedSpmWarSaveSlotData as AuxiliaryTypesAuxiliaryTypesDecodedSpmWarSaveSlotData,
+    DecodedMapEditorData as AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData,
+    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import {
+    setValue as HelpersCookiesSetValue,
+    getInt as HelpersCookiesGetInt,
+    getFloat as HelpersCookiesGetFloat,
+    getString as HelpersCookiesGetString,
+} from "../helpers/Cookies.ts";
+import { compress, decompress } from "../helpers/Gzip.ts";
+import { getExisted } from "../helpers/Misc.ts";
+import { LanguageType } from "../lang/Constants.ts";
+import { checkIsValidLanguageType } from "../lang/Utils.ts";
+import { KeyPrefix, NewDatabaseName, NewDatabaseVersion } from "./Constants.ts";
+import { warn } from "../Logger.ts";
+import { CcrRoomStaticInfo } from "../proto/schema/CommonProto/CoopCustomRoom/CcrRoomStaticInfo.ts";
+import { MapEditorData } from "../proto/schema/CommonProto/Map/MapEditorData.ts";
+import { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
+import { NormalMapBriefData } from "../proto/schema/CommonProto/Map/NormalMapBriefData.ts";
+import { McrRoomStaticInfo } from "../proto/schema/CommonProto/MultiCustomRoom/McrRoomStaticInfo.ts";
+import { MfrRoomStaticInfo } from "../proto/schema/CommonProto/MultiFreeRoom/MfrRoomStaticInfo.ts";
+import { MpwWarProgressInfo } from "../proto/schema/CommonProto/MultiPlayerWar/MpwWarProgressInfo.ts";
+import { MpwWarSettings } from "../proto/schema/CommonProto/MultiPlayerWar/MpwWarSettings.ts";
+import { S } from "../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/S.ts";
+import { ReplayInfo } from "../proto/schema/CommonProto/Replay/ReplayInfo.ts";
+import { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
+import { SpmWarSaveSlotFullData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotFullData.ts";
+import { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import { Scale } from "../stages/Constants.ts";
+import { setItem, getItem } from "../vendor/egret/LocalStorage.ts";
 
-type DecodedSpmWarSaveSlotData          = AuxiliaryTypesAuxiliaryTypes.DecodedSpmWarSaveSlotData;
-type DecodedMapEditorData               = AuxiliaryTypesAuxiliaryTypes.DecodedMapEditorData;
-type Undefinable<T>                     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type DecodedSpmWarSaveSlotData          = AuxiliaryTypesAuxiliaryTypesDecodedSpmWarSaveSlotData;
+type DecodedMapEditorData               = AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData;
+type Undefinable<T>                     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-const KEY_PREFIX                                = LocalDataConstants.KeyPrefix;
+const KEY_PREFIX                                = KeyPrefix;
 const KEY_ACCOUNT                               = KEY_PREFIX + "Account";
 const KEY_PASSWORD                              = KEY_PREFIX + "Password";
 const KEY_REMEMBER_PASSWORD                     = KEY_PREFIX + "RememberPassword";
@@ -55,14 +64,14 @@ const VALUE_TRUE                    = "1";
 const VALUE_FALSE                   = "0";
 
 namespace IndexedDb {
-    const DatabaseName      = LocalDataConstants.NewDatabaseName;
-    const DatabaseVersion   = LocalDataConstants.NewDatabaseVersion;
+    const DatabaseName      = NewDatabaseName;
+    const DatabaseVersion   = NewDatabaseVersion;
 
     export function initDatabase(): Promise<void> {
         return new Promise<void>(resolve => {
             const request       = window.indexedDB.open(DatabaseName, DatabaseVersion);
             request.onsuccess   = () => {
-                Logger2.warn(`IndexedDB init successfully.`);
+                warn(`IndexedDB init successfully.`);
 
                 const database = request.result;
                 StoreNormalMapBriefData.setDatabase(database);
@@ -86,7 +95,7 @@ namespace IndexedDb {
                 resolve();
             };
             request.onupgradeneeded = () => {
-                Logger2.warn(`IndexedDB upgrade successfully.`);
+                warn(`IndexedDB upgrade successfully.`);
 
                 const database = request.result;
                 StoreNormalMapBriefData.initStore(database);
@@ -108,7 +117,7 @@ namespace IndexedDb {
                 StoreMpwUnitStatistics.initStore(database);
             };
             request.onerror     = () => {
-                Logger2.warn(`IndexedDB failed to init.`);
+                warn(`IndexedDB failed to init.`);
 
                 resolve();
             };
@@ -505,15 +514,15 @@ export function getIsRememberPassword(): boolean {
     return (value == null) || (value === VALUE_TRUE);
 }
 
-export function setLanguageType(language: LangConstants.LanguageType): void {
+export function setLanguageType(language: LanguageType): void {
     setValue(KEY_LANGUAGE, "" + language);
 }
-export function getLanguageType(): LangConstants.LanguageType {
+export function getLanguageType(): LanguageType {
     const t = getInt(KEY_LANGUAGE);
-    if ((t != null) && (LangUtils.checkIsValidLanguageType(t))) {
+    if ((t != null) && (checkIsValidLanguageType(t))) {
         return t;
     } else {
-        return LangConstants.LanguageType.English;
+        return LanguageType.English;
     }
 }
 
@@ -613,7 +622,7 @@ export function setStageScale(scale: number): void {
     setValue(KEY_STAGE_SCALE, `${scale}`);
 }
 export function getStageScale(): number {
-    return getInt(KEY_STAGE_SCALE) || StagesConstants.Scale.MinScale;
+    return getInt(KEY_STAGE_SCALE) || Scale.MinScale;
 }
 
 export function setIsAutoTourneyNotified(tourneyId: number, isNotified: boolean): void {
@@ -634,7 +643,7 @@ export function getMpwOverridingSkinIdArray(warId: number): number[] | undefined
     const str = getString(`${KEY_MPW_OVERRIDING_SKIN_ID_ARRAY}${warId}`);
     return !str ? undefined : str.split(`,`).map(v => parseInt(v));
 }
-export function setMpwOverridingSkinIdArray(warId: number, skinIdArray: AuxiliaryTypesAuxiliaryTypes.Undefinable<number[]>): void {
+export function setMpwOverridingSkinIdArray(warId: number, skinIdArray: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>): void {
     setValue(`${KEY_MPW_OVERRIDING_SKIN_ID_ARRAY}${warId}`, skinIdArray?.join(`,`) ?? ``);
 }
 
@@ -642,7 +651,7 @@ export function getRwOverridingSkinIdArray(replayId: number): number[] | undefin
     const str = getString(`${KEY_RW_OVERRIDING_SKIN_ID_ARRAY}${replayId}`);
     return !str ? undefined : str.split(`,`).map(v => parseInt(v));
 }
-export function setRwOverridingSkinIdArray(replayId: number, skinIdArray: AuxiliaryTypesAuxiliaryTypes.Undefinable<number[]>): void {
+export function setRwOverridingSkinIdArray(replayId: number, skinIdArray: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>): void {
     setValue(`${KEY_RW_OVERRIDING_SKIN_ID_ARRAY}${replayId}`, skinIdArray?.join(`,`) ?? ``);
 }
 
@@ -654,83 +663,83 @@ export function setRwOverridingSkinIdArray(replayId: number, skinIdArray: Auxili
 //     return (data == null) || (data === VALUE_TRUE);
 // }
 
-export const StoreNormalMapBriefData = new IndexedDb.Store1<number, ProtoSchemaCommonProtoMapNormalMapBriefData.NormalMapBriefData, Uint8Array>({
+export const StoreNormalMapBriefData = new IndexedDb.Store1<number, NormalMapBriefData, Uint8Array>({
     storeName           : "NormalMapBriefData",
-    encode              : mapBriefData  => HelpersGzip.compress(mapBriefData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoMapNormalMapBriefData.NormalMapBriefData.decode(HelpersGzip.decompress(encodedData))
+    encode              : mapBriefData  => compress(mapBriefData.encode()),
+    decode              : encodedData   => NormalMapBriefData.decode(decompress(encodedData))
 });
-export const StoreNormalMapRawData = new IndexedDb.Store1<number, ProtoSchemaCommonProtoMapMapRawData.MapRawData, Uint8Array>({
+export const StoreNormalMapRawData = new IndexedDb.Store1<number, MapRawData, Uint8Array>({
     storeName           : "NormalMapRawData",
-    encode              : mapRawData    => HelpersGzip.compress(mapRawData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoMapMapRawData.MapRawData.decode(HelpersGzip.decompress(encodedData))
+    encode              : mapRawData    => compress(mapRawData.encode()),
+    decode              : encodedData   => MapRawData.decode(decompress(encodedData))
 });
-export const StoreMpmFullReplayData = new IndexedDb.Store1<number, ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, Uint8Array>({
+export const StoreMpmFullReplayData = new IndexedDb.Store1<number, SerialWar, Uint8Array>({
     storeName           : "MpmFullReplayData",
-    encode              : replayData    => HelpersGzip.compress(replayData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(encodedData))
+    encode              : replayData    => compress(replayData.encode()),
+    decode              : encodedData   => SerialWar.decode(decompress(encodedData))
 });
-export const StoreMpmFullReplayInfo = new IndexedDb.Store1<number, ProtoSchemaCommonProtoReplayReplayInfo.ReplayInfo, Uint8Array>({
+export const StoreMpmFullReplayInfo = new IndexedDb.Store1<number, ReplayInfo, Uint8Array>({
     storeName           : "MpmFullReplayInfo",
-    encode              : replayInfo    => HelpersGzip.compress(replayInfo.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoReplayReplayInfo.ReplayInfo.decode(HelpersGzip.decompress(encodedData))
+    encode              : replayInfo    => compress(replayInfo.encode()),
+    decode              : encodedData   => ReplayInfo.decode(decompress(encodedData))
 });
-export const StoreSpmReplayData = new IndexedDb.Store1<number, ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, Uint8Array>({
+export const StoreSpmReplayData = new IndexedDb.Store1<number, SerialWar, Uint8Array>({
     storeName           : "SpmReplayData",
-    encode              : replayData    => HelpersGzip.compress(replayData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(encodedData))
+    encode              : replayData    => compress(replayData.encode()),
+    decode              : encodedData   => SerialWar.decode(decompress(encodedData))
 });
-export const StoreMcrRoomStaticInfo = new IndexedDb.Store1<number, ProtoSchemaCommonProtoMultiCustomRoomMcrRoomStaticInfo.McrRoomStaticInfo, Uint8Array>({
+export const StoreMcrRoomStaticInfo = new IndexedDb.Store1<number, McrRoomStaticInfo, Uint8Array>({
     storeName           : "McrRoomStaticInfo",
-    encode              : info          => HelpersGzip.compress(info.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoMultiCustomRoomMcrRoomStaticInfo.McrRoomStaticInfo.decode(HelpersGzip.decompress(encodedData)),
+    encode              : info          => compress(info.encode()),
+    decode              : encodedData   => McrRoomStaticInfo.decode(decompress(encodedData)),
 });
-export const StoreCcrRoomStaticInfo = new IndexedDb.Store1<number, ProtoSchemaCommonProtoCoopCustomRoomCcrRoomStaticInfo.CcrRoomStaticInfo, Uint8Array>({
+export const StoreCcrRoomStaticInfo = new IndexedDb.Store1<number, CcrRoomStaticInfo, Uint8Array>({
     storeName           : "CcrRoomStaticInfo",
-    encode              : info          => HelpersGzip.compress(info.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoCoopCustomRoomCcrRoomStaticInfo.CcrRoomStaticInfo.decode(HelpersGzip.decompress(encodedData)),
+    encode              : info          => compress(info.encode()),
+    decode              : encodedData   => CcrRoomStaticInfo.decode(decompress(encodedData)),
 });
-export const StoreMfrRoomStaticInfo = new IndexedDb.Store1<number, ProtoSchemaCommonProtoMultiFreeRoomMfrRoomStaticInfo.MfrRoomStaticInfo, Uint8Array>({
+export const StoreMfrRoomStaticInfo = new IndexedDb.Store1<number, MfrRoomStaticInfo, Uint8Array>({
     storeName           : "MfrRoomStaticInfo",
-    encode              : info          => HelpersGzip.compress(info.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoMultiFreeRoomMfrRoomStaticInfo.MfrRoomStaticInfo.decode(HelpersGzip.decompress(encodedData)),
+    encode              : info          => compress(info.encode()),
+    decode              : encodedData   => MfrRoomStaticInfo.decode(decompress(encodedData)),
 });
-export const StoreMpwWarSettings = new IndexedDb.Store1<number, ProtoSchemaCommonProtoMultiPlayerWarMpwWarSettings.MpwWarSettings, Uint8Array>({
+export const StoreMpwWarSettings = new IndexedDb.Store1<number, MpwWarSettings, Uint8Array>({
     storeName           : "MpwWarSettings",
-    encode              : info          => HelpersGzip.compress(info.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoMultiPlayerWarMpwWarSettings.MpwWarSettings.decode(HelpersGzip.decompress(encodedData)),
+    encode              : info          => compress(info.encode()),
+    decode              : encodedData   => MpwWarSettings.decode(decompress(encodedData)),
 });
-export const StoreMpwWarProgressInfo = new IndexedDb.Store1<number, ProtoSchemaCommonProtoMultiPlayerWarMpwWarProgressInfo.MpwWarProgressInfo, Uint8Array>({
+export const StoreMpwWarProgressInfo = new IndexedDb.Store1<number, MpwWarProgressInfo, Uint8Array>({
     storeName           : "MpwWarProgressInfo",
-    encode              : info          => HelpersGzip.compress(info.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoMultiPlayerWarMpwWarProgressInfo.MpwWarProgressInfo.decode(HelpersGzip.decompress(encodedData)),
+    encode              : info          => compress(info.encode()),
+    decode              : encodedData   => MpwWarProgressInfo.decode(decompress(encodedData)),
 });
 export const StoreSpmWarSaveSlotFullData = new IndexedDb.Store2<DecodedSpmWarSaveSlotData, Uint8Array>({   // userId, slotIndex
     storeName           : "SpmWarSaveSlotFullData",
-    encode              : data => HelpersGzip.compress(ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotFullData.SpmWarSaveSlotFullData.fromJson({
+    encode              : data => compress(SpmWarSaveSlotFullData.fromJson({
         slotIndex           : data.slotIndex,
-        compressedWarData   : HelpersGzip.compress(data.warData.encode()),
+        compressedWarData   : compress(data.warData.encode()),
         encodedExtraData    : data.extraData.encode(),
     }).encode()),
     decode              : encodedData => {
-        const data              = ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotFullData.SpmWarSaveSlotFullData.decode(HelpersGzip.decompress(encodedData));
-        const compressedWarData = HelpersMisc.getExisted(data.getCompressedWarData());
+        const data              = SpmWarSaveSlotFullData.decode(decompress(encodedData));
+        const compressedWarData = getExisted(data.getCompressedWarData());
         let encodedWarData      = compressedWarData;
         // compressedWarData 在早期代码版本是未经压缩的，此处做个兼容
         try {
-            encodedWarData = HelpersGzip.decompress(compressedWarData);
+            encodedWarData = decompress(compressedWarData);
         } catch {
             encodedWarData = compressedWarData;
         }
         return {
             slotIndex   : data.getSlotIndex() ?? 0,
-            warData     : ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(encodedWarData),
-            extraData   : ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData.SpmWarSaveSlotExtraData.decode(HelpersMisc.getExisted(data.getEncodedExtraData())),
+            warData     : SerialWar.decode(encodedWarData),
+            extraData   : SpmWarSaveSlotExtraData.decode(getExisted(data.getEncodedExtraData())),
         };
     }
 });
 export const StoreMeFullData = new IndexedDb.Store2<DecodedMapEditorData, Uint8Array>({    // userId, slotIndex
     storeName           : "MeFullData",
-    encode              : data => HelpersGzip.compress(ProtoSchemaCommonProtoMapMapEditorData.MapEditorData.fromJson({
+    encode              : data => compress(MapEditorData.fromJson({
         slotIndex                   : data.slotIndex,
         reviewComment               : data.reviewComment,
         reviewStatus                : data.reviewStatus,
@@ -740,74 +749,74 @@ export const StoreMeFullData = new IndexedDb.Store2<DecodedMapEditorData, Uint8A
         gridMarkData                : data.gridMarkData?.toJson(),
     }).encode()),
     decode              : encodedData => {
-        const data              = ProtoSchemaCommonProtoMapMapEditorData.MapEditorData.decode(HelpersGzip.decompress(encodedData));
+        const data              = MapEditorData.decode(decompress(encodedData));
         const encodedMapRawData = data.getEncodedMapRawData();
         return {
             slotIndex                   : data.getSlotIndex() ?? 0,
             reviewComment               : data.getReviewComment() ?? null,
             reviewStatus                : data.getReviewStatus() ?? 0,
-            mapRawData                  : encodedMapRawData ? ProtoSchemaCommonProtoMapMapRawData.MapRawData.decode(encodedMapRawData) : null,
+            mapRawData                  : encodedMapRawData ? MapRawData.decode(encodedMapRawData) : null,
             dataTimestamp               : data.getDataTimestamp() ?? 0,
             srcNormalMapIdForAddEvent   : data.getSrcNormalMapIdForAddEvent() ?? null,
             gridMarkData                : data.getGridMarkData(),
         };
     }
 });
-export const StoreCampaignMapRawData = new IndexedDb.Store2<ProtoSchemaCommonProtoMapMapRawData.MapRawData, Uint8Array>({
+export const StoreCampaignMapRawData = new IndexedDb.Store2<MapRawData, Uint8Array>({
     storeName           : "CampaignMapRawData",
-    encode              : mapRawData    => HelpersGzip.compress(mapRawData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoMapMapRawData.MapRawData.decode(HelpersGzip.decompress(encodedData))
+    encode              : mapRawData    => compress(mapRawData.encode()),
+    decode              : encodedData   => MapRawData.decode(decompress(encodedData))
 });
-export const StoreMpwHalfwayReplayData = new IndexedDb.Store2<ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, Uint8Array>({ // userId, warId
+export const StoreMpwHalfwayReplayData = new IndexedDb.Store2<SerialWar, Uint8Array>({ // userId, warId
     storeName           : "MpwHalfwayReplayData",
-    encode              : warData       => HelpersGzip.compress(warData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(encodedData)),
+    encode              : warData       => compress(warData.encode()),
+    decode              : encodedData   => SerialWar.decode(decompress(encodedData)),
 });
-export const StoreMpwWatchWarData = new IndexedDb.Store2<ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, Uint8Array>({ // userId, warId
+export const StoreMpwWatchWarData = new IndexedDb.Store2<SerialWar, Uint8Array>({ // userId, warId
     storeName           : "MpwWatchWarData",
-    encode              : warData       => HelpersGzip.compress(warData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(encodedData)),
+    encode              : warData       => compress(warData.encode()),
+    decode              : encodedData   => SerialWar.decode(decompress(encodedData)),
 });
-export const StoreMpwOngoingWarData = new IndexedDb.Store2<ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, Uint8Array>({ // userId, warId
+export const StoreMpwOngoingWarData = new IndexedDb.Store2<SerialWar, Uint8Array>({ // userId, warId
     storeName           : "MpwOngoingWarData",
-    encode              : warData       => HelpersGzip.compress(warData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersGzip.decompress(encodedData)),
+    encode              : warData       => compress(warData.encode()),
+    decode              : encodedData   => SerialWar.decode(decompress(encodedData)),
 });
-export const StoreMpwUnitStatistics = new IndexedDb.Store2<ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetUnitStatisticsS.S, Uint8Array>({   // userId, warId
+export const StoreMpwUnitStatistics = new IndexedDb.Store2<S, Uint8Array>({   // userId, warId
     storeName           : "MpwUnitStatistics",
-    encode              : warData       => HelpersGzip.compress(warData.encode()),
-    decode              : encodedData   => ProtoSchemaCommonProtoNetMessageMsgMpwCommonGetUnitStatisticsS.S.decode(HelpersGzip.decompress(encodedData)),
+    encode              : warData       => compress(warData.encode()),
+    decode              : encodedData   => S.decode(decompress(encodedData)),
 });
 
 function setValue(key: string, value: string): void {
     try {
-        VendorEgretLocalStorage.setItem(key, value);
+        setItem(key, value);
     } catch {
-        HelpersCookies.setValue(key, value);
+        HelpersCookiesSetValue(key, value);
     }
 }
 function getInt(key: string): number | null {
     try {
-        const value = VendorEgretLocalStorage.getItem(key);
+        const value = getItem(key);
         const i = value == null ? NaN : parseInt(value);
         return isNaN(i) ? null : i;
     } catch {
-        return HelpersCookies.getInt(key);
+        return HelpersCookiesGetInt(key);
     }
 }
 function getFloat(key: string): number | null {
     try {
-        const value = VendorEgretLocalStorage.getItem(key);
+        const value = getItem(key);
         const f = value == null ? NaN : parseFloat(value);
         return isNaN(f) ? null : f;
     } catch {
-        return HelpersCookies.getFloat(key);
+        return HelpersCookiesGetFloat(key);
     }
 }
 function getString(key: string): string | null {
     try {
-        return VendorEgretLocalStorage.getItem(key);
+        return getItem(key);
     } catch {
-        return HelpersCookies.getString(key);
+        return HelpersCookiesGetString(key);
     }
 }

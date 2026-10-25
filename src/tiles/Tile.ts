@@ -1,57 +1,94 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import * as CoSkillsUtilsPersistentSelfTileEnabledForUnitProduction from "../coSkills/utils/persistent/SelfTileEnabledForUnitProduction.ts";
-import * as CoSkillsUtilsPersistentSelfTileIncome from "../coSkills/utils/persistent/SelfTileIncome.ts";
-import * as ForceSkinsUtils from "../forceSkins/Utils.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import * as GameConfigGcMap from "../gameConfig/GcMap.ts";
-import * as GameHelpersGhFactory from "../gameHelpers/GhFactory.ts";
-import * as HelpersCollection from "../helpers/Collection.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import * as LocationsConstants from "../locations/Constants.ts";
-import * as LocationsUtils from "../locations/Utils.ts";
-import type * as NotificationsDataTypes from "../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import * as PlayersConstants from "../players/Constants.ts";
-import type * as PlayersIPlayer from "../players/IPlayer.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfTileEnabledForUnitProduction from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
-import type * as ProtoSchemaCommonProtoConfigMoveCostCfg from "../proto/schema/CommonProto/Config/MoveCostCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigTileTemplateCfg from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type * as ProtoSchemaCommonProtoStructureTileBuff from "../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialTile from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData from "../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomCannonData from "../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData from "../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData from "../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
-import * as TileBuffsConstants from "../tileBuffs/Constants.ts";
-import * as TileBuffsUtilsCommon from "../tileBuffs/utils/Common.ts";
-import * as TilesConstantsCommon from "./constants/Common.ts";
-import * as TilesConstantsDefaultCustomTileData from "./constants/DefaultCustomTileData.ts";
-import * as TilesConstantsMapWeapon from "./constants/MapWeapon.ts";
-import type * as TilesITile from "./ITile.ts";
-import type * as TilesITileView from "./ITileView.ts";
-import * as TilesUtilsCommon from "./utils/Common.ts";
-import * as TilesUtilsCustomTileData from "./utils/CustomTileData.ts";
-import * as TilesUtilsSerialization from "./utils/Serialization.ts";
-import * as UnitsConstants from "../units/Constants.ts";
-import type * as UnitsIUnit from "../units/IUnit.ts";
-import * as UnitsUtilsCommon from "../units/utils/Common.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
-import * as VisibilitiesUtils from "../visibilities/Utils.ts";
+import type {
+    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+    CustomError,
+    RepairHpAndCost,
+} from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import { checkIsEffective } from "../coSkills/utils/persistent/SelfTileEnabledForUnitProduction.ts";
+import { getTotalMultiplier } from "../coSkills/utils/persistent/SelfTileIncome.ts";
+import { getRawOverridingSkinId } from "../forceSkins/Utils.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
+import { Constants } from "../gameConfig/GcMap.ts";
+import { getTileViewClass, getRwWarClass } from "../gameHelpers/GhFactory.ts";
+import { deleteElementFromList } from "../helpers/Collection.ts";
+import { getExisted, newError, createLazyFunc } from "../helpers/Misc.ts";
+import { getCurrentLanguageType, getLanguageText } from "../lang/Utils.ts";
+import { GroupCount, GroupSize, MinId, MaxId } from "../locations/Constants.ts";
+import { checkHasAnyOverlap } from "../locations/Utils.ts";
+import type { BwTileHasLocationIdSet, BwTileIsHighlightChanged, BwTileBuffChanged } from "../notifications/DataTypes.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import { PlayerIndex } from "../players/Constants.ts";
+import type { IPlayer as PlayersIPlayer } from "../players/IPlayer.ts";
+import type {
+    SelfTileEnabledForUnitProduction,
+} from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import type { MoveCostCfg } from "../proto/schema/CommonProto/Config/MoveCostCfg.ts";
+import type { TileTemplateCfg as ProtoSchemaCommonProtoConfigTileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
+import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type {
+    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
+} from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { TileCustomBuildingData } from "../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import type { TileCustomCannonData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
+import type { TileCustomCrystalData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
+import type { TileCustomLaserTurretData } from "../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
+import { BuffTypeId } from "../tileBuffs/Constants.ts";
+import { checkIsValid, checkIsExpired } from "../tileBuffs/utils/Common.ts";
+import { ObjectTypeId } from "./constants/Common.ts";
+import {
+    Crystal,
+    CannonDown,
+    CannonLeft,
+    CannonUp,
+    CannonRight,
+    CustomCannon,
+    CustomLaserTurret,
+} from "./constants/DefaultCustomTileData.ts";
+import { TypeId as TilesConstantsMapWeaponTypeId, AllCustomizableTypeIdArray } from "./constants/MapWeapon.ts";
+import type { ITile } from "./ITile.ts";
+import type { ITileView } from "./ITileView.ts";
+import {
+    getMaxCapturePoint,
+    getIsDefeatedOnCapture,
+    getDefenseAmount,
+    getDefenseUnitTypeArray,
+    checkCanDefendUnit,
+    getIncomePerTurn,
+    checkCanBlockEnemyUnitType,
+    getBlockEnemyUnitTypeArray,
+    getRepairNormalizedHp,
+    checkCanRepairOrSupplyUnitType,
+    getRepairUnitTypeArray,
+    checkCanHideUnitType,
+    getHideUnitTypeArray,
+    getProducibleUnitTypeArray,
+    getVisionRange,
+    getIsVisionEnabledForAllPlayers,
+    getGlobalAttackBonus,
+    getGlobalDefenseBonus,
+    getCoBoardUnitTypeArray,
+    checkIsValidCustomNameId,
+} from "./utils/Common.ts";
+import { Crystal as TilesUtilsCustomTileDataCrystal, Cannon, LaserTurret, Building } from "./utils/CustomTileData.ts";
+import { create } from "./utils/Serialization.ts";
+import { Hp, CategoryId } from "../units/Constants.ts";
+import type { IUnit as UnitsIUnit } from "../units/IUnit.ts";
+import { getNormalizedHp } from "../units/utils/Common.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+import { checkIsTileVisibleToTeams } from "../visibilities/Utils.ts";
 
-type SerialTile                     = ProtoSchemaCommonProtoWarSerializationSerialTile.SerialTile;
-type TileBuff                       = ProtoSchemaCommonProtoStructureTileBuff.TileBuff;
-type TileTemplateCfg                = ProtoSchemaCommonProtoConfigTileTemplateCfg.TileTemplateCfg;
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type IPlayer                        = PlayersIPlayer.IPlayer;
-type IUnit                          = UnitsIUnit.IUnit;
-type IBwWar                         = BaseWarInterfaceIBwWar.IBwWar;
+type SerialTile                     = ProtoSchemaCommonProtoWarSerializationSerialTile;
+type TileBuff                       = ProtoSchemaCommonProtoStructureTileBuff;
+type TileTemplateCfg                = ProtoSchemaCommonProtoConfigTileTemplateCfg;
+type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type IPlayer                        = PlayersIPlayer;
+type IUnit                          = UnitsIUnit;
+type IBwWar                         = BaseWarInterfaceIBwWar;
 
-export class Tile implements TilesITile.ITile {
-    private _gameConfig?                : GameConfigGcData.GcData;
+export class Tile implements ITile {
+    private _gameConfig?                : GcData;
     private _templateCfg?               : TileTemplateCfg;
     private _gridX                      = 0;
     private _gridY                      = 0;
@@ -71,20 +108,20 @@ export class Tile implements TilesITile.ITile {
     private _unfixedBuffList            : TileBuff[] = [];
     private _customNameId               : Undefinable<number>;
 
-    private _customCrystalData          : Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData>;
-    private _customCannonData           : Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData>;
-    private _customLaserTurretData      : Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData>;
-    private _customBuildingData         : Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData>;
+    private _customCrystalData          : Undefinable<TileCustomCrystalData>;
+    private _customCannonData           : Undefinable<TileCustomCannonData>;
+    private _customLaserTurretData      : Undefinable<TileCustomLaserTurretData>;
+    private _customBuildingData         : Undefinable<TileCustomBuildingData>;
 
-    private readonly _view  = new (GameHelpersGhFactory.getTileViewClass())();
+    private readonly _view  = new (getTileViewClass())();
     private _hasFog         = false;
     private _war?           : IBwWar;
 
-    public init(data: SerialTile, gameConfig: GameConfigGcData.GcData): void {
+    public init(data: SerialTile, gameConfig: GcData): void {
         this.deserialize(data, gameConfig);
         this.setHasFog(false);
     }
-    public fastInit(data: SerialTile, gameConfig: GameConfigGcData.GcData): void {
+    public fastInit(data: SerialTile, gameConfig: GcData): void {
         this.init(data, gameConfig);
     }
 
@@ -95,95 +132,95 @@ export class Tile implements TilesITile.ITile {
         this.flushDataToView();
     }
 
-    public getErrorCodeForTileData(data: SerialTile, playersCountUnneutral: number, gameConfig: GameConfigGcData.GcData): UtilsClientErrorCode.ClientErrorCode {
+    public getErrorCodeForTileData(data: SerialTile, playersCountUnneutral: number, gameConfig: GcData): ClientErrorCode {
         const playerIndex = data.getPlayerIndex();
         if (playerIndex > playersCountUnneutral) {
-            return UtilsClientErrorCode.ClientErrorCode.BwTile_GetErrorCodeForTileData_00;
+            return ClientErrorCode.BwTile_GetErrorCodeForTileData_00;
         }
 
         try {
             this.init(data, gameConfig);
         } catch (e) {
-            return (e as AuxiliaryTypesAuxiliaryTypes.CustomError).errorCode ?? UtilsClientErrorCode.ClientErrorCode.BwTile_GetErrorCodeForTileData_01;
+            return (e as CustomError).errorCode ?? ClientErrorCode.BwTile_GetErrorCodeForTileData_01;
         }
 
-        return UtilsClientErrorCode.ClientErrorCode.NoError;
+        return ClientErrorCode.NoError;
     }
-    public deserialize(data: SerialTile, gameConfig: GameConfigGcData.GcData): void {
+    public deserialize(data: SerialTile, gameConfig: GcData): void {
         this._setGameConfig(gameConfig);
 
-        const gridIndex = HelpersMisc.getExisted(AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(data.getGridIndex()), UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_00);
+        const gridIndex = getExisted(GridIndex.convertGridIndex(data.getGridIndex()), ClientErrorCode.BwTile_Deserialize_00);
         const gridX     = gridIndex.getX();
         const gridY     = gridIndex.getY();
         if ((gridX < 0)                                                 ||
             (gridY < 0)                                                 ||
-            ((gridX + 1) * (gridY + 1) > GameConfigGcMap.Constants.MaxGridsCount)
+            ((gridX + 1) * (gridY + 1) > Constants.MaxGridsCount)
         ) {
-            throw HelpersMisc.newError(`Invalid gridX and/or gridY: ${gridX}, ${gridY}`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_01);
+            throw newError(`Invalid gridX and/or gridY: ${gridX}, ${gridY}`, ClientErrorCode.BwTile_Deserialize_01);
         }
 
         const objectType    = data.getObjectType();
         const baseType      = data.getBaseType();
         const playerIndex   = data.getPlayerIndex();
         if (!gameConfig.checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType: objectType })) {
-            throw HelpersMisc.newError(`Invalid playerIndex: ${playerIndex}`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_04);
+            throw newError(`Invalid playerIndex: ${playerIndex}`, ClientErrorCode.BwTile_Deserialize_04);
         }
 
         const baseShapeId = data.getBaseShapeId();
         if (!gameConfig.checkIsValidTileBaseShapeId(baseType, baseShapeId)) {
-            throw HelpersMisc.newError(`Invalid baseShapeId: ${baseShapeId}`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_12);
+            throw newError(`Invalid baseShapeId: ${baseShapeId}`, ClientErrorCode.BwTile_Deserialize_12);
         }
 
         const objectShapeId = data.getObjectShapeId();
         if (!gameConfig.checkIsValidTileObjectShapeId(objectType, objectShapeId)) {
-            throw HelpersMisc.newError(`Invalid objectShapeId: ${objectShapeId}`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_13);
+            throw newError(`Invalid objectShapeId: ${objectShapeId}`, ClientErrorCode.BwTile_Deserialize_13);
         }
 
         const decorationType    = data.getDecorationType();
         const decorationShapeId = data.getDecorationShapeId();
         if (!gameConfig.checkIsValidTileDecorationShapeId(decorationType, decorationShapeId)) {
-            throw HelpersMisc.newError(`Invalid decorationType/shapeId: ${decorationType}, ${decorationShapeId}`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_14);
+            throw newError(`Invalid decorationType/shapeId: ${decorationType}, ${decorationShapeId}`, ClientErrorCode.BwTile_Deserialize_14);
         }
 
-        const templateCfg       = HelpersMisc.getExisted(gameConfig.getTileTemplateCfg(HelpersMisc.getExisted(gameConfig.getTileType(baseType, objectType))));
+        const templateCfg       = getExisted(gameConfig.getTileTemplateCfg(getExisted(gameConfig.getTileType(baseType, objectType))));
         const mapWeaponType     = templateCfg.getMapWeaponTypeId();
         const customCrystalData = data.getCustomCrystalData();
-        if ((customCrystalData != null) && (mapWeaponType !== TilesConstantsMapWeapon.TypeId.CustomCrystal)) {
-            throw HelpersMisc.newError(`CustomCrystalData is present while the tile is not CustomCrystal.`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_15);
+        if ((customCrystalData != null) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCrystal)) {
+            throw newError(`CustomCrystalData is present while the tile is not CustomCrystal.`, ClientErrorCode.BwTile_Deserialize_15);
         }
-        if ((customCrystalData != null) && (!TilesUtilsCustomTileData.Crystal.checkIsValid(customCrystalData))) {
-            throw HelpersMisc.newError(`Invalid customCrystalData.`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_16);
+        if ((customCrystalData != null) && (!TilesUtilsCustomTileDataCrystal.checkIsValid(customCrystalData))) {
+            throw newError(`Invalid customCrystalData.`, ClientErrorCode.BwTile_Deserialize_16);
         }
 
         const customCannonData = data.getCustomCannonData();
-        if ((customCannonData != null) && (mapWeaponType !== TilesConstantsMapWeapon.TypeId.CustomCannon)) {
-            throw HelpersMisc.newError(`CustomCannonData is present while the tile is not CustomCannon.`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_17);
+        if ((customCannonData != null) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon)) {
+            throw newError(`CustomCannonData is present while the tile is not CustomCannon.`, ClientErrorCode.BwTile_Deserialize_17);
         }
-        if ((customCannonData != null) && (!TilesUtilsCustomTileData.Cannon.checkIsValid(customCannonData))) {
-            throw HelpersMisc.newError(`Invalid customCannonData.`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_18);
+        if ((customCannonData != null) && (!Cannon.checkIsValid(customCannonData))) {
+            throw newError(`Invalid customCannonData.`, ClientErrorCode.BwTile_Deserialize_18);
         }
 
         const customLaserTurretData = data.getCustomLaserTurretData();
-        if ((customLaserTurretData != null) && (mapWeaponType !== TilesConstantsMapWeapon.TypeId.CustomLaserTurret)) {
-            throw HelpersMisc.newError(`CustomLaserTurretData is present while the tile is not CustomLaserTurret.`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_19);
+        if ((customLaserTurretData != null) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)) {
+            throw newError(`CustomLaserTurretData is present while the tile is not CustomLaserTurret.`, ClientErrorCode.BwTile_Deserialize_19);
         }
-        if ((customLaserTurretData != null) && (!TilesUtilsCustomTileData.LaserTurret.checkIsValid(customLaserTurretData))) {
-            throw HelpersMisc.newError(`Invalid customLaserTurretData.`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_20);
+        if ((customLaserTurretData != null) && (!LaserTurret.checkIsValid(customLaserTurretData))) {
+            throw newError(`Invalid customLaserTurretData.`, ClientErrorCode.BwTile_Deserialize_20);
         }
 
         const customBuildingData = data.getCustomBuildingData();
         if (customBuildingData != null) {
             if (!templateCfg.getIsCustomizableBuilding()) {
-                throw HelpersMisc.newError(`Invalid customBuildingData.`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_21);
+                throw newError(`Invalid customBuildingData.`, ClientErrorCode.BwTile_Deserialize_21);
             }
-            if (!TilesUtilsCustomTileData.Building.checkIsValid(customBuildingData, gameConfig)) {
-                throw HelpersMisc.newError(`Invalid customBuildingData.`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_22);
+            if (!Building.checkIsValid(customBuildingData, gameConfig)) {
+                throw newError(`Invalid customBuildingData.`, ClientErrorCode.BwTile_Deserialize_22);
             }
         }
 
         const unfixedBuffArray = data.getUnfixedBuffArray();
-        if (unfixedBuffArray?.some(v => !TileBuffsUtilsCommon.checkIsValid(v))) {
-            throw HelpersMisc.newError(`Invalid buffArray.`, UtilsClientErrorCode.ClientErrorCode.BwTile_Deserialize_23);
+        if (unfixedBuffArray?.some(v => !checkIsValid(v))) {
+            throw newError(`Invalid buffArray.`, ClientErrorCode.BwTile_Deserialize_23);
         }
 
         this._setTemplateCfg(templateCfg);
@@ -211,7 +248,7 @@ export class Tile implements TilesITile.ITile {
         this._setCustomLaserTurretData(customLaserTurretData?.clone());
     }
     public serialize(): SerialTile {
-        return TilesUtilsSerialization.create({
+        return create({
             gridIndex               : this.getGridIndex().toProto().toJson(),
 
             baseType                : this.getBaseType(),
@@ -250,16 +287,16 @@ export class Tile implements TilesITile.ITile {
     public serializeForTeamIndexes(teamIndexes: Set<number>): SerialTile {
         const war       = this.getWar();
         const gridIndex = this.getGridIndex();
-        if (VisibilitiesUtils.checkIsTileVisibleToTeams(war, gridIndex, teamIndexes)) {
+        if (checkIsTileVisibleToTeams(war, gridIndex, teamIndexes)) {
             return this.serialize();
 
         } else {
-            return TilesUtilsSerialization.create({
+            return create({
                 gridIndex               : gridIndex.toProto().toJson(),
                 baseType                : this.getBaseType(),
                 objectType              : this.getObjectType(),
                 decorationType          : this.getDecorationType(),
-                playerIndex             : this.getTemplateCfg().getIsAlwaysShowOwner() ? this.getPlayerIndex() : PlayersConstants.PlayerIndex.Neutral,
+                playerIndex             : this.getTemplateCfg().getIsAlwaysShowOwner() ? this.getPlayerIndex() : PlayerIndex.Neutral,
 
                 currentHp               : this.getCurrentHp(),
                 currentBuildPoint       : null,
@@ -286,13 +323,13 @@ export class Tile implements TilesITile.ITile {
         this._war = war;
     }
     public getWar(): IBwWar {
-        return HelpersMisc.getExisted(this._war);
+        return getExisted(this._war);
     }
 
-    public getGameConfig(): GameConfigGcData.GcData {
-        return HelpersMisc.getExisted(this._gameConfig);
+    public getGameConfig(): GcData {
+        return getExisted(this._gameConfig);
     }
-    private _setGameConfig(config: GameConfigGcData.GcData): void {
+    private _setGameConfig(config: GcData): void {
         this._gameConfig = config;
     }
 
@@ -300,7 +337,7 @@ export class Tile implements TilesITile.ITile {
         this._templateCfg = cfg;
     }
     public getTemplateCfg(): TileTemplateCfg {
-        return HelpersMisc.getExisted(this._templateCfg);
+        return getExisted(this._templateCfg);
     }
 
     public updateOnUnitLeave(): void {
@@ -311,7 +348,7 @@ export class Tile implements TilesITile.ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////
-    public getView(): TilesITileView.ITileView {
+    public getView(): ITileView {
         return this._view;
     }
     public flushDataToView(): void {
@@ -322,9 +359,9 @@ export class Tile implements TilesITile.ITile {
             tileData            : this.serialize(),
             hasFog              : this.getHasFog(),
             skinId              : this.getSkinId(),
-            overridingSkinId    : ForceSkinsUtils.getRawOverridingSkinId(war, this.getPlayerIndex()),
+            overridingSkinId    : getRawOverridingSkinId(war, this.getPlayerIndex()),
             themeType           : this.getTileThemeType(),
-            isFullReplay        : war instanceof GameHelpersGhFactory.getRwWarClass(),
+            isFullReplay        : war instanceof getRwWarClass(),
         });
         view.updateView();
     }
@@ -333,42 +370,42 @@ export class Tile implements TilesITile.ITile {
         this._baseType = baseType;
     }
     public getBaseType(): number {
-        return HelpersMisc.getExisted(this._baseType);
+        return getExisted(this._baseType);
     }
 
     public setObjectType(objectType: number): void {
         this._objectType = objectType;
     }
     public getObjectType(): number {
-        return HelpersMisc.getExisted(this._objectType);
+        return getExisted(this._objectType);
     }
 
     public setDecorationType(decorationType: number): void {
         this._decorationType = decorationType;
     }
     public getDecorationType(): number {
-        return HelpersMisc.getExisted(this._decorationType, UtilsClientErrorCode.ClientErrorCode.BwTile_GetDecorationType_00);
+        return getExisted(this._decorationType, ClientErrorCode.BwTile_GetDecorationType_00);
     }
 
     public setBaseShapeId(id: number): void {
         this._baseShapeId = id;
     }
     public getBaseShapeId(): number {
-        return HelpersMisc.getExisted(this._baseShapeId);
+        return getExisted(this._baseShapeId);
     }
 
     public setObjectShapeId(id: number): void {
         this._objectShapeId = id;
     }
     public getObjectShapeId(): number {
-        return HelpersMisc.getExisted(this._objectShapeId);
+        return getExisted(this._objectShapeId);
     }
 
     public setDecorationShapeId(id: number): void {
         this._decorationShapeId = id;
     }
     public getDecorationShapeId(): number {
-        return HelpersMisc.getExisted(this._decorationShapeId, UtilsClientErrorCode.ClientErrorCode.BwTile_GetDecorationShapeId_00);
+        return getExisted(this._decorationShapeId, ClientErrorCode.BwTile_GetDecorationShapeId_00);
     }
 
     public getSkinId(): number {
@@ -387,7 +424,7 @@ export class Tile implements TilesITile.ITile {
     }
     public setCurrentHp(hp: number): void {
         if ((hp < 0) || (hp > (this.getMaxHp() ?? 0))) {
-            throw HelpersMisc.newError(`Invalid hp: ${hp}`);
+            throw newError(`Invalid hp: ${hp}`);
         }
 
         this._currentHp = hp;
@@ -413,7 +450,7 @@ export class Tile implements TilesITile.ITile {
     }
     public setCurrentBuildPoint(point: number): void {
         if ((point < 0) || (point > (this.getMaxBuildPoint() ?? 0))) {
-            throw HelpersMisc.newError(`Invalid build point: ${point}`);
+            throw newError(`Invalid build point: ${point}`);
         }
 
         this._currentBuildPoint = point;
@@ -423,7 +460,7 @@ export class Tile implements TilesITile.ITile {
     // Functions for capture.
     ////////////////////////////////////////////////////////////////////////////////
     public getMaxCapturePoint(): Undefinable<number> {
-        return TilesUtilsCommon.getMaxCapturePoint(this.getTemplateCfg(), this.getCustomBuildingData());
+        return getMaxCapturePoint(this.getTemplateCfg(), this.getCustomBuildingData());
     }
 
     public getCurrentCapturePoint(): number {
@@ -431,7 +468,7 @@ export class Tile implements TilesITile.ITile {
     }
     public setCurrentCapturePoint(point: number): void {
         if ((point < 0) || (point > (this.getMaxCapturePoint() ?? 0))) {
-            throw HelpersMisc.newError(`Invalid capture point: ${point}`);
+            throw newError(`Invalid capture point: ${point}`);
         }
 
         this._currentCapturePoint = point;
@@ -445,7 +482,7 @@ export class Tile implements TilesITile.ITile {
     }
 
     public getIsDefeatedOnCapture(): boolean {
-        return TilesUtilsCommon.getIsDefeatedOnCapture(this.getTemplateCfg(), this.getCustomBuildingData());
+        return getIsDefeatedOnCapture(this.getTemplateCfg(), this.getCustomBuildingData());
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -464,7 +501,7 @@ export class Tile implements TilesITile.ITile {
             return false;
         }
 
-        for (let i = 0; i < LocationsConstants.GroupCount; ++i) {
+        for (let i = 0; i < GroupCount; ++i) {
             if (currArray[i] & groupedLocationIdArray[i]) {
                 return true;
             }
@@ -479,36 +516,36 @@ export class Tile implements TilesITile.ITile {
             return false;
         }
 
-        const groupedLocationId = idArray[Math.floor((locationId - 1) / LocationsConstants.GroupSize)];
-        return !!((groupedLocationId >>> ((locationId - 1) % LocationsConstants.GroupSize)) & 1);
+        const groupedLocationId = idArray[Math.floor((locationId - 1) / GroupSize)];
+        return !!((groupedLocationId >>> ((locationId - 1) % GroupSize)) & 1);
     }
     public setHasLocationId(locationId: number, hasId: boolean): void {
-        const groupedLocationIdArray  = this._groupedLocationIdArray ??= new Array<number>(LocationsConstants.GroupCount).fill(0);
-        const index                   = Math.floor((locationId - 1) / LocationsConstants.GroupSize);
+        const groupedLocationIdArray  = this._groupedLocationIdArray ??= new Array<number>(GroupCount).fill(0);
+        const index                   = Math.floor((locationId - 1) / GroupSize);
         if (hasId) {
-            groupedLocationIdArray[index] |= 1 << ((locationId - 1) % LocationsConstants.GroupSize);
+            groupedLocationIdArray[index] |= 1 << ((locationId - 1) % GroupSize);
         } else {
-            groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % LocationsConstants.GroupSize));
+            groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % GroupSize));
         }
 
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileHasLocationIdSet, this as NotificationsDataTypes.BwTileHasLocationIdSet);
+        dispatch(TypeId.BwTileHasLocationIdSet, this as BwTileHasLocationIdSet);
     }
     public setHasLocationIdWithLocationIdArray(locationIdArray: number[], hasId: boolean): void {
-        const groupedLocationIdArray = this._groupedLocationIdArray ??= new Array<number>(LocationsConstants.GroupCount).fill(0);
+        const groupedLocationIdArray = this._groupedLocationIdArray ??= new Array<number>(GroupCount).fill(0);
         for (const locationId of locationIdArray) {
-            const index = Math.floor((locationId - 1) / LocationsConstants.GroupSize);
+            const index = Math.floor((locationId - 1) / GroupSize);
             if (hasId) {
-                groupedLocationIdArray[index] |= 1 << ((locationId - 1) % LocationsConstants.GroupSize);
+                groupedLocationIdArray[index] |= 1 << ((locationId - 1) % GroupSize);
             } else {
-                groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % LocationsConstants.GroupSize));
+                groupedLocationIdArray[index] &= ~(1 << ((locationId - 1) % GroupSize));
             }
         }
 
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileHasLocationIdSet, this as NotificationsDataTypes.BwTileHasLocationIdSet);
+        dispatch(TypeId.BwTileHasLocationIdSet, this as BwTileHasLocationIdSet);
     }
     public getLocationIdList(hasId: boolean): number[] {
         const locationIdArray: number[] = [];
-        for (let locationId = LocationsConstants.MinId; locationId <= LocationsConstants.MaxId; ++locationId) {
+        for (let locationId = MinId; locationId <= MaxId; ++locationId) {
             if (hasId === this.getHasLocationId(locationId)) {
                 locationIdArray.push(locationId);
             }
@@ -520,12 +557,12 @@ export class Tile implements TilesITile.ITile {
     // Functions for highlight.
     ////////////////////////////////////////////////////////////////////////////////
     public getIsHighlighted(): boolean {
-        return HelpersMisc.getExisted(this._isHighlighted);
+        return getExisted(this._isHighlighted);
     }
     public setIsHighlighted(isHighlighted: boolean): void {
         if (this._isHighlighted !== isHighlighted) {
             this._isHighlighted = isHighlighted;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileIsHighlightedChanged, this as NotificationsDataTypes.BwTileIsHighlightChanged);
+            dispatch(TypeId.BwTileIsHighlightedChanged, this as BwTileIsHighlightChanged);
         }
     }
 
@@ -554,7 +591,7 @@ export class Tile implements TilesITile.ITile {
         const playerIndex   = turnManager.getPlayerIndexInTurn();
         let isUpdated       = false;
         for (let i = 0; i < buffArray.length; ++i) {
-            if (TileBuffsUtilsCommon.checkIsExpired(buffArray[i], turnIndex, playerIndex)) {
+            if (checkIsExpired(buffArray[i], turnIndex, playerIndex)) {
                 isUpdated = true;
                 buffArray.splice(i--, 1);
             }
@@ -564,9 +601,9 @@ export class Tile implements TilesITile.ITile {
             if (updateView) {
                 this.flushDataToView();
             }
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileBuffChanged, {
+            dispatch(TypeId.BwTileBuffChanged, {
                 tile    : this,
-            } as NotificationsDataTypes.BwTileBuffChanged);
+            } as BwTileBuffChanged);
         }
 
         return isUpdated;
@@ -582,9 +619,9 @@ export class Tile implements TilesITile.ITile {
         if (updateView) {
             this.flushDataToView();
         }
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileBuffChanged, {
+        dispatch(TypeId.BwTileBuffChanged, {
             tile    : this,
-        } as NotificationsDataTypes.BwTileBuffChanged);
+        } as BwTileBuffChanged);
     }
     public deleteUnfixedBuff(buff: TileBuff, updateView: boolean): boolean {
         const buffArray = this.getUnfixedBuffList();
@@ -592,16 +629,16 @@ export class Tile implements TilesITile.ITile {
             return false;
         }
 
-        if (!HelpersCollection.deleteElementFromList(buffArray, buff)) {
+        if (!deleteElementFromList(buffArray, buff)) {
             return false;
         }
 
         if (updateView) {
             this.flushDataToView();
         }
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileBuffChanged, {
+        dispatch(TypeId.BwTileBuffChanged, {
             tile    : this,
-        } as NotificationsDataTypes.BwTileBuffChanged);
+        } as BwTileBuffChanged);
 
         return true;
     }
@@ -614,7 +651,7 @@ export class Tile implements TilesITile.ITile {
     // Functions for defense amount for units.
     ////////////////////////////////////////////////////////////////////////////////
     public getDefenseAmount(): number {
-        return TilesUtilsCommon.getDefenseAmount(this.getTemplateCfg(), this.getCustomBuildingData());
+        return getDefenseAmount(this.getTemplateCfg(), this.getCustomBuildingData());
     }
     public getDefenseAmountForUnit(unit: IUnit, observerTeamIndexSet: Undefinable<Set<number>>, useDamagePreviewSettings: boolean): number {
         if (!this.checkCanDefendUnit(unit)) {
@@ -634,7 +671,7 @@ export class Tile implements TilesITile.ITile {
         const isInCozByPreviewSettings  = ((useDamagePreviewSettings) && (damagePreviewSettings.isEnabled))
             ? damagePreviewSettings.settings.find(v => v.playerIndex === unitPlayerIndex)?.isForcedInCoZone ?? false
             : false;
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() =>
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() =>
             observerTeamIndexSet == null
                 ? unitPlayer.getCoGridIndexListOnMap()
                 : unitPlayer.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet)
@@ -665,10 +702,10 @@ export class Tile implements TilesITile.ITile {
     }
 
     public getDefenseUnitTypeArray(): Undefinable<number[]> {
-        return TilesUtilsCommon.getDefenseUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
+        return getDefenseUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
     }
     public checkCanDefendUnit(unit: IUnit): boolean {
-        return TilesUtilsCommon.checkCanDefendUnit({
+        return checkCanDefendUnit({
             templateCfg         : this.getTemplateCfg(),
             customBuildingData  : this.getCustomBuildingData(),
             gameConfig          : this.getGameConfig(),
@@ -683,18 +720,18 @@ export class Tile implements TilesITile.ITile {
         this._gridX = x;
     }
     public getGridX(): number {
-        return HelpersMisc.getExisted(this._gridX);
+        return getExisted(this._gridX);
     }
 
     private _setGridY(y: number): void {
         this._gridY = y;
     }
     public getGridY(): number {
-        return HelpersMisc.getExisted(this._gridY);
+        return getExisted(this._gridY);
     }
 
-    public getGridIndex(): AuxiliaryTypesGridIndex.GridIndex {
-        return new AuxiliaryTypesGridIndex.GridIndex(
+    public getGridIndex(): GridIndex {
+        return new GridIndex(
             this.getGridX(),
             this.getGridY(),
         );
@@ -714,12 +751,12 @@ export class Tile implements TilesITile.ITile {
     }): void {
         const gameConfig = this.getGameConfig();
         if (!gameConfig.checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType: objectType })) {
-            throw HelpersMisc.newError(`Invalid playerIndex: ${playerIndex}, baseType: ${baseType}, objectType: ${objectType}`);
+            throw newError(`Invalid playerIndex: ${playerIndex}, baseType: ${baseType}, objectType: ${objectType}`);
         }
 
-        const newCfg            = HelpersMisc.getExisted(gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(baseType, objectType));
+        const newCfg            = getExisted(gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(baseType, objectType));
         const isSameTileType    = this.getTileTypeId() === newCfg.getTileTypeId();
-        const data              = TilesUtilsSerialization.create({
+        const data              = create({
             gridIndex               : this.getGridIndex().toProto().toJson(),
             objectType              : objectType,
             baseType                : baseType,
@@ -751,12 +788,12 @@ export class Tile implements TilesITile.ITile {
     public resetOnTileObjectDestroyed(): void {
         const gameConfig    = this.getGameConfig();
         const baseType      = this.getBaseType();
-        const objectType    = TilesConstantsCommon.ObjectTypeId.Empty;
-        const newCfg        = HelpersMisc.getExisted(gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(baseType, objectType));
+        const objectType    = ObjectTypeId.Empty;
+        const newCfg        = getExisted(gameConfig.getTileTemplateCfgByBaseTypeAndObjectType(baseType, objectType));
 
-        const data          = TilesUtilsSerialization.create({
+        const data          = create({
             gridIndex               : this.getGridIndex().toProto().toJson(),
-            playerIndex             : PlayersConstants.PlayerIndex.Neutral,
+            playerIndex             : PlayerIndex.Neutral,
             baseType                : baseType,
             baseShapeId             : this.getBaseShapeId(),
             objectType              : objectType,
@@ -792,11 +829,11 @@ export class Tile implements TilesITile.ITile {
     // Functions for income.
     ////////////////////////////////////////////////////////////////////////////////
     public getIncomePerTurn(): number {
-        return TilesUtilsCommon.getIncomePerTurn(this.getTemplateCfg(), this.getCustomBuildingData());
+        return getIncomePerTurn(this.getTemplateCfg(), this.getCustomBuildingData());
     }
     public getIncomeForPlayer(playerIndex: number): number {
         if ((this.getPlayerIndex() !== playerIndex)                                                                 ||
-            (this.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === TileBuffsConstants.BuffTypeId.NoIncome))
+            (this.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === BuffTypeId.NoIncome))
         ) {
             return 0;
         }
@@ -807,10 +844,10 @@ export class Tile implements TilesITile.ITile {
         const selfTileTypeId                  = this.getTileTypeId();
         const selfGridIndex                 = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifierForSkill            = 1;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifierForSkill *= CoSkillsUtilsPersistentSelfTileIncome.getTotalMultiplier({
+            modifierForSkill *= getTotalMultiplier({
                 cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfTileIncome(),
                 gameConfig                  : gameConfig,
                 tileTypeId                  : selfTileTypeId,
@@ -835,7 +872,7 @@ export class Tile implements TilesITile.ITile {
         this._playerIndex = index;
     }
     public getPlayerIndex(): number {
-        return HelpersMisc.getExisted(this._playerIndex);
+        return getExisted(this._playerIndex);
     }
 
     public getPlayer(): IPlayer {
@@ -849,11 +886,11 @@ export class Tile implements TilesITile.ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for move cost.
     ////////////////////////////////////////////////////////////////////////////////
-    private _getMoveCostCfg(): { [moveType: number]: ProtoSchemaCommonProtoConfigMoveCostCfg.MoveCostCfg } {
-        return HelpersMisc.getExisted(this.getGameConfig().getMoveCostCfg(this.getTileTypeId()));
+    private _getMoveCostCfg(): { [moveType: number]: MoveCostCfg } {
+        return getExisted(this.getGameConfig().getMoveCostCfg(this.getTileTypeId()));
     }
     public checkCanBlockEnemyUnitType(unitType: number): boolean {
-        return TilesUtilsCommon.checkCanBlockEnemyUnitType({
+        return checkCanBlockEnemyUnitType({
             gameConfig          : this.getGameConfig(),
             templateCfg         : this.getTemplateCfg(),
             customBuildingData  : this.getCustomBuildingData(),
@@ -861,7 +898,7 @@ export class Tile implements TilesITile.ITile {
         });
     }
     public getBlockEnemyUnitTypeArray(): Undefinable<number[]> {
-        return TilesUtilsCommon.getBlockEnemyUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
+        return getBlockEnemyUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
     }
 
     public getMoveCostByMoveType(moveType: number): Undefinable<number> {
@@ -874,7 +911,7 @@ export class Tile implements TilesITile.ITile {
             return null;
         }
 
-        if (LocationsUtils.checkHasAnyOverlap(this.getGroupedLocationIdArray(), unit.getForbiddenGroupedLocationIdArray())) {
+        if (checkHasAnyOverlap(this.getGroupedLocationIdArray(), unit.getForbiddenGroupedLocationIdArray())) {
             return null;
         }
 
@@ -889,7 +926,7 @@ export class Tile implements TilesITile.ITile {
         const player                    = unit.getPlayer();
         const gridIndex                 = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         for (const skillId of player.getCoCurrentSkills() || []) {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitMoveCost();
             if ((cfg)                                                                                   &&
@@ -913,7 +950,7 @@ export class Tile implements TilesITile.ITile {
     // Functions for repair/supply unit.
     ////////////////////////////////////////////////////////////////////////////////
     public getRepairNormalizedHp(): Undefinable<number> {
-        return TilesUtilsCommon.getRepairNormalizedHp(this.getTemplateCfg(), this.getCustomBuildingData());
+        return getRepairNormalizedHp(this.getTemplateCfg(), this.getCustomBuildingData());
     }
 
     public getNormalizedRepairAmountAndCostModifier(): { amountModifier: number, costMultiplierPct: number } {
@@ -921,7 +958,7 @@ export class Tile implements TilesITile.ITile {
         const gameConfig                = this.getGameConfig();
         const gridIndex                 = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         let amountModifier              = 0;
         let costMultiplierPct           = 100;
         for (const skillId of player.getCoCurrentSkills()) {
@@ -942,7 +979,7 @@ export class Tile implements TilesITile.ITile {
     }
 
     public checkCanRepairOrSupplyUnitType(unitType: number): boolean {
-        return TilesUtilsCommon.checkCanRepairOrSupplyUnitType({
+        return checkCanRepairOrSupplyUnitType({
             gameConfig          : this.getGameConfig(),
             templateCfg         : this.getTemplateCfg(),
             customBuildingData  : this.getCustomBuildingData(),
@@ -950,10 +987,10 @@ export class Tile implements TilesITile.ITile {
         });
     }
     public getRepairUnitTypeArray(): Undefinable<number[]> {
-        return TilesUtilsCommon.getRepairUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
+        return getRepairUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
     }
 
-    public getRepairHpAndCostForUnit(unit: IUnit): Undefinable<AuxiliaryTypesAuxiliaryTypes.RepairHpAndCost> {
+    public getRepairHpAndCostForUnit(unit: IUnit): Undefinable<RepairHpAndCost> {
         if ((this.getTeamIndex() !== unit.getTeamIndex()) || (!this.checkCanRepairOrSupplyUnitType(unit.getUnitType()))) {
             return null;
         }
@@ -970,7 +1007,7 @@ export class Tile implements TilesITile.ITile {
         const productionCost        = Math.floor(unit.getProductionFinalCost() * modifier.costMultiplierPct / 100);
         const currentHp             = unit.getCurrentHp();
         const normalizedMaxHp       = unit.getNormalizedMaxHp();
-        const normalizedCurrentHp   = UnitsUtilsCommon.getNormalizedHp(currentHp);
+        const normalizedCurrentHp   = getNormalizedHp(currentHp);
         const normalizedRepairHp    = Math.min(
             normalizedMaxHp - normalizedCurrentHp,
             cfgNormalizedRepairHp + modifier.amountModifier,
@@ -979,7 +1016,7 @@ export class Tile implements TilesITile.ITile {
                 : Number.MAX_SAFE_INTEGER,
         );
         return {
-            hp  : (normalizedRepairHp + normalizedCurrentHp) * UnitsConstants.Hp.Normalizer - currentHp,
+            hp  : (normalizedRepairHp + normalizedCurrentHp) * Hp.Normalizer - currentHp,
             cost: Math.floor(normalizedRepairHp * productionCost / normalizedMaxHp),
         };
     }
@@ -988,7 +1025,7 @@ export class Tile implements TilesITile.ITile {
     // Functions for hide unit.
     ////////////////////////////////////////////////////////////////////////////////
     public checkCanHideUnitType(unitType: number): boolean {
-        return TilesUtilsCommon.checkCanHideUnitType({
+        return checkCanHideUnitType({
             gameConfig          : this.getGameConfig(),
             templateCfg         : this.getTemplateCfg(),
             customBuildingData  : this.getCustomBuildingData(),
@@ -999,7 +1036,7 @@ export class Tile implements TilesITile.ITile {
         return !!this.getHideUnitTypeArray()?.length;
     }
     public getHideUnitTypeArray(): Undefinable<number[]> {
-        return TilesUtilsCommon.getHideUnitTypeArray({
+        return getHideUnitTypeArray({
             gameConfig          : this.getGameConfig(),
             templateCfg         : this.getTemplateCfg(),
             customBuildingData  : this.getCustomBuildingData(),
@@ -1009,7 +1046,7 @@ export class Tile implements TilesITile.ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for produce unit.
     ////////////////////////////////////////////////////////////////////////////////
-    public getEffectiveSelfUnitProductionSkillCfg(playerIndex: number): Undefinable<ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfTileEnabledForUnitProduction.SelfTileEnabledForUnitProduction> {
+    public getEffectiveSelfUnitProductionSkillCfg(playerIndex: number): Undefinable<SelfTileEnabledForUnitProduction> {
         const war       = this.getWar();
         const player    = war.getPlayerManager().getPlayer(playerIndex);
         if ((!player.getCoId()) || (this.getPlayerIndex() !== playerIndex)) {
@@ -1020,10 +1057,10 @@ export class Tile implements TilesITile.ITile {
         const selfTileTypeId            = this.getTileTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
         const selfGridIndex             = this.getGridIndex();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         for (const skillId of player.getCoCurrentSkills()) {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfTileEnabledForUnitProduction();
-            if (CoSkillsUtilsPersistentSelfTileEnabledForUnitProduction.checkIsEffective({
+            if (checkIsEffective({
                 cfg                         : cfg,
                 gameConfig                  : gameConfig,
                 tileTypeId                  : selfTileTypeId,
@@ -1041,7 +1078,7 @@ export class Tile implements TilesITile.ITile {
     /** 把co技能，事件，规则，buff全都考虑了进去 */
     public checkIsUnitProducerForPlayer(playerIndex: number): boolean {
         if ((this.getPlayerIndex() !== playerIndex)                                                                             ||
-            (this.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === TileBuffsConstants.BuffTypeId.NoProduction))
+            (this.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === BuffTypeId.NoProduction))
         ) {
             return false;
         }
@@ -1049,7 +1086,7 @@ export class Tile implements TilesITile.ITile {
         const war               = this.getWar();
         const effectiveCoSkill  = this.getEffectiveSelfUnitProductionSkillCfg(playerIndex);
         const unitTypeArray     = effectiveCoSkill
-            ? war.getGcData().getUnitCategoryCfg(effectiveCoSkill.getUnitCategoryId() ?? UnitsConstants.CategoryId.All)?.getUnitTypeIds()
+            ? war.getGcData().getUnitCategoryCfg(effectiveCoSkill.getUnitCategoryId() ?? CategoryId.All)?.getUnitTypeIds()
             : this.getRegularProducibleUnitTypeArray();
         return unitTypeArray?.some(v => war.checkCanProduceUnitByOpaAndRule(playerIndex, v)) ?? false;
     }
@@ -1057,7 +1094,7 @@ export class Tile implements TilesITile.ITile {
     /** 把co技能，事件，规则，buff全都考虑了进去 */
     public getProducibleUnitTypeArrayForPlayer(playerIndex: number): Undefinable<number[]> {
         if ((this.getPlayerIndex() !== playerIndex)                                                                             ||
-            (this.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === TileBuffsConstants.BuffTypeId.NoProduction))
+            (this.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === BuffTypeId.NoProduction))
         ) {
             return null;
         }
@@ -1065,24 +1102,24 @@ export class Tile implements TilesITile.ITile {
         const war               = this.getWar();
         const effectiveCoSkill  = this.getEffectiveSelfUnitProductionSkillCfg(playerIndex);
         const unitTypeArray     = effectiveCoSkill
-            ? war.getGcData().getUnitCategoryCfg(effectiveCoSkill.getUnitCategoryId() ?? UnitsConstants.CategoryId.All)?.getUnitTypeIds()
+            ? war.getGcData().getUnitCategoryCfg(effectiveCoSkill.getUnitCategoryId() ?? CategoryId.All)?.getUnitTypeIds()
             : this.getRegularProducibleUnitTypeArray();
         return unitTypeArray?.filter(v => war.checkCanProduceUnitByOpaAndRule(playerIndex, v));
     }
 
     /** 只考虑地形本身属性，不考虑co技能、事件、规则、buff */
     public getRegularProducibleUnitTypeArray(): Undefinable<number[]> {
-        return TilesUtilsCommon.getProducibleUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
+        return getProducibleUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
     }
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for vision.
     ////////////////////////////////////////////////////////////////////////////////
     public getCfgVisionRange(): number {
-        return TilesUtilsCommon.getVisionRange(this.getTemplateCfg(), this.getCustomBuildingData());
+        return getVisionRange(this.getTemplateCfg(), this.getCustomBuildingData());
     }
     public getIsVisionEnabledForAllPlayers(): boolean {
-        return TilesUtilsCommon.getIsVisionEnabledForAllPlayers(this.getTemplateCfg(), this.getCustomBuildingData());
+        return getIsVisionEnabledForAllPlayers(this.getTemplateCfg(), this.getCustomBuildingData());
     }
 
     public getFinalVisionRange(): number {
@@ -1104,17 +1141,17 @@ export class Tile implements TilesITile.ITile {
     // Functions for global attack/defense bonus.
     ////////////////////////////////////////////////////////////////////////////////
     public getGlobalAttackBonus(): number {
-        return TilesUtilsCommon.getGlobalAttackBonus(this.getTemplateCfg(), this.getCustomBuildingData());
+        return getGlobalAttackBonus(this.getTemplateCfg(), this.getCustomBuildingData());
     }
     public getGlobalDefenseBonus(): number {
-        return TilesUtilsCommon.getGlobalDefenseBonus(this.getTemplateCfg(), this.getCustomBuildingData());
+        return getGlobalDefenseBonus(this.getTemplateCfg(), this.getCustomBuildingData());
     }
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for load co.
     ////////////////////////////////////////////////////////////////////////////////
     public getCoBoardUnitTypeArray(): Undefinable<number[]> {
-        return TilesUtilsCommon.getCoBoardUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
+        return getCoBoardUnitTypeArray(this.getTemplateCfg(), this.getCustomBuildingData(), this.getGameConfig());
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -1125,20 +1162,20 @@ export class Tile implements TilesITile.ITile {
     }
     public setCustomNameId(nameId: Undefinable<number>): void {
         if ((nameId != null)                                        &&
-            ((!TilesUtilsCommon.checkIsValidCustomNameId(nameId)))
+            ((!checkIsValidCustomNameId(nameId)))
         ) {
-            throw HelpersMisc.newError(`Invalid nameId: ${nameId}`);
+            throw newError(`Invalid nameId: ${nameId}`);
         }
 
         if (this.getCustomNameId() !== nameId) {
             this._customNameId = nameId;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTileCustomNameIdChanged);
+            dispatch(TypeId.BwTileCustomNameIdChanged);
         }
     }
 
-    public getCustomName(languageType = LangUtils.getCurrentLanguageType()): AuxiliaryTypesAuxiliaryTypes.Undefinable<string> {
+    public getCustomName(languageType = getCurrentLanguageType()): AuxiliaryTypesAuxiliaryTypesUndefinable<string> {
         const nameId = this.getCustomNameId();
-        return LangUtils.getLanguageText({
+        return getLanguageText({
             textArray       : this.getWar().getTileMap().getTileCustomNameArray()?.find(v => (v.getNameId() ?? 0) === nameId)?.getNameTextArray(),
             languageType    : languageType,
             useAlternate    : false,
@@ -1148,7 +1185,7 @@ export class Tile implements TilesITile.ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for map weapon.
     ////////////////////////////////////////////////////////////////////////////////
-    public getMapWeaponType(): AuxiliaryTypesAuxiliaryTypes.Undefinable<number> {
+    public getMapWeaponType(): AuxiliaryTypesAuxiliaryTypesUndefinable<number> {
         return this.getTemplateCfg().getMapWeaponTypeId();
     }
     public checkIsMapWeapon(): boolean {
@@ -1156,35 +1193,35 @@ export class Tile implements TilesITile.ITile {
     }
     public checkIsCustomMapWeapon(): boolean {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        return (mapWeaponType != null) && (TilesConstantsMapWeapon.AllCustomizableTypeIdArray.indexOf(mapWeaponType) >= 0);
+        return (mapWeaponType != null) && (AllCustomizableTypeIdArray.indexOf(mapWeaponType) >= 0);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for crystal data.
     ////////////////////////////////////////////////////////////////////////////////
-    public getFinalCrystalData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData> {
+    public getFinalCrystalData(): Undefinable<TileCustomCrystalData> {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        if (mapWeaponType === TilesConstantsMapWeapon.TypeId.Crystal) {
-            return TilesConstantsDefaultCustomTileData.Crystal;
-        } else if (mapWeaponType === TilesConstantsMapWeapon.TypeId.CustomCrystal) {
-            return this.getCustomCrystalData() ?? TilesConstantsDefaultCustomTileData.Crystal;
+        if (mapWeaponType === TilesConstantsMapWeaponTypeId.Crystal) {
+            return Crystal;
+        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CustomCrystal) {
+            return this.getCustomCrystalData() ?? Crystal;
         } else {
             return null;
         }
     }
-    public getCustomCrystalData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData> {
+    public getCustomCrystalData(): Undefinable<TileCustomCrystalData> {
         return this._customCrystalData;
     }
-    private _setCustomCrystalData(data: Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData>): void {
+    private _setCustomCrystalData(data: Undefinable<TileCustomCrystalData>): void {
         this._customCrystalData = data;
     }
 
     public checkIsNormalCrystal(): boolean {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        return (mapWeaponType === TilesConstantsMapWeapon.TypeId.Crystal);
+        return (mapWeaponType === TilesConstantsMapWeaponTypeId.Crystal);
     }
-    private _initCustomCrystalData(): ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData {
-        return this._customCrystalData ??= TilesConstantsDefaultCustomTileData.Crystal.clone();
+    private _initCustomCrystalData(): TileCustomCrystalData {
+        return this._customCrystalData ??= Crystal.clone();
     }
     public setCustomCrystalRadius(radius: number): void {
         this._initCustomCrystalData().setRadius(radius);
@@ -1223,38 +1260,38 @@ export class Tile implements TilesITile.ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for cannon data.
     ////////////////////////////////////////////////////////////////////////////////
-    public getFinalCannonData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData> {
+    public getFinalCannonData(): Undefinable<TileCustomCannonData> {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        if (mapWeaponType === TilesConstantsMapWeapon.TypeId.CannonDown) {
-            return TilesConstantsDefaultCustomTileData.CannonDown;
-        } else if (mapWeaponType === TilesConstantsMapWeapon.TypeId.CannonLeft) {
-            return TilesConstantsDefaultCustomTileData.CannonLeft;
-        } else if (mapWeaponType === TilesConstantsMapWeapon.TypeId.CannonUp) {
-            return TilesConstantsDefaultCustomTileData.CannonUp;
-        } else if (mapWeaponType === TilesConstantsMapWeapon.TypeId.CannonRight) {
-            return TilesConstantsDefaultCustomTileData.CannonRight;
-        } else if (mapWeaponType === TilesConstantsMapWeapon.TypeId.CustomCannon) {
-            return this.getCustomCannonData() ?? TilesConstantsDefaultCustomTileData.CustomCannon;
+        if (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonDown) {
+            return CannonDown;
+        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonLeft) {
+            return CannonLeft;
+        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonUp) {
+            return CannonUp;
+        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonRight) {
+            return CannonRight;
+        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CustomCannon) {
+            return this.getCustomCannonData() ?? CustomCannon;
         } else {
             return null;
         }
     }
-    public getCustomCannonData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData> {
+    public getCustomCannonData(): Undefinable<TileCustomCannonData> {
         return this._customCannonData;
     }
-    private _setCustomCannonData(data: Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData>): void {
+    private _setCustomCannonData(data: Undefinable<TileCustomCannonData>): void {
         this._customCannonData = data;
     }
 
     public checkIsNormalCannon(): boolean {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        return (mapWeaponType === TilesConstantsMapWeapon.TypeId.CannonRight)
-            || (mapWeaponType === TilesConstantsMapWeapon.TypeId.CannonUp)
-            || (mapWeaponType === TilesConstantsMapWeapon.TypeId.CannonLeft)
-            || (mapWeaponType === TilesConstantsMapWeapon.TypeId.CannonDown);
+        return (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonRight)
+            || (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonUp)
+            || (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonLeft)
+            || (mapWeaponType === TilesConstantsMapWeaponTypeId.CannonDown);
     }
-    private _initCustomCannonData(): ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData {
-        return this._customCannonData ??= TilesConstantsDefaultCustomTileData.CustomCannon.clone();
+    private _initCustomCannonData(): TileCustomCannonData {
+        return this._customCannonData ??= CustomCannon.clone();
     }
 
     public setCustomCannonRangeForUp(rangeForUp: number): void {
@@ -1303,29 +1340,29 @@ export class Tile implements TilesITile.ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for cannon data.
     ////////////////////////////////////////////////////////////////////////////////
-    public getFinalLaserTurretData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData> {
+    public getFinalLaserTurretData(): Undefinable<TileCustomLaserTurretData> {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        if (mapWeaponType === TilesConstantsMapWeapon.TypeId.LaserTurret) {
-            return TilesConstantsDefaultCustomTileData.CustomLaserTurret;
-        } else if (mapWeaponType === TilesConstantsMapWeapon.TypeId.CustomLaserTurret) {
-            return this.getCustomLaserTurretData() ?? TilesConstantsDefaultCustomTileData.CustomLaserTurret;
+        if (mapWeaponType === TilesConstantsMapWeaponTypeId.LaserTurret) {
+            return CustomLaserTurret;
+        } else if (mapWeaponType === TilesConstantsMapWeaponTypeId.CustomLaserTurret) {
+            return this.getCustomLaserTurretData() ?? CustomLaserTurret;
         } else {
             return null;
         }
     }
-    public getCustomLaserTurretData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData> {
+    public getCustomLaserTurretData(): Undefinable<TileCustomLaserTurretData> {
         return this._customLaserTurretData;
     }
-    private _setCustomLaserTurretData(data: Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData>): void {
+    private _setCustomLaserTurretData(data: Undefinable<TileCustomLaserTurretData>): void {
         this._customLaserTurretData = data;
     }
 
     public checkIsNormalLaserTurret(): boolean {
         const mapWeaponType = this.getTemplateCfg().getMapWeaponTypeId();
-        return (mapWeaponType === TilesConstantsMapWeapon.TypeId.LaserTurret);
+        return (mapWeaponType === TilesConstantsMapWeaponTypeId.LaserTurret);
     }
-    private _initCustomLaserTurretData(): ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData {
-        return this._customLaserTurretData ??= TilesConstantsDefaultCustomTileData.CustomLaserTurret.clone();
+    private _initCustomLaserTurretData(): TileCustomLaserTurretData {
+        return this._customLaserTurretData ??= CustomLaserTurret.clone();
     }
 
     public setCustomLaserTurretRangeForUp(rangeForUp: number): void {
@@ -1371,10 +1408,10 @@ export class Tile implements TilesITile.ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for custom building data.
     ////////////////////////////////////////////////////////////////////////////////
-    public setCustomBuildingData(data: Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData>): void {
+    public setCustomBuildingData(data: Undefinable<TileCustomBuildingData>): void {
         this._customBuildingData = data;
     }
-    public getCustomBuildingData(): Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData> {
+    public getCustomBuildingData(): Undefinable<TileCustomBuildingData> {
         return this._customBuildingData;
     }
 
@@ -1395,12 +1432,12 @@ export class Tile implements TilesITile.ITile {
     public resetTileDataAsHasFog(): void {
         this.setHasFog(true);
 
-        const data = TilesUtilsSerialization.create({
+        const data = create({
             gridIndex               : this.getGridIndex().toProto().toJson(),
             baseType                : this.getBaseType(),
             decorationType          : this.getDecorationType(),
             objectType              : this.getObjectType(),
-            playerIndex             : this.getTemplateCfg().getIsAlwaysShowOwner() ? this.getPlayerIndex() : PlayersConstants.PlayerIndex.Neutral,
+            playerIndex             : this.getTemplateCfg().getIsAlwaysShowOwner() ? this.getPlayerIndex() : PlayerIndex.Neutral,
             baseShapeId             : this.getBaseShapeId(),
             decorationShapeId       : this.getDecorationShapeId(),
             objectShapeId           : this.getObjectShapeId(),
@@ -1426,12 +1463,12 @@ export class Tile implements TilesITile.ITile {
     public getTileThemeType(): number {
         const war = this.getWar();
         return war.getInstanceWarRule().getWarRuleCommonData()?.getFixedTileTheme()
-            ?? HelpersMisc.getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme());
+            ?? getExisted(war.getGcData().getWeatherCfg(war.getWeatherManager().getCurrentWeatherType())?.getTileTheme());
     }
 }
 
-function getNewObjectShapeIdOnObjectDestroyed(oldType: number, oldShapeId: number, gameConfig: GameConfigGcData.GcData): number {
-    const shapeIdArray = HelpersMisc.getExisted(gameConfig.getTileObjectCfg(oldType)?.shapeIdsAfterDestruction);
+function getNewObjectShapeIdOnObjectDestroyed(oldType: number, oldShapeId: number, gameConfig: GcData): number {
+    const shapeIdArray = getExisted(gameConfig.getTileObjectCfg(oldType)?.shapeIdsAfterDestruction);
     for (let i = 1; i < shapeIdArray.length; i += 2) {
         if (shapeIdArray[i] === oldShapeId) {
             return shapeIdArray[i + 1];

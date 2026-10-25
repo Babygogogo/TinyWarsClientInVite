@@ -1,43 +1,46 @@
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import * as PlayersConstants from "../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoPlayerEndTurn from "../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoSystemBeginTurn from "../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialTurnManager from "../proto/schema/CommonProto/WarSerialization/SerialTurnManager.ts";
-import * as TurnsConstants from "./Constants.ts";
-import type * as TurnsITurnManager from "./ITurnManager.ts";
-import * as TurnsPhaseHandlersWithExtraData from "./phaseHandlers/WithExtraData.ts";
-import * as TurnsPhaseHandlersWithoutExtraData from "./phaseHandlers/WithoutExtraData.ts";
-import type * as TurnsTypes from "./Types.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import { newError, getExisted } from "../helpers/Misc.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import { PlayerIndex, AliveStateId } from "../players/Constants.ts";
+import type { WoPlayerEndTurn } from "../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
+import type { WoSystemBeginTurn } from "../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
+import { SerialTurnManager } from "../proto/schema/CommonProto/WarSerialization/SerialTurnManager.ts";
+import { PhaseCode } from "./Constants.ts";
+import type { ITurnManager } from "./ITurnManager.ts";
+import { endPhaseStandby, endPhaseMain } from "./phaseHandlers/WithExtraData.ts";
+import {
+    endPhaseStandby as TurnsPhaseHandlersWithoutExtraDataEndPhaseStandby,
+    endPhaseMain as TurnsPhaseHandlersWithoutExtraDataEndPhaseMain,
+} from "./phaseHandlers/WithoutExtraData.ts";
+import type { TurnAndPlayerIndex as TurnsTypesTurnAndPlayerIndex } from "./Types.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type IBwWar                         = BaseWarInterfaceIBwWar.IBwWar;
-type TurnAndPlayerIndex             = TurnsTypes.TurnAndPlayerIndex;
+type IBwWar                         = BaseWarInterfaceIBwWar;
+type TurnAndPlayerIndex             = TurnsTypesTurnAndPlayerIndex;
 
-export class TurnManager implements TurnsITurnManager.ITurnManager {
+export class TurnManager implements ITurnManager {
     private _turnIndex?             : number;
     private _playerIndexInTurn?     : number;
-    private _phaseCode?             : TurnsConstants.PhaseCode;
+    private _phaseCode?             : PhaseCode;
     private _enterTurnTime?         : number;
 
     private _war?                   : IBwWar;
     private _hasUnitOnBeginningTurn = false;
 
-    public init(data: ProtoSchemaCommonProtoWarSerializationSerialTurnManager.SerialTurnManager, playersCountUnneutral: number): void {
+    public init(data: SerialTurnManager, playersCountUnneutral: number): void {
         const playerIndex = data.getPlayerIndex();
-        if ((playerIndex < PlayersConstants.PlayerIndex.Neutral)   ||
+        if ((playerIndex < PlayerIndex.Neutral)   ||
             (playerIndex > playersCountUnneutral)
         ) {
-            throw HelpersMisc.newError(`Invalid playerIndex: ${playerIndex}`, UtilsClientErrorCode.ClientErrorCode.BwTurnManager_Init_01);
+            throw newError(`Invalid playerIndex: ${playerIndex}`, ClientErrorCode.BwTurnManager_Init_01);
         }
 
         const turnPhaseCode = data.getTurnPhaseCode();
-        if ((turnPhaseCode !== TurnsConstants.PhaseCode.Main)          &&
-            (turnPhaseCode !== TurnsConstants.PhaseCode.WaitBeginTurn)
+        if ((turnPhaseCode !== PhaseCode.Main)          &&
+            (turnPhaseCode !== PhaseCode.WaitBeginTurn)
         ) {
-            throw HelpersMisc.newError(`Invalid turnPhaseCode: ${turnPhaseCode}`, UtilsClientErrorCode.ClientErrorCode.BwTurnManager_Init_02);
+            throw newError(`Invalid turnPhaseCode: ${turnPhaseCode}`, ClientErrorCode.BwTurnManager_Init_02);
         }
 
         this.setTurnIndex(data.getTurnIndex());
@@ -45,7 +48,7 @@ export class TurnManager implements TurnsITurnManager.ITurnManager {
         this.setPhaseCode(turnPhaseCode);
         this.setEnterTurnTime(data.getEnterTurnTime() ?? 0);
     }
-    public fastInit(data: ProtoSchemaCommonProtoWarSerializationSerialTurnManager.SerialTurnManager, playersCountUnneutral: number): void {
+    public fastInit(data: SerialTurnManager, playersCountUnneutral: number): void {
         this.init(data, playersCountUnneutral);
     }
 
@@ -53,18 +56,18 @@ export class TurnManager implements TurnsITurnManager.ITurnManager {
         this._setWar(war);
     }
 
-    public serialize(): ProtoSchemaCommonProtoWarSerializationSerialTurnManager.SerialTurnManager {
-        return ProtoSchemaCommonProtoWarSerializationSerialTurnManager.SerialTurnManager.fromJson({
+    public serialize(): SerialTurnManager {
+        return SerialTurnManager.fromJson({
             turnIndex       : this.getTurnIndex(),
             playerIndex     : this.getPlayerIndexInTurn(),
             turnPhaseCode   : this.getPhaseCode(),
             enterTurnTime   : this.getEnterTurnTime(),
         });
     }
-    public serializeForCreateSfw(): ProtoSchemaCommonProtoWarSerializationSerialTurnManager.SerialTurnManager {
+    public serializeForCreateSfw(): SerialTurnManager {
         return this.serialize();
     }
-    public serializeForCreateMfr(): ProtoSchemaCommonProtoWarSerializationSerialTurnManager.SerialTurnManager {
+    public serializeForCreateMfr(): SerialTurnManager {
         return this.serializeForCreateSfw();
     }
 
@@ -72,49 +75,49 @@ export class TurnManager implements TurnsITurnManager.ITurnManager {
         this._war = war;
     }
     public getWar(): IBwWar {
-        return HelpersMisc.getExisted(this._war);
+        return getExisted(this._war);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The functions for running turn.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public endPhaseStandby(action: ProtoSchemaCommonProtoWarOperationWoSystemBeginTurn.WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
+    public endPhaseStandby(action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
         return this.getWar().getIsExecuteActionsWithExtraData()
-            ? TurnsPhaseHandlersWithExtraData.endPhaseStandby(this, action, isFastExecute)
-            : TurnsPhaseHandlersWithoutExtraData.endPhaseStandby(this, isFastExecute);
+            ? endPhaseStandby(this, action, isFastExecute)
+            : TurnsPhaseHandlersWithoutExtraDataEndPhaseStandby(this, isFastExecute);
     }
 
-    public endPhaseMain(action: ProtoSchemaCommonProtoWarOperationWoPlayerEndTurn.WoPlayerEndTurn, isFastExecute: boolean): void {
+    public endPhaseMain(action: WoPlayerEndTurn, isFastExecute: boolean): void {
         this.getWar().getIsExecuteActionsWithExtraData()
-            ? TurnsPhaseHandlersWithExtraData.endPhaseMain(this, action, isFastExecute)
-            : TurnsPhaseHandlersWithoutExtraData.endPhaseMain(this, isFastExecute);
+            ? endPhaseMain(this, action, isFastExecute)
+            : TurnsPhaseHandlersWithoutExtraDataEndPhaseMain(this, isFastExecute);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getTurnIndex(): number {
-        return HelpersMisc.getExisted(this._turnIndex);
+        return getExisted(this._turnIndex);
     }
     public setTurnIndex(index: number): void {
         if (this._turnIndex !== index){
             this._turnIndex = index;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTurnIndexChanged);
+            dispatch(TypeId.BwTurnIndexChanged);
         }
     }
 
     public getPlayerIndexInTurn(): number {
-        return HelpersMisc.getExisted(this._playerIndexInTurn);
+        return getExisted(this._playerIndexInTurn);
     }
     public setPlayerIndexInTurn(index: number): void {
         if (this._playerIndexInTurn !== index) {
             this._playerIndexInTurn = index;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwPlayerIndexInTurnChanged);
+            dispatch(TypeId.BwPlayerIndexInTurnChanged);
         }
     }
     public getPreviousAlivePlayerIndex(playerIndex: number, includeNeutral = false): number {
         const playerIndex1  = this._getPreviousAlivePlayerIndex(playerIndex);
-        if ((playerIndex1 !== PlayersConstants.PlayerIndex.Neutral) || (includeNeutral)) {
+        if ((playerIndex1 !== PlayerIndex.Neutral) || (includeNeutral)) {
             return playerIndex1;
         } else {
             return this._getPreviousAlivePlayerIndex(playerIndex1);
@@ -123,7 +126,7 @@ export class TurnManager implements TurnsITurnManager.ITurnManager {
     public getNextAlivePlayerIndex(playerIndex: number, includeNeutral = false): number {
         const data          = this._getNextAliveTurnAndPlayerIndex(null, playerIndex);
         const playerIndex1  = data.playerIndex;
-        if ((playerIndex1 !== PlayersConstants.PlayerIndex.Neutral) || (includeNeutral)) {
+        if ((playerIndex1 !== PlayerIndex.Neutral) || (includeNeutral)) {
             return playerIndex1;
         } else {
             const nextData = this._getNextAliveTurnAndPlayerIndex(data.turnIndex, playerIndex1);
@@ -131,18 +134,18 @@ export class TurnManager implements TurnsITurnManager.ITurnManager {
         }
     }
 
-    public getPhaseCode(): TurnsConstants.PhaseCode {
-        return HelpersMisc.getExisted(this._phaseCode);
+    public getPhaseCode(): PhaseCode {
+        return getExisted(this._phaseCode);
     }
-    public setPhaseCode(code: TurnsConstants.PhaseCode): void {
+    public setPhaseCode(code: PhaseCode): void {
         if (this._phaseCode !== code) {
             this._phaseCode = code;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwTurnPhaseCodeChanged);
+            dispatch(TypeId.BwTurnPhaseCodeChanged);
         }
     }
 
     public getEnterTurnTime(): number {
-        return HelpersMisc.getExisted(this._enterTurnTime);
+        return getExisted(this._enterTurnTime);
     }
     public setEnterTurnTime(time: number): void {
         this._enterTurnTime = time;
@@ -158,7 +161,7 @@ export class TurnManager implements TurnsITurnManager.ITurnManager {
             }
 
             const player = playerManager.getPlayer(previousPlayerIndex);
-            if (player.getAliveState() !== PlayersConstants.AliveStateId.Dead) {
+            if (player.getAliveState() !== AliveStateId.Dead) {
                 return previousPlayerIndex;
             } else {
                 --previousPlayerIndex;
@@ -177,7 +180,7 @@ export class TurnManager implements TurnsITurnManager.ITurnManager {
         } else {
             return {
                 turnIndex   : currTurnIndex + 1,
-                playerIndex : PlayersConstants.PlayerIndex.Neutral,
+                playerIndex : PlayerIndex.Neutral,
             };
         }
     }
@@ -198,7 +201,7 @@ export class TurnManager implements TurnsITurnManager.ITurnManager {
             }
 
             const player = playerManager.getPlayer(nextPlayerIndex);
-            if (player.getAliveState() !== PlayersConstants.AliveStateId.Dead) {
+            if (player.getAliveState() !== AliveStateId.Dead) {
                 return {
                     turnIndex   : nextTurnIndex,
                     playerIndex : nextPlayerIndex

@@ -1,48 +1,48 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import * as AuxiliaryTypesMovePath from "../../../auxiliaryTypes/MovePath.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import type * as ProtoSchemaCommonProtoStructureMovePath from "../../../proto/schema/CommonProto/Structure/MovePath.ts";
-import * as TurnsConstants from "../../../turns/Constants.ts";
-import * as UnitsConstants from "../../../units/Constants.ts";
-import * as UtilsClientErrorCode from "../../../utils/ClientErrorCode.ts";
-import * as VisibilitiesUtils from "../../../visibilities/Utils.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { newError, getExisted } from "../../../helpers/Misc.ts";
+import type { MovePath as ProtoSchemaCommonProtoStructureMovePath } from "../../../proto/schema/CommonProto/Structure/MovePath.ts";
+import { PhaseCode } from "../../../turns/Constants.ts";
+import { ActionStateId } from "../../../units/Constants.ts";
+import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
+import { checkIsUnitOnMapVisibleToTeam } from "../../../visibilities/Utils.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type IBwWar                 = BaseWarInterfaceIBwWar;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export function getRevisedPath({ war, rawPath, launchUnitId, requesterUserId }: {
     war             : IBwWar;
-    rawPath         : Undefinable<ProtoSchemaCommonProtoStructureMovePath.MovePath>;
+    rawPath         : Undefinable<ProtoSchemaCommonProtoStructureMovePath>;
     launchUnitId    : Undefinable<number>;
     requesterUserId : Undefinable<number>;
-}): AuxiliaryTypesMovePath.MovePath {
+}): MovePath {
     if (rawPath == null) {
-        throw HelpersMisc.newError(`Empty rawPath.`, UtilsClientErrorCode.ClientErrorCode.BwHelpers_GetRevisedPath_00);
+        throw newError(`Empty rawPath.`, ClientErrorCode.BwHelpers_GetRevisedPath_00);
     }
 
     const rawPathNodes = rawPath.getNodes();
     if ((rawPathNodes == null) || (!rawPathNodes.length)) {
-        throw HelpersMisc.newError(`Empty rawPathNodes.`, UtilsClientErrorCode.ClientErrorCode.BwHelpers_GetRevisedPath_01);
+        throw newError(`Empty rawPathNodes.`, ClientErrorCode.BwHelpers_GetRevisedPath_01);
     }
 
-    const beginningGridIndex    = HelpersMisc.getExisted(AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(rawPathNodes[0]), UtilsClientErrorCode.ClientErrorCode.BwHelpers_GetRevisedPath_02);
+    const beginningGridIndex    = getExisted(GridIndex.convertGridIndex(rawPathNodes[0]), ClientErrorCode.BwHelpers_GetRevisedPath_02);
     const playerInTurn          = war.getPlayerInTurn();
     const unitMap               = war.getUnitMap();
     const focusUnit             = launchUnitId != null ? unitMap.getUnitLoadedById(launchUnitId) : unitMap.getUnitOnMap(beginningGridIndex);
     if ((!focusUnit)                                                    ||
         (focusUnit.getPlayerIndex() !== playerInTurn.getPlayerIndex())  ||
-        (focusUnit.getActionState() !== UnitsConstants.ActionStateId.Idle)         ||
-        (war.getTurnPhaseCode() !== TurnsConstants.PhaseCode.Main)                 ||
+        (focusUnit.getActionState() !== ActionStateId.Idle)         ||
+        (war.getTurnPhaseCode() !== PhaseCode.Main)                 ||
         (playerInTurn.getUserId() != requesterUserId)
     ) {
-        throw HelpersMisc.newError(`Invalid focusUnit.`, UtilsClientErrorCode.ClientErrorCode.BwHelpers_GetRevisedPath_03);
+        throw newError(`Invalid focusUnit.`, ClientErrorCode.BwHelpers_GetRevisedPath_03);
     }
 
     if (launchUnitId != null) {
         if (!focusUnit.getGridIndex().checkIsEqual(beginningGridIndex)) {
-            throw HelpersMisc.newError(`Invalid gridIndex.`, UtilsClientErrorCode.ClientErrorCode.BwHelpers_GetRevisedPath_04);
+            throw newError(`Invalid gridIndex.`, ClientErrorCode.BwHelpers_GetRevisedPath_04);
         }
     }
 
@@ -55,25 +55,25 @@ export function getRevisedPath({ war, rawPath, launchUnitId, requesterUserId }: 
     let rawTotalFuelConsumption     = 0;
     let isBlocked                   = false;
     for (let i = 1; i < rawPathNodes.length; ++i) {
-        const gridIndex = AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(rawPathNodes[i]);
+        const gridIndex = GridIndex.convertGridIndex(rawPathNodes[i]);
         if ((!gridIndex)                                                                                            ||
-            (!gridIndex.checkIsAdjacent(HelpersMisc.getExisted(AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(rawPathNodes[i - 1]))))  ||
+            (!gridIndex.checkIsAdjacent(getExisted(GridIndex.convertGridIndex(rawPathNodes[i - 1]))))  ||
             (!gridIndex.checkIsInsideMap(mapSize))                                                                  ||
             (revisedNodes.some(g => g.checkIsEqual(gridIndex)))
         ) {
-            throw HelpersMisc.newError(`Invalid gridIndex.`, UtilsClientErrorCode.ClientErrorCode.BwHelpers_GetRevisedPath_05);
+            throw newError(`Invalid gridIndex.`, ClientErrorCode.BwHelpers_GetRevisedPath_05);
         }
 
         const tile              = tileMap.getTile(gridIndex);
-        const fuelConsumption   = HelpersMisc.getExisted(tile.getMoveCostByUnit(focusUnit), UtilsClientErrorCode.ClientErrorCode.BwHelpers_GetRevisedPath_06);
+        const fuelConsumption   = getExisted(tile.getMoveCostByUnit(focusUnit), ClientErrorCode.BwHelpers_GetRevisedPath_06);
         rawTotalFuelConsumption += fuelConsumption;
         if (rawTotalFuelConsumption > maxFuelConsumption) {
-            throw HelpersMisc.newError(`Invalid rawTotalFuelConsumption: ${rawTotalFuelConsumption}`, UtilsClientErrorCode.ClientErrorCode.BwHelpers_GetRevisedPath_07);
+            throw newError(`Invalid rawTotalFuelConsumption: ${rawTotalFuelConsumption}`, ClientErrorCode.BwHelpers_GetRevisedPath_07);
         }
 
         const existingUnit = unitMap.getUnitOnMap(gridIndex);
         if ((existingUnit) && (existingUnit.getTeamIndex() !== teamIndexInTurn)) {
-            if (VisibilitiesUtils.checkIsUnitOnMapVisibleToTeam({
+            if (checkIsUnitOnMapVisibleToTeam({
                 war                 : war,
                 gridIndex           : gridIndex,
                 unitType            : existingUnit.getUnitType(),
@@ -82,7 +82,7 @@ export function getRevisedPath({ war, rawPath, launchUnitId, requesterUserId }: 
                 unitPlayerIndex     : existingUnit.getPlayerIndex(),
                 observerTeamIndex   : teamIndexInTurn,
             })) {
-                throw HelpersMisc.newError(`There is a blocking visible unit.`, UtilsClientErrorCode.ClientErrorCode.BwHelpers_GetRevisedPath_08);
+                throw newError(`There is a blocking visible unit.`, ClientErrorCode.BwHelpers_GetRevisedPath_08);
             } else {
                 isBlocked = true;
             }
@@ -94,10 +94,10 @@ export function getRevisedPath({ war, rawPath, launchUnitId, requesterUserId }: 
         }
     }
 
-    return new AuxiliaryTypesMovePath.MovePath(revisedNodes, revisedTotalFuelConsumption, isBlocked);
+    return new MovePath(revisedNodes, revisedTotalFuelConsumption, isBlocked);
 }
 
-export function checkIsPathDestinationOccupiedByOtherVisibleUnit(war: IBwWar, rawPath: AuxiliaryTypesGridIndex.GridIndex[]): boolean {
+export function checkIsPathDestinationOccupiedByOtherVisibleUnit(war: IBwWar, rawPath: GridIndex[]): boolean {
     if (rawPath.length == 1) {
         return false;
     } else {
@@ -107,14 +107,14 @@ export function checkIsPathDestinationOccupiedByOtherVisibleUnit(war: IBwWar, ra
         if (unit == null) {
             return false;
         } else {
-            return VisibilitiesUtils.checkIsUnitOnMapVisibleToTeam({
+            return checkIsUnitOnMapVisibleToTeam({
                 war,
                 gridIndex           : destination,
                 unitType            : unit.getUnitType(),
                 isDiving            : unit.getIsDiving(),
                 isInvisible         : unit.checkIsInvisible(destination),
                 unitPlayerIndex     : unit.getPlayerIndex(),
-                observerTeamIndex   : HelpersMisc.getExisted(unitMap.getUnitOnMap(rawPath[0])).getTeamIndex(),
+                observerTeamIndex   : getExisted(unitMap.getUnitOnMap(rawPath[0])).getTeamIndex(),
             });
         }
     }

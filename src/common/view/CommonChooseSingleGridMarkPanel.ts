@@ -1,35 +1,35 @@
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GridMarksConstants from "../../gridMarks/Constants.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import { AllGridMarkTypeId } from "../../gridMarks/Constants.ts";
+import { getGridMark } from "../../helpers/ImageSource.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
     currentMarkTypeId       : number | null;
     getHelpText?            : () => string;
     callback                : (skinId: number) => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnHelp!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTips!        : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnHelp!          : IUiButton;
+    private readonly _btnClose!         : IUiButton;
+    private readonly _labelTips!        : IUiLabel;
 
-    private readonly _list!             : UiInterfacesIUiScrollList.IUiScrollList<DataForItemRenderer>;
+    private readonly _list!             : IUiScrollList<DataForItemRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -37,7 +37,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnHelp,    callback: this._onTouchedBtnHelp },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -62,7 +62,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const func = this.getOpenData()?.getHelpText;
         const text  = func ? func() : null;
         if (text) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
+            openPanel(getDict().CommonHelpPanel, {
                 getContent : () => text,
             });
         }
@@ -93,8 +93,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0914);
-        this._labelTips.setLangText(LangConstants.TextType.B1249);
+        this._labelTitle.setLangText(TextType.B0914);
+        this._labelTips.setLangText(TextType.B1249);
     }
 
     private _createDataForList(): DataForItemRenderer[] {
@@ -105,7 +105,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const callback  = openData.callback;
         const dataArray : DataForItemRenderer[] = [];
-        for (const markTypeId of GridMarksConstants.AllGridMarkTypeId) {
+        for (const markTypeId of AllGridMarkTypeId) {
             dataArray.push({
                 markTypeId  : markTypeId,
                 callback    : callback,
@@ -116,14 +116,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForItemRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForItemRenderer extends UiListItemData {
     markTypeId  : number;
     callback    : (skinId: number) => void;
 }
-class ItemRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForItemRenderer> {
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBg!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgSelected!  : UiInterfacesIUiImage.IUiImage;
+class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
+    private readonly _group!        : IUiContainer;
+    private readonly _imgBg!        : IUiImage;
+    private readonly _imgSelected!  : IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -138,7 +138,7 @@ class ItemRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         this._updateView();
     }
 
-    private _onTouchedImgSelected(e: VendorEgretEgret.Event): void {
+    private _onTouchedImgSelected(e: Event): void {
         e.stopPropagation();
 
         const openData = this.getOpenData();
@@ -146,9 +146,9 @@ class ItemRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonConfirm01);
+        playShortSfx(ShortSfxCode.ButtonConfirm01);
         openData.callback(openData.markTypeId);
-        GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonChooseSingleSkinIdPanel);
+        closePanel(getDict().CommonChooseSingleSkinIdPanel);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,6 +160,6 @@ class ItemRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             return;
         }
 
-        this._imgBg.loadSource(HelpersImageSource.getGridMark(markTypeId));
+        this._imgBg.loadSource(getGridMark(markTypeId));
     }
 }

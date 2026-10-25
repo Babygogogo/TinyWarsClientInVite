@@ -1,17 +1,17 @@
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwGridVisualEffect from "../interface/IBwGridVisualEffect.ts";
-import type * as BaseWarInterfaceIBwGridVisualEffectView from "../interface/IBwGridVisualEffectView.ts";
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import type * as NotificationsTypes from "../../notifications/Types.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { IBwGridVisualEffect } from "../interface/IBwGridVisualEffect.ts";
+import type { IBwGridVisualEffectView } from "../interface/IBwGridVisualEffectView.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { getBwGridVisualEffectViewClass } from "../../gameHelpers/GhFactory.ts";
+import { addEventListeners, removeEventListeners } from "../../notifications/Dispatcher.ts";
+import type { Listener } from "../../notifications/Types.ts";
 
-type GridIndex = AuxiliaryTypesGridIndex.GridIndex;
+type GridIndex = AuxiliaryTypesGridIndex;
 
-export class BwGridVisualEffect implements BaseWarInterfaceIBwGridVisualEffect.IBwGridVisualEffect {
-    private readonly _view = new (GameHelpersGhFactory.getBwGridVisualEffectViewClass())();
+export class BwGridVisualEffect implements IBwGridVisualEffect {
+    private readonly _view = new (getBwGridVisualEffectViewClass())();
 
-    private _notifyListeners: NotificationsTypes.Listener[] = [
+    private _notifyListeners: Listener[] = [
         // { type: NotifyType.BwUnitBeAttacked,   callback: this._onNotifyBwUnitBeAttacked },
         // { type: NotifyType.BwUnitBeDestroyed,  callback: this._onNotifyBwUnitBeDestroyed },
         // { type: NotifyType.BwUnitBeRepaired,   callback: this._onNotifyBwUnitBeRepaired },
@@ -29,19 +29,19 @@ export class BwGridVisualEffect implements BaseWarInterfaceIBwGridVisualEffect.I
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public startRunning(war: BaseWarInterfaceIBwWar.IBwWar): void {
-        NotificationsDispatcher.addEventListeners(this._notifyListeners, this, false, 1);
+    public startRunning(war: IBwWar): void {
+        addEventListeners(this._notifyListeners, this, false, 1);
     }
     public startRunningView(): void {
         this.getView().startRunningView();
     }
     public stopRunning(): void {
-        NotificationsDispatcher.removeEventListeners(this._notifyListeners, this);
+        removeEventListeners(this._notifyListeners, this);
 
         this.getView().stopRunningView();
     }
 
-    public getView(): BaseWarInterfaceIBwGridVisualEffectView.IBwGridVisualEffectView {
+    public getView(): IBwGridVisualEffectView {
         return this._view;
     }
 

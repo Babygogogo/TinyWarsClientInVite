@@ -1,18 +1,38 @@
-import * as AuxiliaryTypesTreeNode from "../../auxiliaryTypes/TreeNode.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as ResManager2 from "../../ResManager.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import * as UiTypesUiCommonEventType from "../types/UiCommonEventType.ts";
-import * as UiTypesUiComponentType from "../types/UiComponentType.ts";
-import type * as UiTypesUiSkin from "../types/UiSkin.ts";
-import type * as UiTypesUiSkinAttrs from "../types/UiSkinAttrs.ts";
-import * as UiTypesUiSkinState from "../types/UiSkinState.ts";
-import * as UiUtilsUiFactory from "./UiFactory.ts";
-import * as UiUtilsUiSizerHelpers from "./UiSizerHelpers.ts";
+import { TreeNode } from "../../auxiliaryTypes/TreeNode.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { getSkin } from "../../ResManager.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
+import { UiCommonEventType } from "../types/UiCommonEventType.ts";
+import { UiComponentType } from "../types/UiComponentType.ts";
+import type { UiSkin as UiTypesUiSkin } from "../types/UiSkin.ts";
+import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import { UiSkinState } from "../types/UiSkinState.ts";
+import {
+    getUiContainerClass,
+    getUiLayoutClass,
+    getUiScrollerClass,
+    getUiScrollListClass,
+    getUiImageClass,
+    getUiLabelClass,
+    getUiButtonClass,
+    getUiTextInputClass,
+    getUiPromptedInputClass,
+    getUiListClass,
+    getUiTabClass,
+    getUiProgressBarClass,
+    getUiRadioButtonClass,
+    getUiSwitchClass,
+    getUiZoomableComponentClass,
+    getUiZoomableMapClass,
+    getUiMapInfoClass,
+    getUiCoInfoClass,
+    getUiContainerBaseClass,
+} from "./UiFactory.ts";
+import { loadSizerOptions } from "./UiSizerHelpers.ts";
 
-type UiSkinAttrs        = UiTypesUiSkinAttrs.UiSkinAttrs;
-type UiSkin             = UiTypesUiSkin.UiSkin;
-type IUiSkinLoader      = UiInterfacesIUiComponent.IUiComponent;
+type UiSkinAttrs        = UiTypesUiSkinAttrs;
+type UiSkin             = UiTypesUiSkin;
+type IUiSkinLoader      = IUiComponent;
 
 const UiSkinDefaultAttrs: UiSkinAttrs = {
     x                   : 0,
@@ -43,20 +63,20 @@ const UiSkinDefaultAttrs: UiSkinAttrs = {
     multiline           : 0,
     // autoShrinkWidth     : 0,
 };
-function getDefaultTouchEnabled(uiType: UiTypesUiComponentType.UiComponentType): boolean {
-    return (uiType === UiTypesUiComponentType.UiComponentType.Button)
-        || (uiType === UiTypesUiComponentType.UiComponentType.TextInput)
-        || (uiType === UiTypesUiComponentType.UiComponentType.Scroller)
-        || (uiType === UiTypesUiComponentType.UiComponentType.ScrollList);
+function getDefaultTouchEnabled(uiType: UiComponentType): boolean {
+    return (uiType === UiComponentType.Button)
+        || (uiType === UiComponentType.TextInput)
+        || (uiType === UiComponentType.Scroller)
+        || (uiType === UiComponentType.ScrollList);
 }
-function getDefaultTouchChildren(uiType: UiTypesUiComponentType.UiComponentType): boolean {
-    return (uiType !== UiTypesUiComponentType.UiComponentType.Button)
-        && (uiType !== UiTypesUiComponentType.UiComponentType.TextInput);
+function getDefaultTouchChildren(uiType: UiComponentType): boolean {
+    return (uiType !== UiComponentType.Button)
+        && (uiType !== UiComponentType.TextInput);
 }
 
 interface ResultForLoadSkin {
     ui                  : IUiSkinLoader;
-    nonNestedChildren   : AuxiliaryTypesTreeNode.TreeNode<IUiSkinLoader>[];
+    nonNestedChildren   : TreeNode<IUiSkinLoader>[];
 }
 
 // const debugLoadedSkinSet = new Set<IUiSkinLoader>();
@@ -70,7 +90,7 @@ interface ResultForLoadSkin {
 // const debugLoadedSkinAttrSet = new Set<IUiSkinLoader>();
 
 export function loadSkinByPath<T extends IUiSkinLoader>(root: T, skinPath: string): T {
-    return loadSkin(root, HelpersMisc.getExisted(ResManager2.getSkin(skinPath)));
+    return loadSkin(root, getExisted(getSkin(skinPath)));
 }
 export function loadSkin<T extends IUiSkinLoader>(root: T, skin: UiSkin): T {
     doLoadSkin({
@@ -92,20 +112,20 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
 }): ResultForLoadSkin {
     const skinInfo = ui.checkAndInitSkinInfo();
     if (skinInfo.getNonNestedSkinChildren()) {
-        throw HelpersMisc.newError(`ui.getNonNestedSkinChildren() must be null here.`);
+        throw newError(`ui.getNonNestedSkinChildren() must be null here.`);
     }
     if (isNestedSkin) {
         if (!skinInfo.getSkin()) {
-            throw HelpersMisc.newError(`ui.getLoadedSkin() must not be null here.`);
+            throw newError(`ui.getLoadedSkin() must not be null here.`);
         }
     } else {
         if (skinInfo.getSkin()) {
-            throw HelpersMisc.newError(`ui.getLoadedSkin() must be null here.`);
+            throw newError(`ui.getLoadedSkin() must be null here.`);
         }
         skinInfo.setSkin(skin);
     }
 
-    const nonNestedChildren : AuxiliaryTypesTreeNode.TreeNode<IUiSkinLoader>[] = [];
+    const nonNestedChildren : TreeNode<IUiSkinLoader>[] = [];
     const nestedSkin        = getNestedSkin(skin);
     if (nestedSkin) {
         doLoadSkin({
@@ -120,30 +140,30 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
         for (const childSkin of skin.$$ ?? []) {
             const result = doLoadSkin({
                 root            : root,
-                ui              : createUiByName(HelpersMisc.getExisted(childSkin.uiType)),
+                ui              : createUiByName(getExisted(childSkin.uiType)),
                 skin            : childSkin,
                 isNestedSkin    : false,
                 isRootSkin      : false,
             });
 
             const childUi   = result.ui;
-            const node      = new AuxiliaryTypesTreeNode.TreeNode(childUi);
+            const node      = new TreeNode(childUi);
             for (const childNode of result.nonNestedChildren) {
                 node.addChild(childNode.clone());
             }
             nonNestedChildren.push(node);
 
-            if (ui instanceof UiUtilsUiFactory.getUiContainerClass()) {
+            if (ui instanceof getUiContainerClass()) {
                 ui.addUiChild(childUi);
-            } else if (ui instanceof UiUtilsUiFactory.getUiLayoutClass()) {
+            } else if (ui instanceof getUiLayoutClass()) {
                 ui.addItem(childUi, false);
-            } else if (ui instanceof UiUtilsUiFactory.getUiScrollerClass()) {
+            } else if (ui instanceof getUiScrollerClass()) {
                 ui.initViewport(childUi);
-            } else if (ui instanceof UiUtilsUiFactory.getUiScrollListClass()) {
+            } else if (ui instanceof getUiScrollListClass()) {
                 ui.initViewport(childUi as unknown as any);
             } else {
                 // ui.addChild(childUi);
-                throw HelpersMisc.newError(`Cannot add child.`);
+                throw newError(`Cannot add child.`);
             }
             directSkinChildren.push(new WeakRef(childUi));
 
@@ -162,11 +182,11 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
 
     {   // debug
         if (!skinInfo.getNonNestedSkinChildren()) {
-            throw HelpersMisc.newError(`ui.getNonNestedSkinChildren() must not be null here.`);
+            throw newError(`ui.getNonNestedSkinChildren() must not be null here.`);
         }
         const temp = nonNestedChildren.flatMap(v => v.bfs());
         if (new Set(temp).size !== temp.length) {
-            throw HelpersMisc.newError(`nonNestedChildren contains duplicated element.`);
+            throw newError(`nonNestedChildren contains duplicated element.`);
         }
     }
 
@@ -174,10 +194,10 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
         const state = skin.currentState ?? "";
         for (const childNode of nonNestedChildren) {
             for (const child of childNode.dfs()) {
-                const childSkinInfo = HelpersMisc.getExisted(child.getSkinInfo());
-                loadSkinAttrs(child, state, getNestedSkin(HelpersMisc.getExisted(childSkinInfo.getSkin()))?.currentState);
+                const childSkinInfo = getExisted(child.getSkinInfo());
+                loadSkinAttrs(child, state, getNestedSkin(getExisted(childSkinInfo.getSkin()))?.currentState);
                 childSkinInfo.setIsLoaded(true);
-                child.getEventAgent().dispatchUiCommonEvent(UiTypesUiCommonEventType.UiCommonEventType.SkinLoaded);
+                child.getEventAgent().dispatchUiCommonEvent(UiCommonEventType.SkinLoaded);
                 child.updateOnLoadedSkin?.call(child);
                 // debugUpdateLoadedSkinSet(child);
             }
@@ -186,7 +206,7 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
         if (isRootSkin) {
             loadSkinAttrs(ui, state, undefined);
             skinInfo.setIsLoaded(true);
-            ui.getEventAgent().dispatchUiCommonEvent(UiTypesUiCommonEventType.UiCommonEventType.SkinLoaded);
+            ui.getEventAgent().dispatchUiCommonEvent(UiCommonEventType.SkinLoaded);
             ui.updateOnLoadedSkin?.call(ui);
             // debugUpdateLoadedSkinSet(ui);
         }
@@ -197,34 +217,34 @@ function doLoadSkin({ root, ui, skin, isNestedSkin, isRootSkin }: {
         nonNestedChildren   : nonNestedChildren,
     };
 }
-function createUiByName(name: UiTypesUiComponentType.UiComponentType): IUiSkinLoader {
+function createUiByName(name: UiComponentType): IUiSkinLoader {
     switch (name) {
-        case UiTypesUiComponentType.UiComponentType.Image              : return new (UiUtilsUiFactory.getUiImageClass())();                 // 仅属性
-        case UiTypesUiComponentType.UiComponentType.Image9             : return new (UiUtilsUiFactory.getUiImageClass())();                 // 仅属性
-        case UiTypesUiComponentType.UiComponentType.Label              : return new (UiUtilsUiFactory.getUiLabelClass())();                 // 仅属性
-        case UiTypesUiComponentType.UiComponentType.Group              : return new (UiUtilsUiFactory.getUiContainerClass())();             // 仅属性
-        case UiTypesUiComponentType.UiComponentType.Button             : return new (UiUtilsUiFactory.getUiButtonClass())();                // 带皮肤
-        case UiTypesUiComponentType.UiComponentType.Layout             : return new (UiUtilsUiFactory.getUiLayoutClass())();                // 仅属性
-        case UiTypesUiComponentType.UiComponentType.Scroller           : return new (UiUtilsUiFactory.getUiScrollerClass())();              // 带皮肤 ??
-        case UiTypesUiComponentType.UiComponentType.ScrollList         : return new (UiUtilsUiFactory.getUiScrollListClass())();
-        case UiTypesUiComponentType.UiComponentType.TextInput          : return new (UiUtilsUiFactory.getUiTextInputClass())();             // 带皮肤
-        case UiTypesUiComponentType.UiComponentType.PromptedInput      : return new (UiUtilsUiFactory.getUiPromptedInputClass())();         // 带皮肤
-        case UiTypesUiComponentType.UiComponentType.List               : return new (UiUtilsUiFactory.getUiListClass())();
-        case UiTypesUiComponentType.UiComponentType.Tab                : return new (UiUtilsUiFactory.getUiTabClass())();
-        case UiTypesUiComponentType.UiComponentType.ProgressBar        : return new (UiUtilsUiFactory.getUiProgressBarClass())();
-        case UiTypesUiComponentType.UiComponentType.RadioButton        : return new (UiUtilsUiFactory.getUiRadioButtonClass())();
-        case UiTypesUiComponentType.UiComponentType.Switch             : return new (UiUtilsUiFactory.getUiSwitchClass())();
-        case UiTypesUiComponentType.UiComponentType.ZoomableComponent  : return new (UiUtilsUiFactory.getUiZoomableComponentClass())();
-        case UiTypesUiComponentType.UiComponentType.ZoomableMap        : return new (UiUtilsUiFactory.getUiZoomableMapClass())();
-        case UiTypesUiComponentType.UiComponentType.MapInfo            : return new (UiUtilsUiFactory.getUiMapInfoClass())();
-        case UiTypesUiComponentType.UiComponentType.CoInfo             : return new (UiUtilsUiFactory.getUiCoInfoClass())();
+        case UiComponentType.Image              : return new (getUiImageClass())();                 // 仅属性
+        case UiComponentType.Image9             : return new (getUiImageClass())();                 // 仅属性
+        case UiComponentType.Label              : return new (getUiLabelClass())();                 // 仅属性
+        case UiComponentType.Group              : return new (getUiContainerClass())();             // 仅属性
+        case UiComponentType.Button             : return new (getUiButtonClass())();                // 带皮肤
+        case UiComponentType.Layout             : return new (getUiLayoutClass())();                // 仅属性
+        case UiComponentType.Scroller           : return new (getUiScrollerClass())();              // 带皮肤 ??
+        case UiComponentType.ScrollList         : return new (getUiScrollListClass())();
+        case UiComponentType.TextInput          : return new (getUiTextInputClass())();             // 带皮肤
+        case UiComponentType.PromptedInput      : return new (getUiPromptedInputClass())();         // 带皮肤
+        case UiComponentType.List               : return new (getUiListClass())();
+        case UiComponentType.Tab                : return new (getUiTabClass())();
+        case UiComponentType.ProgressBar        : return new (getUiProgressBarClass())();
+        case UiComponentType.RadioButton        : return new (getUiRadioButtonClass())();
+        case UiComponentType.Switch             : return new (getUiSwitchClass())();
+        case UiComponentType.ZoomableComponent  : return new (getUiZoomableComponentClass())();
+        case UiComponentType.ZoomableMap        : return new (getUiZoomableMapClass())();
+        case UiComponentType.MapInfo            : return new (getUiMapInfoClass())();
+        case UiComponentType.CoInfo             : return new (getUiCoInfoClass())();
         default                                 : throw new Error(`Unknown skin name: ${name}`);
     }
 }
 
 function getNestedSkin(skin: UiSkin): UiSkin | undefined {
     const nestedSkinName = skin.nestedSkinName;
-    return nestedSkinName == null ? skin.nestedSkin : HelpersMisc.getExisted(ResManager2.getSkin(nestedSkinName));
+    return nestedSkinName == null ? skin.nestedSkin : getExisted(getSkin(nestedSkinName));
 }
 export function getRevisedAttrValue<K extends keyof UiSkinAttrs>(
     oldSkinAttrs    : UiSkinAttrs | undefined,
@@ -237,21 +257,21 @@ export function getRevisedAttrValue<K extends keyof UiSkinAttrs>(
         : { needChange: true,   value: newValue };
 }
 
-export function loadSkinStateRecursively(ui: IUiSkinLoader, state: UiTypesUiSkinState.UiSkinState): void {
-    const skinInfo = HelpersMisc.getExisted(ui.getSkinInfo());
-    for (const childNode of HelpersMisc.getExisted(skinInfo.getNonNestedSkinChildren())) {
+export function loadSkinStateRecursively(ui: IUiSkinLoader, state: UiSkinState): void {
+    const skinInfo = getExisted(ui.getSkinInfo());
+    for (const childNode of getExisted(skinInfo.getNonNestedSkinChildren())) {
         for (const rawChild of childNode.dfs()) {
             const child = rawChild.deref();
             if (child) {
-                loadSkinAttrs(child, state, HelpersMisc.getExisted(child.getSkinInfo()).getLoadedSkinNestedState());
+                loadSkinAttrs(child, state, getExisted(child.getSkinInfo()).getLoadedSkinNestedState());
             }
         }
     }
-    loadSkinAttrs(ui, HelpersMisc.getExisted(skinInfo.getLoadedSkinState()), state);
+    loadSkinAttrs(ui, getExisted(skinInfo.getLoadedSkinState()), state);
 }
 function loadSkinAttrs(ui: IUiSkinLoader, state: string, nestedState: string | undefined): void {
-    const skinInfo  = HelpersMisc.getExisted(ui.getSkinInfo());
-    const skinAttrs = generateSkinAttrs(HelpersMisc.getExisted(skinInfo.getSkin()), state, nestedState);
+    const skinInfo  = getExisted(ui.getSkinInfo());
+    const skinAttrs = generateSkinAttrs(getExisted(skinInfo.getSkin()), state, nestedState);
     ui.loadSkinAttrs(skinInfo.getLoadedSkinAttrs(), skinAttrs);
     skinInfo.setLoadedSkinAttrs(skinAttrs);
     skinInfo.setLoadedSkinState(state);
@@ -289,17 +309,17 @@ export function commonLoadSkinAttrs(
     //     height = 0;   // 指定默认高度以避免子ui错乱
     // }
 
-    (x.needChange)              && (ui.setX(HelpersMisc.getExisted(x.value)));
-    (y.needChange)              && (ui.setY(HelpersMisc.getExisted(y.value)));
-    (scaleX.needChange)         && (ui.setScaleX(HelpersMisc.getExisted(scaleX.value)));
-    (scaleY.needChange)         && (ui.setScaleY(HelpersMisc.getExisted(scaleY.value)));
-    (pivotX.needChange)         && (ui.setAnchorOffsetX(HelpersMisc.getExisted(pivotX.value)));
-    (pivotY.needChange)         && (ui.setAnchorOffsetY(HelpersMisc.getExisted(pivotY.value)));
-    (alpha.needChange)          && (ui.setAlpha(HelpersMisc.getExisted(alpha.value)));
+    (x.needChange)              && (ui.setX(getExisted(x.value)));
+    (y.needChange)              && (ui.setY(getExisted(y.value)));
+    (scaleX.needChange)         && (ui.setScaleX(getExisted(scaleX.value)));
+    (scaleY.needChange)         && (ui.setScaleY(getExisted(scaleY.value)));
+    (pivotX.needChange)         && (ui.setAnchorOffsetX(getExisted(pivotX.value)));
+    (pivotY.needChange)         && (ui.setAnchorOffsetY(getExisted(pivotY.value)));
+    (alpha.needChange)          && (ui.setAlpha(getExisted(alpha.value)));
     (visible.needChange)        && (ui.setIsVisible(!!visible.value));
-    (rotation.needChange)       && (ui.setRotationInDegree(HelpersMisc.getExisted(rotation.value)));
+    (rotation.needChange)       && (ui.setRotationInDegree(getExisted(rotation.value)));
     (touchEnabled.needChange)   && (ui.setIsTouchEnabled(!!touchEnabled.value));
-    (touchChildren.needChange)  && (ui instanceof UiUtilsUiFactory.getUiContainerBaseClass()) && (ui.setIsTouchChildrenEnabled(!!touchChildren.value));
+    (touchChildren.needChange)  && (ui instanceof getUiContainerBaseClass()) && (ui.setIsTouchChildrenEnabled(!!touchChildren.value));
 
     if (width.needChange) {
         const rawValue  = width.value;
@@ -320,7 +340,7 @@ export function commonLoadSkinAttrs(
         ui.setUnscaledManualHeight(rawValue);
     }
 }
-export function commonLoadSkinAttrsForSizer(ui: IUiSkinLoader & UiInterfacesIUiComponent.IUiComponent, oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
+export function commonLoadSkinAttrsForSizer(ui: IUiSkinLoader & IUiComponent, oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
     // if ((width == null)                                     &&
     //     ((attrs?.left == null) || (attrs?.right == null))
     // ) {
@@ -335,7 +355,7 @@ export function commonLoadSkinAttrsForSizer(ui: IUiSkinLoader & UiInterfacesIUiC
     // }
 
     commonLoadSkinAttrs(ui, oldSkinAttrs, newSkinAttrs);
-    UiUtilsUiSizerHelpers.loadSizerOptions(ui, newSkinAttrs);
+    loadSizerOptions(ui, newSkinAttrs);
 }
 
 function mergeSkinAttrs(src: UiSkinAttrs | undefined, dst: UiSkinAttrs): void {
@@ -355,8 +375,8 @@ function generateSkinAttrsForState(skinAttrDict: Record<string, UiSkinAttrs> | u
         return undefined;
     }
 
-    const defaultAttrs  = skinAttrDict[UiTypesUiSkinState.UiSkinState.Default];
-    const attrs         = skinAttrDict[state ?? UiTypesUiSkinState.UiSkinState.Default];
+    const defaultAttrs  = skinAttrDict[UiSkinState.Default];
+    const attrs         = skinAttrDict[state ?? UiSkinState.Default];
     const dstAttrs      = deepClone(defaultAttrs) ?? {};
     if ((attrs != null) && (attrs != defaultAttrs)) {
         for (const key in attrs) {
@@ -370,7 +390,7 @@ function generateSkinAttrsForState(skinAttrDict: Record<string, UiSkinAttrs> | u
 }
 function generateSkinAttrs(skin: UiSkin, state: string | undefined, nestedState: string | undefined): UiSkinAttrs {
     const dstAttrs          = deepClone(UiSkinDefaultAttrs);
-    const uiType            = HelpersMisc.getExisted(skin.uiType);
+    const uiType            = getExisted(skin.uiType);
     dstAttrs.touchChildren  = getDefaultTouchChildren(uiType) ? 1 : 0;
     dstAttrs.touchEnabled   = getDefaultTouchEnabled(uiType) ? 1 : 0;
 

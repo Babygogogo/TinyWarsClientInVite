@@ -1,59 +1,61 @@
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as MailModelMailModel from "./MailModel.ts";
-import * as NetworksManager from "../../networks/Manager.ts";
-import * as NetworksMessageCodes from "../../networks/MessageCodes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMailDeleteMailS from "../../proto/schema/CommonProto/NetMessage/MsgMailDeleteMail/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMailGetAllMailArrayS from "../../proto/schema/CommonProto/NetMessage/MsgMailGetAllMailArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMailGetMailS from "../../proto/schema/CommonProto/NetMessage/MsgMailGetMail/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMailSetIsNewS from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { resetAllMailDataArray, updateOnMsgMailGetMail, updateOnMsgMailDeleteMail, updateOnMsgMailSetIsNew } from "./MailModel.ts";
+import { addListeners, send } from "../../networks/Manager.ts";
+import { MessageCodes } from "../../networks/MessageCodes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMailDeleteMail/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMailGetAllMailArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMailGetAllMailArray/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMailGetMailS } from "../../proto/schema/CommonProto/NetMessage/MsgMailGetMail/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMailSetIsNewS } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export function init(): void {
-    NetworksManager.addListeners([
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMailGetAllMailArray,  callback: _onMsgMailGetAllMailArray },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMailGetMail,          callback: _onMsgMailGetMail },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMailDeleteMail,       callback: _onMsgMailDeleteMail },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMailSetIsNew,         callback: _onMsgMailSetIsNew },
+    addListeners([
+        { msgCode: MessageCodes.MsgMailGetAllMailArray,  callback: _onMsgMailGetAllMailArray },
+        { msgCode: MessageCodes.MsgMailGetMail,          callback: _onMsgMailGetMail },
+        { msgCode: MessageCodes.MsgMailDeleteMail,       callback: _onMsgMailDeleteMail },
+        { msgCode: MessageCodes.MsgMailSetIsNew,         callback: _onMsgMailSetIsNew },
     ], null);
 }
 
-function _onMsgMailGetAllMailArray(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMailGetAllMailArrayS.S;
-    MailModelMailModel.resetAllMailDataArray(data.getMailFullDataArray());
-    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMailGetAllMailArray, data);
+function _onMsgMailGetAllMailArray(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMailGetAllMailArrayS;
+    resetAllMailDataArray(data.getMailFullDataArray());
+    dispatch(TypeId.MsgMailGetAllMailArray, data);
 }
 
-function _onMsgMailGetMail(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMailGetMailS.S;
-    MailModelMailModel.updateOnMsgMailGetMail(HelpersMisc.getExisted(data.getMailFullData()));
-    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMailGetMail, data);
+function _onMsgMailGetMail(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMailGetMailS;
+    updateOnMsgMailGetMail(getExisted(data.getMailFullData()));
+    dispatch(TypeId.MsgMailGetMail, data);
 }
 
 export function reqMailDeleteMail(mailId: number): void {
-    NetworksManager.send({ MsgMailDeleteMail: { c: {
+    send({ MsgMailDeleteMail: { c: {
         mailId  : mailId,
     } }, });
 }
-function _onMsgMailDeleteMail(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMailDeleteMailS.S;
+function _onMsgMailDeleteMail(e: Event): void {
+    const data = e.data as S;
     if (!data.getErrorCode()) {
-        MailModelMailModel.updateOnMsgMailDeleteMail(HelpersMisc.getExisted(data.getMailId()));
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMailDeleteMail, data);
+        updateOnMsgMailDeleteMail(getExisted(data.getMailId()));
+        dispatch(TypeId.MsgMailDeleteMail, data);
     }
 }
 
 export function reqMailSetIsNew(mailId: number, isNew: boolean): void {
-    NetworksManager.send({ MsgMailSetIsNew: { c: {
+    send({ MsgMailSetIsNew: { c: {
         mailId  : mailId,
         isNew   : isNew,
     }}});
 }
-function _onMsgMailSetIsNew(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMailSetIsNewS.S;
+function _onMsgMailSetIsNew(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMailSetIsNewS;
     if (!data.getErrorCode()) {
-        MailModelMailModel.updateOnMsgMailSetIsNew(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMailSetIsNew, data);
+        updateOnMsgMailSetIsNew(data);
+        dispatch(TypeId.MsgMailSetIsNew, data);
     }
 }

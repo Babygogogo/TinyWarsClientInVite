@@ -1,61 +1,61 @@
-import * as AuxiliaryTypesChatToTarget from "../../auxiliaryTypes/ChatToTarget.ts";
-import * as ChatModel from "../../chat/Model.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersCompatibility from "../../helpers/Compatibility.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LobbyModelLobbyModel from "../model/LobbyModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
+import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
+import { checkHasUnreadMessage } from "../../chat/Model.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel, getRunningPanel } from "../../gamePanels/Manager.ts";
+import { Tween } from "../../graphics/Constants.ts";
+import { getIsGameHidden } from "../../helpers/Compatibility.ts";
+import { gotoMyWarListPanel } from "../../helpers/GameFlow.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { MouseStyleType } from "../../helpers/PointerInput.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getSecondaryLanguageType, getText, getGameVersionName } from "../../lang/Utils.ts";
+import { checkIsRedForStartButton } from "../model/LobbyModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { getServerTimestamp, wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { getSelfUserId } from "../../users/Model.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _groupBottom!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupContainer!   : UiInterfacesIUiContainer.IUiContainer;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _groupBottom!      : IUiContainer;
+    private readonly _groupContainer!   : IUiContainer;
 
     // private readonly _groupStart!       : Ui.Interfaces.IUiContainer;
-    private readonly _btnStart!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _imgStart!         : UiInterfacesIUiImage.IUiImage;
+    private readonly _btnStart!         : IUiButton;
+    private readonly _imgStart!         : IUiImage;
 
-    private readonly _groupVersion!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelVersion!     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupVersion!     : IUiContainer;
+    private readonly _labelVersion!     : IUiLabel;
 
-    private readonly _groupProfile!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutProfile!    : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelProfile1!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelProfile2!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupProfile!     : IUiContainer;
+    private readonly _layoutProfile!    : IUiLayout;
+    private readonly _labelProfile1!    : IUiLabel;
+    private readonly _labelProfile2!    : IUiLabel;
 
-    private readonly _groupChat!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutChat!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelChat1!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelChat2!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgChatRed!       : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupChat!        : IUiContainer;
+    private readonly _layoutChat!       : IUiLayout;
+    private readonly _labelChat1!       : IUiLabel;
+    private readonly _labelChat2!       : IUiLabel;
+    private readonly _imgChatRed!       : IUiImage;
 
-    private readonly _groupMapEditor!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutMapEditor!  : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMapEditor1!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapEditor2!  : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupMapEditor!   : IUiContainer;
+    private readonly _layoutMapEditor!  : IUiLayout;
+    private readonly _labelMapEditor1!  : IUiLabel;
+    private readonly _labelMapEditor2!  : IUiLabel;
 
-    private readonly _groupGameChart!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutGameChart!  : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelGameChart1!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelGameChart2!  : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupGameChart!   : IUiContainer;
+    private readonly _layoutGameChart!  : IUiLayout;
+    private readonly _labelGameChart1!  : IUiLabel;
+    private readonly _labelGameChart2!  : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -67,13 +67,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._groupVersion,       callback: this._onTouchedGroupVersion },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.TimeTick,                        callback: this._onNotifyTimeTick },
-            { type: NotificationsTypeId.TypeId.MsgUserLogout,                   callback: this._onMsgUserLogout },
-            { type: NotificationsTypeId.TypeId.MsgChatGetAllReadProgressList,   callback: this._onMsgChatGetAllReadProgressList },
-            { type: NotificationsTypeId.TypeId.MsgChatUpdateReadProgress,       callback: this._onMsgChatUpdateReadProgress },
-            { type: NotificationsTypeId.TypeId.MsgChatGetAllMessages,           callback: this._onMsgChatGetAllMessages },
-            { type: NotificationsTypeId.TypeId.MsgChatAddMessage,               callback: this._onMsgChatAddMessages },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.TimeTick,                        callback: this._onNotifyTimeTick },
+            { type: TypeId.MsgUserLogout,                   callback: this._onMsgUserLogout },
+            { type: TypeId.MsgChatGetAllReadProgressList,   callback: this._onMsgChatGetAllReadProgressList },
+            { type: TypeId.MsgChatUpdateReadProgress,       callback: this._onMsgChatUpdateReadProgress },
+            { type: TypeId.MsgChatGetAllMessages,           callback: this._onMsgChatGetAllMessages },
+            { type: TypeId.MsgChatAddMessage,               callback: this._onMsgChatAddMessages },
         ]);
 
         applyTouchEnabled(this._groupProfile);
@@ -86,8 +86,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const imgStart = this._imgStart;
         imgStart.setAlpha(0);
-        TweenExecutor.Executor.removeTweens(imgStart);
-        TweenExecutor.Executor.get(imgStart, { loop: true })
+        Executor.removeTweens(imgStart);
+        Executor.get(imgStart, { loop: true })
             .to({ customAlpha: 0.8 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
@@ -98,7 +98,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateBtnChat();
     }
     protected override async _onClosed(): Promise<void> {
-        TweenExecutor.Executor.removeTweens(this._imgStart);
+        Executor.removeTweens(this._imgStart);
 
         await super._onClosed();
     }
@@ -107,16 +107,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        const languageType2 = LangUtils.getSecondaryLanguageType();
-        this._labelProfile1.setLangText(LangConstants.TextType.B1375);
-        this._labelProfile2.setText(LangUtils.getText(LangConstants.TextType.B1375, languageType2));
-        this._labelChat1.setLangText(LangConstants.TextType.B1376);
-        this._labelChat2.setText(LangUtils.getText(LangConstants.TextType.B1376, languageType2));
-        this._labelMapEditor1.setLangText(LangConstants.TextType.B1377);
-        this._labelMapEditor2.setText(LangUtils.getText(LangConstants.TextType.B1377, languageType2));
-        this._labelGameChart1.setLangText(LangConstants.TextType.B0900);
-        this._labelGameChart2.setText(LangUtils.getText(LangConstants.TextType.B0900, languageType2));
-        this._labelVersion.setText(LangUtils.getGameVersionName(window.GAME_VERSION) ?? LangConstants.UndefinedError);
+        const languageType2 = getSecondaryLanguageType();
+        this._labelProfile1.setLangText(TextType.B1375);
+        this._labelProfile2.setText(getText(TextType.B1375, languageType2));
+        this._labelChat1.setLangText(TextType.B1376);
+        this._labelChat2.setText(getText(TextType.B1376, languageType2));
+        this._labelMapEditor1.setLangText(TextType.B1377);
+        this._labelMapEditor2.setText(getText(TextType.B1377, languageType2));
+        this._labelGameChart1.setLangText(TextType.B0900);
+        this._labelGameChart2.setText(getText(TextType.B0900, languageType2));
+        this._labelVersion.setText(getGameVersionName(window.GAME_VERSION) ?? UndefinedError);
 
         this._imgChatRed.setX(this._layoutChat.getX() + this._labelChat1.getScaledWidth());
 
@@ -128,55 +128,55 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnStart(): void {
         this._updateImgStart();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyStartPanel, void 0);
+        openPanel(getDict().LobbyStartPanel, void 0);
     }
 
     private _onTouchedGroupProfile(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.closePanel(GamePanelsDict.getDict().UserOnlineUsersPanel);
-        GamePanelsManager.closePanel(GamePanelsDict.getDict().ChatPanel);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, {
-            userId: HelpersMisc.getExisted(UsersModel.getSelfUserId()),
+        closePanel(getDict().UserOnlineUsersPanel);
+        closePanel(getDict().ChatPanel);
+        openPanel(getDict().UserPanel, {
+            userId: getExisted(getSelfUserId()),
         });
     }
 
     private _onTouchedGroupChat(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.closePanel(GamePanelsDict.getDict().UserOnlineUsersPanel);
-        GamePanelsManager.closePanel(GamePanelsDict.getDict().UserPanel);
-        if (!GamePanelsManager.getRunningPanel(GamePanelsDict.getDict().ChatPanel)) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().ChatPanel, { toTarget: new AuxiliaryTypesChatToTarget.ChatToTarget({}) });
+        closePanel(getDict().UserOnlineUsersPanel);
+        closePanel(getDict().UserPanel);
+        if (!getRunningPanel(getDict().ChatPanel)) {
+            openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({}) });
         } else {
-            GamePanelsManager.closePanel(GamePanelsDict.getDict().ChatPanel);
+            closePanel(getDict().ChatPanel);
         }
     }
 
     private _onTouchedGroupMapEditor(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        HelpersGameFlow.gotoMyWarListPanel(WarTypesConstants.WarTypeId.Me);
+        gotoMyWarListPanel(WarTypeId.Me);
     }
 
     private _onTouchedGroupGameChart(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonGameChartPanel, void 0);
+        openPanel(getDict().CommonGameChartPanel, void 0);
     }
 
     private _onTouchedGroupVersion(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChangeVersionPanel, void 0);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        openPanel(getDict().CommonChangeVersionPanel, void 0);
     }
 
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
     private _onNotifyTimeTick(): void {
-        if ((TimerTimerModel.getServerTimestamp() % 10 === 0)                                 &&
-            (!HelpersCompatibility.getIsGameHidden())                               &&
-            (!GamePanelsManager.getRunningPanel(GamePanelsDict.getDict().LobbyStartPanel))
+        if ((getServerTimestamp() % 10 === 0)                                 &&
+            (!getIsGameHidden())                               &&
+            (!getRunningPanel(getDict().LobbyStartPanel))
         ) {
             this._updateImgStart();
         }
@@ -201,58 +201,58 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private async _updateImgStart(): Promise<void> {
-        this._imgStart.setIsVisible(await LobbyModelLobbyModel.checkIsRedForStartButton());
+        this._imgStart.setIsVisible(await checkIsRedForStartButton());
     }
 
     private _updateBtnChat(): void {
-        this._imgChatRed.setIsVisible(ChatModel.checkHasUnreadMessage());
+        this._imgChatRed.setIsVisible(checkHasUnreadMessage());
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupContainer,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupProfile,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupChat,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
             waitTime    : 66,
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupMapEditor,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
             waitTime    : 132,
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupGameChart,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
             waitTime    : 200,
         });
 
-        await TimerTimerModel.wait(200 + GraphicsConstants.Tween.DefaultDuration);
+        await wait(200 + Tween.DefaultDuration);
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupContainer,
             beginProps  : { customAlpha: 1, customY: 0 },
             endProps    : { customAlpha: 0, customY: 40 },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 }
 
-function applyTouchEnabled(container: UiInterfacesIUiContainer.IUiContainer): void {
+function applyTouchEnabled(container: IUiContainer): void {
     container.setIsTouchEnabled(true);
     container.setIsTouchChildrenEnabled(false);
-    container.setMouseStyle(HelpersPointerInput.MouseStyleType.Pointer);
+    container.setMouseStyle(MouseStyleType.Pointer);
 }

@@ -1,80 +1,162 @@
-import * as AutoTourneysRoomsGateway from "../../autoTourneys/rooms/Gateway.ts";
-import * as AutoTourneysRoomsProvider from "../../autoTourneys/rooms/Provider.ts";
-import * as CommonViewCommonWarAdvancedSettingsPage from "../../common/view/CommonWarAdvancedSettingsPage.ts";
-import * as CommonViewCommonWarBasicSettingsPage from "../../common/view/CommonWarBasicSettingsPage.ts";
-import * as CommonViewCommonWarMapInfoPage from "../../common/view/CommonWarMapInfoPage.ts";
-import * as CommonViewCommonWarPlayerInfoPage from "../../common/view/CommonWarPlayerInfoPage.ts";
-import * as CoopCustomRoomModelCcrModel from "../../coopCustomRoom/model/CcrModel.ts";
-import * as CoopCustomRoomModelCcrProxy from "../../coopCustomRoom/model/CcrProxy.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as MultiCustomRoomModelMcrModel from "../../multiCustomRoom/model/McrModel.ts";
-import * as MultiCustomRoomModelMcrProxy from "../../multiCustomRoom/model/McrProxy.ts";
-import * as MultiFreeRoomModelMfrModel from "../../multiFreeRoom/model/MfrModel.ts";
-import * as MultiFreeRoomModelMfrProxy from "../../multiFreeRoom/model/MfrProxy.ts";
-import * as MultiMatchRoomModelMmrModel from "../../multiMatchRoom/model/MmrModel.ts";
-import * as MultiMatchRoomModelMmrProxy from "../../multiMatchRoom/model/MmrProxy.ts";
-import * as MultiPlayerRoomsConstants from "../../multiPlayerRooms/Constants.ts";
-import * as MultiRankRoomModelMrrModel from "../../multiRankRoom/model/MrrModel.ts";
-import * as MultiRankRoomModelMrrProxy from "../../multiRankRoom/model/MrrProxy.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgAtrGetRoomPublicInfoS from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetRoomPublicInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgAtrSetBannedCoIdArrayS from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetBannedCoIdArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgAtrSetSelfSettingsS from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetSelfSettings/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCcrGetRoomPlayerInfoS from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomPlayerInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCcrGetRoomStaticInfoS from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomStaticInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomPlayerInfoS from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomPlayerInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomStaticInfoS from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomStaticInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomPlayerInfoS from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomPlayerInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomStaticInfoS from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomStaticInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmrGetRoomPublicInfoS from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetRoomPublicInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmrSetBannedCoIdArrayS from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetBannedCoIdArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmrSetSelfSettingsS from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetSelfSettings/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMrrGetRoomPublicInfoS from "../../proto/schema/CommonProto/NetMessage/MsgMrrGetRoomPublicInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMrrSetBannedCoIdArrayS from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetBannedCoIdArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMrrSetSelfSettingsS from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetSelfSettings/S.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import * as UiComponentsUiTabItemRenderer from "../../ui/components/UiTabItemRenderer.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiInterfacesIUiTab from "../../ui/interfaces/IUiTab.ts";
-import type * as UiTypesUiItemTapEventData from "../../ui/types/UiItemTapEventData.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
+import { reqAtrGetJoinedRoomIdArray } from "../../autoTourneys/rooms/Gateway.ts";
+import {
+    getRoomInfo,
+    getSelfSettings,
+    getJoinedRoomIdArray,
+    createDataForCommonWarPlayerInfoPage,
+    createDataForCommonWarBasicSettingsPage,
+    createDataForCommonWarAdvancedSettingsPage,
+    checkIsRedForRoom,
+} from "../../autoTourneys/rooms/Provider.ts";
+import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
+    Page as CommonViewCommonWarBasicSettingsPage,
+} from "../../common/view/CommonWarBasicSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
+    Page as CommonViewCommonWarMapInfoPage,
+} from "../../common/view/CommonWarMapInfoPage.ts";
+import {
+    type OpenData as CommonViewCommonWarPlayerInfoPageOpenData,
+    Page as CommonViewCommonWarPlayerInfoPage,
+} from "../../common/view/CommonWarPlayerInfoPage.ts";
+import {
+    getJoinedRoomIdSetWithFilter,
+    getRoomStaticInfo,
+    createDataForCommonWarPlayerInfoPage as CoopCustomRoomModelCcrModelCreateDataForCommonWarPlayerInfoPage,
+    createDataForCommonWarBasicSettingsPage as CoopCustomRoomModelCcrModelCreateDataForCommonWarBasicSettingsPage,
+    createDataForCommonWarAdvancedSettingsPage as CoopCustomRoomModelCcrModelCreateDataForCommonWarAdvancedSettingsPage,
+    checkIsRedForRoom as CoopCustomRoomModelCcrModelCheckIsRedForRoom,
+} from "../../coopCustomRoom/model/CcrModel.ts";
+import { reqCcrGetJoinedRoomIdArray } from "../../coopCustomRoom/model/CcrProxy.ts";
+import { showLang } from "../../FloatText.ts";
+import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getWarTypeName } from "../../lang/Utils.ts";
+import {
+    getJoinedRoomIdSetWithFilter as MultiCustomRoomModelMcrModelGetJoinedRoomIdSetWithFilter,
+    getRoomStaticInfo as MultiCustomRoomModelMcrModelGetRoomStaticInfo,
+    createDataForCommonWarPlayerInfoPage as MultiCustomRoomModelMcrModelCreateDataForCommonWarPlayerInfoPage,
+    createDataForCommonWarBasicSettingsPage as MultiCustomRoomModelMcrModelCreateDataForCommonWarBasicSettingsPage,
+    createDataForCommonWarAdvancedSettingsPage as MultiCustomRoomModelMcrModelCreateDataForCommonWarAdvancedSettingsPage,
+    checkIsRedForRoom as MultiCustomRoomModelMcrModelCheckIsRedForRoom,
+} from "../../multiCustomRoom/model/McrModel.ts";
+import { reqMcrGetJoinedRoomIdArray } from "../../multiCustomRoom/model/McrProxy.ts";
+import {
+    getJoinedRoomIdSetWithFilter as MultiFreeRoomModelMfrModelGetJoinedRoomIdSetWithFilter,
+    getRoomStaticInfo as MultiFreeRoomModelMfrModelGetRoomStaticInfo,
+    createDataForCommonWarPlayerInfoPage as MultiFreeRoomModelMfrModelCreateDataForCommonWarPlayerInfoPage,
+    createDataForCommonWarBasicSettingsPage as MultiFreeRoomModelMfrModelCreateDataForCommonWarBasicSettingsPage,
+    createDataForCommonWarAdvancedSettingsPage as MultiFreeRoomModelMfrModelCreateDataForCommonWarAdvancedSettingsPage,
+    checkIsRedForRoom as MultiFreeRoomModelMfrModelCheckIsRedForRoom,
+} from "../../multiFreeRoom/model/MfrModel.ts";
+import { reqMfrGetJoinedRoomIdArray } from "../../multiFreeRoom/model/MfrProxy.ts";
+import {
+    getRoomInfo as MultiMatchRoomModelMmrModelGetRoomInfo,
+    getSelfSettings as MultiMatchRoomModelMmrModelGetSelfSettings,
+    getJoinedRoomIdArray as MultiMatchRoomModelMmrModelGetJoinedRoomIdArray,
+    createDataForCommonWarPlayerInfoPage as MultiMatchRoomModelMmrModelCreateDataForCommonWarPlayerInfoPage,
+    createDataForCommonWarBasicSettingsPage as MultiMatchRoomModelMmrModelCreateDataForCommonWarBasicSettingsPage,
+    createDataForCommonWarAdvancedSettingsPage as MultiMatchRoomModelMmrModelCreateDataForCommonWarAdvancedSettingsPage,
+    checkIsRedForRoom as MultiMatchRoomModelMmrModelCheckIsRedForRoom,
+} from "../../multiMatchRoom/model/MmrModel.ts";
+import { reqMmrGetJoinedRoomIdArray } from "../../multiMatchRoom/model/MmrProxy.ts";
+import { MultiPlayerRoomType } from "../../multiPlayerRooms/Constants.ts";
+import {
+    getRoomInfo as MultiRankRoomModelMrrModelGetRoomInfo,
+    getSelfSettings as MultiRankRoomModelMrrModelGetSelfSettings,
+    getJoinedRoomIdArray as MultiRankRoomModelMrrModelGetJoinedRoomIdArray,
+    createDataForCommonWarPlayerInfoPage as MultiRankRoomModelMrrModelCreateDataForCommonWarPlayerInfoPage,
+    createDataForCommonWarBasicSettingsPage as MultiRankRoomModelMrrModelCreateDataForCommonWarBasicSettingsPage,
+    createDataForCommonWarAdvancedSettingsPage as MultiRankRoomModelMrrModelCreateDataForCommonWarAdvancedSettingsPage,
+    checkIsRedForRoom as MultiRankRoomModelMrrModelCheckIsRedForRoom,
+} from "../../multiRankRoom/model/MrrModel.ts";
+import { reqMrrGetJoinedRoomIdArray } from "../../multiRankRoom/model/MrrProxy.ts";
+import { getRawData, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgAtrGetRoomPublicInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgAtrSetBannedCoIdArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetBannedCoIdArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgAtrSetSelfSettingsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgAtrSetSelfSettings/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCcrGetRoomPlayerInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomPlayerInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCcrGetRoomStaticInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCcrGetRoomStaticInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomPlayerInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomPlayerInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomStaticInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMcrGetRoomStaticInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomPlayerInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomPlayerInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomStaticInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMfrGetRoomStaticInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmrGetRoomPublicInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmrGetRoomPublicInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmrSetBannedCoIdArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetBannedCoIdArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmrSetSelfSettingsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmrSetSelfSettings/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMrrGetRoomPublicInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMrrGetRoomPublicInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMrrSetBannedCoIdArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetBannedCoIdArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMrrSetSelfSettingsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMrrSetSelfSettings/S.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import { UiTabItemRenderer } from "../../ui/components/UiTabItemRenderer.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
+import type { UiItemTapEventData } from "../../ui/types/UiItemTapEventData.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getSelfUserId } from "../../users/Model.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _groupTab!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _tabSettings!          : UiInterfacesIUiTab.IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPage.OpenData | CommonViewCommonWarPlayerInfoPage.OpenData | CommonViewCommonWarAdvancedSettingsPage.OpenData | CommonViewCommonWarBasicSettingsPage.OpenData>;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _groupTab!             : IUiContainer;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPageOpenData | CommonViewCommonWarPlayerInfoPageOpenData | CommonViewCommonWarAdvancedSettingsPageOpenData | CommonViewCommonWarBasicSettingsPageOpenData>;
 
-    private readonly _groupNavigator!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMultiPlayer!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyRoom!          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupNavigator!       : IUiLayout;
+    private readonly _labelMultiPlayer!     : IUiLabel;
+    private readonly _labelMyRoom!          : IUiLabel;
 
-    private readonly _btnBack!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnNextStep!          : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnBack!              : IUiButton;
+    private readonly _btnNextStep!          : IUiButton;
 
-    private readonly _groupRoomList!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listRoom!             : UiInterfacesIUiScrollList.IUiScrollList<DataForRoomRenderer>;
-    private readonly _labelNoRoom!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelLoading!         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupRoomList!        : IUiContainer;
+    private readonly _listRoom!             : IUiScrollList<DataForRoomRenderer>;
+    private readonly _labelNoRoom!          : IUiLabel;
+    private readonly _labelLoading!         : IUiLabel;
 
     private _isTabInitialized       = false;
     private _hasReceivedAtrData     = false;
@@ -86,44 +168,44 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
 
-            { type: NotificationsTypeId.TypeId.MsgAtrGetJoinedRoomIdArray,          callback: this._onNotifyMsgAtrGetJoinedRoomIdArray },
-            { type: NotificationsTypeId.TypeId.MsgAtrDeleteRoomByServer,            callback: this._onNotifyMsgAtrDeleteRoomByServer },
-            { type: NotificationsTypeId.TypeId.MsgAtrGetRoomPublicInfo,             callback: this._onNotifyMsgAtrGetRoomPublicInfo },
-            { type: NotificationsTypeId.TypeId.MsgAtrSetSelfSettings,               callback: this._onNotifyMsgAtrSetSelfSettings },
-            { type: NotificationsTypeId.TypeId.MsgAtrSetBannedCoIdArray,            callback: this._onNotifyMsgAtrSetBannedCoIdArray },
+            { type: TypeId.MsgAtrGetJoinedRoomIdArray,          callback: this._onNotifyMsgAtrGetJoinedRoomIdArray },
+            { type: TypeId.MsgAtrDeleteRoomByServer,            callback: this._onNotifyMsgAtrDeleteRoomByServer },
+            { type: TypeId.MsgAtrGetRoomPublicInfo,             callback: this._onNotifyMsgAtrGetRoomPublicInfo },
+            { type: TypeId.MsgAtrSetSelfSettings,               callback: this._onNotifyMsgAtrSetSelfSettings },
+            { type: TypeId.MsgAtrSetBannedCoIdArray,            callback: this._onNotifyMsgAtrSetBannedCoIdArray },
 
-            { type: NotificationsTypeId.TypeId.MsgCcrGetRoomStaticInfo,             callback: this._onNotifyMsgCcrGetRoomStaticInfo },
-            { type: NotificationsTypeId.TypeId.MsgCcrGetRoomPlayerInfo,             callback: this._onNotifyMsgCcrGetRoomPlayerInfo },
-            { type: NotificationsTypeId.TypeId.MsgCcrGetJoinedRoomIdArray,          callback: this._onNotifyMsgCcrGetJoinedRoomIdArray },
+            { type: TypeId.MsgCcrGetRoomStaticInfo,             callback: this._onNotifyMsgCcrGetRoomStaticInfo },
+            { type: TypeId.MsgCcrGetRoomPlayerInfo,             callback: this._onNotifyMsgCcrGetRoomPlayerInfo },
+            { type: TypeId.MsgCcrGetJoinedRoomIdArray,          callback: this._onNotifyMsgCcrGetJoinedRoomIdArray },
 
-            { type: NotificationsTypeId.TypeId.MsgMcrGetRoomStaticInfo,             callback: this._onNotifyMsgMcrGetRoomStaticInfo },
-            { type: NotificationsTypeId.TypeId.MsgMcrGetRoomPlayerInfo,             callback: this._onNotifyMsgMcrGetRoomPlayerInfo },
-            { type: NotificationsTypeId.TypeId.MsgMcrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMcrGetJoinedRoomIdArray },
+            { type: TypeId.MsgMcrGetRoomStaticInfo,             callback: this._onNotifyMsgMcrGetRoomStaticInfo },
+            { type: TypeId.MsgMcrGetRoomPlayerInfo,             callback: this._onNotifyMsgMcrGetRoomPlayerInfo },
+            { type: TypeId.MsgMcrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMcrGetJoinedRoomIdArray },
 
-            { type: NotificationsTypeId.TypeId.MsgMfrGetRoomStaticInfo,             callback: this._onNotifyMsgMfrGetRoomStaticInfo },
-            { type: NotificationsTypeId.TypeId.MsgMfrGetRoomPlayerInfo,             callback: this._onNotifyMsgMfrGetRoomPlayerInfo },
-            { type: NotificationsTypeId.TypeId.MsgMfrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMfrGetJoinedRoomIdArray },
+            { type: TypeId.MsgMfrGetRoomStaticInfo,             callback: this._onNotifyMsgMfrGetRoomStaticInfo },
+            { type: TypeId.MsgMfrGetRoomPlayerInfo,             callback: this._onNotifyMsgMfrGetRoomPlayerInfo },
+            { type: TypeId.MsgMfrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMfrGetJoinedRoomIdArray },
 
-            { type: NotificationsTypeId.TypeId.MsgMmrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMmrGetJoinedRoomIdArray },
-            { type: NotificationsTypeId.TypeId.MsgMmrDeleteRoomByServer,            callback: this._onNotifyMsgMmrDeleteRoomByServer },
-            { type: NotificationsTypeId.TypeId.MsgMmrGetRoomPublicInfo,             callback: this._onNotifyMsgMmrGetRoomPublicInfo },
-            { type: NotificationsTypeId.TypeId.MsgMmrSetSelfSettings,               callback: this._onNotifyMsgMmrSetSelfSettings },
-            { type: NotificationsTypeId.TypeId.MsgMmrSetBannedCoIdArray,            callback: this._onNotifyMsgMmrSetBannedCoIdArray },
+            { type: TypeId.MsgMmrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMmrGetJoinedRoomIdArray },
+            { type: TypeId.MsgMmrDeleteRoomByServer,            callback: this._onNotifyMsgMmrDeleteRoomByServer },
+            { type: TypeId.MsgMmrGetRoomPublicInfo,             callback: this._onNotifyMsgMmrGetRoomPublicInfo },
+            { type: TypeId.MsgMmrSetSelfSettings,               callback: this._onNotifyMsgMmrSetSelfSettings },
+            { type: TypeId.MsgMmrSetBannedCoIdArray,            callback: this._onNotifyMsgMmrSetBannedCoIdArray },
 
-            { type: NotificationsTypeId.TypeId.MsgMrrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMrrGetJoinedRoomIdArray },
-            { type: NotificationsTypeId.TypeId.MsgMrrDeleteRoomByServer,            callback: this._onNotifyMsgMrrDeleteRoomByServer },
-            { type: NotificationsTypeId.TypeId.MsgMrrGetRoomPublicInfo,             callback: this._onNotifyMsgMrrGetRoomPublicInfo },
-            { type: NotificationsTypeId.TypeId.MsgMrrSetSelfSettings,               callback: this._onNotifyMsgMrrSetSelfSettings },
-            { type: NotificationsTypeId.TypeId.MsgMrrSetBannedCoIdArray,            callback: this._onNotifyMsgMrrSetBannedCoIdArray },
+            { type: TypeId.MsgMrrGetJoinedRoomIdArray,          callback: this._onNotifyMsgMrrGetJoinedRoomIdArray },
+            { type: TypeId.MsgMrrDeleteRoomByServer,            callback: this._onNotifyMsgMrrDeleteRoomByServer },
+            { type: TypeId.MsgMrrGetRoomPublicInfo,             callback: this._onNotifyMsgMrrGetRoomPublicInfo },
+            { type: TypeId.MsgMrrSetSelfSettings,               callback: this._onNotifyMsgMrrSetSelfSettings },
+            { type: TypeId.MsgMrrSetBannedCoIdArray,            callback: this._onNotifyMsgMrrSetBannedCoIdArray },
         ]);
         this._setUiListenerArray([
             { ui: this._btnBack,        callback: this._onTouchedBtnBack },
             { ui: this._btnNextStep,    callback: this._onTouchedBtnNextStep },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -144,12 +226,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._hasReceivedMfrData    = false;
         this._hasReceivedMmrData    = false;
         this._hasReceivedMrrData    = false;
-        AutoTourneysRoomsGateway.reqAtrGetJoinedRoomIdArray();
-        CoopCustomRoomModelCcrProxy.reqCcrGetJoinedRoomIdArray();
-        MultiCustomRoomModelMcrProxy.reqMcrGetJoinedRoomIdArray();
-        MultiFreeRoomModelMfrProxy.reqMfrGetJoinedRoomIdArray();
-        MultiMatchRoomModelMmrProxy.reqMmrGetJoinedRoomIdArray();
-        MultiRankRoomModelMrrProxy.reqMrrGetJoinedRoomIdArray();
+        reqAtrGetJoinedRoomIdArray();
+        reqCcrGetJoinedRoomIdArray();
+        reqMcrGetJoinedRoomIdArray();
+        reqMfrGetJoinedRoomIdArray();
+        reqMmrGetJoinedRoomIdArray();
+        reqMrrGetJoinedRoomIdArray();
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateGroupRoomList();
@@ -188,55 +270,55 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onNotifyMsgAtrDeleteRoomByServer(): void {
         this._updateGroupRoomList();
     }
-    private _onNotifyMsgAtrGetRoomPublicInfo(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgAtrGetRoomPublicInfoS.S;
+    private _onNotifyMsgAtrGetRoomPublicInfo(e: Event): void {
+        const data          = e.data as S;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Atr)
+            (selectedData.roomType === MultiPlayerRoomType.Atr)
         ) {
             this._updateComponentsForPreviewingRoomInfo();
         }
     }
-    private _onNotifyMsgAtrSetSelfSettings(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgAtrSetSelfSettingsS.S;
+    private _onNotifyMsgAtrSetSelfSettings(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgAtrSetSelfSettingsS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Atr)
+            (selectedData.roomType === MultiPlayerRoomType.Atr)
         ) {
             this._updateCommonWarPlayerInfoPage();
         }
     }
-    private _onNotifyMsgAtrSetBannedCoIdArray(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgAtrSetBannedCoIdArrayS.S;
+    private _onNotifyMsgAtrSetBannedCoIdArray(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgAtrSetBannedCoIdArrayS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Atr)
+            (selectedData.roomType === MultiPlayerRoomType.Atr)
         ) {
             this._updateCommonWarPlayerInfoPage();
         }
     }
 
-    private _onNotifyMsgCcrGetRoomStaticInfo(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgCcrGetRoomStaticInfoS.S;
+    private _onNotifyMsgCcrGetRoomStaticInfo(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgCcrGetRoomStaticInfoS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Ccr)
+            (selectedData.roomType === MultiPlayerRoomType.Ccr)
         ) {
             this._updateComponentsForPreviewingRoomInfo();
         }
     }
-    private _onNotifyMsgCcrGetRoomPlayerInfo(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgCcrGetRoomPlayerInfoS.S;
+    private _onNotifyMsgCcrGetRoomPlayerInfo(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgCcrGetRoomPlayerInfoS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Ccr)
+            (selectedData.roomType === MultiPlayerRoomType.Ccr)
         ) {
-            const selfUserId = UsersModel.getSelfUserId();
+            const selfUserId = getSelfUserId();
             if (data.getRoomPlayerInfo()?.getPlayerDataList()?.some(v => v.getUserId() === selfUserId)) {
                 this._updateComponentsForPreviewingRoomInfo();
             } else {
@@ -249,24 +331,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateGroupRoomList();
     }
 
-    private _onNotifyMsgMcrGetRoomStaticInfo(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomStaticInfoS.S;
+    private _onNotifyMsgMcrGetRoomStaticInfo(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomStaticInfoS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mcr)
+            (selectedData.roomType === MultiPlayerRoomType.Mcr)
         ) {
             this._updateComponentsForPreviewingRoomInfo();
         }
     }
-    private _onNotifyMsgMcrGetRoomPlayerInfo(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomPlayerInfoS.S;
+    private _onNotifyMsgMcrGetRoomPlayerInfo(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrGetRoomPlayerInfoS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mcr)
+            (selectedData.roomType === MultiPlayerRoomType.Mcr)
         ) {
-            const selfUserId = UsersModel.getSelfUserId();
+            const selfUserId = getSelfUserId();
             if (data.getRoomPlayerInfo()?.getPlayerDataList()?.some(v => v.getUserId() === selfUserId)) {
                 this._updateComponentsForPreviewingRoomInfo();
             } else {
@@ -279,24 +361,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateGroupRoomList();
     }
 
-    private _onNotifyMsgMfrGetRoomStaticInfo(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomStaticInfoS.S;
+    private _onNotifyMsgMfrGetRoomStaticInfo(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomStaticInfoS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mfr)
+            (selectedData.roomType === MultiPlayerRoomType.Mfr)
         ) {
             this._updateComponentsForPreviewingRoomInfo();
         }
     }
-    private _onNotifyMsgMfrGetRoomPlayerInfo(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomPlayerInfoS.S;
+    private _onNotifyMsgMfrGetRoomPlayerInfo(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMfrGetRoomPlayerInfoS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mfr)
+            (selectedData.roomType === MultiPlayerRoomType.Mfr)
         ) {
-            const selfUserId = UsersModel.getSelfUserId();
+            const selfUserId = getSelfUserId();
             if (data.getRoomPlayerInfo()?.getPlayerDataList().some(v => v.getUserId() === selfUserId)) {
                 this._updateComponentsForPreviewingRoomInfo();
             } else {
@@ -316,32 +398,32 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onNotifyMsgMmrDeleteRoomByServer(): void {
         this._updateGroupRoomList();
     }
-    private _onNotifyMsgMmrGetRoomPublicInfo(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMmrGetRoomPublicInfoS.S;
+    private _onNotifyMsgMmrGetRoomPublicInfo(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMmrGetRoomPublicInfoS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mmr)
+            (selectedData.roomType === MultiPlayerRoomType.Mmr)
         ) {
             this._updateComponentsForPreviewingRoomInfo();
         }
     }
-    private _onNotifyMsgMmrSetSelfSettings(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMmrSetSelfSettingsS.S;
+    private _onNotifyMsgMmrSetSelfSettings(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMmrSetSelfSettingsS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mmr)
+            (selectedData.roomType === MultiPlayerRoomType.Mmr)
         ) {
             this._updateCommonWarPlayerInfoPage();
         }
     }
-    private _onNotifyMsgMmrSetBannedCoIdArray(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMmrSetBannedCoIdArrayS.S;
+    private _onNotifyMsgMmrSetBannedCoIdArray(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMmrSetBannedCoIdArrayS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mmr)
+            (selectedData.roomType === MultiPlayerRoomType.Mmr)
         ) {
             this._updateCommonWarPlayerInfoPage();
         }
@@ -354,32 +436,32 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onNotifyMsgMrrDeleteRoomByServer(): void {
         this._updateGroupRoomList();
     }
-    private _onNotifyMsgMrrGetRoomPublicInfo(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMrrGetRoomPublicInfoS.S;
+    private _onNotifyMsgMrrGetRoomPublicInfo(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMrrGetRoomPublicInfoS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mrr)
+            (selectedData.roomType === MultiPlayerRoomType.Mrr)
         ) {
             this._updateComponentsForPreviewingRoomInfo();
         }
     }
-    private _onNotifyMsgMrrSetSelfSettings(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMrrSetSelfSettingsS.S;
+    private _onNotifyMsgMrrSetSelfSettings(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMrrSetSelfSettingsS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mrr)
+            (selectedData.roomType === MultiPlayerRoomType.Mrr)
         ) {
             this._updateCommonWarPlayerInfoPage();
         }
     }
-    private _onNotifyMsgMrrSetBannedCoIdArray(e: VendorEgretEgret.Event): void {
-        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMrrSetBannedCoIdArrayS.S;
+    private _onNotifyMsgMrrSetBannedCoIdArray(e: Event): void {
+        const data          = e.data as ProtoSchemaCommonProtoNetMessageMsgMrrSetBannedCoIdArrayS;
         const selectedData  = this._listRoom.getFirstSelectedData();
         if ((selectedData != null)                      &&
             (data.getRoomId() === selectedData.roomId)  &&
-            (selectedData.roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mrr)
+            (selectedData.roomType === MultiPlayerRoomType.Mrr)
         ) {
             this._updateCommonWarPlayerInfoPage();
         }
@@ -387,9 +469,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().McrMainMenuPanel, void 0);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyTopPanel, void 0);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyBottomPanel, void 0);
+        openPanel(getDict().McrMainMenuPanel, void 0);
+        openPanel(getDict().LobbyTopPanel, void 0);
+        openPanel(getDict().LobbyBottomPanel, void 0);
     }
 
     private async _onTouchedBtnNextStep(): Promise<void> {
@@ -402,50 +484,50 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const roomType  = selectedData.roomType;
         this.closePanel();
 
-        if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Atr) {
-            const roomInfo = await AutoTourneysRoomsProvider.getRoomInfo(roomId);
+        if (roomType === MultiPlayerRoomType.Atr) {
+            const roomInfo = await getRoomInfo(roomId);
             if (roomInfo == null) {
-                FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                showLang(TextType.YouCanNotDoThisRightNow);
             } else {
-                (await AutoTourneysRoomsProvider.getSelfSettings(roomId))?.resetData(roomInfo);
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().AtrRoomInfoPanel, {
+                (await getSelfSettings(roomId))?.resetData(roomInfo);
+                openPanel(getDict().AtrRoomInfoPanel, {
                     roomId  : roomId,
                 });
             }
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Ccr) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CcrRoomInfoPanel, {
+        } else if (roomType === MultiPlayerRoomType.Ccr) {
+            openPanel(getDict().CcrRoomInfoPanel, {
                 roomId  : roomId,
             });
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mcr) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().McrRoomInfoPanel, {
+        } else if (roomType === MultiPlayerRoomType.Mcr) {
+            openPanel(getDict().McrRoomInfoPanel, {
                 roomId  : roomId,
             });
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mfr) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().MfrRoomInfoPanel, {
+        } else if (roomType === MultiPlayerRoomType.Mfr) {
+            openPanel(getDict().MfrRoomInfoPanel, {
                 roomId  : roomId,
             });
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mmr) {
-            const roomInfo = await MultiMatchRoomModelMmrModel.getRoomInfo(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mmr) {
+            const roomInfo = await MultiMatchRoomModelMmrModelGetRoomInfo(roomId);
             if (roomInfo == null) {
-                FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                showLang(TextType.YouCanNotDoThisRightNow);
             } else {
-                (await MultiMatchRoomModelMmrModel.getSelfSettings(roomId))?.resetData(roomInfo);
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().MmrRoomInfoPanel, {
+                (await MultiMatchRoomModelMmrModelGetSelfSettings(roomId))?.resetData(roomInfo);
+                openPanel(getDict().MmrRoomInfoPanel, {
                     roomId  : roomId,
                 });
             }
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mrr) {
-            const roomInfo = await MultiRankRoomModelMrrModel.getRoomInfo(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mrr) {
+            const roomInfo = await MultiRankRoomModelMrrModelGetRoomInfo(roomId);
             if (roomInfo == null) {
-                FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                showLang(TextType.YouCanNotDoThisRightNow);
             } else {
-                (await MultiRankRoomModelMrrModel.getSelfSettings(roomId))?.resetData(roomInfo);
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().MrrRoomInfoPanel, {
+                (await MultiRankRoomModelMrrModelGetSelfSettings(roomId))?.resetData(roomInfo);
+                openPanel(getDict().MrrRoomInfoPanel, {
                     roomId  : roomId,
                 });
             }
@@ -459,23 +541,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0298) },
+                pageClass   : CommonViewCommonWarMapInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0224) },
-                pageClass   : CommonViewCommonWarPlayerInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0224) },
+                pageClass   : CommonViewCommonWarPlayerInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0002) },
-                pageClass   : CommonViewCommonWarBasicSettingsPage.Page,
+                tabItemData : { name: getText(TextType.B0002) },
+                pageClass   : CommonViewCommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0003) },
-                pageClass   : CommonViewCommonWarAdvancedSettingsPage.Page,
+                tabItemData : { name: getText(TextType.B0003) },
+                pageClass   : Page,
                 pageData    : null,
             },
         ]);
@@ -491,12 +573,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(LangUtils.getText(LangConstants.TextType.A0040));
-        this._labelMultiPlayer.setText(LangUtils.getText(LangConstants.TextType.B0137));
-        this._labelMyRoom.setText(LangUtils.getText(LangConstants.TextType.B0410));
-        this._btnBack.setText(LangUtils.getText(LangConstants.TextType.B0146));
-        this._labelNoRoom.setText(LangUtils.getText(LangConstants.TextType.B0582));
-        this._btnNextStep.setText(LangUtils.getText(LangConstants.TextType.B1383));
+        this._labelLoading.setText(getText(TextType.A0040));
+        this._labelMultiPlayer.setText(getText(TextType.B0137));
+        this._labelMyRoom.setText(getText(TextType.B0410));
+        this._btnBack.setText(getText(TextType.B0146));
+        this._labelNoRoom.setText(getText(TextType.B0582));
+        this._btnNextStep.setText(getText(TextType.B1383));
 
         this._groupNavigator.arrangeItems();
     }
@@ -551,35 +633,35 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private async _createDataForListRoom(): Promise<DataForRoomRenderer[]> {
         const dataArray: DataForRoomRenderer[] = [];
-        dataArray.push(...((await AutoTourneysRoomsProvider.getJoinedRoomIdArray())?.map(roomId => ({
+        dataArray.push(...((await getJoinedRoomIdArray())?.map(roomId => ({
             roomId      : roomId,
             panel       : this,
-            roomType    : MultiPlayerRoomsConstants.MultiPlayerRoomType.Atr,
+            roomType    : MultiPlayerRoomType.Atr,
         }) as DataForRoomRenderer)?.sort((v1, v2) => v1.roomId - v2.roomId) ?? []));
-        dataArray.push(...((await MultiRankRoomModelMrrModel.getJoinedRoomIdArray())?.map(roomId => ({
+        dataArray.push(...((await MultiRankRoomModelMrrModelGetJoinedRoomIdArray())?.map(roomId => ({
             roomId      : roomId,
             panel       : this,
-            roomType    : MultiPlayerRoomsConstants.MultiPlayerRoomType.Mrr,
+            roomType    : MultiPlayerRoomType.Mrr,
         }) as DataForRoomRenderer)?.sort((v1, v2) => v1.roomId - v2.roomId) ?? []));
-        dataArray.push(...((await MultiMatchRoomModelMmrModel.getJoinedRoomIdArray())?.map(roomId => ({
+        dataArray.push(...((await MultiMatchRoomModelMmrModelGetJoinedRoomIdArray())?.map(roomId => ({
             roomId      : roomId,
             panel       : this,
-            roomType    : MultiPlayerRoomsConstants.MultiPlayerRoomType.Mmr,
+            roomType    : MultiPlayerRoomType.Mmr,
         }) as DataForRoomRenderer)?.sort((v1, v2) => v1.roomId - v2.roomId) ?? []));
-        dataArray.push(...[...await MultiCustomRoomModelMcrModel.getJoinedRoomIdSetWithFilter(null)].map(roomId => ({
+        dataArray.push(...[...await MultiCustomRoomModelMcrModelGetJoinedRoomIdSetWithFilter(null)].map(roomId => ({
             roomId      : roomId,
             panel       : this,
-            roomType    : MultiPlayerRoomsConstants.MultiPlayerRoomType.Mcr,
+            roomType    : MultiPlayerRoomType.Mcr,
         }) as DataForRoomRenderer).sort((v1, v2) => v1.roomId - v2.roomId));
-        dataArray.push(...[...await CoopCustomRoomModelCcrModel.getJoinedRoomIdSetWithFilter(null)].map(roomId => ({
+        dataArray.push(...[...await getJoinedRoomIdSetWithFilter(null)].map(roomId => ({
             roomId      : roomId,
             panel       : this,
-            roomType    : MultiPlayerRoomsConstants.MultiPlayerRoomType.Ccr,
+            roomType    : MultiPlayerRoomType.Ccr,
         }) as DataForRoomRenderer).sort((v1, v2) => v1.roomId - v2.roomId));
-        dataArray.push(...[...await MultiFreeRoomModelMfrModel.getJoinedRoomIdSetWithFilter(null)].map(roomId => ({
+        dataArray.push(...[...await MultiFreeRoomModelMfrModelGetJoinedRoomIdSetWithFilter(null)].map(roomId => ({
             roomId      : roomId,
             panel       : this,
-            roomType    : MultiPlayerRoomsConstants.MultiPlayerRoomType.Mfr,
+            roomType    : MultiPlayerRoomType.Mfr,
         }) as DataForRoomRenderer).sort((v1, v2) => v1.roomId - v2.roomId));
 
         return dataArray;
@@ -609,7 +691,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
 
-    private async _createDataForCommonWarMapInfoPage(): Promise<CommonViewCommonWarMapInfoPage.OpenData> {
+    private async _createDataForCommonWarMapInfoPage(): Promise<CommonViewCommonWarMapInfoPageOpenData> {
         const selectedData = this._listRoom.getFirstSelectedData();
         if (selectedData == null) {
             return null;
@@ -617,52 +699,52 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const roomId    = selectedData.roomId;
         const roomType  = selectedData.roomType;
-        if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Atr) {
-            const roomInfo      = await AutoTourneysRoomsProvider.getRoomInfo(roomId);
+        if (roomType === MultiPlayerRoomType.Atr) {
+            const roomInfo      = await getRoomInfo(roomId);
             const normalMapId   = roomInfo ? (roomInfo.getSettingsForAtw()?.getNormalMapId() ?? 0) : null;
             return normalMapId == null
                 ? null
                 : {
                     mapInfo : {
                         hasFog              : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId)),
+                        gameConfig          : await getGameConfig(getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData          : getExisted(await getRawData(normalMapId)),
                         overridingPlayers   : null,
                     },
                 };
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Ccr) {
-            const roomStaticInfo    = await CoopCustomRoomModelCcrModel.getRoomStaticInfo(roomId);
+        } else if (roomType === MultiPlayerRoomType.Ccr) {
+            const roomStaticInfo    = await getRoomStaticInfo(roomId);
             const normalMapId       = roomStaticInfo ? (roomStaticInfo.getSettingsForCcw()?.getNormalMapId() ?? 0) : null;
             return normalMapId == null
                 ? null
                 : {
                     mapInfo : {
                         hasFog              : !!roomStaticInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(roomStaticInfo?.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId)),
+                        gameConfig          : await getGameConfig(getExisted(roomStaticInfo?.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData          : getExisted(await getRawData(normalMapId)),
                         overridingPlayers   : null,
                     },
                 };
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mcr) {
-            const roomInfo      = await MultiCustomRoomModelMcrModel.getRoomStaticInfo(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mcr) {
+            const roomInfo      = await MultiCustomRoomModelMcrModelGetRoomStaticInfo(roomId);
             const normalMapId   = roomInfo ? (roomInfo.getSettingsForMcw()?.getNormalMapId() ?? 0) : null;
             return normalMapId == null
                 ? null
                 : {
                     mapInfo : {
                         hasFog              : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId)),
+                        gameConfig          : await getGameConfig(getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData          : getExisted(await getRawData(normalMapId)),
                         overridingPlayers   : null,
                     },
                 };
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mfr) {
+        } else if (roomType === MultiPlayerRoomType.Mfr) {
             const warData   = roomId == null
                 ? null
-                : (await MultiFreeRoomModelMfrModel.getRoomStaticInfo(roomId))?.getSettingsForMfw()?.getInitialWarData();
+                : (await MultiFreeRoomModelMfrModelGetRoomStaticInfo(roomId))?.getSettingsForMfw()?.getInitialWarData();
 
             return warData == null
                 ? null
@@ -674,30 +756,30 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     },
                 };
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mmr) {
-            const roomInfo      = await MultiMatchRoomModelMmrModel.getRoomInfo(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mmr) {
+            const roomInfo      = await MultiMatchRoomModelMmrModelGetRoomInfo(roomId);
             const normalMapId   = roomInfo ? (roomInfo.getSettingsForMmw()?.getNormalMapId() ?? 0) : null;
             return normalMapId == null
                 ? null
                 : {
                     mapInfo : {
                         hasFog              : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId)),
+                        gameConfig          : await getGameConfig(getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData          : getExisted(await getRawData(normalMapId)),
                         overridingPlayers   : null,
                     },
                 };
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mrr) {
-            const roomInfo      = await MultiRankRoomModelMrrModel.getRoomInfo(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mrr) {
+            const roomInfo      = await MultiRankRoomModelMrrModelGetRoomInfo(roomId);
             const normalMapId   = roomInfo ? (roomInfo.getSettingsForMrw()?.getNormalMapId() ?? 0) : null;
             return normalMapId == null
                 ? null
                 : {
                     mapInfo : {
                         hasFog              : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                        gameConfig          : await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
-                        mapRawData          : HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId)),
+                        gameConfig          : await getGameConfig(getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                        mapRawData          : getExisted(await getRawData(normalMapId)),
                         overridingPlayers   : null,
                     },
                 };
@@ -707,7 +789,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
 
-    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonViewCommonWarPlayerInfoPage.OpenData> {
+    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
         const selectedData = this._listRoom.getFirstSelectedData();
         if (selectedData == null) {
             return null;
@@ -715,24 +797,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const roomId    = selectedData.roomId;
         const roomType  = selectedData.roomType;
-        if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Atr) {
-            return AutoTourneysRoomsProvider.createDataForCommonWarPlayerInfoPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Ccr) {
-            return CoopCustomRoomModelCcrModel.createDataForCommonWarPlayerInfoPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mcr) {
-            return MultiCustomRoomModelMcrModel.createDataForCommonWarPlayerInfoPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mfr) {
-            return MultiFreeRoomModelMfrModel.createDataForCommonWarPlayerInfoPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mmr) {
-            return MultiMatchRoomModelMmrModel.createDataForCommonWarPlayerInfoPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mrr) {
-            return MultiRankRoomModelMrrModel.createDataForCommonWarPlayerInfoPage(roomId);
+        if (roomType === MultiPlayerRoomType.Atr) {
+            return createDataForCommonWarPlayerInfoPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Ccr) {
+            return CoopCustomRoomModelCcrModelCreateDataForCommonWarPlayerInfoPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mcr) {
+            return MultiCustomRoomModelMcrModelCreateDataForCommonWarPlayerInfoPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mfr) {
+            return MultiFreeRoomModelMfrModelCreateDataForCommonWarPlayerInfoPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mmr) {
+            return MultiMatchRoomModelMmrModelCreateDataForCommonWarPlayerInfoPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mrr) {
+            return MultiRankRoomModelMrrModelCreateDataForCommonWarPlayerInfoPage(roomId);
         } else {
             return null;
         }
     }
 
-    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonViewCommonWarBasicSettingsPage.OpenData> {
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
         const selectedData = this._listRoom.getFirstSelectedData();
         if (selectedData == null) {
             return null;
@@ -740,24 +822,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const roomId    = selectedData.roomId;
         const roomType  = selectedData.roomType;
-        if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Atr) {
-            return AutoTourneysRoomsProvider.createDataForCommonWarBasicSettingsPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Ccr) {
-            return CoopCustomRoomModelCcrModel.createDataForCommonWarBasicSettingsPage(roomId, true);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mcr) {
-            return MultiCustomRoomModelMcrModel.createDataForCommonWarBasicSettingsPage(roomId, true);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mfr) {
-            return MultiFreeRoomModelMfrModel.createDataForCommonWarBasicSettingsPage(roomId, true);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mmr) {
-            return MultiMatchRoomModelMmrModel.createDataForCommonWarBasicSettingsPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mrr) {
-            return MultiRankRoomModelMrrModel.createDataForCommonWarBasicSettingsPage(roomId);
+        if (roomType === MultiPlayerRoomType.Atr) {
+            return createDataForCommonWarBasicSettingsPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Ccr) {
+            return CoopCustomRoomModelCcrModelCreateDataForCommonWarBasicSettingsPage(roomId, true);
+        } else if (roomType === MultiPlayerRoomType.Mcr) {
+            return MultiCustomRoomModelMcrModelCreateDataForCommonWarBasicSettingsPage(roomId, true);
+        } else if (roomType === MultiPlayerRoomType.Mfr) {
+            return MultiFreeRoomModelMfrModelCreateDataForCommonWarBasicSettingsPage(roomId, true);
+        } else if (roomType === MultiPlayerRoomType.Mmr) {
+            return MultiMatchRoomModelMmrModelCreateDataForCommonWarBasicSettingsPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mrr) {
+            return MultiRankRoomModelMrrModelCreateDataForCommonWarBasicSettingsPage(roomId);
         } else {
             return null;
         }
     }
 
-    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonViewCommonWarAdvancedSettingsPage.OpenData> {
+    private async _createDataForCommonWarAdvancedSettingsPage(): Promise<CommonViewCommonWarAdvancedSettingsPageOpenData> {
         const selectedData = this._listRoom.getFirstSelectedData();
         if (selectedData == null) {
             return null;
@@ -765,108 +847,108 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const roomId    = selectedData.roomId;
         const roomType  = selectedData.roomType;
-        if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Atr) {
-            return AutoTourneysRoomsProvider.createDataForCommonWarAdvancedSettingsPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Ccr) {
-            return CoopCustomRoomModelCcrModel.createDataForCommonWarAdvancedSettingsPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mcr) {
-            return MultiCustomRoomModelMcrModel.createDataForCommonWarAdvancedSettingsPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mfr) {
-            return MultiFreeRoomModelMfrModel.createDataForCommonWarAdvancedSettingsPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mmr) {
-            return MultiMatchRoomModelMmrModel.createDataForCommonWarAdvancedSettingsPage(roomId);
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mrr) {
-            return MultiRankRoomModelMrrModel.createDataForCommonWarAdvancedSettingsPage(roomId);
+        if (roomType === MultiPlayerRoomType.Atr) {
+            return createDataForCommonWarAdvancedSettingsPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Ccr) {
+            return CoopCustomRoomModelCcrModelCreateDataForCommonWarAdvancedSettingsPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mcr) {
+            return MultiCustomRoomModelMcrModelCreateDataForCommonWarAdvancedSettingsPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mfr) {
+            return MultiFreeRoomModelMfrModelCreateDataForCommonWarAdvancedSettingsPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mmr) {
+            return MultiMatchRoomModelMmrModelCreateDataForCommonWarAdvancedSettingsPage(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mrr) {
+            return MultiRankRoomModelMrrModelCreateDataForCommonWarAdvancedSettingsPage(roomId);
         } else {
             return null;
         }
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupRoomList,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnNextStep,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 0, },
             endProps    : { customAlpha: 1, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupRoomList,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnNextStep,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 1, },
             endProps    : { customAlpha: 0, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 }
 
-interface DataForTabItemRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTabItemRenderer extends UiListItemData {
     name: string;
 }
-class TabItemRenderer extends UiComponentsUiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer> {
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+class TabItemRenderer extends UiTabItemRenderer<DataForTabItemRenderer> {
+    private readonly _labelName!    : IUiLabel;
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? LangConstants.UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
     }
 }
 
-interface DataForRoomRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForRoomRenderer extends UiListItemData {
     roomId      : number;
     roomType    : number;
     panel       : Panel;
 }
 class RoomRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForRoomRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForRoomRenderer>
+    extends     UiListItemRenderer<DataForRoomRenderer>
+    implements  IUiListItemRenderer<DataForRoomRenderer>
 {
-    private readonly _layoutName!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelRoomId!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelWarType! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgRed!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!   : IUiLayout;
+    private readonly _labelRoomId!  : IUiLabel;
+    private readonly _labelWarType! : IUiLabel;
+    private readonly _labelName!    : IUiLabel;
+    private readonly _imgRed!       : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -890,77 +972,77 @@ class RoomRenderer
         const imgRed        = this._imgRed;
         const labelName     = this._labelName;
         const labelWarType  = this._labelWarType;
-        if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Atr) {
-            const roomInfo      = await AutoTourneysRoomsProvider.getRoomInfo(roomId);
-            imgRed.setIsVisible(await AutoTourneysRoomsProvider.checkIsRedForRoom(roomId));
+        if (roomType === MultiPlayerRoomType.Atr) {
+            const roomInfo      = await getRoomInfo(roomId);
+            imgRed.setIsVisible(await checkIsRedForRoom(roomId));
             labelWarType.setText(roomInfo
-                ? LangUtils.getWarTypeName(roomInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypesConstants.WarTypeId.AtwFog : WarTypesConstants.WarTypeId.AtwStd) ?? LangConstants.UndefinedError
+                ? getWarTypeName(roomInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypeId.AtwFog : WarTypeId.AtwStd) ?? UndefinedError
                 : ``
             );
             labelName.setText(roomInfo
-                ? (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(roomInfo.getSettingsForAtw()?.getNormalMapId() ?? 0) ?? LangConstants.UndefinedError)
+                ? (await getMapNameInCurrentLanguage(roomInfo.getSettingsForAtw()?.getNormalMapId() ?? 0) ?? UndefinedError)
                 : ``
             );
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Ccr) {
-            const roomStaticInfo    = await CoopCustomRoomModelCcrModel.getRoomStaticInfo(roomId);
+        } else if (roomType === MultiPlayerRoomType.Ccr) {
+            const roomStaticInfo    = await getRoomStaticInfo(roomId);
             const settingsForCcw    = roomStaticInfo?.getSettingsForCcw();
-            imgRed.setIsVisible(await CoopCustomRoomModelCcrModel.checkIsRedForRoom(roomId));
+            imgRed.setIsVisible(await CoopCustomRoomModelCcrModelCheckIsRedForRoom(roomId));
             labelWarType.setText(roomStaticInfo
-                ? LangUtils.getWarTypeName(roomStaticInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypesConstants.WarTypeId.CcwFog : WarTypesConstants.WarTypeId.CcwStd) ?? LangConstants.UndefinedError
+                ? getWarTypeName(roomStaticInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypeId.CcwFog : WarTypeId.CcwStd) ?? UndefinedError
                 : ``
             );
             labelName.setText(settingsForCcw
-                ? settingsForCcw.getWarName() || (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId() ?? 0) ?? LangConstants.UndefinedError)
+                ? settingsForCcw.getWarName() || (await getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId() ?? 0) ?? UndefinedError)
                 : ``
             );
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mcr) {
-            const roomStaticInfo    = await MultiCustomRoomModelMcrModel.getRoomStaticInfo(roomId);
+        } else if (roomType === MultiPlayerRoomType.Mcr) {
+            const roomStaticInfo    = await MultiCustomRoomModelMcrModelGetRoomStaticInfo(roomId);
             const settingsForMcw    = roomStaticInfo?.getSettingsForMcw();
-            imgRed.setIsVisible(await MultiCustomRoomModelMcrModel.checkIsRedForRoom(roomId));
+            imgRed.setIsVisible(await MultiCustomRoomModelMcrModelCheckIsRedForRoom(roomId));
             labelWarType.setText(roomStaticInfo
-                ? LangUtils.getWarTypeName(roomStaticInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypesConstants.WarTypeId.McwFog : WarTypesConstants.WarTypeId.McwStd) ?? LangConstants.UndefinedError
+                ? getWarTypeName(roomStaticInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypeId.McwFog : WarTypeId.McwStd) ?? UndefinedError
                 : ``
             );
             labelName.setText(settingsForMcw
-                ? settingsForMcw.getWarName() || (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId() ?? 0) ?? LangConstants.UndefinedError)
+                ? settingsForMcw.getWarName() || (await getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId() ?? 0) ?? UndefinedError)
                 : ``
             );
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mfr) {
-            const roomInfo = await MultiFreeRoomModelMfrModel.getRoomStaticInfo(roomId);
-            imgRed.setIsVisible(await MultiFreeRoomModelMfrModel.checkIsRedForRoom(roomId));
+        } else if (roomType === MultiPlayerRoomType.Mfr) {
+            const roomInfo = await MultiFreeRoomModelMfrModelGetRoomStaticInfo(roomId);
+            imgRed.setIsVisible(await MultiFreeRoomModelMfrModelCheckIsRedForRoom(roomId));
             labelWarType.setText(roomInfo
-                ? LangUtils.getWarTypeName(roomInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypesConstants.WarTypeId.MfwFog : WarTypesConstants.WarTypeId.MfwStd) ?? LangConstants.UndefinedError
+                ? getWarTypeName(roomInfo.getSettingsForMfw()?.getInitialWarData()?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypeId.MfwFog : WarTypeId.MfwStd) ?? UndefinedError
                 : ``
             );
             labelName.setText(roomInfo
-                ? roomInfo.getSettingsForMfw()?.getWarName() || `(${LangUtils.getText(LangConstants.TextType.B0557)})`
+                ? roomInfo.getSettingsForMfw()?.getWarName() || `(${getText(TextType.B0557)})`
                 : ``
             );
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mmr) {
-            const roomInfo = await MultiMatchRoomModelMmrModel.getRoomInfo(roomId);
-            imgRed.setIsVisible(await MultiMatchRoomModelMmrModel.checkIsRedForRoom(roomId));
+        } else if (roomType === MultiPlayerRoomType.Mmr) {
+            const roomInfo = await MultiMatchRoomModelMmrModelGetRoomInfo(roomId);
+            imgRed.setIsVisible(await MultiMatchRoomModelMmrModelCheckIsRedForRoom(roomId));
             labelWarType.setText(roomInfo
-                ? LangUtils.getWarTypeName(roomInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypesConstants.WarTypeId.MmwFog : WarTypesConstants.WarTypeId.MmwStd) ?? LangConstants.UndefinedError
+                ? getWarTypeName(roomInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypeId.MmwFog : WarTypeId.MmwStd) ?? UndefinedError
                 : ``
             );
             labelName.setText(roomInfo
-                ? (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(roomInfo.getSettingsForMmw()?.getNormalMapId() ?? 0) ?? LangConstants.UndefinedError)
+                ? (await getMapNameInCurrentLanguage(roomInfo.getSettingsForMmw()?.getNormalMapId() ?? 0) ?? UndefinedError)
                 : ``
             );
 
-        } else if (roomType === MultiPlayerRoomsConstants.MultiPlayerRoomType.Mrr) {
-            const roomInfo      = await MultiRankRoomModelMrrModel.getRoomInfo(roomId);
-            imgRed.setIsVisible(await MultiRankRoomModelMrrModel.checkIsRedForRoom(roomId));
+        } else if (roomType === MultiPlayerRoomType.Mrr) {
+            const roomInfo      = await MultiRankRoomModelMrrModelGetRoomInfo(roomId);
+            imgRed.setIsVisible(await MultiRankRoomModelMrrModelCheckIsRedForRoom(roomId));
             labelWarType.setText(roomInfo
-                ? LangUtils.getWarTypeName(roomInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypesConstants.WarTypeId.MrwFog : WarTypesConstants.WarTypeId.MrwStd) ?? LangConstants.UndefinedError
+                ? getWarTypeName(roomInfo.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault() ? WarTypeId.MrwFog : WarTypeId.MrwStd) ?? UndefinedError
                 : ``
             );
             labelName.setText(roomInfo
-                ? (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(roomInfo.getSettingsForMrw()?.getNormalMapId() ?? 0) ?? LangConstants.UndefinedError)
+                ? (await getMapNameInCurrentLanguage(roomInfo.getSettingsForMrw()?.getNormalMapId() ?? 0) ?? UndefinedError)
                 : ``
             );
         }
@@ -968,7 +1050,7 @@ class RoomRenderer
         layoutName.arrangeItems();
     }
 
-    public onItemTapEvent(e: UiTypesUiItemTapEventData.UiItemTapEventData): void {
+    public onItemTapEvent(e: UiItemTapEventData): void {
         const openData = this.getOpenData();
         openData?.panel.setAndReviseSelectedRoomId(e.itemIndex, false);
     }

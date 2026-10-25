@@ -1,10 +1,10 @@
-import type * as UiTypesUiSizerDimensionOptions from "./UiSizerDimensionOptions.ts";
-import type * as UiTypesUiSizerHorizontalAlignOptions from "./UiSizerHorizontalAlignOptions.ts";
-import type * as UiTypesUiSizerVerticalAlignOptions from "./UiSizerVerticalAlignOptions.ts";
+import type { UiSizerDimensionOptions } from "./UiSizerDimensionOptions.ts";
+import type { UiSizerHorizontalAlignOptions } from "./UiSizerHorizontalAlignOptions.ts";
+import type { UiSizerVerticalAlignOptions } from "./UiSizerVerticalAlignOptions.ts";
 
 export interface UiSizerOptions {
-    width?              : UiTypesUiSizerDimensionOptions.UiSizerDimensionOptions;
-    height?             : UiTypesUiSizerDimensionOptions.UiSizerDimensionOptions;
-    horizontalAlign?    : UiTypesUiSizerHorizontalAlignOptions.UiSizerHorizontalAlignOptions;
-    verticalAlign?      : UiTypesUiSizerVerticalAlignOptions.UiSizerVerticalAlignOptions;
+    width?              : UiSizerDimensionOptions;
+    height?             : UiSizerDimensionOptions;
+    horizontalAlign?    : UiSizerHorizontalAlignOptions;
+    verticalAlign?      : UiSizerVerticalAlignOptions;
 }

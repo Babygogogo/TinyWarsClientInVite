@@ -1,17 +1,17 @@
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import { UndefinedError, TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 // eslint-disable-next-line no-shadow
 const enum TouchingType {
@@ -29,22 +29,22 @@ export type OpenData = {
     getTitleText        : () => string;
     callback            : (newMinNumber: number, newMaxNumber: number) => void;
 };
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnHelp!                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCancel!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!               : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnHelp!                  : IUiButton;
+    private readonly _btnCancel!                : IUiButton;
+    private readonly _btnConfirm!               : IUiButton;
 
-    private readonly _groupBar!                 : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBar!                   : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgLowerPoint!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgUpperPoint!            : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupBar!                 : IUiContainer;
+    private readonly _imgBar!                   : IUiImage;
+    private readonly _imgLowerPoint!            : IUiImage;
+    private readonly _imgUpperPoint!            : IUiImage;
 
-    private readonly _layoutCount!              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelLowerCount!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelUpperCount!          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutCount!              : IUiLayout;
+    private readonly _labelLowerCount!          : IUiLabel;
+    private readonly _labelUpperCount!          : IUiLabel;
 
     private _selectedLowerNum                   = 0;
     private _selectedUpperNum                   = 0;
@@ -52,14 +52,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupBar,       callback: this._onTouchedGroupBar },
-            { ui: this._groupBar,       callback: this._onTouchBeginGroupBar,           eventType: HelpersPointerInput.PointerEventType.Press },
-            { ui: this._groupBar,       callback: this._onTouchMoveGroupBar,            eventType: HelpersPointerInput.PointerEventType.PressMove },
-            { ui: this._groupBar,       callback: this._onTouchEndGroupBar,             eventType: HelpersPointerInput.PointerEventType.ReleaseIn },
-            { ui: this._groupBar,       callback: this._onTouchReleaseOutsideGroupBar,  eventType: HelpersPointerInput.PointerEventType.ReleaseOut },
+            { ui: this._groupBar,       callback: this._onTouchBeginGroupBar,           eventType: PointerEventType.Press },
+            { ui: this._groupBar,       callback: this._onTouchMoveGroupBar,            eventType: PointerEventType.PressMove },
+            { ui: this._groupBar,       callback: this._onTouchEndGroupBar,             eventType: PointerEventType.ReleaseIn },
+            { ui: this._groupBar,       callback: this._onTouchReleaseOutsideGroupBar,  eventType: PointerEventType.ReleaseOut },
 
             { ui: this._btnCancel,      callback: this._onTouchedBtnCancel },
             { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
@@ -89,7 +89,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
 
-    private _onTouchedGroupBar(e: VendorEgretEgret.Event): void {
+    private _onTouchedGroupBar(e: Event): void {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
@@ -98,7 +98,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const groupBar  = this._groupBar;
         const minNumber = openData.minNumber;
         const barWidth  = groupBar.getScaledWidth();
-        const data      = e.data as HelpersPointerInput.PointerUnifiedEventData;
+        const data      = e.data as PointerUnifiedEventData;
         const touchX    = groupBar.globalToLocal(data.stageX, data.stageY).x;
         const num       = Math.round(Math.max(0, Math.min(touchX, barWidth)) / barWidth * (openData.maxNumber - minNumber)) + minNumber;
         if (Math.abs(touchX - this._imgLowerPoint.getX()) <= Math.abs(touchX - this._imgUpperPoint.getX()) ) {
@@ -112,14 +112,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._touchingType = TouchingType.None;
         this._updateGroupBar();
     }
-    private _onTouchBeginGroupBar(e: VendorEgretEgret.Event): void {
-        const data          = e.data as HelpersPointerInput.PointerUnifiedEventData;
+    private _onTouchBeginGroupBar(e: Event): void {
+        const data          = e.data as PointerUnifiedEventData;
         const touchX        = this._groupBar.globalToLocal(data.stageX, data.stageY).x;
         this._touchingType  = Math.abs(touchX - this._imgLowerPoint.getX()) <= Math.abs(touchX - this._imgUpperPoint.getX())
             ? TouchingType.Lower
             : TouchingType.Upper;
     }
-    private _onTouchMoveGroupBar(e: VendorEgretEgret.Event): void {
+    private _onTouchMoveGroupBar(e: Event): void {
         const touchingType = this._touchingType;
         if (touchingType === TouchingType.None) {
             return;
@@ -133,7 +133,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const groupBar  = this._groupBar;
         const minNumber = openData.minNumber;
         const barWidth  = groupBar.getScaledWidth();
-        const data      = e.data as HelpersPointerInput.PointerUnifiedEventData;
+        const data      = e.data as PointerUnifiedEventData;
         const touchX    = groupBar.globalToLocal(data.stageX, data.stageY).x;
         const num       = Math.round(Math.max(0, Math.min(touchX, barWidth)) / barWidth * (openData.maxNumber - minNumber)) + minNumber;
         if (touchingType === TouchingType.Lower) {
@@ -165,7 +165,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnHelp(): void {
         const func = this.getOpenData()?.getHelpText;
         if (func) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
+            openPanel(getDict().CommonHelpPanel, {
                 getContent : () => func(),
             });
         }
@@ -181,9 +181,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? LangConstants.UndefinedError);
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnCancel.setText(LangUtils.getText(LangConstants.TextType.B0154));
+        this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? UndefinedError);
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._btnCancel.setText(getText(TextType.B0154));
     }
 
     private _updateGroupBar(): void {
@@ -195,9 +195,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const minNumber     = openData.minNumber;
         const maxNumber     = openData.maxNumber;
         const barWidth      = this._groupBar.getScaledWidth();
-        const lowerCount    = HelpersMisc.getExisted(this._selectedLowerNum);
+        const lowerCount    = getExisted(this._selectedLowerNum);
         const lowerPos      = barWidth * (lowerCount - minNumber) / (maxNumber - minNumber);
-        const upperCount    = HelpersMisc.getExisted(this._selectedUpperNum);
+        const upperCount    = getExisted(this._selectedUpperNum);
         const upperPos      = barWidth * (upperCount - minNumber) / (maxNumber - minNumber);
         const imgBar        = this._imgBar;
         imgBar.setX(lowerPos);

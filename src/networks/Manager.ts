@@ -1,20 +1,23 @@
-import * as FloatText2 from "../FloatText.ts";
-import * as GameVersionsUtils from "../gameVersions/Utils.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import * as Logger2 from "../Logger.ts";
-import * as NetworksMessageCodes from "./MessageCodes.ts";
-import * as NetworksWebsocketConnection from "./WebsocketConnection.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoNetMessageMessageContainer from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
-import * as ProtoSchemaCommonProtoNetMessageMsgMpwCommonHandleBoot from "../proto/schema/CommonProto/NetMessage/MsgMpwCommonHandleBoot.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
-import * as UtilsServerErrorCode from "../utils/ServerErrorCode.ts";
-import * as VendorEgretEgret from "../vendor/egret/Egret.ts";
+import { show } from "../FloatText.ts";
+import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
+import { newError } from "../helpers/Misc.ts";
+import { TextType } from "../lang/Constants.ts";
+import { getErrorText, getText } from "../lang/Utils.ts";
+import { log } from "../Logger.ts";
+import { MessageCodes } from "./MessageCodes.ts";
+import { WebsocketConnection } from "./WebsocketConnection.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import {
+    type MessageContainerJson as ProtoSchemaCommonProtoNetMessageMessageContainerMessageContainerJson,
+    MessageContainer,
+} from "../proto/schema/CommonProto/NetMessage/MessageContainer.ts";
+import { MsgMpwCommonHandleBoot } from "../proto/schema/CommonProto/NetMessage/MsgMpwCommonHandleBoot.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+import { ServerErrorCode } from "../utils/ServerErrorCode.ts";
+import { Event, EventDispatcher, ByteArray } from "../vendor/egret/Egret.ts";
 
-type MessageContainerJson   = ProtoSchemaCommonProtoNetMessageMessageContainer.MessageContainerJson;
+type MessageContainerJson   = ProtoSchemaCommonProtoNetMessageMessageContainerMessageContainerJson;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Constants.
@@ -28,7 +31,7 @@ export function checkAndOverrideGameVersion(): void {
     }
 }
 function getFullUrl(): string {
-    return GameVersionsUtils.getCurrentGameEssentialConfig()?.serverUrl;
+    return getCurrentGameEssentialConfig()?.serverUrl;
     // return "ws://localhost:4000";
 }
 
@@ -36,28 +39,28 @@ function getFullUrl(): string {
 // Type definitions.
 ////////////////////////////////////////////////////////////////////////////////
 export type MsgListener = {
-    msgCode     : NetworksMessageCodes.MessageCodes;
-    callback    : (e: VendorEgretEgret.Event) => void;
+    msgCode     : MessageCodes;
+    callback    : (e: Event) => void;
     thisObject? : any;
 };
 
-class NetMessageDispatcher extends VendorEgretEgret.EventDispatcher {
-    public dispatchWithContainer(container: ProtoSchemaCommonProtoNetMessageMessageContainer.MessageContainer): void {
+class NetMessageDispatcher extends EventDispatcher {
+    public dispatchWithContainer(container: MessageContainer): void {
         const msgData = container.getMessageData();
         if (msgData == null) {
-            throw HelpersMisc.newError(`Empty messageData?!`, UtilsClientErrorCode.ClientErrorCode.NetManager_NetMessageDispatcher_DispatchWithContainer_00);
+            throw newError(`Empty messageData?!`, ClientErrorCode.NetManager_NetMessageDispatcher_DispatchWithContainer_00);
         }
 
         const sData = msgData.getS();
-        if (msgData instanceof ProtoSchemaCommonProtoNetMessageMsgMpwCommonHandleBoot.MsgMpwCommonHandleBoot) {
+        if (msgData instanceof MsgMpwCommonHandleBoot) {
             // Don't show the error text.
         } else {
             const errorCode = (sData?.toJson() as any)?.errorCode;
             if (errorCode) {
-                if (errorCode === UtilsServerErrorCode.ServerErrorCode.Common_RequestTooFrequent_0001) {
+                if (errorCode === ServerErrorCode.Common_RequestTooFrequent_0001) {
                     // Logger.warn(`Request too frequent: ${errorCode}`);
                 } else {
-                    FloatText2.show(LangUtils.getErrorText(errorCode));
+                    show(getErrorText(errorCode));
                 }
             }
         }
@@ -68,7 +71,7 @@ class NetMessageDispatcher extends VendorEgretEgret.EventDispatcher {
 ////////////////////////////////////////////////////////////////////////////////
 // Local variables.
 ////////////////////////////////////////////////////////////////////////////////
-let _webSocketConnection    : NetworksWebsocketConnection.WebsocketConnection | null = null;
+let _webSocketConnection    : WebsocketConnection | null = null;
 // let _signalRConnection      : signalR.HubConnection | null = null;
 let _canAutoReconnect       = true;
 
@@ -84,14 +87,14 @@ export function init(): void {
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function addListeners(listeners: MsgListener[], thisObject?: any): void {
     for (const one of listeners) {
-        dispatcher.addEventListener(NetworksMessageCodes.MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
+        dispatcher.addEventListener(MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
     }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function removeListeners(listeners: MsgListener[], thisObject?: any): void {
     for (const one of listeners) {
-        dispatcher.removeEventListener(NetworksMessageCodes.MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
+        dispatcher.removeEventListener(MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
     }
 }
 
@@ -110,12 +113,12 @@ export function send(containerJson: MessageContainerJson): void {
     } else {
         const connection = _webSocketConnection;
         if ((!connection) || (!connection.connected)) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0014));
+            show(getText(TextType.A0014));
         } else {
             const messageName = getMessageName(containerJson);
-            const encodedData = ProtoSchemaCommonProtoNetMessageMessageContainer.MessageContainer.fromJson(containerJson).encode();
-            Logger2.log("%cNetManager send: ", "background:#97FF4F;", messageName, ", length: ", encodedData.byteLength, "\n", containerJson[messageName]);
-            connection.writeBytes(new VendorEgretEgret.ByteArray(encodedData));
+            const encodedData = MessageContainer.fromJson(containerJson).encode();
+            log("%cNetManager send: ", "background:#97FF4F;", messageName, ", length: ", encodedData.byteLength, "\n", containerJson[messageName]);
+            connection.writeBytes(new ByteArray(encodedData));
             connection.flush();
         }
     }
@@ -156,7 +159,7 @@ function initConnection(): void {
 
     } else {
         if (_webSocketConnection == null) {
-            const connection = new NetworksWebsocketConnection.WebsocketConnection({
+            const connection = new WebsocketConnection({
                 callbackOnConnectionOpened  : c => _onConnectionOpened(c),
                 callbackOnConnectionClosed  : c => _onConnectionClosed(c),
                 callbackOnConnectionErrored : c => _onConnectionErrored(c),
@@ -183,31 +186,31 @@ function destroyConnection(): void {
     // }
 }
 
-function _onConnectionOpened(connection: NetworksWebsocketConnection.WebsocketConnection): void {
+function _onConnectionOpened(connection: WebsocketConnection): void {
     if (connection === _webSocketConnection) {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0007));
+        show(getText(TextType.A0007));
 
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.NetworkConnected);
+        dispatch(TypeId.NetworkConnected);
     }
 }
-function _onConnectionClosed(connection: NetworksWebsocketConnection.WebsocketConnection): void {
+function _onConnectionClosed(connection: WebsocketConnection): void {
     if (connection === _webSocketConnection) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.NetworkDisconnected);
+        dispatch(TypeId.NetworkDisconnected);
 
         if (!checkCanAutoReconnect()) {
             // FloatText.show(Lang.getText(Lang.Type.A0013));
         } else {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0008));
+            show(getText(TextType.A0008));
             resetConnection();
         }
     }
 }
-function _onConnectionErrored(connection: NetworksWebsocketConnection.WebsocketConnection): void {
+function _onConnectionErrored(connection: WebsocketConnection): void {
     if (connection === _webSocketConnection) {
         resetConnection();
     }
 }
-function _onConnectionData(connection: NetworksWebsocketConnection.WebsocketConnection, container: ProtoSchemaCommonProtoNetMessageMessageContainer.MessageContainer): void {
+function _onConnectionData(connection: WebsocketConnection, container: MessageContainer): void {
     if (connection !== _webSocketConnection) {
         return;
     }
@@ -265,5 +268,5 @@ function getMessageName(container: MessageContainerJson): keyof MessageContainer
     for (const k in container) {
         return k as keyof MessageContainerJson;
     }
-    throw HelpersMisc.newError(`Invalid container.`, UtilsClientErrorCode.ClientErrorCode.Helpers_GetMessageName_00);
+    throw newError(`Invalid container.`, ClientErrorCode.Helpers_GetMessageName_00);
 }

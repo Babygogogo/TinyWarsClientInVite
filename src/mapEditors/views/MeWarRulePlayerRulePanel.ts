@@ -1,52 +1,54 @@
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayerRulesConstants from "../../playerRules/Constants.ts";
-import type * as ProtoSchemaCommonProtoWarRulePlayerRule from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
-import type * as ProtoSchemaCommonProtoWarRuleTemplateWarRule from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import * as UiComponentsUiPlayerRuleRenderer from "../../ui/components/UiPlayerRuleRenderer.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiList from "../../ui/interfaces/IUiList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getTextForYesOrNo, getPlayerRuleHelpText, getPlayerRuleName } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { RuleTypeId } from "../../playerRules/Constants.ts";
+import type { PlayerRule as ProtoSchemaCommonProtoWarRulePlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
+import type {
+    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
+} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import { type DataForUiPlayerRuleRenderer, UiPlayerRuleRenderer } from "../../ui/components/UiPlayerRuleRenderer.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiList } from "../../ui/interfaces/IUiList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
-type TemplateWarRule        = ProtoSchemaCommonProtoWarRuleTemplateWarRule.TemplateWarRule;
-type PlayerRule             = ProtoSchemaCommonProtoWarRulePlayerRule.PlayerRule;
+type TemplateWarRule        = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
+type PlayerRule             = ProtoSchemaCommonProtoWarRulePlayerRule;
 
 export interface OpenData {
-    war                     : MapEditorInterfaceIMeWar.IMeWar;
+    war                     : IMeWar;
     templateWarRule         : TemplateWarRule;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnHelp!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnBatch!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnHelp!          : IUiButton;
+    private readonly _btnClose!         : IUiButton;
+    private readonly _btnBatch!         : IUiButton;
 
-    private readonly _listRuleTitle!    : UiInterfacesIUiList.IUiList<DataForRuleTitleRenderer>;
-    private readonly _listPlayerIndex!  : UiInterfacesIUiList.IUiList<DataForPlayerIndexRenderer>;
-    private readonly _listPlayerRule!   : UiInterfacesIUiList.IUiList<UiComponentsUiPlayerRuleRenderer.DataForUiPlayerRuleRenderer>;
-    private readonly _labelNoData!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _listRuleTitle!    : IUiList<DataForRuleTitleRenderer>;
+    private readonly _listPlayerIndex!  : IUiList<DataForPlayerIndexRenderer>;
+    private readonly _listPlayerRule!   : IUiList<DataForUiPlayerRuleRenderer>;
+    private readonly _labelNoData!      : IUiLabel;
 
     private _isBatch                    = false;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MeMapSimpleDialogueChanged,                  callback: this._onNotifyMeMapSimpleDialogueChanged },
-            { type: NotificationsTypeId.TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback: this._onNotifyMeWarRuleMapSimpleDialogueIdArrayChanged },
+            { type: TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MeMapSimpleDialogueChanged,                  callback: this._onNotifyMeMapSimpleDialogueChanged },
+            { type: TypeId.MeWarRuleMapSimpleDialogueIdArrayChanged,    callback: this._onNotifyMeWarRuleMapSimpleDialogueIdArrayChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -60,7 +62,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         this._listRuleTitle.setItemRendererClass(RuleTitleRenderer);
         this._listPlayerIndex.setItemRendererClass(PlayerIndexRenderer);
-        this._listPlayerRule.setItemRendererClass(UiComponentsUiPlayerRuleRenderer.UiPlayerRuleRenderer);
+        this._listPlayerRule.setItemRendererClass(UiPlayerRuleRenderer);
     }
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
@@ -92,13 +94,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateView();
     }
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0785),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0785),
         });
     }
     private _onTouchedBtnBatch(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent             : () => LangUtils.getText(LangConstants.TextType.A0940),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent             : () => getText(TextType.A0940),
             callback            : () => {
                 this._setIsBatch(true);
                 this._updateBtnBatch();
@@ -107,8 +109,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 this._setIsBatch(false);
                 this._updateBtnBatch();
             },
-            getTextForConfirm  : () => LangUtils.getTextForYesOrNo(true),
-            getTextForCancel   : () => LangUtils.getTextForYesOrNo(false),
+            getTextForConfirm  : () => getTextForYesOrNo(true),
+            getTextForCancel   : () => getTextForYesOrNo(false),
         });
     }
 
@@ -119,12 +121,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0407)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoData.setText(LangUtils.getText(LangConstants.TextType.B0278));
+        this._labelTitle.setText(`${getText(TextType.B0407)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
+        this._labelNoData.setText(getText(TextType.B0278));
         this._updateBtnBatch();
     }
     private _updateBtnBatch(): void {
-        this._btnBatch.setText(`${LangUtils.getText(LangConstants.TextType.B1373)}: ${LangUtils.getTextForYesOrNo(this._isBatch)}`);
+        this._btnBatch.setText(`${getText(TextType.B1373)}: ${getTextForYesOrNo(this._isBatch)}`);
     }
     private async _updateComponentsForPlayerRule(): Promise<void> {
         const openData = this.getOpenData();
@@ -137,8 +139,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const playersCountUnneutral = war.getField().getMaxPlayerIndex();
         const gcData                = war.getGcData();
         const isReviewing           = war.getIsReviewingMap();
-        const warRuleCommonData     = HelpersMisc.getExisted(templateWarRule.getWarRuleCommonData());
-        const playerRuleArray       = warRuleCommonData.getPlayerRuleList().filter(v => HelpersMisc.getExisted(v.getPlayerIndex()) <= playersCountUnneutral);
+        const warRuleCommonData     = getExisted(templateWarRule.getWarRuleCommonData());
+        const playerRuleArray       = warRuleCommonData.getPlayerRuleList().filter(v => getExisted(v.getPlayerIndex()) <= playersCountUnneutral);
         const playerRulesCount      = playerRuleArray.length;
         const revisedPlayersCount   = Math.max(2, playerRulesCount);
         const widthForListRuleTitle = revisedPlayersCount * 80 + (revisedPlayersCount - 1) + 130;
@@ -148,7 +150,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const dataArrayForListRuleTitle     = this._createDataArrayForListRuleTitle(widthForListRuleTitle);
         const dataArrayForListPlayerIndex   = playerRuleArray?.map(v => ({ playerRule: v }) as DataForPlayerIndexRenderer);
-        const dataArrayForListPlayerRule    : UiComponentsUiPlayerRuleRenderer.DataForUiPlayerRuleRenderer[] = [];
+        const dataArrayForListPlayerRule    : DataForUiPlayerRuleRenderer[] = [];
         for (const dataForListRuleTitle of dataArrayForListRuleTitle) {
             const ruleType = dataForListRuleTitle.ruleType;
             for (const playerRule of playerRuleArray) {
@@ -176,42 +178,42 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _createDataArrayForListRuleTitle(itemWidth: number): DataForRuleTitleRenderer[] {
         const dataArray: DataForRuleTitleRenderer[] = [
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.TeamIndex },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.BannedCoCategoryIdArray },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.BannedUnitTypeArray },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.CanActivateCoSkill },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.CanCoBoard },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.CanUnitJoin },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.InitialFund },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.IncomeMultiplier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.MaxUnitsCount },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.EnergyAddPctOnCoBoard },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.EnergyLossPctOnCoDie },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.EnergyGrowthMultiplier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.MoveRangeModifier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.AttackPowerModifier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.DefenseModifier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.UnitVisionRangeModifier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.TileVisionRangeModifier },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.LuckLowerLimit },
-            { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.LuckUpperLimit },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.TeamIndex },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.BannedCoCategoryIdArray },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.BannedUnitTypeArray },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.CanActivateCoSkill },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.CanCoBoard },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.CanUnitJoin },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.InitialFund },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.IncomeMultiplier },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.MaxUnitsCount },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.EnergyAddPctOnCoBoard },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.EnergyLossPctOnCoDie },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.EnergyGrowthMultiplier },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.MoveRangeModifier },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.AttackPowerModifier },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.DefenseModifier },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.UnitVisionRangeModifier },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.TileVisionRangeModifier },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.LuckLowerLimit },
+            { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.LuckUpperLimit },
         ];
         if (this.getOpenData()?.war.getCampaignMapData()) {
             dataArray.push(
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.CampaignHumanCoIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.CampaignAiCoId },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.CampaignSkinId },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.CampaignHumanCoIdArray },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.CampaignAiCoId },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.CampaignSkinId },
             );
         } else {
             dataArray.push(
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.McwHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.MmwHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.MrwHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.AtwHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.CcwHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.CcwAiCoId },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.WarRoomHumanCoCategoryIdArray },
-                { index: 0, itemWidth: itemWidth, ruleType: PlayerRulesConstants.RuleTypeId.WarRoomAiCoId },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.McwHumanCoCategoryIdArray },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.MmwHumanCoCategoryIdArray },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.MrwHumanCoCategoryIdArray },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.AtwHumanCoCategoryIdArray },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.CcwHumanCoCategoryIdArray },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.CcwAiCoId },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.WarRoomHumanCoCategoryIdArray },
+                { index: 0, itemWidth: itemWidth, ruleType: RuleTypeId.WarRoomAiCoId },
             );
         }
         for (let i = 0; i < dataArray.length; ++i) {
@@ -221,22 +223,22 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForRuleTitleRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForRuleTitleRenderer extends UiListItemData {
     itemWidth   : number;
     index       : number;
-    ruleType    : PlayerRulesConstants.RuleTypeId;
+    ruleType    : RuleTypeId;
 }
-class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForRuleTitleRenderer> {
-    private readonly _imgBg!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+class RuleTitleRenderer extends UiListItemRenderer<DataForRuleTitleRenderer> {
+    private readonly _imgBg!        : IUiImage;
+    private readonly _labelName!    : IUiLabel;
 
-    private readonly _groupHelp!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnHelp0!     : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp1!     : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupHelp!    : IUiContainer;
+    private readonly _btnHelp0!     : IUiButton;
+    private readonly _btnHelp1!     : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupHelp,  callback: this._onTouchedGroupHelp },
@@ -251,10 +253,10 @@ class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
             return;
         }
 
-        const text = LangUtils.getPlayerRuleHelpText(ruleType);
+        const text = getPlayerRuleHelpText(ruleType);
         if (text) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            openPanel(getDict().CommonHelpPanel, {
                 getContent : () => text,
             });
         }
@@ -272,7 +274,7 @@ class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
 
         const btnHelp0 = this._btnHelp0;
         const btnHelp1 = this._btnHelp1;
-        if (LangUtils.getPlayerRuleHelpText(openData.ruleType)) {
+        if (getPlayerRuleHelpText(openData.ruleType)) {
             btnHelp0.setIsVisible(!isBgVisible);
             btnHelp1.setIsVisible(isBgVisible);
         } else {
@@ -289,19 +291,19 @@ class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
             return;
         }
 
-        this._labelName.setText(LangUtils.getPlayerRuleName(ruleType) ?? LangConstants.UndefinedError);
+        this._labelName.setText(getPlayerRuleName(ruleType) ?? UndefinedError);
     }
     private _updateGroupHelp(): void {
         const ruleType = this.getOpenData()?.ruleType;
-        this._groupHelp.setIsVisible(ruleType == null ? false : (LangUtils.getPlayerRuleHelpText(ruleType) != null));
+        this._groupHelp.setIsVisible(ruleType == null ? false : (getPlayerRuleHelpText(ruleType) != null));
     }
 }
 
-interface DataForPlayerIndexRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForPlayerIndexRenderer extends UiListItemData {
     playerRule  : PlayerRule;
 }
-class PlayerIndexRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForPlayerIndexRenderer> {
-    private readonly _labelPlayerIndex! : UiInterfacesIUiLabel.IUiLabel;
+class PlayerIndexRenderer extends UiListItemRenderer<DataForPlayerIndexRenderer> {
+    private readonly _labelPlayerIndex! : IUiLabel;
 
     protected override _doApplyOpenData(): void {
         this._updateView();

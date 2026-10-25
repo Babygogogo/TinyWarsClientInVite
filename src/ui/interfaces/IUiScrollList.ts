@@ -1,13 +1,13 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as UiInterfacesIUiList from "./IUiList.ts";
-import type * as UiInterfacesIUiListItemRenderer from "./IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollerBase from "./IUiScrollerBase.ts";
-import type * as UiTypesUiListItemData from "../types/UiListItemData.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IUiList } from "./IUiList.ts";
+import type { IUiListItemRenderer as UiInterfacesIUiListItemRenderer } from "./IUiListItemRenderer.ts";
+import type { IUiScrollerBase } from "./IUiScrollerBase.ts";
+import type { UiListItemData } from "../types/UiListItemData.ts";
 
-type IUiListItemRenderer<T extends UiTypesUiListItemData.UiListItemData> = UiInterfacesIUiListItemRenderer.IUiListItemRenderer<T>;
+type IUiListItemRenderer<T extends UiListItemData> = UiInterfacesIUiListItemRenderer<T>;
 
-export interface IUiScrollList<DataForRenderer extends UiTypesUiListItemData.UiListItemData> extends UiInterfacesIUiScrollerBase.IUiScrollerBase {
-    initViewport(viewport: UiInterfacesIUiList.IUiList<DataForRenderer>): void;
+export interface IUiScrollList<DataForRenderer extends UiListItemData> extends IUiScrollerBase {
+    initViewport(viewport: IUiList<DataForRenderer>): void;
 
     setItemRendererClass(itemRenderer: new () => IUiListItemRenderer<DataForRenderer>): void;
 
@@ -35,7 +35,7 @@ export interface IUiScrollList<DataForRenderer extends UiTypesUiListItemData.UiL
 
     getSelectedItemIndexes(): number[] | undefined;
     setSelectedItemIndexes(indexes: number[], needResetItemsSkin?: boolean): void;
-    setSelectedItemIndex(index: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>, needResetItemsSkin?: boolean): void;
+    setSelectedItemIndex(index: Undefinable<number>, needResetItemsSkin?: boolean): void;
 
     getFirstSelectedItem(): IUiListItemRenderer<DataForRenderer> | undefined;
     getFirstSelectedItemIndex(): number | undefined;

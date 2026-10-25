@@ -1,26 +1,26 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgUserGetUsersByNicknameS from "../../proto/schema/CommonProto/NetMessage/MsgUserGetUsersByNickname/S.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import * as UiTypesUiInputEventType from "../../ui/types/UiInputEventType.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as UsersProxy from "../../users/Proxy.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getFormattedText, getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetUsersByNickname/S.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getFollowingUserIdArray, getUserNickname } from "../../users/Model.ts";
+import { reqUserGetUsersByNickname } from "../../users/Proxy.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
     maxChooseCount      : number | null;
@@ -28,30 +28,30 @@ export interface OpenData {
     getTitleText        : (() => string) | null;
     callbackOnConfirm   : (userIdArray: number[]) => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnClose!                 : IUiButton;
 
-    private readonly _inputNickname!            : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _btnClearNickname!         : UiInterfacesIUiButton.IUiButton;
+    private readonly _inputNickname!            : IUiPromptedInput;
+    private readonly _btnClearNickname!         : IUiButton;
 
-    private readonly _labelSearchRange!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnSearchFollowing!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSearchNotFollowing!    : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSearchAll!             : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelSearchRange!         : IUiLabel;
+    private readonly _btnSearchFollowing!       : IUiButton;
+    private readonly _btnSearchNotFollowing!    : IUiButton;
+    private readonly _btnSearchAll!             : IUiButton;
 
-    private readonly _listUser!                 : UiInterfacesIUiScrollList.IUiScrollList<DataForUnitTypeRenderer>;
-    private readonly _btnConfirm!               : UiInterfacesIUiButton.IUiButton;
+    private readonly _listUser!                 : IUiScrollList<DataForUnitTypeRenderer>;
+    private readonly _btnConfirm!               : IUiButton;
 
     private _selectedUserIdSet                  = new Set<number>();
     private _candidateUserIdArray               : number[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgUserGetUsersByNickname,   callback: this._onNotifyMsgUserGetUsersByNickname },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgUserGetUsersByNickname,   callback: this._onNotifyMsgUserGetUsersByNickname },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -64,7 +64,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnSearchAll,           callback: this._onTouchedBtnSearchAll },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputNickname,          callback: this._onFocusOutInputNickname,    eventType: UiTypesUiInputEventType.UiInputEventType.FocusOut },
+            { ui: this._inputNickname,          callback: this._onFocusOutInputNickname,    eventType: UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -76,7 +76,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateComponentsForLanguage();
 
-        this._candidateUserIdArray = UsersModel.getFollowingUserIdArray()?.concat() ?? [];
+        this._candidateUserIdArray = getFollowingUserIdArray()?.concat() ?? [];
         this._updateBottomButtons();
         this._updateListNickname();
     }
@@ -116,7 +116,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     }
                     this._addSelectedUserId(userId);
                 } else {
-                    FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0147, maxChooseCount));
+                    show(getFormattedText(TextType.F0147, maxChooseCount));
                 }
             }
         }
@@ -152,27 +152,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnSearchFollowed(): void {
         const nickname = this._inputNickname.trimInputText() ?? ``;
         if (nickname.length <= 0) {
-            this._candidateUserIdArray = UsersModel.getFollowingUserIdArray()?.concat() ?? [];
+            this._candidateUserIdArray = getFollowingUserIdArray()?.concat() ?? [];
             this.getSelectedUserIdSet().clear();
             this._updateListNickname();
         } else {
-            UsersProxy.reqUserGetUsersByNickname(nickname, true);
+            reqUserGetUsersByNickname(nickname, true);
         }
     }
     private _onTouchedBtnSearchNotFollowing(): void {
         const nickname = this._inputNickname.trimInputText() ?? ``;
         if (nickname.length <= 0) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0146, LangUtils.getText(LangConstants.TextType.B0175)));
+            show(getFormattedText(TextType.F0146, getText(TextType.B0175)));
         } else {
-            UsersProxy.reqUserGetUsersByNickname(nickname, false);
+            reqUserGetUsersByNickname(nickname, false);
         }
     }
     private _onTouchedBtnSearchAll(): void {
         const nickname = this._inputNickname.trimInputText() ?? ``;
         if (nickname.length <= 0) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0146, LangUtils.getText(LangConstants.TextType.B0175)));
+            show(getFormattedText(TextType.F0146, getText(TextType.B0175)));
         } else {
-            UsersProxy.reqUserGetUsersByNickname(nickname, null);
+            reqUserGetUsersByNickname(nickname, null);
         }
     }
 
@@ -183,13 +183,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             const currChooseCount       = selectedUserIdArray.length;
             const maxChooseCount        = this.getMaxChooseCount();
             if ((maxChooseCount != null) && (currChooseCount > maxChooseCount)) {
-                FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0147, maxChooseCount));
+                show(getFormattedText(TextType.F0147, maxChooseCount));
                 return;
             }
 
             const minChooseCount = this.getMinChooseCount();
             if ((minChooseCount != null) && (currChooseCount < minChooseCount)) {
-                FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0155, maxChooseCount));
+                show(getFormattedText(TextType.F0155, maxChooseCount));
                 return;
             }
 
@@ -202,20 +202,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgUserGetUsersByNickname(e: VendorEgretEgret.Event): void {
-        const data                  = e.data as ProtoSchemaCommonProtoNetMessageMsgUserGetUsersByNicknameS.S;
+    private _onNotifyMsgUserGetUsersByNickname(e: Event): void {
+        const data                  = e.data as S;
         this._candidateUserIdArray  = data.getUserIdArray();
         this.getSelectedUserIdSet().clear();
         this._updateListNickname();
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSearchRange.setLangText(LangConstants.TextType.A0834);
-        this._btnSearchFollowing.setLangText(LangConstants.TextType.B0997);
-        this._btnSearchNotFollowing.setLangText(LangConstants.TextType.B0998);
-        this._btnSearchAll.setLangText(LangConstants.TextType.B0776);
-        this._btnConfirm.setLangText(LangConstants.TextType.B0026);
-        this._inputNickname.setPromptText(LangUtils.getText(LangConstants.TextType.B0175));
+        this._labelSearchRange.setLangText(TextType.A0834);
+        this._btnSearchFollowing.setLangText(TextType.B0997);
+        this._btnSearchNotFollowing.setLangText(TextType.B0998);
+        this._btnSearchAll.setLangText(TextType.B0776);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._inputNickname.setPromptText(getText(TextType.B0175));
 
         this._updateLabelTitle();
     }
@@ -227,7 +227,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _updateLabelTitle(): void {
         const func = this.getOpenData()?.getTitleText;
-        this._labelTitle.setText(func ? func() : LangUtils.getText(LangConstants.TextType.Players));
+        this._labelTitle.setText(func ? func() : getText(TextType.Players));
     }
 
     private async _updateListNickname(): Promise<void> {
@@ -243,18 +243,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForUnitTypeRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForUnitTypeRenderer extends UiListItemData {
     userId  : number;
     panel   : Panel;
 }
-class UnitTypeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForUnitTypeRenderer> {
-    private readonly _groupHelp!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupSelect!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgSelected!      : UiInterfacesIUiImage.IUiImage;
+class UnitTypeRenderer extends UiListItemRenderer<DataForUnitTypeRenderer> {
+    private readonly _groupHelp!        : IUiContainer;
+    private readonly _groupSelect!      : IUiContainer;
+    private readonly _imgSelected!      : IUiImage;
 
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelUserId!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelUserId!      : IUiLabel;
+    private readonly _labelName!        : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -269,11 +269,11 @@ class UnitTypeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
     }
 
     private _onTouchedGroupHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: this.getOpenData()?.userId });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        openPanel(getDict().UserPanel, { userId: this.getOpenData()?.userId });
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupSelect(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         const openData = this.getOpenData();
         openData?.panel.updateOnSelectUser(openData.userId);
     }
@@ -286,7 +286,7 @@ class UnitTypeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
 
         this._labelUserId.setText(`#${userId}`);
 
-        const nickname = await UsersModel.getUserNickname(userId) ?? LangConstants.UndefinedError;
+        const nickname = await getUserNickname(userId) ?? UndefinedError;
         if (userId === this.getOpenData()?.userId) {
             this._labelName.setText(nickname);
         }

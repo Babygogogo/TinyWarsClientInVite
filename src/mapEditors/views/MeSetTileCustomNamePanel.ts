@@ -1,41 +1,41 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoStructureTileFilter from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
-import * as TilesConstantsCommon from "../../tiles/constants/Common.ts";
-import * as TilesUtilsFilter from "../../tiles/utils/Filter.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { showLang } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { createRange } from "../../helpers/Collection.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getLanguageText, getFormattedText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { TileFilter } from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
+import { CustomName } from "../../tiles/constants/Common.ts";
+import { checkIsMeet } from "../../tiles/utils/Filter.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 
-type IBwWar             = BaseWarInterfaceIBwWar.IBwWar;
+type IBwWar             = BaseWarInterfaceIBwWar;
 
 export interface OpenData {
     war         : IBwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                                  : IUiImage;
+    private readonly _group!                                    : IUiContainer;
+    private readonly _labelTitle!                               : IUiLabel;
+    private readonly _btnClose!                                 : IUiButton;
 
-    private readonly _btnTileFilter!                            : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTileFilter!                          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnTileFilter!                            : IUiButton;
+    private readonly _labelTileFilter!                          : IUiLabel;
 
-    private readonly _btnCustomNameId!                          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelCustomNameId!                        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnCustomNameId!                          : IUiButton;
+    private readonly _labelCustomNameId!                        : IUiLabel;
 
-    private readonly _btnConfirm!                               : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnConfirm!                               : IUiButton;
 
-    private _tileFilter     : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoStructureTileFilter.TileFilter>;
+    private _tileFilter     : Undefinable<TileFilter>;
     private _customNameId   = 0;
 
     public updateOnLoadedSkin(): void {
@@ -48,8 +48,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnConfirm,                             callback: this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -80,11 +80,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const filter        = this._tileFilter;
         const customNameId  = this._customNameId;
         for (const tile of tileMap.getAllTiles()) {
-            if ((filter == null) || (TilesUtilsFilter.checkIsMeet(filter, tile))) {
+            if ((filter == null) || (checkIsMeet(filter, tile))) {
                 tile.setCustomNameId(customNameId == 0 ? null : customNameId);
             }
         }
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
     }
 
     private _onTouchedBtnTileFilter(): void {
@@ -93,7 +93,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeTileFilterPanel, {
+        openPanel(getDict().WeTileFilterPanel, {
             gameConfig              : war.getGcData(),
             playersCountUnneutral   : war.getPlayersCountUnneutral(),
             mapSize                 : war.getTileMap().getMapSize(),
@@ -112,17 +112,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const arr = war.getTileMap().getTileCustomNameArray();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.B1430),
-            availableNumberArray    : HelpersCollection.createRange(0, TilesConstantsCommon.CustomName.MaxId + 1, 1),
+        openPanel(getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => getText(TextType.B1430),
+            availableNumberArray    : createRange(0, CustomName.MaxId + 1, 1),
             currentNumber           : this._customNameId,
             columnsCount            : 4,
             showNumber              : true,
             getNumberMainText       : num => {
                 if (num === 0) {
-                    return `(${LangUtils.getText(LangConstants.TextType.B0391)})`;
+                    return `(${getText(TextType.B0391)})`;
                 } else {
-                    return LangUtils.getLanguageText({ textArray: arr?.find(v => (v.getNameId() ?? 0) === num)?.getNameTextArray() }) ?? `----`;
+                    return getLanguageText({ textArray: arr?.find(v => (v.getNameId() ?? 0) === num)?.getNameTextArray() }) ?? `----`;
                 }
             },
             callbackOnConfirm       : num => {
@@ -140,10 +140,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1373);
-        this._btnConfirm.setLangText(LangConstants.TextType.B0026);
-        this._btnTileFilter.setLangText(LangConstants.TextType.TileFilter);
-        this._btnCustomNameId.setLangText(LangConstants.TextType.B0162);
+        this._labelTitle.setLangText(TextType.B1373);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnTileFilter.setLangText(TextType.TileFilter);
+        this._btnCustomNameId.setLangText(TextType.B0162);
 
         this._updateLabelTileFilter();
         this._updateLabelCustomNameId();
@@ -156,12 +156,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const filter = this._tileFilter;
-        this._labelTileFilter.setText(LangUtils.getFormattedText(
-            LangConstants.TextType.F0257,
+        this._labelTileFilter.setText(getFormattedText(
+            TextType.F0257,
             filter == null
                 ? allTiles.length
-                : allTiles.filter(v => TilesUtilsFilter.checkIsMeet(filter, v)).length,
-            LangUtils.getText(LangConstants.TextType.Tiles),
+                : allTiles.filter(v => checkIsMeet(filter, v)).length,
+            getText(TextType.Tiles),
         ));
     }
 
@@ -169,9 +169,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const customNameId  = this._customNameId;
         const label         = this._labelCustomNameId;
         if (customNameId === 0) {
-            label.setText(`(${LangUtils.getText(LangConstants.TextType.B0391)})`);
+            label.setText(`(${getText(TextType.B0391)})`);
         } else {
-            label.setText(LangUtils.getLanguageText({
+            label.setText(getLanguageText({
                 textArray   : this.getOpenData()?.war.getTileMap().getTileCustomNameArray()?.find(v => (v.getNameId() ?? 0) === customNameId)?.getNameTextArray(),
             }) ?? `----`);
         }

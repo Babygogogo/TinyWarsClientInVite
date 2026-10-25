@@ -1,156 +1,200 @@
-import * as CampaignsMainsProvider from "../mains/Provider.ts";
-import * as CampaignsManagementsProvider from "./Provider.ts";
-import * as NetworksManager from "../../networks/Manager.ts";
-import * as NetworksMessageCodes from "../../networks/MessageCodes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoMapMapExtraText from "../../proto/schema/CommonProto/Map/MapExtraText.ts";
-import type * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmCreateCampaignS from "../../proto/schema/CommonProto/NetMessage/MsgCmCreateCampaign/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmCreateCampaignMapS from "../../proto/schema/CommonProto/NetMessage/MsgCmCreateCampaignMap/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmGetAllCampaignIdArrayS from "../../proto/schema/CommonProto/NetMessage/MsgCmGetAllCampaignIdArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmGetDesigningCampaignIdArrayS from "../../proto/schema/CommonProto/NetMessage/MsgCmGetDesigningCampaignIdArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignDescS from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignDesc/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignEnabledS from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignEnabled/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapEnabledS from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapEnabled/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapExtraTextS from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapExtraText/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapNameS from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapName/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapRawDataS from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapRawData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapWarEventActionS from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapWarEventAction/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignNameS from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignName/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmSetExtraLinkS from "../../proto/schema/CommonProto/NetMessage/MsgCmSetExtraLink/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmUpdateCampaignDesignersS from "../../proto/schema/CommonProto/NetMessage/MsgCmUpdateCampaignDesigners/S.ts";
-import type * as ProtoSchemaCommonProtoStructureLanguageText from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventAction from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import {
+    updateOnMsgCmCreateCampaignMap,
+    updateOnMsgCmSetCampaignDesc,
+    updateOnMsgCmSetCampaignName,
+    updateOnMsgCmSetCampaignEnabled,
+    updateOnMsgCmSetCampaignMapEnabled,
+    updateOnMsgCmSetCampaignMapRawData,
+    updateOnMsgCmSetCampaignMapExtraText,
+    updateOnMsgCmSetCampaignMapName,
+    updateOnMsgCmSetCampaignMapWarEventAction,
+    updateOnMsgCmUpdateCampaignDesigners,
+    updateOnMsgCmSetExtraLink,
+} from "../mains/Provider.ts";
+import {
+    updateOnMsgCmCreateCampaign,
+    updateOnFailedMsgCmGetAllCampaignIdArray,
+    updateOnMsgCmGetAllCampaignIdArray,
+    updateOnFailedMsgCmGetDesigningCampaignIdArray,
+    updateOnMsgCmGetDesigningCampaignIdArray,
+} from "./Provider.ts";
+import { addListeners, send } from "../../networks/Manager.ts";
+import { MessageCodes } from "../../networks/MessageCodes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { MapExtraTextJson } from "../../proto/schema/CommonProto/Map/MapExtraText.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCmCreateCampaign/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmCreateCampaignMapS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmCreateCampaignMap/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmGetAllCampaignIdArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmGetAllCampaignIdArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmGetDesigningCampaignIdArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmGetDesigningCampaignIdArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignDescS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignDesc/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignEnabledS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignEnabled/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapEnabledS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapEnabled/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapExtraTextS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapExtraText/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapNameS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapName/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapRawDataS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapRawData/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapWarEventActionS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignMapWarEventAction/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignNameS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignName/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmSetExtraLinkS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmSetExtraLink/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgCmUpdateCampaignDesignersS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgCmUpdateCampaignDesigners/S.ts";
+import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export function init(): void {
-    NetworksManager.addListeners([
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmCreateCampaign,                 callback: _onMsgCmCreateCampaign },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmCreateCampaignMap,              callback: _onMsgCmCreateCampaignMap },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmGetAllCampaignIdArray,          callback: _onMsgCmGetAllCampaignIdArray },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmGetDesigningCampaignIdArray,    callback: _onMsgCmGetDesigningCampaignIdArray },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmSetCampaignDesc,                callback: _onMsgCmSetCampaignDesc },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmSetCampaignName,                callback: _onMsgCmSetCampaignName },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmSetCampaignEnabled,             callback: _onMsgCmSetCampaignEnabled },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmSetCampaignMapEnabled,          callback: _onMsgCmSetCampaignMapEnabled },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmSetCampaignMapRawData,          callback: _onMsgCmSetCampaignMapRawData },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmSetCampaignMapExtraText,        callback: _onMsgCmSetCampaignMapExtraText },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmSetCampaignMapName,             callback: _onMsgCmSetCampaignMapName },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmSetCampaignMapWarEventAction,   callback: _onMsgCmSetCampaignMapWarEventAction },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmUpdateCampaignDesigners,        callback: _onMsgCmUpdateCampaignDesigners },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgCmSetExtraLink,                   callback: _onMsgCmSetExtraLink },
+    addListeners([
+        { msgCode: MessageCodes.MsgCmCreateCampaign,                 callback: _onMsgCmCreateCampaign },
+        { msgCode: MessageCodes.MsgCmCreateCampaignMap,              callback: _onMsgCmCreateCampaignMap },
+        { msgCode: MessageCodes.MsgCmGetAllCampaignIdArray,          callback: _onMsgCmGetAllCampaignIdArray },
+        { msgCode: MessageCodes.MsgCmGetDesigningCampaignIdArray,    callback: _onMsgCmGetDesigningCampaignIdArray },
+        { msgCode: MessageCodes.MsgCmSetCampaignDesc,                callback: _onMsgCmSetCampaignDesc },
+        { msgCode: MessageCodes.MsgCmSetCampaignName,                callback: _onMsgCmSetCampaignName },
+        { msgCode: MessageCodes.MsgCmSetCampaignEnabled,             callback: _onMsgCmSetCampaignEnabled },
+        { msgCode: MessageCodes.MsgCmSetCampaignMapEnabled,          callback: _onMsgCmSetCampaignMapEnabled },
+        { msgCode: MessageCodes.MsgCmSetCampaignMapRawData,          callback: _onMsgCmSetCampaignMapRawData },
+        { msgCode: MessageCodes.MsgCmSetCampaignMapExtraText,        callback: _onMsgCmSetCampaignMapExtraText },
+        { msgCode: MessageCodes.MsgCmSetCampaignMapName,             callback: _onMsgCmSetCampaignMapName },
+        { msgCode: MessageCodes.MsgCmSetCampaignMapWarEventAction,   callback: _onMsgCmSetCampaignMapWarEventAction },
+        { msgCode: MessageCodes.MsgCmUpdateCampaignDesigners,        callback: _onMsgCmUpdateCampaignDesigners },
+        { msgCode: MessageCodes.MsgCmSetExtraLink,                   callback: _onMsgCmSetExtraLink },
     ]);
 }
 
 export function reqCmCreateCampaign(): void {
-    NetworksManager.send({
+    send({
         MsgCmCreateCampaign: { c: {} }
     });
 }
-async function _onMsgCmCreateCampaign(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmCreateCampaignS.S;
+async function _onMsgCmCreateCampaign(e: Event): Promise<void> {
+    const data = e.data as S;
     if (!data.getErrorCode()) {
-        await CampaignsManagementsProvider.updateOnMsgCmCreateCampaign(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmCreateCampaign, data);
+        await updateOnMsgCmCreateCampaign(data);
+        dispatch(TypeId.MsgCmCreateCampaign, data);
     }
 }
 
 export function reqCmCreateCampaignMap(campaignId: number): void {
-    NetworksManager.send({
+    send({
         MsgCmCreateCampaignMap: { c: {
             campaignId  : campaignId,
         } },
     });
 }
-async function _onMsgCmCreateCampaignMap(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmCreateCampaignMapS.S;
+async function _onMsgCmCreateCampaignMap(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmCreateCampaignMapS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmCreateCampaignMap(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmCreateCampaignMap, data);
+        await updateOnMsgCmCreateCampaignMap(data);
+        dispatch(TypeId.MsgCmCreateCampaignMap, data);
     }
 }
 
 export function reqCmGetAllCampaignIdArray(): void {
-    NetworksManager.send({
+    send({
         MsgCmGetAllCampaignIdArray: { c: {} }
     });
 }
-function _onMsgCmGetAllCampaignIdArray(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmGetAllCampaignIdArrayS.S;
+function _onMsgCmGetAllCampaignIdArray(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmGetAllCampaignIdArrayS;
     if (data.getErrorCode()) {
-        CampaignsManagementsProvider.updateOnFailedMsgCmGetAllCampaignIdArray(data);
+        updateOnFailedMsgCmGetAllCampaignIdArray(data);
     } else {
-        CampaignsManagementsProvider.updateOnMsgCmGetAllCampaignIdArray(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmGetAllCampaignIdArray, data);
+        updateOnMsgCmGetAllCampaignIdArray(data);
+        dispatch(TypeId.MsgCmGetAllCampaignIdArray, data);
     }
 }
 
 export function reqCmGetDesigningCampaignIdArray(): void {
-    NetworksManager.send({
+    send({
         MsgCmGetDesigningCampaignIdArray: { c: {} }
     });
 }
-function _onMsgCmGetDesigningCampaignIdArray(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmGetDesigningCampaignIdArrayS.S;
+function _onMsgCmGetDesigningCampaignIdArray(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmGetDesigningCampaignIdArrayS;
     if (data.getErrorCode()) {
-        CampaignsManagementsProvider.updateOnFailedMsgCmGetDesigningCampaignIdArray(data);
+        updateOnFailedMsgCmGetDesigningCampaignIdArray(data);
     } else {
-        CampaignsManagementsProvider.updateOnMsgCmGetDesigningCampaignIdArray(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmGetDesigningCampaignIdArray, data);
+        updateOnMsgCmGetDesigningCampaignIdArray(data);
+        dispatch(TypeId.MsgCmGetDesigningCampaignIdArray, data);
     }
 }
 
-export function reqCmSetCampaignDesc(campaignId: number, descArray: ProtoSchemaCommonProtoStructureLanguageText.LanguageText[]): void {
-    NetworksManager.send({
+export function reqCmSetCampaignDesc(campaignId: number, descArray: LanguageText[]): void {
+    send({
         MsgCmSetCampaignDesc: { c: {
             campaignId  : campaignId,
             descArray   : descArray.map(v => v.toJson()),
         }}
     });
 }
-async function _onMsgCmSetCampaignDesc(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignDescS.S;
+async function _onMsgCmSetCampaignDesc(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignDescS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmSetCampaignDesc(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmSetCampaignDesc, data);
+        await updateOnMsgCmSetCampaignDesc(data);
+        dispatch(TypeId.MsgCmSetCampaignDesc, data);
     }
 }
 
-export function reqCmSetCampaignName(campaignId: number, nameArray: ProtoSchemaCommonProtoStructureLanguageText.LanguageText[]): void {
-    NetworksManager.send({
+export function reqCmSetCampaignName(campaignId: number, nameArray: LanguageText[]): void {
+    send({
         MsgCmSetCampaignName: { c: {
             campaignId  : campaignId,
             nameArray   : nameArray.map(v => v.toJson()),
         }}
     });
 }
-async function _onMsgCmSetCampaignName(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignNameS.S;
+async function _onMsgCmSetCampaignName(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignNameS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmSetCampaignName(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmSetCampaignName, data);
+        await updateOnMsgCmSetCampaignName(data);
+        dispatch(TypeId.MsgCmSetCampaignName, data);
     }
 }
 
 export function reqCmSetCampaignEnabled(campaignId: number, isEnabled: boolean): void {
-    NetworksManager.send({
+    send({
         MsgCmSetCampaignEnabled: { c: {
             campaignId  : campaignId,
             isEnabled   : isEnabled,
         }}
     });
 }
-async function _onMsgCmSetCampaignEnabled(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignEnabledS.S;
+async function _onMsgCmSetCampaignEnabled(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignEnabledS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmSetCampaignEnabled(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmSetCampaignEnabled, data);
+        await updateOnMsgCmSetCampaignEnabled(data);
+        dispatch(TypeId.MsgCmSetCampaignEnabled, data);
     }
 }
 
 export function reqCmSetCampaignMapEnabled(campaignId: number, campaignMapId: number, isEnabled: boolean): void {
-    NetworksManager.send({
+    send({
         MsgCmSetCampaignMapEnabled: { c: {
             campaignId      : campaignId,
             campaignMapId   : campaignMapId,
@@ -158,31 +202,31 @@ export function reqCmSetCampaignMapEnabled(campaignId: number, campaignMapId: nu
         }}
     });
 }
-async function _onMsgCmSetCampaignMapEnabled(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapEnabledS.S;
+async function _onMsgCmSetCampaignMapEnabled(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapEnabledS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmSetCampaignMapEnabled(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmSetCampaignMapEnabled, data);
+        await updateOnMsgCmSetCampaignMapEnabled(data);
+        dispatch(TypeId.MsgCmSetCampaignMapEnabled, data);
     }
 }
 
-export function reqCmSetCampaignMapRawData(mapRawData: ProtoSchemaCommonProtoMapMapRawData.MapRawData): void {
-    NetworksManager.send({
+export function reqCmSetCampaignMapRawData(mapRawData: MapRawData): void {
+    send({
         MsgCmSetCampaignMapRawData: { c: {
             mapRawData  : mapRawData.toJson(),
         }}
     });
 }
-async function _onMsgCmSetCampaignMapRawData(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapRawDataS.S;
+async function _onMsgCmSetCampaignMapRawData(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapRawDataS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmSetCampaignMapRawData(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmSetCampaignMapRawData, data);
+        await updateOnMsgCmSetCampaignMapRawData(data);
+        dispatch(TypeId.MsgCmSetCampaignMapRawData, data);
     }
 }
 
-export function reqCmSetCampaignMapExtraText(campaignId: number, campaignMapId: number, mapExtraText: ProtoSchemaCommonProtoMapMapExtraText.MapExtraTextJson): void {
-    NetworksManager.send({
+export function reqCmSetCampaignMapExtraText(campaignId: number, campaignMapId: number, mapExtraText: MapExtraTextJson): void {
+    send({
         MsgCmSetCampaignMapExtraText: { c: {
             campaignId      : campaignId,
             campaignMapId   : campaignMapId,
@@ -190,16 +234,16 @@ export function reqCmSetCampaignMapExtraText(campaignId: number, campaignMapId: 
         }}
     });
 }
-async function _onMsgCmSetCampaignMapExtraText(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapExtraTextS.S;
+async function _onMsgCmSetCampaignMapExtraText(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapExtraTextS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmSetCampaignMapExtraText(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmSetCampaignMapExtraText, data);
+        await updateOnMsgCmSetCampaignMapExtraText(data);
+        dispatch(TypeId.MsgCmSetCampaignMapExtraText, data);
     }
 }
 
-export function reqCmSetCampaignMapName(campaignId: number, campaignMapId: number, mapNameArray: ProtoSchemaCommonProtoStructureLanguageText.LanguageText[]): void {
-    NetworksManager.send({
+export function reqCmSetCampaignMapName(campaignId: number, campaignMapId: number, mapNameArray: LanguageText[]): void {
+    send({
         MsgCmSetCampaignMapName: { c: {
             campaignId      : campaignId,
             campaignMapId   : campaignMapId,
@@ -207,31 +251,31 @@ export function reqCmSetCampaignMapName(campaignId: number, campaignMapId: numbe
         }}
     });
 }
-async function _onMsgCmSetCampaignMapName(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapNameS.S;
+async function _onMsgCmSetCampaignMapName(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapNameS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmSetCampaignMapName(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmSetCampaignMapName, data);
+        await updateOnMsgCmSetCampaignMapName(data);
+        dispatch(TypeId.MsgCmSetCampaignMapName, data);
     }
 }
 
-export function reqCmSetCampaignMapWarEventAction(campaignId: number, campaignMapId: number, action: ProtoSchemaCommonProtoWarEventWarEventAction.WarEventAction): void {
-    NetworksManager.send({ MsgCmSetCampaignMapWarEventAction: { c: {
+export function reqCmSetCampaignMapWarEventAction(campaignId: number, campaignMapId: number, action: WarEventAction): void {
+    send({ MsgCmSetCampaignMapWarEventAction: { c: {
         campaignId      : campaignId,
         campaignMapId   : campaignMapId,
         warEventAction  : action.toJson(),
     } } });
 }
-async function _onMsgCmSetCampaignMapWarEventAction(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapWarEventActionS.S;
+async function _onMsgCmSetCampaignMapWarEventAction(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignMapWarEventActionS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmSetCampaignMapWarEventAction(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmSetCampaignMapWarEventAction, data);
+        await updateOnMsgCmSetCampaignMapWarEventAction(data);
+        dispatch(TypeId.MsgCmSetCampaignMapWarEventAction, data);
     }
 }
 
 export function reqCmUpdateCampaignDesigners(campaignId: number, addUserIdArray: number[], deleteUserIdArray: number[]): void {
-    NetworksManager.send({
+    send({
         MsgCmUpdateCampaignDesigners: { c: {
             campaignId          : campaignId,
             addUserIdArray      : addUserIdArray,
@@ -239,26 +283,26 @@ export function reqCmUpdateCampaignDesigners(campaignId: number, addUserIdArray:
         } },
     });
 }
-async function _onMsgCmUpdateCampaignDesigners(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmUpdateCampaignDesignersS.S;
+async function _onMsgCmUpdateCampaignDesigners(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmUpdateCampaignDesignersS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmUpdateCampaignDesigners(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmUpdateCampaignDesigners, data);
+        await updateOnMsgCmUpdateCampaignDesigners(data);
+        dispatch(TypeId.MsgCmUpdateCampaignDesigners, data);
     }
 }
 
 export function reqCmSetExtraLink(campaignId: number, extraLink: string): void {
-    NetworksManager.send({
+    send({
         MsgCmSetExtraLink: { c: {
             campaignId  : campaignId,
             extraLink   : extraLink,
         }}
     });
 }
-async function _onMsgCmSetExtraLink(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetExtraLinkS.S;
+async function _onMsgCmSetExtraLink(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetExtraLinkS;
     if (!data.getErrorCode()) {
-        await CampaignsMainsProvider.updateOnMsgCmSetExtraLink(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgCmSetExtraLink, data);
+        await updateOnMsgCmSetExtraLink(data);
+        dispatch(TypeId.MsgCmSetExtraLink, data);
     }
 }

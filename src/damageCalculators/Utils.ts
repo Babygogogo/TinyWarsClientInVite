@@ -1,38 +1,40 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesBattleInfo from "../auxiliaryTypes/BattleInfo.ts";
-import * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import * as CosConstants from "../cos/Constants.ts";
-import * as CoSkillsUtilsInstantMiscSelfFundAfterBattle from "../coSkills/utils/instantMisc/SelfFundAfterBattle.ts";
-import * as CoSkillsUtilsInstantMiscSelfUnitPromotionAfterBattle from "../coSkills/utils/instantMisc/SelfUnitPromotionAfterBattle.ts";
-import * as DestructionsUtils from "../destructions/Utils.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import * as GameConfigGcWar from "../gameConfig/GcWar.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as HelpersTeam from "../helpers/Team.ts";
-import * as NumbersConstants from "../numbers/Constants.ts";
-import * as NumbersUtils from "../numbers/Utils.ts";
-import * as PlayersConstants from "../players/Constants.ts";
-import type * as PlayersIPlayer from "../players/IPlayer.ts";
-import * as ProtoSchemaCommonProtoStructureBattleDamageInfo from "../proto/schema/CommonProto/Structure/BattleDamageInfo.ts";
-import * as ProtoSchemaCommonProtoWarSerializationWsUnitStatistics from "../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type * as TilesITile from "../tiles/ITile.ts";
-import * as UnitsConstants from "../units/Constants.ts";
-import type * as UnitsIUnit from "../units/IUnit.ts";
-import type * as UnitsIUnitMap from "../units/IUnitMap.ts";
-import * as UnitsUtilsCommon from "../units/utils/Common.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
-import * as VisibilitiesUtils from "../visibilities/Utils.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { BattleInfo } from "../auxiliaryTypes/BattleInfo.ts";
+import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import { CoId, EnergyTypeId } from "../cos/Constants.ts";
+import { getTotalOffset } from "../coSkills/utils/instantMisc/SelfFundAfterBattle.ts";
+import {
+    getTotalOffset as CoSkillsUtilsInstantMiscSelfUnitPromotionAfterBattleGetTotalOffset,
+} from "../coSkills/utils/instantMisc/SelfUnitPromotionAfterBattle.ts";
+import { destroyUnitOnMapForWarDamageCalculator } from "../destructions/Utils.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
+import { DamageFormulaTypeId } from "../gameConfig/GcWar.ts";
+import { newError, getExisted } from "../helpers/Misc.ts";
+import { encodeTeamIndex } from "../helpers/Team.ts";
+import { MaxInt32 } from "../numbers/Constants.ts";
+import { getValueInRange } from "../numbers/Utils.ts";
+import { AliveStateId, Fund } from "../players/Constants.ts";
+import type { IPlayer } from "../players/IPlayer.ts";
+import { BattleDamageInfo } from "../proto/schema/CommonProto/Structure/BattleDamageInfo.ts";
+import { WsUnitStatistics } from "../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+import type { ITile } from "../tiles/ITile.ts";
+import { WeaponTypeId } from "../units/Constants.ts";
+import type { IUnit } from "../units/IUnit.ts";
+import type { IUnitMap } from "../units/IUnitMap.ts";
+import { getNormalizedHp } from "../units/utils/Common.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+import { getObserverTeamIndexListForUnitOnMap } from "../visibilities/Utils.ts";
 
-type IBwUnit                = UnitsIUnit.IUnit;
-type IBwPlayer              = PlayersIPlayer.IPlayer;
-type IBwUnitMap             = UnitsIUnitMap.IUnitMap;
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
-type IBwTile                = TilesITile.ITile;
+type IBwUnit                = IUnit;
+type IBwPlayer              = IPlayer;
+type IBwUnitMap             = IUnitMap;
+type IBwWar                 = BaseWarInterfaceIBwWar;
+type IBwTile                = ITile;
 
 function checkIsInAttackRange({ gridIndex1, gridIndex2, minAttackRange1, maxAttackRange1 }: {
-    gridIndex1      : AuxiliaryTypesGridIndex.GridIndex;
-    gridIndex2      : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex1      : GridIndex;
+    gridIndex2      : GridIndex;
     minAttackRange1  : number | null;
     maxAttackRange1  : number | null;
 }): boolean {
@@ -44,7 +46,7 @@ function checkIsInAttackRange({ gridIndex1, gridIndex2, minAttackRange1, maxAtta
     }
 }
 
-function getLuckValue(war: IBwWar, attackerUnit: IBwUnit, attackerGridIndex: AuxiliaryTypesGridIndex.GridIndex, isEstimated: boolean): number {
+function getLuckValue(war: IBwWar, attackerUnit: IBwUnit, attackerGridIndex: GridIndex, isEstimated: boolean): number {
     const playerIndex               = attackerUnit.getPlayerIndex();
     const playerRule                = war.getCommonSettingManager().getPlayerRule(playerIndex);
     const lowerLimitForSettings     = playerRule.getLuckLowerLimit();
@@ -68,27 +70,27 @@ function getLuckValue(war: IBwWar, attackerUnit: IBwUnit, attackerGridIndex: Aux
     }
 }
 
-export function getDamageMultiplierForDefenseBonus(gcData: GameConfigGcData.GcData, bonus: number): number {    // DONE
+export function getDamageMultiplierForDefenseBonus(gcData: GcData, bonus: number): number {    // DONE
     const formulaTypeId = gcData.getSystemCfg().getDamageFormulaTypeId();
-    if (formulaTypeId === GameConfigGcWar.DamageFormulaTypeId.Dor) {
+    if (formulaTypeId === DamageFormulaTypeId.Dor) {
         return (bonus >= 0)
             ? 1 / (1 + bonus / 100)
             : 1 - bonus / 100;
 
-    } else if (formulaTypeId === GameConfigGcWar.DamageFormulaTypeId.Trilogy) {
+    } else if (formulaTypeId === DamageFormulaTypeId.Trilogy) {
         return Math.max(0, 1 - bonus / 100);
 
     } else {
-        throw HelpersMisc.newError(`Invalid formula type: ${formulaTypeId}`);
+        throw newError(`Invalid formula type: ${formulaTypeId}`);
     }
 }
 
 function getAttackBonusMultiplier({ war, attacker, attackerGridIndex, isCounter, observerTeamIndexSet, useDamagePreviewSettings }: {
     war                         : IBwWar;
     attacker                    : IBwUnit;
-    attackerGridIndex           : AuxiliaryTypesGridIndex.GridIndex;
+    attackerGridIndex           : GridIndex;
     targetUnit                  : IBwUnit | null;
-    targetGridIndex             : AuxiliaryTypesGridIndex.GridIndex;
+    targetGridIndex             : GridIndex;
     isCounter                   : boolean;
     observerTeamIndexSet        : Set<number> | null;
     useDamagePreviewSettings    : boolean;
@@ -118,9 +120,9 @@ function getAttackBonusMultiplier({ war, attacker, attackerGridIndex, isCounter,
 function getDefenseBonusMultiplierForUnit({ war, attacker, attackerGridIndex, target, targetGridIndex, observerTeamIndexSet, useDamagePreviewSettings }: {
     war                         : IBwWar;
     attacker                    : IBwUnit;
-    attackerGridIndex           : AuxiliaryTypesGridIndex.GridIndex;
+    attackerGridIndex           : GridIndex;
     target                      : IBwUnit;
-    targetGridIndex             : AuxiliaryTypesGridIndex.GridIndex;
+    targetGridIndex             : GridIndex;
     isCounter                   : boolean;
     observerTeamIndexSet        : Set<number> | null;
     useDamagePreviewSettings    : boolean;
@@ -156,7 +158,7 @@ function getDefenseBonusMultiplierForTile(): number {
 
 function checkCanAttackTile({ unit1, movePath1, maxAttackRange1, canAttackAfterMoving1, tile2 }: {
     unit1                   : IBwUnit;
-    movePath1               : AuxiliaryTypesGridIndex.GridIndex[];
+    movePath1               : GridIndex[];
     maxAttackRange1         : number | null;
     canAttackAfterMoving1   : boolean;
     tile2                   : IBwTile;
@@ -187,7 +189,7 @@ function checkCanAttackTile({ unit1, movePath1, maxAttackRange1, canAttackAfterM
 }
 function checkCanAttackUnit({ unit1, movePath1, maxAttackRange1, canAttackAfterMoving1, unit2, isCounter }: {
     unit1                   : IBwUnit;
-    movePath1               : AuxiliaryTypesGridIndex.GridIndex[] | null;
+    movePath1               : GridIndex[] | null;
     maxAttackRange1         : number | null;
     canAttackAfterMoving1   : boolean;
     unit2                   : IBwUnit;
@@ -241,7 +243,7 @@ function getAttackDamageForAttackUnit({ war, unit1, unit2, isCounter, isEstimate
         return 0;
     }
 
-    const baseAttackDamage  = HelpersMisc.getExisted(unit1.getBaseDamage(unit2.getArmorType()));
+    const baseAttackDamage  = getExisted(unit1.getBaseDamage(unit2.getArmorType()));
     const gridIndex1        = unit1.getGridIndex();
     const gridIndex2        = unit2.getGridIndex();
     const attackBonusMultiplier     = getAttackBonusMultiplier({
@@ -267,12 +269,12 @@ function getAttackDamageForAttackUnit({ war, unit1, unit2, isCounter, isEstimate
     const luckValue                 = unit2.checkIsArmorAffectByLuck()
         ? getLuckValue(war, unit1, gridIndex1, isEstimated)
         : 0;
-    return NumbersUtils.getValueInRange({
+    return getValueInRange({
         minValue    : 0,
-        maxValue    : NumbersConstants.MaxInt32,
+        maxValue    : MaxInt32,
         rawValue    : Math.floor(0.000001 +
             (baseAttackDamage * attackBonusMultiplier + luckValue)      *
-            (UnitsUtilsCommon.getNormalizedHp(unitHp1) / 10) *
+            (getNormalizedHp(unitHp1) / 10) *
             defenseBonusMultiplier
         ),
     });
@@ -291,7 +293,7 @@ function getAttackDamageForAttackTile({ war, unit1, tile2, isCounter, isEstimate
         return 0;
     }
 
-    const baseAttackDamage      = HelpersMisc.getExisted(unit1.getBaseDamage(HelpersMisc.getExisted(tile2.getArmorType())));
+    const baseAttackDamage      = getExisted(unit1.getBaseDamage(getExisted(tile2.getArmorType())));
     const gridIndex1            = unit1.getGridIndex();
     const gridIndex2            = tile2.getGridIndex();
     const attackBonusMultiplier = getAttackBonusMultiplier({
@@ -308,12 +310,12 @@ function getAttackDamageForAttackTile({ war, unit1, tile2, isCounter, isEstimate
     const luckValue                 = tile2.checkIsArmorAffectByLuck()
         ? getLuckValue(war, unit1, gridIndex1, isEstimated)
         : 0;
-    return NumbersUtils.getValueInRange({
+    return getValueInRange({
         minValue    : 0,
-        maxValue    : NumbersConstants.MaxInt32,
+        maxValue    : MaxInt32,
         rawValue    : Math.floor(0.000001 +
             (baseAttackDamage * attackBonusMultiplier + luckValue)      *
-            (UnitsUtilsCommon.getNormalizedHp(unitHp1) / 10) *
+            (getNormalizedHp(unitHp1) / 10) *
             defenseBonusMultiplier
         ),
     });
@@ -329,13 +331,13 @@ function getAttackDamageForAttackTile({ war, unit1, tile2, isCounter, isEstimate
 /// - 其余所有数据，包括弹药、HP、晋升、资金、能量、击杀、玩家存活状态，都会被自动计算和应用<para />
 /// </summary>
 function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, maxAttackRange1, canAttackAfterMoving1, gridIndex2, maxAttackRange2, canAttackAfterMoving2, isEstimated, observerTeamIndexSet, useDamagePreviewSettings }: {
-    battleInfo                  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo                  : BattleInfo;
     war                         : IBwWar;
-    movePath1                   : AuxiliaryTypesGridIndex.GridIndex[];
-    launchUnitId1               : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    movePath1                   : GridIndex[];
+    launchUnitId1               : Undefinable<number>;
     maxAttackRange1             : number | null;
     canAttackAfterMoving1       : boolean;
-    gridIndex2                  : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex2                  : GridIndex;
     maxAttackRange2             : number | null;
     canAttackAfterMoving2       : boolean;
     isEstimated                 : boolean;
@@ -344,9 +346,9 @@ function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, m
 }): void {
     const unitMap     = war.getUnitMap();
     const gridIndex1  = movePath1[movePath1.length - 1];
-    const unit1       = HelpersMisc.getExisted(unitMap.getUnit(gridIndex1, launchUnitId1));
+    const unit1       = getExisted(unitMap.getUnit(gridIndex1, launchUnitId1));
     const unitId1     = unit1.getUnitId();
-    const unit2       = HelpersMisc.getExisted(unitMap.getUnitOnMap(gridIndex2));
+    const unit2       = getExisted(unitMap.getUnitOnMap(gridIndex2));
     const unitId2     = unit2.getUnitId();
     if (!checkCanAttackUnit({
         unit1                   : unit1,
@@ -368,7 +370,7 @@ function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, m
         observerTeamIndexSet        : observerTeamIndexSet,
         useDamagePreviewSettings    : useDamagePreviewSettings,
     });
-    battleInfo.damageInfoArray.push(ProtoSchemaCommonProtoStructureBattleDamageInfo.BattleDamageInfo.fromJson({
+    battleInfo.damageInfoArray.push(BattleDamageInfo.fromJson({
         attackerUnitId      : unitId1,
         targetUnitId        : unitId2,
         damage              : attackDamage,
@@ -403,7 +405,7 @@ function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, m
             observerTeamIndexSet        : observerTeamIndexSet,
             useDamagePreviewSettings    : useDamagePreviewSettings,
         });
-        battleInfo.damageInfoArray.push(ProtoSchemaCommonProtoStructureBattleDamageInfo.BattleDamageInfo.fromJson({
+        battleInfo.damageInfoArray.push(BattleDamageInfo.fromJson({
             attackerUnitId      : unitId2,
             targetUnitId        : unitId1,
             damage              : counterDamage,
@@ -422,7 +424,7 @@ function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, m
     for (const player of battleInfo.playersForDestroyedUnits) {
         const playerIndex = player.getPlayerIndex();
         if ((!player.checkIsNeutral())                                          &&
-            (player.getAliveState() != PlayersConstants.AliveStateId.Dead)  &&
+            (player.getAliveState() != AliveStateId.Dead)  &&
             (!unitMap.checkHasUnitForPlayer(playerIndex))
         ) {
             if (!isEstimated) {
@@ -433,12 +435,12 @@ function doRunBattleForAttackUnit({ battleInfo, war, movePath1, launchUnitId1, m
                 }
             }
 
-            player.setAliveState(PlayersConstants.AliveStateId.Dying);
+            player.setAliveState(AliveStateId.Dying);
         }
     }
 }
 function handleAttackUnit({ battleInfo, war, unit1, unit2, damage, isEstimated }: {
-    battleInfo  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo  : BattleInfo;
     war         : IBwWar;
     unit1       : IBwUnit;
     unit2       : IBwUnit;
@@ -455,22 +457,22 @@ function handleAttackUnit({ battleInfo, war, unit1, unit2, damage, isEstimated }
     const coGridIndexArray2       = player2.getCoGridIndexListOnMap();
     const unitNewHp2              = Math.max(0, unitOldHp2 - damage);
     const isUnitDestroyed2        = unitNewHp2 <= 0;
-    const unitLostNormalizedHp2   = UnitsUtilsCommon.getNormalizedHp(unitOldHp2) - UnitsUtilsCommon.getNormalizedHp(unitNewHp2);
+    const unitLostNormalizedHp2   = getNormalizedHp(unitOldHp2) - getNormalizedHp(unitNewHp2);
     const isInCoZone1             = (unit1.getIsCoOnboard()) || (player1.checkIsInCoZone(unitGridIndex1, coGridIndexArray1));
     if ((!isEstimated) && (unitLostNormalizedHp2 != 0)) {
-        const observerTeamIndexes = VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({
+        const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({
             war         : war,
             gridIndex   : unitGridIndex2,
         });
         if (observerTeamIndexes != null) {
-            warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+            warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                 unitType                    : unit2.getUnitType(),
                 dstPlayerIndex              : unit2.getPlayerIndex(),
                 normalizedHpGain            : 0,
                 normalizedHpLoss            : unitLostNormalizedHp2,
                 unitGain                    : 0,
                 unitLoss                    : 0,
-                groupedObserverTeamIndexes  : HelpersTeam.encodeTeamIndex(observerTeamIndexes),
+                groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
             }));
         }
     }
@@ -528,7 +530,7 @@ function handleAttackUnit({ battleInfo, war, unit1, unit2, damage, isEstimated }
     }
 }
 function handlePrimaryWeaponAmmoForAttackUnit({ battleInfo, isEstimated, unit1, targetUnit }: {
-    battleInfo  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo  : BattleInfo;
     isEstimated : boolean;
     unit1       : IBwUnit;
     targetUnit  : IBwUnit;
@@ -536,7 +538,7 @@ function handlePrimaryWeaponAmmoForAttackUnit({ battleInfo, isEstimated, unit1, 
     const attackerAmmo = unit1.getPrimaryWeaponCurrentAmmo();
     if ((attackerAmmo != null)                                                                                  &&
         (attackerAmmo > 0)                                                                                      &&
-        (unit1.getCfgBaseDamage(targetUnit.getArmorType(), UnitsConstants.WeaponTypeId.Primary) != null)
+        (unit1.getCfgBaseDamage(targetUnit.getArmorType(), WeaponTypeId.Primary) != null)
     ) {
         if (!isEstimated) {
             // battleInfo.affectedThings.add(unit1);
@@ -551,7 +553,7 @@ function handlePrimaryWeaponAmmoForAttackUnit({ battleInfo, isEstimated, unit1, 
     }
 }
 function handleHpForAttackUnit({ battleInfo, isEstimated, unit, unitNewHp }: {
-    battleInfo  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo  : BattleInfo;
     isEstimated : boolean;
     unit        : IBwUnit;
     unitNewHp   : number;
@@ -572,12 +574,12 @@ function handleHpForAttackUnit({ battleInfo, isEstimated, unit, unitNewHp }: {
     }
 }
 function handlePromotionForAttackUnit({ battleInfo, isEstimated, player1, unit1, targetLostNormalizedHp, attackerCoGridIndexListOnMap, isTargetDestroyed }: {
-    battleInfo                      : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo                      : BattleInfo;
     isEstimated                     : boolean;
     player1                         : IBwPlayer;
     unit1                           : IBwUnit;
     targetLostNormalizedHp          : number;
-    attackerCoGridIndexListOnMap    : AuxiliaryTypesGridIndex.GridIndex[];
+    attackerCoGridIndexListOnMap    : GridIndex[];
     isTargetDestroyed               : boolean;
 }): void {
     const gcData                = unit1.getGcData();
@@ -598,13 +600,13 @@ function handlePromotionForAttackUnit({ battleInfo, isEstimated, player1, unit1,
         }
     }
 
-    if (player1.getCoId() !== CosConstants.CoId.Empty) {
+    if (player1.getCoId() !== CoId.Empty) {
         const attackerCoZoneRadius      = player1.getCoZoneRadius();
         const isAttackerCoOnBoard       = unit1.getIsCoOnboard();
         const getCoGridIndexArrayOnMap  = () => attackerCoGridIndexListOnMap;
         let offset                      = 0;
         for (const skillId of player1.getCoCurrentSkills()) {
-            offset += CoSkillsUtilsInstantMiscSelfUnitPromotionAfterBattle.getTotalOffset({
+            offset += CoSkillsUtilsInstantMiscSelfUnitPromotionAfterBattleGetTotalOffset({
                 cfg                         : gcData.getCoSkillCfg(skillId)?.getInstantMisc()?.getSelfUnitPromotionAfterBattle(),
                 gameConfig                  : gcData,
                 unitTypeId                  : attackerUnitTypeId,
@@ -631,7 +633,7 @@ function handlePromotionForAttackUnit({ battleInfo, isEstimated, player1, unit1,
     }
 }
 function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, attackerUnit, targetUnit, targetLostNormalizedHp, isAttackerInAttackerCoZone }: {
-    battleInfo                  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo                  : BattleInfo;
     isEstimated                 : boolean;
     attackerPlayer              : IBwPlayer;
     attackerUnit                : IBwUnit;
@@ -639,7 +641,7 @@ function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, atta
     targetLostNormalizedHp      : number;
     isAttackerInAttackerCoZone  : boolean;
 }): void {
-    if ((targetLostNormalizedHp == 0) || (attackerPlayer.getCoId() == CosConstants.CoId.Empty)) {
+    if ((targetLostNormalizedHp == 0) || (attackerPlayer.getCoId() == CoId.Empty)) {
         return;
     }
 
@@ -650,7 +652,7 @@ function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, atta
     const targetNormalizedMaxHp = targetUnit.getNormalizedMaxHp();
     let addFund                 = 0;
     for (const skillId of attackerPlayer.getCoCurrentSkills()) {
-        addFund += CoSkillsUtilsInstantMiscSelfFundAfterBattle.getTotalOffset({
+        addFund += getTotalOffset({
             cfg                         : gameConfig.getCoSkillCfg(skillId)?.getInstantMisc()?.getSelfFundAfterBattle(),
             gameConfig                  : gameConfig,
             selfUnitTypeId              : attackerUnitTypeId,
@@ -672,15 +674,15 @@ function handleFundForAttackUnit({ battleInfo, isEstimated, attackerPlayer, atta
             }
         }
 
-        attackerPlayer.setFund(NumbersUtils.getValueInRange({
-            maxValue    : PlayersConstants.Fund.MaxFund,
-            minValue    : PlayersConstants.Fund.MinFund,
+        attackerPlayer.setFund(getValueInRange({
+            maxValue    : Fund.MaxFund,
+            minValue    : Fund.MinFund,
             rawValue    : attackerPlayer.getFund() + addFund
         }));
     }
 }
 function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlayer, targetPlayer, targetLostNormalizedHp, targetCfgEnergyValue, isAttackerInAttackerCoZone, isTargetInTargetCoZone}: {
-    battleInfo                  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo                  : BattleInfo;
     isEstimated                 : boolean;
     war                         : IBwWar;
     attackerPlayer              : IBwPlayer;
@@ -700,7 +702,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
     if (attackerPlayer.checkCanGetEnergyWithBattle()) {
         const coEnergyType1   = attackerPlayer.getCoEnergyType();
         const playerIndex1    = attackerPlayer.getPlayerIndex();
-        if (coEnergyType1 == CosConstants.EnergyTypeId.Trilogy) {
+        if (coEnergyType1 == EnergyTypeId.Trilogy) {
             if (!isEstimated) {
                 // battleInfo.affectedThings.add(attackerPlayer);
             } else {
@@ -714,7 +716,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
                 + warEventManager.getOpaEnergyGrowthMultiplierModifier(playerIndex1);
             attackerPlayer.addAndValidateCoCurrentEnergy(targetLostNormalizedHp * targetCfgEnergyValue * multiplier1 * energyParameters1 / 100 / 100);
 
-        } else if (coEnergyType1 == CosConstants.EnergyTypeId.Dor) {
+        } else if (coEnergyType1 == EnergyTypeId.Dor) {
             if (isAttackerInAttackerCoZone) {
                 if (!isEstimated) {
                     // battleInfo.affectedThings.add(attackerPlayer);
@@ -730,14 +732,14 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
             }
 
         } else {
-            throw HelpersMisc.newError(`Invalid coEnergyType1: ${coEnergyType1}`);
+            throw newError(`Invalid coEnergyType1: ${coEnergyType1}`);
         }
     }
 
     if (targetPlayer.checkCanGetEnergyWithBattle()) {
         const coEnergyType2   = targetPlayer.getCoEnergyType();
         const playerIndex2    = targetPlayer.getPlayerIndex();
-        if (coEnergyType2 == CosConstants.EnergyTypeId.Trilogy) {
+        if (coEnergyType2 == EnergyTypeId.Trilogy) {
             if (!isEstimated) {
                 // battleInfo.affectedThings.add(targetPlayer);
             } else {
@@ -751,7 +753,7 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
                 + warEventManager.getOpaEnergyGrowthMultiplierModifier(playerIndex2);
             targetPlayer.addAndValidateCoCurrentEnergy(targetLostNormalizedHp * targetCfgEnergyValue * multiplier2 * energyParameters2 / 100 / 100);
 
-        } else if (coEnergyType2 == CosConstants.EnergyTypeId.Dor) {
+        } else if (coEnergyType2 == EnergyTypeId.Dor) {
             if (isTargetInTargetCoZone) {
                 if (!isEstimated) {
                     // battleInfo.affectedThings.add(targetPlayer);
@@ -767,19 +769,19 @@ function handleEnergyForAttackUnit({ battleInfo, isEstimated, war, attackerPlaye
             }
 
         } else {
-            throw HelpersMisc.newError(`Invalid coEnergyType2: ${coEnergyType2}`);
+            throw newError(`Invalid coEnergyType2: ${coEnergyType2}`);
         }
     }
 }
 function handleDestructionForAttackUnit({ battleInfo, war, unit, isUnitDestroyed, isEstimated }: {
-    battleInfo      : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo      : BattleInfo;
     war             : IBwWar;
     unit            : IBwUnit;
     isUnitDestroyed : boolean;
     isEstimated     : boolean;
 }): void {
     if (isUnitDestroyed) {
-        DestructionsUtils.destroyUnitOnMapForWarDamageCalculator({
+        destroyUnitOnMapForWarDamageCalculator({
             battleInfo          : battleInfo,
             war                 : war,
             gridIndex           : unit.getGridIndex(),
@@ -798,20 +800,20 @@ function handleDestructionForAttackUnit({ battleInfo, war, unit, isUnitDestroyed
 /// - 其余所有数据，包括弹药、HP、晋升、资金、能量、击杀、玩家存活状态，都会被自动计算和应用<para />
 /// </summary>
 function doRunBattleForAttackTile({ battleInfo, war, movePath1, launchUnitId1, maxAttackRange1, canAttackAfterMoving1, gridIndex2, isEstimated, observerTeamIndexSet, useDamagePreviewSettings }: {
-    battleInfo                  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo                  : BattleInfo;
     war                         : IBwWar;
-    movePath1                   : AuxiliaryTypesGridIndex.GridIndex[];
-    launchUnitId1               : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    movePath1                   : GridIndex[];
+    launchUnitId1               : Undefinable<number>;
     maxAttackRange1             : number | null;
     canAttackAfterMoving1       : boolean;
-    gridIndex2                  : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex2                  : GridIndex;
     isEstimated                 : boolean;
     observerTeamIndexSet        : Set<number> | null;
     useDamagePreviewSettings    : boolean;
 }): void {
     const unitMap     = war.getUnitMap();
     const gridIndex1  = movePath1[movePath1.length - 1];
-    const unit1       = HelpersMisc.getExisted(unitMap.getUnit(gridIndex1, launchUnitId1));
+    const unit1       = getExisted(unitMap.getUnit(gridIndex1, launchUnitId1));
     const tile2       = war.getTileMap().getTile(gridIndex2);
     if (!checkCanAttackTile({
         unit1                   : unit1,
@@ -832,7 +834,7 @@ function doRunBattleForAttackTile({ battleInfo, war, movePath1, launchUnitId1, m
         observerTeamIndexSet        : observerTeamIndexSet,
         useDamagePreviewSettings    : useDamagePreviewSettings,
     });
-    battleInfo.damageInfoArray.push(ProtoSchemaCommonProtoStructureBattleDamageInfo.BattleDamageInfo.fromJson({
+    battleInfo.damageInfoArray.push(BattleDamageInfo.fromJson({
         attackerUnitId      : unit1.getUnitId(),
         targetUnitId        : null,
         targetTileGridIndex : gridIndex2.toProto().toJson(),
@@ -850,7 +852,7 @@ function doRunBattleForAttackTile({ battleInfo, war, movePath1, launchUnitId1, m
     for (const player of battleInfo.playersForDestroyedUnits) {
         const playerIndex = player.getPlayerIndex();
         if ((!player.checkIsNeutral())                                          &&
-            (player.getAliveState() != PlayersConstants.AliveStateId.Dead)  &&
+            (player.getAliveState() != AliveStateId.Dead)  &&
             (!unitMap.checkHasUnitForPlayer(playerIndex))
         ) {
             if (!isEstimated) {
@@ -861,12 +863,12 @@ function doRunBattleForAttackTile({ battleInfo, war, movePath1, launchUnitId1, m
                 }
             }
 
-            player.setAliveState(PlayersConstants.AliveStateId.Dying);
+            player.setAliveState(AliveStateId.Dying);
         }
     }
 }
 function handleAttackTile({ battleInfo, war, unit1, tile2, damage, isEstimated }: {
-    battleInfo  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo  : BattleInfo;
     war         : IBwWar;
     unit1       : IBwUnit;
     tile2       : IBwTile;
@@ -894,16 +896,16 @@ function handleAttackTile({ battleInfo, war, unit1, tile2, damage, isEstimated }
     });
 }
 function handlePrimaryWeaponAmmoForAttackTile({ battleInfo, isEstimated, unit1, tile2 }: {
-    battleInfo  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo  : BattleInfo;
     isEstimated : boolean;
     unit1       : IBwUnit;
     tile2       : IBwTile;
 }): void {
-    const armorType2 = HelpersMisc.getExisted(tile2.getArmorType());
+    const armorType2 = getExisted(tile2.getArmorType());
     const attackerAmmo = unit1.getPrimaryWeaponCurrentAmmo();
     if ((attackerAmmo != null)                                                                  &&
         (attackerAmmo > 0)                                                                      &&
-        (unit1.getCfgBaseDamage(armorType2, UnitsConstants.WeaponTypeId.Primary) != null)
+        (unit1.getCfgBaseDamage(armorType2, WeaponTypeId.Primary) != null)
     ) {
         if (!isEstimated) {
             // battleInfo.affectedThings.add(unit1);
@@ -918,7 +920,7 @@ function handlePrimaryWeaponAmmoForAttackTile({ battleInfo, isEstimated, unit1, 
     }
 }
 function handleHpForAttackTile({ battleInfo, isEstimated, tile2, tileNewHp2 }: {
-    battleInfo  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo  : BattleInfo;
     isEstimated : boolean;
     tile2       : IBwTile;
     tileNewHp2  : number;
@@ -939,7 +941,7 @@ function handleHpForAttackTile({ battleInfo, isEstimated, tile2, tileNewHp2 }: {
     }
 }
 function handleDestructionForAttackTile({ battleInfo, isEstimated, war, tile2 }: {
-    battleInfo  : AuxiliaryTypesBattleInfo.BattleInfo;
+    battleInfo  : BattleInfo;
     isEstimated : boolean;
     war         : IBwWar;
     tile2       : IBwTile;
@@ -994,21 +996,21 @@ export function getEstimatedBattleInfo({
     isAttackUnit,
 }: {
     war                         : IBwWar;
-    movePath1                   : AuxiliaryTypesGridIndex.GridIndex[];
+    movePath1                   : GridIndex[];
     launchUnitId1               : number | null;
-    gridIndex2                  : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex2                  : GridIndex;
     fuelConsumption             : number;
     observerTeamIndexSet        : Set<number> | null;
     useDamagePreviewSettings    : boolean;
     isAttackUnit                : boolean;
-}): AuxiliaryTypesBattleInfo.BattleInfo {
+}): BattleInfo {
     // 预处理
     const beginningGridIndex    = movePath1[0];
-    const battleInfo            = new AuxiliaryTypesBattleInfo.BattleInfo();
+    const battleInfo            = new BattleInfo();
     const unitMap               = war.getUnitMap();
     const tileMap               = war.getTileMap();
     const mapSize               = tileMap.getMapSize();
-    const unit1                 = HelpersMisc.getExisted(unitMap.getUnit(beginningGridIndex, launchUnitId1));
+    const unit1                 = getExisted(unitMap.getUnit(beginningGridIndex, launchUnitId1));
     const unit2                 = unitMap.getUnitOnMap(gridIndex2);
     const maxAttackRange1       = unit1.getFinalMaxAttackRange();                   // 预先计算，不能延后
     const maxAttackRange2       = unit2?.getFinalMaxAttackRange() ?? null;          // 预先计算，不能延后
@@ -1096,7 +1098,7 @@ export function getEstimatedBattleInfo({
             continue;
         }
 
-        const unit = HelpersMisc.getExisted(unitMap.getUnitById(unitId));
+        const unit = getExisted(unitMap.getUnitById(unitId));
         if (unit.getLoaderUnitId() == null) {
             unitMap.removeUnitOnMap(unit.getGridIndex(), false);
         } else {
@@ -1139,15 +1141,15 @@ export function runBattleForAttackUnit({
     canAttackAfterMoving2
 }: {
     war                     : IBwWar;
-    movePath1               : AuxiliaryTypesGridIndex.GridIndex[];
-    launchUnitId1           : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    movePath1               : GridIndex[];
+    launchUnitId1           : Undefinable<number>;
     maxAttackRange1         : number | null;
     canAttackAfterMoving1   : boolean;
-    gridIndex2              : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex2              : GridIndex;
     maxAttackRange2         : number | null;
     canAttackAfterMoving2   : boolean;
-}): AuxiliaryTypesBattleInfo.BattleInfo {
-    const battleInfo = new AuxiliaryTypesBattleInfo.BattleInfo();
+}): BattleInfo {
+    const battleInfo = new BattleInfo();
     doRunBattleForAttackUnit({
         battleInfo                  : battleInfo,
         war                         : war,
@@ -1179,15 +1181,15 @@ export function runBattleForAttackTile({
     canAttackAfterMoving2
 }: {
     war                     : IBwWar;
-    movePath1               : AuxiliaryTypesGridIndex.GridIndex[];
-    launchUnitId1           : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    movePath1               : GridIndex[];
+    launchUnitId1           : Undefinable<number>;
     maxAttackRange1         : number | null;
     canAttackAfterMoving1   : boolean;
-    gridIndex2              : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex2              : GridIndex;
     maxAttackRange2         : number | null;
     canAttackAfterMoving2   : boolean;
-}): AuxiliaryTypesBattleInfo.BattleInfo {
-    const battleInfo = new AuxiliaryTypesBattleInfo.BattleInfo();
+}): BattleInfo {
+    const battleInfo = new BattleInfo();
     doRunBattleForAttackTile({
         battleInfo                  : battleInfo,
         war                         : war,
@@ -1209,18 +1211,18 @@ type AttackAndCounterDamage = {
     counterDamage   : number | null;
 };
 export function getAttackAndCounterDamage({ battleDamageInfoArray, attackerUnitId, targetGridIndex, unitMap }: {
-    battleDamageInfoArray   : ProtoSchemaCommonProtoStructureBattleDamageInfo.BattleDamageInfo[];
+    battleDamageInfoArray   : BattleDamageInfo[];
     attackerUnitId          : number;
-    targetGridIndex         : AuxiliaryTypesGridIndex.GridIndex;
+    targetGridIndex         : GridIndex;
     unitMap                 : IBwUnitMap;
 }): AttackAndCounterDamage {
     let attackDamage    : number | null = null;
     let counterDamage   : number | null = null;
     for (const info of battleDamageInfoArray) {
-        const damage                = HelpersMisc.getExisted(info.getDamage(), UtilsClientErrorCode.ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_00);
-        const infoAttackerUnitId    = HelpersMisc.getExisted(info.getAttackerUnitId(), UtilsClientErrorCode.ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_01);
+        const damage                = getExisted(info.getDamage(), ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_00);
+        const infoAttackerUnitId    = getExisted(info.getAttackerUnitId(), ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_01);
         const infoTargetUnitId      = info.getTargetUnitId();
-        const targetTileGridIndex   = AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(info.getTargetTileGridIndex());
+        const targetTileGridIndex   = GridIndex.convertGridIndex(info.getTargetTileGridIndex());
         if (attackerUnitId === infoAttackerUnitId) {
             if (targetTileGridIndex != null) {
                 if (targetGridIndex.checkIsEqual(targetTileGridIndex)) {
@@ -1228,17 +1230,17 @@ export function getAttackAndCounterDamage({ battleDamageInfoArray, attackerUnitI
                 }
             } else {
                 if (infoTargetUnitId == null) {
-                    throw HelpersMisc.newError(`Empty infoTargetUnitId.`, UtilsClientErrorCode.ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_02);
+                    throw newError(`Empty infoTargetUnitId.`, ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_02);
                 }
 
-                const unit = HelpersMisc.getExisted(unitMap.getUnitById(infoTargetUnitId), UtilsClientErrorCode.ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_03);
+                const unit = getExisted(unitMap.getUnitById(infoTargetUnitId), ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_03);
                 if (unitMap.getUnitOnMap(targetGridIndex) === unit) {
                     attackDamage = (attackDamage || 0) + damage;
                 }
             }
 
         } else if (attackerUnitId === infoTargetUnitId) {
-            const unit = HelpersMisc.getExisted(unitMap.getUnitById(infoAttackerUnitId), UtilsClientErrorCode.ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_04);
+            const unit = getExisted(unitMap.getUnitById(infoAttackerUnitId), ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_04);
             if (unitMap.getUnitOnMap(targetGridIndex) === unit) {
                 counterDamage = (counterDamage || 0) + damage;
             }

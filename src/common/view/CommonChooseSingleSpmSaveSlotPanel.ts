@@ -1,26 +1,26 @@
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SinglePlayerModeModelSpmModel from "../../singlePlayerMode/model/SpmModel.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiInterfacesIUiZoomableMap from "../../ui/interfaces/IUiZoomableMap.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as WarTypesUtils from "../../warTypes/Utils.ts";
+import { SinglePlayerWar } from "../../gameConfig/GcWar.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getWarTypeName, getTimestampShortText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getSlotFullData, getSlotName } from "../../singlePlayerMode/model/SpmModel.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
+import { getItemRendererBackground } from "../../warTypes/Utils.ts";
 
 export interface OpenData {
     currentSlotIndex        : number;
@@ -30,19 +30,19 @@ export interface OpenData {
     getHelpText?            : () => string;
     callback                : (slotIndex: number, comment: string | null) => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTips!        : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
+    private readonly _btnHelp!          : IUiButton;
+    private readonly _labelTips!        : IUiLabel;
 
-    private readonly _srlSaveSlot!      : UiInterfacesIUiScrollList.IUiScrollList<DataForSlotRenderer>;
-    private readonly _labelNoData!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _srlSaveSlot!      : IUiScrollList<DataForSlotRenderer>;
+    private readonly _labelNoData!      : IUiLabel;
 
-    private readonly _groupZoomMap!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _zoomMap!          : UiInterfacesIUiZoomableMap.IUiZoomableMap;
+    private readonly _groupZoomMap!     : IUiContainer;
+    private readonly _zoomMap!          : IUiZoomableMap;
 
     private _selectedSlotIndex        = -1;
 
@@ -53,7 +53,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._groupZoomMap,           callback: this._onTouchedGroupZoomMap },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -87,23 +87,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const func  = this.getOpenData()?.getHelpText;
         const text  = func ? func() : null;
         if (text) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
+            openPanel(getDict().CommonHelpPanel, {
                 getContent : () => text,
             });
         }
     }
 
     private async _onTouchedGroupZoomMap(): Promise<void> {
-        const warData = (await SinglePlayerModeModelSpmModel.getSlotFullData(this._selectedSlotIndex))?.warData;
+        const warData = (await getSlotFullData(this._selectedSlotIndex))?.warData;
         if (warData) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowMapPanel, {
+            openPanel(getDict().CommonShowMapPanel, {
                 warInfo : {
                     warData             : warData,
                     showInitialWarData  : true,
                     overridingPlayers   : warData.getPlayerManager()?.getPlayers(),
                 },
             });
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
 
@@ -123,7 +123,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const list      = this._srlSaveSlot;
         await list.bindData(this._createDataForList());
         list.setSelectedItemIndex(slotIndex);
-        list.scrollToItem(slotIndex >= GameConfigGcWar.SinglePlayerWar.MaxSaveSlotCount / 2 ? 100 : 0);
+        list.scrollToItem(slotIndex >= SinglePlayerWar.MaxSaveSlotCount / 2 ? 100 : 0);
 
         await this.showMap(slotIndex);
     }
@@ -144,7 +144,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
         labelNoData.setIsVisible(false);
 
-        const warData = (await SinglePlayerModeModelSpmModel.getSlotFullData(slotIndex))?.warData;
+        const warData = (await getSlotFullData(slotIndex))?.warData;
         if (slotIndex !== this._selectedSlotIndex) {
             return;
         }
@@ -165,9 +165,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0259));
-        this._labelNoData.setText(LangUtils.getText(LangConstants.TextType.B0278));
-        this._labelTips.setText(LangUtils.getText(LangConstants.TextType.B1249));
+        this._labelTitle.setText(getText(TextType.B0259));
+        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelTips.setText(getText(TextType.B1249));
     }
 
     private _createDataForList(): DataForSlotRenderer[] {
@@ -181,7 +181,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const needConfirmOverwrite  = openData.needConfirmOverwrite;
         const needNonEmptyData      = openData.needNonEmptyData ?? false;
         const dataArray             : DataForSlotRenderer[] = [];
-        for (let slotIndex = 0; slotIndex < GameConfigGcWar.SinglePlayerWar.MaxSaveSlotCount; ++slotIndex) {
+        for (let slotIndex = 0; slotIndex < SinglePlayerWar.MaxSaveSlotCount; ++slotIndex) {
             dataArray.push({
                 slotIndex               : slotIndex,
                 needComment             : needComment,
@@ -196,7 +196,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForSlotRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForSlotRenderer extends UiListItemData {
     slotIndex               : number;
     needComment             : boolean;
     needConfirmOverwrite    : boolean;
@@ -204,15 +204,15 @@ interface DataForSlotRenderer extends UiTypesUiListItemData.UiListItemData {
     panel                   : Panel;
     callback                : (slotIndex: number, comment: string | null) => void;
 }
-class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForSlotRenderer> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBg!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgSelected!      : UiInterfacesIUiImage.IUiImage;
+class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
+    private readonly _group!            : IUiContainer;
+    private readonly _imgBg!            : IUiImage;
+    private readonly _imgSelected!      : IUiImage;
 
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelSlotIndex!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTimestamp!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapName!     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelSlotIndex!   : IUiLabel;
+    private readonly _labelTimestamp!   : IUiLabel;
+    private readonly _labelMapName!     : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -226,13 +226,13 @@ class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const imgSelected = this._imgSelected;
         imgSelected.setIsTouchEnabled(true);
         imgSelected.setAlpha(0);
-        TweenExecutor.Executor.removeTweens(imgSelected);
-        TweenExecutor.Executor.get(imgSelected, { loop: true })
+        Executor.removeTweens(imgSelected);
+        Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        TweenExecutor.Executor.removeTweens(this._imgSelected);
+        Executor.removeTweens(this._imgSelected);
         await super._onClosed();
     }
 
@@ -245,7 +245,7 @@ class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         openData?.panel.showMap(openData.slotIndex);
     }
 
-    private async _onTouchedImgSelected(e: VendorEgretEgret.Event): Promise<void> {
+    private async _onTouchedImgSelected(e: Event): Promise<void> {
         e.stopPropagation();
 
         const openData = this.getOpenData();
@@ -253,7 +253,7 @@ class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             return;
         }
 
-        const slotData  = await SinglePlayerModeModelSpmModel.getSlotFullData(openData.slotIndex);
+        const slotData  = await getSlotFullData(openData.slotIndex);
         if ((slotData == null) && (openData.needNonEmptyData)) {
             return;
         }
@@ -261,28 +261,28 @@ class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const callback  = () => {
             if (!openData.needComment) {
                 openData.callback(openData.slotIndex, null);
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonChooseSingleSpmSaveSlotPanel);
+                closePanel(getDict().CommonChooseSingleSpmSaveSlotPanel);
             } else {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputPanel, {
-                    title           : LangUtils.getText(LangConstants.TextType.B0088),
-                    maxChars        : GameConfigGcWar.SinglePlayerWar.MaxSaveSlotCommentLength,
+                openPanel(getDict().CommonInputPanel, {
+                    title           : getText(TextType.B0088),
+                    maxChars        : SinglePlayerWar.MaxSaveSlotCommentLength,
                     currentValue    : ``,
-                    tips            : LangUtils.getText(LangConstants.TextType.A0144),
+                    tips            : getText(TextType.A0144),
                     canBeEmpty      : true,
                     charRestrict    : null,
                     callback        : panel => {
                         openData.callback(openData.slotIndex, panel.getInputText());
-                        GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonChooseSingleSpmSaveSlotPanel);
+                        closePanel(getDict().CommonChooseSingleSpmSaveSlotPanel);
                     }
                 });
             }
         };
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonConfirm01);
+        playShortSfx(ShortSfxCode.ButtonConfirm01);
         if ((!openData.needConfirmOverwrite) || (slotData == null)) {
             callback();
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent  : () => LangUtils.getText(LangConstants.TextType.A0070),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent  : () => getText(TextType.A0070),
                 callback    : callback,
             });
         }
@@ -297,7 +297,7 @@ class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             return;
         }
 
-        const slotInfo = await SinglePlayerModeModelSpmModel.getSlotFullData(slotIndex);
+        const slotInfo = await getSlotFullData(slotIndex);
         if (slotIndex !== this.getOpenData()?.slotIndex) {
             return;
         }
@@ -313,15 +313,15 @@ class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             imgBg.loadSource(`uncompressedRectangle0016`);
         } else {
             const warData       = slotInfo.warData;
-            const warType       = HelpersProtoSchemaWarSerializationSerialWar.getWarTypeId(warData);
-            labelSlotIndex.setText(`#${slotIndex} ${LangUtils.getWarTypeName(warType)}`);
-            imgBg.loadSource(WarTypesUtils.getItemRendererBackground(warType));
+            const warType       = getWarTypeId(warData);
+            labelSlotIndex.setText(`#${slotIndex} ${getWarTypeName(warType)}`);
+            imgBg.loadSource(getItemRendererBackground(warType));
 
             const slotExtraData = slotInfo.extraData;
             const timestamp     = slotExtraData.getTimestamp();
-            labelTimestamp.setText(timestamp == null ? `` : LangUtils.getTimestampShortText(timestamp));
+            labelTimestamp.setText(timestamp == null ? `` : getTimestampShortText(timestamp));
 
-            const slotName = await SinglePlayerModeModelSpmModel.getSlotName(slotIndex);
+            const slotName = await getSlotName(slotIndex);
             if (slotIndex === this.getOpenData()?.slotIndex) {
                 labelMapName.setText(slotName);
             }

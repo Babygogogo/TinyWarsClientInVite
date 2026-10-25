@@ -1,4 +1,4 @@
-import type * as MedalsTypes from "./Types.ts";
+import type { MedalCfg } from "./Types.ts";
 
 // eslint-disable-next-line no-shadow
 export const enum Common {
@@ -10,7 +10,7 @@ export const enum MedalTypeId {
     TournamentPrize = 1,
 }
 
-export const CfgDict = new Map<number, MedalsTypes.MedalCfg>([
+export const CfgDict = new Map<number, MedalCfg>([
     // 类型参数备注
     // 1=联赛奖牌	第n届	第n名
     [1,     { medalId: 1,     typeParams: [1, 0, 1] }],   // #0联赛#1

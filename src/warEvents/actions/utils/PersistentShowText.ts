@@ -1,22 +1,24 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaPersistentShowText from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentShowText.ts";
-import * as WarEventsActionsConstantsPersistentShowText from "../constants/PersistentShowText.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { checkIsValidLanguageTextArray, getLanguageText, getFormattedText, getText } from "../../../lang/Utils.ts";
+import type {
+    WeaPersistentShowText as ProtoSchemaCommonProtoWarEventWeaPersistentShowText,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentShowText.ts";
+import { Common } from "../constants/PersistentShowText.ts";
 
-type WeaPersistentShowText  = ProtoSchemaCommonProtoWarEventWeaPersistentShowText.WeaPersistentShowText;
+type WeaPersistentShowText  = ProtoSchemaCommonProtoWarEventWeaPersistentShowText;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaPersistentShowText>): boolean {
+export function checkIsValid(action: Undefinable<WeaPersistentShowText>): boolean {
     if (action == null) {
         return false;
     }
 
-    if (!LangUtils.checkIsValidLanguageTextArray({
+    if (!checkIsValidLanguageTextArray({
         list            : action.getTextArray(),
         minTextCount    : 1,
         minTextLength   : 1,
-        maxTextLength   : WarEventsActionsConstantsPersistentShowText.Common.MaxLength,
+        maxTextLength   : Common.MaxLength,
     })) {
         return false;
     }
@@ -24,38 +26,38 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaPersistentShowText>): string | null {
+export function getBriefDesc(data: Undefinable<WeaPersistentShowText>): string | null {
     if (data == null) {
         return null;
     }
 
-    const rawText = LangUtils.getLanguageText({ textArray: data.getTextArray() });
+    const rawText = getLanguageText({ textArray: data.getTextArray() });
     if (rawText == null) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0131, LangConstants.UndefinedError);
+        return getFormattedText(TextType.F0131, UndefinedError);
     } else {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0131, rawText.length > 20 ? `${rawText?.substring(0, 20)}...` : rawText);
+        return getFormattedText(TextType.F0131, rawText.length > 20 ? `${rawText?.substring(0, 20)}...` : rawText);
     }
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaPersistentShowText>): string | null {
+export function getDetailDesc(data: Undefinable<WeaPersistentShowText>): string | null {
     return getBriefDesc(data);
 }
 
 export function getErrorTip(data: WeaPersistentShowText): string | null {
-    if (!LangUtils.checkIsValidLanguageTextArray({
+    if (!checkIsValidLanguageTextArray({
         list            : data.getTextArray(),
         minTextCount    : 1,
         minTextLength   : 1,
-        maxTextLength   : WarEventsActionsConstantsPersistentShowText.Common.MaxLength
+        maxTextLength   : Common.MaxLength
     })) {
-        return LangUtils.getText(LangConstants.TextType.A0308);
+        return getText(TextType.A0308);
     }
 
     return null;
 }
 
-export function applyWithExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWarInterfaceIBwWar.IBwWar): void {
+export function applyWithExtraData(_action: WeaPersistentShowText, actionId: number, war: IBwWar): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }
-export function applyWithoutExtraData(_action: WeaPersistentShowText, actionId: number, war: BaseWarInterfaceIBwWar.IBwWar): void {
+export function applyWithoutExtraData(_action: WeaPersistentShowText, actionId: number, war: IBwWar): void {
     war.getWarEventManager().updateOpaIdArrayOnExecuteAction(actionId);
 }

@@ -1,5 +1,5 @@
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfCanCoBoard from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfCanCoBoard.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { SelfCanCoBoard } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfCanCoBoard.ts";
 
 export function checkCanCoBoard({
     cfg,
@@ -8,8 +8,8 @@ export function checkCanCoBoard({
     tileTypeId,
     isOwnTile,
 }: {
-    cfg             : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfCanCoBoard.SelfCanCoBoard | null | undefined;
-    gameConfig      : GameConfigGcData.GcData;
+    cfg             : SelfCanCoBoard | null | undefined;
+    gameConfig      : GcData;
     unitTypeId      : number;
     tileTypeId      : number;
     isOwnTile       : boolean;

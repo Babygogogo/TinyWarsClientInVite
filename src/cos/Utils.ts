@@ -1,19 +1,19 @@
-import * as CosConstants from "./Constants.ts";
-import * as HelpersCollection from "../helpers/Collection.ts";
-import * as NumbersUtils from "../numbers/Utils.ts";
-import type * as ProtoSchemaCommonProtoConfigCoBasicCfg from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
+import { EnergyHardLimit, CoId } from "./Constants.ts";
+import { pickRandomElement } from "../helpers/Collection.ts";
+import { getValueInRange } from "../numbers/Utils.ts";
+import type { CoBasicCfg as ProtoSchemaCommonProtoConfigCoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
 
-type CoBasicCfg         = ProtoSchemaCommonProtoConfigCoBasicCfg.CoBasicCfg;
+type CoBasicCfg         = ProtoSchemaCommonProtoConfigCoBasicCfg;
 
 export function checkIsValidEnergy(energy: number): boolean {
     return (energy === Math.floor(energy))
-        && (energy >= CosConstants.EnergyHardLimit.Min)
-        && (energy <= CosConstants.EnergyHardLimit.Max);
+        && (energy >= EnergyHardLimit.Min)
+        && (energy <= EnergyHardLimit.Max);
 }
 export function getValidEnergy(energy: number): number {
-    return NumbersUtils.getValueInRange({
-        minValue    : CosConstants.EnergyHardLimit.Min,
-        maxValue    : CosConstants.EnergyHardLimit.Max,
+    return getValueInRange({
+        minValue    : EnergyHardLimit.Min,
+        maxValue    : EnergyHardLimit.Max,
         rawValue    : Math.floor(energy),
     });
 }
@@ -29,12 +29,12 @@ export function getCoMaxEnergy(coConfig: CoBasicCfg): number {
 export function pickRandomCo(coIdList: number[]): number {
     if ((coIdList == null) || (coIdList.length <= 0)) {
         // throw Helpers.Misc.newError(`Empty coIdList.`, ClientErrorCode.WarRuleHelpers_GetRandomCoIdWithCoIdList_00);
-        return CosConstants.CoId.Empty;
+        return CoId.Empty;
     } else {
         if (coIdList.length <= 1) {
             return coIdList[0];
         } else {
-            return HelpersCollection.pickRandomElement(coIdList.filter(v => v !== CosConstants.CoId.Empty));
+            return pickRandomElement(coIdList.filter(v => v !== CoId.Empty));
         }
     }
 }

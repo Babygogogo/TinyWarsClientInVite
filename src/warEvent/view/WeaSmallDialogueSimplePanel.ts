@@ -1,58 +1,69 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as DialoguesConstants from "../../dialogues/Constants.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoStructureLanguageText from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventAction from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSmallDialogueSimple from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple.ts";
-import * as ProtoSchemaCommonProtoWarEventWeaSmallDialogueSimpleDataForAside from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple/DataForAside.ts";
-import * as ProtoSchemaCommonProtoWarEventWeaSmallDialogueSimpleDataForCoDialogue from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple/DataForCoDialogue.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSmallDialogueSimpleDataForDialogue from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple/DataForDialogue.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as WarEventsActionsUtilsCommon from "../../warEvents/actions/utils/Common.ts";
-import * as WarEventsActionsUtilsSmallDialogueSimple from "../../warEvents/actions/utils/SmallDialogueSimple.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { Common, SmallDialogueSideId } from "../../dialogues/Constants.ts";
+import { show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { deleteElementFromList, createRange } from "../../helpers/Collection.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getText,
+    getFormattedText,
+    getCurrentLanguageType,
+    getSecondaryLanguageType,
+    getLanguageText,
+    getLanguageTypeName,
+} from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
+import type {
+    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type {
+    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WeaSmallDialogueSimple } from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple.ts";
+import { DataForAside } from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple/DataForAside.ts";
+import { DataForCoDialogue } from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple/DataForCoDialogue.ts";
+import type { DataForDialogue } from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple/DataForDialogue.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getDefaultSimpleCoDialogueData, getErrorTipForAction } from "../../warEvents/actions/utils/Common.ts";
+import { getErrorTipForWeaSimpleDialogueData } from "../../warEvents/actions/utils/SmallDialogueSimple.ts";
 
-type IBwWar                             = BaseWarInterfaceIBwWar.IBwWar;
-type WarEventFullData                   = ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
-type WarEventAction                     = ProtoSchemaCommonProtoWarEventWarEventAction.WarEventAction;
+type IBwWar                             = BaseWarInterfaceIBwWar;
+type WarEventFullData                   = ProtoSchemaCommonProtoWarEventWarEventFullData;
+type WarEventAction                     = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
-    war         : MapEditorInterfaceIMeWar.IMeWar;
+    war         : IMeWar;
     fullData    : WarEventFullData;
     action      : WarEventAction;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnType!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnPlay!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAddDialogue!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClear!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDialoguesCount!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listDialogue!         : UiInterfacesIUiScrollList.IUiScrollList<DataForDialogueRenderer>;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _btnHelp!              : IUiButton;
+    private readonly _btnType!              : IUiButton;
+    private readonly _btnPlay!              : IUiButton;
+    private readonly _btnAddDialogue!       : IUiButton;
+    private readonly _btnClear!             : IUiButton;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _labelDialoguesCount!  : IUiLabel;
+    private readonly _listDialogue!         : IUiScrollList<DataForDialogueRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -64,8 +75,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,            callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarEventFullDataChanged,    callback: this._onNotifyWarEventFullDataChanged },
+            { type: TypeId.LanguageChanged,            callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarEventFullDataChanged,    callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -95,21 +106,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnAddDialogue(): void {
-        const dialogueArray = HelpersMisc.getExisted(this._getAction()?.getDataArray());
-        if (dialogueArray.length > DialoguesConstants.Common.MaxCount) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0228));
+        const dialogueArray = getExisted(this._getAction()?.getDataArray());
+        if (dialogueArray.length > Common.MaxCount) {
+            show(getText(TextType.A0228));
         } else {
-            dialogueArray.push(WarEventsActionsUtilsCommon.getDefaultSimpleCoDialogueData());
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+            dialogueArray.push(getDefaultSimpleCoDialogueData());
+            dispatch(TypeId.WarEventFullDataChanged);
         }
     }
 
     private _onTouchedBtnClear(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
-                HelpersMisc.getExisted(this._getAction()?.getDataArray()).length = 0;
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                getExisted(this._getAction()?.getDataArray()).length = 0;
+                dispatch(TypeId.WarEventFullDataChanged);
             }
         });
     }
@@ -120,7 +131,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeActionTypeListPanel, {
+        openPanel(getDict().WeActionTypeListPanel, {
             war         : openData.war,
             fullData    : openData.fullData,
             action      : openData.action,
@@ -134,14 +145,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const action            = openData.action;
-        const dialogueAction    = HelpersMisc.getExisted(action.getWeaSmallDialogueSimple());
-        const errorTip          = WarEventsActionsUtilsCommon.getErrorTipForAction(openData.fullData, action, openData.war);
+        const dialogueAction    = getExisted(action.getWeaSmallDialogueSimple());
+        const errorTip          = getErrorTipForAction(openData.fullData, action, openData.war);
         if (errorTip) {
-            FloatText2.show(errorTip);
+            show(errorTip);
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().BwSmallDialoguePanel, {
+        openPanel(getDict().BwSmallDialoguePanel, {
             war             : openData.war,
             actionData      : dialogueAction,
             callbackOnClose : () => {
@@ -151,8 +162,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0118),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0118),
         });
     }
 
@@ -166,8 +177,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnType.setLangText(LangConstants.TextType.B0516);
+        this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
+        this._btnType.setLangText(TextType.B0516);
     }
 
     private async _updateComponentsForDialogues(): Promise<void> {
@@ -190,45 +201,45 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         await this._listDialogue.bindData(dataArray);
 
         const label     = this._labelDialoguesCount;
-        const maxCount  = DialoguesConstants.Common.MaxCount;
+        const maxCount  = Common.MaxCount;
         const currCount = dataArray.length;
-        label.setText(`${LangUtils.getText(LangConstants.TextType.B0675)}: ${currCount} / ${maxCount}`);
-        label.setTextColor(((currCount <= maxCount) && (currCount > 0)) ? GraphicsConstants.ColorValue.White : GraphicsConstants.ColorValue.Red);
+        label.setText(`${getText(TextType.B0675)}: ${currCount} / ${maxCount}`);
+        label.setTextColor(((currCount <= maxCount) && (currCount > 0)) ? ColorValue.White : ColorValue.Red);
     }
 
-    private _getAction(): AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarEventWeaSmallDialogueSimple.WeaSmallDialogueSimple> {
+    private _getAction(): Undefinable<WeaSmallDialogueSimple> {
         return this.getOpenData()?.action.getWeaSmallDialogueSimple();
     }
 }
 
-interface DataForDialogueRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForDialogueRenderer extends UiListItemData {
     war             : IBwWar;
     action          : WarEventAction;
-    dataForDialogue : ProtoSchemaCommonProtoWarEventWeaSmallDialogueSimpleDataForDialogue.DataForDialogue;
+    dataForDialogue : DataForDialogue;
 }
-class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForDialogueRenderer> {
-    private readonly _labelError!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnChangeType!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnInsert!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnUp!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDelete!            : UiInterfacesIUiButton.IUiButton;
+class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
+    private readonly _labelError!           : IUiLabel;
+    private readonly _btnChangeType!        : IUiButton;
+    private readonly _btnInsert!            : IUiButton;
+    private readonly _btnUp!                : IUiButton;
+    private readonly _btnDelete!            : IUiButton;
 
-    private readonly _labelDialogueType!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnPosition!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelPosition!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelDialogueType!    : IUiLabel;
+    private readonly _btnPosition!          : IUiButton;
+    private readonly _labelPosition!        : IUiLabel;
 
-    private readonly _groupCoDialogue!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnPortrait!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelPortrait!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnCustomName!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelCustomName!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupCoDialogue!      : IUiContainer;
+    private readonly _btnPortrait!          : IUiButton;
+    private readonly _labelPortrait!        : IUiLabel;
+    private readonly _btnCustomName!        : IUiButton;
+    private readonly _labelCustomName!      : IUiLabel;
 
-    private readonly _btn1!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDelete1!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _label1!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btn2!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDelete2!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _label2!               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btn1!                 : IUiButton;
+    private readonly _btnDelete1!           : IUiButton;
+    private readonly _label1!               : IUiLabel;
+    private readonly _btn2!                 : IUiButton;
+    private readonly _btnDelete2!           : IUiButton;
+    private readonly _label2!               : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -246,7 +257,7 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             { ui: this._btnDelete2,         callback: this._onTouchedBtnDelete2 },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
 
         this._label1.setAutoShrinkHeight(60);
@@ -272,13 +283,13 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             const dataForAside = dataForDialogue.getDataForAside();
             if (dataForAside) {
                 dataForDialogue.setDataForAside(null);
-                dataForDialogue.setDataForCoDialogue(ProtoSchemaCommonProtoWarEventWeaSmallDialogueSimpleDataForCoDialogue.DataForCoDialogue.fromJson({
+                dataForDialogue.setDataForCoDialogue(DataForCoDialogue.fromJson({
                     coId        : openData.war.getGcData().getCoIdArrayForDialogue()[0],
                     side        : dataForAside.getSide(),
                     textArray   : dataForAside.getTextArray().map(v => v.toJson()),
                     nameArray   : [],
                 }));
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
                 return;
             }
         }
@@ -287,16 +298,16 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             const dataForCoDialogue = dataForDialogue.getDataForCoDialogue();
             if (dataForCoDialogue) {
                 dataForDialogue.setDataForCoDialogue(null);
-                dataForDialogue.setDataForAside(ProtoSchemaCommonProtoWarEventWeaSmallDialogueSimpleDataForAside.DataForAside.fromJson({
+                dataForDialogue.setDataForAside(DataForAside.fromJson({
                     textArray   : dataForCoDialogue.getTextArray().map(v => v.toJson()),
                     side        : dataForCoDialogue.getSide(),
                 }));
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
                 return;
             }
         }
 
-        throw HelpersMisc.newError(`Invalid dataForDialogue.`);
+        throw newError(`Invalid dataForDialogue.`);
     }
 
     private _onTouchedBtnInsert(): void {
@@ -305,12 +316,12 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const dialogueArray = HelpersMisc.getExisted(openData.action.getWeaSmallDialogueSimple()?.getDataArray());
-        if (dialogueArray.length > DialoguesConstants.Common.MaxCount) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0228));
+        const dialogueArray = getExisted(openData.action.getWeaSmallDialogueSimple()?.getDataArray());
+        if (dialogueArray.length > Common.MaxCount) {
+            show(getText(TextType.A0228));
         } else {
             dialogueArray.splice(dialogueArray.indexOf(openData.dataForDialogue), 0, openData.dataForDialogue.clone());
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+            dispatch(TypeId.WarEventFullDataChanged);
         }
     }
 
@@ -320,11 +331,11 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const dialogueArray = HelpersMisc.getExisted(openData.action.getWeaSmallDialogueSimple()?.getDataArray());
+        const dialogueArray = getExisted(openData.action.getWeaSmallDialogueSimple()?.getDataArray());
         const index         = dialogueArray.indexOf(openData.dataForDialogue);
         if (index > 0) {
             [dialogueArray[index - 1], dialogueArray[index]] = [dialogueArray[index], dialogueArray[index - 1]];
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+            dispatch(TypeId.WarEventFullDataChanged);
         }
     }
 
@@ -334,11 +345,11 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
-                HelpersCollection.deleteElementFromList(HelpersMisc.getExisted(openData.action.getWeaSmallDialogueSimple()?.getDataArray()), openData.dataForDialogue);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                deleteElementFromList(getExisted(openData.action.getWeaSmallDialogueSimple()?.getDataArray()), openData.dataForDialogue);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -349,15 +360,15 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const data = dataForDialogue.getDataForCoDialogue() ?? dataForDialogue.getDataForAside();
         if (data) {
-            data.setSide(data.getSide() === DialoguesConstants.SmallDialogueSideId.Bottom
-                ? DialoguesConstants.SmallDialogueSideId.Top
-                : DialoguesConstants.SmallDialogueSideId.Bottom
+            data.setSide(data.getSide() === SmallDialogueSideId.Bottom
+                ? SmallDialogueSideId.Top
+                : SmallDialogueSideId.Bottom
             );
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+            dispatch(TypeId.WarEventFullDataChanged);
         }
     }
 
@@ -372,13 +383,13 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.B1442),
-            availableNumberArray    : [0].concat(HelpersCollection.createRange(1, openData.war.getPlayersCountUnneutral() + 1, 1)),
+        openPanel(getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => getText(TextType.B1442),
+            availableNumberArray    : [0].concat(createRange(1, openData.war.getPlayersCountUnneutral() + 1, 1)),
             currentNumber           : dataForCoDialogue.getPlayerIndex() ?? 0,
             getNumberMainText       : num => {
                 if (num === 0) {
-                    return LangUtils.getText(LangConstants.TextType.B0145);
+                    return getText(TextType.B0145);
                 } else {
                     return `P${num}`;
                 }
@@ -387,11 +398,11 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
                 if (num !== 0) {
                     dataForCoDialogue.setCoId(null);
                     dataForCoDialogue.setPlayerIndex(num);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 } else {
                     const currentCoId   = dataForCoDialogue.getCoId();
                     const gameConfig    = openData.war.getGcData();
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleCoIdPanel, {
+                    openPanel(getDict().CommonChooseSingleCoIdPanel, {
                         gameConfig          : gameConfig,
                         availableCoIdArray  : gameConfig.getCoIdArrayForDialogue(),
                         currentCoId         : currentCoId,
@@ -400,7 +411,7 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
                             if (newCoId !== currentCoId) {
                                 dataForCoDialogue.setPlayerIndex(null);
                                 dataForCoDialogue.setCoId(newCoId);
-                                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                                dispatch(TypeId.WarEventFullDataChanged);
                             }
                         },
                     });
@@ -410,22 +421,22 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
     }
 
     private _onTouchedBtnCustomName(): void {
-        const dataForDialogue = HelpersMisc.getExisted(this.getOpenData()?.dataForDialogue.getDataForCoDialogue());
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputShortLangTextPanel, {
+        const dataForDialogue = getExisted(this.getOpenData()?.dataForDialogue.getDataForCoDialogue());
+        openPanel(getDict().CommonInputShortLangTextPanel, {
             currentTextArray    : dataForDialogue.getNameArray(),
             allowEmpty          : true,
-            maxTextLength       : DialoguesConstants.Common.MaxNameLength,
-            getTitleText        : () => LangUtils.getText(LangConstants.TextType.B0156),
-            getHelpText         : () => LangUtils.getFormattedText(LangConstants.TextType.F0020, DialoguesConstants.Common.MaxNameLength),
+            maxTextLength       : Common.MaxNameLength,
+            getTitleText        : () => getText(TextType.B0156),
+            getHelpText         : () => getFormattedText(TextType.F0020, Common.MaxNameLength),
             callback            : newNameArray => {
-                const revisedArray: ProtoSchemaCommonProtoStructureLanguageText.LanguageText[] = [];
+                const revisedArray: LanguageText[] = [];
                 for (const name of newNameArray) {
                     if (name.getText()) {
                         revisedArray.push(name);
                     }
                 }
                 dataForDialogue.setNameArray(revisedArray);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -436,17 +447,17 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const languageType1 = LangUtils.getCurrentLanguageType();
-        const textArray     = HelpersMisc.getExisted(dataForDialogue.getDataForCoDialogue()?.getTextArray() ?? dataForDialogue.getDataForAside()?.getTextArray());
+        const languageType1 = getCurrentLanguageType();
+        const textArray     = getExisted(dataForDialogue.getDataForCoDialogue()?.getTextArray() ?? dataForDialogue.getDataForAside()?.getTextArray());
         const textData      = textArray.find(v => (v.getLanguageType() ?? 0) === languageType1);
         const currentText   = textData?.getText();
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputPanel, {
-            title           : LangUtils.getText(LangConstants.TextType.B0455),
+        openPanel(getDict().CommonInputPanel, {
+            title           : getText(TextType.B0455),
             currentValue    : currentText || ``,
             charRestrict    : null,
-            maxChars        : DialoguesConstants.Common.MaxTextLength,
-            tips            : LangUtils.getFormattedText(LangConstants.TextType.F0020, DialoguesConstants.Common.MaxTextLength),
+            maxChars        : Common.MaxTextLength,
+            tips            : getFormattedText(TextType.F0020, Common.MaxTextLength),
             canBeEmpty      : true,
             isMultiLine     : true,
             callback        : panel => {
@@ -456,18 +467,18 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
                 }
 
                 if (!text.length) {
-                    HelpersCollection.deleteElementFromList(textArray, textData);
+                    deleteElementFromList(textArray, textData);
                 } else {
                     if (textData) {
                         textData.setText(text);
                     } else {
-                        textArray.push(ProtoSchemaCommonProtoStructureLanguageText.LanguageText.fromJson({
+                        textArray.push(LanguageText.fromJson({
                             languageType    : languageType1,
                             text            : text,
                         }));
                     }
                 }
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -478,16 +489,16 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const languageType1     = LangUtils.getCurrentLanguageType();
-        const textArray         = HelpersMisc.getExisted(dataForDialogue.getDataForCoDialogue()?.getTextArray() ?? dataForDialogue.getDataForAside()?.getTextArray());
+        const languageType1     = getCurrentLanguageType();
+        const textArray         = getExisted(dataForDialogue.getDataForCoDialogue()?.getTextArray() ?? dataForDialogue.getDataForAside()?.getTextArray());
         const index             = textArray.findIndex(v => (v.getLanguageType() ?? 0) === languageType1);
         const textData          = textArray[index];
         if (textData?.getText() != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent     : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
                 callback    : () => {
                     textArray.splice(index, 1);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             });
         }
@@ -499,17 +510,17 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const languageType2     = LangUtils.getSecondaryLanguageType();
-        const textArray         = HelpersMisc.getExisted(dataForDialogue.getDataForCoDialogue()?.getTextArray() ?? dataForDialogue.getDataForAside()?.getTextArray());
+        const languageType2     = getSecondaryLanguageType();
+        const textArray         = getExisted(dataForDialogue.getDataForCoDialogue()?.getTextArray() ?? dataForDialogue.getDataForAside()?.getTextArray());
         const textData          = textArray.find(v => (v.getLanguageType() ?? 0) === languageType2);
         const currentText       = textData?.getText();
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputPanel, {
-            title           : LangUtils.getText(LangConstants.TextType.B0456),
+        openPanel(getDict().CommonInputPanel, {
+            title           : getText(TextType.B0456),
             currentValue    : currentText || ``,
             charRestrict    : null,
-            maxChars        : DialoguesConstants.Common.MaxTextLength,
-            tips            : LangUtils.getFormattedText(LangConstants.TextType.F0020, DialoguesConstants.Common.MaxTextLength),
+            maxChars        : Common.MaxTextLength,
+            tips            : getFormattedText(TextType.F0020, Common.MaxTextLength),
             canBeEmpty      : true,
             isMultiLine     : true,
             callback        : panel => {
@@ -519,18 +530,18 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
                 }
 
                 if (!text.length) {
-                    HelpersCollection.deleteElementFromList(textArray, textData);
+                    deleteElementFromList(textArray, textData);
                 } else {
                     if (textData) {
                         textData.setText(text);
                     } else {
-                        textArray.push(ProtoSchemaCommonProtoStructureLanguageText.LanguageText.fromJson({
+                        textArray.push(LanguageText.fromJson({
                             languageType    : languageType2,
                             text            : text,
                         }));
                     }
                 }
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -541,16 +552,16 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const languageType2     = LangUtils.getSecondaryLanguageType();
-        const textArray         = HelpersMisc.getExisted(dataForDialogue.getDataForCoDialogue()?.getTextArray() ?? dataForDialogue.getDataForAside()?.getTextArray());
+        const languageType2     = getSecondaryLanguageType();
+        const textArray         = getExisted(dataForDialogue.getDataForCoDialogue()?.getTextArray() ?? dataForDialogue.getDataForAside()?.getTextArray());
         const index             = textArray.findIndex(v => v.getLanguageType() === languageType2);
         const textData          = textArray[index];
         if (textData?.getText() != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent     : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
                 callback    : () => {
                     textArray.splice(index, 1);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             });
         }
@@ -574,22 +585,22 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
         const dataForDialogue   = openData.dataForDialogue;
         const dataForCoDialogue = dataForDialogue.getDataForCoDialogue();
         const dataForAside      = dataForDialogue.getDataForAside();
-        const languageType1     = LangUtils.getCurrentLanguageType();
-        const languageType2     = LangUtils.getSecondaryLanguageType();
+        const languageType1     = getCurrentLanguageType();
+        const languageType2     = getSecondaryLanguageType();
         const groupCoDialogue   = this._groupCoDialogue;
         const labelPosition     = this._labelPosition;
 
         if (dataForAside) {
             groupCoDialogue.setIsVisible(false);
-            labelPosition.setLangText(dataForAside.getSide() === DialoguesConstants.SmallDialogueSideId.Bottom ? LangConstants.TextType.B1261 : LangConstants.TextType.B1260);
+            labelPosition.setLangText(dataForAside.getSide() === SmallDialogueSideId.Bottom ? TextType.B1261 : TextType.B1260);
 
         } else if (dataForCoDialogue) {
             groupCoDialogue.setIsVisible(true);
-            labelPosition.setLangText(dataForCoDialogue.getSide() === DialoguesConstants.SmallDialogueSideId.Bottom ? LangConstants.TextType.B1261 : LangConstants.TextType.B1260);
+            labelPosition.setLangText(dataForCoDialogue.getSide() === SmallDialogueSideId.Bottom ? TextType.B1261 : TextType.B1260);
 
             const coId = dataForCoDialogue.getCoId();
             this._labelPortrait.setText(coId != null
-                ? (openData.war.getGcData().getCoNameAndTierText(coId) ?? LangConstants.UndefinedError)
+                ? (openData.war.getGcData().getCoNameAndTierText(coId) ?? UndefinedError)
                 : `P${dataForCoDialogue.getPlayerIndex()}`
             );
 
@@ -603,12 +614,12 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
 
         {
             const textArray = dataForCoDialogue ? dataForCoDialogue.getTextArray() : dataForAside?.getTextArray();
-            this._label1.setText(LangUtils.getLanguageText({
+            this._label1.setText(getLanguageText({
                 textArray   : textArray,
                 useAlternate: false,
                 languageType: languageType1,
             }) || "");
-            this._label2.setText(LangUtils.getLanguageText({
+            this._label2.setText(getLanguageText({
                 textArray   : textArray,
                 useAlternate: false,
                 languageType: languageType2,
@@ -620,12 +631,12 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
         this._updateLabelError();
         this._updateLabelDialogueType();
 
-        this._btnChangeType.setLangText(LangConstants.TextType.B0668);
-        this._btnPosition.setLangText(LangConstants.TextType.B1181);
-        this._btnPortrait.setLangText(LangConstants.TextType.B1442);
-        this._btnCustomName.setLangText(LangConstants.TextType.B0156);
-        this._btn1.setText(LangUtils.getLanguageTypeName(LangUtils.getCurrentLanguageType()) ?? LangConstants.UndefinedError);
-        this._btn2.setText(LangUtils.getLanguageTypeName(LangUtils.getSecondaryLanguageType()) ?? LangConstants.UndefinedError);
+        this._btnChangeType.setLangText(TextType.B0668);
+        this._btnPosition.setLangText(TextType.B1181);
+        this._btnPortrait.setLangText(TextType.B1442);
+        this._btnCustomName.setLangText(TextType.B0156);
+        this._btn1.setText(getLanguageTypeName(getCurrentLanguageType()) ?? UndefinedError);
+        this._btn2.setText(getLanguageTypeName(getSecondaryLanguageType()) ?? UndefinedError);
     }
 
     private _updateLabelError(): void {
@@ -635,14 +646,14 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
         }
 
         const war       = openData.war;
-        const errorTips = WarEventsActionsUtilsSmallDialogueSimple.getErrorTipForWeaSimpleDialogueData(openData.dataForDialogue, war.getPlayersCountUnneutral(), war.getGcData());
+        const errorTips = getErrorTipForWeaSimpleDialogueData(openData.dataForDialogue, war.getPlayersCountUnneutral(), war.getGcData());
         const label     = this._labelError;
         if (errorTips) {
-            label.setTextColor(GraphicsConstants.ColorValue.Red);
+            label.setTextColor(ColorValue.Red);
             label.setText(errorTips);
         } else {
-            label.setTextColor(GraphicsConstants.ColorValue.White);
-            label.setLangText(LangConstants.TextType.B0493);
+            label.setTextColor(ColorValue.White);
+            label.setLangText(TextType.B0493);
         }
     }
 
@@ -654,11 +665,11 @@ class DialogueRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
 
         const label = this._labelDialogueType;
         if (data.getDataForAside()) {
-            label.setText(`${LangUtils.getText(LangConstants.TextType.B0669)}: ${LangUtils.getText(LangConstants.TextType.B0670)}`);
+            label.setText(`${getText(TextType.B0669)}: ${getText(TextType.B0670)}`);
         } else if (data.getDataForCoDialogue()) {
-            label.setText(`${LangUtils.getText(LangConstants.TextType.B0669)}: ${LangUtils.getText(LangConstants.TextType.B0671)}`);
+            label.setText(`${getText(TextType.B0669)}: ${getText(TextType.B0671)}`);
         } else {
-            label.setText(`${LangUtils.getText(LangConstants.TextType.B0669)}: ${LangUtils.getText(LangConstants.TextType.B0672)}`);
+            label.setText(`${getText(TextType.B0669)}: ${getText(TextType.B0672)}`);
         }
     }
 }

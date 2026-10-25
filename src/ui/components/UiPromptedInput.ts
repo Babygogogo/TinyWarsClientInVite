@@ -1,16 +1,16 @@
-import * as HelpersCompatibility from "../../helpers/Compatibility.ts";
-import * as UiComponentsUiContainer from "./UiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiPromptedInput from "../interfaces/IUiPromptedInput.ts";
-import type * as UiInterfacesIUiTextInput from "../interfaces/IUiTextInput.ts";
-import type * as UiTypesUiSkinAttrs from "../types/UiSkinAttrs.ts";
-import * as UiUtilsUiSkinHelpers from "../utils/UiSkinHelpers.ts";
+import { isPc } from "../../helpers/Compatibility.ts";
+import { UiContainer } from "./UiContainer.ts";
+import type { IUiLabel } from "../interfaces/IUiLabel.ts";
+import type { IUiPromptedInput } from "../interfaces/IUiPromptedInput.ts";
+import type { IUiTextInput } from "../interfaces/IUiTextInput.ts";
+import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import { commonLoadSkinAttrsForSizer, getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
 
-type UiSkinAttrs = UiTypesUiSkinAttrs.UiSkinAttrs;
+type UiSkinAttrs = UiTypesUiSkinAttrs;
 
-export class UiPromptedInput extends UiComponentsUiContainer.UiContainer implements UiInterfacesIUiPromptedInput.IUiPromptedInput {
-    private readonly _textInput?    : UiInterfacesIUiTextInput.IUiTextInput;
-    private readonly _labelPrompt?  : UiInterfacesIUiLabel.IUiLabel;
+export class UiPromptedInput extends UiContainer implements IUiPromptedInput {
+    private readonly _textInput?    : IUiTextInput;
+    private readonly _labelPrompt?  : IUiLabel;
 
     public constructor() {
         super();
@@ -26,16 +26,16 @@ export class UiPromptedInput extends UiComponentsUiContainer.UiContainer impleme
     }
 
     public loadSkinAttrs(oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
-        UiUtilsUiSkinHelpers.commonLoadSkinAttrsForSizer(this, oldSkinAttrs, newSkinAttrs);
+        commonLoadSkinAttrsForSizer(this, oldSkinAttrs, newSkinAttrs);
 
         const input = this.getInputComponent();
         if (input == null) {
             return;
         }
 
-        const restrict          = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "restrict");
-        const maxChars          = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "maxChars");
-        const displayAsPassword = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "displayAsPassword");
+        const restrict          = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "restrict");
+        const maxChars          = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "maxChars");
+        const displayAsPassword = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "displayAsPassword");
         // const multiline         = Utils.UiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "multiline");
 
         (restrict.needChange)           && (input.setRestrict(restrict.value));
@@ -45,7 +45,7 @@ export class UiPromptedInput extends UiComponentsUiContainer.UiContainer impleme
     }
 
     // GETTERS & SETTERS
-    public getPromptComponent(): UiInterfacesIUiLabel.IUiLabel | undefined {
+    public getPromptComponent(): IUiLabel | undefined {
         return this._labelPrompt;
     }
     public getPromptText(): string | undefined {
@@ -56,7 +56,7 @@ export class UiPromptedInput extends UiComponentsUiContainer.UiContainer impleme
         this.getInputComponent()?.setDomPlaceholder(text);
     }
 
-    public getInputComponent(): UiInterfacesIUiTextInput.IUiTextInput | undefined {
+    public getInputComponent(): IUiTextInput | undefined {
         return this._textInput;
     }
     public getInputText(): string | undefined {
@@ -96,6 +96,6 @@ export class UiPromptedInput extends UiComponentsUiContainer.UiContainer impleme
 
     // INPUT SUBSTITUTION
     private _updateLabelPrompt(): void {
-        this.getPromptComponent()?.setIsVisible((HelpersCompatibility.isPc) && (!this.getInputComponent()?.getText().length));
+        this.getPromptComponent()?.setIsVisible((isPc) && (!this.getInputComponent()?.getText().length));
     }
 }

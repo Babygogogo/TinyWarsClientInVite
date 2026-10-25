@@ -1,31 +1,33 @@
-import type * as ActionPlannersIActionPlanner from "../actionPlanners/IActionPlanner.ts";
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwCursor from "../baseWar/interface/IBwCursor.ts";
-import type * as BaseWarInterfaceIBwGridVisualEffect from "../baseWar/interface/IBwGridVisualEffect.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as FieldsIFieldView from "./IFieldView.ts";
-import type * as FogMapsIFogMap from "../fogMaps/IFogMap.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialField from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
-import type * as TilesITileMap from "../tiles/ITileMap.ts";
-import type * as UnitsIUnitMap from "../units/IUnitMap.ts";
+import type { IActionPlanner } from "../actionPlanners/IActionPlanner.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwCursor as BaseWarInterfaceIBwCursor } from "../baseWar/interface/IBwCursor.ts";
+import type { IBwGridVisualEffect as BaseWarInterfaceIBwGridVisualEffect } from "../baseWar/interface/IBwGridVisualEffect.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IFieldView } from "./IFieldView.ts";
+import type { IFogMap } from "../fogMaps/IFogMap.ts";
+import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import type {
+    SerialField as ProtoSchemaCommonProtoWarSerializationSerialField,
+} from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
+import type { ITileMap } from "../tiles/ITileMap.ts";
+import type { IUnitMap } from "../units/IUnitMap.ts";
 
-type SerialField            = ProtoSchemaCommonProtoWarSerializationSerialField.SerialField;
-type GcData                 = GameConfigGcData.GcData;
-type IBwTileMap             = TilesITileMap.ITileMap;
-type IBwUnitMap             = UnitsIUnitMap.IUnitMap;
-type IBwCursor              = BaseWarInterfaceIBwCursor.IBwCursor;
-type IBwGridVisualEffect    = BaseWarInterfaceIBwGridVisualEffect.IBwGridVisualEffect;
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
+type SerialField            = ProtoSchemaCommonProtoWarSerializationSerialField;
+type GcData                 = GameConfigGcData;
+type IBwTileMap             = ITileMap;
+type IBwUnitMap             = IUnitMap;
+type IBwCursor              = BaseWarInterfaceIBwCursor;
+type IBwGridVisualEffect    = BaseWarInterfaceIBwGridVisualEffect;
+type IBwWar                 = BaseWarInterfaceIBwWar;
 
 export interface IField {
-    getFogMap(): FogMapsIFogMap.IFogMap;
+    getFogMap(): IFogMap;
     getTileMap(): IBwTileMap;
     getUnitMap(): IBwUnitMap;
-    getActionPlanner(): ActionPlannersIActionPlanner.IActionPlanner;
+    getActionPlanner(): IActionPlanner;
 
     init({ data, gameConfig, playersCountUnneutral }: {
-        data                    : AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialField>;
+        data                    : Undefinable<SerialField>;
         gameConfig              : GcData;
         playersCountUnneutral   : number;
     }): void;
@@ -46,7 +48,7 @@ export interface IField {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    getView(): FieldsIFieldView.IFieldView;
+    getView(): IFieldView;
 
     getCursor(): IBwCursor;
 

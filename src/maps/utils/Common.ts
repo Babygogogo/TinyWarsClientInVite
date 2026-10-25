@@ -1,16 +1,16 @@
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameConfigGcMap from "../../gameConfig/GcMap.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialTile from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import * as TilesConstantsCommon from "../../tiles/constants/Common.ts";
-import * as TilesUtilsSerialization from "../../tiles/utils/Serialization.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as WarRulesUtilsTemplate from "../../warRules/utils/Template.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { Constants } from "../../gameConfig/GcMap.ts";
+import { LanguageType } from "../../lang/Constants.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import { AwbwTileMapping } from "../../tiles/constants/Common.ts";
+import { createDefault } from "../../tiles/utils/Serialization.ts";
+import { getServerTimestamp } from "../../timer/TimerModel.ts";
+import { getSelfUserId } from "../../users/Model.ts";
+import { createDefault as WarRulesUtilsTemplateCreateDefault } from "../../warRules/utils/Template.ts";
 
-export function convertAwbwMap(text: string, gcData: GameConfigGcData.GcData): ProtoSchemaCommonProtoMapMapRawData.MapRawData | undefined {
+export function convertAwbwMap(text: string, gcData: GcData): MapRawData | undefined {
     const awbwIdMap = text.trim().split(`\n`).map(line => line.split(`,`)).map(line => line.map(cell => parseInt(cell)));
     const mapHeight = awbwIdMap.length;
     if (mapHeight <= 0) {
@@ -19,7 +19,7 @@ export function convertAwbwMap(text: string, gcData: GameConfigGcData.GcData): P
 
     const mapWidth = awbwIdMap[0].length;
     if ((mapWidth <= 0) ||
-        (mapWidth * mapHeight > GameConfigGcMap.Constants.MaxGridsCount)
+        (mapWidth * mapHeight > Constants.MaxGridsCount)
     ) {
         return undefined;
     }
@@ -34,7 +34,7 @@ export function convertAwbwMap(text: string, gcData: GameConfigGcData.GcData): P
     {
         for (const column of awbwIdMap) {
             for (const awbwTileId of column) {
-                const info = TilesConstantsCommon.AwbwTileMapping.get(awbwTileId);
+                const info = AwbwTileMapping.get(awbwTileId);
                 if (info == null) {
                     return undefined;
                 }
@@ -51,15 +51,15 @@ export function convertAwbwMap(text: string, gcData: GameConfigGcData.GcData): P
         for (const playerIndex of [...unneutralPlayerIndexSet].sort((v1, v2) => v1 - v2)) {
             playerIndexMapping.set(
                 playerIndex,
-                newIndex <= PlayersConstants.PlayerIndex.Max ? newIndex++ : 0
+                newIndex <= PlayerIndex.Max ? newIndex++ : 0
             );
         }
     }
 
-    const tileArray: ProtoSchemaCommonProtoWarSerializationSerialTile.SerialTile[] = [];
+    const tileArray: SerialTile[] = [];
     for (let x = 0; x < mapWidth; ++x) {
         for (let y = 0; y < mapHeight; ++y) {
-            const info = TilesConstantsCommon.AwbwTileMapping.get(awbwIdMap[y][x]);
+            const info = AwbwTileMapping.get(awbwIdMap[y][x]);
             if (info == null) {
                 return undefined;
             }
@@ -69,7 +69,7 @@ export function convertAwbwMap(text: string, gcData: GameConfigGcData.GcData): P
                 return undefined;
             }
 
-            const tile = TilesUtilsSerialization.createDefault({
+            const tile = createDefault({
                 gridIndex           : { x, y },
                 tileBaseTypeId      : cfg.getToTileBaseTypeId(),
                 tileObjectTypeId    : cfg.getToTileObjectTypeId(),
@@ -80,18 +80,18 @@ export function convertAwbwMap(text: string, gcData: GameConfigGcData.GcData): P
         }
     }
 
-    const playersCountUnneutral = Math.min(unneutralPlayerIndexSet.size, PlayersConstants.PlayerIndex.Max);
-    return ProtoSchemaCommonProtoMapMapRawData.MapRawData.fromJson({
+    const playersCountUnneutral = Math.min(unneutralPlayerIndexSet.size, PlayerIndex.Max);
+    return MapRawData.fromJson({
         designerName            : "AWBW",
-        designerUserId          : UsersModel.getSelfUserId(),
-        mapNameArray            : [{ languageType: LangConstants.LanguageType.English, text: "AWBW Map" }],
+        designerUserId          : getSelfUserId(),
+        mapNameArray            : [{ languageType: LanguageType.English, text: "AWBW Map" }],
         mapWidth                : mapWidth,
         mapHeight               : mapHeight,
         playersCountUnneutral   : playersCountUnneutral,
-        modifiedTime            : TimerTimerModel.getServerTimestamp(),
+        modifiedTime            : getServerTimestamp(),
         tileDataArray           : tileArray.map(v => v.toJson()),
         unitDataArray           : [],
-        templateWarRuleArray    : [WarRulesUtilsTemplate.createDefault(0, playersCountUnneutral, gcData).toJson()],
+        templateWarRuleArray    : [WarRulesUtilsTemplateCreateDefault(0, playersCountUnneutral, gcData).toJson()],
         mapTagIdFlags           : null,
         warEventFullData        : null,
         mapSimpleDialogueArray  : [],

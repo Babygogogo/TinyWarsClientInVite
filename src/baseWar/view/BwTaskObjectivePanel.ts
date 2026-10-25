@@ -1,36 +1,36 @@
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoTaskObjectivesTaskObjective from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
-import type * as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
-import * as UiComponentsUiContainer from "../../ui/components/UiContainer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as UiUtilsUiFactory from "../../ui/utils/UiFactory.ts";
-import * as UiUtilsUiSkinHelpers from "../../ui/utils/UiSkinHelpers.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getLanguageText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
+import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
+import { UiContainer } from "../../ui/components/UiContainer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { getUiLabelClass, getUiContainerClass, getUiImageClass } from "../../ui/utils/UiFactory.ts";
+import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 
 export interface OpenData {
-    war     : BaseWarInterfaceIBwWar.IBwWar;
+    war     : IBwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _labelTitle!           : IUiLabel;
 
-    private readonly _groupTaskObjective!   : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _groupTaskObjective!   : IUiLayout;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._btnClose,   callback: this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -54,7 +54,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1214));
+        this._labelTitle.setText(getText(TextType.B1214));
 
         this._updateGroupTaskObjective();
     }
@@ -71,7 +71,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const allTaskObjectiveArray = war.getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray() ?? [];
         const stateArray            = war.getTaskObjectiveManager().getStateArray();
         {
-            group.addItem(createLabelForTaskObjectiveCategory(LangUtils.getText(LangConstants.TextType.B1217)), false);
+            group.addItem(createLabelForTaskObjectiveCategory(getText(TextType.B1217)), false);
 
             const dataArray = getDataArrayForTaskObjectiveRenderer(war, allTaskObjectiveArray, stateArray, true);
             for (const data of dataArray) {
@@ -85,7 +85,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         group.addItem(createSeparator(), false);
 
         {
-            group.addItem(createLabelForTaskObjectiveCategory(LangUtils.getText(LangConstants.TextType.B1220)), false);
+            group.addItem(createLabelForTaskObjectiveCategory(getText(TextType.B1220)), false);
 
             const dataArray = getDataArrayForTaskObjectiveRenderer(war, allTaskObjectiveArray, stateArray, false);
             for (const data of dataArray) {
@@ -100,8 +100,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-function createLabelForTaskObjectiveCategory(text: string): UiInterfacesIUiLabel.IUiLabel {
-    const label = new (UiUtilsUiFactory.getUiLabelClass());
+function createLabelForTaskObjectiveCategory(text: string): IUiLabel {
+    const label = new (getUiLabelClass());
     label.setText(text);
     label.setIsBold(true);
     label.setFontSize(12);
@@ -113,25 +113,25 @@ function createTaskObjectiveRenderer(data: DataForTaskObjectiveRenderer): TaskOb
     renderer.setData(data);
     return renderer;
 }
-function createGroupEmpty(): UiInterfacesIUiContainer.IUiContainer {
-    const label     = new (UiUtilsUiFactory.getUiLabelClass());
+function createGroupEmpty(): IUiContainer {
+    const label     = new (getUiLabelClass());
     label.setText(`----`);
     label.setFontSize(16);
     label.setX(30);
 
-    const group = new (UiUtilsUiFactory.getUiContainerClass());
+    const group = new (getUiContainerClass());
     group.addUiChild(label);
     return group;
 }
-function createSeparator(): UiInterfacesIUiImage.IUiImage {
-    const img = new (UiUtilsUiFactory.getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000`});
+function createSeparator(): IUiImage {
+    const img = new (getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000`});
     img.setUnscaledManualWidth(560);
     img.setUnscaledManualHeight(1);
     img.setIsSmoothing(false);
     img.setIsVisible(false);
     return img;
 }
-function getDataArrayForTaskObjectiveRenderer(war: BaseWarInterfaceIBwWar.IBwWar, allTaskObjectiveArray: ProtoSchemaCommonProtoTaskObjectivesTaskObjective.TaskObjective[], stateArray: ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState[], isMain: boolean): DataForTaskObjectiveRenderer[] {
+function getDataArrayForTaskObjectiveRenderer(war: IBwWar, allTaskObjectiveArray: TaskObjective[], stateArray: TaskObjectiveState[], isMain: boolean): DataForTaskObjectiveRenderer[] {
     const dataArray: DataForTaskObjectiveRenderer[] = [];
     for (const taskObjective of allTaskObjectiveArray.filter(v => isMain === !!v.getIsMain())) {
         const objectiveId = taskObjective.getObjectiveId() ?? 0;
@@ -146,20 +146,20 @@ function getDataArrayForTaskObjectiveRenderer(war: BaseWarInterfaceIBwWar.IBwWar
 }
 
 interface DataForTaskObjectiveRenderer {
-    taskObjective   : ProtoSchemaCommonProtoTaskObjectivesTaskObjective.TaskObjective;
-    war             : BaseWarInterfaceIBwWar.IBwWar;
+    taskObjective   : TaskObjective;
+    war             : IBwWar;
 }
-class TaskObjectiveRenderer extends UiComponentsUiContainer.UiContainer {
-    private readonly _groupCompleted!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgCompleted!     : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelDesc!        : UiInterfacesIUiLabel.IUiLabel;
+class TaskObjectiveRenderer extends UiContainer {
+    private readonly _groupCompleted!   : IUiContainer;
+    private readonly _imgCompleted!     : IUiImage;
+    private readonly _labelDesc!        : IUiLabel;
 
     private _data           : DataForTaskObjectiveRenderer | null = null;
 
     public constructor() {
         super();
 
-        UiUtilsUiSkinHelpers.loadSkinByPath(this, "component/taskObjective/TaskObjective001.exml");
+        loadSkinByPath(this, "component/taskObjective/TaskObjective001.exml");
     }
 
     public updateOnLoadedSkin(): void {
@@ -188,7 +188,7 @@ class TaskObjectiveRenderer extends UiComponentsUiContainer.UiContainer {
         const maxProgress       = taskObjective.getMaxProgress();
         const currentProgress   = data.war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId() ?? 0) == objectiveId)?.getCurrentProgress() ?? 0;
         const labelDesc         = this._labelDesc;
-        labelDesc.setText(`(${currentProgress}${maxProgress == null ? `` : ` / ${maxProgress}`}) ${LangUtils.getLanguageText({ textArray: taskObjective.getDesc() })}`);
+        labelDesc.setText(`(${currentProgress}${maxProgress == null ? `` : ` / ${maxProgress}`}) ${getLanguageText({ textArray: taskObjective.getDesc() })}`);
         this.setUnscaledManualHeight(labelDesc.getScaledHeight());
 
         const groupCompleted = this._groupCompleted;

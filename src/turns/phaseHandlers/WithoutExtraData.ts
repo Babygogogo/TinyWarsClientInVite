@@ -1,60 +1,60 @@
-import * as AuxiliaryTypesAttackableArea from "../../auxiliaryTypes/AttackableArea.ts";
-import * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as BootTimersConstants from "../../bootTimers/Constants.ts";
-import * as CoSkillsConstants from "../../coSkills/Constants.ts";
-import * as DestructionsUtils from "../../destructions/Utils.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersTeam from "../../helpers/Team.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as PlayersUtilsCommon from "../../players/utils/Common.ts";
-import * as ProtoSchemaCommonProtoWarSerializationWsUnitStatistics from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import * as TilesConstantsMapWeapon from "../../tiles/constants/MapWeapon.ts";
-import type * as TilesITile from "../../tiles/ITile.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TurnsConstants from "../Constants.ts";
-import type * as TurnsITurnManager from "../ITurnManager.ts";
-import * as UnitBuffsConstants from "../../unitBuffs/Constants.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import * as VisibilitiesUtils from "../../visibilities/Utils.ts";
+import { AttackableArea } from "../../auxiliaryTypes/AttackableArea.ts";
+import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { TimerTypeId, Incremental } from "../../bootTimers/Constants.ts";
+import { AutoRecoveryTimingId, SkillTypeId } from "../../coSkills/Constants.ts";
+import { destroyUnitLoaded, destroyUnitOnMap } from "../../destructions/Utils.ts";
+import { getRwWarBaseClass } from "../../gameHelpers/GhFactory.ts";
+import { newError, createLazyFunc, getExisted } from "../../helpers/Misc.ts";
+import { encodeTeamIndex } from "../../helpers/Team.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { AliveStateId } from "../../players/Constants.ts";
+import { getValidFund } from "../../players/utils/Common.ts";
+import { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+import { TypeId } from "../../tiles/constants/MapWeapon.ts";
+import type { ITile } from "../../tiles/ITile.ts";
+import { getServerTimestamp, wait } from "../../timer/TimerModel.ts";
+import { PhaseCode, TurnIndex } from "../Constants.ts";
+import type { ITurnManager } from "../ITurnManager.ts";
+import { BuffTypeId } from "../../unitBuffs/Constants.ts";
+import { Hp, ActionStateId } from "../../units/Constants.ts";
+import type { IUnit } from "../../units/IUnit.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import { getAllUnitsOnMapVisibleToTeams, getObserverTeamIndexListForUnitOnMap } from "../../visibilities/Utils.ts";
 
-type IBwTile                = TilesITile.ITile;
-type IBwUnit                = UnitsIUnit.IUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
+type IBwTile                = ITile;
+type IBwUnit                = IUnit;
+type IBwWar                 = BaseWarInterfaceIBwWar;
 
-export async function endPhaseStandby(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): Promise<void> {
+export async function endPhaseStandby(turnManager: ITurnManager, isFastExecute: boolean): Promise<void> {
     const phaseCode = turnManager.getPhaseCode();
-    if (phaseCode !== TurnsConstants.PhaseCode.WaitBeginTurn) {
-        throw HelpersMisc.newError(`Invalid phaseCode: ${phaseCode}`, UtilsClientErrorCode.ClientErrorCode.BwTurnManager_EndPhaseWaitBeginTurnWithoutExtraData_00);
+    if (phaseCode !== PhaseCode.WaitBeginTurn) {
+        throw newError(`Invalid phaseCode: ${phaseCode}`, ClientErrorCode.BwTurnManager_EndPhaseWaitBeginTurnWithoutExtraData_00);
     }
 
     runPhaseResetHasUnitOnBeginningTurn(turnManager, isFastExecute);
     runPhaseHandleUnitBuffEffect(turnManager, isFastExecute);
     runPhaseGetFund(turnManager, isFastExecute);
     runPhaseConsumeFuel(turnManager, isFastExecute);
-    runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkillsConstants.AutoRecoveryTimingId.BeforeRegularRepair);
+    runPhaseRecoverUnitByCo(turnManager, isFastExecute, AutoRecoveryTimingId.BeforeRegularRepair);
     runPhaseRepairUnitByTile(turnManager, isFastExecute);
     runPhaseDestroyUnitsOutOfFuel(turnManager, isFastExecute);
     runPhaseRepairUnitByUnit(turnManager, isFastExecute);
-    runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkillsConstants.AutoRecoveryTimingId.AfterRegularRepair);
+    runPhaseRecoverUnitByCo(turnManager, isFastExecute, AutoRecoveryTimingId.AfterRegularRepair);
     await runPhaseActivateMapWeapon(turnManager, isFastExecute);
     runPhaseCheckAndUpdateUnitAiMode(turnManager, isFastExecute);
     runPhaseMain(turnManager, isFastExecute);
 
-    turnManager.setPhaseCode(TurnsConstants.PhaseCode.Main);
+    turnManager.setPhaseCode(PhaseCode.Main);
 }
 
-export function endPhaseMain(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+export function endPhaseMain(turnManager: ITurnManager, isFastExecute: boolean): void {
     const phaseCode = turnManager.getPhaseCode();
-    if (phaseCode !== TurnsConstants.PhaseCode.Main) {
-        throw HelpersMisc.newError(`Invalid phaseCode: ${phaseCode}`, UtilsClientErrorCode.ClientErrorCode.BwTurnManager_EndPhaseMainWithoutExtraData_00);
+    if (phaseCode !== PhaseCode.Main) {
+        throw newError(`Invalid phaseCode: ${phaseCode}`, ClientErrorCode.BwTurnManager_EndPhaseMainWithoutExtraData_00);
     }
 
-    runPhaseRecoverUnitByCo(turnManager, isFastExecute, CoSkillsConstants.AutoRecoveryTimingId.BeforeEndTurn);
+    runPhaseRecoverUnitByCo(turnManager, isFastExecute, AutoRecoveryTimingId.BeforeEndTurn);
     runPhaseResetUnitState(turnManager, isFastExecute);
     runPhaseResetVisionForCurrentPlayer(turnManager, isFastExecute);
     runPhaseHandleUnitBuffEffect2(turnManager, isFastExecute);
@@ -67,15 +67,15 @@ export function endPhaseMain(turnManager: TurnsITurnManager.ITurnManager, isFast
     runPhaseResetVisionForNextPlayer(turnManager, isFastExecute);
     runPhaseWaitBeginTurn(turnManager, isFastExecute);
 
-    turnManager.setPhaseCode(TurnsConstants.PhaseCode.WaitBeginTurn);
+    turnManager.setPhaseCode(PhaseCode.WaitBeginTurn);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetHasUnitOnBeginningTurn(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetHasUnitOnBeginningTurn(turnManager: ITurnManager, isFastExecute: boolean): void {
     turnManager.setHasUnitOnBeginningTurn(turnManager.getWar().getUnitMap().checkHasUnitForPlayer(turnManager.getPlayerIndexInTurn()));
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseHandleUnitBuffEffect(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseHandleUnitBuffEffect(turnManager: ITurnManager, isFastExecute: boolean): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const unitMap       = war.getUnitMap();
@@ -90,7 +90,7 @@ function runPhaseHandleUnitBuffEffect(turnManager: TurnsITurnManager.ITurnManage
         let isModified = false;
         for (const buff of unit.getBuffList() ?? []) {
             const buffTypeId = buff.getBuffTypeId();
-            if (buffTypeId === UnitBuffsConstants.BuffTypeId.Fire) {
+            if (buffTypeId === BuffTypeId.Fire) {
                 isModified = true;
 
                 const newHp = unit.getCurrentHp() - 10;
@@ -98,9 +98,9 @@ function runPhaseHandleUnitBuffEffect(turnManager: TurnsITurnManager.ITurnManage
                     unit.setCurrentHp(newHp);
                 } else {
                     if (unit.getLoaderUnitId() != null) {
-                        DestructionsUtils.destroyUnitLoaded(war, unitId);
+                        destroyUnitLoaded(war, unitId);
                     } else {
-                        DestructionsUtils.destroyUnitOnMap(war, gridIndex, !isFastExecute);
+                        destroyUnitOnMap(war, gridIndex, !isFastExecute);
                     }
                     break;
                 }
@@ -113,24 +113,24 @@ function runPhaseHandleUnitBuffEffect(turnManager: TurnsITurnManager.ITurnManage
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseGetFund(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseGetFund(turnManager: ITurnManager, isFastExecute: boolean): void {
     const war           = turnManager.getWar();
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const player        = war.getPlayer(playerIndex);
     const currentFund   = player.getFund();
     let totalIncome     = war.getTileMap().getTotalIncomeForPlayer(playerIndex);
-    if (turnManager.getTurnIndex() === TurnsConstants.TurnIndex.FirstIndex) {
+    if (turnManager.getTurnIndex() === TurnIndex.FirstIndex) {
         totalIncome += war.getCommonSettingManager().getPlayerRule(playerIndex).getInitialFund();
     }
 
     player.setFund(currentFund + totalIncome);
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseConsumeFuel(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseConsumeFuel(turnManager: ITurnManager, isFastExecute: boolean): void {
     const playerIndex = turnManager.getPlayerIndexInTurn();
     const turnIndex = turnManager.getTurnIndex();
     const war = turnManager.getWar();
-    if (turnIndex > TurnsConstants.TurnIndex.FirstIndex) {
+    if (turnIndex > TurnIndex.FirstIndex) {
         for (const unit of war.getUnitMap().getAllUnitsOnMap()) {
             if (unit.getPlayerIndex() === playerIndex) {
                 const currentFuel = unit.getCurrentFuel();
@@ -140,7 +140,7 @@ function runPhaseConsumeFuel(turnManager: TurnsITurnManager.ITurnManager, isFast
         }
     }
 }
-function runPhaseRecoverUnitByCo(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean, timing: number): void {
+function runPhaseRecoverUnitByCo(turnManager: ITurnManager, isFastExecute: boolean, timing: number): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const player        = war.getPlayer(playerIndex);
@@ -151,10 +151,10 @@ function runPhaseRecoverUnitByCo(turnManager: TurnsITurnManager.ITurnManager, is
         const tileMap                   = war.getTileMap();
         const gridVisionEffect          = war.getGridVisualEffect();
         const warStatisticsManager      = war.getWarStatisticsManager();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
-        const visibleUnits              = ((war instanceof GameHelpersGhFactory.getRwWarBaseClass()) && (war.getIsBatchExecuteAction()))
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const visibleUnits              = ((war instanceof getRwWarBaseClass()) && (war.getIsBatchExecuteAction()))
             ? null
-            : VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
+            : getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
         for (const skillId of player.getCoCurrentSkills() || []) {
             const skillCfg = gameConfig.getCoSkillCfg(skillId);
 
@@ -210,25 +210,25 @@ function runPhaseRecoverUnitByCo(turnManager: TurnsITurnManager.ITurnManager, is
                                 recoverAmount,
                                 Math.floor(currentFund * normalizedMaxHp / revisedProductionCost)
                             );
-                        const repairAmount = (normalizedRepairHp + normalizedCurrentHp) * UnitsConstants.Hp.Normalizer - currentHp;
+                        const repairAmount = (normalizedRepairHp + normalizedCurrentHp) * Hp.Normalizer - currentHp;
 
                         if (repairAmount > 0) {
                             unit.addCurrentHp(repairAmount);
-                            player.setFund(PlayersUtilsCommon.getValidFund(currentFund - Math.floor(normalizedRepairHp * revisedProductionCost / normalizedMaxHp)));
+                            player.setFund(getValidFund(currentFund - Math.floor(normalizedRepairHp * revisedProductionCost / normalizedMaxHp)));
 
                             {
                                 const offsetNormalizedHp = unit.getNormalizedCurrentHp() - normalizedCurrentHp;
                                 if (offsetNormalizedHp !== 0) {
-                                    const observerTeamIndexes = VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+                                    const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
                                     if (observerTeamIndexes != null) {
-                                        warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                                        warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                             unitType                    : unit.getUnitType(),
                                             dstPlayerIndex              : playerIndex,
                                             unitGain                    : 0,
                                             unitLoss                    : 0,
                                             normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
                                             normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                            groupedObserverTeamIndexes  : HelpersTeam.encodeTeamIndex(observerTeamIndexes),
+                                            groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
                                         }));
                                     }
                                 }
@@ -291,7 +291,7 @@ function runPhaseRecoverUnitByCo(turnManager: TurnsITurnManager.ITurnManager, is
                         ) {
                             const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
                             if (maxAmmo) {
-                                const currentAmmo               = HelpersMisc.getExisted(unit.getPrimaryWeaponCurrentAmmo(), UtilsClientErrorCode.ClientErrorCode.BwTurnManager_RunPhaseRecoverUnitByCoWithoutExtraData_00);
+                                const currentAmmo               = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.BwTurnManager_RunPhaseRecoverUnitByCoWithoutExtraData_00);
                                 const offsetPrimaryWeaponAmmo   = Math.min(Math.floor(maxAmmo * (recoverCfg.getAmmoGainPct() ?? 0) / 100), maxAmmo - currentAmmo);
                                 unit.addAndValidatePrimaryWeaponCurrentAmmo(offsetPrimaryWeaponAmmo);
 
@@ -308,7 +308,7 @@ function runPhaseRecoverUnitByCo(turnManager: TurnsITurnManager.ITurnManager, is
         }
     }
 }
-function runPhaseRepairUnitByTile(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseRepairUnitByTile(turnManager: ITurnManager, isFastExecute: boolean): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const player        = war.getPlayer(playerIndex);
@@ -320,9 +320,9 @@ function runPhaseRepairUnitByTile(turnManager: TurnsITurnManager.ITurnManager, i
     const tileMap               = war.getTileMap();
     const warStatisticsManager  = war.getWarStatisticsManager();
     const gridVisionEffect      = war.getGridVisualEffect();
-    const visibleUnits          = ((war instanceof GameHelpersGhFactory.getRwWarBaseClass()) && (war.getIsBatchExecuteAction()))
+    const visibleUnits          = ((war instanceof getRwWarBaseClass()) && (war.getIsBatchExecuteAction()))
         ? null
-        : VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
+        : getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
     for (const unit of allUnitsOnMap.sort(sorterForRepairUnits)) {
         const gridIndex     = unit.getGridIndex();
         const tile          = tileMap.getTile(gridIndex);
@@ -344,16 +344,16 @@ function runPhaseRepairUnitByTile(turnManager: TurnsITurnManager.ITurnManager, i
             {
                 const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                 if (offsetNormalizedHp != 0) {
-                    const observerTeamIndexes = VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+                    const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                     if (observerTeamIndexes != null) {
-                        warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                        warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                             unitType                    : unit.getUnitType(),
                             dstPlayerIndex              : playerIndex,
                             unitGain                    : 0,
                             unitLoss                    : 0,
                             normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
                             normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                            groupedObserverTeamIndexes  : HelpersTeam.encodeTeamIndex(observerTeamIndexes),
+                            groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
                         }));
                     }
                 }
@@ -370,7 +370,7 @@ function runPhaseRepairUnitByTile(turnManager: TurnsITurnManager.ITurnManager, i
         }
     }
 }
-function runPhaseDestroyUnitsOutOfFuel(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseDestroyUnitsOutOfFuel(turnManager: ITurnManager, isFastExecute: boolean): void {
     const playerIndex           = turnManager.getPlayerIndexInTurn();
     const war                   = turnManager.getWar();
     const fogMap                = war.getFogMap();
@@ -390,20 +390,20 @@ function runPhaseDestroyUnitsOutOfFuel(turnManager: TurnsITurnManager.ITurnManag
                 });
             }
 
-            DestructionsUtils.destroyUnitOnMap(war, gridIndex, !isFastExecute);
+            destroyUnitOnMap(war, gridIndex, !isFastExecute);
         }
     }
 }
-function runPhaseRepairUnitByUnit(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseRepairUnitByUnit(turnManager: ITurnManager, isFastExecute: boolean): void {
     const playerIndex       = turnManager.getPlayerIndexInTurn();
     const war               = turnManager.getWar();
     const player            = war.getPlayer(playerIndex);
     const unitMap           = war.getUnitMap();
     const mapSize           = unitMap.getMapSize();
     const gridVisionEffect  = war.getGridVisualEffect();
-    const visibleUnits      = ((war instanceof GameHelpersGhFactory.getRwWarBaseClass()) && (war.getIsBatchExecuteAction()))
+    const visibleUnits      = ((war instanceof getRwWarBaseClass()) && (war.getIsBatchExecuteAction()))
         ? null
-        : VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
+        : getAllUnitsOnMapVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
     const allUnitsLoaded    : IBwUnit[] = [];
     for (const unit of unitMap.getAllUnitsLoaded()) {
         (unit.getPlayerIndex() === playerIndex) && (allUnitsLoaded.push(unit));
@@ -411,7 +411,7 @@ function runPhaseRepairUnitByUnit(turnManager: TurnsITurnManager.ITurnManager, i
 
     const warStatisticsManager = war.getWarStatisticsManager();
     for (const unit of allUnitsLoaded.sort(sorterForRepairUnits)) {
-        const loader        = HelpersMisc.getExisted(unit.getLoaderUnit(), UtilsClientErrorCode.ClientErrorCode.BwTurnManager_RunPhaseRepairUnitByUnitWithoutExtraData_00);
+        const loader        = getExisted(unit.getLoaderUnit(), ClientErrorCode.BwTurnManager_RunPhaseRepairUnitByUnitWithoutExtraData_00);
         const gridIndex     = loader.getGridIndex();
         const repairData    = loader.getRepairHpAndCostForLoadedUnit(unit);
         if (repairData) {
@@ -430,16 +430,16 @@ function runPhaseRepairUnitByUnit(turnManager: TurnsITurnManager.ITurnManager, i
             {
                 const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                 if (offsetNormalizedHp !== 0) {
-                    const observerTeamIndexes = VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+                    const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                     if (observerTeamIndexes != null) {
-                        warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                        warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                             unitType                    : unit.getUnitType(),
                             dstPlayerIndex              : playerIndex,
                             unitGain                    : 0,
                             unitLoss                    : 0,
                             normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
                             normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                            groupedObserverTeamIndexes  : HelpersTeam.encodeTeamIndex(observerTeamIndexes),
+                            groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
                         }));
                     }
                 }
@@ -497,7 +497,7 @@ function runPhaseRepairUnitByUnit(turnManager: TurnsITurnManager.ITurnManager, i
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function runPhaseActivateMapWeapon(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): Promise<void> {
+async function runPhaseActivateMapWeapon(turnManager: ITurnManager, isFastExecute: boolean): Promise<void> {
     const war               = turnManager.getWar();
     const playerIndex       = war.getPlayerIndexInTurn();
     const tileMap           = war.getTileMap();
@@ -505,17 +505,17 @@ async function runPhaseActivateMapWeapon(turnManager: TurnsITurnManager.ITurnMan
     const allTileArray      = tileMap.getAllTiles().filter(v => v.getPlayerIndex() === playerIndex);
 
     {
-        const crystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeapon.TypeId.Crystal)
+        const crystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === TypeId.Crystal)
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of crystalArray) {
             await handleMapWeaponTileCrystal(war, tile, isFastExecute);
         }
     }
     {
-        const customCrystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeapon.TypeId.CustomCrystal)
+        const customCrystalArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === TypeId.CustomCrystal)
             .sort((v1, v2) => {
-                const priority1 = HelpersMisc.getExisted(v1.getFinalCrystalData()).getPriority();
-                const priority2 = HelpersMisc.getExisted(v2.getFinalCrystalData()).getPriority();
+                const priority1 = getExisted(v1.getFinalCrystalData()).getPriority();
+                const priority2 = getExisted(v2.getFinalCrystalData()).getPriority();
                 if (priority1 !== priority2) {
                     return priority2 - priority1;
                 } else {
@@ -534,10 +534,10 @@ async function runPhaseActivateMapWeapon(turnManager: TurnsITurnManager.ITurnMan
         }
     }
     {
-        const customCannonArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeapon.TypeId.CustomCannon)
+        const customCannonArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === TypeId.CustomCannon)
             .sort((v1, v2) => {
-                const priority1 = HelpersMisc.getExisted(v1.getFinalCannonData()).getPriority();
-                const priority2 = HelpersMisc.getExisted(v2.getFinalCannonData()).getPriority();
+                const priority1 = getExisted(v1.getFinalCannonData()).getPriority();
+                const priority2 = getExisted(v2.getFinalCannonData()).getPriority();
                 if (priority1 !== priority2) {
                     return priority2 - priority1;
                 } else {
@@ -549,17 +549,17 @@ async function runPhaseActivateMapWeapon(turnManager: TurnsITurnManager.ITurnMan
         }
     }
     {
-        const laserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeapon.TypeId.LaserTurret)
+        const laserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === TypeId.LaserTurret)
             .sort((v1, v2) => v1.getGridIndex().getGridId(mapSize) - v2.getGridIndex().getGridId(mapSize));
         for (const tile of laserTurretArray) {
             await handleMapWeaponTileLaserTurret(war, tile, isFastExecute);
         }
     }
     {
-        const customLaserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === TilesConstantsMapWeapon.TypeId.CustomLaserTurret)
+        const customLaserTurretArray = allTileArray.filter(v => v.getTemplateCfg().getMapWeaponTypeId() === TypeId.CustomLaserTurret)
             .sort((v1, v2) => {
-                const priority1 = HelpersMisc.getExisted(v1.getFinalLaserTurretData()).getPriority();
-                const priority2 = HelpersMisc.getExisted(v2.getFinalLaserTurretData()).getPriority();
+                const priority1 = getExisted(v1.getFinalLaserTurretData()).getPriority();
+                const priority2 = getExisted(v2.getFinalLaserTurretData()).getPriority();
                 if (priority1 !== priority2) {
                     return priority2 - priority1;
                 } else {
@@ -572,7 +572,7 @@ async function runPhaseActivateMapWeapon(turnManager: TurnsITurnManager.ITurnMan
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseCheckAndUpdateUnitAiMode(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseCheckAndUpdateUnitAiMode(turnManager: ITurnManager, isFastExecute: boolean): void {
     const war           = turnManager.getWar();
     const playerInTurn  = war.getPlayerInTurn();
     if (playerInTurn.getUserId() == null) {
@@ -585,7 +585,7 @@ function runPhaseCheckAndUpdateUnitAiMode(turnManager: TurnsITurnManager.ITurnMa
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseMain(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseMain(turnManager: ITurnManager, isFastExecute: boolean): void {
     const war           = turnManager.getWar();
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const player        = war.getPlayer(playerIndex);
@@ -594,7 +594,7 @@ function runPhaseMain(turnManager: TurnsITurnManager.ITurnManager, isFastExecute
     if ((turnManager.getHasUnitOnBeginningTurn())                     &&
         (!hasUnit)
     ) {
-        player.setAliveState(PlayersConstants.AliveStateId.Dying);
+        player.setAliveState(AliveStateId.Dying);
     }
 
     if (hasUnit) {
@@ -605,23 +605,23 @@ function runPhaseMain(turnManager: TurnsITurnManager.ITurnManager, isFastExecute
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetUnitState(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetUnitState(turnManager: ITurnManager, isFastExecute: boolean): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     for (const unit of war.getUnitMap().getAllUnits()) {
         if (unit.getPlayerIndex() === playerIndex) {
-            unit.setActionState(UnitsConstants.ActionStateId.Idle);
+            unit.setActionState(ActionStateId.Idle);
             unit.updateView();
         }
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVisionForCurrentPlayer(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetVisionForCurrentPlayer(turnManager: ITurnManager, isFastExecute: boolean): void {
     const war = turnManager.getWar();
     war.getFogMap().resetMapFromPathsForPlayerWithEncodedData(war.getPlayerIndexInTurn());
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseHandleUnitBuffEffect2(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseHandleUnitBuffEffect2(turnManager: ITurnManager, isFastExecute: boolean): void {
     const playerIndex   = turnManager.getPlayerIndexInTurn();
     const war           = turnManager.getWar();
     const unitMap       = war.getUnitMap();
@@ -636,7 +636,7 @@ function runPhaseHandleUnitBuffEffect2(turnManager: TurnsITurnManager.ITurnManag
         let isModified = false;
         for (const buff of unit.getBuffList() ?? []) {
             const buffTypeId = buff.getBuffTypeId();
-            if (buffTypeId === UnitBuffsConstants.BuffTypeId.Disease) {
+            if (buffTypeId === BuffTypeId.Disease) {
                 isModified = true;
 
                 const newHp = unit.getCurrentHp() - 10;
@@ -644,9 +644,9 @@ function runPhaseHandleUnitBuffEffect2(turnManager: TurnsITurnManager.ITurnManag
                     unit.setCurrentHp(newHp);
                 } else {
                     if (unit.getLoaderUnitId() != null) {
-                        DestructionsUtils.destroyUnitLoaded(war, unitId);
+                        destroyUnitLoaded(war, unitId);
                     } else {
-                        DestructionsUtils.destroyUnitOnMap(war, gridIndex, !isFastExecute);
+                        destroyUnitOnMap(war, gridIndex, !isFastExecute);
                     }
                     break;
                 }
@@ -659,35 +659,35 @@ function runPhaseHandleUnitBuffEffect2(turnManager: TurnsITurnManager.ITurnManag
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseTickTurnAndPlayerIndex(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseTickTurnAndPlayerIndex(turnManager: ITurnManager, isFastExecute: boolean): void {
     const playerIndex       = turnManager.getPlayerIndexInTurn();
     const war               = turnManager.getWar();
-    const currTime          = TimerTimerModel.getServerTimestamp();
+    const currTime          = getServerTimestamp();
     const player            = war.getPlayer(playerIndex);
     const bootTimerParams   = war.getSettingsBootTimerParams();
-    const timerType         : BootTimersConstants.TimerTypeId = bootTimerParams[0];
-    if (timerType === BootTimersConstants.TimerTypeId.NoBoot) {
+    const timerType         : TimerTypeId = bootTimerParams[0];
+    if (timerType === TimerTypeId.NoBoot) {
         player.setRestTimeToBoot(0);
 
-    } else if (timerType === BootTimersConstants.TimerTypeId.Regular) {
-        player.setRestTimeToBoot(HelpersMisc.getExisted(bootTimerParams[1], UtilsClientErrorCode.ClientErrorCode.BwTurnManager_RunPhaseTickTurnAndPlayerIndexWithoutExtraData_00));
+    } else if (timerType === TimerTypeId.Regular) {
+        player.setRestTimeToBoot(getExisted(bootTimerParams[1], ClientErrorCode.BwTurnManager_RunPhaseTickTurnAndPlayerIndexWithoutExtraData_00));
 
-    } else if (timerType === BootTimersConstants.TimerTypeId.Incremental) {
+    } else if (timerType === TimerTypeId.Incremental) {
         const oldRestTimeToBoot         = player.getRestTimeToBoot();
         const enterTurnTime             = turnManager.getEnterTurnTime();
-        const incrementalTimePerUnit    = HelpersMisc.getExisted(bootTimerParams[2], UtilsClientErrorCode.ClientErrorCode.BwTurnManager_RunPhaseTickTurnAndPlayerIndexWithoutExtraData_01);
+        const incrementalTimePerUnit    = getExisted(bootTimerParams[2], ClientErrorCode.BwTurnManager_RunPhaseTickTurnAndPlayerIndexWithoutExtraData_01);
         const incrementalTimePerTurn    = bootTimerParams[3] ?? 0;
         const restTimeToBoot            = Math.max(
             0,
             Math.min(
-                BootTimersConstants.Incremental.MaxLimit,
+                Incremental.MaxLimit,
                 oldRestTimeToBoot - (currTime - enterTurnTime) + incrementalTimePerUnit * war.getUnitMap().countAllUnitsForPlayer(playerIndex) + incrementalTimePerTurn,
             ),
         );
         player.setRestTimeToBoot(restTimeToBoot);
 
     } else {
-        throw HelpersMisc.newError(`Invalid timerType: ${timerType}`, UtilsClientErrorCode.ClientErrorCode.BwTurnManager_RunPhaseTickTurnAndPlayerIndexWithoutExtraData_02);
+        throw newError(`Invalid timerType: ${timerType}`, ClientErrorCode.BwTurnManager_RunPhaseTickTurnAndPlayerIndexWithoutExtraData_02);
     }
 
     player.setIsSkipTurn(false);
@@ -695,26 +695,26 @@ function runPhaseTickTurnAndPlayerIndex(turnManager: TurnsITurnManager.ITurnMana
     const info = turnManager.getNextTurnAndPlayerIndex();
     turnManager.setTurnIndex(info.turnIndex);
     turnManager.setPlayerIndexInTurn(info.playerIndex);
-    turnManager.setEnterTurnTime(TimerTimerModel.getServerTimestamp());
+    turnManager.setEnterTurnTime(getServerTimestamp());
     war.getWarEventManager().updateWarEventCalledCountOnPlayerTurnSwitched();
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetSkillState(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetSkillState(turnManager: ITurnManager, isFastExecute: boolean): void {
     const war       = turnManager.getWar();
     const player    = war.getPlayerInTurn();
     player.setCoIsDestroyedInTurn(false);
 
     if (player.checkCoIsUsingActiveSkill()) {
-        player.setCoUsingSkillType(CoSkillsConstants.SkillTypeId.Passive);
+        player.setCoUsingSkillType(SkillTypeId.Passive);
         war.getTileMap().getView().updateCoZone();
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVotesForDraw(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetVotesForDraw(turnManager: ITurnManager, isFastExecute: boolean): void {
     turnManager.getWar().getDrawVoteManager().handleTurnPhaseResetVotesForDraw();
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseUpdateWeatherAndForceFog(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseUpdateWeatherAndForceFog(turnManager: ITurnManager, isFastExecute: boolean): void {
     const war               = turnManager.getWar();
     const weatherManager    = war.getWeatherManager();
     weatherManager.updateOnPlayerTurnSwitched();
@@ -725,25 +725,25 @@ function runPhaseUpdateWeatherAndForceFog(turnManager: TurnsITurnManager.ITurnMa
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseUpdateAllTileBuffArray(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseUpdateAllTileBuffArray(turnManager: ITurnManager, isFastExecute: boolean): void {
     for (const tile of turnManager.getWar().getTileMap().getAllTiles()) {
         tile.updateUnfixedBuffArrayOnPlayerTurnSwitched(!isFastExecute);
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseUpdateAllUnitBuffArray(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseUpdateAllUnitBuffArray(turnManager: ITurnManager, isFastExecute: boolean): void {
     for (const unit of turnManager.getWar().getUnitMap().getAllUnits()) {
         unit.updateBuffArrayOnPlayerTurnSwitched(!isFastExecute);
     }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseResetVisionForNextPlayer(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseResetVisionForNextPlayer(turnManager: ITurnManager, isFastExecute: boolean): void {
     // if (!isFastExecute) {
     //     turnManager.getWar().updateTilesAndUnitsOnVisibilityChanged();
     // }
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function runPhaseWaitBeginTurn(turnManager: TurnsITurnManager.ITurnManager, isFastExecute: boolean): void {
+function runPhaseWaitBeginTurn(turnManager: ITurnManager, isFastExecute: boolean): void {
     if (!isFastExecute) {
         turnManager.getWar().getTileMap().getView().resetMarkLayer();
     }
@@ -755,13 +755,13 @@ async function handleMapWeaponTileCrystal(war: IBwWar, tile: IBwTile, isFastExec
     if (!isFastExecute) {
         war.getView().moveGridToCenter(tileGridIndex);
         gridVisualEffect.showEffectCharge(tileGridIndex);
-        await TimerTimerModel.wait(400);
+        await wait(400);
     }
 
     const unitMap           = war.getUnitMap();
     const playerIndexInTurn = tile.getPlayerIndex();
     const teamIndexInTurn   = tile.getTeamIndex();
-    const data              = HelpersMisc.getExisted(tile.getFinalCrystalData(), UtilsClientErrorCode.ClientErrorCode.BwTurnManager_HandleMapWeaponTileCrystal_00);
+    const data              = getExisted(tile.getFinalCrystalData(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileCrystal_00);
     const affectedUnits     = new Set<IBwUnit>();
     const canAffectAlly     = data.getCanAffectAlly();
     const canAffectEnemy    = data.getCanAffectEnemy();
@@ -828,7 +828,7 @@ async function handleMapWeaponTileCrystal(war: IBwWar, tile: IBwTile, isFastExec
                     if (deltaPrimaryAmmoPercentage) {
                         const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
                         if (maxAmmo != null) {
-                            const currentAmmo = HelpersMisc.getExisted(unit.getPrimaryWeaponCurrentAmmo(), UtilsClientErrorCode.ClientErrorCode.BwTurnManager_HandleMapWeaponTileCrystal_02);
+                            const currentAmmo = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileCrystal_02);
                             if (deltaPrimaryAmmoPercentage < 0) {
                                 unit.addAndValidatePrimaryWeaponCurrentAmmo(currentAmmo * deltaPrimaryAmmoPercentage / 100);
                             } else {
@@ -842,16 +842,16 @@ async function handleMapWeaponTileCrystal(war: IBwWar, tile: IBwTile, isFastExec
                         const warStatisticsUpdater  = () => {
                             const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                             if (offsetNormalizedHp != 0) {
-                                const observerTeamIndexes = VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
+                                const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex });
                                 if (observerTeamIndexes != null) {
-                                    warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                                    warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                         unitType                    : unit.getUnitType(),
                                         dstPlayerIndex              : unit.getPlayerIndex(),
                                         unitGain                    : 0,
                                         unitLoss                    : 0,
                                         normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
                                         normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                        groupedObserverTeamIndexes  : HelpersTeam.encodeTeamIndex(observerTeamIndexes),
+                                        groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
                                     }));
                                 }
                             }
@@ -860,16 +860,16 @@ async function handleMapWeaponTileCrystal(war: IBwWar, tile: IBwTile, isFastExec
                         if (deltaHp > 0) {
                             unit.setCurrentHp(Math.min(
                                 unit.getMaxHp(),
-                                (oldNormalizedHp + deltaHp) * UnitsConstants.Hp.Normalizer)
+                                (oldNormalizedHp + deltaHp) * Hp.Normalizer)
                             );
                             warStatisticsUpdater();
 
                         } else {
-                            const rawNewHp = unit.getCurrentHp() + deltaHp * UnitsConstants.Hp.Normalizer;
+                            const rawNewHp = unit.getCurrentHp() + deltaHp * Hp.Normalizer;
                             if ((rawNewHp <= 0) && (canBeFatal)) {
-                                DestructionsUtils.destroyUnitOnMap(war, gridIndex, !isFastExecute);
+                                destroyUnitOnMap(war, gridIndex, !isFastExecute);
                             } else {
-                                unit.setCurrentHp(NumbersUtils.getValueInRange({
+                                unit.setCurrentHp(getValueInRange({
                                     rawValue    : rawNewHp,
                                     minValue    : 1,
                                     maxValue    : unit.getMaxHp(),
@@ -887,7 +887,7 @@ async function handleMapWeaponTileCrystal(war: IBwWar, tile: IBwTile, isFastExec
 
     if (!isFastExecute) {
         const mapSize           = war.getTileMap().getMapSize();
-        const attackableArea    = AuxiliaryTypesAttackableArea.AttackableArea.createForTile(tile, mapSize);
+        const attackableArea    = AttackableArea.createForTile(tile, mapSize);
         const { width, height } = mapSize.getWH();
         for (let x = 0; x < width; ++x) {
             const column = attackableArea.getColumn(x);
@@ -897,16 +897,16 @@ async function handleMapWeaponTileCrystal(war: IBwWar, tile: IBwTile, isFastExec
 
             for (let y = 0; y < height; ++y) {
                 if (column[y]) {
-                    gridVisualEffect.showEffectDamage(new AuxiliaryTypesGridIndex.GridIndex(x, y));
+                    gridVisualEffect.showEffectDamage(new GridIndex(x, y));
                 }
             }
         }
-        await TimerTimerModel.wait(200);
+        await wait(200);
 
         for (const unit of affectedUnits) {
             unit.updateView();
         }
-        await TimerTimerModel.wait(400);
+        await wait(400);
     }
 }
 
@@ -916,12 +916,12 @@ async function handleMapWeaponTileCannon(war: IBwWar, tile: IBwTile, isFastExecu
     if (!isFastExecute) {
         war.getView().moveGridToCenter(tileGridIndex);
         gridVisualEffect.showEffectCharge(tileGridIndex);
-        await TimerTimerModel.wait(400);
+        await wait(400);
     }
 
     const warStatisticsManager          = war.getWarStatisticsManager();
-    const data                          = HelpersMisc.getExisted(tile.getFinalCannonData(), UtilsClientErrorCode.ClientErrorCode.BwTurnManager_HandleMapWeaponTileCannon_00);
-    const getCandidateUnitArray         = HelpersMisc.createLazyFunc(() => generateCandidateUnitArrayForCannon(war, tile));
+    const data                          = getExisted(tile.getFinalCannonData(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileCannon_00);
+    const getCandidateUnitArray         = createLazyFunc(() => generateCandidateUnitArrayForCannon(war, tile));
     const maxTargetCount                = data.getMaxTargetCount();
     const deltaHp                       = data.getOffsetHp();
     const deltaFuelPercentage           = data.getOffsetFuelPercentage();
@@ -953,7 +953,7 @@ async function handleMapWeaponTileCannon(war: IBwWar, tile: IBwTile, isFastExecu
             if (deltaPrimaryAmmoPercentage) {
                 const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
                 if (maxAmmo != null) {
-                    const currentAmmo = HelpersMisc.getExisted(unit.getPrimaryWeaponCurrentAmmo(), UtilsClientErrorCode.ClientErrorCode.BwTurnManager_HandleMapWeaponTileCannon_01);
+                    const currentAmmo = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileCannon_01);
                     if (deltaPrimaryAmmoPercentage < 0) {
                         unit.addAndValidatePrimaryWeaponCurrentAmmo(currentAmmo * deltaPrimaryAmmoPercentage / 100);
                     } else {
@@ -967,16 +967,16 @@ async function handleMapWeaponTileCannon(war: IBwWar, tile: IBwTile, isFastExecu
                 const warStatisticsUpdater  = () => {
                     const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                     if (offsetNormalizedHp != 0) {
-                        const observerTeamIndexes = VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+                        const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
                         if (observerTeamIndexes != null) {
-                            warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                            warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                 unitType                    : unit.getUnitType(),
                                 dstPlayerIndex              : unit.getPlayerIndex(),
                                 unitGain                    : 0,
                                 unitLoss                    : 0,
                                 normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
                                 normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                groupedObserverTeamIndexes  : HelpersTeam.encodeTeamIndex(observerTeamIndexes)
+                                groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes)
                             }));
                         }
                     }
@@ -985,16 +985,16 @@ async function handleMapWeaponTileCannon(war: IBwWar, tile: IBwTile, isFastExecu
                 if (deltaHp > 0) {
                     unit.setCurrentHp(Math.min(
                         unit.getMaxHp(),
-                        (oldNormalizedHp + deltaHp) * UnitsConstants.Hp.Normalizer)
+                        (oldNormalizedHp + deltaHp) * Hp.Normalizer)
                     );
                     warStatisticsUpdater();
 
                 } else {
-                    const rawNewHp = unit.getCurrentHp() + deltaHp * UnitsConstants.Hp.Normalizer;
+                    const rawNewHp = unit.getCurrentHp() + deltaHp * Hp.Normalizer;
                     if ((rawNewHp <= 0) && (canBeFatal)) {
-                        DestructionsUtils.destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute);
+                        destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute);
                     } else {
-                        unit.setCurrentHp(NumbersUtils.getValueInRange({
+                        unit.setCurrentHp(getValueInRange({
                             rawValue    : rawNewHp,
                             minValue    : 1,
                             maxValue    : unit.getMaxHp(),
@@ -1013,17 +1013,17 @@ async function handleMapWeaponTileCannon(war: IBwWar, tile: IBwTile, isFastExecu
             for (const unit of affectedUnits) {
                 gridVisualEffect.showEffectDamage(unit.getGridIndex());
             }
-            await TimerTimerModel.wait(200);
+            await wait(200);
 
             for (const unit of affectedUnits) {
                 unit.updateView();
             }
-            await TimerTimerModel.wait(400);
+            await wait(400);
         }
     }
 }
 function generateCandidateUnitArrayForCannon(war: IBwWar, tile: IBwTile): IBwUnit[] {
-    const data              = HelpersMisc.getExisted(tile.getFinalCannonData(), UtilsClientErrorCode.ClientErrorCode.BwTurnManager_GenerateCandidateUnitArrayForCannon_00);
+    const data              = getExisted(tile.getFinalCannonData(), ClientErrorCode.BwTurnManager_GenerateCandidateUnitArrayForCannon_00);
     const playerIndexInTurn = tile.getPlayerIndex();
     const teamIndexInTurn   = tile.getTeamIndex();
     const tileX             = tile.getGridX();
@@ -1037,7 +1037,7 @@ function generateCandidateUnitArrayForCannon(war: IBwWar, tile: IBwTile): IBwUni
     const rangeForRight     = data.getRangeForRight();
 
     const unitAndFinalCostArray: { unit: IBwUnit, cost: number }[] = [];
-    for (const unit of [...VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(war, new Set([teamIndexInTurn]))].filter(u => {
+    for (const unit of [...getAllUnitsOnMapVisibleToTeams(war, new Set([teamIndexInTurn]))].filter(u => {
         const unitTeamIndex = u.getTeamIndex();
         if (((canAffectSelf) && (u.getPlayerIndex() === playerIndexInTurn))     ||
             ((canAffectAlly) && (unitTeamIndex === teamIndexInTurn))            ||
@@ -1082,10 +1082,10 @@ async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: IBwTile, isFast
     if (!isFastExecute) {
         war.getView().moveGridToCenter(tileGridIndex);
         gridVisualEffect.showEffectCharge(tileGridIndex);
-        await TimerTimerModel.wait(400);
+        await wait(400);
     }
 
-    const data                  = HelpersMisc.getExisted(tile.getFinalLaserTurretData(), UtilsClientErrorCode.ClientErrorCode.BwTurnManager_HandleMapWeaponTileLaserTurret_00);
+    const data                  = getExisted(tile.getFinalLaserTurretData(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileLaserTurret_00);
     const candidateUnitArray    = generateCandidateUnitArrayForLaserTurret(war, tile);
     const affectedUnits         = new Set<IBwUnit>();
     {
@@ -1114,7 +1114,7 @@ async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: IBwTile, isFast
                 if (deltaPrimaryAmmoPercentage) {
                     const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
                     if (maxAmmo != null) {
-                        const currentAmmo = HelpersMisc.getExisted(unit.getPrimaryWeaponCurrentAmmo(), UtilsClientErrorCode.ClientErrorCode.BwTurnManager_HandleMapWeaponTileCrystal_01);
+                        const currentAmmo = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileCrystal_01);
                         if (deltaPrimaryAmmoPercentage < 0) {
                             unit.addAndValidatePrimaryWeaponCurrentAmmo(currentAmmo * deltaPrimaryAmmoPercentage / 100);
                         } else {
@@ -1128,16 +1128,16 @@ async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: IBwTile, isFast
                     const warStatisticsUpdater  = () => {
                         const offsetNormalizedHp = unit.getNormalizedCurrentHp() - oldNormalizedHp;
                         if (offsetNormalizedHp != 0) {
-                            const observerTeamIndexes = VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
+                            const observerTeamIndexes = getObserverTeamIndexListForUnitOnMap({ war, gridIndex: unit.getGridIndex() });
                             if (observerTeamIndexes != null) {
-                                warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                                warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                                     unitType                    : unit.getUnitType(),
                                     dstPlayerIndex              : unit.getPlayerIndex(),
                                     unitGain                    : 0,
                                     unitLoss                    : 0,
                                     normalizedHpGain            : offsetNormalizedHp > 0 ? offsetNormalizedHp : 0,
                                     normalizedHpLoss            : offsetNormalizedHp < 0 ? -offsetNormalizedHp : 0,
-                                    groupedObserverTeamIndexes  : HelpersTeam.encodeTeamIndex(observerTeamIndexes),
+                                    groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
                                 }));
                             }
                         }
@@ -1146,16 +1146,16 @@ async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: IBwTile, isFast
                     if (deltaHp > 0) {
                         unit.setCurrentHp(Math.min(
                             unit.getMaxHp(),
-                            (oldNormalizedHp + deltaHp) * UnitsConstants.Hp.Normalizer)
+                            (oldNormalizedHp + deltaHp) * Hp.Normalizer)
                         );
                         warStatisticsUpdater();
 
                     } else {
-                        const rawNewHp = unit.getCurrentHp() + deltaHp * UnitsConstants.Hp.Normalizer;
+                        const rawNewHp = unit.getCurrentHp() + deltaHp * Hp.Normalizer;
                         if ((rawNewHp <= 0) && (canBeFatal)) {
-                            DestructionsUtils.destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute);
+                            destroyUnitOnMap(war, unit.getGridIndex(), !isFastExecute);
                         } else {
-                            unit.setCurrentHp(NumbersUtils.getValueInRange({
+                            unit.setCurrentHp(getValueInRange({
                                 rawValue    : rawNewHp,
                                 minValue    : 1,
                                 maxValue    : unit.getMaxHp(),
@@ -1172,7 +1172,7 @@ async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: IBwTile, isFast
 
     if (!isFastExecute) {
         const mapSize           = war.getTileMap().getMapSize();
-        const attackableArea    = AuxiliaryTypesAttackableArea.AttackableArea.createForTile(tile, mapSize);
+        const attackableArea    = AttackableArea.createForTile(tile, mapSize);
         const { width, height } = mapSize.getWH();
         for (let x = 0; x < width; ++x) {
             const column = attackableArea.getColumn(x);
@@ -1182,20 +1182,20 @@ async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: IBwTile, isFast
 
             for (let y = 0; y < height; ++y) {
                 if (column[y]) {
-                    gridVisualEffect.showEffectDamage(new AuxiliaryTypesGridIndex.GridIndex(x, y));
+                    gridVisualEffect.showEffectDamage(new GridIndex(x, y));
                 }
             }
         }
-        await TimerTimerModel.wait(200);
+        await wait(200);
 
         for (const unit of affectedUnits) {
             unit.updateView();
         }
-        await TimerTimerModel.wait(400);
+        await wait(400);
     }
 }
 function generateCandidateUnitArrayForLaserTurret(war: IBwWar, tile: IBwTile): IBwUnit[] {
-    const data                  = HelpersMisc.getExisted(tile.getFinalLaserTurretData(), UtilsClientErrorCode.ClientErrorCode.BwTurnManager_GenerateCandidateUnitArrayForLaserTurret_00);
+    const data                  = getExisted(tile.getFinalLaserTurretData(), ClientErrorCode.BwTurnManager_GenerateCandidateUnitArrayForLaserTurret_00);
     const playerIndexInTurn     = tile.getPlayerIndex();
     const teamIndexInTurn       = tile.getTeamIndex();
     const tileGridX             = tile.getGridX();
@@ -1210,7 +1210,7 @@ function generateCandidateUnitArrayForLaserTurret(war: IBwWar, tile: IBwTile): I
     const canAffectEnemy        = data.getCanAffectEnemy();
     const canAffectSelf         = data.getCanAffectSelf();
     const candidateUnitArray    : IBwUnit[] = [];
-    const checkAndAddUnit       = (gridIndex: AuxiliaryTypesGridIndex.GridIndex) => {
+    const checkAndAddUnit       = (gridIndex: GridIndex) => {
         const unit = unitMap.getUnitOnMap(gridIndex);
         if (unit == null) {
             return;
@@ -1226,28 +1226,28 @@ function generateCandidateUnitArrayForLaserTurret(war: IBwWar, tile: IBwTile): I
     };
 
     for (let deltaX = 0; deltaX < rangeForRight; ++deltaX) {
-        const gridIndex = new AuxiliaryTypesGridIndex.GridIndex(tileGridX + deltaX + 1, tileGridY);
+        const gridIndex = new GridIndex(tileGridX + deltaX + 1, tileGridY);
         if (!gridIndex.checkIsInsideMap(mapSize)) {
             break;
         }
         checkAndAddUnit(gridIndex);
     }
     for (let deltaX = 0; deltaX < rangeForLeft; ++deltaX) {
-        const gridIndex = new AuxiliaryTypesGridIndex.GridIndex(tileGridX - deltaX - 1, tileGridY);
+        const gridIndex = new GridIndex(tileGridX - deltaX - 1, tileGridY);
         if (!gridIndex.checkIsInsideMap(mapSize)) {
             break;
         }
         checkAndAddUnit(gridIndex);
     }
     for (let deltaY = 0; deltaY < rangeForDown; ++deltaY) {
-        const gridIndex = new AuxiliaryTypesGridIndex.GridIndex(tileGridX, tileGridY + deltaY + 1);
+        const gridIndex = new GridIndex(tileGridX, tileGridY + deltaY + 1);
         if (!gridIndex.checkIsInsideMap(mapSize)) {
             break;
         }
         checkAndAddUnit(gridIndex);
     }
     for (let deltaY = 0; deltaY < rangeForUp; ++deltaY) {
-        const gridIndex = new AuxiliaryTypesGridIndex.GridIndex(tileGridX, tileGridY - deltaY - 1);
+        const gridIndex = new GridIndex(tileGridX, tileGridY - deltaY - 1);
         if (!gridIndex.checkIsInsideMap(mapSize)) {
             break;
         }
@@ -1260,12 +1260,12 @@ function generateCandidateUnitArrayForLaserTurret(war: IBwWar, tile: IBwTile): I
 function sorterForRepairUnits(unit1: IBwUnit, unit2: IBwUnit): number {
     const cost1 = unit1.getProductionFinalCost();
     if (cost1 == null) {
-        throw HelpersMisc.newError(`Empty cost1.`, UtilsClientErrorCode.ClientErrorCode.BwTurnManager_SorterForRepairUnits_00);
+        throw newError(`Empty cost1.`, ClientErrorCode.BwTurnManager_SorterForRepairUnits_00);
     }
 
     const cost2 = unit2.getProductionFinalCost();
     if (cost2 == null) {
-        throw HelpersMisc.newError(`Empty cost2.`, UtilsClientErrorCode.ClientErrorCode.BwTurnManager_SorterForRepairUnits_01);
+        throw newError(`Empty cost2.`, ClientErrorCode.BwTurnManager_SorterForRepairUnits_01);
     }
 
     if (cost1 !== cost2) {
@@ -1273,12 +1273,12 @@ function sorterForRepairUnits(unit1: IBwUnit, unit2: IBwUnit): number {
     } else {
         const unitId1 = unit1.getUnitId();
         if (unitId1 == null) {
-            throw HelpersMisc.newError(`Empty unitId1.`, UtilsClientErrorCode.ClientErrorCode.BwTurnManager_SorterForRepairUnits_02);
+            throw newError(`Empty unitId1.`, ClientErrorCode.BwTurnManager_SorterForRepairUnits_02);
         }
 
         const unitId2 = unit2.getUnitId();
         if (unitId2 == null) {
-            throw HelpersMisc.newError(`Empty unitId2.`, UtilsClientErrorCode.ClientErrorCode.BwTurnManager_SorterForRepairUnits_03);
+            throw newError(`Empty unitId2.`, ClientErrorCode.BwTurnManager_SorterForRepairUnits_03);
         }
 
         return unitId1 - unitId2;

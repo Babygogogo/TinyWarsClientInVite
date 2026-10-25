@@ -1,6 +1,6 @@
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 
 export interface UiCoData {
-    gameConfig      : GameConfigGcData.GcData;
+    gameConfig      : GcData;
     coId            : number;
 }

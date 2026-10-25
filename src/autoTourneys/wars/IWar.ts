@@ -1,7 +1,7 @@
-import type * as MultiPlayerWarInterfaceIMpwWar from "../../multiPlayerWar/interface/IMpwWar.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForAtw from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
+import type { IMpwWar } from "../../multiPlayerWar/interface/IMpwWar.ts";
+import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
 
-export interface IWar extends MultiPlayerWarInterfaceIMpwWar.IMpwWar {
+export interface IWar extends IMpwWar {
     getCanCheat(): boolean;
     getShouldSerializeFullInfoForFreeModeGames(): boolean;
 
@@ -9,7 +9,7 @@ export interface IWar extends MultiPlayerWarInterfaceIMpwWar.IMpwWar {
     getIsNeedSeedRandom(): boolean;
     getNormalMapId(): number;
 
-    getSettingsForAtw(): ProtoSchemaCommonProtoWarSettingsSettingsForAtw.SettingsForAtw;
+    getSettingsForAtw(): SettingsForAtw;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.

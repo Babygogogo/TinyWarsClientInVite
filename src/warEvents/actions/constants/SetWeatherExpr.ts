@@ -1,24 +1,24 @@
-import * as ExpressionParsersEnums from "../../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../../expressionParsers/Types.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
+import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
-    WeatherType                         : ExpressionParsersTypes.EpExpressionInfo;
-    WeatherTurnsCount                   : ExpressionParsersTypes.EpExpressionInfo;
+    WeatherType                         : EpExpressionInfo;
+    WeatherTurnsCount                   : EpExpressionInfo;
 } = {
     WeatherType       : {
-        contextType     : ExpressionParsersEnums.ContextType.Weather,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Weather,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.Weather),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0526),
+        getTitleText    : () => getText(TextType.Weather),
+        getHelpText     : () => getText(TextType.A0526),
     },
     WeatherTurnsCount : {
-        contextType     : ExpressionParsersEnums.ContextType.Weather,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Weather,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.Turns),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0527),
+        getTitleText    : () => getText(TextType.Turns),
+        getHelpText     : () => getText(TextType.A0527),
     },
 };

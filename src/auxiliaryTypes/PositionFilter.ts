@@ -1,12 +1,12 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "./AuxiliaryTypes.ts";
-import type * as ProtoSchemaCommonProtoStructureGridIndex from "../proto/schema/CommonProto/Structure/GridIndex.ts";
-import type * as ProtoSchemaCommonProtoStructureValueAndComparator from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
+import type { Undefinable } from "./AuxiliaryTypes.ts";
+import type { GridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
+import type { ValueAndComparator } from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
 
 export class PositionFilter {
     private _conLocationIdArray         : number[] = [];
-    private _conGridIndexArray          : ProtoSchemaCommonProtoStructureGridIndex.GridIndex[] = [];
-    private _conGridIndexMinDistance?   : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator>;
-    private _conLocationMinDistance?    : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator>;
+    private _conGridIndexArray          : GridIndex[] = [];
+    private _conGridIndexMinDistance?   : Undefinable<ValueAndComparator>;
+    private _conLocationMinDistance?    : Undefinable<ValueAndComparator>;
     private _conGridXArray              : number[] = [];
     private _conGridYArray              : number[] = [];
 
@@ -28,24 +28,24 @@ export class PositionFilter {
         this._conLocationIdArray = value.concat();
     }
 
-    public getConGridIndexArray(): ProtoSchemaCommonProtoStructureGridIndex.GridIndex[] {
+    public getConGridIndexArray(): GridIndex[] {
         return this._conGridIndexArray;
     }
-    public setConGridIndexArray(value: ProtoSchemaCommonProtoStructureGridIndex.GridIndex[]): void {
+    public setConGridIndexArray(value: GridIndex[]): void {
         this._conGridIndexArray = value.map(v => v.clone());
     }
 
-    public getConGridIndexMinDistance(): AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator> {
+    public getConGridIndexMinDistance(): Undefinable<ValueAndComparator> {
         return this._conGridIndexMinDistance;
     }
-    public setConGridIndexMinDistance(value: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator>): void {
+    public setConGridIndexMinDistance(value: Undefinable<ValueAndComparator>): void {
         this._conGridIndexMinDistance = value?.clone();
     }
 
-    public getConLocationMinDistance(): AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator> {
+    public getConLocationMinDistance(): Undefinable<ValueAndComparator> {
         return this._conLocationMinDistance;
     }
-    public setConLocationMinDistance(value: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator>): void {
+    public setConLocationMinDistance(value: Undefinable<ValueAndComparator>): void {
         this._conLocationMinDistance = value?.clone();
     }
 

@@ -1,12 +1,12 @@
-import * as UiComponentsUiContainerBase from "./UiContainerBase.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import type * as UiInterfacesIUiContainer from "../interfaces/IUiContainer.ts";
-import * as UiUtilsUiSizerHelpers from "../utils/UiSizerHelpers.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { UiContainerBase } from "./UiContainerBase.ts";
+import type { IUiComponent as UiInterfacesIUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiContainer } from "../interfaces/IUiContainer.ts";
+import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
+import type { DisplayObject } from "../../vendor/egret/Egret.ts";
 
-type IUiComponent = UiInterfacesIUiComponent.IUiComponent;
+type IUiComponent = UiInterfacesIUiComponent;
 
-export class UiContainer extends UiComponentsUiContainerBase.UiContainerBase implements UiInterfacesIUiContainer.IUiContainer {
+export class UiContainer extends UiContainerBase implements IUiContainer {
     public getUiChildAt(index: number): IUiComponent | undefined {
         return (this.getChildAt(index) ?? undefined) as unknown as IUiComponent | undefined;
     }
@@ -14,14 +14,14 @@ export class UiContainer extends UiComponentsUiContainerBase.UiContainerBase imp
         return this.$children as unknown as IUiComponent[];
     }
     public addUiChild(child: IUiComponent): IUiComponent {
-        return this.addChild(child as unknown as VendorEgretEgret.DisplayObject) as unknown as IUiComponent;
+        return this.addChild(child as unknown as DisplayObject) as unknown as IUiComponent;
     }
     public addUiChildAt(child: IUiComponent, index: number): IUiComponent {
-        return this.addChildAt(child as unknown as VendorEgretEgret.DisplayObject, index) as unknown as IUiComponent;
+        return this.addChildAt(child as unknown as DisplayObject, index) as unknown as IUiComponent;
     }
     public removeUiChild(child: IUiComponent): IUiComponent | undefined {
         const num = this.numChildren;
-        this.removeChild(child as unknown as VendorEgretEgret.DisplayObject);
+        this.removeChild(child as unknown as DisplayObject);
         return this.numChildren < num ? child : undefined;
     }
     public removeUiChildAt(index: number): IUiComponent | undefined {
@@ -34,15 +34,15 @@ export class UiContainer extends UiComponentsUiContainerBase.UiContainerBase imp
     }
 
     public setUiChildIndex(child: IUiComponent, index: number): void {
-        this.setChildIndex(child as unknown as VendorEgretEgret.DisplayObject, index);
+        this.setChildIndex(child as unknown as DisplayObject, index);
     }
 
     protected override _checkAndAddAutoSizerInfo(): void {
         if (this.getSizerInfo() != null) {
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         } else {
             for (const child of this.getUiChildren()) {
-                UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(child, false);
+                checkAndAddAutoSizerInfo(child, false);
             }
         }
     }

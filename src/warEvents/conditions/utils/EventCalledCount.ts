@@ -1,28 +1,32 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarEventWecEventCalledCount from "../../../proto/schema/CommonProto/WarEvent/WecEventCalledCount.ts";
-import * as UtilsClientErrorCode from "../../../utils/ClientErrorCode.ts";
-import * as ValueAndComparatorsUtils from "../../../valueAndComparators/Utils.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { getExisted } from "../../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getFormattedText, getComparatorName, getText } from "../../../lang/Utils.ts";
+import type {
+    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
+} from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type {
+    WecEventCalledCount as ProtoSchemaCommonProtoWarEventWecEventCalledCount,
+} from "../../../proto/schema/CommonProto/WarEvent/WecEventCalledCount.ts";
+import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
+import { checkIsValidValueComparatorId, checkIsMeet1 } from "../../../valueAndComparators/Utils.ts";
 
-type WecEventCalledCount        = ProtoSchemaCommonProtoWarEventWecEventCalledCount.WecEventCalledCount;
-type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
+type WecEventCalledCount        = ProtoSchemaCommonProtoWarEventWecEventCalledCount;
+type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData;
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WecEventCalledCount>): string | null {
+export function getBriefDesc(data: Undefinable<WecEventCalledCount>): string | null {
     if (data == null) {
         return null;
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0096,
-        LangUtils.getComparatorName(HelpersMisc.getExisted(data.getEventsCountComparator())),
-        data.getEventsCount() ?? LangConstants.UndefinedError
+    return getFormattedText(
+        TextType.F0096,
+        getComparatorName(getExisted(data.getEventsCountComparator())),
+        data.getEventsCount() ?? UndefinedError
     );
 }
-export function getDetailedDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WecEventCalledCount>): string | null {
+export function getDetailedDesc(data: Undefinable<WecEventCalledCount>): string | null {
     if (data == null) {
         return null;
     }
@@ -31,18 +35,18 @@ export function getDetailedDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<W
     {
         const eventIdArray = data.getEventIdArray();
         if (eventIdArray?.length) {
-            subTextArray.push(`- ${LangUtils.getFormattedText(
-                LangConstants.TextType.F0095,
-                eventIdArray.join(` ${LangUtils.getText(LangConstants.TextType.Or)} `)
+            subTextArray.push(`- ${getFormattedText(
+                TextType.F0095,
+                eventIdArray.join(` ${getText(TextType.Or)} `)
             )}`);
         }
     }
     {
         const timesInTurn = data.getTimesInTurn();
         if (timesInTurn != null) {
-            subTextArray.push(`- ${LangUtils.getFormattedText(
-                LangConstants.TextType.F0094,
-                LangUtils.getComparatorName(HelpersMisc.getExisted(data.getTimesInTurnComparator())),
+            subTextArray.push(`- ${getFormattedText(
+                TextType.F0094,
+                getComparatorName(getExisted(data.getTimesInTurnComparator())),
                 timesInTurn
             )}`);
         }
@@ -50,61 +54,61 @@ export function getDetailedDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<W
     {
         const timesTotal = data.getTimesTotal();
         if (timesTotal != null) {
-            subTextArray.push(`- ${LangUtils.getFormattedText(
-                LangConstants.TextType.F0105,
-                LangUtils.getComparatorName(HelpersMisc.getExisted(data.getTimesTotalComparator())),
+            subTextArray.push(`- ${getFormattedText(
+                TextType.F0105,
+                getComparatorName(getExisted(data.getTimesTotalComparator())),
                 timesTotal
             )}`);
         }
     }
 
     if (!subTextArray.length) {
-        subTextArray.push(LangUtils.getText(LangConstants.TextType.A0944));
+        subTextArray.push(getText(TextType.A0944));
     }
 
     return [
-        LangUtils.getFormattedText(
-            LangConstants.TextType.F0104,
-            LangUtils.getComparatorName(HelpersMisc.getExisted(data.getEventsCountComparator())),
-            data.getEventsCount() ?? LangConstants.UndefinedError
+        getFormattedText(
+            TextType.F0104,
+            getComparatorName(getExisted(data.getEventsCountComparator())),
+            data.getEventsCount() ?? UndefinedError
         ),
         ...subTextArray
     ].join(`\n`);
 }
 export function getErrorTip(data: WecEventCalledCount, fullData: WarEventFullData): string | null {
     if (data.getEventsCount() == null) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0788));
+        return getFormattedText(TextType.F0091, getText(TextType.B0788));
     }
 
     {
         const comparator = data.getEventsCountComparator();
-        if ((comparator == null) || (!ValueAndComparatorsUtils.checkIsValidValueComparatorId(comparator))) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Comparator));
+        if ((comparator == null) || (!checkIsValidValueComparatorId(comparator))) {
+            return getFormattedText(TextType.F0091, getText(TextType.Comparator));
         }
     }
 
     if (data.getEventIdArray()?.some(eventId => !fullData.getEventArray()?.some(v => eventId === v.getEventId()))) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0462));
+        return getFormattedText(TextType.F0091, getText(TextType.B0462));
     }
 
     {
         const comparator = data.getTimesTotalComparator();
-        if ((comparator == null) || (!ValueAndComparatorsUtils.checkIsValidValueComparatorId(comparator))) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Comparator));
+        if ((comparator == null) || (!checkIsValidValueComparatorId(comparator))) {
+            return getFormattedText(TextType.F0091, getText(TextType.Comparator));
         }
     }
 
     {
         const comparator = data.getTimesInTurnComparator();
-        if ((comparator == null) || (!ValueAndComparatorsUtils.checkIsValidValueComparatorId(comparator))) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Comparator));
+        if ((comparator == null) || (!checkIsValidValueComparatorId(comparator))) {
+            return getFormattedText(TextType.F0091, getText(TextType.Comparator));
         }
     }
 
     return null;
 }
 
-export function checkIsValid(condition: AuxiliaryTypesAuxiliaryTypes.Undefinable<WecEventCalledCount>): boolean {
+export function checkIsValid(condition: Undefinable<WecEventCalledCount>): boolean {
     if (condition == null) {
         return false;
     }
@@ -124,21 +128,21 @@ export function checkIsValid(condition: AuxiliaryTypesAuxiliaryTypes.Undefinable
 
     {
         const comparator = condition.getEventsCountComparator();
-        if ((comparator == null) || (!ValueAndComparatorsUtils.checkIsValidValueComparatorId(comparator))) {
+        if ((comparator == null) || (!checkIsValidValueComparatorId(comparator))) {
             return false;
         }
     }
 
     {
         const comparator = condition.getTimesInTurnComparator();
-        if ((comparator == null) || (!ValueAndComparatorsUtils.checkIsValidValueComparatorId(comparator))) {
+        if ((comparator == null) || (!checkIsValidValueComparatorId(comparator))) {
             return false;
         }
     }
 
     {
         const comparator = condition.getTimesTotalComparator();
-        if ((comparator == null) || (!ValueAndComparatorsUtils.checkIsValidValueComparatorId(comparator))) {
+        if ((comparator == null) || (!checkIsValidValueComparatorId(comparator))) {
             return false;
         }
     }
@@ -146,23 +150,23 @@ export function checkIsValid(condition: AuxiliaryTypesAuxiliaryTypes.Undefinable
     return true;
 }
 
-export function checkIsMeet(condition: WecEventCalledCount, war: BaseWarInterfaceIBwWar.IBwWar): boolean {
+export function checkIsMeet(condition: WecEventCalledCount, war: IBwWar): boolean {
     const eventIdArray          = condition.getEventIdArray() ?? [];
     const timesInTurn           = condition.getTimesInTurn();
     const timesTotal            = condition.getTimesTotal();
-    const timesInTurnComparator = HelpersMisc.getExisted(condition.getTimesInTurnComparator(), UtilsClientErrorCode.ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_00);
-    const timesTotalComparator  = HelpersMisc.getExisted(condition.getTimesTotalComparator(), UtilsClientErrorCode.ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_01);
+    const timesInTurnComparator = getExisted(condition.getTimesInTurnComparator(), ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_00);
+    const timesTotalComparator  = getExisted(condition.getTimesTotalComparator(), ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_01);
     const warEventManager       = war.getWarEventManager();
 
     let eventsCount = 0;
     for (const warEvent of war.getCommonSettingManager().getInstanceWarRule().getWarEventFullData()?.getEventArray() ?? []) {
-        const eventId = HelpersMisc.getExisted(warEvent.getEventId(), UtilsClientErrorCode.ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_02);
+        const eventId = getExisted(warEvent.getEventId(), ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_02);
         if ((eventIdArray.length) && (eventIdArray.indexOf(eventId) < 0)) {
             continue;
         }
 
         if ((timesInTurn != null)                   &&
-            (!ValueAndComparatorsUtils.checkIsMeet1({
+            (!checkIsMeet1({
                 comparator  : timesInTurnComparator,
                 targetValue : timesInTurn,
                 actualValue : warEventManager.getWarEventCalledCountInPlayerTurn(eventId),
@@ -172,7 +176,7 @@ export function checkIsMeet(condition: WecEventCalledCount, war: BaseWarInterfac
         }
 
         if ((timesTotal != null)                    &&
-            (!ValueAndComparatorsUtils.checkIsMeet1({
+            (!checkIsMeet1({
                 comparator  : timesTotalComparator,
                 targetValue : timesTotal,
                 actualValue : warEventManager.getWarEventCalledCountTotal(eventId),
@@ -184,9 +188,9 @@ export function checkIsMeet(condition: WecEventCalledCount, war: BaseWarInterfac
         ++eventsCount;
     }
 
-    return ValueAndComparatorsUtils.checkIsMeet1({
-        comparator  : HelpersMisc.getExisted(condition.getEventsCountComparator(), UtilsClientErrorCode.ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_03),
-        targetValue : HelpersMisc.getExisted(condition.getEventsCount(), UtilsClientErrorCode.ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_04),
+    return checkIsMeet1({
+        comparator  : getExisted(condition.getEventsCountComparator(), ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_03),
+        targetValue : getExisted(condition.getEventsCount(), ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_04),
         actualValue : eventsCount,
     });
 }

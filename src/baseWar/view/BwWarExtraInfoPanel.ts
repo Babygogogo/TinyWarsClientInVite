@@ -1,55 +1,55 @@
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as StagesConstants from "../../stages/Constants.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { getSpwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getLanguageText } from "../../lang/Utils.ts";
+import { getBriefData } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { Dimension } from "../../stages/Constants.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 
 export interface OpenData {
-    war     : BaseWarInterfaceIBwWar.IBwWar;
+    war     : IBwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTips!                : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _btnClose!                 : IUiButton;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _labelTips!                : IUiLabel;
 
-    private readonly _scrContent!               : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiLayout.IUiLayout>;
-    private readonly _layoutContent!            : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _scrContent!               : IUiScroller<IUiLayout>;
+    private readonly _layoutContent!            : IUiLayout;
 
-    private readonly _layoutMapName!            : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMapNameTitle!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapName!             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutMapName!            : IUiLayout;
+    private readonly _labelMapNameTitle!        : IUiLabel;
+    private readonly _labelMapName!             : IUiLabel;
 
-    private readonly _layoutMapDesigner!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMapDesignerTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapDesigner!         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutMapDesigner!        : IUiLayout;
+    private readonly _labelMapDesignerTitle!    : IUiLabel;
+    private readonly _labelMapDesigner!         : IUiLabel;
 
-    private readonly _layoutTurns!              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTurnsTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTurns!               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutTurns!              : IUiLayout;
+    private readonly _labelTurnsTitle!          : IUiLabel;
+    private readonly _labelTurns!               : IUiLabel;
 
-    private readonly _layoutOperations!         : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelOperationsTitle!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelOperations!          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutOperations!         : IUiLayout;
+    private readonly _labelOperationsTitle!     : IUiLabel;
+    private readonly _labelOperations!          : IUiLabel;
 
-    private readonly _layoutScorePreview!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelScorePreviewTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelScorePreview!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutScorePreview!       : IUiLayout;
+    private readonly _labelScorePreviewTitle!   : IUiLabel;
+    private readonly _labelScorePreview!        : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -70,13 +70,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private async _updateView(): Promise<void> {
         {
-            this._labelTitle.setLangText(LangConstants.TextType.B0223);
-            this._labelMapNameTitle.setLangText(LangConstants.TextType.B0225);
-            this._labelMapDesignerTitle.setLangText(LangConstants.TextType.B0163);
-            this._labelTurnsTitle.setLangText(LangConstants.TextType.Turns);
-            this._labelOperationsTitle.setLangText(LangConstants.TextType.B1292);
-            this._labelScorePreviewTitle.setLangText(LangConstants.TextType.B1450);
-            this._labelTips.setLangText(LangConstants.TextType.A0379);
+            this._labelTitle.setLangText(TextType.B0223);
+            this._labelMapNameTitle.setLangText(TextType.B0225);
+            this._labelMapDesignerTitle.setLangText(TextType.B0163);
+            this._labelTurnsTitle.setLangText(TextType.Turns);
+            this._labelOperationsTitle.setLangText(TextType.B1292);
+            this._labelScorePreviewTitle.setLangText(TextType.B1450);
+            this._labelTips.setLangText(TextType.A0379);
         }
 
         const war = this.getOpenData()?.war;
@@ -101,9 +101,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 labelMapName.setText(`--`);
                 labelMapDesigner.setText(`--`);
             } else {
-                const briefInfo         = await NormalMapModelNormalMapModel.getBriefData(normalMapId);
-                labelMapName.setText(`#${normalMapId} ${LangUtils.getLanguageText({ textArray: briefInfo?.getMapNameArray() }) ?? LangConstants.UndefinedError}`);
-                labelMapDesigner.setText(`${briefInfo?.getDesignerName() ?? LangConstants.UndefinedError}`);
+                const briefInfo         = await getBriefData(normalMapId);
+                labelMapName.setText(`#${normalMapId} ${getLanguageText({ textArray: briefInfo?.getMapNameArray() }) ?? UndefinedError}`);
+                labelMapDesigner.setText(`${briefInfo?.getDesignerName() ?? UndefinedError}`);
             }
             this._layoutMapName.arrangeItems();
             this._layoutMapDesigner.arrangeItems();
@@ -114,7 +114,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             const layoutScorePreview    = this._layoutScorePreview;
             layoutContent.removeItem(layoutScorePreview, false);
 
-            if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
+            if (war instanceof getSpwWarClass()) {
                 layoutContent.addItem(layoutScorePreview, false);
                 this._labelScorePreview.setText(`${war.calculateTotalScore()}`);
                 layoutScorePreview.arrangeItems();
@@ -127,10 +127,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
             const scrContent        = this._scrContent;
             const contentHeight     = layoutContent.getScaledHeight();
-            const scrollerHeight    = NumbersUtils.getValueInRange({
+            const scrollerHeight    = getValueInRange({
                 rawValue    : contentHeight,
                 minValue    : 160,
-                maxValue    : StagesConstants.Dimension.DesignMinHeight - 80,
+                maxValue    : Dimension.DesignMinHeight - 80,
             });
             scrContent.setUnscaledManualHeight(scrollerHeight);
             scrContent.updateOnItemsChanged();

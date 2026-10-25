@@ -1,10 +1,10 @@
-import type * as UiInterfacesIUiOpenableComponent from "../interfaces/IUiOpenableComponent.ts";
+import type { IUiOpenableComponent } from "../interfaces/IUiOpenableComponent.ts";
 
 export interface UiTabData<TabItemData, PageData> {
     callbackOnTouchedItem?  : () => boolean;
     tabItemData             : TabItemData;
 
-    pageClass               : new () => UiInterfacesIUiOpenableComponent.IUiOpenableComponent<PageData>;
+    pageClass               : new () => IUiOpenableComponent<PageData>;
     pageData                : PageData;
 
     // /**

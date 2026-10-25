@@ -1,34 +1,34 @@
-import * as ActionPlannersConstants from "../actionPlanners/Constants.ts";
-import * as GameHelpersGhFactory from "../gameHelpers/GhFactory.ts";
-import * as GraphicsUtils from "../graphics/Utils.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import * as UiComponentsUiContainer from "../ui/components/UiContainer.ts";
-import type * as UiInterfacesIUiContainer from "../ui/interfaces/IUiContainer.ts";
-import * as UiUtilsUiFactory from "../ui/utils/UiFactory.ts";
-import * as UnitsConstants from "./Constants.ts";
-import type * as UnitsIUnitMap from "./IUnitMap.ts";
-import type * as UnitsIUnitMapView from "./IUnitMapView.ts";
-import type * as UnitsIUnitView from "./IUnitView.ts";
-import * as UsersModel from "../users/Model.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
-import type * as VendorEgretEgret from "../vendor/egret/Egret.ts";
-import * as VisibilitiesUtils from "../visibilities/Utils.ts";
+import { StateId } from "../actionPlanners/Constants.ts";
+import { getRwWarBaseClass, getRwWarClass } from "../gameHelpers/GhFactory.ts";
+import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
+import { createLazyFunc, getExisted, newError } from "../helpers/Misc.ts";
+import { addEventListeners, removeEventListeners } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import { UiContainer } from "../ui/components/UiContainer.ts";
+import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
+import { getUiContainerClass } from "../ui/utils/UiFactory.ts";
+import { DisplayLayerId } from "./Constants.ts";
+import type { IUnitMap } from "./IUnitMap.ts";
+import type { IUnitMapView } from "./IUnitMapView.ts";
+import type { IUnitView } from "./IUnitView.ts";
+import { getSelfSettingsOpacitySettings } from "../users/Model.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+import type { DisplayObject } from "../vendor/egret/Egret.ts";
+import { getAllUnitsOnMapVisibleToTeams } from "../visibilities/Utils.ts";
 
-const getGridWidth          = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight         = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridHeight);
+const getGridWidth          = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight         = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
 
-export class UnitMapView extends UiComponentsUiContainer.UiContainer implements UnitsIUnitMapView.IUnitMapView {
-    private readonly _layerForNaval     = new (UiUtilsUiFactory.getUiContainerClass())();
-    private readonly _layerForGround    = new (UiUtilsUiFactory.getUiContainerClass())();
-    private readonly _layerForAir       = new (UiUtilsUiFactory.getUiContainerClass())();
+export class UnitMapView extends UiContainer implements IUnitMapView {
+    private readonly _layerForNaval     = new (getUiContainerClass())();
+    private readonly _layerForGround    = new (getUiContainerClass())();
+    private readonly _layerForAir       = new (getUiContainerClass())();
     private readonly _notifyListeners   = [
-        { type: NotificationsTypeId.TypeId.ActionPlannerStateSet,               callback: this._onNotifyActionPlannerStateChanged },
-        { type: NotificationsTypeId.TypeId.UserSettingsOpacitySettingsChanged,  callback: this._onNotifyUserSettingsOpacitySettingsChanged },
+        { type: TypeId.ActionPlannerStateSet,               callback: this._onNotifyActionPlannerStateChanged },
+        { type: TypeId.UserSettingsOpacitySettingsChanged,  callback: this._onNotifyUserSettingsOpacitySettingsChanged },
     ];
 
-    private _unitMap    : UnitsIUnitMap.IUnitMap | null = null;
+    private _unitMap    : IUnitMap | null = null;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Initializers.
@@ -44,7 +44,7 @@ export class UnitMapView extends UiComponentsUiContainer.UiContainer implements 
         this.setIsTouchChildrenEnabled(false);
     }
 
-    public init(unitMap: UnitsIUnitMap.IUnitMap): void {
+    public init(unitMap: IUnitMap): void {
         this._setUnitMap(unitMap);
 
         this._clearAllUnits();
@@ -57,24 +57,24 @@ export class UnitMapView extends UiComponentsUiContainer.UiContainer implements 
             this.addUnit(unit.getView(), false);
         }
 
-        NotificationsDispatcher.addEventListeners(this._notifyListeners, this);
+        addEventListeners(this._notifyListeners, this);
     }
     public stopRunningView(): void {
-        NotificationsDispatcher.removeEventListeners(this._notifyListeners, this);
+        removeEventListeners(this._notifyListeners, this);
     }
 
-    private _getUnitMap(): UnitsIUnitMap.IUnitMap {
-        return HelpersMisc.getExisted(this._unitMap);
+    private _getUnitMap(): IUnitMap {
+        return getExisted(this._unitMap);
     }
-    private _setUnitMap(unitMap: UnitsIUnitMap.IUnitMap): void {
+    private _setUnitMap(unitMap: IUnitMap): void {
         this._unitMap = unitMap;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Other public functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public addUnit(view: UnitsIUnitView.IUnitView, needResetZOrder: boolean): void {
-        const model = HelpersMisc.getExisted(view.getUnit());
+    public addUnit(view: IUnitView, needResetZOrder: boolean): void {
+        const model = getExisted(view.getUnit());
 
         view.setX(getGridWidth() * model.getGridX());
         view.setY(getGridHeight() * model.getGridY());
@@ -85,8 +85,8 @@ export class UnitMapView extends UiComponentsUiContainer.UiContainer implements 
         (needResetZOrder) && (this._resetZOrderForLayer(layer));
     }
 
-    public removeUnit(view: UnitsIUnitView.IUnitView): void {
-        view.getParent()?.removeChild(view as unknown as VendorEgretEgret.DisplayObject);
+    public removeUnit(view: IUnitView): void {
+        view.getParent()?.removeChild(view as unknown as DisplayObject);
     }
 
     public resetZOrder(unitType: number): void {
@@ -98,88 +98,88 @@ export class UnitMapView extends UiComponentsUiContainer.UiContainer implements 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onNotifyActionPlannerStateChanged(): void {
         const war = this._getUnitMap().getWar();
-        if ((war instanceof GameHelpersGhFactory.getRwWarBaseClass()) && (war.getIsBatchExecuteAction())) {
+        if ((war instanceof getRwWarBaseClass()) && (war.getIsBatchExecuteAction())) {
             return;
         }
 
         const actionPlanner = war.getActionPlanner();
         const state         = actionPlanner.getStateId();
 
-        if (state === ActionPlannersConstants.StateId.Idle) {
+        if (state === StateId.Idle) {
             this._resetVisibleForAllUnitsOnMap();
 
-        } else if (state === ActionPlannersConstants.StateId.ExecutingAction) {
+        } else if (state === StateId.ExecutingAction) {
             this._resetVisibleForAllUnitsOnMap();
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitMovePath) {
+        } else if (state === StateId.ChoosingUnitMovePath) {
             this._resetVisibleForAllUnitsOnMap();
-            HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
+            getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
             const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
             (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAction) {
+        } else if (state === StateId.ChoosingUnitAction) {
             this._resetVisibleForAllUnitsOnMap();
-            HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
+            getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
             const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
             (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitAttackTarget) {
+        } else if (state === StateId.ChoosingUnitAttackTarget) {
             this._resetVisibleForAllUnitsOnMap();
-            HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
+            getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
             const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
             (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitCrushTarget) {
+        } else if (state === StateId.ChoosingUnitCrushTarget) {
             this._resetVisibleForAllUnitsOnMap();
             actionPlanner.getFocusUnitOnMap()?.setViewVisible(false);
             actionPlanner.getFocusUnitLoaded()?.setViewVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget) {
+        } else if (state === StateId.ChoosingCoActiveSkillTarget) {
             this._resetVisibleForAllUnitsOnMap();
             actionPlanner.getFocusUnitOnMap()?.setViewVisible(false);
             actionPlanner.getFocusUnitLoaded()?.setViewVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitDropDestination) {
+        } else if (state === StateId.ChoosingUnitDropDestination) {
             this._resetVisibleForAllUnitsOnMap();
-            HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
+            getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
             const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
             (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitFlareDestination) {
+        } else if (state === StateId.ChoosingUnitFlareDestination) {
             this._resetVisibleForAllUnitsOnMap();
-            HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
+            getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
             const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
             (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitRepairTarget) {
+        } else if (state === StateId.ChoosingUnitRepairTarget) {
             this._resetVisibleForAllUnitsOnMap();
             actionPlanner.getFocusUnitOnMap()?.setViewVisible(false);
             actionPlanner.getFocusUnitLoaded()?.setViewVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingUnitSiloDestination) {
+        } else if (state === StateId.ChoosingUnitSiloDestination) {
             this._resetVisibleForAllUnitsOnMap();
-            HelpersMisc.getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
+            getExisted(actionPlanner.getFocusUnitOnMap()).setViewVisible(false);
             const focusUnitLoaded = actionPlanner.getFocusUnitLoaded();
             (focusUnitLoaded) && (focusUnitLoaded.setViewVisible(false));
 
-        } else if (state === ActionPlannersConstants.StateId.ChoosingTileProductionTarget) {
+        } else if (state === StateId.ChoosingTileProductionTarget) {
             this._resetVisibleForAllUnitsOnMap();
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitAttackableArea) {
+        } else if (state === StateId.PreviewingUnitAttackableArea) {
             this._resetVisibleForAllUnitsOnMap();
             for (const [, unit] of actionPlanner.getUnitsForPreviewingAttackableArea()) {
                 unit.setViewVisible(false);
             }
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitMovableArea) {
+        } else if (state === StateId.PreviewingUnitMovableArea) {
             this._resetVisibleForAllUnitsOnMap();
-            HelpersMisc.getExisted(actionPlanner.getUnitForPreviewingMovableArea()).setViewVisible(false);
+            getExisted(actionPlanner.getUnitForPreviewingMovableArea()).setViewVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingUnitVisibleArea) {
+        } else if (state === StateId.PreviewingUnitVisibleArea) {
             this._resetVisibleForAllUnitsOnMap();
-            HelpersMisc.getExisted(actionPlanner.getUnitForPreviewingVisibleArea()).setViewVisible(false);
+            getExisted(actionPlanner.getUnitForPreviewingVisibleArea()).setViewVisible(false);
 
-        } else if (state === ActionPlannersConstants.StateId.PreviewingTileAttackableArea) {
+        } else if (state === StateId.PreviewingTileAttackableArea) {
             this._resetVisibleForAllUnitsOnMap();
 
         } else {
@@ -200,13 +200,13 @@ export class UnitMapView extends UiComponentsUiContainer.UiContainer implements 
         this._layerForNaval.removeUiChildren();
     }
 
-    private _resetZOrderForLayer(layer: UiInterfacesIUiContainer.IUiContainer): void {
+    private _resetZOrderForLayer(layer: IUiContainer): void {
         const viewsCount    = layer.getUiChildren().length;
-        const views         = new Array<UnitsIUnitView.IUnitView>(viewsCount);
+        const views         = new Array<IUnitView>(viewsCount);
         for (let i = 0; i < viewsCount; ++i) {
             views[i] = layer.getUiChildAt(i) as any;
         }
-        views.sort((v1, v2) => HelpersMisc.getExisted(v1.getUnit()).getGridY() - HelpersMisc.getExisted(v2.getUnit()).getGridY());
+        views.sort((v1, v2) => getExisted(v1.getUnit()).getGridY() - getExisted(v2.getUnit()).getGridY());
         for (let i = 0; i < viewsCount; ++i) {
             layer.setUiChildIndex(views[i], i);
         }
@@ -217,21 +217,21 @@ export class UnitMapView extends UiComponentsUiContainer.UiContainer implements 
         this._resetZOrderForLayer(this._layerForNaval);
     }
 
-    private _getLayerByUnitType(unitType: number): UiInterfacesIUiContainer.IUiContainer {
+    private _getLayerByUnitType(unitType: number): IUiContainer {
         switch (this._getUnitMap().getWar().getGcData().getUnitTemplateCfg(unitType)?.getLayer()) {
-            case UnitsConstants.DisplayLayerId.Air     : return this._layerForAir;
-            case UnitsConstants.DisplayLayerId.Ground  : return this._layerForGround;
-            case UnitsConstants.DisplayLayerId.Sea     : return this._layerForNaval;
-            default                         : throw HelpersMisc.newError(`Invalid layer.`, UtilsClientErrorCode.ClientErrorCode.BwUnitMapView_GetLayerByUnitType_00);
+            case DisplayLayerId.Air     : return this._layerForAir;
+            case DisplayLayerId.Ground  : return this._layerForGround;
+            case DisplayLayerId.Sea     : return this._layerForNaval;
+            default                         : throw newError(`Invalid layer.`, ClientErrorCode.BwUnitMapView_GetLayerByUnitType_00);
         }
     }
 
     private _resetVisibleForAllUnitsOnMap(): void {
         const unitMap       = this._getUnitMap();
         const war           = unitMap.getWar();
-        const visibleUnits  = VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(
+        const visibleUnits  = getAllUnitsOnMapVisibleToTeams(
             war,
-            ((war instanceof GameHelpersGhFactory.getRwWarClass()) && (!war.getIsShowAllUnits()))
+            ((war instanceof getRwWarClass()) && (!war.getIsShowAllUnits()))
                 ? new Set([war.getVisionTeamIndex() ?? war.getPlayerInTurn().getTeamIndex()])
                 : war.getPlayerManager().getWatcherTeamIndexesForSelf()
         );
@@ -241,7 +241,7 @@ export class UnitMapView extends UiComponentsUiContainer.UiContainer implements 
     }
 
     private _updateOpacityForAllLayers(): void {
-        const opacity = (UsersModel.getSelfSettingsOpacitySettings()?.getUnitOpacity() ?? 100) / 100;
+        const opacity = (getSelfSettingsOpacitySettings()?.getUnitOpacity() ?? 100) / 100;
         this._layerForAir.setAlpha(opacity);
         this._layerForGround.setAlpha(opacity);
         this._layerForNaval.setAlpha(opacity);

@@ -1,52 +1,52 @@
-import * as BroadcastsConstants from "../Constants.ts";
-import * as BroadcastsGateway from "../Gateway.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoStructureLanguageText from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
+import { Constants } from "../Constants.ts";
+import { reqBroadcastAddMessage } from "../Gateway.ts";
+import { show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { LanguageType, TextType } from "../../lang/Constants.ts";
+import { getText, getFormattedText, getTimestampShortText, getTimeDurationText2 } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
+import { getServerTimestamp } from "../../timer/TimerModel.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelChinese!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputChinese!         : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelEnglish!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputEnglish!         : UiInterfacesIUiPromptedInput.IUiPromptedInput;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _labelChinese!         : IUiLabel;
+    private readonly _inputChinese!         : IUiPromptedInput;
+    private readonly _labelEnglish!         : IUiLabel;
+    private readonly _inputEnglish!         : IUiPromptedInput;
 
-    private readonly _btnStartTime!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelStartTime!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnStartTimeYear!     : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnStartTimeMonth!    : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnStartTimeDay!      : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnStartTimeHour!     : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnStartTimeMinute!   : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnStartTimeSecond!   : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDuration!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelDuration!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnStartTime!         : IUiButton;
+    private readonly _labelStartTime!       : IUiLabel;
+    private readonly _btnStartTimeYear!     : IUiButton;
+    private readonly _btnStartTimeMonth!    : IUiButton;
+    private readonly _btnStartTimeDay!      : IUiButton;
+    private readonly _btnStartTimeHour!     : IUiButton;
+    private readonly _btnStartTimeMinute!   : IUiButton;
+    private readonly _btnStartTimeSecond!   : IUiButton;
+    private readonly _btnDuration!          : IUiButton;
+    private readonly _labelDuration!        : IUiLabel;
 
-    private readonly _labelTip!             : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnModify!            : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelTip!             : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _btnModify!            : IUiButton;
 
     private _startTime      = 0;
     private _duration       = 180;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                   callback: this.closePanel },
@@ -65,11 +65,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._enableKeyEscapeToClosePanel();
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
-        this._inputChinese.setInputMaxLength(BroadcastsConstants.Constants.TextMaxLength);
-        this._inputEnglish.setInputMaxLength(BroadcastsConstants.Constants.TextMaxLength);
+        this._inputChinese.setInputMaxLength(Constants.TextMaxLength);
+        this._inputEnglish.setInputMaxLength(Constants.TextMaxLength);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._startTime = TimerTimerModel.getServerTimestamp();
+        this._startTime = getServerTimestamp();
         this._updateView();
 
         this._inputChinese.setInputText(`服务器即将进行停机更新。请尽快保存您的进度以免丢失，谢谢！`);
@@ -83,26 +83,26 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnModify(): void {
         const chineseText   = this._inputChinese.trimInputText();
         const englishText   = this._inputEnglish.trimInputText();
-        const textList      : ProtoSchemaCommonProtoStructureLanguageText.LanguageText[] = [];
+        const textList      : LanguageText[] = [];
         if (chineseText) {
-            textList.push(ProtoSchemaCommonProtoStructureLanguageText.LanguageText.fromJson({ languageType: LangConstants.LanguageType.Chinese, text: chineseText }));
+            textList.push(LanguageText.fromJson({ languageType: LanguageType.Chinese, text: chineseText }));
         }
         if (englishText) {
-            textList.push(ProtoSchemaCommonProtoStructureLanguageText.LanguageText.fromJson({ languageType: LangConstants.LanguageType.English, text: englishText }));
+            textList.push(LanguageText.fromJson({ languageType: LanguageType.English, text: englishText }));
         }
-        if (textList.every(v => HelpersMisc.getExisted(v.getText()).length <= 0)) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0155));
-        } else if (textList.some(v => HelpersMisc.getExisted(v.getText()).length > BroadcastsConstants.Constants.TextMaxLength)) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0034, BroadcastsConstants.Constants.TextMaxLength));
+        if (textList.every(v => getExisted(v.getText()).length <= 0)) {
+            show(getText(TextType.A0155));
+        } else if (textList.some(v => getExisted(v.getText()).length > Constants.TextMaxLength)) {
+            show(getFormattedText(TextType.F0034, Constants.TextMaxLength));
         } else {
             const startTime = this._startTime;
-            BroadcastsGateway.reqBroadcastAddMessage(textList, startTime, startTime + this._duration);
+            reqBroadcastAddMessage(textList, startTime, startTime + this._duration);
             this.closePanel();
         }
     }
 
     private _onTouchedBtnStartTime(): void {
-        this._startTime = TimerTimerModel.getServerTimestamp();
+        this._startTime = getServerTimestamp();
         this._updateLabelDuration();
         this._updateLabelStartTime();
     }
@@ -111,8 +111,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const minValue  = 2022;
         const maxValue  = 2100;
         const date      = new Date(this._startTime * 1000);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0059),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle           : () => getText(TextType.B0059),
             minValue,
             maxValue,
             currentValue    : date.getFullYear(),
@@ -128,8 +128,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const minValue  = 1;
         const maxValue  = 12;
         const date      = new Date(this._startTime * 1000);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0058),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle           : () => getText(TextType.B0058),
             minValue,
             maxValue,
             currentValue    : date.getMonth() + 1,
@@ -145,8 +145,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const minValue  = 1;
         const maxValue  = 31;
         const date      = new Date(this._startTime * 1000);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0057),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle           : () => getText(TextType.B0057),
             minValue,
             maxValue,
             currentValue    : date.getDate(),
@@ -162,8 +162,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const minValue  = 0;
         const maxValue  = 23;
         const date      = new Date(this._startTime * 1000);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0884),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle           : () => getText(TextType.B0884),
             minValue,
             maxValue,
             currentValue    : date.getHours(),
@@ -179,8 +179,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const minValue  = 0;
         const maxValue  = 59;
         const date      = new Date(this._startTime * 1000);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0885),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle           : () => getText(TextType.B0885),
             minValue,
             maxValue,
             currentValue    : date.getMinutes(),
@@ -196,8 +196,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const minValue  = 0;
         const maxValue  = 59;
         const date      = new Date(this._startTime * 1000);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0886),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle           : () => getText(TextType.B0886),
             minValue,
             maxValue,
             currentValue    : date.getSeconds(),
@@ -213,8 +213,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnDuration(): void {
         const minValue  = 30;
         const maxValue  = 3600 * 24;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0883),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle           : () => getText(TextType.B0883),
             minValue,
             maxValue,
             currentValue    : this._duration,
@@ -233,27 +233,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnClose.setText(LangUtils.getText(LangConstants.TextType.B0146));
-        this._btnModify.setText(LangUtils.getText(LangConstants.TextType.B0320));
-        this._labelChinese.setText(LangUtils.getText(LangConstants.TextType.B0455));
-        this._labelEnglish.setText(LangUtils.getText(LangConstants.TextType.B0456));
-        this._labelTip.setText(LangUtils.getText(LangConstants.TextType.A0156));
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0454));
-        this._btnStartTime.setText(LangUtils.getText(LangConstants.TextType.B0882));
-        this._btnDuration.setText(LangUtils.getText(LangConstants.TextType.B0883));
-        this._btnStartTimeYear.setText(LangUtils.getText(LangConstants.TextType.B0059));
-        this._btnStartTimeMonth.setText(LangUtils.getText(LangConstants.TextType.B0058));
-        this._btnStartTimeDay.setText(LangUtils.getText(LangConstants.TextType.B0057));
-        this._btnStartTimeHour.setText(LangUtils.getText(LangConstants.TextType.B0884));
-        this._btnStartTimeMinute.setText(LangUtils.getText(LangConstants.TextType.B0885));
-        this._btnStartTimeSecond.setText(LangUtils.getText(LangConstants.TextType.B0886));
+        this._btnClose.setText(getText(TextType.B0146));
+        this._btnModify.setText(getText(TextType.B0320));
+        this._labelChinese.setText(getText(TextType.B0455));
+        this._labelEnglish.setText(getText(TextType.B0456));
+        this._labelTip.setText(getText(TextType.A0156));
+        this._labelTitle.setText(getText(TextType.B0454));
+        this._btnStartTime.setText(getText(TextType.B0882));
+        this._btnDuration.setText(getText(TextType.B0883));
+        this._btnStartTimeYear.setText(getText(TextType.B0059));
+        this._btnStartTimeMonth.setText(getText(TextType.B0058));
+        this._btnStartTimeDay.setText(getText(TextType.B0057));
+        this._btnStartTimeHour.setText(getText(TextType.B0884));
+        this._btnStartTimeMinute.setText(getText(TextType.B0885));
+        this._btnStartTimeSecond.setText(getText(TextType.B0886));
     }
 
     private _updateLabelStartTime(): void {
-        this._labelStartTime.setText(LangUtils.getTimestampShortText(this._startTime));
+        this._labelStartTime.setText(getTimestampShortText(this._startTime));
     }
     private _updateLabelDuration(): void {
         const duration              = this._duration;
-        this._labelDuration.setText(`${LangUtils.getTimeDurationText2(duration)} (~${LangUtils.getTimestampShortText(this._startTime + duration)})`);
+        this._labelDuration.setText(`${getTimeDurationText2(duration)} (~${getTimestampShortText(this._startTime + duration)})`);
     }
 }

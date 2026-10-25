@@ -1,15 +1,24 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoStructureTileBuff from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type * as ProtoSchemaCommonProtoStructureTileBuffFilter from "../../proto/schema/CommonProto/Structure/TileBuffFilter.ts";
-import * as TileBuffsUtilsCommon from "./Common.ts";
-import * as ValueAndComparatorsUtils from "../../valueAndComparators/Utils.ts";
-import * as ValueArrayAndPredicatesUtils from "../../valueArrayAndPredicates/Utils.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getTileBuffName, getComparatorName, getFormattedText } from "../../lang/Utils.ts";
+import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type {
+    TileBuffFilter as ProtoSchemaCommonProtoStructureTileBuffFilter,
+} from "../../proto/schema/CommonProto/Structure/TileBuffFilter.ts";
+import { checkIsEverlasting, checkIsValidTypeIdSubset } from "./Common.ts";
+import {
+    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
+    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
+} from "../../valueAndComparators/Utils.ts";
+import {
+    checkIsMeet as ValueArrayAndPredicatesUtilsCheckIsMeet,
+    getDesc as ValueArrayAndPredicatesUtilsGetDesc,
+    checkIsValid as ValueArrayAndPredicatesUtilsCheckIsValid,
+} from "../../valueArrayAndPredicates/Utils.ts";
 
-type TileBuffFilter                     = ProtoSchemaCommonProtoStructureTileBuffFilter.TileBuffFilter;
-type TileBuff                           = ProtoSchemaCommonProtoStructureTileBuff.TileBuff;
-type IBwWar                             = BaseWarInterfaceIBwWar.IBwWar;
+type TileBuffFilter                     = ProtoSchemaCommonProtoStructureTileBuffFilter;
+type TileBuff                           = ProtoSchemaCommonProtoStructureTileBuff;
+type IBwWar                             = BaseWarInterfaceIBwWar;
 
 export function tickConIsEverlasting(data: TileBuffFilter): boolean | null {
     const oldValue = data.getConIsEverlasting();
@@ -28,7 +37,7 @@ export function checkIsMeet(data: TileBuffFilter, buff: TileBuff, war: IBwWar): 
     {
         const con = data.getConBuffTypeId();
         if ((con != null) &&
-            (!ValueArrayAndPredicatesUtils.checkIsMeet(con, buff.getBuffTypeId() ?? 0))
+            (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, buff.getBuffTypeId() ?? 0))
         ) {
             return false;
         }
@@ -36,7 +45,7 @@ export function checkIsMeet(data: TileBuffFilter, buff: TileBuff, war: IBwWar): 
 
     {
         const con = data.getConIsEverlasting();
-        if ((con != null) && (con !== TileBuffsUtilsCommon.checkIsEverlasting(buff))) {
+        if ((con != null) && (con !== checkIsEverlasting(buff))) {
             return false;
         }
     }
@@ -54,7 +63,7 @@ export function checkIsMeet(data: TileBuffFilter, buff: TileBuff, war: IBwWar): 
                 const turnIndex = data.getConIsRelativeEndTurnIndex()
                     ? expiringTurnIndex - turnManager.getTurnIndex()
                     : expiringTurnIndex;
-                if (!ValueAndComparatorsUtils.checkIsMeet(con, turnIndex)) {
+                if (!ValueAndComparatorsUtilsCheckIsMeet(con, turnIndex)) {
                     return false;
                 }
             }
@@ -71,7 +80,7 @@ export function checkIsMeet(data: TileBuffFilter, buff: TileBuff, war: IBwWar): 
                 const playerIndex = data.getConIsRelativeEndPlayerIndex()
                     ? expiringPlayerIndex - turnManager.getPlayerIndexInTurn()
                     : expiringPlayerIndex;
-                if (!ValueAndComparatorsUtils.checkIsMeet(con, playerIndex)) {
+                if (!ValueAndComparatorsUtilsCheckIsMeet(con, playerIndex)) {
                     return false;
                 }
             }
@@ -95,20 +104,20 @@ export function getDesc(data: TileBuffFilter): string {
     {
         const conBuffTypeId = data.getConBuffTypeId();
         if (conBuffTypeId != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicatesUtils.getDesc(
+            textArrayForSubConditions.push(ValueArrayAndPredicatesUtilsGetDesc(
                 conBuffTypeId,
-                LangUtils.getText(LangConstants.TextType.AbnormalStateTypeId),
-                v => LangUtils.getTileBuffName(v)
+                getText(TextType.AbnormalStateTypeId),
+                v => getTileBuffName(v)
             ));
         }
     }
 
     const conIsEverlasting = data.getConIsEverlasting();
     if (conIsEverlasting) {
-        textArrayForSubConditions.push(`${LangUtils.getText(LangConstants.TextType.B1455)}: ${LangUtils.getText(LangConstants.TextType.Yes)}`);
+        textArrayForSubConditions.push(`${getText(TextType.B1455)}: ${getText(TextType.Yes)}`);
     } else {
         if (conIsEverlasting != null) {
-            textArrayForSubConditions.push(`${LangUtils.getText(LangConstants.TextType.B1455)}: ${LangUtils.getText(LangConstants.TextType.No)}`);
+            textArrayForSubConditions.push(`${getText(TextType.B1455)}: ${getText(TextType.No)}`);
         }
 
         {
@@ -117,9 +126,9 @@ export function getDesc(data: TileBuffFilter): string {
                 const isRelative        = data.getConIsRelativeEndTurnIndex();
                 const value             = con.getValue();
                 const comparator        = con.getComparator();
-                const textForComparator = LangUtils.getComparatorName(comparator);
-                const textForRelative   = isRelative ? `${LangUtils.getText(LangConstants.TextType.B1462)} ` : ``;
-                textArrayForSubConditions.push(`${LangUtils.getText(LangConstants.TextType.EndTurnIndex)}: ${textForRelative}${textForComparator} ${value}`);
+                const textForComparator = getComparatorName(comparator);
+                const textForRelative   = isRelative ? `${getText(TextType.B1462)} ` : ``;
+                textArrayForSubConditions.push(`${getText(TextType.EndTurnIndex)}: ${textForRelative}${textForComparator} ${value}`);
             }
         }
 
@@ -129,26 +138,26 @@ export function getDesc(data: TileBuffFilter): string {
                 const isRelative        = data.getConIsRelativeEndPlayerIndex();
                 const value             = con.getValue();
                 const comparator        = con.getComparator();
-                const textForComparator = LangUtils.getComparatorName(comparator);
-                const textForRelative   = isRelative ? `${LangUtils.getText(LangConstants.TextType.B1462)} ` : ``;
-                textArrayForSubConditions.push(`${LangUtils.getText(LangConstants.TextType.EndPlayerIndex)}: ${textForRelative}${textForComparator} ${value}`);
+                const textForComparator = getComparatorName(comparator);
+                const textForRelative   = isRelative ? `${getText(TextType.B1462)} ` : ``;
+                textArrayForSubConditions.push(`${getText(TextType.EndPlayerIndex)}: ${textForRelative}${textForComparator} ${value}`);
             }
         }
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0230,
-        LangUtils.getText(LangConstants.TextType.AbnormalStates),
+    return getFormattedText(
+        TextType.F0230,
+        getText(TextType.AbnormalStates),
         textArrayForSubConditions.length
             ? textArrayForSubConditions.map(v => `- ${v}`).join(`\n`)
-            : LangUtils.getText(LangConstants.TextType.A0944)
+            : getText(TextType.A0944)
     );
 }
 export function getDescForEmbed(data: TileBuffFilter): string | null {
     const textArrayForSubConditions: string[] = [];
     {
         if (data.getConBuffTypeId() != null) {
-            textArrayForSubConditions.push(LangUtils.getText(LangConstants.TextType.AbnormalStateTypeId));
+            textArrayForSubConditions.push(getText(TextType.AbnormalStateTypeId));
         }
     }
     {
@@ -156,15 +165,15 @@ export function getDescForEmbed(data: TileBuffFilter): string | null {
             (data.getConEndTurnIndex() != null)   ||
             (data.getConEndPlayerIndex() != null)
         ) {
-            textArrayForSubConditions.push(LangUtils.getText(LangConstants.TextType.EndTime));
+            textArrayForSubConditions.push(getText(TextType.EndTime));
         }
     }
 
     return !textArrayForSubConditions.length
         ? null
-        : LangUtils.getFormattedText(
-            LangConstants.TextType.F0231,
-            LangUtils.getText(LangConstants.TextType.AbnormalStates),
+        : getFormattedText(
+            TextType.F0231,
+            getText(TextType.AbnormalStates),
             textArrayForSubConditions.join(`, `)
         );
 }
@@ -173,10 +182,10 @@ export function getErrorTip(data: TileBuffFilter): string | null {
     {
         const con = data.getConBuffTypeId();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtils.checkIsValid(con))                     ||
-                (!TileBuffsUtilsCommon.checkIsValidTypeIdSubset(con.getValueArray()))
+            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                     ||
+                (!checkIsValidTypeIdSubset(con.getValueArray()))
             ) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.AbnormalStateTypeId));
+                return getFormattedText(TextType.F0091, getText(TextType.AbnormalStateTypeId));
             }
         }
     }
@@ -185,8 +194,8 @@ export function getErrorTip(data: TileBuffFilter): string | null {
     {
         const con = data.getConEndTurnIndex();
         if (con != null) {
-            if ((conIsEverlasting) || (!ValueAndComparatorsUtils.checkIsValid(con))) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.EndTurnIndex));
+            if ((conIsEverlasting) || (!ValueAndComparatorsUtilsCheckIsValid(con))) {
+                return getFormattedText(TextType.F0091, getText(TextType.EndTurnIndex));
             }
         }
     }
@@ -194,8 +203,8 @@ export function getErrorTip(data: TileBuffFilter): string | null {
     {
         const con = data.getConEndPlayerIndex();
         if (con != null) {
-            if ((conIsEverlasting) || (!ValueAndComparatorsUtils.checkIsValid(con))) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.EndPlayerIndex));
+            if ((conIsEverlasting) || (!ValueAndComparatorsUtilsCheckIsValid(con))) {
+                return getFormattedText(TextType.F0091, getText(TextType.EndPlayerIndex));
             }
         }
     }

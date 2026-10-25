@@ -1,87 +1,95 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesMapSize from "../../auxiliaryTypes/MapSize.ts";
-import * as CampaignsMainsProvider from "../../campaigns/mains/Provider.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameConfigGcMap from "../../gameConfig/GcMap.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialTile from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "./UiListItemRenderer.ts";
-import * as UiComponentsUiOpenableComponent from "./UiOpenableComponent.ts";
-import type * as UiInterfacesIUiContainer from "../interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiMapInfo from "../interfaces/IUiMapInfo.ts";
-import type * as UiInterfacesIUiScrollList from "../interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../types/UiListItemData.ts";
-import type * as UiTypesUiMapInfoData from "../types/UiMapInfoData.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as UsersProxy from "../../users/Proxy.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
+import { getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
+import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import { Constants } from "../../gameConfig/GcMap.ts";
+import { getLatestGameConfig, getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import {
+    getNormalMapId as HelpersProtoSchemaWarSerializationSerialWarGetNormalMapId,
+} from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getLanguageText } from "../../lang/Utils.ts";
+import {
+    getRawData,
+    getAverageRating,
+    getMapNameInCurrentLanguage,
+    getTotalRatersCount,
+    getTotalPlayedTimes,
+} from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "./UiListItemRenderer.ts";
+import { UiOpenableComponent } from "./UiOpenableComponent.ts";
+import type { IUiContainer } from "../interfaces/IUiContainer.ts";
+import type { IUiImage } from "../interfaces/IUiImage.ts";
+import type { IUiLabel } from "../interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../interfaces/IUiLayout.ts";
+import type { IUiMapInfo } from "../interfaces/IUiMapInfo.ts";
+import type { IUiScrollList } from "../interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../types/UiListItemData.ts";
+import type { UiMapInfoData } from "../types/UiMapInfoData.ts";
+import { getUiTileViewClass } from "../utils/UiFactory.ts";
+import { getMapRating } from "../../users/Model.ts";
+import { reqUserSetMapRating } from "../../users/Proxy.ts";
 
-type GcData         = GameConfigGcData.GcData;
+type GcData         = GameConfigGcData;
 
-export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableComponent<UiTypesUiMapInfoData.UiMapInfoData> implements UiInterfacesIUiMapInfo.IUiMapInfo {
+export class UiMapInfo extends UiOpenableComponent<UiMapInfoData> implements IUiMapInfo {
     // private readonly _groupTile!                : UiGroup;
-    private readonly _listTile!                 : UiInterfacesIUiScrollList.IUiScrollList<DataForTileRenderer>;
+    private readonly _listTile!                 : IUiScrollList<DataForTileRenderer>;
 
-    private readonly _groupFog!                 : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutFog!                : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelFogTitle!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelFog!                 : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupFog!                 : IUiContainer;
+    private readonly _layoutFog!                : IUiLayout;
+    private readonly _labelFogTitle!            : IUiLabel;
+    private readonly _labelFog!                 : IUiLabel;
 
     // private readonly _groupMapInfo!             : UiGroup;
-    private readonly _layoutInfo!               : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _layoutInfo!               : IUiLayout;
 
-    private readonly _layoutName!               : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMapName!             : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDesigner!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!               : IUiLayout;
+    private readonly _labelMapName!             : IUiLabel;
+    private readonly _labelDesigner!            : IUiLabel;
 
-    private readonly _layoutMapId!              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMapIdTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapId!               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutMapId!              : IUiLayout;
+    private readonly _labelMapIdTitle!          : IUiLabel;
+    private readonly _labelMapId!               : IUiLabel;
 
-    private readonly _groupRating!              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelRatingTitle!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _layoutRating!             : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelRating!              : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRaters!              : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupRating!              : IUiLayout;
+    private readonly _labelRatingTitle!         : IUiLabel;
+    private readonly _layoutRating!             : IUiLayout;
+    private readonly _labelRating!              : IUiLabel;
+    private readonly _labelRaters!              : IUiLabel;
 
-    private readonly _groupMyRating!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutMyRating!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMyRatingTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyRating!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgSetMyRating!           : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupMyRating!            : IUiContainer;
+    private readonly _layoutMyRating!           : IUiLayout;
+    private readonly _labelMyRatingTitle!       : IUiLabel;
+    private readonly _labelMyRating!            : IUiLabel;
+    private readonly _imgSetMyRating!           : IUiImage;
 
-    private readonly _groupWarStatistics!       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutPlayedTimes!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelPlayedTimesTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPlayedTimes!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgWarStatistics!         : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupWarStatistics!       : IUiContainer;
+    private readonly _layoutPlayedTimes!        : IUiLayout;
+    private readonly _labelPlayedTimesTitle!    : IUiLabel;
+    private readonly _labelPlayedTimes!         : IUiLabel;
+    private readonly _imgWarStatistics!         : IUiImage;
 
-    private readonly _layoutPlayersCount!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelPlayersCountTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPlayersCount!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _layoutMapSize!            : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMapSizeTitle!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapSize!             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutPlayersCount!       : IUiLayout;
+    private readonly _labelPlayersCountTitle!   : IUiLabel;
+    private readonly _labelPlayersCount!        : IUiLabel;
+    private readonly _layoutMapSize!            : IUiLayout;
+    private readonly _labelMapSizeTitle!        : IUiLabel;
+    private readonly _labelMapSize!             : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,          callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgUserSetMapRating,      callback: this._onNotifyMsgUserSetMapRating },
-            { type: NotificationsTypeId.TypeId.MsgNormalMapGetBriefData, callback: this._onNotifyMsgNormalMapGetBriefData },
+            { type: TypeId.LanguageChanged,          callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgUserSetMapRating,      callback: this._onNotifyMsgUserSetMapRating },
+            { type: TypeId.MsgNormalMapGetBriefData, callback: this._onNotifyMsgNormalMapGetBriefData },
         ]);
         this._setUiListenerArray([
             { ui: this._groupMyRating,              callback: this._onTouchedGroupMyRating },
@@ -119,19 +127,19 @@ export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableCompone
 
         const normalMapId = getNormalMapId(openData);
         if (normalMapId != null) {
-            const minValue = GameConfigGcMap.Constants.MinRating;
-            const maxValue = GameConfigGcMap.Constants.MaxRating;
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-                getTitle           : () => LangUtils.getText(LangConstants.TextType.B0363),
-                currentValue    : UsersModel.getMapRating(normalMapId) || 0,
+            const minValue = Constants.MinRating;
+            const maxValue = Constants.MaxRating;
+            openPanel(getDict().CommonInputIntegerPanel, {
+                getTitle           : () => getText(TextType.B0363),
+                currentValue    : getMapRating(normalMapId) || 0,
                 minValue        : minValue,
                 maxValue        : maxValue,
-                getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0238),
+                getHelpText     : () => getText(TextType.A0238),
                 callback        : value => {
-                    UsersProxy.reqUserSetMapRating(normalMapId, value);
+                    reqUserSetMapRating(normalMapId, value);
                 },
             });
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
     private _onTouchedGroupWarStatistics(): void {
@@ -142,19 +150,19 @@ export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableCompone
 
         const normalMapId = getNormalMapId(openData);
         if (normalMapId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonMapWarStatisticsPanel, { normalMapId });
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            openPanel(getDict().CommonMapWarStatisticsPanel, { normalMapId });
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelPlayersCountTitle.setLangText(LangConstants.TextType.B0229);
-        this._labelPlayedTimesTitle.setLangText(LangConstants.TextType.B0565);
-        this._labelMapSizeTitle.setLangText(LangConstants.TextType.B0300);
-        this._labelRatingTitle.setLangText(LangConstants.TextType.B0364);
-        this._labelMapIdTitle.setLangText(LangConstants.TextType.B0821);
-        this._labelMyRatingTitle.setLangText(LangConstants.TextType.B0363);
-        this._labelFogTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0020)}:`);
+        this._labelPlayersCountTitle.setLangText(TextType.B0229);
+        this._labelPlayedTimesTitle.setLangText(TextType.B0565);
+        this._labelMapSizeTitle.setLangText(TextType.B0300);
+        this._labelRatingTitle.setLangText(TextType.B0364);
+        this._labelMapIdTitle.setLangText(TextType.B0821);
+        this._labelMyRatingTitle.setLangText(TextType.B0363);
+        this._labelFogTitle.setText(`${getText(TextType.B0020)}:`);
         this._updateLabelFog();
     }
 
@@ -177,7 +185,7 @@ export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableCompone
         if (openData == null) {
             labelMapName.setText(`--`);
             labelMapId.setText(`--`);
-            labelDesigner.setText(`${LangUtils.getText(LangConstants.TextType.B0163)}: --`);
+            labelDesigner.setText(`${getText(TextType.B0163)}: --`);
             labelPlayersCount.setText(`--`);
             labelRating.setText(`--`);
             labelRaters.setText(`(--)`);
@@ -205,21 +213,21 @@ export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableCompone
         {
             const normalMapId = getNormalMapId(openData);
             if (normalMapId != null) {
-                const mapRawData    = HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId));
-                const rating        = await NormalMapModelNormalMapModel.getAverageRating(normalMapId);
-                const myRating      = UsersModel.getMapRating(normalMapId);
+                const mapRawData    = getExisted(await getRawData(normalMapId));
+                const rating        = await getAverageRating(normalMapId);
+                const myRating      = getMapRating(normalMapId);
                 imgSetMyRating.setIsVisible(true);
                 imgWarStatistics.setIsVisible(true);
-                labelMapName.setText(await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId) || LangConstants.UndefinedError);
+                labelMapName.setText(await getMapNameInCurrentLanguage(normalMapId) || UndefinedError);
                 labelMapId.setText(`${normalMapId}`);
-                labelDesigner.setText(`${LangUtils.getText(LangConstants.TextType.B0163)}: ${mapRawData.getDesignerName() ?? LangConstants.UndefinedError}`);
+                labelDesigner.setText(`${getText(TextType.B0163)}: ${mapRawData.getDesignerName() ?? UndefinedError}`);
                 labelPlayersCount.setText(`${mapRawData.getPlayersCountUnneutral()}`);
-                labelRating.setText(rating != null ? rating.toFixed(2) : LangUtils.getText(LangConstants.TextType.None));
-                labelRaters.setText(`(${await NormalMapModelNormalMapModel.getTotalRatersCount(normalMapId)})`);
-                labelMyRating.setText(myRating != null ? `${myRating}` : LangUtils.getText(LangConstants.TextType.None));
-                labelPlayedTimes.setText(`${await NormalMapModelNormalMapModel.getTotalPlayedTimes(normalMapId)}`);
+                labelRating.setText(rating != null ? rating.toFixed(2) : getText(TextType.None));
+                labelRaters.setText(`(${await getTotalRatersCount(normalMapId)})`);
+                labelMyRating.setText(myRating != null ? `${myRating}` : getText(TextType.None));
+                labelPlayedTimes.setText(`${await getTotalPlayedTimes(normalMapId)}`);
                 labelMapSize.setText(`${mapRawData.getMapWidth()} x ${mapRawData.getMapHeight()}`);
-                await listTile.bindData(generateDataForListTile(mapRawData.getTileDataArray(), await GameConfigGcModel.getLatestGameConfig()));
+                await listTile.bindData(generateDataForListTile(mapRawData.getTileDataArray(), await getLatestGameConfig()));
 
                 this._arrangeLayouts();
                 return;
@@ -231,7 +239,7 @@ export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableCompone
             if (campaignMapData) {
                 const campaignId    = campaignMapData.getCampaignId() ?? 0;
                 const campaignMapId = campaignMapData.getCampaignMapId() ?? 0;
-                const mapRawData    = await CampaignsMainsProvider.getCampaignMapRawData(campaignId, campaignMapId);
+                const mapRawData    = await getCampaignMapRawData(campaignId, campaignMapId);
                 if ((mapRawData == null)                                                            ||
                     (mapRawData?.getCampaignMapData()?.getRevision() ?? 0) !== (campaignMapData.getRevision() ?? 0)
                 ) {
@@ -239,7 +247,7 @@ export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableCompone
                     imgWarStatistics.setIsVisible(false);
                     labelMapName.setText(`--`);
                     labelMapId.setText(`--`);
-                    labelDesigner.setText(`${LangUtils.getText(LangConstants.TextType.B0163)}: --`);
+                    labelDesigner.setText(`${getText(TextType.B0163)}: --`);
                     labelPlayersCount.setText(`--`);
                     labelRating.setText(`--`);
                     labelRaters.setText(`(--)`);
@@ -249,15 +257,15 @@ export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableCompone
                 } else {
                     imgSetMyRating.setIsVisible(false);
                     imgWarStatistics.setIsVisible(false);
-                    labelMapName.setText(LangUtils.getLanguageText({ textArray: mapRawData.getMapNameArray() }) ?? LangConstants.UndefinedError);
+                    labelMapName.setText(getLanguageText({ textArray: mapRawData.getMapNameArray() }) ?? UndefinedError);
                     labelMapId.setText(`${campaignId} - ${campaignMapId}`);
-                    labelDesigner.setText(`${LangUtils.getText(LangConstants.TextType.B0163)}: ${mapRawData.getDesignerName() ?? LangConstants.UndefinedError}`);
+                    labelDesigner.setText(`${getText(TextType.B0163)}: ${mapRawData.getDesignerName() ?? UndefinedError}`);
                     labelPlayersCount.setText(`${mapRawData.getPlayersCountUnneutral()}`);
                     labelRating.setText(`--`);
                     labelRaters.setText(`(--)`);
                     labelPlayedTimes.setText(`--`);
                     labelMapSize.setText(`${mapRawData.getMapWidth()} x ${mapRawData.getMapHeight()}`);
-                    await listTile.bindData(generateDataForListTile(mapRawData.getTileDataArray(), await GameConfigGcModel.getLatestGameConfig()));
+                    await listTile.bindData(generateDataForListTile(mapRawData.getTileDataArray(), await getLatestGameConfig()));
                 }
 
                 this._arrangeLayouts();
@@ -269,19 +277,19 @@ export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableCompone
             const warInfo = openData.warInfo;
             if (warInfo) {
                 const warData       = warInfo.warData;
-                const tileMapData   = HelpersMisc.getExisted(warData.getField()?.getTileMap());
-                const mapSize       = AuxiliaryTypesMapSize.MapSize.createWithSerialTileMap(tileMapData);
+                const tileMapData   = getExisted(warData.getField()?.getTileMap());
+                const mapSize       = MapSize.createWithSerialTileMap(tileMapData);
                 imgSetMyRating.setIsVisible(false);
                 imgWarStatistics.setIsVisible(false);
                 labelMapName.setText(`--`);
                 labelMapId.setText(`--`);
-                labelDesigner.setText(`${LangUtils.getText(LangConstants.TextType.B0163)}: --`);
-                labelPlayersCount.setText(`${HelpersMisc.getExisted(warData.getPlayerManager()?.getPlayers()).length - 1}`);
+                labelDesigner.setText(`${getText(TextType.B0163)}: --`);
+                labelPlayersCount.setText(`${getExisted(warData.getPlayerManager()?.getPlayers()).length - 1}`);
                 labelRating.setText(`--`);
                 labelRaters.setText(`(--)`);
                 labelPlayedTimes.setText(`--`);
                 labelMapSize.setText(`${mapSize.getWidth()} x ${mapSize.getHeight()}`);
-                await listTile.bindData(generateDataForListTile(tileMapData.getTiles(), await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(warData.getSettingsForCommon()?.getConfigVersion()))));
+                await listTile.bindData(generateDataForListTile(tileMapData.getTiles(), await getGameConfig(getExisted(warData.getSettingsForCommon()?.getConfigVersion()))));
 
                 this._arrangeLayouts();
                 return;
@@ -292,7 +300,7 @@ export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableCompone
     private _updateLabelFog(): void {
         const hasFog    = getHasFog(this.getOpenData());
         const label     = this._labelFog;
-        label.setLangText(hasFog ? LangConstants.TextType.Yes : LangConstants.TextType.No);
+        label.setLangText(hasFog ? TextType.Yes : TextType.No);
         label.setTextColor(hasFog ? 0xFFFF00 : 0xFFFFFF);
 
         this._layoutFog.arrangeItems();
@@ -311,7 +319,7 @@ export class UiMapInfo extends UiComponentsUiOpenableComponent.UiOpenableCompone
     }
 }
 
-function generateDataForListTile(tileDataArray: ProtoSchemaCommonProtoWarSerializationSerialTile.SerialTile[], gameConfig: GcData): DataForTileRenderer[] {
+function generateDataForListTile(tileDataArray: SerialTile[], gameConfig: GcData): DataForTileRenderer[] {
     const tileCountDict = new Map<number, number>();
     for (const tile of tileDataArray || []) {
         const tileType = gameConfig.getTileType(tile.getBaseType() ?? 0, tile.getObjectType() ?? 0);
@@ -331,34 +339,34 @@ function generateDataForListTile(tileDataArray: ProtoSchemaCommonProtoWarSeriali
     return dataArray;
 }
 
-function getNormalMapId(data: UiTypesUiMapInfoData.UiMapInfoData | null): number | null {
+function getNormalMapId(data: UiMapInfoData | null): number | null {
     const warData = data?.warInfo?.warData;
     return warData
-        ? HelpersProtoSchemaWarSerializationSerialWar.getNormalMapId(warData)
+        ? HelpersProtoSchemaWarSerializationSerialWarGetNormalMapId(warData)
         : (data?.mapInfo?.mapRawData.getNormalMapId() ?? null);
 }
-function getHasFog(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<UiTypesUiMapInfoData.UiMapInfoData>): boolean | null {
+function getHasFog(data: Undefinable<UiMapInfoData>): boolean | null {
     const warData = data?.warInfo?.warData;
     return warData
         ? (!!warData.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault())
         : (data?.mapInfo?.hasFog ?? null);
 }
 
-interface DataForTileRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTileRenderer extends UiListItemData {
     gameConfig      : GcData;
     tileType        : number;
     num             : number;
 }
-class TileRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForTileRenderer> {
+class TileRenderer extends UiListItemRenderer<DataForTileRenderer> {
     // private readonly _group!        : UiGroup;
-    private readonly _conTileView!  : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelNum!     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _conTileView!  : IUiContainer;
+    private readonly _labelNum!     : IUiLabel;
 
-    private readonly _tileView      = new (UiUtilsUiFactory.getUiTileViewClass())();
+    private readonly _tileView      = new (getUiTileViewClass())();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.TileAnimationTick,  callback: this._onNotifyTileAnimationTick },
+            { type: TypeId.TileAnimationTick,  callback: this._onNotifyTileAnimationTick },
         ]);
 
         const tileView      = this._tileView;
@@ -387,7 +395,7 @@ class TileRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             tileDecorationShapeId   : null,
             tileObjectType          : tileObjectType,
             tileObjectShapeId       : 0,
-            skinId                  : PlayersConstants.PlayerIndex.Neutral,
+            skinId                  : PlayerIndex.Neutral,
             overridingSkinId        : undefined,
             gameConfig              : gameConfig,
         });

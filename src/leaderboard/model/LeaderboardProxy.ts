@@ -1,63 +1,73 @@
-import * as LeaderboardModelLeaderboardModel from "./LeaderboardModel.ts";
-import * as NetworksManager from "../../networks/Manager.ts";
-import * as NetworksMessageCodes from "../../networks/MessageCodes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgLbMrwGetRankIndexS from "../../proto/schema/CommonProto/NetMessage/MsgLbMrwGetRankIndex/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetRankInfo/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetTopDataArray/S.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import type * as WarTypesConstants from "../../warTypes/Constants.ts";
+import {
+    updateOnMsgLbSpmOverallGetTopDataArray,
+    updateOnFailedMsgLbSpmOverallGetRankInfo,
+    updateOnMsgLbSpmOverallGetRankInfo,
+    updateOnFailedMsgLbMrwGetRankIndex,
+    updateOnMsgLbMrwGetRankIndex,
+} from "./LeaderboardModel.ts";
+import { addListeners, send } from "../../networks/Manager.ts";
+import { MessageCodes } from "../../networks/MessageCodes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgLbMrwGetRankIndex/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetRankInfo/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetTopDataArray/S.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
+import type { WarTypeId } from "../../warTypes/Constants.ts";
 
 export function init(): void {
-    NetworksManager.addListeners([
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgLbSpmOverallGetTopDataArray,  callback: _onMsgLbSpmOverallGetTopDataArray, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgLbSpmOverallGetRankInfo,      callback: _onMsgLbSpmOverallGetRankInfo, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgLbMrwGetRankIndex,            callback: _onMsgLbMrwGetRankIndex },
+    addListeners([
+        { msgCode: MessageCodes.MsgLbSpmOverallGetTopDataArray,  callback: _onMsgLbSpmOverallGetTopDataArray, },
+        { msgCode: MessageCodes.MsgLbSpmOverallGetRankInfo,      callback: _onMsgLbSpmOverallGetRankInfo, },
+        { msgCode: MessageCodes.MsgLbMrwGetRankIndex,            callback: _onMsgLbMrwGetRankIndex },
     ]);
 }
 
 export function reqLbSpmOverallGetTopDataArray(configVersion: string): void {
-    NetworksManager.send({ MsgLbSpmOverallGetTopDataArray: { c: {
+    send({ MsgLbSpmOverallGetTopDataArray: { c: {
         configVersion   : configVersion,
     } } });
 }
-function _onMsgLbSpmOverallGetTopDataArray(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS.S;
+function _onMsgLbSpmOverallGetTopDataArray(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS;
     if (!data.getErrorCode()) {
-        LeaderboardModelLeaderboardModel.updateOnMsgLbSpmOverallGetTopDataArray(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgLbSpmOverallGetTopDataArray, data);
+        updateOnMsgLbSpmOverallGetTopDataArray(data);
+        dispatch(TypeId.MsgLbSpmOverallGetTopDataArray, data);
     }
 }
 
 export function reqLbSpmOverallGetRankInfo(userId: number): void {
-    NetworksManager.send({ MsgLbSpmOverallGetRankInfo: { c: {
+    send({ MsgLbSpmOverallGetRankInfo: { c: {
         userId,
     } } });
 }
-function _onMsgLbSpmOverallGetRankInfo(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS.S;
+function _onMsgLbSpmOverallGetRankInfo(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetRankInfoS;
     if (data.getErrorCode()) {
-        LeaderboardModelLeaderboardModel.updateOnFailedMsgLbSpmOverallGetRankInfo(data);
+        updateOnFailedMsgLbSpmOverallGetRankInfo(data);
     } else {
-        LeaderboardModelLeaderboardModel.updateOnMsgLbSpmOverallGetRankInfo(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgLbSpmOverallGetRankInfo, data);
+        updateOnMsgLbSpmOverallGetRankInfo(data);
+        dispatch(TypeId.MsgLbSpmOverallGetRankInfo, data);
     }
 }
 
-export function reqLbMrwGetRankIndex(warType: WarTypesConstants.WarTypeId, playersCountUnneutral: number, userId: number): void {
-    NetworksManager.send({ MsgLbMrwGetRankIndex: { c: {
+export function reqLbMrwGetRankIndex(warType: WarTypeId, playersCountUnneutral: number, userId: number): void {
+    send({ MsgLbMrwGetRankIndex: { c: {
         warType,
         playersCountUnneutral,
         userId,
     } } });
 }
-function _onMsgLbMrwGetRankIndex(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgLbMrwGetRankIndexS.S;
+function _onMsgLbMrwGetRankIndex(e: Event): void {
+    const data = e.data as S;
     if (data.getErrorCode()) {
-        LeaderboardModelLeaderboardModel.updateOnFailedMsgLbMrwGetRankIndex(data);
+        updateOnFailedMsgLbMrwGetRankIndex(data);
     } else {
-        LeaderboardModelLeaderboardModel.updateOnMsgLbMrwGetRankIndex(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgLbMrwGetRankIndex, data);
+        updateOnMsgLbMrwGetRankIndex(data);
+        dispatch(TypeId.MsgLbMrwGetRankIndex, data);
     }
 }

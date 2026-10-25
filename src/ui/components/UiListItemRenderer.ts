@@ -1,15 +1,15 @@
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as UiComponentsUiOpenableComponent from "./UiOpenableComponent.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../interfaces/IUiListItemRenderer.ts";
-import type * as UiTypesUiItemTapEventData from "../types/UiItemTapEventData.ts";
-import type * as UiTypesUiListItemData from "../types/UiListItemData.ts";
+import { MouseStyleType } from "../../helpers/PointerInput.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { UiOpenableComponent } from "./UiOpenableComponent.ts";
+import type { IUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
+import type { UiItemTapEventData } from "../types/UiItemTapEventData.ts";
+import type { UiListItemData } from "../types/UiListItemData.ts";
 
-export abstract class UiListItemRenderer<OpenData extends UiTypesUiListItemData.UiListItemData>
-    extends     UiComponentsUiOpenableComponent.UiOpenableComponent<OpenData>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<OpenData>
+export abstract class UiListItemRenderer<OpenData extends UiListItemData>
+    extends     UiOpenableComponent<OpenData>
+    implements  IUiListItemRenderer<OpenData>
 {
-    private _shortSfxCode = SoundsConstants.ShortSfxCode.None;
+    private _shortSfxCode = ShortSfxCode.None;
 
     // public constructor() {
     //     super();
@@ -19,22 +19,22 @@ export abstract class UiListItemRenderer<OpenData extends UiTypesUiListItemData.
     // }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public onItemTapEvent(_e: UiTypesUiItemTapEventData.UiItemTapEventData): void {
+    public onItemTapEvent(_e: UiItemTapEventData): void {
         // to be overridden
     }
 
-    protected _setShortSfxCode(code: SoundsConstants.ShortSfxCode): void {
+    protected _setShortSfxCode(code: ShortSfxCode): void {
         this._shortSfxCode = code;
     }
-    public getShortSfxCode(): SoundsConstants.ShortSfxCode {
+    public getShortSfxCode(): ShortSfxCode {
         return this._shortSfxCode;
     }
 
     protected _applySettingsForWholeTouch(
         touchEnabled            = true,
         touchChildrenEnabled    = false,
-        mouseStyle              = HelpersPointerInput.MouseStyleType.Pointer,
-        shortSfxCode            = SoundsConstants.ShortSfxCode.ButtonNeutral01
+        mouseStyle              = MouseStyleType.Pointer,
+        shortSfxCode            = ShortSfxCode.ButtonNeutral01
     ): void {
         this.setIsTouchEnabled(touchEnabled);
         this.setIsTouchChildrenEnabled(touchChildrenEnabled);

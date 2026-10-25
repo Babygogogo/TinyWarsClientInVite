@@ -1,90 +1,97 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as CoSkillsConstants from "../../coSkills/Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as PlayersUtilsFilter from "../../players/utils/Filter.ts";
-import * as ProtoSchemaCommonProtoStructurePlayerFilter from "../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import * as ProtoSchemaCommonProtoStructureValueAndComparator from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TeamsConstants from "../../teams/Constants.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as ValueAndComparatorsConstants from "../../valueAndComparators/Constants.ts";
-import * as ValueAndComparatorsUtils from "../../valueAndComparators/Utils.ts";
-import * as ValueArrayAndPredicatesUtils from "../../valueArrayAndPredicates/Utils.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { AllSkillTypeIdArray } from "../../coSkills/Constants.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { createRange } from "../../helpers/Collection.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getText,
+    getPlayerTeamName,
+    getComparatorName,
+    getPlayerAliveStateName,
+    getCoSkillTypeName,
+    getTextForYesOrNo,
+} from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex, Fund, AllAliveStateIdArray } from "../../players/Constants.ts";
+import { checkIsEmpty, getErrorTip, getDesc } from "../../players/utils/Filter.ts";
+import { PlayerFilter } from "../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { TeamIndex } from "../../teams/Constants.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
+import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
+import { tickIsOneOf } from "../../valueArrayAndPredicates/Utils.ts";
 
 export interface OpenData {
-    gameConfig              : GameConfigGcData.GcData;
+    gameConfig              : GcData;
     playersCountUnneutral   : number;
-    currentFilter           : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoStructurePlayerFilter.PlayerFilter>;
-    callback                : ((playerFilter: ProtoSchemaCommonProtoStructurePlayerFilter.PlayerFilter | null) => void) | null;
+    currentFilter           : Undefinable<PlayerFilter>;
+    callback                : ((playerFilter: PlayerFilter | null) => void) | null;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClear!                                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                                  : IUiImage;
+    private readonly _group!                                    : IUiContainer;
+    private readonly _labelTitle!                               : IUiLabel;
+    private readonly _btnClear!                                 : IUiButton;
+    private readonly _btnClose!                                 : IUiButton;
 
-    private readonly _groupDesc!                                : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelDesc!                                : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelError!                               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDesc!                                : IUiLayout;
+    private readonly _labelDesc!                                : IUiLabel;
+    private readonly _labelError!                               : IUiLabel;
 
-    private readonly _btnConIsInTurn!                           : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConIsInTurn!                         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConIsInTurn!                           : IUiButton;
+    private readonly _labelConIsInTurn!                         : IUiLabel;
 
-    private readonly _btnConIsSkipTurn!                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConIsSkipTurn!                       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConIsSkipTurn!                         : IUiButton;
+    private readonly _labelConIsSkipTurn!                       : IUiLabel;
 
-    private readonly _btnConPlayerIndexArray!                   : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConPlayerIndexArray!                 : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnConPlayerIndexPredicate!               : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConPlayerIndexPredicate!             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConPlayerIndexArray!                   : IUiButton;
+    private readonly _labelConPlayerIndexArray!                 : IUiLabel;
+    private readonly _btnConPlayerIndexPredicate!               : IUiButton;
+    private readonly _labelConPlayerIndexPredicate!             : IUiLabel;
 
-    private readonly _btnConTeamIndexArray!                     : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConTeamIndexArray!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnConTeamIndexPredicate!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConTeamIndexPredicate!               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConTeamIndexArray!                     : IUiButton;
+    private readonly _labelConTeamIndexArray!                   : IUiLabel;
+    private readonly _btnConTeamIndexPredicate!                 : IUiButton;
+    private readonly _labelConTeamIndexPredicate!               : IUiLabel;
 
-    private readonly _btnConAliveStateArray!                    : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConAliveStateArray!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnConAliveStatePredicate!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConAliveStatePredicate!              : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConAliveStateArray!                    : IUiButton;
+    private readonly _labelConAliveStateArray!                  : IUiLabel;
+    private readonly _btnConAliveStatePredicate!                : IUiButton;
+    private readonly _labelConAliveStatePredicate!              : IUiLabel;
 
-    private readonly _btnConCoUsingSkillTypeArray!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConCoUsingSkillTypeArray!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnConCoUsingSkillTypePredicate!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConCoUsingSkillTypePredicate!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConCoUsingSkillTypeArray!              : IUiButton;
+    private readonly _labelConCoUsingSkillTypeArray!            : IUiLabel;
+    private readonly _btnConCoUsingSkillTypePredicate!          : IUiButton;
+    private readonly _labelConCoUsingSkillTypePredicate!        : IUiLabel;
 
-    private readonly _btnConCoCategoryIdArray!                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConCoCategoryIdArray!                : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnConCoCategoryIdPredicate!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConCoCategoryIdPredicate!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConCoCategoryIdArray!                  : IUiButton;
+    private readonly _labelConCoCategoryIdArray!                : IUiLabel;
+    private readonly _btnConCoCategoryIdPredicate!              : IUiButton;
+    private readonly _labelConCoCategoryIdPredicate!            : IUiLabel;
 
-    private readonly _btnConFund!                               : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConFund!                             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConFund!                               : IUiButton;
+    private readonly _labelConFund!                             : IUiLabel;
 
-    private readonly _btnConCoEnergy!                           : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConCoEnergy!                         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConCoEnergy!                           : IUiButton;
+    private readonly _labelConCoEnergy!                         : IUiLabel;
 
-    private _filter = new ProtoSchemaCommonProtoStructurePlayerFilter.PlayerFilter();
+    private _filter = new PlayerFilter();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                               callback: this._onTouchedBtnClose },
@@ -115,13 +122,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         ]);
         this._setIsTouchMaskEnabled(true);
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnClose();
         });
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._filter = this.getOpenData()?.currentFilter?.clone() ?? new ProtoSchemaCommonProtoStructurePlayerFilter.PlayerFilter();
+        this._filter = this.getOpenData()?.currentFilter?.clone() ?? new PlayerFilter();
 
         this._updateView();
     }
@@ -137,13 +144,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if (callback == null) {
             this.closePanel();
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent          : () => LangUtils.getText(LangConstants.TextType.A0418),
-                getTextForConfirm   : () => LangUtils.getText(LangConstants.TextType.Yes),
-                getTextForCancel    : () => LangUtils.getText(LangConstants.TextType.No),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent          : () => getText(TextType.A0418),
+                getTextForConfirm   : () => getText(TextType.Yes),
+                getTextForCancel    : () => getText(TextType.No),
                 callback            : () => {
                     const playerFilter = this._getPlayerFilter();
-                    callback(PlayersUtilsFilter.checkIsEmpty(playerFilter) ? null : playerFilter);
+                    callback(checkIsEmpty(playerFilter) ? null : playerFilter);
                     this.closePanel();
                 },
                 callbackOnCancel    : () => this.closePanel(),
@@ -152,10 +159,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
     private _onTouchedBtnClear(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent     : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
             callback    : () => {
-                this._filter = new ProtoSchemaCommonProtoStructurePlayerFilter.PlayerFilter();
+                this._filter = new PlayerFilter();
                 this._updateView();
             }
         });
@@ -188,7 +195,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnPlayerIndexPredicate(): void {
         const con = this._getPlayerFilter().createIfNotExistsConPlayerIndex();
-        ValueArrayAndPredicatesUtils.tickIsOneOf(con);
+        tickIsOneOf(con);
         this._updateView();
     }
     private _onTouchedBtnPlayerIndexArray(): void {
@@ -199,9 +206,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const filter = this._getPlayerFilter();
         const oldCon = filter.getConPlayerIndex();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.PlayerIndex),
-            availableNumberArray    : HelpersCollection.createRange(PlayersConstants.PlayerIndex.Neutral, openData.playersCountUnneutral + 1, 1),
+        openPanel(getDict().CommonChooseMultiNumberPanel, {
+            getTitleText            : () => getText(TextType.PlayerIndex),
+            availableNumberArray    : createRange(PlayerIndex.Neutral, openData.playersCountUnneutral + 1, 1),
             currentNumberArray      : oldCon?.getValueArray() ?? [],
             getNumberMainText       : num => `P${num}`,
             callbackOnConfirm       : valueArray => {
@@ -219,7 +226,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnTeamIndexPredicate(): void {
         const con = this._getPlayerFilter().createIfNotExistsConTeamIndex();
-        ValueArrayAndPredicatesUtils.tickIsOneOf(con);
+        tickIsOneOf(con);
         this._updateView();
     }
     private _onTouchedBtnTeamIndexArray(): void {
@@ -230,11 +237,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const filter = this._getPlayerFilter();
         const oldCon = filter.getConTeamIndex();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.B0019),
-            availableNumberArray    : HelpersCollection.createRange(TeamsConstants.TeamIndex.Neutral, openData.playersCountUnneutral + 1, 1),
+        openPanel(getDict().CommonChooseMultiNumberPanel, {
+            getTitleText            : () => getText(TextType.B0019),
+            availableNumberArray    : createRange(TeamIndex.Neutral, openData.playersCountUnneutral + 1, 1),
             currentNumberArray      : oldCon?.getValueArray() ?? [],
-            getNumberMainText       : num => LangUtils.getPlayerTeamName(num) ?? LangConstants.UndefinedError,
+            getNumberMainText       : num => getPlayerTeamName(num) ?? UndefinedError,
             callbackOnConfirm       : valueArray => {
                 if (!valueArray.length) {
                     filter.setConTeamIndex(null);
@@ -252,13 +259,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const filter = this._getPlayerFilter();
         const oldCon = filter.getConCoEnergy();
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.CoEnergy),
-            availableNumberArray    : ValueAndComparatorsConstants.AllComparatorIdArray,
+        openPanel(getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => getText(TextType.CoEnergy),
+            availableNumberArray    : AllComparatorIdArray,
             currentNumber           : oldCon?.getComparator(),
-            getNumberMainText       : num => LangUtils.getComparatorName(num) ?? LangConstants.UndefinedError,
-            callbackOnConfirm       : sign => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.CoEnergy),
+            getNumberMainText       : num => getComparatorName(num) ?? UndefinedError,
+            callbackOnConfirm       : sign => openPanel(getDict().CommonInputNullableIntegerPanel, {
+                getTitle        : () => getText(TextType.CoEnergy),
                 minValue        : 0,
                 maxValue        : 1000000,
                 currentValue    : oldCon?.getValue(),
@@ -270,7 +277,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                             oldCon.setValue(value);
                             oldCon.setComparator(sign);
                         } else {
-                            filter.setConCoEnergy(ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
+                            filter.setConCoEnergy(ValueAndComparator.fromJson({
                                 value       : value,
                                 comparator  : sign,
                             }));
@@ -286,15 +293,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const filter = this._getPlayerFilter();
         const oldCon = filter.getConFund();
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.Fund),
-            availableNumberArray    : ValueAndComparatorsConstants.AllComparatorIdArray,
+        openPanel(getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => getText(TextType.Fund),
+            availableNumberArray    : AllComparatorIdArray,
             currentNumber           : oldCon?.getComparator(),
-            getNumberMainText       : num => LangUtils.getComparatorName(num) ?? LangConstants.UndefinedError,
-            callbackOnConfirm       : sign => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputNullableIntegerPanel, {
-                getTitle        : () => LangUtils.getText(LangConstants.TextType.Fund),
+            getNumberMainText       : num => getComparatorName(num) ?? UndefinedError,
+            callbackOnConfirm       : sign => openPanel(getDict().CommonInputNullableIntegerPanel, {
+                getTitle        : () => getText(TextType.Fund),
                 minValue        : 0,
-                maxValue        : PlayersConstants.Fund.MaxFund,
+                maxValue        : Fund.MaxFund,
                 currentValue    : oldCon?.getValue(),
                 callback        : value => {
                     if (value == null) {
@@ -304,7 +311,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                             oldCon.setValue(value);
                             oldCon.setComparator(sign);
                         } else {
-                            filter.setConFund(ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
+                            filter.setConFund(ValueAndComparator.fromJson({
                                 value       : value,
                                 comparator  : sign,
                             }));
@@ -318,17 +325,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnAliveStatePredicate(): void {
         const con = this._getPlayerFilter().createIfNotExistsConAliveState();
-        ValueArrayAndPredicatesUtils.tickIsOneOf(con);
+        tickIsOneOf(con);
         this._updateView();
     }
     private _onTouchedBtnAliveStateArray(): void {
         const filter = this._getPlayerFilter();
         const oldCon = filter.getConAliveState();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.PlayerAliveState),
-            availableNumberArray    : PlayersConstants.AllAliveStateIdArray,
+        openPanel(getDict().CommonChooseMultiNumberPanel, {
+            getTitleText            : () => getText(TextType.PlayerAliveState),
+            availableNumberArray    : AllAliveStateIdArray,
             currentNumberArray      : oldCon?.getValueArray(),
-            getNumberMainText       : num => LangUtils.getPlayerAliveStateName(num) ?? LangConstants.UndefinedError,
+            getNumberMainText       : num => getPlayerAliveStateName(num) ?? UndefinedError,
             callbackOnConfirm       : valueArray => {
                 if (!valueArray.length) {
                     filter.setConAliveState(null);
@@ -344,17 +351,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnCoUsingSkillTypePredicate(): void {
         const con = this._getPlayerFilter().createIfNotExistsConCoUsingSkillType();
-        ValueArrayAndPredicatesUtils.tickIsOneOf(con);
+        tickIsOneOf(con);
         this._updateView();
     }
     private _onTouchedBtnCoUsingSkillTypeArray(): void {
         const filter = this._getPlayerFilter();
         const oldCon = filter.getConCoUsingSkillType();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.ActivatingCoSkillType),
-            availableNumberArray    : CoSkillsConstants.AllSkillTypeIdArray,
+        openPanel(getDict().CommonChooseMultiNumberPanel, {
+            getTitleText            : () => getText(TextType.ActivatingCoSkillType),
+            availableNumberArray    : AllSkillTypeIdArray,
             currentNumberArray      : oldCon?.getValueArray(),
-            getNumberMainText       : num => LangUtils.getCoSkillTypeName(num) ?? LangConstants.UndefinedError,
+            getNumberMainText       : num => getCoSkillTypeName(num) ?? UndefinedError,
             callbackOnConfirm       : valueArray => {
                 if (!valueArray.length) {
                     filter.setConCoUsingSkillType(null);
@@ -370,7 +377,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnCoCategoryIdPredicate(): void {
         const con = this._getPlayerFilter().createIfNotExistsConCoCategoryId();
-        ValueArrayAndPredicatesUtils.tickIsOneOf(con);
+        tickIsOneOf(con);
         this._updateView();
     }
     private _onTouchedBtnCoCategoryIdArray(): void {
@@ -381,8 +388,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const filter = this._getPlayerFilter();
         const oldCon = filter.getConCoCategoryId();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiCoCategoryIdPanel, {
-            getTitleText                    : () => LangUtils.getText(LangConstants.TextType.B0394),
+        openPanel(getDict().CommonChooseMultiCoCategoryIdPanel, {
+            getTitleText                    : () => getText(TextType.B0394),
             gameConfig                      : gameConfig,
             forceUnchosenCoCategoryIdArray  : [],
             availableCoCategoryIdArray      : gameConfig.getAllEnabledCoCategoryIdArray(),
@@ -419,23 +426,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.PlayerFilter);
-        this._btnClear.setLangText(LangConstants.TextType.B0391);
+        this._labelTitle.setLangText(TextType.PlayerFilter);
+        this._btnClear.setLangText(TextType.B0391);
 
-        this._btnConIsInTurn.setLangText(LangConstants.TextType.B1401);
-        this._btnConIsSkipTurn.setLangText(LangConstants.TextType.B1402);
-        this._btnConPlayerIndexPredicate.setLangText(LangConstants.TextType.B1403);
-        this._btnConPlayerIndexArray.setLangText(LangConstants.TextType.PlayerIndex);
-        this._btnConTeamIndexPredicate.setLangText(LangConstants.TextType.B1403);
-        this._btnConTeamIndexArray.setLangText(LangConstants.TextType.B0019);
-        this._btnConCoEnergy.setLangText(LangConstants.TextType.CoEnergy);
-        this._btnConFund.setLangText(LangConstants.TextType.Fund);
-        this._btnConAliveStatePredicate.setLangText(LangConstants.TextType.B1403);
-        this._btnConAliveStateArray.setLangText(LangConstants.TextType.PlayerAliveState);
-        this._btnConCoUsingSkillTypePredicate.setLangText(LangConstants.TextType.B1403);
-        this._btnConCoUsingSkillTypeArray.setLangText(LangConstants.TextType.ActivatingCoSkillType);
-        this._btnConCoCategoryIdPredicate.setLangText(LangConstants.TextType.B1403);
-        this._btnConCoCategoryIdArray.setLangText(LangConstants.TextType.B0394);
+        this._btnConIsInTurn.setLangText(TextType.B1401);
+        this._btnConIsSkipTurn.setLangText(TextType.B1402);
+        this._btnConPlayerIndexPredicate.setLangText(TextType.B1403);
+        this._btnConPlayerIndexArray.setLangText(TextType.PlayerIndex);
+        this._btnConTeamIndexPredicate.setLangText(TextType.B1403);
+        this._btnConTeamIndexArray.setLangText(TextType.B0019);
+        this._btnConCoEnergy.setLangText(TextType.CoEnergy);
+        this._btnConFund.setLangText(TextType.Fund);
+        this._btnConAliveStatePredicate.setLangText(TextType.B1403);
+        this._btnConAliveStateArray.setLangText(TextType.PlayerAliveState);
+        this._btnConCoUsingSkillTypePredicate.setLangText(TextType.B1403);
+        this._btnConCoUsingSkillTypeArray.setLangText(TextType.ActivatingCoSkillType);
+        this._btnConCoCategoryIdPredicate.setLangText(TextType.B1403);
+        this._btnConCoCategoryIdArray.setLangText(TextType.B0394);
 
         this._updateLabelDescAndLabelError();
     }
@@ -448,11 +455,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const playerFilter      = this._getPlayerFilter();
         const gameConfig        = openData.gameConfig;
-        const errorTip          = PlayersUtilsFilter.getErrorTip(playerFilter, openData.playersCountUnneutral, gameConfig);
+        const errorTip          = getErrorTip(playerFilter, openData.playersCountUnneutral, gameConfig);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || LangUtils.getText(LangConstants.TextType.B0493));
-        labelError.setTextColor(errorTip ? GraphicsConstants.ColorValue.Red : GraphicsConstants.ColorValue.Green);
-        this._labelDesc.setText(PlayersUtilsFilter.getDesc(playerFilter, gameConfig));
+        labelError.setText(errorTip || getText(TextType.B0493));
+        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
+        this._labelDesc.setText(getDesc(playerFilter, gameConfig));
         this._groupDesc.arrangeItems();
     }
     private _updateLabelsForPlayerIndex(): void {
@@ -464,7 +471,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             labelPredicate.setText(``);
         } else {
             labelArray.setText(con.getValueArray()?.map(v => `P${v}`).join(`, `) ?? ``);
-            labelPredicate.setText(LangUtils.getTextForYesOrNo(con.getIsOneOf()));
+            labelPredicate.setText(getTextForYesOrNo(con.getIsOneOf()));
         }
     }
     private _updateLabelsForTeamIndex(): void {
@@ -475,8 +482,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             labelArray.setText(``);
             labelPredicate.setText(``);
         } else {
-            labelArray.setText(con.getValueArray()?.map(v => LangUtils.getPlayerTeamName(v)).join(`, `) ?? ``);
-            labelPredicate.setText(LangUtils.getTextForYesOrNo(con.getIsOneOf()));
+            labelArray.setText(con.getValueArray()?.map(v => getPlayerTeamName(v)).join(`, `) ?? ``);
+            labelPredicate.setText(getTextForYesOrNo(con.getIsOneOf()));
         }
     }
     private _updateLabelsForAliveState(): void {
@@ -487,8 +494,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             labelArray.setText(``);
             labelPredicate.setText(``);
         } else {
-            labelArray.setText(con.getValueArray().map(v => LangUtils.getPlayerAliveStateName(v)).join(`, `) ?? ``);
-            labelPredicate.setText(LangUtils.getTextForYesOrNo(con.getIsOneOf()));
+            labelArray.setText(con.getValueArray().map(v => getPlayerAliveStateName(v)).join(`, `) ?? ``);
+            labelPredicate.setText(getTextForYesOrNo(con.getIsOneOf()));
         }
     }
     private _updateLabelsForCoUsingSkillType(): void {
@@ -499,8 +506,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             labelArray.setText(``);
             labelPredicate.setText(``);
         } else {
-            labelArray.setText(con.getValueArray()?.map(v => LangUtils.getCoSkillTypeName(v)).join(`, `) ?? ``);
-            labelPredicate.setText(LangUtils.getTextForYesOrNo(con.getIsOneOf()));
+            labelArray.setText(con.getValueArray()?.map(v => getCoSkillTypeName(v)).join(`, `) ?? ``);
+            labelPredicate.setText(getTextForYesOrNo(con.getIsOneOf()));
         }
     }
     private _updateLabelsForCoCategoryId(): void {
@@ -517,28 +524,28 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             labelPredicate.setText(``);
         } else {
             labelArray.setText(con.getValueArray().map(v => gameConfig.getCoCategoryCfg(v)?.getName()).join(`, `) ?? ``);
-            labelPredicate.setText(LangUtils.getTextForYesOrNo(con.getIsOneOf()));
+            labelPredicate.setText(getTextForYesOrNo(con.getIsOneOf()));
         }
     }
     private _updateLabelIsInTurn(): void {
         const value = this._getPlayerFilter().getConIsInTurn();
-        this._labelConIsInTurn.setText(value == null ? `` : LangUtils.getTextForYesOrNo(value));
+        this._labelConIsInTurn.setText(value == null ? `` : getTextForYesOrNo(value));
     }
     private _updateLabelIsSkipTurn(): void {
         const value = this._getPlayerFilter().getConIsSkipTurn();
-        this._labelConIsSkipTurn.setText(value == null ? `` : LangUtils.getTextForYesOrNo(value));
+        this._labelConIsSkipTurn.setText(value == null ? `` : getTextForYesOrNo(value));
     }
 
     private _updateLabelsForConFund(): void {
         const con = this._getPlayerFilter().getConFund();
-        this._labelConFund.setText(con == null ? `` : ValueAndComparatorsUtils.getBriefDesc(con));
+        this._labelConFund.setText(con == null ? `` : getBriefDesc(con));
     }
     private _updateLabelsForConCoEnergy(): void {
         const con = this._getPlayerFilter().getConCoEnergy();
-        this._labelConCoEnergy.setText(con == null ? `` : ValueAndComparatorsUtils.getBriefDesc(con));
+        this._labelConCoEnergy.setText(con == null ? `` : getBriefDesc(con));
     }
 
-    private _getPlayerFilter(): ProtoSchemaCommonProtoStructurePlayerFilter.PlayerFilter {
+    private _getPlayerFilter(): PlayerFilter {
         return this._filter;
     }
 }

@@ -1,18 +1,20 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesCachedDataAccessor from "../auxiliaryTypes/CachedDataAccessor.ts";
-import * as BroadcastsGateway from "./Gateway.ts";
-import * as HelpersCollection from "../helpers/Collection.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import type * as ProtoSchemaCommonProtoBroadcastBroadcastMessage from "../proto/schema/CommonProto/Broadcast/BroadcastMessage.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
-import * as TimerTimerModel from "../timer/TimerModel.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
+import { reqBroadcastGetMessageData } from "./Gateway.ts";
+import { getNonNullElements } from "../helpers/Collection.ts";
+import { getExisted } from "../helpers/Misc.ts";
+import type {
+    BroadcastMessage as ProtoSchemaCommonProtoBroadcastBroadcastMessage,
+} from "../proto/schema/CommonProto/Broadcast/BroadcastMessage.ts";
+import type { S } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
+import { getServerTimestamp } from "../timer/TimerModel.ts";
 
-type BroadcastMessage   = ProtoSchemaCommonProtoBroadcastBroadcastMessage.BroadcastMessage;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type BroadcastMessage   = ProtoSchemaCommonProtoBroadcastBroadcastMessage;
+type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 const _allMessageIdArray    : number[] = [];
-const _messageDataAccessor  = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<number, BroadcastMessage>({
-    reqData : (messageId: number) => BroadcastsGateway.reqBroadcastGetMessageData(messageId),
+const _messageDataAccessor  = new CachedDataAccessor<number, BroadcastMessage>({
+    reqData : (messageId: number) => reqBroadcastGetMessageData(messageId),
 });
 
 export function setAllMessageIdArray(messageIdArray: number[]): void {
@@ -31,14 +33,14 @@ function setMessageData(messageId: number, messageData: Undefinable<BroadcastMes
 }
 
 export async function getOngoingMessageIdArray(): Promise<number[]> {
-    const currTime      = TimerTimerModel.getServerTimestamp();
+    const currTime      = getServerTimestamp();
     const promiseArray  : Promise<number | null>[] = [];
     for (const messageId of getAllMessageIdArray()) {
         promiseArray.push((async () => {
             const messageData = await getMessageData(messageId);
             if ((messageData)                                                           &&
-                (HelpersMisc.getExisted(messageData.getStartTime()) <= currTime)   &&
-                (HelpersMisc.getExisted(messageData.getEndTime()) >= currTime)
+                (getExisted(messageData.getStartTime()) <= currTime)   &&
+                (getExisted(messageData.getEndTime()) >= currTime)
             ) {
                 return messageId;
             } else {
@@ -46,13 +48,13 @@ export async function getOngoingMessageIdArray(): Promise<number[]> {
             }
         })());
     }
-    return HelpersCollection.getNonNullElements(await Promise.all(promiseArray));
+    return getNonNullElements(await Promise.all(promiseArray));
 }
 
-export function updateOnMsgBroadcastGetMessageData(data: ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS.S): void {
+export function updateOnMsgBroadcastGetMessageData(data: S): void {
     setMessageData(data.getMessageId() ?? 0, data.getMessageData() ?? null);
 }
-export function updateOnFailedMsgBroadcastGetMessageData(data: ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS.S): void {
+export function updateOnFailedMsgBroadcastGetMessageData(data: S): void {
     const messageId = data.getMessageId();
     if (messageId != null) {
         _messageDataAccessor.updateOnRequestFailed(messageId);

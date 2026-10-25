@@ -1,4 +1,4 @@
-import * as ProtoSchemaCommonProtoStructureValueAndComparator from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
+import { ValueAndComparator } from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
 
 // eslint-disable-next-line no-shadow
 export const enum ComparatorId {
@@ -18,7 +18,7 @@ export const AllComparatorIdArray = [
     ComparatorId.NotLessThan,
 ];
 
-export const Equal0 = ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
+export const Equal0 = ValueAndComparator.fromJson({
     value       : 0,
     comparator  : ComparatorId.EqualTo,
 });

@@ -1,10 +1,10 @@
-import * as TurnsConstants from "../turns/Constants.ts";
+import { TurnIndex } from "../turns/Constants.ts";
 
 // eslint-disable-next-line no-shadow
 export const enum EndTimeModification {
     MaxEndPlayerIndex = 10000,
     MinEndPlayerIndex = -MaxEndPlayerIndex,
-    MaxEndTurnIndex   = TurnsConstants.TurnIndex.MaxLimit,
+    MaxEndTurnIndex   = TurnIndex.MaxLimit,
     MinEndTurnIndex   = -MaxEndTurnIndex,
 }
 

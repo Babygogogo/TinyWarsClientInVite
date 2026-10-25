@@ -1,18 +1,28 @@
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import {
+    getText,
+    getUnitName,
+    getMoveTypeName,
+    getTileName,
+    getTileBaseName,
+    getTileObjectName,
+    getTileDecorationName,
+    getWeatherName,
+    getPlayerAliveStateName,
+} from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { AllAliveStateIdArray } from "../../players/Constants.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 // eslint-disable-next-line no-shadow
 const enum Category {
@@ -48,20 +58,20 @@ const AllCategoryArray = [
 ];
 
 export interface OpenData {
-    gameConfig  : GameConfigGcData.GcData;
+    gameConfig  : GcData;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnSort!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _imgInnerTouchMask!    : UiInterfacesIUiImage.IUiImage;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnSort!              : IUiButton;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _imgInnerTouchMask!    : IUiImage;
 
-    private readonly _listItem!             : UiInterfacesIUiScrollList.IUiScrollList<DataForCategoryRenderer>;
+    private readonly _listItem!             : IUiScrollList<DataForCategoryRenderer>;
 
-    private readonly _scrContent!           : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiContainer.IUiContainer>;
-    private readonly _labelContent!         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _scrContent!           : IUiScroller<IUiContainer>;
+    private readonly _labelContent!         : IUiLabel;
 
     private _category           = Category.UnitType;
     private _sortType           = SortType.TypeId;
@@ -69,7 +79,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnSort,                    callback: this._onTouchedBtnSort },
@@ -110,8 +120,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1168));
-        this._btnSort.setText(LangUtils.getText(LangConstants.TextType.B1049));
+        this._labelTitle.setText(getText(TextType.B1168));
+        this._btnSort.setText(getText(TextType.B1049));
         this._updateLabelContent();
     }
 
@@ -146,25 +156,25 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _generateTextForCategory(category: Category): string {
         const gameConfig = this.getOpenData()?.gameConfig;
         if (gameConfig == null) {
-            return LangConstants.UndefinedError;
+            return UndefinedError;
         }
 
         const sortType = this._sortType;
         if (category === Category.UnitType) {
             return getTextForCategoryData(gameConfig.getAllUnitTypeArray().map(v => ({
                 typeId      : v,
-                typeName    : LangUtils.getUnitName(v, gameConfig) ?? LangConstants.UndefinedError
+                typeName    : getUnitName(v, gameConfig) ?? UndefinedError
             })), sortType);
         } else if (category === Category.UnitMoveType) {
-            return getTextForCategoryData(gameConfig.getAllMoveTypeIdArray().map(v => ({ typeId: v, typeName: LangUtils.getMoveTypeName(v, gameConfig) ?? LangConstants.UndefinedError })), sortType);
+            return getTextForCategoryData(gameConfig.getAllMoveTypeIdArray().map(v => ({ typeId: v, typeName: getMoveTypeName(v, gameConfig) ?? UndefinedError })), sortType);
         } else if (category === Category.TileType) {
-            return getTextForCategoryData(gameConfig.getAllTileTypeArraySortedByWeight().map(v => ({ typeId: v, typeName: LangUtils.getTileName(v, gameConfig) ?? LangConstants.UndefinedError })), sortType);
+            return getTextForCategoryData(gameConfig.getAllTileTypeArraySortedByWeight().map(v => ({ typeId: v, typeName: getTileName(v, gameConfig) ?? UndefinedError })), sortType);
         } else if (category === Category.TileBaseType) {
             return getTextForCategoryData(gameConfig.getAllEnabledTileBaseCfgArray().map(v => {
                 const tileBaseType = v.tileBaseTypeId;
                 return {
                     typeId      : tileBaseType,
-                    typeName    : LangUtils.getTileBaseName(tileBaseType, gameConfig) ?? LangConstants.UndefinedError,
+                    typeName    : getTileBaseName(tileBaseType, gameConfig) ?? UndefinedError,
                 };
             }), sortType);
         } else if (category === Category.TileObjectType) {
@@ -172,7 +182,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 const typeId = v.tileObjectTypeId;
                 return {
                     typeId      : typeId,
-                    typeName    : LangUtils.getTileObjectName(typeId, gameConfig) ?? LangConstants.UndefinedError,
+                    typeName    : getTileObjectName(typeId, gameConfig) ?? UndefinedError,
                 };
             }), sortType);
         } else if (category === Category.TileDecorationType) {
@@ -180,47 +190,47 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 const tileDecorationType = v.tileDecorationTypeId;
                 return {
                     typeId      : tileDecorationType,
-                    typeName    : LangUtils.getTileDecorationName(tileDecorationType, gameConfig) ?? LangConstants.UndefinedError,
+                    typeName    : getTileDecorationName(tileDecorationType, gameConfig) ?? UndefinedError,
                 };
             }), sortType);
         } else if (category === Category.TileBuff) {
-            return LangUtils.getText(LangConstants.TextType.A0759);
+            return getText(TextType.A0759);
         } else if (category === Category.Weather) {
             return getTextForCategoryData(
                 gameConfig.getAllWeatherTypeArray().map(v => ({
                     typeId: v,
-                    typeName: LangUtils.getWeatherName(v, gameConfig) ?? LangConstants.UndefinedError
+                    typeName: getWeatherName(v, gameConfig) ?? UndefinedError
                 })),
                 sortType
             );
         } else if (category === Category.CoCategory) {
-            return getTextForCategoryData(gameConfig.getAllEnabledCoCategoryIdArray().map(v => ({ typeId: v, typeName: gameConfig.getCoCategoryCfg(v)?.getName() ?? LangConstants.UndefinedError })), sortType);
+            return getTextForCategoryData(gameConfig.getAllEnabledCoCategoryIdArray().map(v => ({ typeId: v, typeName: gameConfig.getCoCategoryCfg(v)?.getName() ?? UndefinedError })), sortType);
         } else if (category === Category.PlayerAliveState) {
-            const text1 = getTextForCategoryData(PlayersConstants.AllAliveStateIdArray.map(v => ({ typeId: v, typeName: LangUtils.getPlayerAliveStateName(v) ?? LangConstants.UndefinedError })), sortType);
-            const text2 = LangUtils.getText(LangConstants.TextType.A0272);
+            const text1 = getTextForCategoryData(AllAliveStateIdArray.map(v => ({ typeId: v, typeName: getPlayerAliveStateName(v) ?? UndefinedError })), sortType);
+            const text2 = getText(TextType.A0272);
             return `${text1}\n\n${text2}`;
         } else if (category === Category.WarOperation) {
-            return LangUtils.getText(LangConstants.TextType.A0708);
+            return getText(TextType.A0708);
         } else {
-            throw HelpersMisc.newError(`Invalid category: ${category}`);
+            throw newError(`Invalid category: ${category}`);
         }
     }
 }
 
-interface DataForCategoryRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForCategoryRenderer extends UiListItemData {
     name        : string;
     category    : Category;
     panel       : Panel;
 }
-class CategoryRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForCategoryRenderer> {
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
+class CategoryRenderer extends UiListItemRenderer<DataForCategoryRenderer> {
+    private readonly _labelName!        : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
     }
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? LangConstants.UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
     }
 
     public onItemTapEvent(): void {
@@ -231,18 +241,18 @@ class CategoryRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
 
 function getCategoryName(category: Category): string {
     switch (category) {
-        case Category.TileType              : return LangUtils.getText(LangConstants.TextType.B1357);
-        case Category.UnitType              : return LangUtils.getText(LangConstants.TextType.B1358);
-        case Category.UnitMoveType          : return LangUtils.getText(LangConstants.TextType.B1362);
-        case Category.TileBaseType          : return LangUtils.getText(LangConstants.TextType.B1199);
-        case Category.TileObjectType        : return LangUtils.getText(LangConstants.TextType.B1201);
-        case Category.TileDecorationType    : return LangUtils.getText(LangConstants.TextType.B1203);
-        case Category.TileBuff              : return LangUtils.getText(LangConstants.TextType.B1361);
-        case Category.Weather               : return LangUtils.getText(LangConstants.TextType.B1359);
-        case Category.CoCategory            : return LangUtils.getText(LangConstants.TextType.B1213);
-        case Category.PlayerAliveState      : return LangUtils.getText(LangConstants.TextType.PlayerAliveState);
-        case Category.WarOperation          : return LangUtils.getText(LangConstants.TextType.B1360);
-        default                             : throw HelpersMisc.newError(`Invalid category: ${category}`);
+        case Category.TileType              : return getText(TextType.B1357);
+        case Category.UnitType              : return getText(TextType.B1358);
+        case Category.UnitMoveType          : return getText(TextType.B1362);
+        case Category.TileBaseType          : return getText(TextType.B1199);
+        case Category.TileObjectType        : return getText(TextType.B1201);
+        case Category.TileDecorationType    : return getText(TextType.B1203);
+        case Category.TileBuff              : return getText(TextType.B1361);
+        case Category.Weather               : return getText(TextType.B1359);
+        case Category.CoCategory            : return getText(TextType.B1213);
+        case Category.PlayerAliveState      : return getText(TextType.PlayerAliveState);
+        case Category.WarOperation          : return getText(TextType.B1360);
+        default                             : throw newError(`Invalid category: ${category}`);
     }
 }
 

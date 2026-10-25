@@ -1,59 +1,59 @@
-import type * as ExpressionParsersContextsBase from "../contexts/Base.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersNodesBase from "./Base.ts";
-import type * as ExpressionParsersResultsBase from "../results/Base.ts";
-import * as ExpressionParsersResultsNum from "../results/Num.ts";
-import * as ExpressionParsersUtils from "../Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { Base } from "../contexts/Base.ts";
+import { ContextType, ResultType } from "../Enums.ts";
+import { Base as ExpressionParsersNodesBase } from "./Base.ts";
+import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import { Num } from "../results/Num.ts";
+import { getErrorTextForOperandType } from "../Utils.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class OperatorLessEqual extends ExpressionParsersNodesBase.Base {
-    private _lhs: ExpressionParsersNodesBase.Base;              // Left hand side of the operation
-    private _rhs: ExpressionParsersNodesBase.Base;              // Right hand side of the operation
+export class OperatorLessEqual extends ExpressionParsersNodesBase {
+    private _lhs: ExpressionParsersNodesBase;              // Left hand side of the operation
+    private _rhs: ExpressionParsersNodesBase;              // Right hand side of the operation
 
-    public constructor(lhs: ExpressionParsersNodesBase.Base, rhs: ExpressionParsersNodesBase.Base) {
+    public constructor(lhs: ExpressionParsersNodesBase, rhs: ExpressionParsersNodesBase) {
         super();
 
         this._lhs = lhs;
         this._rhs = rhs;
     }
 
-    public override eval(ctx: ExpressionParsersContextsBase.Base, rootCtx: ExpressionParsersContextsBase.Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase.Base> | null, localVariableDict: Map<string, ExpressionParsersResultsBase.Base> | null, isRestricted: boolean): ExpressionParsersResultsBase.Base {
+    public override eval(ctx: Base, rootCtx: Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
         const lhs = this._lhs.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
-        if (!(lhs instanceof ExpressionParsersResultsNum.Num)) {
-            throw HelpersMisc.newError(`Unexpected lhs type.`);
+        if (!(lhs instanceof Num)) {
+            throw newError(`Unexpected lhs type.`);
         }
 
         const rhs = this._rhs.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
-        if (!(rhs instanceof ExpressionParsersResultsNum.Num)) {
-            throw HelpersMisc.newError(`Unexpected rhs type.`);
+        if (!(rhs instanceof Num)) {
+            throw newError(`Unexpected rhs type.`);
         }
 
-        return new ExpressionParsersResultsNum.Num(ctx.getWar(), lhs.num <= rhs.num ? 1 : 0);
+        return new Num(ctx.getWar(), lhs.num <= rhs.num ? 1 : 0);
     }
     public override getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet }: {
-        contextType             : ExpressionParsersEnums.ContextType;
-        lambdaArgumentInfoDict  : Map<string, ExpressionParsersEnums.ResultType> | null;
-        localVariableDict       : Map<string, ExpressionParsersEnums.ResultType> | null;
+        contextType             : ContextType;
+        lambdaArgumentInfoDict  : Map<string, ResultType> | null;
+        localVariableDict       : Map<string, ResultType> | null;
         customCounterNameSet    : Set<string>;
-    }): ExpressionParsersEnums.ResultType {
+    }): ResultType {
         const lhsType = this._lhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
-        if (lhsType !== ExpressionParsersEnums.ResultType.Number) {
-            throw HelpersMisc.newError(
-                ExpressionParsersUtils.getErrorTextForOperandType("<=", 1, ExpressionParsersEnums.ResultType.Number, lhsType),
-                UtilsClientErrorCode.ClientErrorCode.EpNodeOperatorLessEqual_GetResultType_00
+        if (lhsType !== ResultType.Number) {
+            throw newError(
+                getErrorTextForOperandType("<=", 1, ResultType.Number, lhsType),
+                ClientErrorCode.EpNodeOperatorLessEqual_GetResultType_00
             );
         }
 
         const rhsType = this._rhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
-        if (rhsType !== ExpressionParsersEnums.ResultType.Number) {
-            throw HelpersMisc.newError(
-                ExpressionParsersUtils.getErrorTextForOperandType("<=", 2, ExpressionParsersEnums.ResultType.Number, rhsType),
-                UtilsClientErrorCode.ClientErrorCode.EpNodeOperatorLessEqual_GetResultType_01
+        if (rhsType !== ResultType.Number) {
+            throw newError(
+                getErrorTextForOperandType("<=", 2, ResultType.Number, rhsType),
+                ClientErrorCode.EpNodeOperatorLessEqual_GetResultType_01
             );
         }
 
-        return ExpressionParsersEnums.ResultType.Number;
+        return ResultType.Number;
     }
 
     public override getTokensCount(): number {

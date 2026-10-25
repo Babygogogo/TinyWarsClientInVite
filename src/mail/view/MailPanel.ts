@@ -1,72 +1,78 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as CampaignsMainsProvider from "../../campaigns/mains/Provider.ts";
-import * as CoopCustomRoomModelCcrProxy from "../../coopCustomRoom/model/CcrProxy.ts";
-import * as CosConstants from "../../cos/Constants.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as ForceSkinsUtils from "../../forceSkins/Utils.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as MailModelMailModel from "../model/MailModel.ts";
-import * as MailModelMailProxy from "../model/MailProxy.ts";
-import * as MultiCustomRoomModelMcrProxy from "../../multiCustomRoom/model/McrProxy.ts";
-import * as MultiFreeRoomModelMfrProxy from "../../multiFreeRoom/model/MfrProxy.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoMailMailEndWarNotificationPlayerInfo from "../../proto/schema/CommonProto/Mail/MailEndWarNotification/PlayerInfo.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCcrJoinRoomS from "../../proto/schema/CommonProto/NetMessage/MsgCcrJoinRoom/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMailSetIsNewS from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMcrJoinRoomS from "../../proto/schema/CommonProto/NetMessage/MsgMcrJoinRoom/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomS from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/S.ts";
-import * as ReplayWarModelRwModel from "../../replayWar/model/RwModel.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiInterfacesIUiZoomableMap from "../../ui/interfaces/IUiZoomableMap.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as WatchWarModelWwModel from "../../watchWar/model/WwModel.ts";
+import type { PlayerInfo2 } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { getCampaignInfo, getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
+import { reqCcrJoinRoom } from "../../coopCustomRoom/model/CcrProxy.ts";
+import { CoId } from "../../cos/Constants.ts";
+import { showLang, show } from "../../FloatText.ts";
+import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
+import { getGameConfig, getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import {
+    gotoReplayWar,
+    gotoMultiPlayerWar,
+    gotoCcrRoomInfoPanel,
+    gotoMcrRoomInfoPanel,
+    gotoMfrRoomInfoPanel,
+} from "../../helpers/GameFlow.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getNormalMapId, getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getFormattedText, getWarTypeName, getLanguageText, getTimestampShortText } from "../../lang/Utils.ts";
+import { getMail, getAllMailDataArray } from "../model/MailModel.ts";
+import { reqMailSetIsNew, reqMailDeleteMail } from "../model/MailProxy.ts";
+import { reqMcrJoinRoom } from "../../multiCustomRoom/model/McrProxy.ts";
+import { reqMfrJoinRoom } from "../../multiFreeRoom/model/MfrProxy.ts";
+import { getRawData, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { PlayerInfo } from "../../proto/schema/CommonProto/Mail/MailEndWarNotification/PlayerInfo.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCcrJoinRoom/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMailSetIsNewS } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMcrJoinRoomS } from "../../proto/schema/CommonProto/NetMessage/MsgMcrJoinRoom/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomS } from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/S.ts";
+import { getReplayData } from "../../replayWar/model/RwModel.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getUserNickname } from "../../users/Model.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
+import { getWatchWarData } from "../../watchWar/model/WwModel.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
+    private readonly _group!            : IUiContainer;
 
-    private readonly _listMail!         : UiInterfacesIUiScrollList.IUiScrollList<DataForMailRenderer>;
-    private readonly _labelNoData!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _listMail!         : IUiScrollList<DataForMailRenderer>;
+    private readonly _labelNoData!      : IUiLabel;
 
-    private readonly _groupDetail!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _scrContent!       : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiContainer.IUiContainer>;
-    private readonly _layoutContent!    : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelContent!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupMapView!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _zoomMap!          : UiInterfacesIUiZoomableMap.IUiZoomableMap;
+    private readonly _groupDetail!      : IUiContainer;
+    private readonly _scrContent!       : IUiScroller<IUiContainer>;
+    private readonly _layoutContent!    : IUiLayout;
+    private readonly _labelContent!     : IUiLabel;
+    private readonly _groupMapView!     : IUiContainer;
+    private readonly _zoomMap!          : IUiZoomableMap;
 
-    private readonly _layoutButtons!    : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnReplay!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnJoinRoom!      : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSpectate!      : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnInviter!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnPlayers!       : UiInterfacesIUiButton.IUiButton;
+    private readonly _layoutButtons!    : IUiLayout;
+    private readonly _btnReplay!        : IUiButton;
+    private readonly _btnJoinRoom!      : IUiButton;
+    private readonly _btnSpectate!      : IUiButton;
+    private readonly _btnInviter!       : IUiButton;
+    private readonly _btnPlayers!       : IUiButton;
 
-    private readonly _btnDelete!        : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnDelete!        : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -80,13 +86,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._groupMapView,   callback: this._onTouchedGroupMapView },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgMailGetAllMailArray,  callback: this._onNotifyMsgMailGetAllMailArray },
-            { type: NotificationsTypeId.TypeId.MsgMailGetMail,          callback: this._onNotifyMsgMailGetMail },
-            { type: NotificationsTypeId.TypeId.MsgMailDeleteMail,       callback: this._onNotifyMsgMailDeleteMail },
-            { type: NotificationsTypeId.TypeId.MsgCcrJoinRoom,          callback: this._onNotifyMsgCcrJoinRoom },
-            { type: NotificationsTypeId.TypeId.MsgMcrJoinRoom,          callback: this._onNotifyMsgMcrJoinRoom },
-            { type: NotificationsTypeId.TypeId.MsgMfrJoinRoom,          callback: this._onNotifyMsgMfrJoinRoom },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgMailGetAllMailArray,  callback: this._onNotifyMsgMailGetAllMailArray },
+            { type: TypeId.MsgMailGetMail,          callback: this._onNotifyMsgMailGetMail },
+            { type: TypeId.MsgMailDeleteMail,       callback: this._onNotifyMsgMailDeleteMail },
+            { type: TypeId.MsgCcrJoinRoom,          callback: this._onNotifyMsgCcrJoinRoom },
+            { type: TypeId.MsgMcrJoinRoom,          callback: this._onNotifyMsgMcrJoinRoom },
+            { type: TypeId.MsgMfrJoinRoom,          callback: this._onNotifyMsgMfrJoinRoom },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -112,7 +118,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     public async setAndReviseSelectedMailId(newMailId: number, needScroll: boolean): Promise<void> {
         const listMail  = this._listMail;
-        const newIndex  = HelpersMisc.getExisted(listMail.getRevisedFirstIndex(v => v?.mailId === newMailId));
+        const newIndex  = getExisted(listMail.getRevisedFirstIndex(v => v?.mailId === newMailId));
         listMail.setSelectedItemIndex(newIndex);
         this._updateComponentsForMailMainData();
 
@@ -122,9 +128,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         {
             const mailId    = this._getSelectedMailId();
-            const mailData  = mailId == null ? null : MailModelMailModel.getMail(mailId);
+            const mailData  = mailId == null ? null : getMail(mailId);
             if (mailData?.getIsNew()) {
-                MailModelMailProxy.reqMailSetIsNew(mailData.getMailId(), false);
+                reqMailSetIsNew(mailData.getMailId(), false);
             }
         }
     }
@@ -137,62 +143,62 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////
     private async _onTouchedBtnReplay(): Promise<void> {
         const mailId    = this._listMail.getFirstSelectedData()?.mailId;
-        const replayId  = (mailId == null ? null : MailModelMailModel.getMail(mailId))?.getMailContainer().getMailEndWarNotification()?.getReplayId();
+        const replayId  = (mailId == null ? null : getMail(mailId))?.getMailContainer().getMailEndWarNotification()?.getReplayId();
         if (replayId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonBlockPanel, {
-                title   : LangUtils.getText(LangConstants.TextType.B0088),
-                content : LangUtils.getText(LangConstants.TextType.A0040),
+            openPanel(getDict().CommonBlockPanel, {
+                title   : getText(TextType.B0088),
+                content : getText(TextType.A0040),
             });
 
-            const data = await ReplayWarModelRwModel.getReplayData(replayId);
+            const data = await getReplayData(replayId);
             if (data) {
-                HelpersGameFlow.gotoReplayWar(data, replayId);
+                gotoReplayWar(data, replayId);
             } else {
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonBlockPanel);
+                closePanel(getDict().CommonBlockPanel);
             }
         }
     }
 
     private _onTouchedBtnJoinRoom(): void {
         const mailId        = this._listMail.getFirstSelectedData()?.mailId;
-        const mailContainer = (mailId == null ? null : MailModelMailModel.getMail(mailId))?.getMailContainer();
+        const mailContainer = (mailId == null ? null : getMail(mailId))?.getMailContainer();
         if (mailContainer?.getMailMcrInvite()) {
-            MultiCustomRoomModelMcrProxy.reqMcrJoinRoom(mailContainer.getMailMcrInvite()?.getRoomId() ?? 0);
+            reqMcrJoinRoom(mailContainer.getMailMcrInvite()?.getRoomId() ?? 0);
         } else if (mailContainer?.getMailCcrInvite()) {
-            CoopCustomRoomModelCcrProxy.reqCcrJoinRoom(mailContainer.getMailCcrInvite()?.getRoomId() ?? 0);
+            reqCcrJoinRoom(mailContainer.getMailCcrInvite()?.getRoomId() ?? 0);
         } else if (mailContainer?.getMailMfrInvite()) {
-            MultiFreeRoomModelMfrProxy.reqMfrJoinRoom(mailContainer.getMailMfrInvite()?.getRoomId() ?? 0);
+            reqMfrJoinRoom(mailContainer.getMailMfrInvite()?.getRoomId() ?? 0);
         }
     }
 
     private async _onTouchedBtnSpectate(): Promise<void> {
         const mailId    = this._listMail.getFirstSelectedData()?.mailId;
-        const warId     = (mailId == null ? null : MailModelMailModel.getMail(mailId))?.getMailContainer().getMailAcceptSpectate()?.getWarId();
+        const warId     = (mailId == null ? null : getMail(mailId))?.getMailContainer().getMailAcceptSpectate()?.getWarId();
         if (warId == null) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonBlockPanel, {
-                title   : LangUtils.getText(LangConstants.TextType.B0088),
-                content : LangUtils.getText(LangConstants.TextType.A0040),
+            openPanel(getDict().CommonBlockPanel, {
+                title   : getText(TextType.B0088),
+                content : getText(TextType.A0040),
             });
 
-            const warData = await WatchWarModelWwModel.getWatchWarData(warId);
+            const warData = await getWatchWarData(warId);
             if (warData) {
-                HelpersGameFlow.gotoMultiPlayerWar(warData);
+                gotoMultiPlayerWar(warData);
             } else {
-                FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                showLang(TextType.YouCanNotDoThisRightNow);
             }
 
-            GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonBlockPanel);
+            closePanel(getDict().CommonBlockPanel);
         }
     }
 
     private _onTouchedBtnDelete(): void {
         const mailId = this._listMail.getFirstSelectedData()?.mailId;
         if (mailId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent     : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
-                callback    : () => MailModelMailProxy.reqMailDeleteMail(mailId),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+                callback    : () => reqMailDeleteMail(mailId),
             });
         }
     }
@@ -203,14 +209,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const mailContainer = MailModelMailModel.getMail(mailId)?.getMailContainer();
+        const mailContainer = getMail(mailId)?.getMailContainer();
         if (mailContainer == null) {
             return;
         }
 
         const userId = (mailContainer.getMailCcrInvite() ?? mailContainer.getMailMcrInvite() ?? mailContainer.getMailMfrInvite())?.getInviterUserId();
         if (userId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: userId });
+            openPanel(getDict().UserPanel, { userId: userId });
         }
     }
 
@@ -220,7 +226,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const mailData = MailModelMailModel.getMail(mailId)?.getMailContainer().getMailEndWarNotification();
+        const mailData = getMail(mailId)?.getMailContainer().getMailEndWarNotification();
         if (mailData == null) {
             return;
         }
@@ -231,12 +237,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const configVersion = mailData.getConfigVersion();
-        const gameConfig    = configVersion == null ? null : await GameConfigGcModel.getGameConfig(configVersion);
+        const gameConfig    = configVersion == null ? null : await getGameConfig(configVersion);
         if (gameConfig == null) {
             return;
         }
 
-        const playerInfoArray: AuxiliaryTypesAuxiliaryTypes.PlayerInfo2[] = [];
+        const playerInfoArray: PlayerInfo2[] = [];
         for (let i = 0; i < rawPlayerInfoArray.length; ++i) {
             const playerIndex   = i + 1;
             const rawPlayerInfo = rawPlayerInfoArray[i];
@@ -244,12 +250,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 userId      : rawPlayerInfo.getUserId(),
                 isAlive     : !!rawPlayerInfo.getIsAlive(),
                 playerIndex : playerIndex,
-                skinId      : rawPlayerInfo.getSkinId() ?? ForceSkinsUtils.getDefaultSkinId(playerIndex),
-                coId        : rawPlayerInfo.getCoId() ?? CosConstants.CoId.Empty,
+                skinId      : rawPlayerInfo.getSkinId() ?? getDefaultSkinId(playerIndex),
+                coId        : rawPlayerInfo.getCoId() ?? CoId.Empty,
                 teamIndex   : rawPlayerInfo.getTeamIndex(),
             });
         }
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowPlayerListPanel, {
+        openPanel(getDict().CommonShowPlayerListPanel, {
             gameConfig      : gameConfig,
             warId           : null,
             playerInfoArray : playerInfoArray,
@@ -262,13 +268,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const normalMapId = MailModelMailModel.getMail(mailId)?.getMailContainer().getMailEndWarNotification()?.getNormalMapId();
+        const normalMapId = getMail(mailId)?.getMailContainer().getMailEndWarNotification()?.getNormalMapId();
         if (normalMapId != null) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowMapPanel, {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            openPanel(getDict().CommonShowMapPanel, {
                 mapInfo : {
-                    gameConfig          : await GameConfigGcModel.getLatestGameConfig(),
-                    mapRawData          : HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId)),
+                    gameConfig          : await getLatestGameConfig(),
+                    mapRawData          : getExisted(await getRawData(normalMapId)),
                     overridingPlayers   : null,
                 },
             });
@@ -291,23 +297,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateView();
     }
 
-    private _onNotifyMsgCcrJoinRoom(e: VendorEgretEgret.Event): void {
-        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgCcrJoinRoomS.S;
-        const roomId    = HelpersMisc.getExisted(data.getRoomId());
-        HelpersGameFlow.gotoCcrRoomInfoPanel(roomId);
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0069, roomId));
+    private _onNotifyMsgCcrJoinRoom(e: Event): void {
+        const data      = e.data as S;
+        const roomId    = getExisted(data.getRoomId());
+        gotoCcrRoomInfoPanel(roomId);
+        show(getFormattedText(TextType.F0069, roomId));
     }
-    private _onNotifyMsgMcrJoinRoom(e: VendorEgretEgret.Event): void {
-        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrJoinRoomS.S;
-        const roomId    = HelpersMisc.getExisted(data.getRoomId());
-        HelpersGameFlow.gotoMcrRoomInfoPanel(roomId);
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0069, roomId));
+    private _onNotifyMsgMcrJoinRoom(e: Event): void {
+        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgMcrJoinRoomS;
+        const roomId    = getExisted(data.getRoomId());
+        gotoMcrRoomInfoPanel(roomId);
+        show(getFormattedText(TextType.F0069, roomId));
     }
-    private _onNotifyMsgMfrJoinRoom(e: VendorEgretEgret.Event): void {
-        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomS.S;
-        const roomId    = HelpersMisc.getExisted(data.getRoomId());
-        HelpersGameFlow.gotoMfrRoomInfoPanel(roomId);
-        FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0069, roomId));
+    private _onNotifyMsgMfrJoinRoom(e: Event): void {
+        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomS;
+        const roomId    = getExisted(data.getRoomId());
+        gotoMfrRoomInfoPanel(roomId);
+        show(getFormattedText(TextType.F0069, roomId));
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -321,21 +327,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1276);
-        this._labelNoData.setLangText(LangConstants.TextType.B0278);
-        this._btnDelete.setLangText(LangConstants.TextType.B0220);
-        this._btnReplay.setLangText(LangConstants.TextType.B0710);
-        this._btnJoinRoom.setLangText(LangConstants.TextType.B0583);
-        this._btnSpectate.setLangText(LangConstants.TextType.B0872);
-        this._btnInviter.setLangText(LangConstants.TextType.B1398);
-        this._btnPlayers.setLangText(LangConstants.TextType.Players);
+        this._labelTitle.setLangText(TextType.B1276);
+        this._labelNoData.setLangText(TextType.B0278);
+        this._btnDelete.setLangText(TextType.B0220);
+        this._btnReplay.setLangText(TextType.B0710);
+        this._btnJoinRoom.setLangText(TextType.B0583);
+        this._btnSpectate.setLangText(TextType.B0872);
+        this._btnInviter.setLangText(TextType.B1398);
+        this._btnPlayers.setLangText(TextType.Players);
 
         this._updateComponentsForMailMainData();
     }
 
     private _createDataForListMail(): DataForMailRenderer[] {
         const dataArray: DataForMailRenderer[] = [];
-        for (const mailData of MailModelMailModel.getAllMailDataArray()) {
+        for (const mailData of getAllMailDataArray()) {
             dataArray.push({
                 mailId  : mailData.getMailId(),
                 panel   : this,
@@ -355,7 +361,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const mailData = MailModelMailModel.getMail(mailId);
+        const mailData = getMail(mailId);
         if (mailData == null) {
             groupDetail.setIsVisible(false);
             labelNoData.setIsVisible(true);
@@ -389,20 +395,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     layoutButtons.addItem(btnReplay, false);
                 }
                 layoutButtons.addItem(btnPlayers, false);
-                labelContent.setText(LangUtils.getFormattedText(
-                    LangConstants.TextType.F0151,
-                    LangUtils.getWarTypeName(data.getWarType() ?? 0),
-                    (normalMapId != null) ? (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId) ?? LangConstants.UndefinedError) : `----`,
+                labelContent.setText(getFormattedText(
+                    TextType.F0151,
+                    getWarTypeName(data.getWarType() ?? 0),
+                    (normalMapId != null) ? (await getMapNameInCurrentLanguage(normalMapId) ?? UndefinedError) : `----`,
                     (replayId != null) ? replayId : `----`,
-                    await generatePlayerInfoText(data.getPlayerInfoArray(), !!data.getIsDraw(), HelpersMisc.getExisted(data.getConfigVersion()))
+                    await generatePlayerInfoText(data.getPlayerInfoArray(), !!data.getIsDraw(), getExisted(data.getConfigVersion()))
                 ));
 
                 if (normalMapId != null) {
                     layoutContent.addItem(this._groupMapView, false);
 
                     this._zoomMap.showMapByMapData({
-                        mapRawData          : HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId)),
-                        gameConfig          : await GameConfigGcModel.getLatestGameConfig(),
+                        mapRawData          : getExisted(await getRawData(normalMapId)),
+                        gameConfig          : await getLatestGameConfig(),
                         overridingPlayers   : null,
                     });
                 }
@@ -414,12 +420,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             if (data) {
                 layoutButtons.addItem(btnJoinRoom, false);
                 layoutButtons.addItem(btnInviter, false);
-                labelContent.setText(LangUtils.getFormattedText(
-                    LangConstants.TextType.F0152,
+                labelContent.setText(getFormattedText(
+                    TextType.F0152,
                     data.getRoomId() ?? 0,
-                    await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(data.getNormalMapId() ?? 0) ?? LangConstants.UndefinedError,
-                    LangUtils.getText(data.getHasFog() ? LangConstants.TextType.Yes : LangConstants.TextType.No),
-                    await UsersModel.getUserNickname(data.getInviterUserId() ?? 0) ?? LangConstants.UndefinedError
+                    await getMapNameInCurrentLanguage(data.getNormalMapId() ?? 0) ?? UndefinedError,
+                    getText(data.getHasFog() ? TextType.Yes : TextType.No),
+                    await getUserNickname(data.getInviterUserId() ?? 0) ?? UndefinedError
                 ));
             }
         }
@@ -429,12 +435,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             if (data) {
                 layoutButtons.addItem(btnJoinRoom, false);
                 layoutButtons.addItem(btnInviter, false);
-                labelContent.setText(LangUtils.getFormattedText(
-                    LangConstants.TextType.F0153,
+                labelContent.setText(getFormattedText(
+                    TextType.F0153,
                     data.getRoomId() ?? 0,
-                    await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(data.getNormalMapId() ?? 0) ?? LangConstants.UndefinedError,
-                    LangUtils.getText(data.getHasFog() ? LangConstants.TextType.Yes : LangConstants.TextType.No),
-                    await UsersModel.getUserNickname(data.getInviterUserId() ?? 0) ?? LangConstants.UndefinedError
+                    await getMapNameInCurrentLanguage(data.getNormalMapId() ?? 0) ?? UndefinedError,
+                    getText(data.getHasFog() ? TextType.Yes : TextType.No),
+                    await getUserNickname(data.getInviterUserId() ?? 0) ?? UndefinedError
                 ));
             }
         }
@@ -444,11 +450,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             if (mailContainer.getMailMfrInvite()) {
                 layoutButtons.addItem(btnJoinRoom, false);
                 layoutButtons.addItem(btnInviter, false);
-                labelContent.setText(LangUtils.getFormattedText(
-                    LangConstants.TextType.F0154,
+                labelContent.setText(getFormattedText(
+                    TextType.F0154,
                     data?.getRoomId() ?? 0,
-                    LangUtils.getText(data?.getHasFog() ? LangConstants.TextType.Yes : LangConstants.TextType.No),
-                    await UsersModel.getUserNickname(data?.getInviterUserId() ?? 0) ?? LangConstants.UndefinedError
+                    getText(data?.getHasFog() ? TextType.Yes : TextType.No),
+                    await getUserNickname(data?.getInviterUserId() ?? 0) ?? UndefinedError
                 ));
             }
         }
@@ -457,11 +463,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             const data = mailContainer.getMailAcceptMap();
             if (data) {
                 const normalMapId = data.getNormalMapId() ?? 0;
-                labelContent.setText(LangUtils.getFormattedText(
-                    LangConstants.TextType.F0156,
+                labelContent.setText(getFormattedText(
+                    TextType.F0156,
                     normalMapId,
-                    (await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId)) ?? LangConstants.UndefinedError,
-                    (await UsersModel.getUserNickname(data.getReviewerUserId() ?? 0)) ?? LangConstants.UndefinedError
+                    (await getMapNameInCurrentLanguage(normalMapId)) ?? UndefinedError,
+                    (await getUserNickname(data.getReviewerUserId() ?? 0)) ?? UndefinedError
                 ));
             }
         }
@@ -470,8 +476,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             const data = mailContainer.getMailAutoTourneyWinners();
             if (data) {
                 const tourneyId = data.getTourneyId() ?? 0;
-                labelContent.setText(LangUtils.getFormattedText(
-                    LangConstants.TextType.F0163,
+                labelContent.setText(getFormattedText(
+                    TextType.F0163,
                     tourneyId,
                 ));
             }
@@ -482,21 +488,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             if (data) {
                 const normalMapId       = data.getNormalMapId() ?? 0;
                 const templateWarRuleId = data.getTemplateWarRuleId();
-                const mapRawData        = await NormalMapModelNormalMapModel.getRawData(normalMapId);
+                const mapRawData        = await getRawData(normalMapId);
                 const mapNameArray      = mapRawData?.getMapNameArray();
                 const ruleNameArray     = mapRawData?.getTemplateWarRuleArray().find(v => (v.getRuleId() ?? 0) == templateWarRuleId)?.getRuleNameArray();
                 if (data.getIsValid()) {
-                    labelContent.setText(LangUtils.getFormattedText(
-                        LangConstants.TextType.F0194,
-                        `#${normalMapId} ${LangUtils.getLanguageText({ textArray: mapNameArray })}`,
-                        `#${templateWarRuleId} ${LangUtils.getLanguageText({ textArray: ruleNameArray })}`,
+                    labelContent.setText(getFormattedText(
+                        TextType.F0194,
+                        `#${normalMapId} ${getLanguageText({ textArray: mapNameArray })}`,
+                        `#${templateWarRuleId} ${getLanguageText({ textArray: ruleNameArray })}`,
                         `${data.getScore() ?? 0}`
                     ));
                 } else {
-                    labelContent.setText(LangUtils.getFormattedText(
-                        LangConstants.TextType.F0195,
-                        `#${normalMapId} ${LangUtils.getLanguageText({ textArray: mapNameArray })}`,
-                        `#${templateWarRuleId} ${LangUtils.getLanguageText({ textArray: ruleNameArray })}`,
+                    labelContent.setText(getFormattedText(
+                        TextType.F0195,
+                        `#${normalMapId} ${getLanguageText({ textArray: mapNameArray })}`,
+                        `#${templateWarRuleId} ${getLanguageText({ textArray: ruleNameArray })}`,
                         `${data.getErrorCode() ?? 0}`
                     ));
                 }
@@ -508,20 +514,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             if (data) {
                 const campaignId        = data.getCampaignId() ?? 0;
                 const campaignMapId     = data.getCampaignMapId() ?? 0;
-                const campaignNameArray = (await CampaignsMainsProvider.getCampaignInfo(campaignId))?.getNameArray();
-                const mapNameArray      = (await CampaignsMainsProvider.getCampaignMapRawData(campaignId, campaignMapId))?.getMapNameArray();
+                const campaignNameArray = (await getCampaignInfo(campaignId))?.getNameArray();
+                const mapNameArray      = (await getCampaignMapRawData(campaignId, campaignMapId))?.getMapNameArray();
                 if (data.getIsValid()) {
-                    labelContent.setText(LangUtils.getFormattedText(
-                        LangConstants.TextType.F0196,
-                        `#${campaignId} ${LangUtils.getLanguageText({ textArray: campaignNameArray })}`,
-                        `#${campaignMapId} ${LangUtils.getLanguageText({ textArray: mapNameArray })}`,
+                    labelContent.setText(getFormattedText(
+                        TextType.F0196,
+                        `#${campaignId} ${getLanguageText({ textArray: campaignNameArray })}`,
+                        `#${campaignMapId} ${getLanguageText({ textArray: mapNameArray })}`,
                         `${data.getScore() ?? 0}`
                     ));
                 } else {
-                    labelContent.setText(LangUtils.getFormattedText(
-                        LangConstants.TextType.F0197,
-                        `#${campaignId} ${LangUtils.getLanguageText({ textArray: campaignNameArray })}`,
-                        `#${campaignMapId} ${LangUtils.getLanguageText({ textArray: mapNameArray })}`,
+                    labelContent.setText(getFormattedText(
+                        TextType.F0197,
+                        `#${campaignId} ${getLanguageText({ textArray: campaignNameArray })}`,
+                        `#${campaignMapId} ${getLanguageText({ textArray: mapNameArray })}`,
                         `${data.getErrorCode() ?? 0}`
                     ));
                 }
@@ -533,19 +539,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             if (data) {
                 const warId         = data.getWarId() ?? 0;
                 const targetUserId  = data.getSpectateTargetUserId() ?? 0;
-                const warData       = await WatchWarModelWwModel.getWatchWarData(warId);
-                const mapId         = warData == null ? null : HelpersProtoSchemaWarSerializationSerialWar.getNormalMapId(warData);
+                const warData       = await getWatchWarData(warId);
+                const mapId         = warData == null ? null : getNormalMapId(warData);
                 if (warData != null) {
                     layoutButtons.addItem(btnSpectate, false);
                 }
-                labelContent.setText(LangUtils.getFormattedText(
-                    LangConstants.TextType.F0210,
+                labelContent.setText(getFormattedText(
+                    TextType.F0210,
                     warId,
-                    warData == null ? `----` : (LangUtils.getWarTypeName(HelpersProtoSchemaWarSerializationSerialWar.getWarTypeId(warData)) ?? LangConstants.UndefinedError),
+                    warData == null ? `----` : (getWarTypeName(getWarTypeId(warData)) ?? UndefinedError),
                     mapId ?? `----`,
-                    mapId == null ? `----` : ((await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(mapId)) ?? LangConstants.UndefinedError),
+                    mapId == null ? `----` : ((await getMapNameInCurrentLanguage(mapId)) ?? UndefinedError),
                     targetUserId,
-                    (await UsersModel.getUserNickname(targetUserId)) ?? LangConstants.UndefinedError
+                    (await getUserNickname(targetUserId)) ?? UndefinedError
                 ));
             }
         }
@@ -553,8 +559,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         {
             const data = mailContainer.getMailMrwBoot();
             if (data) {
-                labelContent.setText(LangUtils.getFormattedText(
-                    LangConstants.TextType.F0214,
+                labelContent.setText(getFormattedText(
+                    TextType.F0214,
                     data.getWarId() ?? 0
                 ));
             }
@@ -569,22 +575,22 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForMailRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForMailRenderer extends UiListItemData {
     mailId  : number;
     panel   : Panel;
 }
 class MailRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForMailRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForMailRenderer>
+    extends     UiListItemRenderer<DataForMailRenderer>
+    implements  IUiListItemRenderer<DataForMailRenderer>
 {
-    private readonly _layoutContent!    : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTimestamp!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgRed!           : UiInterfacesIUiImage.IUiImage;
+    private readonly _layoutContent!    : IUiLayout;
+    private readonly _labelTimestamp!   : IUiLabel;
+    private readonly _labelName!        : IUiLabel;
+    private readonly _imgRed!           : IUiImage;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.MsgMailSetIsNew,     callback: this._onNotifyMsgMailSetIsNew },
+            { type: TypeId.MsgMailSetIsNew,     callback: this._onNotifyMsgMailSetIsNew },
         ]);
         this._applySettingsForWholeTouch();
     }
@@ -597,43 +603,43 @@ class MailRenderer
             return;
         }
 
-        const mailData          = MailModelMailModel.getMail(mailId);
+        const mailData          = getMail(mailId);
         const labelName         = this._labelName;
         const labelTimestamp    = this._labelTimestamp;
         if (mailData == null) {
             labelTimestamp.setText(`????`);
-            labelName.setText(LangConstants.UndefinedError);
+            labelName.setText(UndefinedError);
             return;
         }
 
         const timestamp = mailData.getCreateTimestamp();
-        labelTimestamp.setText(`${LangUtils.getTimestampShortText(timestamp, { hour: false, minute: false, second: false })} ${LangUtils.getTimestampShortText(timestamp, { year: false, month: false, date: false })}`);
+        labelTimestamp.setText(`${getTimestampShortText(timestamp, { hour: false, minute: false, second: false })} ${getTimestampShortText(timestamp, { year: false, month: false, date: false })}`);
 
         const mailContainer = mailData.getMailContainer();
         if (mailContainer == null) {
-            labelName.setText(LangConstants.UndefinedError);
+            labelName.setText(UndefinedError);
         } else if (mailContainer.getMailEndWarNotification()) {
-            labelName.setLangText(LangConstants.TextType.B0087);
+            labelName.setLangText(TextType.B0087);
         } else if (mailContainer.getMailCcrInvite()) {
-            labelName.setLangText(LangConstants.TextType.B1003);
+            labelName.setLangText(TextType.B1003);
         } else if (mailContainer.getMailMcrInvite()) {
-            labelName.setLangText(LangConstants.TextType.B1003);
+            labelName.setLangText(TextType.B1003);
         } else if (mailContainer.getMailMfrInvite()) {
-            labelName.setLangText(LangConstants.TextType.B1003);
+            labelName.setLangText(TextType.B1003);
         } else if (mailContainer.getMailAcceptMap()) {
-            labelName.setLangText(LangConstants.TextType.B1004);
+            labelName.setLangText(TextType.B1004);
         } else if (mailContainer.getMailAutoTourneyWinners()) {
-            labelName.setLangText(LangConstants.TextType.B1022);
+            labelName.setLangText(TextType.B1022);
         } else if (mailContainer.getMailSrwValidationResult()) {
-            labelName.setLangText(LangConstants.TextType.B1141);
+            labelName.setLangText(TextType.B1141);
         } else if (mailContainer.getMailCawValidationResult()) {
-            labelName.setLangText(LangConstants.TextType.B0119);
+            labelName.setLangText(TextType.B0119);
         } else if (mailContainer.getMailAcceptSpectate()) {
-            labelName.setLangText(LangConstants.TextType.B1354);
+            labelName.setLangText(TextType.B1354);
         } else if (mailContainer.getMailMrwBoot()) {
-            labelName.setLangText(LangConstants.TextType.B1364);
+            labelName.setLangText(TextType.B1364);
         } else {
-            labelName.setText(LangConstants.UndefinedError);
+            labelName.setText(UndefinedError);
         }
 
         this._layoutContent.arrangeItems();
@@ -648,8 +654,8 @@ class MailRenderer
         openData.panel.setAndReviseSelectedMailId(openData.mailId, false);
     }
 
-    private _onNotifyMsgMailSetIsNew(e: VendorEgretEgret.Event): void {
-        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMailSetIsNewS.S;
+    private _onNotifyMsgMailSetIsNew(e: Event): void {
+        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMailSetIsNewS;
         if (data.getMailId() === this.getOpenData()?.mailId) {
             this._updateImgRed();
         }
@@ -661,7 +667,7 @@ class MailRenderer
             return;
         }
 
-        const mailData  = MailModelMailModel.getMail(mailId);
+        const mailData  = getMail(mailId);
         const imgRed    = this._imgRed;
         if (mailData == null) {
             imgRed.setIsVisible(false);
@@ -672,21 +678,21 @@ class MailRenderer
     }
 }
 
-async function generatePlayerInfoText(playerInfoArray: ProtoSchemaCommonProtoMailMailEndWarNotificationPlayerInfo.PlayerInfo[], isDraw: boolean, configVersion: string): Promise<string> {
+async function generatePlayerInfoText(playerInfoArray: PlayerInfo[], isDraw: boolean, configVersion: string): Promise<string> {
     if (playerInfoArray.length <= 0) {
         return `----`;
     }
 
     const textArray     : string[] = [];
-    const gameConfig    = await GameConfigGcModel.getGameConfig(configVersion);
+    const gameConfig    = await getGameConfig(configVersion);
     let playerIndex     = 1;
     for (const playerInfo of playerInfoArray) {
         const userId            = playerInfo.getUserId();
-        const nickname          = (userId == null ? LangUtils.getText(LangConstants.TextType.B0607) : await UsersModel.getUserNickname(userId)) ?? LangConstants.UndefinedError;
-        const coName            = gameConfig.getCoBasicCfg(playerInfo.getCoId() ?? 0)?.getName() ?? LangConstants.UndefinedError;
+        const nickname          = (userId == null ? getText(TextType.B0607) : await getUserNickname(userId)) ?? UndefinedError;
+        const coName            = gameConfig.getCoBasicCfg(playerInfo.getCoId() ?? 0)?.getName() ?? UndefinedError;
         const textForAliveState = playerInfo.getIsAlive()
-            ? LangUtils.getText(isDraw ? LangConstants.TextType.B0552 : LangConstants.TextType.B0550)
-            : LangUtils.getText(LangConstants.TextType.B0551);
+            ? getText(isDraw ? TextType.B0552 : TextType.B0550)
+            : getText(TextType.B0551);
         textArray.push(`P${playerIndex++}. ${nickname} (${coName}, ${textForAliveState})`);
     }
     return textArray.join(`\n`);

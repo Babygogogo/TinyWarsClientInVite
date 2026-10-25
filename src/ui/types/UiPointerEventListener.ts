@@ -1,11 +1,11 @@
-import type * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface UiPointerEventListener {
-    ui              : UiInterfacesIUiComponent.IUiComponent;
-    callback        : (e: VendorEgretEgret.Event) => void;
-    mouseStyle?     : HelpersPointerInput.MouseStyleType;
-    eventType?      : HelpersPointerInput.PointerEventType;
+    ui              : IUiComponent;
+    callback        : (e: Event) => void;
+    mouseStyle?     : MouseStyleType;
+    eventType?      : PointerEventType;
     thisObject?     : any;
 }

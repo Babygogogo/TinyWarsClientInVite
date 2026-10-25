@@ -1,19 +1,19 @@
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMovePathNode from "../../auxiliaryTypes/MovePathNode.ts";
-import type * as BotsCommonParams from "../CommonParams.ts";
-import type * as BotsTypes from "../Types.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
+import type { CommonParams } from "../CommonParams.ts";
+import type { ScoreAndAction } from "../Types.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
+import { ActionStateId } from "../../units/Constants.ts";
+import type { IUnit } from "../../units/IUnit.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = UnitsIUnit.IUnit;
-type GrScoreAndAction   = BotsTypes.ScoreAndAction;
+type IBwUnit            = IUnit;
+type GrScoreAndAction   = ScoreAndAction;
 
-export async function getScoreAndActionUnitJoin(commonParams: BotsCommonParams.CommonParams, unit: IBwUnit, gridIndex: AuxiliaryTypesGridIndex.GridIndex, pathNodes: AuxiliaryTypesMovePathNode.MovePathNode[]): Promise<GrScoreAndAction | null> {
-    await TimerTimerModel.checkAndCallLater();
+export async function getScoreAndActionUnitJoin(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+    await checkAndCallLater();
 
     const unitGridIndex = unit.getGridIndex();
     if (gridIndex.checkIsEqual(unitGridIndex)) {
@@ -28,7 +28,7 @@ export async function getScoreAndActionUnitJoin(commonParams: BotsCommonParams.C
     const score = await getScoreForActionUnitJoin(commonParams, unit, gridIndex);
     return {
         score,
-        action  : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({ WoUnitJoinUnit: {
+        action  : WoContainer.fromJson({ WoUnitJoinUnit: {
             path        : {
                 nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                 fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
@@ -39,12 +39,12 @@ export async function getScoreAndActionUnitJoin(commonParams: BotsCommonParams.C
     };
 }
 
-async function getScoreForActionUnitJoin(commonParams: BotsCommonParams.CommonParams, unit: IBwUnit, gridIndex: AuxiliaryTypesGridIndex.GridIndex): Promise<number> {
-    await TimerTimerModel.checkAndCallLater();
+async function getScoreForActionUnitJoin(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex): Promise<number> {
+    await checkAndCallLater();
 
     const war           = commonParams.getWar();
-    const targetUnit    = HelpersMisc.getExisted(war.getUnitMap().getUnitOnMap(gridIndex), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreForActionUnitJoin_00);
-    if (targetUnit.getActionState() === UnitsConstants.ActionStateId.Idle) {
+    const targetUnit    = getExisted(war.getUnitMap().getUnitOnMap(gridIndex), ClientErrorCode.SpwRobot_GetScoreForActionUnitJoin_00);
+    if (targetUnit.getActionState() === ActionStateId.Idle) {
         return -9999;
     }
 

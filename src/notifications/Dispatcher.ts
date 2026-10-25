@@ -1,18 +1,18 @@
-import type * as NotificationsTypeId from "./TypeId.ts";
-import type * as NotificationsTypes from "./Types.ts";
-import * as VendorEgretEgret from "../vendor/egret/Egret.ts";
+import type { TypeId } from "./TypeId.ts";
+import type { Listener as NotificationsTypesListener } from "./Types.ts";
+import { EventDispatcher, Event } from "../vendor/egret/Egret.ts";
 
-type Listener = NotificationsTypes.Listener;
+type Listener = NotificationsTypesListener;
 
-const _DISPATCHER = new VendorEgretEgret.EventDispatcher();
+const _DISPATCHER = new EventDispatcher();
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function dispatch(t: NotificationsTypeId.TypeId, data?: any): void {
+export function dispatch(t: TypeId, data?: any): void {
     _DISPATCHER.dispatchEventWith(getTypeName(t), false, data);
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function addEventListener(type: NotificationsTypeId.TypeId, callback: (e: VendorEgretEgret.Event) => void, thisObject?: any, useCapture?: boolean, priority?: number): void {
+export function addEventListener(type: TypeId, callback: (e: Event) => void, thisObject?: any, useCapture?: boolean, priority?: number): void {
     _DISPATCHER.addEventListener(getTypeName(type), callback, thisObject, useCapture, priority);
 }
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -29,7 +29,7 @@ export function addEventListeners(listeners: Listener[], thisObject: any, useCap
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function removeEventListener(type: NotificationsTypeId.TypeId, callback: (e: VendorEgretEgret.Event) => void, thisObject?: any, useCapture?: boolean): void {
+export function removeEventListener(type: TypeId, callback: (e: Event) => void, thisObject?: any, useCapture?: boolean): void {
     _DISPATCHER.removeEventListener(getTypeName(type), callback, thisObject, useCapture);
 }
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -44,6 +44,6 @@ export function removeEventListeners(listeners: Listener[], thisObject: any, use
     }
 }
 
-function getTypeName(t: NotificationsTypeId.TypeId): string {
+function getTypeName(t: TypeId): string {
     return "Notify" + t;
 }

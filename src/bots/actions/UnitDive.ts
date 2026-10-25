@@ -1,14 +1,14 @@
-import type * as AuxiliaryTypesMovePathNode from "../../auxiliaryTypes/MovePathNode.ts";
-import type * as BotsTypes from "../Types.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
+import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
+import type { ScoreAndAction } from "../Types.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = UnitsIUnit.IUnit;
-type GrScoreAndAction   = BotsTypes.ScoreAndAction;
+type IBwUnit            = IUnit;
+type GrScoreAndAction   = ScoreAndAction;
 
-export async function getScoreAndActionUnitDive(unit: IBwUnit, pathNodes: AuxiliaryTypesMovePathNode.MovePathNode[]): Promise<GrScoreAndAction | null> {
-    await TimerTimerModel.checkAndCallLater();
+export async function getScoreAndActionUnitDive(unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+    await checkAndCallLater();
 
     if (!unit.checkCanDive()) {
         return null;
@@ -16,7 +16,7 @@ export async function getScoreAndActionUnitDive(unit: IBwUnit, pathNodes: Auxili
         const score = await getScoreForActionUnitDive(unit);
         return {
             score,
-            action  : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({ WoUnitDive: {
+            action  : WoContainer.fromJson({ WoUnitDive: {
                 path        : {
                     nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                     fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
@@ -29,7 +29,7 @@ export async function getScoreAndActionUnitDive(unit: IBwUnit, pathNodes: Auxili
 }
 
 async function getScoreForActionUnitDive(unit: IBwUnit): Promise<number> {
-    await TimerTimerModel.checkAndCallLater();
+    await checkAndCallLater();
 
     return unit.checkIsFuelInShort() ? -10 : 10;
 }

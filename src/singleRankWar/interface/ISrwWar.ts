@@ -1,8 +1,8 @@
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as SinglePlayerWarInterfaceISpwWar from "../../singlePlayerWar/interface/ISpwWar.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { ISpwWar } from "../../singlePlayerWar/interface/ISpwWar.ts";
 
-export interface ISrwWar extends SinglePlayerWarInterfaceISpwWar.ISpwWar {
-    serializeForValidation(): ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
+export interface ISrwWar extends ISpwWar {
+    serializeForValidation(): SerialWar;
 
     getIsNeedExecutedOperations(): boolean;
     getIsNeedSeedRandom(): boolean;

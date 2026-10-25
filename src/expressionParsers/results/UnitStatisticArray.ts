@@ -1,21 +1,21 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import type * as ExpressionParsersResultsUnitStatistic from "./UnitStatistic.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { UnitStatistic } from "./UnitStatistic.ts";
 
-export class UnitStatisticArray extends ExpressionParsersResultsBase.Base {
-    public readonly dataArray: ExpressionParsersResultsUnitStatistic.UnitStatistic[];
+export class UnitStatisticArray extends Base {
+    public readonly dataArray: UnitStatistic[];
 
-    public constructor(war: BaseWarInterfaceIBwWar.IBwWar, dataArray: ExpressionParsersResultsUnitStatistic.UnitStatistic[]) {
+    public constructor(war: IBwWar, dataArray: UnitStatistic[]) {
         super(war);
 
         this.dataArray = dataArray;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.UnitStatisticArray;
+    public override getResultType(): ResultType {
+        return ResultType.UnitStatisticArray;
     }
-    public checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public checkIsEqual(rhs: Base): boolean {
         if (!(rhs instanceof UnitStatisticArray)) {
             return false;
         }

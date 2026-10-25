@@ -1,8 +1,10 @@
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForSfw from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
-import type * as SinglePlayerWarInterfaceISpwWar from "../../singlePlayerWar/interface/ISpwWar.ts";
+import type {
+    SettingsForSfw as ProtoSchemaCommonProtoWarSettingsSettingsForSfw,
+} from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
+import type { ISpwWar } from "../../singlePlayerWar/interface/ISpwWar.ts";
 
-type SettingsForSfw = ProtoSchemaCommonProtoWarSettingsSettingsForSfw.SettingsForSfw;
+type SettingsForSfw = ProtoSchemaCommonProtoWarSettingsSettingsForSfw;
 
-export interface ISfwWar extends SinglePlayerWarInterfaceISpwWar.ISpwWar {
+export interface ISfwWar extends ISpwWar {
     getSettingsForSfw(): SettingsForSfw;
 }

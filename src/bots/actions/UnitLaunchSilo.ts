@@ -1,19 +1,19 @@
-import * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMovePathNode from "../../auxiliaryTypes/MovePathNode.ts";
-import type * as BotsCommonParams from "../CommonParams.ts";
-import type * as BotsTypes from "../Types.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
+import type { CommonParams } from "../CommonParams.ts";
+import type { ScoreAndAction } from "../Types.ts";
+import { createEmptyMap } from "../../helpers/Collection.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
+import type { IUnit } from "../../units/IUnit.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = UnitsIUnit.IUnit;
-type GrScoreAndAction   = BotsTypes.ScoreAndAction;
+type IBwUnit            = IUnit;
+type GrScoreAndAction   = ScoreAndAction;
 
-export async function getScoreAndActionUnitLaunchSilo(commonParams: BotsCommonParams.CommonParams, unit: IBwUnit, gridIndex: AuxiliaryTypesGridIndex.GridIndex, pathNodes: AuxiliaryTypesMovePathNode.MovePathNode[]): Promise<GrScoreAndAction | null> {
-    await TimerTimerModel.checkAndCallLater();
+export async function getScoreAndActionUnitLaunchSilo(commonParams: CommonParams, unit: IBwUnit, gridIndex: GridIndex, pathNodes: MovePathNode[]): Promise<GrScoreAndAction | null> {
+    await checkAndCallLater();
 
     const war       = commonParams.getWar();
     const tile      = war.getTileMap().getTile(gridIndex);
@@ -22,14 +22,14 @@ export async function getScoreAndActionUnitLaunchSilo(commonParams: BotsCommonPa
     }
 
     const { width: mapWidth, height: mapHeight }    = commonParams.getMapSize().getWH();
-    const unitValueMap                              = HelpersCollection.createEmptyMap<number>(mapWidth, mapHeight);
+    const unitValueMap                              = createEmptyMap<number>(mapWidth, mapHeight);
     const teamIndex                                 = unit.getTeamIndex();
     const unitMap                                   = war.getUnitMap();
-    const launchSiloParams                          = HelpersMisc.getExisted(tile.getTemplateCfg().getLaunchSiloParams(), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreAndActionUnitLaunchSilo_00);
-    const siloDamage                                = HelpersMisc.getExisted(launchSiloParams[3], UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetScoreAndActionUnitLaunchSilo_01);
+    const launchSiloParams                          = getExisted(tile.getTemplateCfg().getLaunchSiloParams(), ClientErrorCode.SpwRobot_GetScoreAndActionUnitLaunchSilo_00);
+    const siloDamage                                = getExisted(launchSiloParams[3], ClientErrorCode.SpwRobot_GetScoreAndActionUnitLaunchSilo_01);
         for (let x = 0; x < mapWidth; ++x) {
         for (let y = 0; y < mapHeight; ++y) {
-            const targetUnit = unitMap.getUnitOnMap(new AuxiliaryTypesGridIndex.GridIndex(x, y));
+            const targetUnit = unitMap.getUnitOnMap(new GridIndex(x, y));
             if ((!targetUnit) || (targetUnit === unit)) {
                 unitValueMap[x][y] = 0;
             } else {
@@ -40,10 +40,10 @@ export async function getScoreAndActionUnitLaunchSilo(commonParams: BotsCommonPa
     }
     unitValueMap[gridIndex.getX()][gridIndex.getY()] = -Math.min(siloDamage, unit.getCurrentHp() - 1) * unit.getProductionCfgCost();
 
-    let scoreAndGridIndex: { score: number, gridIndex: AuxiliaryTypesGridIndex.GridIndex } | null = null;
+    let scoreAndGridIndex: { score: number, gridIndex: GridIndex } | null = null;
     for (let x = 0; x < mapWidth; ++x) {
         for (let y = 0; y < mapHeight; ++y) {
-            const newTargetGridIndex    = new AuxiliaryTypesGridIndex.GridIndex(x, y);
+            const newTargetGridIndex    = new GridIndex(x, y);
             const newMaxScore           = await getScoreForActionUnitLaunchSilo(commonParams, unitValueMap, newTargetGridIndex, launchSiloParams[2]);
             if (scoreAndGridIndex == null) {
                 scoreAndGridIndex = {
@@ -60,7 +60,7 @@ export async function getScoreAndActionUnitLaunchSilo(commonParams: BotsCommonPa
     return scoreAndGridIndex
         ? {
             score   : scoreAndGridIndex.score,
-            action  : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+            action  : WoContainer.fromJson({
                 WoUnitLaunchSilo: {
                     path        : {
                         nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
@@ -75,8 +75,8 @@ export async function getScoreAndActionUnitLaunchSilo(commonParams: BotsCommonPa
         : null;
 }
 
-async function getScoreForActionUnitLaunchSilo(commonParams: BotsCommonParams.CommonParams, unitValueMap: number[][], targetGridIndex: AuxiliaryTypesGridIndex.GridIndex, siloRadius: number): Promise<number> {
-    await TimerTimerModel.checkAndCallLater();
+async function getScoreForActionUnitLaunchSilo(commonParams: CommonParams, unitValueMap: number[][], targetGridIndex: GridIndex, siloRadius: number): Promise<number> {
+    await checkAndCallLater();
 
     let score = 9999;
     for (const gridIndex of targetGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: siloRadius, mapSize: commonParams.getMapSize() })) {

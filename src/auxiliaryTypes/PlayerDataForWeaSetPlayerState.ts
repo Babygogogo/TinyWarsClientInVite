@@ -1,9 +1,9 @@
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import * as CoSkillsConstants from "../coSkills/Constants.ts";
-import * as CoSkillsUtilsDataGeneratorForUseCoSkill from "../coSkills/utils/DataGeneratorForUseCoSkill.ts";
-import * as CoSkillsUtilsExecutor from "../coSkills/utils/Executor.ts";
-import * as GameHelpersGhFactory from "../gameHelpers/GhFactory.ts";
-import * as VisibilitiesUtils from "../visibilities/Utils.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
+import { SkillTypeId } from "../coSkills/Constants.ts";
+import { generate } from "../coSkills/utils/DataGeneratorForUseCoSkill.ts";
+import { executeInstantSkill } from "../coSkills/utils/Executor.ts";
+import { getSpwWarClass } from "../gameHelpers/GhFactory.ts";
+import { getAllUnitsOnMapVisibleToTeams } from "../visibilities/Utils.ts";
 
 export class PlayerDataForWeaSetPlayerState {
     private readonly _playerIndex           : number;
@@ -35,7 +35,7 @@ export class PlayerDataForWeaSetPlayerState {
         this._activateCoSkillType   = activateCoSkillType;
     }
 
-    public async apply(war: BaseWarInterfaceIBwWar.IBwWar, isFastExecute: boolean): Promise<void> {
+    public async apply(war: IBwWar, isFastExecute: boolean): Promise<void> {
         const player = war.getPlayer(this._playerIndex);
         {
             if (this._fund != null) {
@@ -72,10 +72,10 @@ export class PlayerDataForWeaSetPlayerState {
             if (skillType != null) {
                 const skillIdArray = player.getCoSkills(skillType);
                 for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
-                    CoSkillsUtilsExecutor.executeInstantSkill({
+                    executeInstantSkill({
                         player              : player,
                         skillId             : skillIdArray[skillIndex],
-                        skillData           : CoSkillsUtilsDataGeneratorForUseCoSkill.generate({
+                        skillData           : generate({
                             war         : war,
                             player      : player,
                             skillType   : skillType,
@@ -90,13 +90,13 @@ export class PlayerDataForWeaSetPlayerState {
                 if (!isFastExecute) {
                     const playerIndex       = player.getPlayerIndex();
                     const gridVisualEffect  = war.getGridVisualEffect();
-                    if (war instanceof GameHelpersGhFactory.getSpwWarClass()) {
+                    if (war instanceof getSpwWarClass()) {
                         const teamIndexes = new Set(war.getHumanPlayers().map(v => v.getTeamIndex()));
-                        for (const unit of VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(war, teamIndexes)) {
+                        for (const unit of getAllUnitsOnMapVisibleToTeams(war, teamIndexes)) {
                             if (unit.getPlayerIndex() === playerIndex) {
                                 unit.updateView();
 
-                                if (skillType === CoSkillsConstants.SkillTypeId.Power) {
+                                if (skillType === SkillTypeId.Power) {
                                     gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
                                 } else {
                                     gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());
@@ -108,7 +108,7 @@ export class PlayerDataForWeaSetPlayerState {
                             if (unit.getPlayerIndex() === playerIndex) {
                                 unit.updateView();
 
-                                if (skillType === CoSkillsConstants.SkillTypeId.Power) {
+                                if (skillType === SkillTypeId.Power) {
                                     gridVisualEffect.showEffectCoPowerActivation(unit.getGridIndex());
                                 } else {
                                     gridVisualEffect.showEffectCoSuperPowerActivation(unit.getGridIndex());

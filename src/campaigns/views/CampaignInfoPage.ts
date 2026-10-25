@@ -1,40 +1,40 @@
-import * as CampaignsMainsProvider from "../mains/Provider.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiOpenableComponent from "../../ui/components/UiOpenableComponent.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import * as UiTypesUiHorizontalAlign from "../../ui/types/UiHorizontalAlign.ts";
-import * as UiTypesUiVerticalAlign from "../../ui/types/UiVerticalAlign.ts";
-import * as UiUtilsUiSkinHelpers from "../../ui/utils/UiSkinHelpers.ts";
-import * as UsersConstants from "../../users/Constants.ts";
-import * as UsersModel from "../../users/Model.ts";
+import { getCampaignInfo } from "../mains/Provider.ts";
+import { showLang } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getFormattedText, getLanguageText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
+import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
+import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
+import { Common } from "../../users/Constants.ts";
+import { getUserNickname } from "../../users/Model.ts";
 
 export type OpenData = {
     campaignId  : number;
 } | null;
-export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<OpenData> {
-    private readonly _scroller!     : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiLayout.IUiLayout>;
-    private readonly _group!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelDesc!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnDesigner!  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnLink!      : UiInterfacesIUiButton.IUiButton;
+export class Page extends UiOpenableComponent<OpenData> {
+    private readonly _scroller!     : IUiScroller<IUiLayout>;
+    private readonly _group!        : IUiLayout;
+    private readonly _labelDesc!    : IUiLabel;
+    private readonly _btnDesigner!  : IUiButton;
+    private readonly _btnLink!      : IUiButton;
 
     public constructor() {
         super();
 
-        UiUtilsUiSkinHelpers.loadSkinByPath(this, "campaigns/views/CampaignInfoPage.exml");
+        loadSkinByPath(this, "campaigns/views/CampaignInfoPage.exml");
     }
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnDesigner,    callback: this._onTouchedBtnDesigner },
@@ -42,8 +42,8 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
         ]);
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
+            verticalAlign   : { align       : UiVerticalAlign.Middle },
+            horizontalAlign : { align       : UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -63,7 +63,7 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
             return;
         }
 
-        const campaignInfo = await CampaignsMainsProvider.getCampaignInfo(campaignId);
+        const campaignInfo = await getCampaignInfo(campaignId);
         if (campaignInfo == null) {
             return;
         }
@@ -71,29 +71,29 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
         const rawDesignerIdArray    = campaignInfo.getDesignerUserIdArray();
         const designerIdArray       = rawDesignerIdArray.length <= 1
             ? rawDesignerIdArray
-            : rawDesignerIdArray.filter(v => v !== UsersConstants.Common.AdminUserId);
+            : rawDesignerIdArray.filter(v => v !== Common.AdminUserId);
         if (designerIdArray.length <= 0) {
             return;
         }
 
         if (designerIdArray.length === 1) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: designerIdArray[0]});
+            openPanel(getDict().UserPanel, { userId: designerIdArray[0]});
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
-                getTitleText            : () => LangUtils.getText(LangConstants.TextType.B0163),
+            openPanel(getDict().CommonChooseSingleNumberPanel, {
+                getTitleText            : () => getText(TextType.B0163),
                 availableNumberArray    : designerIdArray,
                 currentNumber           : null,
                 columnsCount            : 2,
                 showNumber              : true,
-                getNumberMainText       : async num => await UsersModel.getUserNickname(num) ?? LangConstants.UndefinedError,
-                callbackOnConfirm       : num => GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: num}),
+                getNumberMainText       : async num => await getUserNickname(num) ?? UndefinedError,
+                callbackOnConfirm       : num => openPanel(getDict().UserPanel, { userId: num}),
             });
         }
     }
 
     private async _onTouchedBtnLink(): Promise<void> {
         if ((!window) || (!window.open)) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -102,10 +102,10 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
             return;
         }
 
-        const extraLink = (await CampaignsMainsProvider.getCampaignInfo(campaignId))?.getExtraLink() ?? ``;
+        const extraLink = (await getCampaignInfo(campaignId))?.getExtraLink() ?? ``;
         if (extraLink.length) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent  : () => LangUtils.getFormattedText(LangConstants.TextType.F0269, extraLink),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent  : () => getFormattedText(TextType.F0269, extraLink),
                 callback    : () => window.open(extraLink),
             });
         }
@@ -117,8 +117,8 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDesigner.setLangText(LangConstants.TextType.B0163);
-        this._btnLink.setLangText(LangConstants.TextType.B1481);
+        this._btnDesigner.setLangText(TextType.B0163);
+        this._btnLink.setLangText(TextType.B1481);
         this._updateLabelDesc();
     }
 
@@ -129,9 +129,9 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
         labelDesc.setText(``);
 
         if (campaignId != null) {
-            const descArray = (await CampaignsMainsProvider.getCampaignInfo(campaignId))?.getDescArray();
+            const descArray = (await getCampaignInfo(campaignId))?.getDescArray();
             if (campaignId === this.getOpenData()?.campaignId) {
-                labelDesc.setText(LangUtils.getLanguageText({ textArray: descArray }) ?? LangConstants.UndefinedError);
+                labelDesc.setText(getLanguageText({ textArray: descArray }) ?? UndefinedError);
             }
         }
 
@@ -147,6 +147,6 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
             return;
         }
 
-        btnLink.setIsVisible(!!(await CampaignsMainsProvider.getCampaignInfo(campaignId))?.getExtraLink()?.length);
+        btnLink.setIsVisible(!!(await getCampaignInfo(campaignId))?.getExtraLink()?.length);
     }
 }

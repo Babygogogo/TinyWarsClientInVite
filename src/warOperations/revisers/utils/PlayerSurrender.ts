@@ -1,26 +1,26 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as PlayersConstants from "../../../players/Constants.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoPlayerSurrender from "../../../proto/schema/CommonProto/WarOperation/WoPlayerSurrender.ts";
-import * as UtilsClientErrorCode from "../../../utils/ClientErrorCode.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { getExisted, newError } from "../../../helpers/Misc.ts";
+import { AliveStateId } from "../../../players/Constants.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { WoPlayerSurrender } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerSurrender.ts";
+import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type IBwWar                 = BaseWarInterfaceIBwWar;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-export function revise(war: IBwWar, rawAction: ProtoSchemaCommonProtoWarOperationWoPlayerSurrender.WoPlayerSurrender, requesterUserId: Undefinable<number>): ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer {
-    const playerIndex   = HelpersMisc.getExisted(rawAction.getPlayerIndex(), UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerSurrender_00);
+export function revise(war: IBwWar, rawAction: WoPlayerSurrender, requesterUserId: Undefinable<number>): WoContainer {
+    const playerIndex   = getExisted(rawAction.getPlayerIndex(), ClientErrorCode.WarOperationReviser_RevisePlayerSurrender_00);
     const player        = war.getPlayer(playerIndex);
     if ((player.getUserId() == null)                            ||
         (player.checkIsNeutral())                               ||
-        (player.getAliveState() !== PlayersConstants.AliveStateId.Alive)   ||
+        (player.getAliveState() !== AliveStateId.Alive)   ||
         (player.getUserId() != requesterUserId)
     ) {
-        throw HelpersMisc.newError(`Invalid playerIndex or aliveState.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerSurrender_01);
+        throw newError(`Invalid playerIndex or aliveState.`, ClientErrorCode.WarOperationReviser_RevisePlayerSurrender_01);
     }
 
-    return ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    return WoContainer.fromJson({
         WoPlayerSurrender: {
             playerIndex : playerIndex,
         },

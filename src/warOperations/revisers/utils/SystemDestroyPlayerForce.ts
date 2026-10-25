@@ -1,35 +1,35 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as PlayersConstants from "../../../players/Constants.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoSystemDestroyPlayerForce from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
-import * as TurnsConstants from "../../../turns/Constants.ts";
-import * as UtilsClientErrorCode from "../../../utils/ClientErrorCode.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { newError } from "../../../helpers/Misc.ts";
+import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { WoSystemDestroyPlayerForce } from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
+import { PhaseCode } from "../../../turns/Constants.ts";
+import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type IBwWar                 = BaseWarInterfaceIBwWar;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-export function revise(war: IBwWar, rawAction: ProtoSchemaCommonProtoWarOperationWoSystemDestroyPlayerForce.WoSystemDestroyPlayerForce, requesterUserId: Undefinable<number>): ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer {
+export function revise(war: IBwWar, rawAction: WoSystemDestroyPlayerForce, requesterUserId: Undefinable<number>): WoContainer {
     if (requesterUserId != null) {
-        throw HelpersMisc.newError(`Invalid requesterUserId.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_00);
+        throw newError(`Invalid requesterUserId.`, ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_00);
     }
 
-    if (war.getTurnPhaseCode() !== TurnsConstants.PhaseCode.Main) {
-        throw HelpersMisc.newError(`Invalid turnPhaseCode.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_01);
+    if (war.getTurnPhaseCode() !== PhaseCode.Main) {
+        throw newError(`Invalid turnPhaseCode.`, ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_01);
     }
 
     const targetPlayerIndex = rawAction.getTargetPlayerIndex();
-    if ((targetPlayerIndex == null) || (targetPlayerIndex === PlayersConstants.PlayerIndex.Neutral)) {
-        throw HelpersMisc.newError(`Invalid targetPlayerIndex: ${targetPlayerIndex}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_02);
+    if ((targetPlayerIndex == null) || (targetPlayerIndex === PlayerIndex.Neutral)) {
+        throw newError(`Invalid targetPlayerIndex: ${targetPlayerIndex}`, ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_02);
     }
 
     const player = war.getPlayer(targetPlayerIndex);
-    if ((player == null) || (player.getAliveState() !== PlayersConstants.AliveStateId.Dying)) {
-        throw HelpersMisc.newError(`Invalid aliveState.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_03);
+    if ((player == null) || (player.getAliveState() !== AliveStateId.Dying)) {
+        throw newError(`Invalid aliveState.`, ClientErrorCode.WarOperationReviser_ReviseSystemDestroyPlayerForce_03);
     }
 
-    return ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    return WoContainer.fromJson({
         WoSystemDestroyPlayerForce: {
             targetPlayerIndex,
         },

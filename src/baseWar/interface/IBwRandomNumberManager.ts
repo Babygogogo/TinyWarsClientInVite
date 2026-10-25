@@ -1,14 +1,17 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as ProtoSchemaCommonProtoStructureSeedRandomState from "../../proto/schema/CommonProto/Structure/SeedRandomState.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type {
+    SeedRandomState as ProtoSchemaCommonProtoStructureSeedRandomState,
+    SeedRandomStateJson as ProtoSchemaCommonProtoStructureSeedRandomStateSeedRandomStateJson,
+} from "../../proto/schema/CommonProto/Structure/SeedRandomState.ts";
 
-type SeedRandomState        = ProtoSchemaCommonProtoStructureSeedRandomState.SeedRandomState;
-type SeedRandomStateJson    = ProtoSchemaCommonProtoStructureSeedRandomState.SeedRandomStateJson;
+type SeedRandomState        = ProtoSchemaCommonProtoStructureSeedRandomState;
+type SeedRandomStateJson    = ProtoSchemaCommonProtoStructureSeedRandomStateSeedRandomStateJson;
 
 export interface IBwRandomNumberManager {
     init({ isNeedSeedRandom, initialState, currentState }: {
         isNeedSeedRandom: boolean;
-        initialState    : AuxiliaryTypesAuxiliaryTypes.Undefinable<SeedRandomState>;
-        currentState    : AuxiliaryTypesAuxiliaryTypes.Undefinable<SeedRandomState>;
+        initialState    : Undefinable<SeedRandomState>;
+        currentState    : Undefinable<SeedRandomState>;
     }): void;
 
     getIsNeedSeedRandom(): boolean;

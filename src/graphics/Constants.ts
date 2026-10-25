@@ -1,4 +1,4 @@
-import type * as GraphicsTypes from "./Types.ts";
+import type { TextureResolutionConfig } from "./Types.ts";
 
 // eslint-disable-next-line no-shadow
 export const enum ColorId {
@@ -41,7 +41,7 @@ export const enum TextureResolutionId {
     Trilogy = 2,
 }
 
-export const TextureResolutionConfigs = new Map<TextureResolutionId, GraphicsTypes.TextureResolutionConfig>([
+export const TextureResolutionConfigs = new Map<TextureResolutionId, TextureResolutionConfig>([
     [TextureResolutionId.Dor,     {
         gridWidth               : 24,
         gridHeight              : 24,

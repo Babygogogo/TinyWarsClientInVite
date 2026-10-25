@@ -1,36 +1,38 @@
-import * as CommonModelCommonModel from "../model/CommonModel.ts";
-import * as ForceSkinsConstants from "../../forceSkins/Constants.ts";
-import * as ForceSkinsUtils from "../../forceSkins/Utils.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GameVersionsConstants from "../../gameVersions/Constants.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoConfigUnitTemplateCfg from "../../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TilesConstantsCommon from "../../tiles/constants/Common.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UiTypesUiUnitViewData from "../../ui/types/UiUnitViewData.ts";
-import * as UiUtilsUiFactory from "../../ui/utils/UiFactory.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
-import * as UnitsUtilsSerialization from "../../units/utils/Serialization.ts";
-import * as UsersModel from "../../users/Model.ts";
+import { getUnitAnimationTickCount, getCachedTileObjectImageSource, getTileAnimationTickCount } from "../model/CommonModel.ts";
+import { SkinId } from "../../forceSkins/Constants.ts";
+import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TypeName } from "../../gameVersions/Constants.ts";
+import { getNonNullElements } from "../../helpers/Collection.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getUnitName, getSecondaryLanguageType, getText, getMoveTypeName, getUnitCategoryName } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import type {
+    UnitTemplateCfg as ProtoSchemaCommonProtoConfigUnitTemplateCfg,
+} from "../../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { ThemeTypeId } from "../../tiles/constants/Common.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
+import { getUiUnitViewClass, getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
+import { WeaponTypeId } from "../../units/Constants.ts";
+import { createDefault } from "../../units/utils/Serialization.ts";
+import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
 
-type UnitTemplateCfg    = ProtoSchemaCommonProtoConfigUnitTemplateCfg.UnitTemplateCfg;
+type UnitTemplateCfg    = ProtoSchemaCommonProtoConfigUnitTemplateCfg;
 
 // eslint-disable-next-line no-shadow
 const enum UnitInfoType {
@@ -49,53 +51,53 @@ const enum UnitInfoType {
     LoadUnit,
 }
 export type OpenData = {
-    gameConfig   : GameConfigGcData.GcData;
+    gameConfig   : GcData;
 };
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listUnit!             : UiInterfacesIUiScrollList.IUiScrollList<DataForUnitRenderer>;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSwitch!            : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _listUnit!             : IUiScrollList<DataForUnitRenderer>;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _btnSwitch!            : IUiButton;
 
-    private readonly _groupInfo!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _conUnitView!          : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutName!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelName!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName1!           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupInfo!            : IUiContainer;
+    private readonly _conUnitView!          : IUiContainer;
+    private readonly _layoutName!           : IUiLayout;
+    private readonly _labelName!            : IUiLabel;
+    private readonly _labelName1!           : IUiLabel;
 
-    private readonly _groupDamage!          : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupDamageTitle!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listInfo!             : UiInterfacesIUiScrollList.IUiScrollList<DataForInfoRenderer>;
-    private readonly _listDamageChart!      : UiInterfacesIUiScrollList.IUiScrollList<DataForDamageRenderer>;
-    private readonly _layoutDamage1!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _layoutDamage2!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelOffense!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDefense!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMain1!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelSub1!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMain2!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelSub2!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDamage!          : IUiContainer;
+    private readonly _groupDamageTitle!     : IUiContainer;
+    private readonly _listInfo!             : IUiScrollList<DataForInfoRenderer>;
+    private readonly _listDamageChart!      : IUiScrollList<DataForDamageRenderer>;
+    private readonly _layoutDamage1!        : IUiLayout;
+    private readonly _layoutDamage2!        : IUiLayout;
+    private readonly _labelOffense!         : IUiLabel;
+    private readonly _labelDefense!         : IUiLabel;
+    private readonly _labelMain1!           : IUiLabel;
+    private readonly _labelSub1!            : IUiLabel;
+    private readonly _labelMain2!           : IUiLabel;
+    private readonly _labelSub2!            : IUiLabel;
 
-    private readonly _groupMoveCost!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupMoveCostTitle!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutMoveCost1!      : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _layoutMoveCost2!      : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMoveCostTitle1!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMoveCostTitle2!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMoveCost1!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMoveCost2!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listMoveCost!         : UiInterfacesIUiScrollList.IUiScrollList<DataForMoveCostRenderer>;
+    private readonly _groupMoveCost!        : IUiContainer;
+    private readonly _groupMoveCostTitle!   : IUiContainer;
+    private readonly _layoutMoveCost1!      : IUiLayout;
+    private readonly _layoutMoveCost2!      : IUiLayout;
+    private readonly _labelMoveCostTitle1!  : IUiLabel;
+    private readonly _labelMoveCostTitle2!  : IUiLabel;
+    private readonly _labelMoveCost1!       : IUiLabel;
+    private readonly _labelMoveCost2!       : IUiLabel;
+    private readonly _listMoveCost!         : IUiScrollList<DataForMoveCostRenderer>;
 
     private _isShowDamage                   = true;
-    private readonly _unitView              = new (UiUtilsUiFactory.getUiUnitViewClass())();
+    private readonly _unitView              = new (getUiUnitViewClass())();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.UnitAnimationTick,           callback: this._onNotifyUnitAnimationTick },
-            { type: NotificationsTypeId.TypeId.StateIndicatorTick,          callback: this._onNotifyUnitStateIndicatorTick },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.UnitAnimationTick,           callback: this._onNotifyUnitAnimationTick },
+            { type: TypeId.StateIndicatorTick,          callback: this._onNotifyUnitStateIndicatorTick },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -148,7 +150,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(CommonModelCommonModel.getUnitAnimationTickCount());
+        this._unitView.updateOnAnimationTick(getUnitAnimationTickCount());
     }
 
     private _onNotifyUnitStateIndicatorTick(): void {
@@ -156,14 +158,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSwitch(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonTileChartPanel, {
+        openPanel(getDict().CommonTileChartPanel, {
             gameConfig: this.getOpenData()?.gameConfig,
         });
         this.closePanel();
     }
 
     private _onTouchedGroupDamageTitle(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         this._isShowDamage = false;
         this._updateGroupDamage();
@@ -171,7 +173,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupMoveCostTitle(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         this._isShowDamage = true;
         this._updateGroupDamage();
@@ -182,17 +184,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.Units);
-        this._labelOffense.setLangText(LangConstants.TextType.B0694);
-        this._labelDefense.setLangText(LangConstants.TextType.B0695);
-        this._labelMain1.setLangText(LangConstants.TextType.B0692);
-        this._labelSub1.setLangText(LangConstants.TextType.B0693);
-        this._labelMain2.setLangText(LangConstants.TextType.B0692);
-        this._labelSub2.setLangText(LangConstants.TextType.B0693);
-        this._labelMoveCostTitle1.setLangText(LangConstants.TextType.B0351);
-        this._labelMoveCostTitle2.setLangText(LangConstants.TextType.B0351);
-        this._labelMoveCost1.setLangText(LangConstants.TextType.B1282);
-        this._labelMoveCost2.setLangText(LangConstants.TextType.B1282);
+        this._labelTitle.setLangText(TextType.Units);
+        this._labelOffense.setLangText(TextType.B0694);
+        this._labelDefense.setLangText(TextType.B0695);
+        this._labelMain1.setLangText(TextType.B0692);
+        this._labelSub1.setLangText(TextType.B0693);
+        this._labelMain2.setLangText(TextType.B0692);
+        this._labelSub2.setLangText(TextType.B0693);
+        this._labelMoveCostTitle1.setLangText(TextType.B0351);
+        this._labelMoveCostTitle2.setLangText(TextType.B0351);
+        this._labelMoveCost1.setLangText(TextType.B1282);
+        this._labelMoveCost2.setLangText(TextType.B1282);
 
         this._layoutDamage1.arrangeItems();
         this._layoutDamage2.arrangeItems();
@@ -212,21 +214,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const unitType      = data.unitType;
-        const playerIndex   = PlayersConstants.PlayerIndex.First;
-        this._labelName.setText(LangUtils.getUnitName(unitType, gameConfig) ?? LangConstants.UndefinedError);
-        this._labelName1.setText(LangUtils.getUnitName(unitType, gameConfig, LangUtils.getSecondaryLanguageType()) ?? LangConstants.UndefinedError);
-        this._unitView.update(new UiTypesUiUnitViewData.UiUnitViewData({
+        const playerIndex   = PlayerIndex.First;
+        this._labelName.setText(getUnitName(unitType, gameConfig) ?? UndefinedError);
+        this._labelName1.setText(getUnitName(unitType, gameConfig, getSecondaryLanguageType()) ?? UndefinedError);
+        this._unitView.update(new UiUnitViewData({
             gameConfig          : gameConfig,
-            skinId              : ForceSkinsUtils.getDefaultSkinId(playerIndex),
+            skinId              : getDefaultSkinId(playerIndex),
             overridingSkinId    : undefined,
-            unitData            : UnitsUtilsSerialization.createDefault({
+            unitData            : createDefault({
                 gridIndex   : { x: 0, y: 0 },
                 playerIndex : playerIndex,
                 unitTypeId  : unitType,
                 unitId      : -1,
                 gcData      : gameConfig,
             }),
-        }), CommonModelCommonModel.getUnitAnimationTickCount());
+        }), getUnitAnimationTickCount());
         this._layoutName.arrangeItems();
     }
 
@@ -238,8 +240,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         } else {
             const gameConfig        = unitData.gameConfig;
             const unitType          = unitData.unitType;
-            const unitTemplateCfg   = HelpersMisc.getExisted(gameConfig.getUnitTemplateCfg(unitType));
-            const dataArray         : DataForInfoRenderer[] = HelpersCollection.getNonNullElements([
+            const unitTemplateCfg   = getExisted(gameConfig.getUnitTemplateCfg(unitType));
+            const dataArray         : DataForInfoRenderer[] = getNonNullElements([
                 this._createInfoHp(unitTemplateCfg, gameConfig),
                 this._createInfoProductionCost(unitTemplateCfg, gameConfig),
                 this._createInfoEnergyPerNormalizedHp(unitTemplateCfg, gameConfig),
@@ -292,7 +294,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Util functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private _createInfoHp(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer {
+    private _createInfoHp(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer {
         return {
             index           : 0,
             infoType        : UnitInfoType.Hp,
@@ -300,7 +302,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             gameConfig,
         };
     }
-    private _createInfoProductionCost(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer {
+    private _createInfoProductionCost(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer {
         return {
             index       : 0,
             infoType    : UnitInfoType.ProductionCost,
@@ -308,10 +310,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             gameConfig,
         };
     }
-    private _createInfoEnergyPerNormalizedHp(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer | null {
+    private _createInfoEnergyPerNormalizedHp(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
         const gameVersion = window.GAME_VERSION;
-        if ((gameVersion !== GameVersionsConstants.TypeName.Test) &&
-            (gameVersion !== GameVersionsConstants.TypeName.Trilogy)
+        if ((gameVersion !== TypeName.Test) &&
+            (gameVersion !== TypeName.Trilogy)
         ) {
             return null;
         } else {
@@ -323,7 +325,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             };
         }
     }
-    private _createInfoMovement(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer {
+    private _createInfoMovement(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer {
         return {
             index       : 0,
             infoType    : UnitInfoType.Movement,
@@ -331,7 +333,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             gameConfig,
         };
     }
-    private _createInfoFuel(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer {
+    private _createInfoFuel(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer {
         return {
             index       : 0,
             infoType    : UnitInfoType.Fuel,
@@ -339,7 +341,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             gameConfig,
         };
     }
-    private _createInfoAttackRange(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer | null {
+    private _createInfoAttackRange(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
         return unitTemplateCfg.getMinAttackRange() == null
             ? null
             : {
@@ -349,7 +351,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoVision(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer {
+    private _createInfoVision(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer {
         return {
             index       : 0,
             infoType    : UnitInfoType.Vision,
@@ -357,7 +359,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             gameConfig,
         };
     }
-    private _createInfoPrimaryWeaponAmmo(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer | null {
+    private _createInfoPrimaryWeaponAmmo(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
         return unitTemplateCfg.getPrimaryWeaponMaxAmmo() == null
             ? null
             : {
@@ -367,7 +369,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoBuildMaterial(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer | null {
+    private _createInfoBuildMaterial(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
         return unitTemplateCfg.getMaxBuildMaterial() == null
             ? null
             : {
@@ -377,7 +379,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoProduceMaterial(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer | null {
+    private _createInfoProduceMaterial(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
         return unitTemplateCfg.getMaxProduceMaterial() == null
             ? null
             : {
@@ -387,7 +389,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoFlareAmmo(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer | null {
+    private _createInfoFlareAmmo(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
         return unitTemplateCfg.getFlareMaxAmmo() == null
             ? null
             : {
@@ -397,7 +399,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoIsDiver(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer | null {
+    private _createInfoIsDiver(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
         return unitTemplateCfg.getDiveCfg() == null
             ? null
             : {
@@ -407,7 +409,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoLoadUnit(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfigGcData.GcData): DataForInfoRenderer | null {
+    private _createInfoLoadUnit(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
         return unitTemplateCfg.getLoadUnitCategoryId() == null
             ? null
             : {
@@ -424,7 +426,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if (dataForUnit) {
             const gameConfig        = dataForUnit.gameConfig;
             const attackUnitType    = dataForUnit.unitType;
-            const playerIndex       = PlayersConstants.PlayerIndex.First;
+            const playerIndex       = PlayerIndex.First;
             let index               = 0;
             for (const targetUnitType of gameConfig.getAllUnitTypeArray()) {
                 dataArray.push({
@@ -495,24 +497,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForUnitRenderer extends UiTypesUiListItemData.UiListItemData {
-    gameConfig      : GameConfigGcData.GcData;
+interface DataForUnitRenderer extends UiListItemData {
+    gameConfig      : GcData;
     unitType        : number;
     index           : number;
     panel           : Panel;
 }
-class UnitRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForUnitRenderer> {
-    private readonly _conUnitView!  : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutName!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelId!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
+    private readonly _conUnitView!  : IUiContainer;
+    private readonly _layoutName!   : IUiLayout;
+    private readonly _labelId!      : IUiLabel;
+    private readonly _labelName!    : IUiLabel;
 
-    private readonly _unitView      = new (UiUtilsUiFactory.getUiUnitViewClass())();
+    private readonly _unitView      = new (getUiUnitViewClass())();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
-            { type: NotificationsTypeId.TypeId.StateIndicatorTick,      callback: this._onNotifyUnitStateIndicatorTick },
+            { type: TypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
+            { type: TypeId.StateIndicatorTick,      callback: this._onNotifyUnitStateIndicatorTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -520,7 +522,7 @@ class UnitRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
     }
 
     private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(CommonModelCommonModel.getUnitAnimationTickCount());
+        this._unitView.updateOnAnimationTick(getUnitAnimationTickCount());
     }
 
     private _onNotifyUnitStateIndicatorTick(): void {
@@ -535,22 +537,22 @@ class UnitRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const gameConfig    = openData.gameConfig;
         const unitType      = openData.unitType;
-        const playerIndex   = PlayersConstants.PlayerIndex.First;
+        const playerIndex   = PlayerIndex.First;
         this._labelId.setText(`#${unitType}`);
-        this._labelName.setText(LangUtils.getUnitName(unitType, gameConfig) ?? LangConstants.UndefinedError);
+        this._labelName.setText(getUnitName(unitType, gameConfig) ?? UndefinedError);
         this._layoutName.arrangeItems();
-        this._unitView.update(new UiTypesUiUnitViewData.UiUnitViewData({
+        this._unitView.update(new UiUnitViewData({
             gameConfig          : gameConfig,
-            skinId              : ForceSkinsUtils.getDefaultSkinId(playerIndex),
+            skinId              : getDefaultSkinId(playerIndex),
             overridingSkinId    : undefined,
-            unitData            : UnitsUtilsSerialization.createDefault({
+            unitData            : createDefault({
                 gridIndex   : { x: 0, y: 0 },
                 unitTypeId  : unitType,
                 playerIndex : playerIndex,
                 unitId      : -1,
                 gcData      : gameConfig,
             }),
-        }), CommonModelCommonModel.getUnitAnimationTickCount());
+        }), getUnitAnimationTickCount());
     }
 
     public onItemTapEvent(): void {
@@ -558,22 +560,22 @@ class UnitRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
     }
 }
 
-interface DataForInfoRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForInfoRenderer extends UiListItemData {
     index           : number;
     infoType        : UnitInfoType;
     unitTemplateCfg : UnitTemplateCfg;
-    gameConfig      : GameConfigGcData.GcData;
+    gameConfig      : GcData;
 }
-class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForInfoRenderer> {
-    private readonly _imgBg!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelValue!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupExtra!       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelExtraInfo!   : UiInterfacesIUiLabel.IUiLabel;
+class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
+    private readonly _imgBg!            : IUiImage;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _labelValue!       : IUiLabel;
+    private readonly _groupExtra!       : IUiContainer;
+    private readonly _labelExtraInfo!   : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -621,7 +623,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         } else if (infoType === UnitInfoType.LoadUnit) {
             this._updateViewAsLoadUnit();
         } else {
-            throw HelpersMisc.newError(`Invalid infoType: ${infoType}`);
+            throw newError(`Invalid infoType: ${infoType}`);
         }
     }
     private _updateViewAsAttackRange(): void {
@@ -632,7 +634,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const minRange  = unit.getMinAttackRange();
         const maxRange  = unit.getMaxAttackRange();
-        this._labelTitle.setLangText(LangConstants.TextType.B0696);
+        this._labelTitle.setLangText(TextType.B0696);
         this._labelValue.setText(minRange == null ? `--` : `${minRange} - ${maxRange}`);
 
         const groupExtra = this._groupExtra;
@@ -640,7 +642,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             groupExtra.setIsVisible(false);
         } else {
             groupExtra.setIsVisible(true);
-            this._labelExtraInfo.setLangText(LangConstants.TextType.B0697);
+            this._labelExtraInfo.setLangText(TextType.B0697);
         }
     }
     private _updateViewAsBuildMaterial(): void {
@@ -651,7 +653,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const currentValue          = unit.getMaxBuildMaterial();
         const maxValue              = unit.getMaxBuildMaterial();
-        this._labelTitle.setLangText(LangConstants.TextType.BuildMaterial);
+        this._labelTitle.setLangText(TextType.BuildMaterial);
         this._labelValue.setText(currentValue == null ? `--` : `${currentValue} / ${maxValue}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -663,7 +665,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const currentValue          = unit.getFlareMaxAmmo();
         const maxValue              = unit.getFlareMaxAmmo();
-        this._labelTitle.setLangText(LangConstants.TextType.FlareAmmo);
+        this._labelTitle.setLangText(TextType.FlareAmmo);
         this._labelValue.setText(currentValue == null ? `--` : `${currentValue} / ${maxValue}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -675,10 +677,10 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const currentValue          = unit.getMaxFuel();
         const maxValue              = unit.getMaxFuel();
-        this._labelTitle.setLangText(LangConstants.TextType.Fuel);
+        this._labelTitle.setLangText(TextType.Fuel);
         this._labelValue.setText(`${currentValue} / ${maxValue}`);
 
-        const fuelConsumption   = HelpersMisc.getExisted(unit.getFuelConsumptionPerTurn());
+        const fuelConsumption   = getExisted(unit.getFuelConsumptionPerTurn());
         const groupExtra        = this._groupExtra;
         if (fuelConsumption == 0) {
             groupExtra.setIsVisible(false);
@@ -695,14 +697,14 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const currentValue          = unit.getMaxHp();
         const maxValue              = unit.getMaxHp();
-        this._labelTitle.setLangText(LangConstants.TextType.Hp);
+        this._labelTitle.setLangText(TextType.Hp);
         this._labelValue.setText(`${currentValue} / ${maxValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsIsDiver(): void {
         const unit = this.getOpenData()?.unitTemplateCfg;
-        this._labelTitle.setLangText(LangConstants.TextType.B0371);
-        this._labelValue.setText(unit?.getDiveCfg() != null ? LangUtils.getText(LangConstants.TextType.Yes) : LangUtils.getText(LangConstants.TextType.No));
+        this._labelTitle.setLangText(TextType.B0371);
+        this._labelValue.setText(unit?.getDiveCfg() != null ? getText(TextType.Yes) : getText(TextType.No));
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsMovement(): void {
@@ -713,10 +715,10 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const unit                  = data.unitTemplateCfg;
         const currentValue          = unit.getMoveRange();
-        this._labelTitle.setLangText(LangConstants.TextType.B0340);
+        this._labelTitle.setLangText(TextType.B0340);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(true);
-        this._labelExtraInfo.setText(LangUtils.getMoveTypeName(HelpersMisc.getExisted(unit.getMoveTypeId()), data.gameConfig) ?? LangConstants.UndefinedError);
+        this._labelExtraInfo.setText(getMoveTypeName(getExisted(unit.getMoveTypeId()), data.gameConfig) ?? UndefinedError);
     }
     private _updateViewAsPrimaryWeaponAmmo(): void {
         const unit = this.getOpenData()?.unitTemplateCfg;
@@ -726,10 +728,10 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const currentValue  = unit.getPrimaryWeaponMaxAmmo();
         const maxValue      = unit.getPrimaryWeaponMaxAmmo();
-        this._labelTitle.setLangText(LangConstants.TextType.PrimaryWeaponAmmo);
+        this._labelTitle.setLangText(TextType.PrimaryWeaponAmmo);
         this._labelValue.setText(currentValue == null ? `--` : `${currentValue} / ${maxValue}`);
         this._groupExtra.setIsVisible(false);
-        this._labelExtraInfo.setLangText(LangConstants.TextType.B1070);
+        this._labelExtraInfo.setLangText(TextType.B1070);
     }
     private _updateViewAsProduceMaterial(): void {
         const data = this.getOpenData();
@@ -740,7 +742,7 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const unit                  = data.unitTemplateCfg;
         const currentValue          = unit.getMaxProduceMaterial();
         const maxValue              = unit.getMaxProduceMaterial();
-        this._labelTitle.setLangText(LangConstants.TextType.ProductionMaterial);
+        this._labelTitle.setLangText(TextType.ProductionMaterial);
         this._labelValue.setText(currentValue == null ? `--` : `${currentValue} / ${maxValue}`);
 
         const groupExtra = this._groupExtra;
@@ -748,14 +750,14 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             groupExtra.setIsVisible(false);
         } else {
             groupExtra.setIsVisible(true);
-            this._labelExtraInfo.setText(LangUtils.getUnitName(
-                HelpersMisc.getExisted(unit.getProduceUnitTypeId()),
+            this._labelExtraInfo.setText(getUnitName(
+                getExisted(unit.getProduceUnitTypeId()),
                 data.gameConfig
-            ) ?? LangConstants.UndefinedError);
+            ) ?? UndefinedError);
         }
     }
     private _updateViewAsProductionCost(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0341);
+        this._labelTitle.setLangText(TextType.B0341);
         this._labelValue.setText(`${this.getOpenData()?.unitTemplateCfg.getProductionCost()}`);
         this._groupExtra.setIsVisible(false);
     }
@@ -767,19 +769,19 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
 
         const energy    = openData.unitTemplateCfg.getEnergyPerNormalizedHp();
         const gcData    = openData.gameConfig;
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B1474)}`);
+        this._labelTitle.setText(`${getText(TextType.B1474)}`);
         this._labelValue.setText(`${energy * gcData.getTrilogyEnergyGainRateForAttacker() / 100} / ${energy * gcData.getTrilogyEnergyGainRateForDefender() / 100}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsVision(): void {
         const unit          = this.getOpenData()?.unitTemplateCfg;
         const currentValue  = unit?.getVisionRange();
-        this._labelTitle.setLangText(LangConstants.TextType.VisionRange);
+        this._labelTitle.setLangText(TextType.VisionRange);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsLoadUnit(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0698);
+        this._labelTitle.setLangText(TextType.B0698);
 
         const data = this.getOpenData();
         if (data == null) {
@@ -796,38 +798,38 @@ class InfoRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         } else {
             labelValue.setText(`0 / ${maxValue}`);
             groupExtra.setIsVisible(true);
-            this._labelExtraInfo.setText(LangUtils.getUnitCategoryName(
-                HelpersMisc.getExisted(unit.getLoadUnitCategoryId()),
+            this._labelExtraInfo.setText(getUnitCategoryName(
+                getExisted(unit.getLoadUnitCategoryId()),
                 data.gameConfig
-            ) ?? LangConstants.UndefinedError);
+            ) ?? UndefinedError);
         }
     }
 }
 
-interface DataForDamageRenderer extends UiTypesUiListItemData.UiListItemData {
-    gameConfig      : GameConfigGcData.GcData;
+interface DataForDamageRenderer extends UiListItemData {
+    gameConfig      : GcData;
     index           : number;
     attackUnitType  : number;
     playerIndex     : number;
     targetUnitType? : number;
     targetTileType? : number;
 }
-class DamageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForDamageRenderer> {
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBg!                : UiInterfacesIUiImage.IUiImage;
-    private readonly _conView!              : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _tileView!             : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelPrimaryAttack!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelSecondaryAttack! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPrimaryDefend!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelSecondaryDefend! : UiInterfacesIUiLabel.IUiLabel;
+class DamageRenderer extends UiListItemRenderer<DataForDamageRenderer> {
+    private readonly _group!                : IUiContainer;
+    private readonly _imgBg!                : IUiImage;
+    private readonly _conView!              : IUiContainer;
+    private readonly _tileView!             : IUiImage;
+    private readonly _labelPrimaryAttack!   : IUiLabel;
+    private readonly _labelSecondaryAttack! : IUiLabel;
+    private readonly _labelPrimaryDefend!   : IUiLabel;
+    private readonly _labelSecondaryDefend! : IUiLabel;
 
-    private readonly _unitView              = new (UiUtilsUiFactory.getUiUnitViewClass())();
+    private readonly _unitView              = new (getUiUnitViewClass())();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
-            { type: NotificationsTypeId.TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
+            { type: TypeId.UnitAnimationTick,       callback: this._onNotifyUnitAnimationTick },
+            { type: TypeId.StateIndicatorTick,  callback: this._onNotifyUnitStateIndicatorTick },
         ]);
         this.setIsTouchChildrenEnabled(false);
 
@@ -835,7 +837,7 @@ class DamageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
     }
 
     private _onNotifyUnitAnimationTick(): void {
-        this._unitView.updateOnAnimationTick(CommonModelCommonModel.getUnitAnimationTickCount());
+        this._unitView.updateOnAnimationTick(getUnitAnimationTickCount());
     }
 
     private _onNotifyUnitStateIndicatorTick(): void {
@@ -864,30 +866,30 @@ class DamageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             const playerIndex = openData.playerIndex;
             this._unitView.setIsVisible(true);
             this._tileView.setIsVisible(false);
-            this._unitView.update(new UiTypesUiUnitViewData.UiUnitViewData({
+            this._unitView.update(new UiUnitViewData({
                 gameConfig          : gameConfig,
-                skinId              : ForceSkinsUtils.getDefaultSkinId(playerIndex),
+                skinId              : getDefaultSkinId(playerIndex),
                 overridingSkinId    : undefined,
-                unitData            : UnitsUtilsSerialization.createDefault({
+                unitData            : createDefault({
                     gridIndex   : { x: 0, y: 0 },
                     unitTypeId  : targetUnitType,
                     playerIndex : playerIndex,
                     unitId      : -1,
                     gcData      : gameConfig,
                 }),
-            }), CommonModelCommonModel.getUnitAnimationTickCount());
+            }), getUnitAnimationTickCount());
 
-            const attackCfg                 = HelpersMisc.getExisted(gameConfig.getDamageChartCfgs(attackUnitType));
-            const targetArmorType           = HelpersMisc.getExisted(gameConfig.getUnitTemplateCfg(targetUnitType)?.getArmorTypeId());
-            const primaryAttackDamage       = attackCfg[targetArmorType][UnitsConstants.WeaponTypeId.Primary].getDamage();
-            const secondaryAttackDamage     = attackCfg[targetArmorType][UnitsConstants.WeaponTypeId.Secondary].getDamage();
+            const attackCfg                 = getExisted(gameConfig.getDamageChartCfgs(attackUnitType));
+            const targetArmorType           = getExisted(gameConfig.getUnitTemplateCfg(targetUnitType)?.getArmorTypeId());
+            const primaryAttackDamage       = attackCfg[targetArmorType][WeaponTypeId.Primary].getDamage();
+            const secondaryAttackDamage     = attackCfg[targetArmorType][WeaponTypeId.Secondary].getDamage();
             this._labelPrimaryAttack.setText(primaryAttackDamage == null ? `--` : `${primaryAttackDamage}`);
             this._labelSecondaryAttack.setText(secondaryAttackDamage == null ? `--` : `${secondaryAttackDamage}`);
 
-            const defendCfg                 = HelpersMisc.getExisted(gameConfig.getDamageChartCfgs(targetUnitType));
-            const attackerArmorType         = HelpersMisc.getExisted(gameConfig.getUnitTemplateCfg(attackUnitType)?.getArmorTypeId());
-            const primaryDefendDamage       = defendCfg[attackerArmorType][UnitsConstants.WeaponTypeId.Primary].getDamage();
-            const secondaryDefendDamage     = defendCfg[attackerArmorType][UnitsConstants.WeaponTypeId.Secondary].getDamage();
+            const defendCfg                 = getExisted(gameConfig.getDamageChartCfgs(targetUnitType));
+            const attackerArmorType         = getExisted(gameConfig.getUnitTemplateCfg(attackUnitType)?.getArmorTypeId());
+            const primaryDefendDamage       = defendCfg[attackerArmorType][WeaponTypeId.Primary].getDamage();
+            const secondaryDefendDamage     = defendCfg[attackerArmorType][WeaponTypeId.Secondary].getDamage();
             this._labelPrimaryDefend.setText(primaryDefendDamage == null ? `--` : `${primaryDefendDamage}`);
             this._labelSecondaryDefend.setText(secondaryDefendDamage == null ? `--` : `${secondaryDefendDamage}`);
 
@@ -895,20 +897,20 @@ class DamageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             this._unitView.setIsVisible(false);
             this._tileView.setIsVisible(true);
 
-            const targetTileType            = HelpersMisc.getExisted(openData.targetTileType);
-            const attackCfg                 = HelpersMisc.getExisted(gameConfig.getDamageChartCfgs(attackUnitType));
-            const targetCfg                 = HelpersMisc.getExisted(gameConfig.getTileTemplateCfg(targetTileType));
-            const targetArmorType           = HelpersMisc.getExisted(targetCfg.getArmorTypeId());
-            const primaryAttackDamage       = attackCfg[targetArmorType][UnitsConstants.WeaponTypeId.Primary].getDamage();
-            const secondaryAttackDamage     = attackCfg[targetArmorType][UnitsConstants.WeaponTypeId.Secondary].getDamage();
-            this._tileView.loadSource(CommonModelCommonModel.getCachedTileObjectImageSource({
-                version     : UsersModel.getSelfSettingsTextureVersion(),
-                themeType   : TilesConstantsCommon.ThemeTypeId.Normal,
-                skinId      : ForceSkinsConstants.SkinId.Neutral,
-                objectType  : HelpersMisc.getExisted(gameConfig.getTileObjectTypeByTileType(targetTileType)),
+            const targetTileType            = getExisted(openData.targetTileType);
+            const attackCfg                 = getExisted(gameConfig.getDamageChartCfgs(attackUnitType));
+            const targetCfg                 = getExisted(gameConfig.getTileTemplateCfg(targetTileType));
+            const targetArmorType           = getExisted(targetCfg.getArmorTypeId());
+            const primaryAttackDamage       = attackCfg[targetArmorType][WeaponTypeId.Primary].getDamage();
+            const secondaryAttackDamage     = attackCfg[targetArmorType][WeaponTypeId.Secondary].getDamage();
+            this._tileView.loadSource(getCachedTileObjectImageSource({
+                version     : getSelfSettingsTextureVersion(),
+                themeType   : ThemeTypeId.Normal,
+                skinId      : SkinId.Neutral,
+                objectType  : getExisted(gameConfig.getTileObjectTypeByTileType(targetTileType)),
                 isDark      : false,
                 shapeId     : 0,
-                tickCount   : CommonModelCommonModel.getTileAnimationTickCount(),
+                tickCount   : getTileAnimationTickCount(),
             }));
             this._labelPrimaryAttack.setText(primaryAttackDamage == null ? `--` : `${primaryAttackDamage}`);
             this._labelSecondaryAttack.setText(secondaryAttackDamage == null ? `--` : `${secondaryAttackDamage}`);
@@ -918,23 +920,23 @@ class DamageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
     }
 }
 
-interface DataForMoveCostRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForMoveCostRenderer extends UiListItemData {
     index           : number;
-    gameConfig      : GameConfigGcData.GcData;
+    gameConfig      : GcData;
     tileType        : number;
     unitType        : number;
 }
-class MoveCostRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForMoveCostRenderer> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBg!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _conView!          : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelMoveCost!    : UiInterfacesIUiLabel.IUiLabel;
+class MoveCostRenderer extends UiListItemRenderer<DataForMoveCostRenderer> {
+    private readonly _group!            : IUiContainer;
+    private readonly _imgBg!            : IUiImage;
+    private readonly _conView!          : IUiContainer;
+    private readonly _labelMoveCost!    : IUiLabel;
 
-    private readonly _tileView          = new (UiUtilsUiFactory.getUiTileViewClass())();
+    private readonly _tileView          = new (getUiTileViewClass())();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.TileAnimationTick,   callback: this._onNotifyTileAnimationTick },
+            { type: TypeId.TileAnimationTick,   callback: this._onNotifyTileAnimationTick },
         ]);
         this.setIsTouchChildrenEnabled(false);
 
@@ -966,8 +968,8 @@ class MoveCostRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
 
         const gameConfig    = openData.gameConfig;
         const tileType      = openData.tileType;
-        const moveCostCfg   = HelpersMisc.getExisted(gameConfig.getMoveCostCfg(tileType));
-        const moveCost      = moveCostCfg[HelpersMisc.getExisted(gameConfig.getUnitTemplateCfg(openData.unitType)?.getMoveTypeId())].getCost();
+        const moveCostCfg   = getExisted(gameConfig.getMoveCostCfg(tileType));
+        const moveCost      = moveCostCfg[getExisted(gameConfig.getUnitTemplateCfg(openData.unitType)?.getMoveTypeId())].getCost();
         this._labelMoveCost.setText(moveCost != null ? `${moveCost}` : `--`);
 
         const tileView          = this._tileView;
@@ -979,7 +981,7 @@ class MoveCostRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             tileDecorationShapeId   : null,
             tileObjectType          : tileTemplateCfg?.getToTileObjectTypeId() ?? null,
             tileObjectShapeId       : 0,
-            skinId                  : PlayersConstants.PlayerIndex.Neutral,
+            skinId                  : PlayerIndex.Neutral,
             overridingSkinId        : undefined,
             gameConfig              : gameConfig,
         });

@@ -1,40 +1,40 @@
-import * as ExpressionParsersEnums from "../../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../../expressionParsers/Types.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
+import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
-    ConTaskObjectiveFilter          : ExpressionParsersTypes.EpExpressionInfo;
-    ActProgress                     : ExpressionParsersTypes.EpExpressionInfo;
-    ActIsHidden                     : ExpressionParsersTypes.EpExpressionInfo;
-    ActIsProgressUpdaterDisabled    : ExpressionParsersTypes.EpExpressionInfo;
+    ConTaskObjectiveFilter          : EpExpressionInfo;
+    ActProgress                     : EpExpressionInfo;
+    ActIsHidden                     : EpExpressionInfo;
+    ActIsProgressUpdaterDisabled    : EpExpressionInfo;
 } = {
     ConTaskObjectiveFilter       : {
-        contextType     : ExpressionParsersEnums.ContextType.TaskObjective,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.TaskObjective,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1223),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0727),
+        getTitleText    : () => getText(TextType.B1223),
+        getHelpText     : () => getText(TextType.A0727),
     },
     ActProgress : {
-        contextType     : ExpressionParsersEnums.ContextType.TaskObjective,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.TaskObjective,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1221),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0728),
+        getTitleText    : () => getText(TextType.B1221),
+        getHelpText     : () => getText(TextType.A0728),
     },
     ActIsHidden : {
-        contextType     : ExpressionParsersEnums.ContextType.TaskObjective,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.TaskObjective,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1222),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0729),
+        getTitleText    : () => getText(TextType.B1222),
+        getHelpText     : () => getText(TextType.A0729),
     },
     ActIsProgressUpdaterDisabled : {
-        contextType     : ExpressionParsersEnums.ContextType.TaskObjective,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.TaskObjective,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1227),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0732),
+        getTitleText    : () => getText(TextType.B1227),
+        getHelpText     : () => getText(TextType.A0732),
     },
 };

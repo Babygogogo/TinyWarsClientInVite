@@ -1,21 +1,21 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import type * as ExpressionParsersResultsPosition from "./Position.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { Position } from "./Position.ts";
 
-export class PositionArray extends ExpressionParsersResultsBase.Base {
-    public readonly positionArray: ExpressionParsersResultsPosition.Position[];
+export class PositionArray extends Base {
+    public readonly positionArray: Position[];
 
-    public constructor(war: BaseWarInterfaceIBwWar.IBwWar, positionArray: ExpressionParsersResultsPosition.Position[]) {
+    public constructor(war: IBwWar, positionArray: Position[]) {
         super(war);
 
         this.positionArray = positionArray;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.PositionArray;
+    public override getResultType(): ResultType {
+        return ResultType.PositionArray;
     }
-    public override checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public override checkIsEqual(rhs: Base): boolean {
         if (!(rhs instanceof PositionArray)) {
             return false;
         }

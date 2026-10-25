@@ -1,75 +1,75 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "../../auxiliaryTypes/MapSize.ts";
-import * as AuxiliaryTypesPositionFilter from "../../auxiliaryTypes/PositionFilter.ts";
-import * as DeprecatedPositionFilterUtils from "../../deprecatedPositionFilter/Utils.ts";
-import * as GameConfigGcMap from "../../gameConfig/GcMap.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocationsConstants from "../../locations/Constants.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoStructureValueAndComparator from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as ValueAndComparatorsConstants from "../../valueAndComparators/Constants.ts";
-import * as ValueAndComparatorsUtils from "../../valueAndComparators/Utils.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
+import { PositionFilter } from "../../auxiliaryTypes/PositionFilter.ts";
+import { checkIsEmpty, getErrorTip, getDesc } from "../../deprecatedPositionFilter/Utils.ts";
+import { Constants } from "../../gameConfig/GcMap.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { getNonNullElements } from "../../helpers/Collection.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getComparatorName } from "../../lang/Utils.ts";
+import { AllLocationIdArray } from "../../locations/Constants.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { ComparatorId } from "../../valueAndComparators/Constants.ts";
+import { tickComparator } from "../../valueAndComparators/Utils.ts";
 
 export interface OpenData {
-    mapSize         : AuxiliaryTypesMapSize.MapSize;
-    currentFilter   : AuxiliaryTypesAuxiliaryTypes.Undefinable<AuxiliaryTypesPositionFilter.PositionFilter>;
-    callback        : ((unitFilter: AuxiliaryTypesPositionFilter.PositionFilter | null) => void) | null;
+    mapSize         : MapSize;
+    currentFilter   : Undefinable<PositionFilter>;
+    callback        : ((unitFilter: PositionFilter | null) => void) | null;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClear!                                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                                  : IUiImage;
+    private readonly _group!                                    : IUiContainer;
+    private readonly _labelTitle!                               : IUiLabel;
+    private readonly _btnClear!                                 : IUiButton;
+    private readonly _btnClose!                                 : IUiButton;
 
-    private readonly _groupDesc!                                : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelDesc!                                : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelError!                               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDesc!                                : IUiLayout;
+    private readonly _labelDesc!                                : IUiLabel;
+    private readonly _labelError!                               : IUiLabel;
 
-    private readonly _btnGridX!                                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelGridX!                               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnGridX!                                 : IUiButton;
+    private readonly _labelGridX!                               : IUiLabel;
 
-    private readonly _btnGridY!                                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelGridY!                               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnGridY!                                 : IUiButton;
+    private readonly _labelGridY!                               : IUiLabel;
 
-    private readonly _btnLocation!                              : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelLocation!                            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnLocation!                              : IUiButton;
+    private readonly _labelLocation!                            : IUiLabel;
 
-    private readonly _btnGridIndex!                             : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelGridIndex!                           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnGridIndex!                             : IUiButton;
+    private readonly _labelGridIndex!                           : IUiLabel;
 
-    private readonly _btnConLocationMinDistance!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConLocationMinDistance!              : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnConLocationMinDistanceComparator!      : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConLocationMinDistanceComparator!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConLocationMinDistance!                : IUiButton;
+    private readonly _labelConLocationMinDistance!              : IUiLabel;
+    private readonly _btnConLocationMinDistanceComparator!      : IUiButton;
+    private readonly _labelConLocationMinDistanceComparator!    : IUiLabel;
 
-    private readonly _btnConGridIndexMinDistance!               : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConGridIndexMinDistance!             : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnConGridIndexMinDistanceComparator!     : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelConGridIndexMinDistanceComparator!   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnConGridIndexMinDistance!               : IUiButton;
+    private readonly _labelConGridIndexMinDistance!             : IUiLabel;
+    private readonly _btnConGridIndexMinDistanceComparator!     : IUiButton;
+    private readonly _labelConGridIndexMinDistanceComparator!   : IUiLabel;
 
-    private readonly _imgInnerTouchMask!                        : UiInterfacesIUiImage.IUiImage;
+    private readonly _imgInnerTouchMask!                        : IUiImage;
 
-    private _positionFilter = new AuxiliaryTypesPositionFilter.PositionFilter();
+    private _positionFilter = new PositionFilter();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarEventFullDataChanged,         callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                               callback: this._onTouchedBtnClose },
@@ -89,7 +89,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         ]);
         this._setIsTouchMaskEnabled(true);
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnClose();
         });
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
@@ -98,7 +98,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._setInnerTouchMaskEnabled(false);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._positionFilter = this.getOpenData()?.currentFilter?.clone() ?? new AuxiliaryTypesPositionFilter.PositionFilter();
+        this._positionFilter = this.getOpenData()?.currentFilter?.clone() ?? new PositionFilter();
 
         this._updateView();
     }
@@ -114,13 +114,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if (callback == null) {
             this.closePanel();
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent             : () => LangUtils.getText(LangConstants.TextType.A0418),
-                getTextForConfirm      : () => LangUtils.getText(LangConstants.TextType.Yes),
-                getTextForCancel       : () => LangUtils.getText(LangConstants.TextType.No),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent             : () => getText(TextType.A0418),
+                getTextForConfirm      : () => getText(TextType.Yes),
+                getTextForCancel       : () => getText(TextType.No),
                 callback            : () => {
                     const filter = this._getPositionFilter();
-                    callback(DeprecatedPositionFilterUtils.checkIsEmpty(filter) ? null : filter);
+                    callback(checkIsEmpty(filter) ? null : filter);
                     this.closePanel();
                 },
                 callbackOnCancel    : () => this.closePanel(),
@@ -129,10 +129,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
     private _onTouchedBtnClear(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent     : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
             callback    : () => {
-                this._positionFilter = new AuxiliaryTypesPositionFilter.PositionFilter();
+                this._positionFilter = new PositionFilter();
                 this._updateView();
             }
         });
@@ -148,8 +148,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const condition = this._getPositionFilter();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseGridIndexPanel, {
-            currentGridIndexArray   : HelpersCollection.getNonNullElements(condition.getConGridIndexArray().map(v => AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(v)) ?? []),
+        openPanel(getDict().CommonChooseGridIndexPanel, {
+            currentGridIndexArray   : getNonNullElements(condition.getConGridIndexArray().map(v => GridIndex.convertGridIndex(v)) ?? []),
             mapSize                 : mapSize,
             callbackOnConfirm       : gridIndexArray => {
                 condition.setConGridIndexArray(gridIndexArray.map(v => v.toProto()));
@@ -160,10 +160,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnLocation(): void {
         const filter = this._getPositionFilter();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiIntegerPanel, {
-            availableIntegerArray   : LocationsConstants.AllLocationIdArray,
+        openPanel(getDict().CommonChooseMultiIntegerPanel, {
+            availableIntegerArray   : AllLocationIdArray,
             currentIntegerArray     : filter.getConLocationIdArray(),
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.Location),
+            getTitleText            : () => getText(TextType.Location),
             callbackOnConfirm       : locationIdArray => {
                 filter.setConLocationIdArray(locationIdArray);
                 this._updateView();
@@ -178,10 +178,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const filter = this._getPositionFilter();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiIntegerPanel, {
+        openPanel(getDict().CommonChooseMultiIntegerPanel, {
             currentIntegerArray     : filter.getConGridXArray(),
             availableIntegerArray   : mapSize.getValidGridXArray(),
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.B1071),
+            getTitleText            : () => getText(TextType.B1071),
             callbackOnConfirm       : gridXArray => {
                 filter.setConGridXArray(gridXArray);
                 this._updateView();
@@ -195,10 +195,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const filter = this._getPositionFilter();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiIntegerPanel, {
+        openPanel(getDict().CommonChooseMultiIntegerPanel, {
             currentIntegerArray     : filter.getConGridYArray(),
             availableIntegerArray   : mapSize.getValidGridYArray(),
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.B1072),
+            getTitleText            : () => getText(TextType.B1072),
             callbackOnConfirm       : gridYArray => {
                 filter.setConGridYArray(gridYArray);
                 this._updateView();
@@ -210,11 +210,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const filter = this._getPositionFilter();
         const con    = filter.getConLocationMinDistance();
         if (con != null) {
-            ValueAndComparatorsUtils.tickComparator(con);
+            tickComparator(con);
         } else {
-            filter.setConLocationMinDistance(ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
+            filter.setConLocationMinDistance(ValueAndComparator.fromJson({
                 value       : 0,
-                comparator  : ValueAndComparatorsConstants.ComparatorId.EqualTo,
+                comparator  : ComparatorId.EqualTo,
             }));
         }
 
@@ -224,10 +224,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const filter = this._getPositionFilter();
         const oldCon = filter.getConLocationMinDistance();
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.B1062),
+        openPanel(getDict().CommonInputNullableIntegerPanel, {
+            getTitle        : () => getText(TextType.B1062),
             minValue        : 0,
-            maxValue        : GameConfigGcMap.Constants.MaxGridsCount,
+            maxValue        : Constants.MaxGridsCount,
             currentValue    : oldCon == null ? null : oldCon.getValue(),
             callback        : value => {
                 if (value == null) {
@@ -236,9 +236,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     if (oldCon != null) {
                         oldCon.setValue(value);
                     } else {
-                        filter.setConLocationMinDistance(ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
+                        filter.setConLocationMinDistance(ValueAndComparator.fromJson({
                             value       : value,
-                            comparator  : ValueAndComparatorsConstants.ComparatorId.EqualTo,
+                            comparator  : ComparatorId.EqualTo,
                         }));
                     }
                 }
@@ -251,11 +251,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const filter = this._getPositionFilter();
         const con    = filter.getConGridIndexMinDistance();
         if (con != null) {
-            ValueAndComparatorsUtils.tickComparator(con);
+            tickComparator(con);
         } else {
-            filter.setConGridIndexMinDistance(ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
+            filter.setConGridIndexMinDistance(ValueAndComparator.fromJson({
                 value       : 0,
-                comparator  : ValueAndComparatorsConstants.ComparatorId.EqualTo,
+                comparator  : ComparatorId.EqualTo,
             }));
         }
 
@@ -265,10 +265,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const filter = this._getPositionFilter();
         const oldCon = filter.getConGridIndexMinDistance();
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputNullableIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.B1063),
+        openPanel(getDict().CommonInputNullableIntegerPanel, {
+            getTitle        : () => getText(TextType.B1063),
             minValue        : 0,
-            maxValue        : GameConfigGcMap.Constants.MaxGridsCount,
+            maxValue        : Constants.MaxGridsCount,
             currentValue    : oldCon?.getValue(),
             callback        : value => {
                 if (value == null) {
@@ -277,9 +277,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     if (oldCon != null) {
                         oldCon.setValue(value);
                     } else {
-                        filter.setConGridIndexMinDistance(ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
+                        filter.setConGridIndexMinDistance(ValueAndComparator.fromJson({
                             value       : value,
-                            comparator  : ValueAndComparatorsConstants.ComparatorId.EqualTo,
+                            comparator  : ComparatorId.EqualTo,
                         }));
                     }
                 }
@@ -303,17 +303,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1073);
-        this._btnClose.setLangText(LangConstants.TextType.B0204);
-        this._btnClear.setLangText(LangConstants.TextType.B0391);
-        this._btnGridIndex.setLangText(LangConstants.TextType.B0531);
-        this._btnLocation.setLangText(LangConstants.TextType.Location);
-        this._btnConLocationMinDistanceComparator.setLangText(LangConstants.TextType.Comparator);
-        this._btnConLocationMinDistance.setLangText(LangConstants.TextType.B1062);
-        this._btnConGridIndexMinDistanceComparator.setLangText(LangConstants.TextType.Comparator);
-        this._btnConGridIndexMinDistance.setLangText(LangConstants.TextType.B1063);
-        this._btnGridX.setLangText(LangConstants.TextType.B1071);
-        this._btnGridY.setLangText(LangConstants.TextType.B1072);
+        this._labelTitle.setLangText(TextType.B1073);
+        this._btnClose.setLangText(TextType.B0204);
+        this._btnClear.setLangText(TextType.B0391);
+        this._btnGridIndex.setLangText(TextType.B0531);
+        this._btnLocation.setLangText(TextType.Location);
+        this._btnConLocationMinDistanceComparator.setLangText(TextType.Comparator);
+        this._btnConLocationMinDistance.setLangText(TextType.B1062);
+        this._btnConGridIndexMinDistanceComparator.setLangText(TextType.Comparator);
+        this._btnConGridIndexMinDistance.setLangText(TextType.B1063);
+        this._btnGridX.setLangText(TextType.B1071);
+        this._btnGridY.setLangText(TextType.B1072);
         // this._labelGridIndex.text   = Lang.getText(LangTextType.B0531);
 
         this._updateLabelDescAndLabelError();
@@ -326,35 +326,35 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const positionFilter    = this._getPositionFilter();
-        const errorTip          = DeprecatedPositionFilterUtils.getErrorTip(positionFilter, openData.mapSize);
+        const errorTip          = getErrorTip(positionFilter, openData.mapSize);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || LangUtils.getText(LangConstants.TextType.B0493));
-        labelError.setTextColor(errorTip ? GraphicsConstants.ColorValue.Red : GraphicsConstants.ColorValue.Green);
-        this._labelDesc.setText(DeprecatedPositionFilterUtils.getDesc(positionFilter));
+        labelError.setText(errorTip || getText(TextType.B0493));
+        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
+        this._labelDesc.setText(getDesc(positionFilter));
         this._groupDesc.arrangeItems();
     }
     private _updateLabelGridIndex(): void {
         const gridIndexArray        = this._getPositionFilter().getConGridIndexArray();
-        this._labelGridIndex.setText(gridIndexArray?.length ? gridIndexArray.map(v => `(${v.getX()},${v.getY()})`).join(`, `) : LangUtils.getText(LangConstants.TextType.B0776));
+        this._labelGridIndex.setText(gridIndexArray?.length ? gridIndexArray.map(v => `(${v.getX()},${v.getY()})`).join(`, `) : getText(TextType.B0776));
     }
     private _updateLabelLocation(): void {
         const locationIdArray       = this._getPositionFilter().getConLocationIdArray();
-        this._labelLocation.setText(locationIdArray?.length ? locationIdArray.join(`, `) : LangUtils.getText(LangConstants.TextType.B0776));
+        this._labelLocation.setText(locationIdArray?.length ? locationIdArray.join(`, `) : getText(TextType.B0776));
     }
 
     private _updateLabelGridX(): void {
         const gridXArray        = this._getPositionFilter().getConGridXArray();
-        this._labelGridX.setText(gridXArray?.length ? gridXArray.join(`, `) : LangUtils.getText(LangConstants.TextType.B0776));
+        this._labelGridX.setText(gridXArray?.length ? gridXArray.join(`, `) : getText(TextType.B0776));
     }
     private _updateLabelGridY(): void {
         const gridYArray        = this._getPositionFilter().getConGridYArray();
-        this._labelGridY.setText(gridYArray?.length ? gridYArray.join(`, `) : LangUtils.getText(LangConstants.TextType.B0776));
+        this._labelGridY.setText(gridYArray?.length ? gridYArray.join(`, `) : getText(TextType.B0776));
     }
 
     private _updateLabelConLocationMinDistanceComparator(): void {
         const con           = this._getPositionFilter().getConLocationMinDistance();
         const comparator    = con?.getComparator();
-        this._labelConLocationMinDistanceComparator.setText(comparator == null ? `` : (LangUtils.getComparatorName(comparator) ?? LangConstants.UndefinedError));
+        this._labelConLocationMinDistanceComparator.setText(comparator == null ? `` : (getComparatorName(comparator) ?? UndefinedError));
     }
     private _updateInputConLocationMinDistance(): void {
         const con = this._getPositionFilter().getConLocationMinDistance();
@@ -364,14 +364,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _updateLabelConGridIndexMinDistanceComparator(): void {
         const con           = this._getPositionFilter().getConGridIndexMinDistance();
         const comparator    = con?.getComparator();
-        this._labelConGridIndexMinDistanceComparator.setText(comparator == null ? `` : (LangUtils.getComparatorName(comparator) ?? LangConstants.UndefinedError));
+        this._labelConGridIndexMinDistanceComparator.setText(comparator == null ? `` : (getComparatorName(comparator) ?? UndefinedError));
     }
     private _updateInputConGridIndexMinDistance(): void {
         const con = this._getPositionFilter().getConGridIndexMinDistance();
         this._labelConGridIndexMinDistance.setText(`${con == null ? `` : (con.getValue() ?? ``)}`);
     }
 
-    private _getPositionFilter(): AuxiliaryTypesPositionFilter.PositionFilter {
+    private _getPositionFilter(): PositionFilter {
         return this._positionFilter;
     }
     private _setInnerTouchMaskEnabled(isEnabled: boolean): void {

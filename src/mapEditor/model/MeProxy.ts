@@ -1,95 +1,111 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as MapEditorModelMeModel from "./MeModel.ts";
-import * as NetworksManager from "../../networks/Manager.ts";
-import * as NetworksMessageCodes from "../../networks/MessageCodes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMeDeleteSlotS from "../../proto/schema/CommonProto/NetMessage/MsgMeDeleteSlot/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS from "../../proto/schema/CommonProto/NetMessage/MsgMeGetAllMapDataTimestamps/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
-import type * as ProtoSchemaCommonProtoStructureGridMarkData from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import {
+    updateOnFailedMsgMeGetAllMapDataTimestamps,
+    updateOnMsgMeGetAllMapDataTimestamps,
+    updateOnMsgMeGetMapDataArray,
+    updateOnMsgMeGetMapDataTimestamp,
+    updateOnFailedMsgMeGetMapData,
+    updateOnMsgMeGetMapData,
+    updateOnMsgMeDeleteSlot,
+} from "./MeModel.ts";
+import { addListeners, send } from "../../networks/Manager.ts";
+import { MessageCodes } from "../../networks/MessageCodes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeDeleteSlot/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetAllMapDataTimestamps/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapData/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
+import type { GridMarkData as ProtoSchemaCommonProtoStructureGridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
-type GridMarkData       = ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData;
+type GridMarkData       = ProtoSchemaCommonProtoStructureGridMarkData;
 
 export function init(): void {
-    NetworksManager.addListeners([
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMeGetAllMapDataTimestamps,    callback: _onMsgMeGetAllMapDataTimestamps },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMeGetMapDataTimestamp,        callback: _onMsgMeGetMapDataTimestamp },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMeGetMapData,                 callback: _onMsgMeGetMapData },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMeGetMapDataArray,            callback: _onMsgMeGetMapDataArray },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMeSubmitNormalMap,            callback: _onMsgMeSubmitNormalMap },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMeDeleteSlot,                 callback: _onMsgMeDeleteSlot },
+    addListeners([
+        { msgCode: MessageCodes.MsgMeGetAllMapDataTimestamps,    callback: _onMsgMeGetAllMapDataTimestamps },
+        { msgCode: MessageCodes.MsgMeGetMapDataTimestamp,        callback: _onMsgMeGetMapDataTimestamp },
+        { msgCode: MessageCodes.MsgMeGetMapData,                 callback: _onMsgMeGetMapData },
+        { msgCode: MessageCodes.MsgMeGetMapDataArray,            callback: _onMsgMeGetMapDataArray },
+        { msgCode: MessageCodes.MsgMeSubmitNormalMap,            callback: _onMsgMeSubmitNormalMap },
+        { msgCode: MessageCodes.MsgMeDeleteSlot,                 callback: _onMsgMeDeleteSlot },
     ], null);
 }
 
 export function reqMeGetAllMapDataTimestamps(): void {
-    NetworksManager.send({ MsgMeGetAllMapDataTimestamps: { c: {
+    send({ MsgMeGetAllMapDataTimestamps: { c: {
     } }, });
 }
-async function _onMsgMeGetAllMapDataTimestamps(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS.S;
+async function _onMsgMeGetAllMapDataTimestamps(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetAllMapDataTimestampsS;
     if (data.getErrorCode()) {
-        MapEditorModelMeModel.updateOnFailedMsgMeGetAllMapDataTimestamps(data);
+        updateOnFailedMsgMeGetAllMapDataTimestamps(data);
     } else {
-        await MapEditorModelMeModel.updateOnMsgMeGetAllMapDataTimestamps(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMeGetAllMapDataTimestamps, data);
+        await updateOnMsgMeGetAllMapDataTimestamps(data);
+        dispatch(TypeId.MsgMeGetAllMapDataTimestamps, data);
     }
 }
 
 export function reqMeGetMapDataArray(slotIndexArray: number[]): void {
-    NetworksManager.send({ MsgMeGetMapDataArray: { c:{
+    send({ MsgMeGetMapDataArray: { c:{
         slotIndexArray  : slotIndexArray,
     } } });
 }
-async function _onMsgMeGetMapDataArray(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS.S;
+async function _onMsgMeGetMapDataArray(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS;
     if (!data.getErrorCode()) {
-        await MapEditorModelMeModel.updateOnMsgMeGetMapDataArray(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMeGetMapDataArray, data);
+        await updateOnMsgMeGetMapDataArray(data);
+        dispatch(TypeId.MsgMeGetMapDataArray, data);
     }
 }
 
 export function reqMeGetMapDataTimestamp(slotIndex: number): void {
-    NetworksManager.send({ MsgMeGetMapDataTimestamp: { c: {
+    send({ MsgMeGetMapDataTimestamp: { c: {
         slotIndex   : slotIndex,
     } } });
 }
-async function _onMsgMeGetMapDataTimestamp(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS.S;
+async function _onMsgMeGetMapDataTimestamp(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS;
     if (!data.getErrorCode()) {
-        await MapEditorModelMeModel.updateOnMsgMeGetMapDataTimestamp(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMeGetMapDataTimestamp, data);
+        await updateOnMsgMeGetMapDataTimestamp(data);
+        dispatch(TypeId.MsgMeGetMapDataTimestamp, data);
     }
 }
 
 export function reqMeGetMapData(slotIndex: number): void {
-    NetworksManager.send({ MsgMeGetMapData: { c: {
+    send({ MsgMeGetMapData: { c: {
         slotIndex   : slotIndex,
     }, } });
 }
-async function _onMsgMeGetMapData(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS.S;
+async function _onMsgMeGetMapData(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataS;
     if (data.getErrorCode()) {
-        MapEditorModelMeModel.updateOnFailedMsgMeGetMapData(data);
+        updateOnFailedMsgMeGetMapData(data);
     } else {
-        await MapEditorModelMeModel.updateOnMsgMeGetMapData(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMeGetMapData, data);
+        await updateOnMsgMeGetMapData(data);
+        dispatch(TypeId.MsgMeGetMapData, data);
     }
 }
 
 export function reqMeSubmitNormalMap({ slotIndex, mapRawData, needReview, srcNormalMapIdForAddEvent, gridMarkData }: {
     slotIndex                   : number;
-    mapRawData                  : ProtoSchemaCommonProtoMapMapRawData.MapRawData;
+    mapRawData                  : MapRawData;
     needReview                  : boolean;
     srcNormalMapIdForAddEvent   : number | null;
-    gridMarkData                : AuxiliaryTypesAuxiliaryTypes.Undefinable<GridMarkData>;
+    gridMarkData                : Undefinable<GridMarkData>;
 }): void {
-    NetworksManager.send({
+    send({
         MsgMeSubmitNormalMap: { c: {
             slotIndex                   : slotIndex,
             needReview                  : needReview,
@@ -99,24 +115,24 @@ export function reqMeSubmitNormalMap({ slotIndex, mapRawData, needReview, srcNor
         }, }
     });
 }
-function _onMsgMeSubmitNormalMap(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS.S;
+function _onMsgMeSubmitNormalMap(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMeSubmitNormalMap, data);
+        dispatch(TypeId.MsgMeSubmitNormalMap, data);
     }
 }
 
 export function reqMeDeleteSlot(slotIndex: number): void {
-    NetworksManager.send({
+    send({
         MsgMeDeleteSlot: { c: {
             slotIndex,
         } },
     });
 }
-async function _onMsgMeDeleteSlot(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMeDeleteSlotS.S;
+async function _onMsgMeDeleteSlot(e: Event): Promise<void> {
+    const data = e.data as S;
     if (!data.getErrorCode()) {
-        await MapEditorModelMeModel.updateOnMsgMeDeleteSlot(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMeDeleteSlot, data);
+        await updateOnMsgMeDeleteSlot(data);
+        dispatch(TypeId.MsgMeDeleteSlot, data);
     }
 }

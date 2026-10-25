@@ -1,5 +1,5 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
+import type { Undefinable, CustomError } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
 export function createLazyFunc<T>(func: () => T): () => T {
     let hasCalled   = false;
@@ -26,20 +26,20 @@ export function createLazyFunc2<T1, T2>(func: (p: T1) => T2): (p: T1) => T2 {
     };
 }
 
-export function assert(condition: boolean, errorCode: UtilsClientErrorCode.ClientErrorCode): asserts condition {
+export function assert(condition: boolean, errorCode: ClientErrorCode): asserts condition {
     if (!condition) {
         throw newError(`Assertion failed!`, errorCode);
     }
 }
 
-export function getDefined<T>(value: T | undefined, errorCode?: UtilsClientErrorCode.ClientErrorCode): T {
+export function getDefined<T>(value: T | undefined, errorCode?: ClientErrorCode): T {
     if (value === undefined) {
         throw newError(`Undefined value.`, errorCode);
     }
 
     return value;
 }
-export function getExisted<T>(value: AuxiliaryTypesAuxiliaryTypes.Undefinable<T>, errorCode?: UtilsClientErrorCode.ClientErrorCode): T {
+export function getExisted<T>(value: Undefinable<T>, errorCode?: ClientErrorCode): T {
     if (value == null) {
         throw newError(`Empty value`, errorCode);
     }
@@ -47,8 +47,8 @@ export function getExisted<T>(value: AuxiliaryTypesAuxiliaryTypes.Undefinable<T>
     return value;
 }
 
-export function newError(msg: string, errorCode?: UtilsClientErrorCode.ClientErrorCode): AuxiliaryTypesAuxiliaryTypes.CustomError {
-    const error     : AuxiliaryTypesAuxiliaryTypes.CustomError = new Error(msg);
+export function newError(msg: string, errorCode?: ClientErrorCode): CustomError {
+    const error     : CustomError = new Error(msg);
     error.errorCode = errorCode;
     return error;
 }

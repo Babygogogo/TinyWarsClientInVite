@@ -1,16 +1,16 @@
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import type * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as UiComponentsUiContainerBase from "./UiContainerBase.ts";
-import type * as UiInterfacesIUiLabel from "../interfaces/IUiLabel.ts";
-import * as UiTypesUiHorizontalAlign from "../types/UiHorizontalAlign.ts";
-import type * as UiTypesUiSkinAttrs from "../types/UiSkinAttrs.ts";
-import * as UiTypesUiVerticalAlign from "../types/UiVerticalAlign.ts";
-import * as UiUtilsUiSizerHelpers from "../utils/UiSizerHelpers.ts";
-import * as UiUtilsUiSkinHelpers from "../utils/UiSkinHelpers.ts";
-import * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import type { TextType, LanguageType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { UiContainerBase } from "./UiContainerBase.ts";
+import type { IUiLabel } from "../interfaces/IUiLabel.ts";
+import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
+import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
+import { loadSizerOptions, checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
+import { getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
+import { TextField, HorizontalAlign, VerticalAlign } from "../../vendor/egret/Egret.ts";
 
-type UiSkinAttrs            = UiTypesUiSkinAttrs.UiSkinAttrs;
+type UiSkinAttrs            = UiTypesUiSkinAttrs;
 
 // const textField = new egret.TextField();
 // textField.text;
@@ -30,14 +30,14 @@ type UiSkinAttrs            = UiTypesUiSkinAttrs.UiSkinAttrs;
 
 const UseEngineAlignFeature = true;
 
-export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase implements UiInterfacesIUiLabel.IUiLabel {
+export class UiLabel extends UiContainerBase implements IUiLabel {
     private _autoShrinkWidth?       : number;
     private _autoShrinkHeight?      : number;
 
-    private _horizontalAlign        = UiTypesUiHorizontalAlign.UiHorizontalAlign.Left;
-    private _verticalAlign          = UiTypesUiVerticalAlign.UiVerticalAlign.Top;
+    private _horizontalAlign        = UiHorizontalAlign.Left;
+    private _verticalAlign          = UiVerticalAlign.Top;
 
-    private readonly _textField     = new VendorEgretEgret.TextField();
+    private readonly _textField     = new TextField();
     private _text                   = "";
 
     public constructor() {
@@ -50,59 +50,59 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
         this.setIsTouchChildrenEnabled(false);
     }
 
-    private _getTextField(): VendorEgretEgret.TextField {
+    private _getTextField(): TextField {
         return this._textField;
     }
 
     public loadSkinAttrs(oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
-        const width             = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "width");
-        const height            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "height");
-        const x                 = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "x");
-        const y                 = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "y");
-        const alpha             = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "alpha");
-        const visible           = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "visible");
-        const rotation          = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "rotation");
-        const size              = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "size");
-        const bold              = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "bold");
-        const italic            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "italic");
-        const horizontalAlign   = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "horizontalAlign");
-        const verticalAlign     = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "verticalAlign");
-        const stroke            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "stroke");
-        const strokeColor       = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "strokeColor");
-        const text              = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "text");
-        const textColor         = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "textColor");
-        const scaleX            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleX");
-        const scaleY            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleY");
-        const pivotX            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetX");
-        const pivotY            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetY");
-        const lineSpacing       = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "lineSpacing");
-        const autoShrinkWidth   = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "autoShrinkWidth");
+        const width             = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "width");
+        const height            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "height");
+        const x                 = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "x");
+        const y                 = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "y");
+        const alpha             = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "alpha");
+        const visible           = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "visible");
+        const rotation          = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "rotation");
+        const size              = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "size");
+        const bold              = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "bold");
+        const italic            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "italic");
+        const horizontalAlign   = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "horizontalAlign");
+        const verticalAlign     = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "verticalAlign");
+        const stroke            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "stroke");
+        const strokeColor       = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "strokeColor");
+        const text              = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "text");
+        const textColor         = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "textColor");
+        const scaleX            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleX");
+        const scaleY            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleY");
+        const pivotX            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetX");
+        const pivotY            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetY");
+        const lineSpacing       = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "lineSpacing");
+        const autoShrinkWidth   = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "autoShrinkWidth");
         // const wordWrap          : number | undefined = attrs?.wordWrap;
 
-        (x.needChange)                  && (this.setX(HelpersMisc.getExisted(x.value)));
-        (y.needChange)                  && (this.setY(HelpersMisc.getExisted(y.value)));
-        (scaleX.needChange)             && (this.setScaleX(HelpersMisc.getExisted(scaleX.value)));
-        (scaleY.needChange)             && (this.setScaleY(HelpersMisc.getExisted(scaleY.value)));
-        (pivotX.needChange)             && (this.setAnchorOffsetX(HelpersMisc.getExisted(pivotX.value)));
-        (pivotY.needChange)             && (this.setAnchorOffsetY(HelpersMisc.getExisted(pivotY.value)));
-        (alpha.needChange)              && (this.setAlpha(HelpersMisc.getExisted(alpha.value)));
+        (x.needChange)                  && (this.setX(getExisted(x.value)));
+        (y.needChange)                  && (this.setY(getExisted(y.value)));
+        (scaleX.needChange)             && (this.setScaleX(getExisted(scaleX.value)));
+        (scaleY.needChange)             && (this.setScaleY(getExisted(scaleY.value)));
+        (pivotX.needChange)             && (this.setAnchorOffsetX(getExisted(pivotX.value)));
+        (pivotY.needChange)             && (this.setAnchorOffsetY(getExisted(pivotY.value)));
+        (alpha.needChange)              && (this.setAlpha(getExisted(alpha.value)));
         (visible.needChange)            && (this.setIsVisible(!!visible.value));
-        (rotation.needChange)           && (this.setRotationInDegree(HelpersMisc.getExisted(rotation.value)));
-        (horizontalAlign.needChange)    && (this.setHorizontalAlign(horizontalAlign.value ?? UiTypesUiHorizontalAlign.UiHorizontalAlign.Left));
-        (verticalAlign.needChange)      && (this.setVerticalAlign(verticalAlign.value ?? UiTypesUiVerticalAlign.UiVerticalAlign.Top));
+        (rotation.needChange)           && (this.setRotationInDegree(getExisted(rotation.value)));
+        (horizontalAlign.needChange)    && (this.setHorizontalAlign(horizontalAlign.value ?? UiHorizontalAlign.Left));
+        (verticalAlign.needChange)      && (this.setVerticalAlign(verticalAlign.value ?? UiVerticalAlign.Top));
         (width.needChange)              && (this.setUnscaledManualWidth(width.value));
         (height.needChange)             && (this.setUnscaledManualHeight(height.value));
         (autoShrinkWidth.needChange)    && (this.setAutoShrinkWidth(autoShrinkWidth.value));
         (text.needChange)               && (this.setText(text.value ?? ``));
         (italic.needChange)             && (this.setIsItalic(!!italic.value));
         (bold.needChange)               && (this.setIsBold(!!bold.value));
-        (textColor.needChange)          && (this.setTextColor(parseInt(HelpersMisc.getExisted(textColor.value).replaceAll("#", "0x"))));
-        (size.needChange)               && (this.setFontSize(HelpersMisc.getExisted(size.value)));
-        (lineSpacing.needChange)        && (this.setLineSpacing(HelpersMisc.getExisted(lineSpacing.value)));
-        (stroke.needChange)             && (this.setStrokeWidth(HelpersMisc.getExisted(stroke.value)));
-        (strokeColor.needChange)        && (this.setStrokeColor(parseInt(HelpersMisc.getExisted(strokeColor.value).replaceAll("#", "0x"))));
+        (textColor.needChange)          && (this.setTextColor(parseInt(getExisted(textColor.value).replaceAll("#", "0x"))));
+        (size.needChange)               && (this.setFontSize(getExisted(size.value)));
+        (lineSpacing.needChange)        && (this.setLineSpacing(getExisted(lineSpacing.value)));
+        (stroke.needChange)             && (this.setStrokeWidth(getExisted(stroke.value)));
+        (strokeColor.needChange)        && (this.setStrokeColor(parseInt(getExisted(strokeColor.value).replaceAll("#", "0x"))));
 
-        UiUtilsUiSizerHelpers.loadSizerOptions(this, newSkinAttrs);
+        loadSizerOptions(this, newSkinAttrs);
     }
 
     public override applySizeFromSizerInfo(width: number | undefined, height: number | undefined): boolean {
@@ -125,7 +125,7 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
         this._updateInnerWidth();
         this._handleShrink();
         this._handleAlign();
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+        checkAndAddAutoSizerInfo(this, true);
 
         return true;
     }
@@ -137,7 +137,7 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
         this._updateInnerHeight();
         this._handleShrink();
         this._handleAlign();
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+        checkAndAddAutoSizerInfo(this, true);
 
         return true;
     }
@@ -162,11 +162,11 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
             this._updateInnerHeight();
             this._handleShrink();
             this._handleAlign();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
     }
-    public setLangText(langTextType: LangConstants.TextType, languageType?: LangConstants.LanguageType): void {
-        this.setText(LangUtils.getText(langTextType, languageType));
+    public setLangText(langTextType: TextType, languageType?: LanguageType): void {
+        this.setText(getText(langTextType, languageType));
     }
     public getFontFamily(): string {
         return this._getTextField().fontFamily;
@@ -179,7 +179,7 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
             this._updateInnerHeight();
             this._handleShrink();
             this._handleAlign();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
     }
     public getFontSize(): number {
@@ -193,7 +193,7 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
             this._updateInnerHeight();
             this._handleShrink();
             this._handleAlign();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
     }
     public getTextColor(): number {
@@ -213,7 +213,7 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
             this._updateInnerHeight();
             this._handleShrink();
             this._handleAlign();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
     }
     public getIsBold(): boolean {
@@ -227,7 +227,7 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
             this._updateInnerHeight();
             this._handleShrink();
             this._handleAlign();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
     }
     public getLineSpacing(): number {
@@ -240,7 +240,7 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
             this._updateInnerHeight();
             this._handleShrink();
             this._handleAlign();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
     }
     public getStrokeWidth(): number {
@@ -262,7 +262,7 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
     }
     public setAutoShrinkWidth(width: number | undefined): void {
         if ((width != null) && (width < 0)) {
-            throw HelpersMisc.newError(`Invalid width: ${width}`);
+            throw newError(`Invalid width: ${width}`);
         }
 
         if (this.getAutoShrinkWidth() != width) {
@@ -271,7 +271,7 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
             this._updateInnerWidth();
             this._handleShrink();
             this._handleAlign();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
     }
     public getAutoShrinkHeight(): number | undefined {
@@ -279,7 +279,7 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
     }
     public setAutoShrinkHeight(height: number | undefined): void {
         if ((height != null) && (height < 0)) {
-            throw HelpersMisc.newError(`Invalid height: ${height}`);
+            throw newError(`Invalid height: ${height}`);
         }
 
         if (this.getAutoShrinkHeight() != height) {
@@ -288,45 +288,45 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
             this._updateInnerHeight();
             this._handleShrink();
             this._handleAlign();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
     }
-    public getHorizontalAlign(): UiTypesUiHorizontalAlign.UiHorizontalAlign {
+    public getHorizontalAlign(): UiHorizontalAlign {
         return this._horizontalAlign;
     }
-    public setHorizontalAlign(align: UiTypesUiHorizontalAlign.UiHorizontalAlign): void {
+    public setHorizontalAlign(align: UiHorizontalAlign): void {
         if (this.getHorizontalAlign() !== align) {
             this._horizontalAlign = align;
 
             if (UseEngineAlignFeature) {
                 const textField = this._getTextField();
-                if (align === UiTypesUiHorizontalAlign.UiHorizontalAlign.Left) {
-                    textField.textAlign = VendorEgretEgret.HorizontalAlign.LEFT;
-                } else if (align === UiTypesUiHorizontalAlign.UiHorizontalAlign.Center) {
-                    textField.textAlign = VendorEgretEgret.HorizontalAlign.CENTER;
+                if (align === UiHorizontalAlign.Left) {
+                    textField.textAlign = HorizontalAlign.LEFT;
+                } else if (align === UiHorizontalAlign.Center) {
+                    textField.textAlign = HorizontalAlign.CENTER;
                 } else {
-                    textField.textAlign = VendorEgretEgret.HorizontalAlign.RIGHT;
+                    textField.textAlign = HorizontalAlign.RIGHT;
                 }
             }
 
             this._handleAlign();
         }
     }
-    public getVerticalAlign(): UiTypesUiVerticalAlign.UiVerticalAlign {
+    public getVerticalAlign(): UiVerticalAlign {
         return this._verticalAlign;
     }
-    public setVerticalAlign(align: UiTypesUiVerticalAlign.UiVerticalAlign): void {
+    public setVerticalAlign(align: UiVerticalAlign): void {
         if (this.getVerticalAlign() !== align) {
             this._verticalAlign = align;
 
             if (UseEngineAlignFeature) {
                 const textField = this._getTextField();
-                if (align === UiTypesUiVerticalAlign.UiVerticalAlign.Top) {
-                    textField.verticalAlign = VendorEgretEgret.VerticalAlign.TOP;
-                } else if (align === UiTypesUiVerticalAlign.UiVerticalAlign.Middle) {
-                    textField.verticalAlign = VendorEgretEgret.VerticalAlign.MIDDLE;
+                if (align === UiVerticalAlign.Top) {
+                    textField.verticalAlign = VerticalAlign.TOP;
+                } else if (align === UiVerticalAlign.Middle) {
+                    textField.verticalAlign = VerticalAlign.MIDDLE;
                 } else {
-                    textField.verticalAlign = VendorEgretEgret.VerticalAlign.BOTTOM;
+                    textField.verticalAlign = VerticalAlign.BOTTOM;
                 }
             }
 
@@ -385,13 +385,13 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
         {
             const unscaledManualWidth   = this.getUnscaledManualWidth();
             const align                 = this.getHorizontalAlign();
-            if ((unscaledManualWidth == null) || (align === UiTypesUiHorizontalAlign.UiHorizontalAlign.Left)) {
+            if ((unscaledManualWidth == null) || (align === UiHorizontalAlign.Left)) {
                 textField.x = 0;
             } else {
                 const width = UseEngineAlignFeature
                     ? textField.width * textField.scaleX
                     : textField.textWidth * textField.scaleX;
-                textField.x = align === UiTypesUiHorizontalAlign.UiHorizontalAlign.Center
+                textField.x = align === UiHorizontalAlign.Center
                     ? (unscaledManualWidth - width) / 2
                     : (unscaledManualWidth - width);
             }
@@ -400,13 +400,13 @@ export class UiLabel extends UiComponentsUiContainerBase.UiContainerBase impleme
         {
             const unscaledManualHeight  = this.getUnscaledManualHeight();
             const align                 = this.getVerticalAlign();
-            if ((unscaledManualHeight == null) || (align === UiTypesUiVerticalAlign.UiVerticalAlign.Top)) {
+            if ((unscaledManualHeight == null) || (align === UiVerticalAlign.Top)) {
                 textField.y = 0;
             } else {
                 const height = UseEngineAlignFeature
                     ? textField.height * textField.scaleY
                     : textField.textHeight * textField.scaleY;
-                textField.y     = align === UiTypesUiVerticalAlign.UiVerticalAlign.Middle
+                textField.y     = align === UiVerticalAlign.Middle
                     ? (unscaledManualHeight - height) / 2
                     : (unscaledManualHeight - height);
             }

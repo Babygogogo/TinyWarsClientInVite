@@ -1,19 +1,19 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import * as ReplayWarModelRwWarBase from "./RwWarBase.ts";
-import * as TeamsConstants from "../../teams/Constants.ts";
-import * as VisibilitiesUtils from "../../visibilities/Utils.ts";
+import type { ReplayCheckpointData } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import { deleteElementFromList } from "../../helpers/Collection.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import { RwWarBase } from "./RwWarBase.ts";
+import { TeamIndex } from "../../teams/Constants.ts";
+import { getAllUnitsOnMapVisibleToTeams, getAllTilesVisibleToTeam } from "../../visibilities/Utils.ts";
 
-type GcData             = GameConfigGcData.GcData;
+type GcData             = GameConfigGcData;
 
-export class RwWar extends ReplayWarModelRwWarBase.RwWarBase {
+export class RwWar extends RwWarBase {
     private _replayId?              : number;
     private _isShowAllUnits         = true;
 
-    public init(warData: ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, gameConfig: GcData): void {
+    public init(warData: SerialWar, gameConfig: GcData): void {
         super.init(warData, gameConfig);
 
         this._initView();
@@ -43,7 +43,7 @@ export class RwWar extends ReplayWarModelRwWarBase.RwWarBase {
                     unit.setViewVisible(true);
                 }
             } else {
-                const visibleUnitsOnMap = VisibilitiesUtils.getAllUnitsOnMapVisibleToTeams(this, new Set([visionTeamIndex]));
+                const visibleUnitsOnMap = getAllUnitsOnMapVisibleToTeams(this, new Set([visionTeamIndex]));
                 for (const unit of allUnitsOnMap) {
                     unit.setViewVisible(visibleUnitsOnMap.has(unit));
                 }
@@ -52,7 +52,7 @@ export class RwWar extends ReplayWarModelRwWarBase.RwWarBase {
 
         const tileMap = this.getTileMap();
         if (!this.getIsBatchExecuteAction()) {
-            const visibleTiles = VisibilitiesUtils.getAllTilesVisibleToTeam(this, visionTeamIndex);
+            const visibleTiles = getAllTilesVisibleToTeam(this, visionTeamIndex);
             for (const tile of tileMap.getAllTiles()) {
                 tile.setHasFog(!visibleTiles.has(tile));
 
@@ -67,18 +67,18 @@ export class RwWar extends ReplayWarModelRwWarBase.RwWarBase {
         }
     }
 
-    public serializeForCheckpoint(): AuxiliaryTypesAuxiliaryTypes.ReplayCheckpointData {
+    public serializeForCheckpoint(): ReplayCheckpointData {
         const randomNumberManager = this.getRandomNumberManager();
         return {
             nextOperationId    : this.getNextOperationId(),
-            warData         : ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.fromJson({
+            warData         : SerialWar.fromJson({
                 settingsForCommon           : null,
                 settingsForMcw              : null,
                 settingsForScw              : null,
 
                 warId                       : null,
                 isEnded                     : this.getIsEnded(),
-                seedRandomInitialState      : HelpersMisc.getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
+                seedRandomInitialState      : getExisted(randomNumberManager.getSeedRandomInitialState()).toJson(),
                 seedRandomCurrentState      : randomNumberManager.getSeedRandomCurrentStateJson(),
                 remainingVotesForDraw       : this.getDrawVoteManager().getRemainingVotes(),
                 drawVoteManager             : this.getDrawVoteManager().getDrawVoteData()?.toJson(),
@@ -99,7 +99,7 @@ export class RwWar extends ReplayWarModelRwWarBase.RwWarBase {
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getReplayId(): number {
-        return HelpersMisc.getExisted(this._replayId);
+        return getExisted(this._replayId);
     }
     public setReplayId(replayId: number): void {
         this._replayId = replayId;
@@ -107,7 +107,7 @@ export class RwWar extends ReplayWarModelRwWarBase.RwWarBase {
 
     public tickVisionTeamIndex(): number | null {
         const teamIndexArray = [...new Set(this.getPlayerManager().getAllPlayers().map(v => v.getTeamIndex()))].sort((v1, v2) => v1 - v2);
-        HelpersCollection.deleteElementFromList(teamIndexArray, TeamsConstants.TeamIndex.Neutral);
+        deleteElementFromList(teamIndexArray, TeamIndex.Neutral);
 
         const currentVisionTeamIndex    = this.getVisionTeamIndex();
         const newVisionTeamIndex        = currentVisionTeamIndex == null

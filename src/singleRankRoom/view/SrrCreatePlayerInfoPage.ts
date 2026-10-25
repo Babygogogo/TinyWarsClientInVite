@@ -1,58 +1,58 @@
-import * as CosConstants from "../../cos/Constants.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as NotificationsDataTypes from "../../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayerRulesUtils from "../../playerRules/Utils.ts";
-import type * as SingleRankRoomModelSrrWarCreator from "../model/SrrWarCreator.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiOpenableComponent from "../../ui/components/UiOpenableComponent.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiOpenableComponent from "../../ui/interfaces/IUiOpenableComponent.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import * as UiTypesUiHorizontalAlign from "../../ui/types/UiHorizontalAlign.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UiTypesUiVerticalAlign from "../../ui/types/UiVerticalAlign.ts";
-import * as UiUtilsUiSkinHelpers from "../../ui/utils/UiSkinHelpers.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as WarRulesUtilsCommonData from "../../warRules/utils/CommonData.ts";
+import { CoId } from "../../cos/Constants.ts";
+import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getPlayerForceName, getPlayerTeamName, getText } from "../../lang/Utils.ts";
+import type { WarCreator_PlayerInfoChanged } from "../../notifications/DataTypes.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getFinalSrwHumanCoIdSet } from "../../playerRules/Utils.ts";
+import type { SrrWarCreator } from "../model/SrrWarCreator.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiOpenableComponent } from "../../ui/interfaces/IUiOpenableComponent.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
+import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
+import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
 
 export type OpenData = {
-    warCreator  : SingleRankRoomModelSrrWarCreator.SrrWarCreator;
+    warCreator  : SrrWarCreator;
 } | null;
 export class Page
-    extends     UiComponentsUiOpenableComponent.UiOpenableComponent<OpenData>
-    implements  UiInterfacesIUiOpenableComponent.IUiOpenableComponent<OpenData>
+    extends     UiOpenableComponent<OpenData>
+    implements  IUiOpenableComponent<OpenData>
 {
-    private readonly _groupInfo!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listPlayer!   : UiInterfacesIUiScrollList.IUiScrollList<DataForPlayerRenderer>;
+    private readonly _groupInfo!    : IUiContainer;
+    private readonly _listPlayer!   : IUiScrollList<DataForPlayerRenderer>;
 
     public constructor() {
         super();
 
-        UiUtilsUiSkinHelpers.loadSkinByPath(this, "singleRankRoom/SrrCreatePlayerInfoPage.exml");
+        loadSkinByPath(this, "singleRankRoom/SrrCreatePlayerInfoPage.exml");
     }
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarCreator_TemplateWarRuleIdChanged,  callback: this._onNotifySrrCreateModelTemplateWarRuleIdChanged },
+            { type: TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarCreator_TemplateWarRuleIdChanged,  callback: this._onNotifySrrCreateModelTemplateWarRuleIdChanged },
         ]);
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
+            verticalAlign   : { align       : UiVerticalAlign.Middle },
+            horizontalAlign : { align       : UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -91,7 +91,7 @@ export class Page
         const mapRawData    = await openData.warCreator.getMapRawData();
         const listPlayer    = this._listPlayer;
         if (mapRawData) {
-            await listPlayer.bindData(this._createDataForListPlayer(HelpersMisc.getExisted(mapRawData.getPlayersCountUnneutral())));
+            await listPlayer.bindData(this._createDataForListPlayer(getExisted(mapRawData.getPlayersCountUnneutral())));
         } else {
             await listPlayer.removeAllItems();
         }
@@ -116,23 +116,23 @@ export class Page
     }
 }
 
-interface DataForPlayerRenderer extends UiTypesUiListItemData.UiListItemData {
-    warCreator      : SingleRankRoomModelSrrWarCreator.SrrWarCreator;
+interface DataForPlayerRenderer extends UiListItemData {
+    warCreator      : SrrWarCreator;
     playerIndex     : number;
 }
-class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForPlayerRenderer> {
-    private readonly _groupCo!              : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgSkin!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgCoInfo!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgCoHead!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelCo!              : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPlayerType!      : UiInterfacesIUiLabel.IUiLabel;
+class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
+    private readonly _groupCo!              : IUiContainer;
+    private readonly _imgSkin!              : IUiImage;
+    private readonly _imgCoInfo!            : IUiImage;
+    private readonly _imgCoHead!            : IUiImage;
+    private readonly _labelCo!              : IUiLabel;
+    private readonly _labelPlayerType!      : IUiLabel;
 
-    private readonly _labelPlayerIndex!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTeamIndex!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelPlayerIndex!     : IUiLabel;
+    private readonly _labelTeamIndex!       : IUiLabel;
 
-    private readonly _btnChangeCo!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnChangeSkinId!      : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnChangeCo!          : IUiButton;
+    private readonly _btnChangeSkinId!      : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -141,8 +141,8 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             { ui: this._btnChangeSkinId,        callback: this._onTouchedBtnChangeSkinId },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarCreator_PlayerInfoChanged,     callback: this._onNotifySrrCreatePlayerInfoChanged },
+            { type: TypeId.LanguageChanged,                callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarCreator_PlayerInfoChanged,     callback: this._onNotifySrrCreatePlayerInfoChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -156,8 +156,8 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        const warRuleCommonData = HelpersMisc.getExisted(openData.warCreator.getInstanceWarRule().getWarRuleCommonData());
-        const playerRule        = WarRulesUtilsCommonData.getPlayerRule(warRuleCommonData, openData.playerIndex);
+        const warRuleCommonData = getExisted(openData.warCreator.getInstanceWarRule().getWarRuleCommonData());
+        const playerRule        = getPlayerRule(warRuleCommonData, openData.playerIndex);
         this._btnChangeCo.setIsVisible(playerRule.getSrwAiCoId() == null);
     }
 
@@ -167,12 +167,12 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const playerData    = openData.warCreator.getPlayerInfo(openData.playerIndex);
         const coId          = playerData ? playerData.getCoId() ?? 0 : null;
-        if ((coId != null) && (coId !== CosConstants.CoId.Empty)) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonCoInfoPanel, {
+        if ((coId != null) && (coId !== CoId.Empty)) {
+            openPanel(getDict().CommonCoInfoPanel, {
                 gameConfig  : openData.warCreator.getGcData(),
                 coId        : coId,
             });
@@ -196,15 +196,15 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
 
         const warCreator        = openData.warCreator;
         const playerIndex       = openData.playerIndex;
-        const warRuleCommonData = HelpersMisc.getExisted(warCreator.getInstanceWarRule().getWarRuleCommonData());
+        const warRuleCommonData = getExisted(warCreator.getInstanceWarRule().getWarRuleCommonData());
         const gcData            = warCreator.getGcData();
         const playerInfo        = warCreator.getPlayerInfo(playerIndex);
         const currentCoId       = playerInfo.getCoId();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleCoIdPanel, {
+        openPanel(getDict().CommonChooseSingleCoIdPanel, {
             gameConfig          : gcData,
             currentCoId         : currentCoId,
-            availableCoIdArray  : [...PlayerRulesUtils.getFinalSrwHumanCoIdSet({
-                playerRule      : WarRulesUtilsCommonData.getPlayerRule(warRuleCommonData, playerIndex),
+            availableCoIdArray  : [...getFinalSrwHumanCoIdSet({
+                playerRule      : getPlayerRule(warRuleCommonData, playerIndex),
                 gameConfig      : gcData,
                 hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
                 includeRandom   : false,
@@ -213,7 +213,7 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             callbackOnConfirm   : newCoId => {
                 if (newCoId != currentCoId) {
                     playerInfo.setCoId(newCoId);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarCreator_PlayerInfoChanged, { playerIndex } as NotificationsDataTypes.WarCreator_PlayerInfoChanged);
+                    dispatch(TypeId.WarCreator_PlayerInfoChanged, { playerIndex } as WarCreator_PlayerInfoChanged);
                 }
             },
         });
@@ -223,16 +223,16 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
         this._updateComponentsForLanguage();
     }
 
-    private _onNotifySrrCreatePlayerInfoChanged(e: VendorEgretEgret.Event): void {
-        const eventData = e.data as NotificationsDataTypes.WarCreator_PlayerInfoChanged;
+    private _onNotifySrrCreatePlayerInfoChanged(e: Event): void {
+        const eventData = e.data as WarCreator_PlayerInfoChanged;
         if (eventData.playerIndex === this.getOpenData()?.playerIndex) {
             this._updateComponentsForSettings();
         }
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnChangeCo.setLangText(LangConstants.TextType.B0230);
-        this._btnChangeSkinId.setLangText(LangConstants.TextType.B0609);
+        this._btnChangeCo.setLangText(TextType.B0230);
+        this._btnChangeSkinId.setLangText(TextType.B0609);
     }
 
     private async _updateComponentsForSettings(): Promise<void> {
@@ -244,22 +244,22 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
         const warCreator        = openData.warCreator;
         const playerIndex       = openData.playerIndex;
         const settingsForCommon = warCreator.getSettingsForCommon();
-        const warRuleCommonData = HelpersMisc.getExisted(warCreator.getInstanceWarRule().getWarRuleCommonData());
-        this._labelPlayerIndex.setText(LangUtils.getPlayerForceName(playerIndex));
-        this._labelTeamIndex.setText(LangUtils.getPlayerTeamName(WarRulesUtilsCommonData.getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) || LangConstants.UndefinedError);
+        const warRuleCommonData = getExisted(warCreator.getInstanceWarRule().getWarRuleCommonData());
+        this._labelPlayerIndex.setText(getPlayerForceName(playerIndex));
+        this._labelTeamIndex.setText(getPlayerTeamName(getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) || UndefinedError);
 
         const playerData = warCreator.getPlayerInfo(playerIndex);
-        this._imgSkin.loadSource(HelpersImageSource.getCoHeadFrame(HelpersMisc.getExisted(playerData.getUnitAndTileSkinId())));
+        this._imgSkin.loadSource(getCoHeadFrame(getExisted(playerData.getUnitAndTileSkinId())));
         this._labelPlayerType.setText(playerData.getUserId() == null
-            ? LangUtils.getText(LangConstants.TextType.B0607)
-            : LangUtils.getText(LangConstants.TextType.B0031)
+            ? getText(TextType.B0607)
+            : getText(TextType.B0031)
         );
 
         const coId                  = playerData.getCoId() ?? 0;
-        const gameConfig            = await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(settingsForCommon.getConfigVersion()));
+        const gameConfig            = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));
         const coCfg                 = gameConfig.getCoBasicCfg(coId);
         this._labelCo.setText(coCfg ? coCfg.getName() : `??`);
-        this._imgCoHead.loadSource(HelpersImageSource.getCoHead(gameConfig, coId) ?? LangConstants.UndefinedError);
-        this._imgCoInfo.setIsVisible((coId !== CosConstants.CoId.Empty) && (!!coCfg));
+        this._imgCoHead.loadSource(getCoHead(gameConfig, coId) ?? UndefinedError);
+        this._imgCoInfo.setIsVisible((coId !== CoId.Empty) && (!!coCfg));
     }
 }

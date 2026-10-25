@@ -1,54 +1,54 @@
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameModesConstants from "../../gameModes/Constants.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayerRulesConstants from "../../playerRules/Constants.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoWarRuleInstanceWarRule from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiOpenableComponent from "../../ui/components/UiOpenableComponent.ts";
-import * as UiComponentsUiPlayerRuleRenderer from "../../ui/components/UiPlayerRuleRenderer.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiList from "../../ui/interfaces/IUiList.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import * as UiTypesUiHorizontalAlign from "../../ui/types/UiHorizontalAlign.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UiTypesUiVerticalAlign from "../../ui/types/UiVerticalAlign.ts";
-import * as UiUtilsUiSkinHelpers from "../../ui/utils/UiSkinHelpers.ts";
+import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import { ModeId } from "../../gameModes/Constants.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getTextForYesOrNo, getPlayerRuleHelpText, getPlayerRuleName } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { RuleTypeId } from "../../playerRules/Constants.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
+import { type DataForUiPlayerRuleRenderer, UiPlayerRuleRenderer } from "../../ui/components/UiPlayerRuleRenderer.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiList } from "../../ui/interfaces/IUiList.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
+import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 
-type GcData                 = GameConfigGcData.GcData;
+type GcData                 = GameConfigGcData;
 
 export type OpenData = {
     canModify       : boolean;
-    instanceWarRule : ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule;
-    gameModeId      : GameModesConstants.ModeId;
+    instanceWarRule : InstanceWarRule;
+    gameModeId      : ModeId;
     gcData          : GcData;
 } | null;
-export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<OpenData> {
-    private readonly _scroller!     : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiContainer.IUiContainer>;
-    private readonly _btnBatch!     : UiInterfacesIUiButton.IUiButton;
-    private readonly _listPlayer!   : UiInterfacesIUiScrollList.IUiScrollList<DataForPlayerRenderer>;
-    private readonly _listTitle!    : UiInterfacesIUiScrollList.IUiScrollList<DataForTitleRenderer>;
-    private readonly _listInfo!     : UiInterfacesIUiList.IUiList<UiComponentsUiPlayerRuleRenderer.DataForUiPlayerRuleRenderer>;
+export class Page extends UiOpenableComponent<OpenData> {
+    private readonly _scroller!     : IUiScroller<IUiContainer>;
+    private readonly _btnBatch!     : IUiButton;
+    private readonly _listPlayer!   : IUiScrollList<DataForPlayerRenderer>;
+    private readonly _listTitle!    : IUiScrollList<DataForTitleRenderer>;
+    private readonly _listInfo!     : IUiList<DataForUiPlayerRuleRenderer>;
 
     private _isBatch                = false;
 
     public constructor() {
         super();
 
-        UiUtilsUiSkinHelpers.loadSkinByPath(this, "common/CommonWarAdvancedSettingsPage.exml");
+        loadSkinByPath(this, "common/CommonWarAdvancedSettingsPage.exml");
     }
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnBatch,   callback: this._onTouchedBtnBatch },
@@ -56,12 +56,12 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
 
         this._listTitle.setItemRendererClass(RuleTitleRenderer);
         this._listPlayer.setItemRendererClass(PlayerRenderer);
-        this._listInfo.setItemRendererClass(UiComponentsUiPlayerRuleRenderer.UiPlayerRuleRenderer);
+        this._listInfo.setItemRendererClass(UiPlayerRuleRenderer);
         this._btnBatch.setIsVisible(false);
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
+            verticalAlign   : { align       : UiVerticalAlign.Middle },
+            horizontalAlign : { align       : UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -91,8 +91,8 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
         this._updateComponentsForLanguage();
     }
     private _onTouchedBtnBatch(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent          : () => LangUtils.getText(LangConstants.TextType.A0940),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent          : () => getText(TextType.A0940),
             callback            : () => {
                 this._setIsBatch(true);
                 this._updateBtnBatch();
@@ -130,9 +130,9 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
             return;
         }
 
-        const playerRuleArray   = HelpersMisc.getExisted(openData.instanceWarRule?.getWarRuleCommonData()?.getPlayerRuleList());
+        const playerRuleArray   = getExisted(openData.instanceWarRule?.getWarRuleCommonData()?.getPlayerRuleList());
         const dataArray         : DataForPlayerRenderer[] = [];
-        for (let playerIndex = PlayersConstants.PlayerIndex.First; playerIndex <= playerRuleArray.length; ++playerIndex) {
+        for (let playerIndex = PlayerIndex.First; playerIndex <= playerRuleArray.length; ++playerIndex) {
             dataArray.push({
                 playerIndex: playerIndex,
             });
@@ -140,13 +140,13 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
         await this._listPlayer.bindData(dataArray);
     }
 
-    private async _updateListTitle(playerRuleTypeArray: PlayerRulesConstants.RuleTypeId[]): Promise<void> {
+    private async _updateListTitle(playerRuleTypeArray: RuleTypeId[]): Promise<void> {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
         }
 
-        const playersCountUnneutral = HelpersMisc.getExisted(openData.instanceWarRule?.getWarRuleCommonData()?.getPlayerRuleList()).length;
+        const playersCountUnneutral = getExisted(openData.instanceWarRule?.getWarRuleCommonData()?.getPlayerRuleList()).length;
         const rendererWidth         = 150 + playersCountUnneutral * 78;
         const dataArray             : DataForTitleRenderer[] = [];
         for (const playerRuleType of playerRuleTypeArray) {
@@ -158,7 +158,7 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
         await this._listTitle.bindData(dataArray);
     }
 
-    private async _updateListInfo(playerRuleTypeArray: PlayerRulesConstants.RuleTypeId[]): Promise<void> {
+    private async _updateListInfo(playerRuleTypeArray: RuleTypeId[]): Promise<void> {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
@@ -168,13 +168,13 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
         const gcData                = openData.gcData;
         const instanceWarRule       = openData.instanceWarRule;
         const gameModeId            = openData.gameModeId;
-        const warRuleCommonData     = HelpersMisc.getExisted(instanceWarRule.getWarRuleCommonData());
+        const warRuleCommonData     = getExisted(instanceWarRule.getWarRuleCommonData());
         const playerRuleArray       = warRuleCommonData.getPlayerRuleList();
         const playersCountUnneutral = playerRuleArray.length;
         const getIsBatch            = () => this.getIsBatch();
-        const dataArray             : UiComponentsUiPlayerRuleRenderer.DataForUiPlayerRuleRenderer[] = [];
+        const dataArray             : DataForUiPlayerRuleRenderer[] = [];
         for (const ruleType of playerRuleTypeArray) {
-            for (let playerIndex = PlayersConstants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
+            for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
                 dataArray.push({
                     canModify           : canModify,
                     gcData              : gcData,
@@ -182,7 +182,7 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
                     instanceWarRule     : instanceWarRule,
                     warRuleCommonData   : warRuleCommonData,
                     playerRuleType      : ruleType,
-                    playerRule          : HelpersMisc.getExisted(playerRuleArray.find(v => v.getPlayerIndex() === playerIndex)),
+                    playerRule          : getExisted(playerRuleArray.find(v => v.getPlayerIndex() === playerIndex)),
                     getIsBatch          : getIsBatch,
                 });
             }
@@ -199,7 +199,7 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
             btn.setIsVisible(false);
         } else {
             btn.setIsVisible(true);
-            btn.setText(`${LangUtils.getText(LangConstants.TextType.B1373)}: ${LangUtils.getTextForYesOrNo(this.getIsBatch())}`);
+            btn.setText(`${getText(TextType.B1373)}: ${getTextForYesOrNo(this.getIsBatch())}`);
         }
     }
 }
@@ -207,20 +207,20 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // RuleTitleRenderer
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-interface DataForTitleRenderer extends UiTypesUiListItemData.UiListItemData {
-    playerRuleType  : PlayerRulesConstants.RuleTypeId;
+interface DataForTitleRenderer extends UiListItemData {
+    playerRuleType  : RuleTypeId;
     rendererWidth   : number;
 }
-class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForTitleRenderer> {
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnHelp!      : UiInterfacesIUiButton.IUiButton;
+class RuleTitleRenderer extends UiListItemRenderer<DataForTitleRenderer> {
+    private readonly _labelName!    : IUiLabel;
+    private readonly _btnHelp!      : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._btnHelp,    callback: this._onTouchedBtnHelp },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
     }
 
@@ -230,9 +230,9 @@ class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
 
     private _onTouchedBtnHelp(): void {
         const playerRuleType    = this.getOpenData()?.playerRuleType;
-        const text              = playerRuleType == null ? null : LangUtils.getPlayerRuleHelpText(playerRuleType);
+        const text              = playerRuleType == null ? null : getPlayerRuleHelpText(playerRuleType);
         if (text) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
+            openPanel(getDict().CommonHelpPanel, {
                 getContent : () => text,
             });
         }
@@ -251,19 +251,19 @@ class RuleTitleRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
         this.setUnscaledManualWidth(openData.rendererWidth);
 
         const playerRuleType = openData.playerRuleType;
-        this._labelName.setText(LangUtils.getPlayerRuleName(playerRuleType) ?? LangConstants.UndefinedError);
-        this._btnHelp.setIsVisible(!!LangUtils.getPlayerRuleHelpText(playerRuleType));
+        this._labelName.setText(getPlayerRuleName(playerRuleType) ?? UndefinedError);
+        this._btnHelp.setIsVisible(!!getPlayerRuleHelpText(playerRuleType));
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // PlayerRenderer
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-interface DataForPlayerRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForPlayerRenderer extends UiListItemData {
     playerIndex : number;
 }
-class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForPlayerRenderer> {
-    private readonly _labelPlayerIndex! : UiInterfacesIUiLabel.IUiLabel;
+class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
+    private readonly _labelPlayerIndex! : IUiLabel;
 
     protected override _doApplyOpenData(): void {
         this._updateView();
@@ -275,74 +275,74 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
     }
 }
 
-function getPlayerRuleTypeArray(gameModeId: GameModesConstants.ModeId): PlayerRulesConstants.RuleTypeId[] {
-    if (gameModeId === GameModesConstants.ModeId.Versus) {
+function getPlayerRuleTypeArray(gameModeId: ModeId): RuleTypeId[] {
+    if (gameModeId === ModeId.Versus) {
         return [
-            PlayerRulesConstants.RuleTypeId.TeamIndex,
-            PlayerRulesConstants.RuleTypeId.BannedCoCategoryIdArray,
-            PlayerRulesConstants.RuleTypeId.McwHumanCoCategoryIdArray,
-            PlayerRulesConstants.RuleTypeId.BannedUnitTypeArray,
-            PlayerRulesConstants.RuleTypeId.InitialFund,
-            PlayerRulesConstants.RuleTypeId.IncomeMultiplier,
-            PlayerRulesConstants.RuleTypeId.MaxUnitsCount,
-            PlayerRulesConstants.RuleTypeId.EnergyAddPctOnCoBoard,
-            PlayerRulesConstants.RuleTypeId.EnergyLossPctOnCoDie,
-            PlayerRulesConstants.RuleTypeId.EnergyGrowthMultiplier,
-            PlayerRulesConstants.RuleTypeId.CanActivateCoSkill,
-            PlayerRulesConstants.RuleTypeId.CanCoBoard,
-            PlayerRulesConstants.RuleTypeId.CanUnitJoin,
-            PlayerRulesConstants.RuleTypeId.MoveRangeModifier,
-            PlayerRulesConstants.RuleTypeId.AttackPowerModifier,
-            PlayerRulesConstants.RuleTypeId.DefenseModifier,
-            PlayerRulesConstants.RuleTypeId.UnitVisionRangeModifier,
-            PlayerRulesConstants.RuleTypeId.TileVisionRangeModifier,
-            PlayerRulesConstants.RuleTypeId.LuckLowerLimit,
-            PlayerRulesConstants.RuleTypeId.LuckUpperLimit,
+            RuleTypeId.TeamIndex,
+            RuleTypeId.BannedCoCategoryIdArray,
+            RuleTypeId.McwHumanCoCategoryIdArray,
+            RuleTypeId.BannedUnitTypeArray,
+            RuleTypeId.InitialFund,
+            RuleTypeId.IncomeMultiplier,
+            RuleTypeId.MaxUnitsCount,
+            RuleTypeId.EnergyAddPctOnCoBoard,
+            RuleTypeId.EnergyLossPctOnCoDie,
+            RuleTypeId.EnergyGrowthMultiplier,
+            RuleTypeId.CanActivateCoSkill,
+            RuleTypeId.CanCoBoard,
+            RuleTypeId.CanUnitJoin,
+            RuleTypeId.MoveRangeModifier,
+            RuleTypeId.AttackPowerModifier,
+            RuleTypeId.DefenseModifier,
+            RuleTypeId.UnitVisionRangeModifier,
+            RuleTypeId.TileVisionRangeModifier,
+            RuleTypeId.LuckLowerLimit,
+            RuleTypeId.LuckUpperLimit,
         ];
-    } else if (gameModeId === GameModesConstants.ModeId.Coop) {
+    } else if (gameModeId === ModeId.Coop) {
         return [
-            PlayerRulesConstants.RuleTypeId.TeamIndex,
-            PlayerRulesConstants.RuleTypeId.BannedCoCategoryIdArray,
-            PlayerRulesConstants.RuleTypeId.CcwHumanCoCategoryIdArray,
-            PlayerRulesConstants.RuleTypeId.BannedUnitTypeArray,
-            PlayerRulesConstants.RuleTypeId.InitialFund,
-            PlayerRulesConstants.RuleTypeId.IncomeMultiplier,
-            PlayerRulesConstants.RuleTypeId.MaxUnitsCount,
-            PlayerRulesConstants.RuleTypeId.EnergyAddPctOnCoBoard,
-            PlayerRulesConstants.RuleTypeId.EnergyLossPctOnCoDie,
-            PlayerRulesConstants.RuleTypeId.EnergyGrowthMultiplier,
-            PlayerRulesConstants.RuleTypeId.CanActivateCoSkill,
-            PlayerRulesConstants.RuleTypeId.CanCoBoard,
-            PlayerRulesConstants.RuleTypeId.CanUnitJoin,
-            PlayerRulesConstants.RuleTypeId.MoveRangeModifier,
-            PlayerRulesConstants.RuleTypeId.AttackPowerModifier,
-            PlayerRulesConstants.RuleTypeId.DefenseModifier,
-            PlayerRulesConstants.RuleTypeId.UnitVisionRangeModifier,
-            PlayerRulesConstants.RuleTypeId.TileVisionRangeModifier,
-            PlayerRulesConstants.RuleTypeId.LuckLowerLimit,
-            PlayerRulesConstants.RuleTypeId.LuckUpperLimit,
+            RuleTypeId.TeamIndex,
+            RuleTypeId.BannedCoCategoryIdArray,
+            RuleTypeId.CcwHumanCoCategoryIdArray,
+            RuleTypeId.BannedUnitTypeArray,
+            RuleTypeId.InitialFund,
+            RuleTypeId.IncomeMultiplier,
+            RuleTypeId.MaxUnitsCount,
+            RuleTypeId.EnergyAddPctOnCoBoard,
+            RuleTypeId.EnergyLossPctOnCoDie,
+            RuleTypeId.EnergyGrowthMultiplier,
+            RuleTypeId.CanActivateCoSkill,
+            RuleTypeId.CanCoBoard,
+            RuleTypeId.CanUnitJoin,
+            RuleTypeId.MoveRangeModifier,
+            RuleTypeId.AttackPowerModifier,
+            RuleTypeId.DefenseModifier,
+            RuleTypeId.UnitVisionRangeModifier,
+            RuleTypeId.TileVisionRangeModifier,
+            RuleTypeId.LuckLowerLimit,
+            RuleTypeId.LuckUpperLimit,
         ];
     } else {
         return [
-            PlayerRulesConstants.RuleTypeId.TeamIndex,
-            PlayerRulesConstants.RuleTypeId.BannedCoCategoryIdArray,
-            PlayerRulesConstants.RuleTypeId.BannedUnitTypeArray,
-            PlayerRulesConstants.RuleTypeId.InitialFund,
-            PlayerRulesConstants.RuleTypeId.IncomeMultiplier,
-            PlayerRulesConstants.RuleTypeId.MaxUnitsCount,
-            PlayerRulesConstants.RuleTypeId.EnergyAddPctOnCoBoard,
-            PlayerRulesConstants.RuleTypeId.EnergyLossPctOnCoDie,
-            PlayerRulesConstants.RuleTypeId.EnergyGrowthMultiplier,
-            PlayerRulesConstants.RuleTypeId.CanActivateCoSkill,
-            PlayerRulesConstants.RuleTypeId.CanCoBoard,
-            PlayerRulesConstants.RuleTypeId.CanUnitJoin,
-            PlayerRulesConstants.RuleTypeId.MoveRangeModifier,
-            PlayerRulesConstants.RuleTypeId.AttackPowerModifier,
-            PlayerRulesConstants.RuleTypeId.DefenseModifier,
-            PlayerRulesConstants.RuleTypeId.UnitVisionRangeModifier,
-            PlayerRulesConstants.RuleTypeId.TileVisionRangeModifier,
-            PlayerRulesConstants.RuleTypeId.LuckLowerLimit,
-            PlayerRulesConstants.RuleTypeId.LuckUpperLimit,
+            RuleTypeId.TeamIndex,
+            RuleTypeId.BannedCoCategoryIdArray,
+            RuleTypeId.BannedUnitTypeArray,
+            RuleTypeId.InitialFund,
+            RuleTypeId.IncomeMultiplier,
+            RuleTypeId.MaxUnitsCount,
+            RuleTypeId.EnergyAddPctOnCoBoard,
+            RuleTypeId.EnergyLossPctOnCoDie,
+            RuleTypeId.EnergyGrowthMultiplier,
+            RuleTypeId.CanActivateCoSkill,
+            RuleTypeId.CanCoBoard,
+            RuleTypeId.CanUnitJoin,
+            RuleTypeId.MoveRangeModifier,
+            RuleTypeId.AttackPowerModifier,
+            RuleTypeId.DefenseModifier,
+            RuleTypeId.UnitVisionRangeModifier,
+            RuleTypeId.TileVisionRangeModifier,
+            RuleTypeId.LuckLowerLimit,
+            RuleTypeId.LuckUpperLimit,
         ];
     }
 }

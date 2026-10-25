@@ -1,86 +1,86 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as PlayersConstants from "../../../players/Constants.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoPlayerProduceUnit from "../../../proto/schema/CommonProto/WarOperation/WoPlayerProduceUnit.ts";
-import * as TileBuffsConstants from "../../../tileBuffs/Constants.ts";
-import * as TurnsConstants from "../../../turns/Constants.ts";
-import * as UnitsConstants from "../../../units/Constants.ts";
-import * as UnitsUtilsCommon from "../../../units/utils/Common.ts";
-import * as UtilsClientErrorCode from "../../../utils/ClientErrorCode.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { newError, getExisted } from "../../../helpers/Misc.ts";
+import { AliveStateId, PlayerIndex } from "../../../players/Constants.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { WoPlayerProduceUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerProduceUnit.ts";
+import { BuffTypeId } from "../../../tileBuffs/Constants.ts";
+import { PhaseCode } from "../../../turns/Constants.ts";
+import { Hp, CategoryId } from "../../../units/Constants.ts";
+import { getNormalizedHp } from "../../../units/utils/Common.ts";
+import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type IBwWar                 = BaseWarInterfaceIBwWar;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-export function revise(war: IBwWar, rawAction: ProtoSchemaCommonProtoWarOperationWoPlayerProduceUnit.WoPlayerProduceUnit, requesterUserId: Undefinable<number>): ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer {
-    if (war.getTurnPhaseCode() !== TurnsConstants.PhaseCode.Main) {
-        throw HelpersMisc.newError(`Invalid turnPhaseCode.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_00);
+export function revise(war: IBwWar, rawAction: WoPlayerProduceUnit, requesterUserId: Undefinable<number>): WoContainer {
+    if (war.getTurnPhaseCode() !== PhaseCode.Main) {
+        throw newError(`Invalid turnPhaseCode.`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_00);
     }
 
     const unitHp = rawAction.getUnitHp();
-    if ((unitHp == null) || (unitHp <= 0) || (unitHp > UnitsConstants.Hp.MaxHp)) {
-        throw HelpersMisc.newError(`Invalid unitHp: ${unitHp}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_01);
+    if ((unitHp == null) || (unitHp <= 0) || (unitHp > Hp.MaxHp)) {
+        throw newError(`Invalid unitHp: ${unitHp}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_01);
     }
 
     const unitMap   = war.getUnitMap();
     const mapSize   = unitMap.getMapSize();
-    const gridIndex = AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(rawAction.getGridIndex());
+    const gridIndex = GridIndex.convertGridIndex(rawAction.getGridIndex());
     if ((gridIndex == null) || (!gridIndex.checkIsInsideMap(mapSize))) {
-        throw HelpersMisc.newError(`Invalid gridIndex.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_02);
+        throw newError(`Invalid gridIndex.`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_02);
     }
 
     if (unitMap.getUnitOnMap(gridIndex)) {
-        throw HelpersMisc.newError(`Grid occupied.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_03);
+        throw newError(`Grid occupied.`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_03);
     }
 
     const playerInTurn      = war.getPlayerInTurn();
     const playerIndexInTurn = playerInTurn ? playerInTurn.getPlayerIndex() : null;
     if ((playerInTurn == null)                                      ||
-        (playerInTurn.getAliveState() !== PlayersConstants.AliveStateId.Alive) ||
+        (playerInTurn.getAliveState() !== AliveStateId.Alive) ||
         (playerIndexInTurn == null)                                 ||
-        (playerIndexInTurn === PlayersConstants.PlayerIndex.Neutral)                 ||
+        (playerIndexInTurn === PlayerIndex.Neutral)                 ||
         (playerInTurn.getUserId() != requesterUserId)
     ) {
-        throw HelpersMisc.newError(`Invalid playerIndexInTurn: ${playerIndexInTurn}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_04);
+        throw newError(`Invalid playerIndexInTurn: ${playerIndexInTurn}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_04);
     }
 
-    const unitType = HelpersMisc.getExisted(rawAction.getUnitType(), UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_05);
+    const unitType = getExisted(rawAction.getUnitType(), ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_05);
     {
         const canProduce = war.getWarEventManager().checkOpaCanProduceUnit(playerIndexInTurn, unitType);
         if (canProduce === false) {
-            throw HelpersMisc.newError(`UnitType is banned by persistent action: ${unitType}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_06);
+            throw newError(`UnitType is banned by persistent action: ${unitType}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_06);
         } else if (canProduce == null) {
             if (war.getCommonSettingManager().getPlayerRule(playerIndexInTurn).getBannedUnitTypeArray().includes(unitType)) {
-                throw HelpersMisc.newError(`UnitType is banned by rule: ${unitType}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_07);
+                throw newError(`UnitType is banned by rule: ${unitType}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_07);
             }
         }
     }
 
     const tile = war.getTileMap().getTile(gridIndex);
     if (tile.getPlayerIndex() !== playerIndexInTurn) {
-        throw HelpersMisc.newError(`Invalid tile player index: ${tile.getPlayerIndex()}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_08);
+        throw newError(`Invalid tile player index: ${tile.getPlayerIndex()}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_08);
     }
-    if (tile.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === TileBuffsConstants.BuffTypeId.NoProduction)) {
-        throw HelpersMisc.newError(`The tile has the No Production abnormal state.`);
+    if (tile.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === BuffTypeId.NoProduction)) {
+        throw newError(`The tile has the No Production abnormal state.`);
     }
 
     const gameConfig    = war.getGcData();
     const skillCfg      = tile.getEffectiveSelfUnitProductionSkillCfg(playerIndexInTurn);
     if (skillCfg != null) {
         if ((unitHp > (skillCfg.getHpUpperLimit() ?? 0)) || (unitHp < (skillCfg.getHpLowerLimit() ?? 0))) {
-            throw HelpersMisc.newError(`Invalid unitHp: ${unitHp}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_09);
+            throw newError(`Invalid unitHp: ${unitHp}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_09);
         }
-        if ((gameConfig.getUnitCategoryCfg(skillCfg.getUnitCategoryId() ?? UnitsConstants.CategoryId.All)?.getUnitTypeIds() ?? []).indexOf(unitType) < 0) {
-            throw HelpersMisc.newError(`Invalid unitType: ${unitType}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_10);
+        if ((gameConfig.getUnitCategoryCfg(skillCfg.getUnitCategoryId() ?? CategoryId.All)?.getUnitTypeIds() ?? []).indexOf(unitType) < 0) {
+            throw newError(`Invalid unitType: ${unitType}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_10);
         }
     } else {
-        if (unitHp != UnitsConstants.Hp.MaxHp) {
-            throw HelpersMisc.newError(`Invalid unitHp: ${unitHp}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_11);
+        if (unitHp != Hp.MaxHp) {
+            throw newError(`Invalid unitHp: ${unitHp}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_11);
         }
         if ((tile.getRegularProducibleUnitTypeArray() ?? []).indexOf(unitType) < 0) {
-            throw HelpersMisc.newError(`Invalid unitType: ${unitType}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_12);
+            throw newError(`Invalid unitType: ${unitType}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_12);
         }
     }
 
@@ -94,24 +94,24 @@ export function revise(war: IBwWar, rawAction: ProtoSchemaCommonProtoWarOperatio
         if ((maxUnitsCount != null) &&
             (unitMap.countAllUnitsForPlayer(playerIndexInTurn) >= maxUnitsCount)
         ) {
-            throw HelpersMisc.newError(`Exceeds max units count: ${maxUnitsCount}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_13);
+            throw newError(`Exceeds max units count: ${maxUnitsCount}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_13);
         }
     }
 
-    const cfgCost   = HelpersMisc.getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getProductionCost(), UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_14);
+    const cfgCost   = getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getProductionCost(), ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_14);
     const cost      = Math.floor(
         cfgCost
         * (skillCfg ? (skillCfg.getCostMultiplierPct() ?? 0) : 100)
-        * UnitsUtilsCommon.getNormalizedHp(unitHp)
+        * getNormalizedHp(unitHp)
         * playerInTurn.getUnitCostModifier(unitType)
         / 100
-        / UnitsConstants.Hp.Normalizer
+        / Hp.Normalizer
     );
     if (cost > playerInTurn.getFund()) {
-        throw HelpersMisc.newError(`Invalid cost: ${cost}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_15);
+        throw newError(`Invalid cost: ${cost}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_15);
     }
 
-    return ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    return WoContainer.fromJson({
         WoPlayerProduceUnit: {
             gridIndex   : gridIndex.toProto().toJson(),
             unitHp      : unitHp,

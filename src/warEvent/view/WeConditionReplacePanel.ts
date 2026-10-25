@@ -1,43 +1,43 @@
-import * as FloatText2 from "../../FloatText.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoWarEventConditionIdAndFlags from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as WarEventsConditionsUtilsCommon from "../../warEvents/conditions/utils/Common.ts";
-import * as WarEventsFullDatasUtils from "../../warEvents/fullDatas/Utils.ts";
+import { showLang } from "../../FloatText.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { closePanel } from "../../gamePanels/Manager.ts";
+import { deleteElementFromList2 } from "../../helpers/Collection.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getBriefDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
+import { getNode, getCondition } from "../../warEvents/fullDatas/Utils.ts";
 
 export interface OpenData {
-    gameConfig      : GameConfigGcData.GcData;
-    fullData        : ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
+    gameConfig      : GcData;
+    fullData        : WarEventFullData;
     parentNodeId    : number;
     oldConditionId  : number | null;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listCondition!    : UiInterfacesIUiScrollList.IUiScrollList<DataForConditionRenderer>;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelNoCondition! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _listCondition!    : IUiScrollList<DataForConditionRenderer>;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _labelNoCondition! : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -69,9 +69,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0258);
-        this._labelNoCondition.setLangText(LangConstants.TextType.B0278);
-        this._btnClose.setLangText(LangConstants.TextType.B0146);
+        this._labelTitle.setLangText(TextType.B0258);
+        this._labelNoCondition.setLangText(TextType.B0278);
+        this._btnClose.setLangText(TextType.B0146);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();
@@ -89,7 +89,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 gameConfig              : gameConfig,
                 parentNodeId            : parentNodeId,
                 oldConditionId          : oldConditionId,
-                candidateConditionId    : HelpersMisc.getExisted(condition.getWecCommonData()?.getConditionId()),
+                candidateConditionId    : getExisted(condition.getWecCommonData()?.getConditionId()),
                 fullData                : fullData,
             });
         }
@@ -99,18 +99,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForConditionRenderer extends UiTypesUiListItemData.UiListItemData {
-    gameConfig              : GameConfigGcData.GcData;
+interface DataForConditionRenderer extends UiListItemData {
+    gameConfig              : GcData;
     parentNodeId            : number;
     oldConditionId          : number | null;
     candidateConditionId    : number;
-    fullData                : ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
+    fullData                : WarEventFullData;
 }
-class ConditionRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForConditionRenderer> {
-    private readonly _labelConditionId! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelCondition!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnCopy!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSelect!        : UiInterfacesIUiButton.IUiButton;
+class ConditionRenderer extends UiListItemRenderer<DataForConditionRenderer> {
+    private readonly _labelConditionId! : IUiLabel;
+    private readonly _labelCondition!   : IUiLabel;
+    private readonly _btnCopy!          : IUiButton;
+    private readonly _btnSelect!        : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -118,7 +118,7 @@ class ConditionRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
             { ui: this._btnSelect,  callback: this._onTouchedBtnSelect },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
 
         this._btnCopy.setIsVisible(false);
@@ -143,10 +143,10 @@ class ConditionRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
             conditionIdForDelete    : openData.oldConditionId,
             conditionIdForClone     : openData.candidateConditionId,
         }) != null) {
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
-            GamePanelsManager.closePanel(GamePanelsDict.getDict().WeConditionReplacePanel);
+            dispatch(TypeId.WarEventFullDataChanged);
+            closePanel(getDict().WeConditionReplacePanel);
         } else {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
         }
     }
     private _onTouchedBtnSelect(): void {        // DONE
@@ -161,11 +161,11 @@ class ConditionRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
             oldConditionId  : openData.oldConditionId,
             newConditionId  : openData.candidateConditionId,
         })) {
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
-            GamePanelsManager.closePanel(GamePanelsDict.getDict().WeConditionReplacePanel);
-            GamePanelsManager.closePanel(GamePanelsDict.getDict().WeCommandPanel);
+            dispatch(TypeId.WarEventFullDataChanged);
+            closePanel(getDict().WeConditionReplacePanel);
+            closePanel(getDict().WeCommandPanel);
         } else {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
         }
     }
     private _onNotifyLanguageChanged(): void {        // DONE
@@ -173,8 +173,8 @@ class ConditionRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCopy.setText(LangUtils.getText(LangConstants.TextType.B0487));
-        this._btnSelect.setText(LangUtils.getText(LangConstants.TextType.B0492));
+        this._btnCopy.setText(getText(TextType.B0487));
+        this._btnSelect.setText(getText(TextType.B0492));
 
         this._updateLabelConditionId();
         this._updateLabelCondition();
@@ -188,7 +188,7 @@ class ConditionRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
 
         const conditionId   = openData.candidateConditionId;
         const nodeNameArray = openData.fullData.getConditionNodeArray().filter(node => node.getConditionIdAndFlagsArray().some(v => v.getConditionId() === conditionId)).map(v => `N${v.getNodeId()}`);
-        this._labelConditionId.setText(`C${conditionId} (${LangUtils.getText(LangConstants.TextType.B0749)}: ${nodeNameArray?.length ? nodeNameArray.join(`, `) : LangUtils.getText(LangConstants.TextType.None)})`);
+        this._labelConditionId.setText(`C${conditionId} (${getText(TextType.B0749)}: ${nodeNameArray?.length ? nodeNameArray.join(`, `) : getText(TextType.None)})`);
     }
     private _updateLabelCondition(): void {
         const openData = this.getOpenData();
@@ -199,9 +199,9 @@ class ConditionRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
         const condition = openData.fullData.getConditionArray().find(v => v.getWecCommonData()?.getConditionId() === openData.candidateConditionId);
         const label     = this._labelCondition;
         if (condition == null) {
-            label.setText(LangUtils.getText(LangConstants.TextType.A0160));
+            label.setText(getText(TextType.A0160));
         } else {
-            label.setText(WarEventsConditionsUtilsCommon.getBriefDescForCondition(condition, openData.gameConfig) || LangConstants.UndefinedError);
+            label.setText(getBriefDescForCondition(condition, openData.gameConfig) || UndefinedError);
         }
 
         this.setUnscaledManualHeight(label.getY() + label.getUnscaledHeight() + 2);
@@ -217,18 +217,18 @@ class ConditionRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
 }
 
 function cloneAndReplaceConditionInParentNode({ fullData, parentNodeId, conditionIdForDelete, conditionIdForClone }: {
-    fullData                : ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
+    fullData                : WarEventFullData;
     parentNodeId            : number;
     conditionIdForDelete    : number | null;
     conditionIdForClone     : number;
 }): number | null {
-    const parentNode = WarEventsFullDatasUtils.getNode(fullData, parentNodeId);
+    const parentNode = getNode(fullData, parentNodeId);
     if (parentNode == null) {
         return null;
     }
 
     const conditionArray    = fullData.getConditionArray();
-    const srcCondition      = WarEventsFullDatasUtils.getCondition(fullData, conditionIdForClone);
+    const srcCondition      = getCondition(fullData, conditionIdForClone);
     if (srcCondition == null) {
         return null;
     }
@@ -237,16 +237,16 @@ function cloneAndReplaceConditionInParentNode({ fullData, parentNodeId, conditio
     const conditionIdAndFlagsArray  = parentNode.getConditionIdAndFlagsArray();
     for (let newConditionId = 1; ; ++newConditionId) {
         if (!conditionArray.some(v => v.getWecCommonData()?.getConditionId() === newConditionId)) {
-            HelpersMisc.getExisted(newCondition.getWecCommonData()).setConditionId(newConditionId);
+            getExisted(newCondition.getWecCommonData()).setConditionId(newConditionId);
             conditionArray.push(newCondition);
-            conditionArray.sort((v1, v2) => HelpersMisc.getExisted(v1.getWecCommonData()?.getConditionId()) - HelpersMisc.getExisted(v2.getWecCommonData()?.getConditionId()));
+            conditionArray.sort((v1, v2) => getExisted(v1.getWecCommonData()?.getConditionId()) - getExisted(v2.getWecCommonData()?.getConditionId()));
 
-            HelpersCollection.deleteElementFromList2(conditionIdAndFlagsArray, v => v.getConditionId() === conditionIdForDelete);
+            deleteElementFromList2(conditionIdAndFlagsArray, v => v.getConditionId() === conditionIdForDelete);
             const oldConditionIdAndFlags = conditionIdAndFlagsArray.find(v => v.getConditionId() === conditionIdForDelete);
             if (oldConditionIdAndFlags != null) {
                 oldConditionIdAndFlags.setConditionId(newConditionId);
             } else {
-                conditionIdAndFlagsArray.push(ProtoSchemaCommonProtoWarEventConditionIdAndFlags.ConditionIdAndFlags.fromJson({ conditionId: newConditionId }));
+                conditionIdAndFlagsArray.push(ConditionIdAndFlags.fromJson({ conditionId: newConditionId }));
             }
 
             // conditionIdAndFlagsArray.sort((v1, v2) => v1.getConditionId() - v2.getConditionId());
@@ -256,7 +256,7 @@ function cloneAndReplaceConditionInParentNode({ fullData, parentNodeId, conditio
 }
 
 function replaceConditionInParentNode({ fullData, parentNodeId, oldConditionId, newConditionId }: {
-    fullData        : ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
+    fullData        : WarEventFullData;
     parentNodeId    : number;
     oldConditionId  : number | null;
     newConditionId  : number;
@@ -265,7 +265,7 @@ function replaceConditionInParentNode({ fullData, parentNodeId, oldConditionId, 
         return false;
     }
 
-    const conditionIdAndFlagsArray = WarEventsFullDatasUtils.getNode(fullData, parentNodeId)?.getConditionIdAndFlagsArray();
+    const conditionIdAndFlagsArray = getNode(fullData, parentNodeId)?.getConditionIdAndFlagsArray();
     if ((conditionIdAndFlagsArray == null)                                          ||
         (conditionIdAndFlagsArray.some(v => v.getConditionId() === newConditionId))
     ) {
@@ -276,7 +276,7 @@ function replaceConditionInParentNode({ fullData, parentNodeId, oldConditionId, 
     if (oldConditionIdAndFlags != null) {
         oldConditionIdAndFlags.setConditionId(newConditionId);
     } else {
-        conditionIdAndFlagsArray.push(ProtoSchemaCommonProtoWarEventConditionIdAndFlags.ConditionIdAndFlags.fromJson({ conditionId: newConditionId }));
+        conditionIdAndFlagsArray.push(ConditionIdAndFlags.fromJson({ conditionId: newConditionId }));
     }
 
     // conditionIdAndFlagsArray.sort((v1, v2) => v1.getConditionId() - v2.getConditionId());

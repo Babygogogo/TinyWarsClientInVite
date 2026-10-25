@@ -1,24 +1,24 @@
-import * as ExpressionParsersEnums from "../../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../../expressionParsers/Types.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
+import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
-    ConUnitFilter                       : ExpressionParsersTypes.EpExpressionInfo;
-    ActPlayerIndex                      : ExpressionParsersTypes.EpExpressionInfo;
+    ConUnitFilter                       : EpExpressionInfo;
+    ActPlayerIndex                      : EpExpressionInfo;
 } = {
     ConUnitFilter       : {
-        contextType     : ExpressionParsersEnums.ContextType.Unit,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Unit,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.UnitFilter),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0624),
+        getTitleText    : () => getText(TextType.UnitFilter),
+        getHelpText     : () => getText(TextType.A0624),
     },
     ActPlayerIndex : {
-        contextType     : ExpressionParsersEnums.ContextType.Unit,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Unit,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.PlayerIndex),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0625),
+        getTitleText    : () => getText(TextType.PlayerIndex),
+        getHelpText     : () => getText(TextType.A0625),
     },
 };

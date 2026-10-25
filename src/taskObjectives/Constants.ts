@@ -1,18 +1,18 @@
-import * as ExpressionParsersEnums from "../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../expressionParsers/Types.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
+import { ContextType, ResultType } from "../expressionParsers/Enums.ts";
+import type { EpExpressionInfo as ExpressionParsersTypesEpExpressionInfo } from "../expressionParsers/Types.ts";
+import { TextType } from "../lang/Constants.ts";
+import { getText } from "../lang/Utils.ts";
 
-type EpExpressionInfo   = ExpressionParsersTypes.EpExpressionInfo;
+type EpExpressionInfo   = ExpressionParsersTypesEpExpressionInfo;
 
 export const ExpressionInfoDict: {
     UpdaterForCurrentProgress   : EpExpressionInfo;
 } = {
     UpdaterForCurrentProgress   : {
-        contextType     : ExpressionParsersEnums.ContextType.TaskObjective,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.TaskObjective,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1226),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0730),
+        getTitleText    : () => getText(TextType.B1226),
+        getHelpText     : () => getText(TextType.A0730),
     },
 };

@@ -1,48 +1,48 @@
-import * as ExpressionParsersEnums from "../../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../../expressionParsers/Types.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
+import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
-    ConTileFilter           : ExpressionParsersTypes.EpExpressionInfo;
-    ActBuffType             : ExpressionParsersTypes.EpExpressionInfo;
-    ActExpiringTurnIndex    : ExpressionParsersTypes.EpExpressionInfo;
-    ActExpiringPlayerIndex  : ExpressionParsersTypes.EpExpressionInfo;
-    ActExtraParams          : ExpressionParsersTypes.EpExpressionInfo;
+    ConTileFilter           : EpExpressionInfo;
+    ActBuffType             : EpExpressionInfo;
+    ActExpiringTurnIndex    : EpExpressionInfo;
+    ActExpiringPlayerIndex  : EpExpressionInfo;
+    ActExtraParams          : EpExpressionInfo;
 } = {
     ConTileFilter: {
-        contextType     : ExpressionParsersEnums.ContextType.Tile,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.Tile,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.TileFilter),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0662),
+        getTitleText    : () => getText(TextType.TileFilter),
+        getHelpText     : () => getText(TextType.A0662),
     },
     ActBuffType: {
-        contextType     : ExpressionParsersEnums.ContextType.TileBuff,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.TileBuff,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B0805),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0761),
+        getTitleText    : () => getText(TextType.B0805),
+        getHelpText     : () => getText(TextType.A0761),
     },
     ActExpiringTurnIndex: {
-        contextType     : ExpressionParsersEnums.ContextType.TileBuff,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.TileBuff,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.EndTurnIndex),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0762),
+        getTitleText    : () => getText(TextType.EndTurnIndex),
+        getHelpText     : () => getText(TextType.A0762),
     },
     ActExpiringPlayerIndex: {
-        contextType     : ExpressionParsersEnums.ContextType.TileBuff,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.TileBuff,
+        resultTypes     : [ResultType.Number],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.EndPlayerIndex),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0763),
+        getTitleText    : () => getText(TextType.EndPlayerIndex),
+        getHelpText     : () => getText(TextType.A0763),
     },
     ActExtraParams: {
-        contextType     : ExpressionParsersEnums.ContextType.TileBuff,
-        resultTypes     : [ExpressionParsersEnums.ResultType.NumberArray],
+        contextType     : ContextType.TileBuff,
+        resultTypes     : [ResultType.NumberArray],
         isRequired      : false,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B1229),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0764),
+        getTitleText    : () => getText(TextType.B1229),
+        getHelpText     : () => getText(TextType.A0764),
     },
 };

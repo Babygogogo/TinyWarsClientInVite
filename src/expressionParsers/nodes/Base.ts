@@ -1,15 +1,15 @@
-import type * as ExpressionParsersContextsBase from "../contexts/Base.ts";
-import type * as ExpressionParsersEnums from "../Enums.ts";
-import type * as ExpressionParsersResultsBase from "../results/Base.ts";
+import type { Base as ExpressionParsersContextsBase } from "../contexts/Base.ts";
+import type { ContextType, ResultType } from "../Enums.ts";
+import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
 
 export abstract class Base {
-    public abstract eval(ctx: ExpressionParsersContextsBase.Base, rootCtx: ExpressionParsersContextsBase.Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase.Base> | null, localVariableDict: Map<string, ExpressionParsersResultsBase.Base> | null, isRestricted: boolean): ExpressionParsersResultsBase.Base;
+    public abstract eval(ctx: ExpressionParsersContextsBase, rootCtx: ExpressionParsersContextsBase, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase;
     public abstract getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet }: {
-        contextType             : ExpressionParsersEnums.ContextType;
-        lambdaArgumentInfoDict  : Map<string, ExpressionParsersEnums.ResultType> | null;
-        localVariableDict       : Map<string, ExpressionParsersEnums.ResultType> | null;
+        contextType             : ContextType;
+        lambdaArgumentInfoDict  : Map<string, ResultType> | null;
+        localVariableDict       : Map<string, ResultType> | null;
         customCounterNameSet    : Set<string>;
-    }): ExpressionParsersEnums.ResultType;
+    }): ResultType;
 
     public abstract getTokensCount(): number;
 

@@ -1,17 +1,17 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaPlayBgm from "../../../proto/schema/CommonProto/WarEvent/WeaPlayBgm.ts";
-import * as SoundsSoundPlayer from "../../../sounds/SoundPlayer.ts";
-import * as SoundsUtils from "../../../sounds/Utils.ts";
-import * as UsersModel from "../../../users/Model.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import { getExisted } from "../../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getText, getBgmSfxName } from "../../../lang/Utils.ts";
+import type { WeaPlayBgm as ProtoSchemaCommonProtoWarEventWeaPlayBgm } from "../../../proto/schema/CommonProto/WarEvent/WeaPlayBgm.ts";
+import { playCoBgmWithWar, playBgm } from "../../../sounds/SoundPlayer.ts";
+import { checkIsBgm } from "../../../sounds/Utils.ts";
+import { getSelfSettingsCoBgmCodeArray } from "../../../users/Model.ts";
 
-type WeaPlayBgm         = ProtoSchemaCommonProtoWarEventWeaPlayBgm.WeaPlayBgm;
+type WeaPlayBgm         = ProtoSchemaCommonProtoWarEventWeaPlayBgm;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaPlayBgm>, gameConfig: GameConfigGcData.GcData): boolean {
+export function checkIsValid(action: Undefinable<WeaPlayBgm>, gameConfig: GcData): boolean {
     if (action == null) {
         return false;
     }
@@ -21,22 +21,22 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     const bgmCode = action.getBgmCode();
-    return (bgmCode != null) && (SoundsUtils.checkIsBgm(bgmCode));
+    return (bgmCode != null) && (checkIsBgm(bgmCode));
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaPlayBgm>, gameConfig: GameConfigGcData.GcData): string | null {
+export function getBriefDesc(data: Undefinable<WeaPlayBgm>, gameConfig: GcData): string | null {
     if (data == null) {
         return null;
     }
 
     if (data.getUseCoBgm()) {
-        return LangUtils.getText(LangConstants.TextType.A0262);
+        return getText(TextType.A0262);
     } else {
         const bgmCode = data.getBgmCode();
-        return `${LangUtils.getText(LangConstants.TextType.B0750)}: ${(bgmCode == null ? null : LangUtils.getBgmSfxName(bgmCode, gameConfig)) ?? LangConstants.UndefinedError}`;
+        return `${getText(TextType.B0750)}: ${(bgmCode == null ? null : getBgmSfxName(bgmCode, gameConfig)) ?? UndefinedError}`;
     }
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaPlayBgm>, gameConfig: GameConfigGcData.GcData): string | null {
+export function getDetailDesc(data: Undefinable<WeaPlayBgm>, gameConfig: GcData): string | null {
     return getBriefDesc(data, gameConfig);
 }
 
@@ -46,26 +46,26 @@ export function getErrorTip(data: WeaPlayBgm): string | null {
     }
 
     const bgmCode = data.getBgmCode();
-    return ((bgmCode == null) || (!SoundsUtils.checkIsBgm(bgmCode)))
-        ? LangUtils.getText(LangConstants.TextType.A0263)
+    return ((bgmCode == null) || (!checkIsBgm(bgmCode)))
+        ? getText(TextType.A0263)
         : null;
 }
 
-export async function applyWithExtraData(action: WeaPlayBgm, isFast: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
+export async function applyWithExtraData(action: WeaPlayBgm, isFast: boolean, war: IBwWar): Promise<void> {
     return applyWithoutExtraData(action, isFast, war);
 }
-export async function applyWithoutExtraData(action: WeaPlayBgm, isFast: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaPlayBgm, isFast: boolean, war: IBwWar): Promise<void> {
     if (isFast) {
         return;
     }
 
     if (action.getUseCoBgm()) {
-        SoundsSoundPlayer.playCoBgmWithWar({
+        playCoBgmWithWar({
             war                             : war,
             force                           : false,
-            coBgmCodeArrayFromUserSettings  : UsersModel.getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
+            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(war.getPlayerInTurn().getCoCategoryId()),
         });
     } else {
-        SoundsSoundPlayer.playBgm(HelpersMisc.getExisted(action.getBgmCode()));
+        playBgm(getExisted(action.getBgmCode()));
     }
 }

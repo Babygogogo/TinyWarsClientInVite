@@ -1,42 +1,44 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import * as AuxiliaryTypesGridIndexAndWeight from "../../../auxiliaryTypes/GridIndexAndWeight.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersContextsUnit from "../../../expressionParsers/contexts/Unit.ts";
-import * as ExpressionParsersParser from "../../../expressionParsers/Parser.ts";
-import * as ExpressionParsersResultsNullableUnit from "../../../expressionParsers/results/NullableUnit.ts";
-import * as ExpressionParsersResultsNum from "../../../expressionParsers/results/Num.ts";
-import * as ExpressionParsersResultsNumArray from "../../../expressionParsers/results/NumArray.ts";
-import * as HelpersTeam from "../../../helpers/Team.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as LocationsConstants from "../../../locations/Constants.ts";
-import * as LocationsUtils from "../../../locations/Utils.ts";
-import * as NumbersUtils from "../../../numbers/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetUnitStateExpr from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitStateExpr.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialUnit from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-import * as ProtoSchemaCommonProtoWarSerializationWsUnitStatistics from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import * as UnitsConstants from "../../../units/Constants.ts";
-import type * as UnitsIUnit from "../../../units/IUnit.ts";
-import * as UnitsUtilsCommon from "../../../units/utils/Common.ts";
-import * as UnitsUtilsCustomName from "../../../units/utils/CustomName.ts";
-import * as UnitsUtilsSerialization from "../../../units/utils/Serialization.ts";
-import * as VisibilitiesUtils from "../../../visibilities/Utils.ts";
-import * as WarEventsActionsConstantsSetUnitStateExpr from "../constants/SetUnitStateExpr.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import { GridIndexAndWeight } from "../../../auxiliaryTypes/GridIndexAndWeight.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { Unit } from "../../../expressionParsers/contexts/Unit.ts";
+import { Parser } from "../../../expressionParsers/Parser.ts";
+import { NullableUnit } from "../../../expressionParsers/results/NullableUnit.ts";
+import { Num } from "../../../expressionParsers/results/Num.ts";
+import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
+import { encodeTeamIndex } from "../../../helpers/Team.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getFormattedText } from "../../../lang/Utils.ts";
+import { MinId, MaxId } from "../../../locations/Constants.ts";
+import { encode } from "../../../locations/Utils.ts";
+import { getValueInRange, getValueInInt32 } from "../../../numbers/Utils.ts";
+import type {
+    WeaSetUnitStateExpr as ProtoSchemaCommonProtoWarEventWeaSetUnitStateExpr,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitStateExpr.ts";
+import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
+import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
+import { TagId } from "../../../units/Constants.ts";
+import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import { checkIsValidActionStateId, checkIsValidAiModeId, getEncodedTagId } from "../../../units/utils/Common.ts";
+import { checkIsValidCustomNameId } from "../../../units/utils/CustomName.ts";
+import { create } from "../../../units/utils/Serialization.ts";
+import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
+import { ExpressionInfoDict } from "../constants/SetUnitStateExpr.ts";
 
-type WeaSetUnitStateExpr    = ProtoSchemaCommonProtoWarEventWeaSetUnitStateExpr.WeaSetUnitStateExpr;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type IUnit                  = UnitsIUnit.IUnit;
+type WeaSetUnitStateExpr    = ProtoSchemaCommonProtoWarEventWeaSetUnitStateExpr;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type IUnit                  = UnitsIUnit;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetUnitStateExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetUnitStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getConUnitFilter(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ConUnitFilter,
+            expressionInfo          : ExpressionInfoDict.ConUnitFilter,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -44,9 +46,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActActionState(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActActionState,
+            expressionInfo          : ExpressionInfoDict.ActActionState,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -54,9 +56,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCurrentHp(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentHp,
+            expressionInfo          : ExpressionInfoDict.ActCurrentHp,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -64,9 +66,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActPrimaryWeaponCurrentAmmo(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo,
+            expressionInfo          : ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -74,9 +76,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActFlareCurrentAmmo(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActFlareCurrentAmmo,
+            expressionInfo          : ExpressionInfoDict.ActFlareCurrentAmmo,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -84,9 +86,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCurrentFuel(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentFuel,
+            expressionInfo          : ExpressionInfoDict.ActCurrentFuel,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -94,9 +96,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActIsCapturingTile(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsCapturingTile,
+            expressionInfo          : ExpressionInfoDict.ActIsCapturingTile,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -104,9 +106,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActIsDiving(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsDiving,
+            expressionInfo          : ExpressionInfoDict.ActIsDiving,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -114,9 +116,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCurrentBuildMaterial(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentBuildMaterial,
+            expressionInfo          : ExpressionInfoDict.ActCurrentBuildMaterial,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -124,9 +126,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCurrentProduceMaterial(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentProduceMaterial,
+            expressionInfo          : ExpressionInfoDict.ActCurrentProduceMaterial,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -134,9 +136,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCurrentPromotion(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentPromotion,
+            expressionInfo          : ExpressionInfoDict.ActCurrentPromotion,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -144,9 +146,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActIsBuildingTile(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsBuildingTile,
+            expressionInfo          : ExpressionInfoDict.ActIsBuildingTile,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -154,9 +156,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActIsCoOnboard(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsCoOnboard,
+            expressionInfo          : ExpressionInfoDict.ActIsCoOnboard,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -164,9 +166,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActAiMode(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActAiMode,
+            expressionInfo          : ExpressionInfoDict.ActAiMode,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -174,9 +176,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCustomNameId(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCustomNameId,
+            expressionInfo          : ExpressionInfoDict.ActCustomNameId,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -184,9 +186,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActGroupedTagId(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActGroupedTagId,
+            expressionInfo          : ExpressionInfoDict.ActGroupedTagId,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -194,9 +196,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActForbiddenGroupedLocationIdArray(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActForbiddenGroupedLocationIdArray,
+            expressionInfo          : ExpressionInfoDict.ActForbiddenGroupedLocationIdArray,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -204,9 +206,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActAiWeightedDestination(),
-            expressionInfo          : WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActAiWeightedDestination,
+            expressionInfo          : ExpressionInfoDict.ActAiWeightedDestination,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -216,254 +218,254 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetUnitStateExpr>): string | null {
+export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetUnitStateExpr>): string | null {
     if (data == null) {
         return null;
     }
 
-    return LangUtils.getFormattedText(LangConstants.TextType.F0053, data.getConUnitFilter() ?? LangConstants.UndefinedError);
+    return getFormattedText(TextType.F0053, data.getConUnitFilter() ?? UndefinedError);
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetUnitStateExpr>): string | null {
+export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetUnitStateExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     const additionalText = [
-        data.getActActionState()                     ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActActionState.getTitleText()}: ${data.getActActionState()}`                                         : null,
-        data.getActIsCoOnboard()                     ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsCoOnboard.getTitleText()}: ${data.getActIsCoOnboard()}`                                         : null,
-        data.getActCurrentPromotion()                ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentPromotion.getTitleText()}: ${data.getActCurrentPromotion()}`                               : null,
-        data.getActCurrentHp()                       ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentHp.getTitleText()}: ${data.getActCurrentHp()}`                                             : null,
-        data.getActPrimaryWeaponCurrentAmmo()        ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo.getTitleText()}: ${data.getActPrimaryWeaponCurrentAmmo()}`               : null,
-        data.getActFlareCurrentAmmo()                ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActFlareCurrentAmmo.getTitleText()}: ${data.getActFlareCurrentAmmo()}`                               : null,
-        data.getActCurrentFuel()                     ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentFuel.getTitleText()}: ${data.getActCurrentFuel()}`                                         : null,
-        data.getActCurrentBuildMaterial()            ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentBuildMaterial.getTitleText()}: ${data.getActCurrentBuildMaterial()}`                       : null,
-        data.getActCurrentProduceMaterial()          ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentProduceMaterial.getTitleText()}: ${data.getActCurrentProduceMaterial()}`                   : null,
-        data.getActIsDiving()                        ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsDiving.getTitleText()}: ${data.getActIsDiving()}`                                               : null,
-        data.getActIsBuildingTile()                  ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsBuildingTile.getTitleText()}: ${data.getActIsBuildingTile()}`                                   : null,
-        data.getActIsCapturingTile()                 ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsCapturingTile.getTitleText()}: ${data.getActIsCapturingTile()}`                                 : null,
-        data.getActGroupedTagId()                    ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActGroupedTagId.getTitleText()}: ${data.getActGroupedTagId()}`                                       : null,
-        data.getActForbiddenGroupedLocationIdArray() ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActForbiddenGroupedLocationIdArray.getTitleText()}: ${data.getActForbiddenGroupedLocationIdArray()}` : null,
-        data.getActAiMode()                          ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActAiMode.getTitleText()}: ${data.getActAiMode()}`                                                   : null,
-        data.getActCustomNameId()                    ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCustomNameId.getTitleText()}: ${data.getActCustomNameId()}`                                       : null,
-        data.getActAiWeightedDestination()           ? `${WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActAiWeightedDestination.getTitleText()}: ${data.getActAiWeightedDestination()}`                     : null,
+        data.getActActionState()                     ? `${ExpressionInfoDict.ActActionState.getTitleText()}: ${data.getActActionState()}`                                         : null,
+        data.getActIsCoOnboard()                     ? `${ExpressionInfoDict.ActIsCoOnboard.getTitleText()}: ${data.getActIsCoOnboard()}`                                         : null,
+        data.getActCurrentPromotion()                ? `${ExpressionInfoDict.ActCurrentPromotion.getTitleText()}: ${data.getActCurrentPromotion()}`                               : null,
+        data.getActCurrentHp()                       ? `${ExpressionInfoDict.ActCurrentHp.getTitleText()}: ${data.getActCurrentHp()}`                                             : null,
+        data.getActPrimaryWeaponCurrentAmmo()        ? `${ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo.getTitleText()}: ${data.getActPrimaryWeaponCurrentAmmo()}`               : null,
+        data.getActFlareCurrentAmmo()                ? `${ExpressionInfoDict.ActFlareCurrentAmmo.getTitleText()}: ${data.getActFlareCurrentAmmo()}`                               : null,
+        data.getActCurrentFuel()                     ? `${ExpressionInfoDict.ActCurrentFuel.getTitleText()}: ${data.getActCurrentFuel()}`                                         : null,
+        data.getActCurrentBuildMaterial()            ? `${ExpressionInfoDict.ActCurrentBuildMaterial.getTitleText()}: ${data.getActCurrentBuildMaterial()}`                       : null,
+        data.getActCurrentProduceMaterial()          ? `${ExpressionInfoDict.ActCurrentProduceMaterial.getTitleText()}: ${data.getActCurrentProduceMaterial()}`                   : null,
+        data.getActIsDiving()                        ? `${ExpressionInfoDict.ActIsDiving.getTitleText()}: ${data.getActIsDiving()}`                                               : null,
+        data.getActIsBuildingTile()                  ? `${ExpressionInfoDict.ActIsBuildingTile.getTitleText()}: ${data.getActIsBuildingTile()}`                                   : null,
+        data.getActIsCapturingTile()                 ? `${ExpressionInfoDict.ActIsCapturingTile.getTitleText()}: ${data.getActIsCapturingTile()}`                                 : null,
+        data.getActGroupedTagId()                    ? `${ExpressionInfoDict.ActGroupedTagId.getTitleText()}: ${data.getActGroupedTagId()}`                                       : null,
+        data.getActForbiddenGroupedLocationIdArray() ? `${ExpressionInfoDict.ActForbiddenGroupedLocationIdArray.getTitleText()}: ${data.getActForbiddenGroupedLocationIdArray()}` : null,
+        data.getActAiMode()                          ? `${ExpressionInfoDict.ActAiMode.getTitleText()}: ${data.getActAiMode()}`                                                   : null,
+        data.getActCustomNameId()                    ? `${ExpressionInfoDict.ActCustomNameId.getTitleText()}: ${data.getActCustomNameId()}`                                       : null,
+        data.getActAiWeightedDestination()           ? `${ExpressionInfoDict.ActAiWeightedDestination.getTitleText()}: ${data.getActAiWeightedDestination()}`                     : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${LangUtils.getFormattedText(LangConstants.TextType.F0053, data.getConUnitFilter() ?? LangConstants.UndefinedError)}\n${additionalText}`;
+    return `${getFormattedText(TextType.F0053, data.getConUnitFilter() ?? UndefinedError)}\n${additionalText}`;
 }
 export function getErrorTip(data: WeaSetUnitStateExpr, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ConUnitFilter;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ConUnitFilter;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getConUnitFilter(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActActionState;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActActionState;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActActionState(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentHp;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCurrentHp;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCurrentHp(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActPrimaryWeaponCurrentAmmo;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActPrimaryWeaponCurrentAmmo(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActFlareCurrentAmmo;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActFlareCurrentAmmo;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActFlareCurrentAmmo(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentFuel;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCurrentFuel;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCurrentFuel(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsCapturingTile;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActIsCapturingTile;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActIsCapturingTile(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsDiving;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActIsDiving;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActIsDiving(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentBuildMaterial;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCurrentBuildMaterial;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCurrentBuildMaterial(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentProduceMaterial;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCurrentProduceMaterial;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCurrentProduceMaterial(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCurrentPromotion;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCurrentPromotion;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCurrentPromotion(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsBuildingTile;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActIsBuildingTile;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActIsBuildingTile(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActIsCoOnboard;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActIsCoOnboard;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActIsCoOnboard(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActAiMode;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActAiMode;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActAiMode(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActCustomNameId;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCustomNameId;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCustomNameId(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActGroupedTagId;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActGroupedTagId;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActGroupedTagId(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActForbiddenGroupedLocationIdArray;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActForbiddenGroupedLocationIdArray;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActForbiddenGroupedLocationIdArray(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetUnitStateExpr.ExpressionInfoDict.ActAiWeightedDestination;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActAiWeightedDestination;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActAiWeightedDestination(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -472,8 +474,8 @@ export function getErrorTip(data: WeaSetUnitStateExpr, customCounterNameSet: Set
 
 function checkIsMeetConditionForUnit(action: WeaSetUnitStateExpr, unit: IUnit): boolean {
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        return (result instanceof ExpressionParsersResultsNum.Num) && (result.num !== 0);
+        const result = Parser.getParseResult(action.getConUnitFilter() ?? ``).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        return (result instanceof Num) && (result.num !== 0);
     } catch (Exception) {
         return false;
     }
@@ -522,10 +524,10 @@ function evalActActionState(action: WeaSetUnitStateExpr, unit: IUnit): number {
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
             const actionState = Math.floor(epResult.num);
-            return (UnitsUtilsCommon.checkIsValidActionStateId(actionState)) ? actionState : defaultValue;
+            return (checkIsValidActionStateId(actionState)) ? actionState : defaultValue;
         } else {
             return defaultValue;
         }
@@ -541,9 +543,9 @@ function evalActPrimaryWeaponCurrentAmmo(action: WeaSetUnitStateExpr, unit: IUni
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
                 minValue    : 0,
                 maxValue    : unit.getPrimaryWeaponMaxAmmo() ?? 0,
                 rawValue    : Math.floor(epResult.num),
@@ -563,9 +565,9 @@ function evalActCurrentHp(action: WeaSetUnitStateExpr, unit: IUnit): number {
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
                 minValue    : 1,
                 maxValue    : unit.getMaxHp(),
                 rawValue    : Math.floor(epResult.num),
@@ -611,8 +613,8 @@ function evalActIsDiving(action: WeaSetUnitStateExpr, unit: IUnit): boolean {
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -629,9 +631,9 @@ function evalActFlareCurrentAmmo(action: WeaSetUnitStateExpr, unit: IUnit): numb
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
                 minValue    : 0,
                 maxValue    : unit.getFlareMaxAmmo() ?? 0,
                 rawValue    : Math.floor(epResult.num),
@@ -651,9 +653,9 @@ function evalActCurrentFuel(action: WeaSetUnitStateExpr, unit: IUnit): number {
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
                 minValue    : 0,
                 maxValue    : unit.getMaxFuel(),
                 rawValue    : Math.floor(epResult.num),
@@ -673,9 +675,9 @@ function evalActCurrentBuildMaterial(action: WeaSetUnitStateExpr, unit: IUnit): 
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
                 minValue    : 0,
                 maxValue    : unit.getMaxBuildMaterial() ?? 0,
                 rawValue    : Math.floor(epResult.num),
@@ -695,9 +697,9 @@ function evalActCurrentProduceMaterial(action: WeaSetUnitStateExpr, unit: IUnit)
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
                 minValue    : 0,
                 maxValue    : unit.getMaxProduceMaterial() ?? 0,
                 rawValue    : Math.floor(epResult.num),
@@ -717,9 +719,9 @@ function evalActCurrentPromotion(action: WeaSetUnitStateExpr, unit: IUnit): numb
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
                 minValue    : 0,
                 maxValue    : unit.getMaxPromotion(),
                 rawValue    : Math.floor(epResult.num),
@@ -762,8 +764,8 @@ function evalActIsCoOnboard(action: WeaSetUnitStateExpr, unit: IUnit): boolean {
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return defaultValue;
@@ -780,10 +782,10 @@ function evalActAiMode(action: WeaSetUnitStateExpr, unit: IUnit): number {
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
             const aiMode = Math.floor(epResult.num);
-            return (UnitsUtilsCommon.checkIsValidAiModeId(aiMode)) ? aiMode : defaultValue;
+            return (checkIsValidAiModeId(aiMode)) ? aiMode : defaultValue;
         } else {
             return defaultValue;
         }
@@ -799,10 +801,10 @@ function evalActCustomNameId(action: WeaSetUnitStateExpr, unit: IUnit): Undefina
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            const value = NumbersUtils.getValueInInt32(epResult.num);
-            return UnitsUtilsCustomName.checkIsValidCustomNameId(value)
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof Num) {
+            const value = getValueInInt32(epResult.num);
+            return checkIsValidCustomNameId(value)
                 ? value
                 : (value < 0 ? null : defaultValue);
         } else {
@@ -820,11 +822,11 @@ function evalActGroupedTagId(action: WeaSetUnitStateExpr, unit: IUnit): number {
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNumArray.NumArray) {
-            return UnitsUtilsCommon.getEncodedTagId(epResult.numberArray.map(v => NumbersUtils.getValueInRange({
-                minValue    : UnitsConstants.TagId.MinTagId,
-                maxValue    : UnitsConstants.TagId.MaxTagId,
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof NumArray) {
+            return getEncodedTagId(epResult.numberArray.map(v => getValueInRange({
+                minValue    : TagId.MinTagId,
+                maxValue    : TagId.MaxTagId,
                 rawValue    : Math.floor(v),
             })));
         } else {
@@ -842,11 +844,11 @@ function evalActForbiddenGroupedLocationIdArray(action: WeaSetUnitStateExpr, uni
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNumArray.NumArray) {
-            return LocationsUtils.encode(epResult.numberArray.map(v => NumbersUtils.getValueInRange({
-                minValue    : LocationsConstants.MinId,
-                maxValue    : LocationsConstants.MaxId,
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof NumArray) {
+            return encode(epResult.numberArray.map(v => getValueInRange({
+                minValue    : MinId,
+                maxValue    : MaxId,
                 rawValue    : Math.floor(v),
             })));
         } else {
@@ -856,7 +858,7 @@ function evalActForbiddenGroupedLocationIdArray(action: WeaSetUnitStateExpr, uni
         return defaultValue;
     }
 }
-function evalActAiWeightedDestination(action: WeaSetUnitStateExpr, unit: IUnit): Undefinable<AuxiliaryTypesGridIndexAndWeight.GridIndexAndWeight> {
+function evalActAiWeightedDestination(action: WeaSetUnitStateExpr, unit: IUnit): Undefinable<GridIndexAndWeight> {
     const defaultValue  = unit.getAiWeightedDestination();
     const act           = action.getActAiWeightedDestination();
     if (!act) {
@@ -864,19 +866,19 @@ function evalActAiWeightedDestination(action: WeaSetUnitStateExpr, unit: IUnit):
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsUnit.Unit(new ExpressionParsersResultsNullableUnit.NullableUnit(unit.getWar(), unit)), false);
-        if (epResult instanceof ExpressionParsersResultsNumArray.NumArray) {
+        const epResult = Parser.getParseResult(act).eval(new Unit(new NullableUnit(unit.getWar(), unit)), false);
+        if (epResult instanceof NumArray) {
             if (epResult.numberArray.length !== 3) {
                 return defaultValue;
             }
 
-            const arr       = epResult.numberArray.map(v => NumbersUtils.getValueInInt32(v));
-            const gridIndex = new AuxiliaryTypesGridIndex.GridIndex(arr[0], arr[1]);
+            const arr       = epResult.numberArray.map(v => getValueInInt32(v));
+            const gridIndex = new GridIndex(arr[0], arr[1]);
             if (!gridIndex.checkIsInsideMap(unit.getWar().getTileMap().getMapSize())) {
                 return defaultValue;
             }
 
-            return new AuxiliaryTypesGridIndexAndWeight.GridIndexAndWeight(gridIndex, arr[2]);
+            return new GridIndexAndWeight(gridIndex, arr[2]);
         } else {
             return defaultValue;
         }
@@ -889,8 +891,8 @@ function evalActAiWeightedDestination(action: WeaSetUnitStateExpr, unit: IUnit):
 export async function applyWithExtraData(_action: WeaSetUnitStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetUnitStateExpr, isFast: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
-    const newUnitDataDict = new Map<IUnit, ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit>();
+export async function applyWithoutExtraData(action: WeaSetUnitStateExpr, isFast: boolean, war: IBwWar): Promise<void> {
+    const newUnitDataDict = new Map<IUnit, SerialUnit>();
     for (const unit of war.getUnitMap().getAllUnits().sort((v1, v2) => v1.getUnitId() - v2.getUnitId())) {
         if (!checkIsMeetConditionForUnit(action, unit)) {
             continue;
@@ -906,7 +908,7 @@ export async function applyWithoutExtraData(action: WeaSetUnitStateExpr, isFast:
 
     applyNewUnitDataDict(newUnitDataDict, war, isFast);
 }
-function createNewUnitData(action: WeaSetUnitStateExpr, unit: IUnit): ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit {
+function createNewUnitData(action: WeaSetUnitStateExpr, unit: IUnit): SerialUnit {
     // 为防止随机数导致结果不稳定，此处eval系列函数的顺序一旦写下就不能更改，后续新属性只能添加在最后
     // 必须保证函数顺序前后端相同
     const actionState                       = evalActActionState(action, unit);
@@ -925,7 +927,7 @@ function createNewUnitData(action: WeaSetUnitStateExpr, unit: IUnit): ProtoSchem
     const currentProduceMaterial            = evalActCurrentProduceMaterial(action, unit);
     const currentFuel                       = evalActCurrentFuel(action, unit);
 
-    return UnitsUtilsSerialization.create({
+    return create({
         unitType                        : unit.getUnitType(),
         unitId                          : unit.getUnitId(),
         playerIndex                     : unit.getPlayerIndex(),
@@ -953,7 +955,7 @@ function createNewUnitData(action: WeaSetUnitStateExpr, unit: IUnit): ProtoSchem
         loaderUnitId                    : unit.getLoaderUnitId() ?? null,
     });
 }
-function applyNewUnitDataDict(dict: Map<IUnit, ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit>, war: BaseWarInterfaceIBwWar.IBwWar, isFast: boolean): void {
+function applyNewUnitDataDict(dict: Map<IUnit, SerialUnit>, war: IBwWar, isFast: boolean): void {
     const unitMap                   = war.getUnitMap();
     const mapSize                   = unitMap.getMapSize();
     const observerTeamIndexesDict   = new Map<number, number[] | null>();
@@ -961,7 +963,7 @@ function applyNewUnitDataDict(dict: Map<IUnit, ProtoSchemaCommonProtoWarSerializ
         const gridIndex   = unit.getGridIndex();
         const gridId      = gridIndex.getGridId(mapSize);
         if (!observerTeamIndexesDict.has(gridId)) {
-            observerTeamIndexesDict.set(gridId, VisibilitiesUtils.getObserverTeamIndexListForUnitOnMap({ war, gridIndex }));
+            observerTeamIndexesDict.set(gridId, getObserverTeamIndexListForUnitOnMap({ war, gridIndex }));
         }
     }
 
@@ -981,14 +983,14 @@ function applyNewUnitDataDict(dict: Map<IUnit, ProtoSchemaCommonProtoWarSerializ
         ) {
             const observerTeamIndexes = observerTeamIndexesDict.get(unit.getGridIndex().getGridId(mapSize));
             if (observerTeamIndexes != null) {
-                warStatisticsManager.addUnitStatistics(ProtoSchemaCommonProtoWarSerializationWsUnitStatistics.WsUnitStatistics.fromJson({
+                warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                    : unit.getUnitType(),
                     dstPlayerIndex              : unit.getPlayerIndex(),
                     unitGain                    : 0,
                     unitLoss                    : 0,
                     normalizedHpGain            : offsetHp > 0 ? offsetHp : 0,
                     normalizedHpLoss            : offsetHp < 0 ? -offsetHp : 0,
-                    groupedObserverTeamIndexes  : HelpersTeam.encodeTeamIndex(observerTeamIndexes),
+                    groupedObserverTeamIndexes  : encodeTeamIndex(observerTeamIndexes),
                 }));
             }
         }

@@ -1,14 +1,14 @@
-import type * as UiInterfacesIUiComponent from "./IUiComponent.ts";
-import type * as UiInterfacesIUiLayoutBase from "./IUiLayoutBase.ts";
+import type { IUiComponent } from "./IUiComponent.ts";
+import type { IUiLayoutBase } from "./IUiLayoutBase.ts";
 
-export interface IUiLayout extends UiInterfacesIUiLayoutBase.IUiLayoutBase {
-    getItemAt(index: number): UiInterfacesIUiComponent.IUiComponent | undefined;
-    getAllItems(): UiInterfacesIUiComponent.IUiComponent[];
+export interface IUiLayout extends IUiLayoutBase {
+    getItemAt(index: number): IUiComponent | undefined;
+    getAllItems(): IUiComponent[];
 
-    addItem(item: UiInterfacesIUiComponent.IUiComponent, needArrange: boolean): UiInterfacesIUiComponent.IUiComponent;
-    addItemAt(item: UiInterfacesIUiComponent.IUiComponent, index: number, needArrange: boolean): UiInterfacesIUiComponent.IUiComponent;
+    addItem(item: IUiComponent, needArrange: boolean): IUiComponent;
+    addItemAt(item: IUiComponent, index: number, needArrange: boolean): IUiComponent;
 
-    removeItem(item: UiInterfacesIUiComponent.IUiComponent, needArrange: boolean): UiInterfacesIUiComponent.IUiComponent | undefined;
-    removeItemAt(index: number, needArrange: boolean): UiInterfacesIUiComponent.IUiComponent | undefined;
-    removeAllItems(needArrange: boolean): UiInterfacesIUiComponent.IUiComponent[];
+    removeItem(item: IUiComponent, needArrange: boolean): IUiComponent | undefined;
+    removeItemAt(index: number, needArrange: boolean): IUiComponent | undefined;
+    removeAllItems(needArrange: boolean): IUiComponent[];
 }

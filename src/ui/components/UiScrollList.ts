@@ -1,46 +1,46 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesTaskQueue from "../../auxiliaryTypes/TaskQueue.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as UiComponentsUiScrollerBase from "./UiScrollerBase.ts";
-import type * as UiInterfacesIUiList from "../interfaces/IUiList.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollList from "../interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../types/UiListItemData.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { TaskQueue } from "../../auxiliaryTypes/TaskQueue.ts";
+import { newError, getExisted } from "../../helpers/Misc.ts";
+import { UiScrollerBase } from "./UiScrollerBase.ts";
+import type { IUiList } from "../interfaces/IUiList.ts";
+import type { IUiListItemRenderer as UiInterfacesIUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
+import type { IUiScrollList } from "../interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../types/UiListItemData.ts";
+import { getUiListClass } from "../utils/UiFactory.ts";
+import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
 
-type IUiListItemRenderer<T extends UiTypesUiListItemData.UiListItemData> = UiInterfacesIUiListItemRenderer.IUiListItemRenderer<T>;
+type IUiListItemRenderer<T extends UiListItemData> = UiInterfacesIUiListItemRenderer<T>;
 
-export class UiScrollList<DataForRenderer extends UiTypesUiListItemData.UiListItemData>
-    extends     UiComponentsUiScrollerBase.UiScrollerBase
-    implements  UiInterfacesIUiScrollList.IUiScrollList<DataForRenderer>
+export class UiScrollList<DataForRenderer extends UiListItemData>
+    extends     UiScrollerBase
+    implements  IUiScrollList<DataForRenderer>
 {
-    private readonly _taskQueue = new AuxiliaryTypesTaskQueue.TaskQueue();
-    private _viewport?          : UiInterfacesIUiList.IUiList<DataForRenderer>;
+    private readonly _taskQueue = new TaskQueue();
+    private _viewport?          : IUiList<DataForRenderer>;
 
-    private _getTaskQueue(): AuxiliaryTypesTaskQueue.TaskQueue<any> {
+    private _getTaskQueue(): TaskQueue<any> {
         return this._taskQueue;
     }
 
-    public initViewport(viewport: UiInterfacesIUiList.IUiList<DataForRenderer>): void {
+    public initViewport(viewport: IUiList<DataForRenderer>): void {
         if (this._getViewport()) {
-            throw HelpersMisc.newError(`Viewport initialized.`);
+            throw newError(`Viewport initialized.`);
         }
 
-        if (!(viewport instanceof UiUtilsUiFactory.getUiListClass())) {
-            throw HelpersMisc.newError(`UiScrollList only supports UiList as viewport, use UiScroller instead.`);
+        if (!(viewport instanceof getUiListClass())) {
+            throw newError(`UiScrollList only supports UiList as viewport, use UiScroller instead.`);
         }
         viewport.setUnscaledRequestedSize(this.getUnscaledManualWidth(), this.getUnscaledManualHeight());
 
         this._viewport = viewport;
-        this.addChild(viewport as unknown as VendorEgretEgret.DisplayObjectContainer);
+        this.addChild(viewport as unknown as DisplayObjectContainer);
     }
-    protected _getViewport(): UiInterfacesIUiList.IUiList<DataForRenderer> | undefined {
+    protected _getViewport(): IUiList<DataForRenderer> | undefined {
         return this._viewport;
     }
 
     public setItemRendererClass(itemRenderer: new () => IUiListItemRenderer<DataForRenderer>): void {
-        HelpersMisc.getExisted(this._getViewport()).setItemRendererClass(itemRenderer);
+        getExisted(this._getViewport()).setItemRendererClass(itemRenderer);
     }
 
     public getMaxSelection(): number | undefined {
@@ -155,7 +155,7 @@ export class UiScrollList<DataForRenderer extends UiTypesUiListItemData.UiListIt
     public setSelectedItemIndexes(indexes: number[], needResetItemsSkin = true): void {
         this._getViewport()?.setSelectedItemIndexes(indexes, needResetItemsSkin);
     }
-    public setSelectedItemIndex(index: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>, needResetItemsSkin = true): void {
+    public setSelectedItemIndex(index: Undefinable<number>, needResetItemsSkin = true): void {
         this.setSelectedItemIndexes(index == null ? [] : [index], needResetItemsSkin);
     }
 

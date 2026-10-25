@@ -1,44 +1,44 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as DialoguesConstants from "../Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as PlayersUtilsCommon from "../../players/utils/Common.ts";
-import type * as ProtoSchemaCommonProtoMapMapSimpleDialogue from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
-import type * as ProtoSchemaCommonProtoMapMapSimpleDialogueDataForAside from "../../proto/schema/CommonProto/Map/MapSimpleDialogue/DataForAside.ts";
-import type * as ProtoSchemaCommonProtoMapMapSimpleDialogueDataForCoDialogue from "../../proto/schema/CommonProto/Map/MapSimpleDialogue/DataForCoDialogue.ts";
-import type * as ProtoSchemaCommonProtoMapMapSimpleDialogueDataForDialogue from "../../proto/schema/CommonProto/Map/MapSimpleDialogue/DataForDialogue.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { Common, SmallDialogueSideId } from "../Constants.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { UndefinedError, TextType } from "../../lang/Constants.ts";
+import { checkIsValidLanguageTextArray, getFormattedText, getText } from "../../lang/Utils.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import { checkIsValidPlayerIndex } from "../../players/utils/Common.ts";
+import type { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
+import type { DataForAside } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue/DataForAside.ts";
+import type { DataForCoDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue/DataForCoDialogue.ts";
+import type { DataForDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue/DataForDialogue.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type MapSimpleDialogueSchema            = ProtoSchemaCommonProtoMapMapSimpleDialogue.MapSimpleDialogue;
+type MapSimpleDialogueSchema            = MapSimpleDialogue;
 
-export function getErrorCode(data: MapSimpleDialogueSchema, playersCountUnneutral: number, gameConfig: GameConfigGcData.GcData): UtilsClientErrorCode.ClientErrorCode {
+export function getErrorCode(data: MapSimpleDialogueSchema, playersCountUnneutral: number, gameConfig: GcData): ClientErrorCode {
     if (data == null) {
-        return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_00;
+        return ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_00;
     }
 
     const dataArray = data.getDataArray();
     if (dataArray == null) {
-        return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_01;
+        return ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_01;
     }
 
     const dialogueCount = dataArray.length;
-    if ((dialogueCount <= 0) || (dialogueCount > DialoguesConstants.Common.MaxCount)) {
-        return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_02;
+    if ((dialogueCount <= 0) || (dialogueCount > Common.MaxCount)) {
+        return ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_02;
     }
 
     {
         const dialogueNameArray = data.getDialogueNameArray();
         if ((dialogueNameArray == null)                                     ||
-            (!LangUtils.checkIsValidLanguageTextArray({
+            (!checkIsValidLanguageTextArray({
                 list            : dialogueNameArray,
-                maxTextLength   : DialoguesConstants.Common.DialogueNameMaxLength,
+                maxTextLength   : Common.DialogueNameMaxLength,
                 minTextLength   : 1,
                 minTextCount    : 1,
             }))
         ) {
-            return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_03;
+            return ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_03;
         }
     }
 
@@ -68,73 +68,73 @@ export function getErrorCode(data: MapSimpleDialogueSchema, playersCountUnneutra
         }
     }
 
-    return UtilsClientErrorCode.ClientErrorCode.NoError;
+    return ClientErrorCode.NoError;
 }
-function getErrorCodeForDataForCoDialogue(data: ProtoSchemaCommonProtoMapMapSimpleDialogueDataForCoDialogue.DataForCoDialogue, playersCountUnneutral: number, gameConfig: GameConfigGcData.GcData): UtilsClientErrorCode.ClientErrorCode {
+function getErrorCodeForDataForCoDialogue(data: DataForCoDialogue, playersCountUnneutral: number, gameConfig: GcData): ClientErrorCode {
     const coId = data.getCoId();
     if (coId != null) {
         if (gameConfig.getCoBasicCfg(coId) == null) {
-            return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_00;
+            return ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_00;
         }
     }
 
     const playerIndex = data.getPlayerIndex();
     if (playerIndex != null) {
-        if ((playerIndex === PlayersConstants.PlayerIndex.Neutral) || (!PlayersUtilsCommon.checkIsValidPlayerIndex(playerIndex, playersCountUnneutral))) {
-            return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_01;
+        if ((playerIndex === PlayerIndex.Neutral) || (!checkIsValidPlayerIndex(playerIndex, playersCountUnneutral))) {
+            return ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_01;
         }
     }
 
     if ((coId == null) && (playerIndex == null)) {
-        return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_02;
+        return ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_02;
     }
 
     const side = data.getSide();
-    if ((side !== DialoguesConstants.SmallDialogueSideId.Top)     &&
-        (side !== DialoguesConstants.SmallDialogueSideId.Bottom)
+    if ((side !== SmallDialogueSideId.Top)     &&
+        (side !== SmallDialogueSideId.Bottom)
     ) {
-        return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_03;
+        return ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_03;
     }
 
-    if (!LangUtils.checkIsValidLanguageTextArray({
+    if (!checkIsValidLanguageTextArray({
         list            : data.getTextArray(),
         minTextLength   : 1,
-        maxTextLength   : DialoguesConstants.Common.MaxTextLength,
+        maxTextLength   : Common.MaxTextLength,
         minTextCount    : 1,
     })) {
-        return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_04;
+        return ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_04;
     }
 
-    if (!LangUtils.checkIsValidLanguageTextArray({
+    if (!checkIsValidLanguageTextArray({
         list            : data.getNameArray(),
         minTextLength   : 1,
-        maxTextLength   : DialoguesConstants.Common.MaxNameLength,
+        maxTextLength   : Common.MaxNameLength,
         minTextCount    : 0,
     })) {
-        return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_05;
+        return ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForCoDialogue_05;
     }
 
-    return UtilsClientErrorCode.ClientErrorCode.NoError;
+    return ClientErrorCode.NoError;
 }
-function getErrorCodeForDataForAside(data: ProtoSchemaCommonProtoMapMapSimpleDialogueDataForAside.DataForAside): UtilsClientErrorCode.ClientErrorCode {
-    if (!LangUtils.checkIsValidLanguageTextArray({
+function getErrorCodeForDataForAside(data: DataForAside): ClientErrorCode {
+    if (!checkIsValidLanguageTextArray({
         list            : data.getTextArray(),
         minTextLength   : 1,
-        maxTextLength   : DialoguesConstants.Common.MaxTextLength,
+        maxTextLength   : Common.MaxTextLength,
         minTextCount    : 1,
     })) {
-        return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForAside_00;
+        return ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForAside_00;
     }
 
     const side = data.getSide();
-    if ((side !== DialoguesConstants.SmallDialogueSideId.Bottom) && (side !== DialoguesConstants.SmallDialogueSideId.Top)) {
-        return UtilsClientErrorCode.ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForAside_01;
+    if ((side !== SmallDialogueSideId.Bottom) && (side !== SmallDialogueSideId.Top)) {
+        return ClientErrorCode.PhMapSimpleDialogue_GetErrorCodeForDataForAside_01;
     }
 
-    return UtilsClientErrorCode.ClientErrorCode.NoError;
+    return ClientErrorCode.NoError;
 }
 
-export function getDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<MapSimpleDialogueSchema>, gameConfig: GameConfigGcData.GcData): string | null {
+export function getDesc(data: Undefinable<MapSimpleDialogueSchema>, gameConfig: GcData): string | null {
     if (data == null) {
         return null;
     } else {
@@ -150,46 +150,46 @@ export function getDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<MapSimple
 
         const coNameArray: string[] = [];
         for (const coId of coIdSet) {
-            coNameArray.push(gameConfig.getCoNameAndTierText(coId) ?? LangConstants.UndefinedError);
+            coNameArray.push(gameConfig.getCoNameAndTierText(coId) ?? UndefinedError);
         }
         for (const playerIndex of playerIndexSet) {
             coNameArray.push(`P${playerIndex}`);
         }
 
-        return LangUtils.getFormattedText(LangConstants.TextType.F0085, coNameArray.join(`, `));
+        return getFormattedText(TextType.F0085, coNameArray.join(`, `));
     }
 }
 
-export function getErrorTip(data: MapSimpleDialogueSchema, playersCountUnneutral: number, gameConfig: GameConfigGcData.GcData): string | null {
+export function getErrorTip(data: MapSimpleDialogueSchema, playersCountUnneutral: number, gameConfig: GcData): string | null {
     const dialoguesArray    = data.getDataArray();
     const dialoguesCount    = dialoguesArray.length;
-    if ((dialoguesCount <= 0) || (dialoguesCount > DialoguesConstants.Common.MaxCount)) {
-        return `${LangUtils.getText(LangConstants.TextType.A0227)} (${dialoguesCount} / ${DialoguesConstants.Common.MaxCount})`;
+    if ((dialoguesCount <= 0) || (dialoguesCount > Common.MaxCount)) {
+        return `${getText(TextType.A0227)} (${dialoguesCount} / ${Common.MaxCount})`;
     }
 
     {
         const dialogueNameArray = data.getDialogueNameArray();
         if ((dialogueNameArray == null)                                     ||
-            (!LangUtils.checkIsValidLanguageTextArray({
+            (!checkIsValidLanguageTextArray({
                 list            : dialogueNameArray,
-                maxTextLength   : DialoguesConstants.Common.DialogueNameMaxLength,
+                maxTextLength   : Common.DialogueNameMaxLength,
                 minTextLength   : 1,
                 minTextCount    : 1,
             }))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0162));
+            return getFormattedText(TextType.F0091, getText(TextType.B0162));
         }
     }
 
     for (let i = 0; i < dialoguesCount; ++i) {
         if (getErrorTipForDataForDialogue(dialoguesArray[i], playersCountUnneutral, gameConfig)) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0071, i);
+            return getFormattedText(TextType.F0071, i);
         }
     }
 
     return null;
 }
-export function getErrorTipForDataForDialogue(dialogueData: ProtoSchemaCommonProtoMapMapSimpleDialogueDataForDialogue.DataForDialogue, playersCountUnneutral: number, gameConfig: GameConfigGcData.GcData): string | null {
+export function getErrorTipForDataForDialogue(dialogueData: DataForDialogue, playersCountUnneutral: number, gameConfig: GcData): string | null {
     // if (Object.keys(dialogueData).length !== 1) {
     //     return Lang.getText(LangTextType.A0230);
     // }
@@ -198,7 +198,7 @@ export function getErrorTipForDataForDialogue(dialogueData: ProtoSchemaCommonPro
         const dataForCoDialogue = dialogueData.getDataForCoDialogue();
         if (dataForCoDialogue) {
             if (getErrorCodeForDataForCoDialogue(dataForCoDialogue, playersCountUnneutral, gameConfig)) {
-                return LangUtils.getText(LangConstants.TextType.A0231);
+                return getText(TextType.A0231);
             }
             return null;
         }
@@ -208,12 +208,12 @@ export function getErrorTipForDataForDialogue(dialogueData: ProtoSchemaCommonPro
         const dataForAside = dialogueData.getDataForAside();
         if (dataForAside) {
             if (getErrorCodeForDataForAside(dataForAside)) {
-                return LangUtils.getText(LangConstants.TextType.A0232);
+                return getText(TextType.A0232);
             }
 
             return null;
         }
     }
 
-    return LangUtils.getText(LangConstants.TextType.A0230);
+    return getText(TextType.A0230);
 }

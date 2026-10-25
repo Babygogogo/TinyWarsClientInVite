@@ -1,9 +1,9 @@
-import * as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import * as ProtoSchemaCommonProtoWarSerializationTileCustomCannonData from "../../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
-import * as ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData from "../../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
-import * as ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData from "../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
+import { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import { TileCustomCannonData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
+import { TileCustomCrystalData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
+import { TileCustomLaserTurretData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
 
-export const Crystal = ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData.fromJson({
+export const Crystal = TileCustomCrystalData.fromJson({
     radius                      : 2,
     priority                    : 0,
 
@@ -20,7 +20,7 @@ export const Crystal = ProtoSchemaCommonProtoWarSerializationTileCustomCrystalDa
     canBeFatal                  : false,
 });
 
-export const CannonUp = ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData.fromJson({
+export const CannonUp = TileCustomCannonData.fromJson({
     rangeForDown                : 0,
     rangeForLeft                : 0,
     rangeForRight               : 0,
@@ -39,7 +39,7 @@ export const CannonUp = ProtoSchemaCommonProtoWarSerializationTileCustomCannonDa
     canBeFatal                  : false,
 });
 
-export const CannonDown = ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData.fromJson({
+export const CannonDown = TileCustomCannonData.fromJson({
     rangeForDown                : 4,
     rangeForLeft                : 0,
     rangeForRight               : 0,
@@ -58,7 +58,7 @@ export const CannonDown = ProtoSchemaCommonProtoWarSerializationTileCustomCannon
     canBeFatal                  : false,
 });
 
-export const CannonLeft = ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData.fromJson({
+export const CannonLeft = TileCustomCannonData.fromJson({
     rangeForDown                : 0,
     rangeForLeft                : 4,
     rangeForRight               : 0,
@@ -77,7 +77,7 @@ export const CannonLeft = ProtoSchemaCommonProtoWarSerializationTileCustomCannon
     canBeFatal                  : false,
 });
 
-export const CannonRight = ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData.fromJson({
+export const CannonRight = TileCustomCannonData.fromJson({
     rangeForDown                : 0,
     rangeForLeft                : 0,
     rangeForRight               : 4,
@@ -96,7 +96,7 @@ export const CannonRight = ProtoSchemaCommonProtoWarSerializationTileCustomCanno
     canBeFatal                  : false,
 });
 
-export const CustomCannon = ProtoSchemaCommonProtoWarSerializationTileCustomCannonData.TileCustomCannonData.fromJson({
+export const CustomCannon = TileCustomCannonData.fromJson({
     rangeForDown                : 4,
     rangeForLeft                : 4,
     rangeForRight               : 4,
@@ -115,7 +115,7 @@ export const CustomCannon = ProtoSchemaCommonProtoWarSerializationTileCustomCann
     canBeFatal                  : false,
 });
 
-export const CustomLaserTurret = ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData.fromJson({
+export const CustomLaserTurret = TileCustomLaserTurretData.fromJson({
     rangeForDown                : 9999,
     rangeForLeft                : 9999,
     rangeForRight               : 9999,
@@ -133,4 +133,4 @@ export const CustomLaserTurret = ProtoSchemaCommonProtoWarSerializationTileCusto
     canBeFatal                  : false,
 });
 
-export const Building = new ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData();
+export const Building = new TileCustomBuildingData();

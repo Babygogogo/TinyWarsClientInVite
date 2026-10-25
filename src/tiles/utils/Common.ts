@@ -1,12 +1,16 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigTileTemplateCfg from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import * as TilesConstantsCommon from "../constants/Common.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import type {
+    TileTemplateCfg as ProtoSchemaCommonProtoConfigTileTemplateCfg,
+} from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
+import type {
+    TileCustomBuildingData as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData,
+} from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import { CustomName, AllThemeTypeIdArray } from "../constants/Common.ts";
 
-type TileTemplateCfg        = ProtoSchemaCommonProtoConfigTileTemplateCfg.TileTemplateCfg;
-type TileCustomBuildingData = ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type TileTemplateCfg        = ProtoSchemaCommonProtoConfigTileTemplateCfg;
+type TileCustomBuildingData = ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export function getMaxCapturePoint(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>): Undefinable<number> {
     return templateCfg.getIsCustomizableBuilding()
@@ -37,7 +41,7 @@ export function getDefenseAmount(templateCfg: TileTemplateCfg, customBuildingDat
         ? customBuildingData?.getDefenseAmount() ?? 0
         : templateCfg.getDefenseAmount();
 }
-export function getDefenseUnitTypeArray(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>, gameConfig: GameConfigGcData.GcData): Undefinable<number[]> {
+export function getDefenseUnitTypeArray(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>, gameConfig: GcData): Undefinable<number[]> {
     return (templateCfg.getIsCustomizableBuilding())
         ? customBuildingData?.getDefenseUnitTypeArray()
         : gameConfig.getUnitCategoryCfg(templateCfg.getDefenseUnitCategoryId())?.getUnitTypeIds();
@@ -45,7 +49,7 @@ export function getDefenseUnitTypeArray(templateCfg: TileTemplateCfg, customBuil
 export function checkCanDefendUnit({ templateCfg, customBuildingData, gameConfig, unitType }: {
     templateCfg         : TileTemplateCfg;
     customBuildingData  : Undefinable<TileCustomBuildingData>;
-    gameConfig          : GameConfigGcData.GcData;
+    gameConfig          : GcData;
     unitType            : number;
 }): boolean {
     if (templateCfg.getIsCustomizableBuilding()) {
@@ -58,7 +62,7 @@ export function checkCanDefendUnit({ templateCfg, customBuildingData, gameConfig
 export function checkCanRepairOrSupplyUnitType({ templateCfg, customBuildingData, gameConfig, unitType }: {
     templateCfg         : TileTemplateCfg;
     customBuildingData  : Undefinable<TileCustomBuildingData>;
-    gameConfig          : GameConfigGcData.GcData;
+    gameConfig          : GcData;
     unitType            : number;
 }): boolean {
     if (templateCfg.getIsCustomizableBuilding()) {
@@ -70,7 +74,7 @@ export function checkCanRepairOrSupplyUnitType({ templateCfg, customBuildingData
             : gameConfig.checkIsUnitTypeInCategory(unitType, unitCategoryId);
     }
 }
-export function getRepairUnitTypeArray(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>, gameConfig: GameConfigGcData.GcData): Undefinable<number[]> {
+export function getRepairUnitTypeArray(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>, gameConfig: GcData): Undefinable<number[]> {
     if (templateCfg.getIsCustomizableBuilding()) {
         return customBuildingData?.getRepairUnitTypeArray();
     } else {
@@ -106,7 +110,7 @@ export function getIsVisionEnabledForAllPlayers(templateCfg: TileTemplateCfg, cu
 export function getHideUnitTypeArray({ templateCfg, customBuildingData, gameConfig }: {
     templateCfg         : TileTemplateCfg;
     customBuildingData  : Undefinable<TileCustomBuildingData>;
-    gameConfig          : GameConfigGcData.GcData;
+    gameConfig          : GcData;
 }): Undefinable<number[]> {
     if (templateCfg.getIsCustomizableBuilding()) {
         return customBuildingData?.getHideUnitTypeArray();
@@ -120,7 +124,7 @@ export function getHideUnitTypeArray({ templateCfg, customBuildingData, gameConf
 export function checkCanHideUnitType({ templateCfg, customBuildingData, gameConfig, unitType }: {
     templateCfg         : TileTemplateCfg;
     customBuildingData  : Undefinable<TileCustomBuildingData>;
-    gameConfig          : GameConfigGcData.GcData;
+    gameConfig          : GcData;
     unitType            : number;
 }): boolean {
     if (templateCfg.getIsCustomizableBuilding()) {
@@ -148,7 +152,7 @@ export function getGlobalDefenseBonus(templateCfg: TileTemplateCfg, customBuildi
 export function checkCanCoBoard({ templateCfg, customBuildingData, gameConfig, unitType }: {
     templateCfg         : TileTemplateCfg;
     customBuildingData  : Undefinable<TileCustomBuildingData>;
-    gameConfig          : GameConfigGcData.GcData;
+    gameConfig          : GcData;
     unitType            : number;
 }): boolean {
     if (templateCfg.getIsCustomizableBuilding()) {
@@ -160,7 +164,7 @@ export function checkCanCoBoard({ templateCfg, customBuildingData, gameConfig, u
             : gameConfig.checkIsUnitTypeInCategory(unitType, unitCategory);
     }
 }
-export function getCoBoardUnitTypeArray(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>, gameConfig: GameConfigGcData.GcData): Undefinable<number[]> {
+export function getCoBoardUnitTypeArray(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>, gameConfig: GcData): Undefinable<number[]> {
     if (templateCfg.getIsCustomizableBuilding()) {
         return customBuildingData?.getUnitTypeArrayForCoBoard();
     } else {
@@ -174,7 +178,7 @@ export function getCoBoardUnitTypeArray(templateCfg: TileTemplateCfg, customBuil
 export function checkCanBlockEnemyUnitType({ templateCfg, customBuildingData, gameConfig, unitType }: {
     templateCfg         : TileTemplateCfg;
     customBuildingData  : Undefinable<TileCustomBuildingData>;
-    gameConfig          : GameConfigGcData.GcData;
+    gameConfig          : GcData;
     unitType            : number;
 }): boolean {
     if (templateCfg.getIsCustomizableBuilding()) {
@@ -186,7 +190,7 @@ export function checkCanBlockEnemyUnitType({ templateCfg, customBuildingData, ga
             : gameConfig.checkIsUnitTypeInCategory(unitType, unitCategory);
     }
 }
-export function getBlockEnemyUnitTypeArray(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>, gameConfig: GameConfigGcData.GcData): Undefinable<number[]> {
+export function getBlockEnemyUnitTypeArray(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>, gameConfig: GcData): Undefinable<number[]> {
     if (templateCfg.getIsCustomizableBuilding()) {
         return customBuildingData?.getBlockEnemyUnitTypeArray();
     } else {
@@ -197,7 +201,7 @@ export function getBlockEnemyUnitTypeArray(templateCfg: TileTemplateCfg, customB
     }
 }
 
-export function getProducibleUnitTypeArray(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>, gameConfig: GameConfigGcData.GcData): Undefinable<number[]> {
+export function getProducibleUnitTypeArray(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>, gameConfig: GcData): Undefinable<number[]> {
     if (templateCfg.getIsCustomizableBuilding()) {
         return customBuildingData?.getProduceUnitTypeArray();
     } else {
@@ -210,15 +214,15 @@ export function getProducibleUnitTypeArray(templateCfg: TileTemplateCfg, customB
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function checkIsValidCustomNameId(nameId: number): boolean {
-    return (nameId >= TilesConstantsCommon.CustomName.MinId)
-        && (nameId <= TilesConstantsCommon.CustomName.MaxId);
+    return (nameId >= CustomName.MinId)
+        && (nameId <= CustomName.MaxId);
 }
 
 export function checkIsValidThemeId(tileTheme: number): boolean {
-    return TilesConstantsCommon.AllThemeTypeIdArray.includes(tileTheme);
+    return AllThemeTypeIdArray.includes(tileTheme);
 }
 export function getNextThemeId(tileTheme: Undefinable<number>): number | null {
-    const arr = TilesConstantsCommon.AllThemeTypeIdArray;
+    const arr = AllThemeTypeIdArray;
     if (tileTheme == null) {
         return arr[0];
     }

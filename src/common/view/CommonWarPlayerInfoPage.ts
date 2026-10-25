@@ -1,64 +1,64 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesChatToTarget from "../../auxiliaryTypes/ChatToTarget.ts";
-import * as CosConstants from "../../cos/Constants.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameConfigGcWar from "../../gameConfig/GcWar.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersText from "../../helpers/Text.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LeaderboardModelLeaderboardModel from "../../leaderboard/model/LeaderboardModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiOpenableComponent from "../../ui/components/UiOpenableComponent.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import * as UiTypesUiHorizontalAlign from "../../ui/types/UiHorizontalAlign.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UiTypesUiVerticalAlign from "../../ui/types/UiVerticalAlign.ts";
-import * as UiUtilsUiSkinHelpers from "../../ui/utils/UiSkinHelpers.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as UsersUtils from "../../users/Utils.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
+import type { PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
+import { CoId } from "../../cos/Constants.ts";
+import { showLang } from "../../FloatText.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { MultiRankedWar } from "../../gameConfig/GcWar.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { getSuffixForRankIndex } from "../../helpers/Text.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getFormattedText, getPlayerForceName, getPlayerTeamName, getTimeDurationText2 } from "../../lang/Utils.ts";
+import { getMrwRankIndex } from "../../leaderboard/model/LeaderboardModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { getServerTimestamp } from "../../timer/TimerModel.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiOpenableComponent } from "../../ui/components/UiOpenableComponent.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
+import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
+import { getSelfUserId, getUserNickname, getUserPublicInfo, getSelfSettingsIsReplayResultVisible } from "../../users/Model.ts";
+import { checkIsDummy } from "../../users/Utils.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export type OpenData = {
-    gameConfig              : GameConfigGcData.GcData;
+    gameConfig              : GcData;
     playersCountUnneutral   : number;
     enterTurnTime           : number | null;
     roomOwnerPlayerIndex    : number | null;
     isReplay                : boolean;
-    playerInfoArray         : AuxiliaryTypesAuxiliaryTypes.PlayerInfo[];
+    playerInfoArray         : PlayerInfo[];
     callbackOnAddDummy      : ((playerIndex: number) => void) | null;
     callbackOnChangeDummy   : ((playerIndex: number) => void) | null;
     callbackOnExitRoom      : (() => void) | null;
     callbackOnDeletePlayer  : ((playerIndex: number, forbidReentrance: boolean) => void) | null;
 } | null;
-export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<OpenData> {
-    private readonly _groupInfo!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listPlayer!   : UiInterfacesIUiScrollList.IUiScrollList<DataForPlayerRenderer>;
+export class Page extends UiOpenableComponent<OpenData> {
+    private readonly _groupInfo!    : IUiContainer;
+    private readonly _listPlayer!   : IUiScrollList<DataForPlayerRenderer>;
 
     public constructor() {
         super();
 
-        UiUtilsUiSkinHelpers.loadSkinByPath(this, "common/CommonWarPlayerInfoPage.exml");
+        loadSkinByPath(this, "common/CommonWarPlayerInfoPage.exml");
     }
 
     public updateOnLoadedSkin(): void {
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
+            verticalAlign   : { align       : UiVerticalAlign.Middle },
+            horizontalAlign : { align       : UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -94,12 +94,12 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
             enterTurnTime,
             isReplay,
         } = openData;
-        const isRoomOwnedBySelf = playerInfoArray.find(v => v.playerIndex === roomOwnerPlayerIndex)?.userId === UsersModel.getSelfUserId();
+        const isRoomOwnedBySelf = playerInfoArray.find(v => v.playerIndex === roomOwnerPlayerIndex)?.userId === getSelfUserId();
         const dataArray         : DataForPlayerRenderer[] = [];
-        for (let playerIndex = PlayersConstants.PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
+        for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
             const playerInfo = playerInfoArray.find(v => v.playerIndex === playerIndex);
             if (playerInfo == null) {
-                throw HelpersMisc.newError(`CommonWarPlayerInfoPage._updateListPlayer() empty playerInfo.`);
+                throw newError(`CommonWarPlayerInfoPage._updateListPlayer() empty playerInfo.`);
             }
 
             dataArray.push({
@@ -119,47 +119,47 @@ export class Page extends UiComponentsUiOpenableComponent.UiOpenableComponent<Op
     }
 }
 
-interface DataForPlayerRenderer extends UiTypesUiListItemData.UiListItemData {
-    gameConfig              : GameConfigGcData.GcData;
+interface DataForPlayerRenderer extends UiListItemData {
+    gameConfig              : GcData;
     isRoomOwnedBySelf       : boolean;
     enterTurnTime           : number | null;
-    playerInfo              : AuxiliaryTypesAuxiliaryTypes.PlayerInfo;
+    playerInfo              : PlayerInfo;
     isReplay                : boolean;
     callbackOnAddDummy      : ((playerIndex: number) => void) | null;
     callbackOnChangeDummy   : ((playerIndex: number) => void) | null;
     callbackOnExitRoom      : (() => void) | null;
     callbackOnDeletePlayer  : ((playerIndex: number, forbidReentrance: boolean) => void) | null;
 }
-class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForPlayerRenderer> {
-    private readonly _groupCo!                  : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgSkin!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgCoHead!                : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelNickname!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelCo!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStatus!              : UiInterfacesIUiLabel.IUiLabel;
+class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
+    private readonly _groupCo!                  : IUiContainer;
+    private readonly _imgSkin!                  : IUiImage;
+    private readonly _imgCoHead!                : IUiImage;
+    private readonly _labelNickname!            : IUiLabel;
+    private readonly _labelCo!                  : IUiLabel;
+    private readonly _labelStatus!              : IUiLabel;
 
-    private readonly _layoutInfo!               : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelPlayerIndex!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTeamIndex!           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutInfo!               : IUiLayout;
+    private readonly _labelPlayerIndex!         : IUiLabel;
+    private readonly _labelTeamIndex!           : IUiLabel;
 
-    private readonly _layoutStd!                : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelRankStdTitle!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRankStd!             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutStd!                : IUiLayout;
+    private readonly _labelRankStdTitle!        : IUiLabel;
+    private readonly _labelRankStd!             : IUiLabel;
 
-    private readonly _layoutFog!                : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelRankFogTitle!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRankFog!             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutFog!                : IUiLayout;
+    private readonly _labelRankFogTitle!        : IUiLabel;
+    private readonly _labelRankFog!             : IUiLabel;
 
-    private readonly _groupRestTimeToBoot!      : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelRestTimeToBootTitle! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRestTimeToBoot!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupRestTimeToBoot!      : IUiLayout;
+    private readonly _labelRestTimeToBootTitle! : IUiLabel;
+    private readonly _labelRestTimeToBoot!      : IUiLabel;
 
-    private readonly _groupButton!              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnChat!                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnInfo!                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDelete!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAddDummy!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnChangeDummy!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupButton!              : IUiLayout;
+    private readonly _btnChat!                  : IUiButton;
+    private readonly _btnInfo!                  : IUiButton;
+    private readonly _btnDelete!                : IUiButton;
+    private readonly _btnAddDummy!              : IUiButton;
+    private readonly _btnChangeDummy!           : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -171,9 +171,9 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             { ui: this._btnChangeDummy, callback: this._onTouchedBtnChangeDummy },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.TimeTick,                                    callback: this._onNotifyTimeTick },
-            { type: NotificationsTypeId.TypeId.UserSettingsIsReplayResultVisibleChanged,    callback: this._onNotifyUserSettingsIsReplayResultVisibleChanged },
+            { type: TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.TimeTick,                                    callback: this._onNotifyTimeTick },
+            { type: TypeId.UserSettingsIsReplayResultVisibleChanged,    callback: this._onNotifyUserSettingsIsReplayResultVisibleChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -185,11 +185,11 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const coId  = openData.playerInfo.coId;
-        if ((coId != null) && (coId !== CosConstants.CoId.Empty)) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonCoInfoPanel, {
+        if ((coId != null) && (coId !== CoId.Empty)) {
+            openPanel(getDict().CommonCoInfoPanel, {
                 gameConfig  : openData.gameConfig,
                 coId,
             });
@@ -199,14 +199,14 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
     private _onTouchedBtnChat(): void {
         const userId = this.getOpenData()?.playerInfo.userId;
         if (userId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().ChatPanel, { toTarget: new AuxiliaryTypesChatToTarget.ChatToTarget({ toUserId: userId }) });
+            openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({ toUserId: userId }) });
         }
     }
 
     private _onTouchedBtnInfo(): void {
         const userId = this.getOpenData()?.playerInfo.userId;
         if (userId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId });
+            openPanel(getDict().UserPanel, { userId });
         }
     }
 
@@ -222,11 +222,11 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        if (userId === UsersModel.getSelfUserId()) {
+        if (userId === getSelfUserId()) {
             const callback = openData.callbackOnExitRoom;
             if (callback) {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                    getContent : () => LangUtils.getText(LangConstants.TextType.A0126),
+                openPanel(getDict().CommonConfirmPanel, {
+                    getContent : () => getText(TextType.A0126),
                     callback,
                 });
             }
@@ -234,8 +234,8 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
         } else {
             const callback = openData.callbackOnDeletePlayer;
             if ((callback) && (openData.isRoomOwnedBySelf)) {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonDeletePlayerPanel, {
-                    content : LangUtils.getFormattedText(LangConstants.TextType.F0029, await UsersModel.getUserNickname(userId)),
+                openPanel(getDict().CommonDeletePlayerPanel, {
+                    content : getFormattedText(TextType.F0029, await getUserNickname(userId)),
                     callback: (forbidReentrance: boolean) => {
                         callback(playerInfo.playerIndex, forbidReentrance);
                     },
@@ -247,13 +247,13 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
     private _onTouchedBtnAddDummy(): void {
         const openData = this.getOpenData();
         if (openData == null) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const callback = openData.callbackOnAddDummy;
         if (callback == null) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -263,13 +263,13 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
     private _onTouchedBtnChangeDummy(): void {
         const openData = this.getOpenData();
         if (openData == null) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const callback = openData.callbackOnChangeDummy;
         if (callback == null) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -292,11 +292,11 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelRankStdTitle.setLangText(LangConstants.TextType.B0546);
-        this._labelRankFogTitle.setLangText(LangConstants.TextType.B0547);
-        this._labelRestTimeToBootTitle.setLangText(LangConstants.TextType.B0188);
+        this._labelRankStdTitle.setLangText(TextType.B0546);
+        this._labelRankFogTitle.setLangText(TextType.B0547);
+        this._labelRestTimeToBootTitle.setLangText(TextType.B0188);
         this._btnAddDummy.setText(`A.I.`);
-        this._btnChangeDummy.setLangText(LangConstants.TextType.B0560);
+        this._btnChangeDummy.setLangText(TextType.B0560);
 
         this._layoutFog.arrangeItems();
         this._layoutStd.arrangeItems();
@@ -316,9 +316,9 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
 
         const playerInfo    = openData.playerInfo;
         const playerIndex   = playerInfo.playerIndex;
-        this._labelPlayerIndex.setText(LangUtils.getPlayerForceName(playerIndex));
-        this._labelTeamIndex.setText(LangUtils.getPlayerTeamName(playerInfo.teamIndex) || LangConstants.UndefinedError);
-        this._imgSkin.loadSource(HelpersImageSource.getCoHeadFrame(playerInfo.unitAndTileSkinId));
+        this._labelPlayerIndex.setText(getPlayerForceName(playerIndex));
+        this._labelTeamIndex.setText(getPlayerTeamName(playerInfo.teamIndex) || UndefinedError);
+        this._imgSkin.loadSource(getCoHeadFrame(playerInfo.unitAndTileSkinId));
 
         const coId      = playerInfo.coId;
         const labelCo   = this._labelCo;
@@ -329,17 +329,17 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
         } else {
             const gameConfig    = openData.gameConfig;
             const coCfg         = gameConfig.getCoBasicCfg(coId);
-            labelCo.setText(coCfg?.getName() ?? LangConstants.UndefinedError);
-            imgCoHead.loadSource(HelpersImageSource.getCoHead(gameConfig, coId) ?? LangConstants.UndefinedError);
+            labelCo.setText(coCfg?.getName() ?? UndefinedError);
+            imgCoHead.loadSource(getCoHead(gameConfig, coId) ?? UndefinedError);
         }
 
         const userId        = playerInfo.userId;
-        const userInfo      = userId == null ? null : await UsersModel.getUserPublicInfo(userId);
+        const userInfo      = userId == null ? null : await getUserPublicInfo(userId);
         const labelNickname = this._labelNickname;
         if (userInfo) {
-            labelNickname.setText(userInfo.getNickname() || LangConstants.UndefinedError);
+            labelNickname.setText(userInfo.getNickname() || UndefinedError);
         } else {
-            labelNickname.setText(playerInfo.isAi ? LangUtils.getText(LangConstants.TextType.B0607) : `??`);
+            labelNickname.setText(playerInfo.isAi ? getText(TextType.B0607) : `??`);
         }
 
         {
@@ -356,7 +356,7 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
                 }
 
             } else {
-                const isDummy = UsersUtils.checkIsDummy(userId);
+                const isDummy = checkIsDummy(userId);
                 if ((isDummy)                       &&
                     (isRoomOwnedBySelf)             &&
                     (openData.callbackOnChangeDummy)
@@ -368,7 +368,7 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
                     groupButton.addItem(this._btnInfo, false);
                 }
 
-                const selfUserId = UsersModel.getSelfUserId();
+                const selfUserId = getSelfUserId();
                 if ((!isDummy) && (userId !== selfUserId)) {
                     groupButton.addItem(this._btnChat, false);
                 }
@@ -390,18 +390,18 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
         }
 
         const label = this._labelStatus;
-        if ((openData.isReplay) && (!UsersModel.getSelfSettingsIsReplayResultVisible())) {
+        if ((openData.isReplay) && (!getSelfSettingsIsReplayResultVisible())) {
             label.setText(``);
             return;
         }
 
         const playerInfo = openData.playerInfo;
         if (playerInfo.isReady) {
-            label.setText(LangUtils.getText(LangConstants.TextType.B0402));
+            label.setText(getText(TextType.B0402));
         } else if (playerInfo.isInTurn) {
-            label.setText(LangUtils.getText(LangConstants.TextType.B0086));
+            label.setText(getText(TextType.B0086));
         } else if (playerInfo.isDefeat != null) {
-            label.setText(LangUtils.getText(playerInfo.isDefeat ? LangConstants.TextType.B0472 : LangConstants.TextType.B0471));
+            label.setText(getText(playerInfo.isDefeat ? TextType.B0472 : TextType.B0471));
         } else {
             // TODO
             label.setText(``);
@@ -418,18 +418,18 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             return;
         }
 
-        const rankScoreArray    = (await UsersModel.getUserPublicInfo(userId))?.getUserMrwRankInfoArray();
-        const stdRankInfo       = rankScoreArray?.find(v => v.getWarType() === WarTypesConstants.WarTypeId.MrwStd);
-        const fogRankInfo       = rankScoreArray?.find(v => v.getWarType() === WarTypesConstants.WarTypeId.MrwFog);
-        const stdRankIndex      = await LeaderboardModelLeaderboardModel.getMrwRankIndex(WarTypesConstants.WarTypeId.MrwStd, userId);
-        const fogRankIndex      = await LeaderboardModelLeaderboardModel.getMrwRankIndex(WarTypesConstants.WarTypeId.MrwFog, userId);
+        const rankScoreArray    = (await getUserPublicInfo(userId))?.getUserMrwRankInfoArray();
+        const stdRankInfo       = rankScoreArray?.find(v => v.getWarType() === WarTypeId.MrwStd);
+        const fogRankInfo       = rankScoreArray?.find(v => v.getWarType() === WarTypeId.MrwFog);
+        const stdRankIndex      = await getMrwRankIndex(WarTypeId.MrwStd, userId);
+        const fogRankIndex      = await getMrwRankIndex(WarTypeId.MrwFog, userId);
         labelRankStd.setText(stdRankInfo
-            ? `${stdRankInfo?.getCurrentScore() ?? GameConfigGcWar.MultiRankedWar.InitialScore} (${stdRankIndex == null ? `--` : `${stdRankIndex}${HelpersText.getSuffixForRankIndex(stdRankIndex)}`})`
-            : `${GameConfigGcWar.MultiRankedWar.InitialScore} (--)`
+            ? `${stdRankInfo?.getCurrentScore() ?? MultiRankedWar.InitialScore} (${stdRankIndex == null ? `--` : `${stdRankIndex}${getSuffixForRankIndex(stdRankIndex)}`})`
+            : `${MultiRankedWar.InitialScore} (--)`
         );
         labelRankFog.setText(fogRankInfo
-            ? `${fogRankInfo?.getCurrentScore() ?? GameConfigGcWar.MultiRankedWar.InitialScore} (${fogRankIndex == null ? `--` : `${fogRankIndex}${HelpersText.getSuffixForRankIndex(fogRankIndex)}`})`
-            : `${GameConfigGcWar.MultiRankedWar.InitialScore} (--)`
+            ? `${fogRankInfo?.getCurrentScore() ?? MultiRankedWar.InitialScore} (${fogRankIndex == null ? `--` : `${fogRankIndex}${getSuffixForRankIndex(fogRankIndex)}`})`
+            : `${MultiRankedWar.InitialScore} (--)`
         );
 
         this._layoutStd.arrangeItems();
@@ -449,7 +449,7 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
         const restTime          = (restTimeToBoot == null) || (enterTurnTime == null)
             ? null
             : (playerInfo.isInTurn
-                ? Math.max(0, restTimeToBoot + enterTurnTime - TimerTimerModel.getServerTimestamp())
+                ? Math.max(0, restTimeToBoot + enterTurnTime - getServerTimestamp())
                 : restTimeToBoot
             );
         const label             = this._labelRestTimeToBoot;
@@ -457,7 +457,7 @@ class PlayerRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<D
             label.setText(`--`);
             label.setTextColor(0xFFFFFF);
         } else {
-            label.setText(LangUtils.getTimeDurationText2(restTime));
+            label.setText(getTimeDurationText2(restTime));
             label.setTextColor(restTime >= 30 * 60
                 ? 0xFFFFFF
                 : (restTime >= 5 * 60 ? 0xFFFF00 : 0xFF4400)

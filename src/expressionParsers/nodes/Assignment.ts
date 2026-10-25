@@ -1,31 +1,31 @@
-import type * as ExpressionParsersContextsBase from "../contexts/Base.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersNodesBase from "./Base.ts";
-import type * as ExpressionParsersResultsBase from "../results/Base.ts";
-import * as ExpressionParsersUtils from "../Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { Base } from "../contexts/Base.ts";
+import { ResultType, ContextType } from "../Enums.ts";
+import { Base as ExpressionParsersNodesBase } from "./Base.ts";
+import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import { getErrorTextForOperandType } from "../Utils.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 const ValidResultTypes = [
-    ExpressionParsersEnums.ResultType.Unit,
-    ExpressionParsersEnums.ResultType.UnitArray,
-    ExpressionParsersEnums.ResultType.Number,
-    ExpressionParsersEnums.ResultType.NumberArray,
-    ExpressionParsersEnums.ResultType.Player,
-    ExpressionParsersEnums.ResultType.PlayerArray,
-    ExpressionParsersEnums.ResultType.Tile,
-    ExpressionParsersEnums.ResultType.TileArray,
-    ExpressionParsersEnums.ResultType.TileBuff,
-    ExpressionParsersEnums.ResultType.TileBuffArray,
-    ExpressionParsersEnums.ResultType.UnitStatistic,
-    ExpressionParsersEnums.ResultType.UnitStatisticArray,
+    ResultType.Unit,
+    ResultType.UnitArray,
+    ResultType.Number,
+    ResultType.NumberArray,
+    ResultType.Player,
+    ResultType.PlayerArray,
+    ResultType.Tile,
+    ResultType.TileArray,
+    ResultType.TileBuff,
+    ResultType.TileBuffArray,
+    ResultType.UnitStatistic,
+    ResultType.UnitStatisticArray,
 ];
 
-export class Assignment extends ExpressionParsersNodesBase.Base {
+export class Assignment extends ExpressionParsersNodesBase {
     private _identifierName : string;
-    private _rhs            : ExpressionParsersNodesBase.Base;
+    private _rhs            : ExpressionParsersNodesBase;
 
-    public constructor(identifierName: string, rhs: ExpressionParsersNodesBase.Base) {
+    public constructor(identifierName: string, rhs: ExpressionParsersNodesBase) {
         super();
 
         this._identifierName    = identifierName;
@@ -38,25 +38,25 @@ export class Assignment extends ExpressionParsersNodesBase.Base {
         return names;
     }
 
-    public override eval(ctx: ExpressionParsersContextsBase.Base, rootCtx: ExpressionParsersContextsBase.Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase.Base> | null, localVariableDict: Map<string, ExpressionParsersResultsBase.Base> | null, isRestricted: boolean): ExpressionParsersResultsBase.Base {
+    public override eval(ctx: Base, rootCtx: Base, lambdaArgumentDict: Map<string, ExpressionParsersResultsBase> | null, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
         const result = this._rhs.eval(ctx, rootCtx, lambdaArgumentDict, localVariableDict, isRestricted);
         if (!checkIsValidResultType(result.getResultType())) {
-            throw HelpersMisc.newError(`Invalid value for assignment.`);
+            throw newError(`Invalid value for assignment.`);
         }
 
         return result;
     }
     public override getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet }: {
-        contextType             : ExpressionParsersEnums.ContextType;
-        lambdaArgumentInfoDict  : Map<string, ExpressionParsersEnums.ResultType> | null;
-        localVariableDict       : Map<string, ExpressionParsersEnums.ResultType> | null;
+        contextType             : ContextType;
+        lambdaArgumentInfoDict  : Map<string, ResultType> | null;
+        localVariableDict       : Map<string, ResultType> | null;
         customCounterNameSet    : Set<string>;
-    }): ExpressionParsersEnums.ResultType {
+    }): ResultType {
         const resultType = this._rhs.getResultType({ contextType, lambdaArgumentInfoDict, localVariableDict, customCounterNameSet });
         if (!checkIsValidResultType(resultType)) {
-            throw HelpersMisc.newError(
-                ExpressionParsersUtils.getErrorTextForOperandType("=", 1, ValidResultTypes, resultType),
-                UtilsClientErrorCode.ClientErrorCode.EpNodeOperatorAssign_GetResultType_00
+            throw newError(
+                getErrorTextForOperandType("=", 1, ValidResultTypes, resultType),
+                ClientErrorCode.EpNodeOperatorAssign_GetResultType_00
             );
         }
 
@@ -80,6 +80,6 @@ export class Assignment extends ExpressionParsersNodesBase.Base {
     // }
 }
 
-function checkIsValidResultType(resultType: ExpressionParsersEnums.ResultType): boolean {
+function checkIsValidResultType(resultType: ResultType): boolean {
     return ValidResultTypes.indexOf(resultType) >= 0;
 }

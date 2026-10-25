@@ -1,15 +1,15 @@
-import type * as LangConstants from "../../lang/Constants.ts";
-import type * as UiInterfacesIUiComponent from "./IUiComponent.ts";
-import type * as UiTypesUiHorizontalAlign from "../types/UiHorizontalAlign.ts";
-import type * as UiTypesUiVerticalAlign from "../types/UiVerticalAlign.ts";
+import type { TextType, LanguageType } from "../../lang/Constants.ts";
+import type { IUiComponent } from "./IUiComponent.ts";
+import type { UiHorizontalAlign as UiTypesUiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
+import type { UiVerticalAlign as UiTypesUiVerticalAlign } from "../types/UiVerticalAlign.ts";
 
-type UiHorizontalAlign  = UiTypesUiHorizontalAlign.UiHorizontalAlign;
-type UiVerticalAlign    = UiTypesUiVerticalAlign.UiVerticalAlign;
+type UiHorizontalAlign  = UiTypesUiHorizontalAlign;
+type UiVerticalAlign    = UiTypesUiVerticalAlign;
 
-export interface IUiLabel extends UiInterfacesIUiComponent.IUiComponent {
+export interface IUiLabel extends IUiComponent {
     getText(): string;
     setText(text: string): void;
-    setLangText(langTextType: LangConstants.TextType, languageType?: LangConstants.LanguageType): void;
+    setLangText(langTextType: TextType, languageType?: LanguageType): void;
     getFontFamily(): string;
     setFontFamily(fontFamily: string): void;
     getFontSize(): number;

@@ -1,178 +1,185 @@
-import * as ActionPlannersConstants from "../Constants.ts";
-import type * as ActionPlannersIActionPlanner from "../IActionPlanner.ts";
-import * as ActionPlannersStatesIdle from "./Idle.ts";
-import type * as ActionPlannersStatesIState from "./IState.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import * as CoSkillsConstants from "../../coSkills/Constants.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
+import { StateId } from "../Constants.ts";
+import type { IActionPlanner } from "../IActionPlanner.ts";
+import { Idle } from "./Idle.ts";
+import type { IState } from "./IState.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import { SkillTypeId } from "../../coSkills/Constants.ts";
+import {
+    getHrwWarClass,
+    getRwWarClass,
+    getMeWarClass,
+    getTwWarClass,
+    getMpwWarClass,
+    getSpwWarClass,
+} from "../../gameHelpers/GhFactory.ts";
+import { newError, getExisted } from "../../helpers/Misc.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 
-type GridIndex          = AuxiliaryTypesGridIndex.GridIndex;
+type GridIndex          = AuxiliaryTypesGridIndex;
 
-export class ChoosingCoActiveSkillTarget implements ActionPlannersStatesIState.IState {
+export class ChoosingCoActiveSkillTarget implements IState {
     private static readonly _instance = new ChoosingCoActiveSkillTarget();
 
     public static getInstance(): ChoosingCoActiveSkillTarget {
         return ChoosingCoActiveSkillTarget._instance;
     }
 
-    public getStateId(): ActionPlannersConstants.StateId {
-        return ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget;
+    public getStateId(): StateId {
+        return StateId.ChoosingCoActiveSkillTarget;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getNextStateIdOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): ActionPlannersConstants.StateId {
+    public getNextStateIdOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): StateId {
         const war = actionPlanner.getWar();
-        if ((war instanceof GameHelpersGhFactory.getHrwWarClass()) ||
-            (war instanceof GameHelpersGhFactory.getRwWarClass())
+        if ((war instanceof getHrwWarClass()) ||
+            (war instanceof getRwWarClass())
         ) {
-            return ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget;
+            return StateId.ChoosingCoActiveSkillTarget;
 
         } else if (
-            (war instanceof GameHelpersGhFactory.getMeWarClass())  ||
-            (war instanceof GameHelpersGhFactory.getTwWarClass())
+            (war instanceof getMeWarClass())  ||
+            (war instanceof getTwWarClass())
         ) {
-            return ActionPlannersConstants.StateId.Idle;
+            return StateId.Idle;
 
         } else if (
-            (war instanceof GameHelpersGhFactory.getMpwWarClass()) ||
-            (war instanceof GameHelpersGhFactory.getSpwWarClass())
+            (war instanceof getMpwWarClass()) ||
+            (war instanceof getSpwWarClass())
         ) {
             if (actionPlanner.getCoActiveSkillTypeId() == null) {
-                return ActionPlannersConstants.StateId.Idle;
+                return StateId.Idle;
             } else {
                 const targetGridIndexArray      = actionPlanner.getCoActiveSkillTargetGridIndexArray() ?? [];
                 const selectableTargetsCount    = actionPlanner.getMaxCoActiveSkillTargetsCount() ?? 0;
                 if (targetGridIndexArray.length < selectableTargetsCount) {
-                    return ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget;
+                    return StateId.ChoosingCoActiveSkillTarget;
                 } else {
                     const previousGridIndex = actionPlanner.getWar().getCursor().getPreviousGridIndex();
                     if ((previousGridIndex != null)                                         &&
                         (previousGridIndex.checkIsEqual(gridIndex))                         &&
                         (targetGridIndexArray.some(v => v.checkIsEqual(previousGridIndex)))
                     ) {
-                        return actionPlanner.getFocusUnitOnMap() ? ActionPlannersConstants.StateId.RequestingUnitUseCoActiveSkill : ActionPlannersConstants.StateId.RequestingPlayerUseCoActiveSkill;
+                        return actionPlanner.getFocusUnitOnMap() ? StateId.RequestingUnitUseCoActiveSkill : StateId.RequestingPlayerUseCoActiveSkill;
                     } else {
-                        return ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget;
+                        return StateId.ChoosingCoActiveSkillTarget;
                     }
                 }
             }
 
         } else {
-            throw HelpersMisc.newError(`Invalid actionPlanner: ${actionPlanner}`);
+            throw newError(`Invalid actionPlanner: ${actionPlanner}`);
         }
     }
 
-    public getNextStateIdOnDrag(): ActionPlannersConstants.StateId {
+    public getNextStateIdOnDrag(): StateId {
         return this.getStateId();
     }
 
-    public getNextStateIdOnDragEnded(): ActionPlannersConstants.StateId {
+    public getNextStateIdOnDragEnded(): StateId {
         return this.getStateId();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public cancel(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
+    public cancel(actionPlanner: IActionPlanner): void {
         const arr = actionPlanner.getCoActiveSkillTargetGridIndexArray();
         if (arr?.length) {
             actionPlanner.deleteCoActiveSkillTargetGridIndex(arr[arr.length - 1]);
             actionPlanner.updateView();
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
         } else {
             if (actionPlanner.getFocusUnitOnMap()) {
                 actionPlanner.getWar().getCursor().setGridIndex(actionPlanner.getFocusUnitDestination());
                 actionPlanner.clearCoActiveSkillSkillType();
                 actionPlanner.clearCoActiveSkillTargetGridIndexArray();
 
-                actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingUnitAction);
+                actionPlanner.setStateId(StateId.ChoosingUnitAction);
                 actionPlanner.updateView();
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+                playShortSfx(ShortSfxCode.ButtonCancel01);
             } else {
-                ActionPlannersStatesIdle.Idle.getInstance().apply(actionPlanner, SoundsConstants.ShortSfxCode.ButtonCancel01);
+                Idle.getInstance().apply(actionPlanner, ShortSfxCode.ButtonCancel01);
             }
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public doApplyOnTap(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, gridIndex: GridIndex): void {
+    public doApplyOnTap(actionPlanner: IActionPlanner, gridIndex: GridIndex): void {
         const currState = actionPlanner.getStateId();
-        if (currState === ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget) {
+        if (currState === StateId.ChoosingCoActiveSkillTarget) {
             if (actionPlanner.checkHasCoActiveSkillTargetGridIndex(gridIndex)) {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorMove01);
+                playShortSfx(ShortSfxCode.CursorMove01);
             } else {
-                const maxTargetsCount = HelpersMisc.getExisted(actionPlanner.getMaxCoActiveSkillTargetsCount());
+                const maxTargetsCount = getExisted(actionPlanner.getMaxCoActiveSkillTargetsCount());
                 if ((actionPlanner.getCoActiveSkillTargetGridIndexArray()?.length ?? 0) < maxTargetsCount) {
                     actionPlanner.addCoActiveSkillTargetGridIndex(gridIndex);
-                    SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                    playShortSfx(ShortSfxCode.CursorConfirm01);
                 } else {
                     if (maxTargetsCount !== 1) {
-                        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorMove01);
+                        playShortSfx(ShortSfxCode.CursorMove01);
                     } else {
                         actionPlanner.clearCoActiveSkillTargetGridIndexArray();
                         actionPlanner.addCoActiveSkillTargetGridIndex(gridIndex);
-                        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                        playShortSfx(ShortSfxCode.CursorConfirm01);
                     }
                 }
             }
 
         } else {
-            throw HelpersMisc.newError(`Invalid currState: ${currState}`);
+            throw newError(`Invalid currState: ${currState}`);
         }
 
         const war = actionPlanner.getWar();
         const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray() ?? [];
-        war.getCursor().getView().setTargetAreaRadius(arr[actionPlanner.getCoActiveSkillTypeId() === CoSkillsConstants.SkillTypeId.Power ? 0 : 1] ?? 0);
+        war.getCursor().getView().setTargetAreaRadius(arr[actionPlanner.getCoActiveSkillTypeId() === SkillTypeId.Power ? 0 : 1] ?? 0);
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget);
+        actionPlanner.setStateId(StateId.ChoosingCoActiveSkillTarget);
         actionPlanner.updateView();
     }
 
-    public doApplyOnDrag(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner): void {
+    public doApplyOnDrag(actionPlanner: IActionPlanner): void {
         const currState = actionPlanner.getStateId();
-        if (currState === ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget) {
+        if (currState === StateId.ChoosingCoActiveSkillTarget) {
             // nothing to do
 
         } else {
-            throw HelpersMisc.newError(`Invalid currState: ${currState}`);
+            throw newError(`Invalid currState: ${currState}`);
         }
 
         const war = actionPlanner.getWar();
         const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray() ?? [];
-        war.getCursor().getView().setTargetAreaRadius(arr[actionPlanner.getCoActiveSkillTypeId() === CoSkillsConstants.SkillTypeId.Power ? 0 : 1] ?? 0);
+        war.getCursor().getView().setTargetAreaRadius(arr[actionPlanner.getCoActiveSkillTypeId() === SkillTypeId.Power ? 0 : 1] ?? 0);
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget);
+        actionPlanner.setStateId(StateId.ChoosingCoActiveSkillTarget);
         actionPlanner.updateView();
     }
 
     public doApplyOnDragEnded(): void {
-        throw HelpersMisc.newError(`ChoosingCoActiveSkillTargetState: Not expected to apply on drag ended!`);
+        throw newError(`ChoosingCoActiveSkillTargetState: Not expected to apply on drag ended!`);
     }
 
-    public doApplyOnChooseAction(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, coSkillTypeId: CoSkillsConstants.SkillTypeId): void {
+    public doApplyOnChooseAction(actionPlanner: IActionPlanner, coSkillTypeId: SkillTypeId): void {
         const currState = actionPlanner.getStateId();
-        if (currState !== ActionPlannersConstants.StateId.ChoosingUnitAction) {
-            throw HelpersMisc.newError(`Invalid currState: ${currState}`);
+        if (currState !== StateId.ChoosingUnitAction) {
+            throw newError(`Invalid currState: ${currState}`);
         } else {
             actionPlanner.setCoActiveSkillSkillType(coSkillTypeId);
         }
 
         const war = actionPlanner.getWar();
         const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray() ?? [];
-        war.getCursor().getView().setTargetAreaRadius(arr[coSkillTypeId === CoSkillsConstants.SkillTypeId.Power ? 0 : 1] ?? 0);
+        war.getCursor().getView().setTargetAreaRadius(arr[coSkillTypeId === SkillTypeId.Power ? 0 : 1] ?? 0);
 
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget);
+        actionPlanner.setStateId(StateId.ChoosingCoActiveSkillTarget);
         actionPlanner.updateView();
     }
 
-    public doApplyOnTouchButton(actionPlanner: ActionPlannersIActionPlanner.IActionPlanner, coSkillTypeId: CoSkillsConstants.SkillTypeId): void {
+    public doApplyOnTouchButton(actionPlanner: IActionPlanner, coSkillTypeId: SkillTypeId): void {
         const war = actionPlanner.getWar();
         const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray() ?? [];
-        war.getCursor().getView().setTargetAreaRadius(arr[coSkillTypeId === CoSkillsConstants.SkillTypeId.Power ? 0 : 1] ?? 0);
+        war.getCursor().getView().setTargetAreaRadius(arr[coSkillTypeId === SkillTypeId.Power ? 0 : 1] ?? 0);
 
         actionPlanner.setCoActiveSkillSkillType(coSkillTypeId);
-        actionPlanner.setStateId(ActionPlannersConstants.StateId.ChoosingCoActiveSkillTarget);
+        actionPlanner.setStateId(StateId.ChoosingCoActiveSkillTarget);
 
         actionPlanner.updateView();
     }

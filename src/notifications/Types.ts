@@ -1,9 +1,9 @@
-import type * as NotificationsTypeId from "./TypeId.ts";
-import type * as VendorEgretEgret from "../vendor/egret/Egret.ts";
+import type { TypeId } from "./TypeId.ts";
+import type { Event } from "../vendor/egret/Egret.ts";
 
 export interface Listener {
-    type        : NotificationsTypeId.TypeId,
-    callback    : (e: VendorEgretEgret.Event) => void,
+    type        : TypeId,
+    callback    : (e: Event) => void,
     thisObject? : any,
     useCapture? : boolean,
     priority?   : number;

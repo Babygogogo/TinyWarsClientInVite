@@ -1,11 +1,13 @@
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as FloatText2 from "../../../FloatText.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoSystemCallWarEvent from "../../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { show } from "../../../FloatText.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
+import type {
+    WoSystemCallWarEvent as ProtoSchemaCommonProtoWarOperationWoSystemCallWarEvent,
+} from "../../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
-type WoSystemCallWarEvent   = ProtoSchemaCommonProtoWarOperationWoSystemCallWarEvent.WoSystemCallWarEvent;
+type IBwWar                 = BaseWarInterfaceIBwWar;
+type WoSystemCallWarEvent   = ProtoSchemaCommonProtoWarOperationWoSystemCallWarEvent;
 
 // let _meWarClass     : new () => MapEditor.IMeWar;
 // let _mpwWarClass    : new () => MultiPlayerWar.IMpwWar;
@@ -32,7 +34,7 @@ async function fastExeSystemCallWarEvent(war: IBwWar, action: WoSystemCallWarEve
 
 async function normalExeSystemCallWarEvent(war: IBwWar, action: WoSystemCallWarEvent): Promise<void> {
     const desc = await getDesc(war, action);
-    (desc) && (FloatText2.show(desc));
+    (desc) && (show(desc));
 
     const warEventManager = war.getWarEventManager();
     warEventManager.updateWarEventCalledCountOnCall(action.getWarEventId());
@@ -64,5 +66,5 @@ async function getDesc(war: IBwWar, action: WoSystemCallWarEvent): Promise<strin
     //     return null;
     // }
 
-    return `${LangUtils.getText(LangConstants.TextType.B0451)} (E${action.getWarEventId()})`;
+    return `${getText(TextType.B0451)} (E${action.getWarEventId()})`;
 }

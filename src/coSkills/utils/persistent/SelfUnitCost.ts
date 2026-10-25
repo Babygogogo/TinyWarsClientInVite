@@ -1,9 +1,9 @@
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitCost from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCost.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { SelfUnitCost } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCost.ts";
 
 export function getTotalMultiplier({ cfg, gameConfig, unitTypeId }: {
-    cfg        : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitCost.SelfUnitCost | null | undefined;
-    gameConfig : GameConfigGcData.GcData;
+    cfg        : SelfUnitCost | null | undefined;
+    gameConfig : GcData;
     unitTypeId : number;
 }): number {
     if (cfg == null) {

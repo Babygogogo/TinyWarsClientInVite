@@ -1,4 +1,4 @@
-import * as HelpersMisc from "../helpers/Misc.ts";
+import { newError } from "../helpers/Misc.ts";
 
 export class TaskQueue<T> {
     private readonly _taskArray : (() => Promise<void>)[] = [];
@@ -12,12 +12,12 @@ export class TaskQueue<T> {
         return new Promise<T>(resolve => {
             const task = async (): Promise<void> => {
                 if (arr[0] !== task) {
-                    throw HelpersMisc.newError(`Unknown error 1!`);
+                    throw newError(`Unknown error 1!`);
                 }
 
                 const result = await rawTask();
                 if (arr.shift() !== task) {
-                    throw HelpersMisc.newError(`Unknown error 2!`);
+                    throw newError(`Unknown error 2!`);
                 }
                 resolve(result);
 

@@ -1,14 +1,20 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarModelBwWar from "../baseWar/model/BwWar.ts";
-import type * as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
-import type * as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager from "../proto/schema/CommonProto/WarSerialization/SerialTaskObjectiveManager.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { BwWar } from "../baseWar/model/BwWar.ts";
+import type {
+    TaskObjectiveFullData as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData,
+} from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
+import type {
+    TaskObjectiveState as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState,
+} from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
+import type {
+    SerialTaskObjectiveManager as ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager,
+} from "../proto/schema/CommonProto/WarSerialization/SerialTaskObjectiveManager.ts";
 
-type TaskObjectiveState         = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState.TaskObjectiveState;
-type TaskObjectiveFullData      = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData;
-type SerialTaskObjectiveManager = ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager.SerialTaskObjectiveManager;
-type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type IBwWar                     = BaseWarModelBwWar.BwWar;
+type TaskObjectiveState         = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState;
+type TaskObjectiveFullData      = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData;
+type SerialTaskObjectiveManager = ProtoSchemaCommonProtoWarSerializationSerialTaskObjectiveManager;
+type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type IBwWar                     = BwWar;
 
 export interface ITaskObjectiveManager {
     init(data: Undefinable<SerialTaskObjectiveManager>, taskObjectiveFullData: Undefinable<TaskObjectiveFullData>): void;

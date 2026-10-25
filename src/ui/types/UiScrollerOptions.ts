@@ -1,4 +1,4 @@
-import type * as UiTypesUiOrientation from "./UiOrientation.ts";
+import type { UiOrientation } from "./UiOrientation.ts";
 
 /**
  * @param options
@@ -14,7 +14,7 @@ import type * as UiTypesUiOrientation from "./UiOrientation.ts";
  * is pressed, and the type is set to 'horizontal'.
  */
 export interface UiScrollerOptions {
-    orientation?                : UiTypesUiOrientation.UiOrientation;
+    orientation?                : UiOrientation;
     cornerRadius?               : number;
     disableEasing?              : boolean;
     dragTrashHold?              : number;

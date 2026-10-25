@@ -1,48 +1,48 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../Constants.ts";
-import * as SoundsSoundPlayer from "../SoundPlayer.ts";
-import * as SoundsUtils from "../Utils.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import * as UiTypesUiInputEventType from "../../ui/types/UiInputEventType.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getBgmSfxName } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../Constants.ts";
+import { playShortSfx, getPlayingBgmCode, playBgm } from "../SoundPlayer.ts";
+import { getAllBgmCodeArray } from "../Utils.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
-    currentBgmCode      : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    gameConfig          : GameConfigGcData.GcData;
+    currentBgmCode      : Undefinable<number>;
+    gameConfig          : GcData;
     callbackOnConfirm   : (bgmCode: number) => void;
     callbackOnCancel?   : () => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnHelp!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnHelp!              : IUiButton;
+    private readonly _btnClose!             : IUiButton;
 
-    private readonly _layoutOngoing!        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelOngoingTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelOngoing!         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutOngoing!        : IUiLayout;
+    private readonly _labelOngoingTitle!    : IUiLabel;
+    private readonly _labelOngoing!         : IUiLabel;
 
-    private readonly _inputFilter!          : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _btnClearFilter!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _listBgm!              : UiInterfacesIUiScrollList.IUiScrollList<DataForBgmRenderer>;
+    private readonly _inputFilter!          : IUiPromptedInput;
+    private readonly _btnClearFilter!       : IUiButton;
+    private readonly _listBgm!              : IUiScrollList<DataForBgmRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -53,19 +53,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._layoutOngoing,                               callback: this._onTouchedGroupOngoing },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.SoundManagerPlayingBgmCodeChanged,   callback: this._onNotifySoundManagerPlayingBgmCodeChanged },
+            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.SoundManagerPlayingBgmCodeChanged,   callback: this._onNotifySoundManagerPlayingBgmCodeChanged },
         ]);
         this._setInputListenerArray([
-            { ui: this._inputFilter,                                callback: this._onFocusOutInputFilter,  eventType: UiTypesUiInputEventType.UiInputEventType.FocusOut },
+            { ui: this._inputFilter,                                callback: this._onFocusOutInputFilter,  eventType: UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._setCallbackOnTouchedMask(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnClose();
         });
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnClose();
         });
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
@@ -91,8 +91,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Event callbacks.
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0820),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0820),
         });
     }
     private _onTouchedBtnClose(): void {
@@ -113,9 +113,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        openData.callbackOnConfirm(SoundsSoundPlayer.getPlayingBgmCode());
+        openData.callbackOnConfirm(getPlayingBgmCode());
         this.closePanel();
     }
     private _onFocusOutInputFilter(): void {
@@ -141,16 +141,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0541));
-        this._labelOngoingTitle.setText(LangUtils.getText(LangConstants.TextType.B1281));
-        this._inputFilter.setPromptText(LangUtils.getText(LangConstants.TextType.B0132));
+        this._labelTitle.setText(getText(TextType.B0541));
+        this._labelOngoingTitle.setText(getText(TextType.B1281));
+        this._inputFilter.setPromptText(getText(TextType.B0132));
         this._updateLabelOngoing();
     }
 
-    private async _updateListBgm(bgmCode: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>): Promise<void> {
+    private async _updateListBgm(bgmCode: Undefinable<number>): Promise<void> {
         const list      = this._listBgm;
         const dataArray = this._createDataForListBgm();
-        bgmCode         ??= SoundsSoundPlayer.getPlayingBgmCode();
+        bgmCode         ??= getPlayingBgmCode();
         await list.bindData(dataArray);
 
         const index = dataArray.findIndex(v => v.bgmCode === bgmCode);
@@ -163,7 +163,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._labelOngoing.setText(LangUtils.getBgmSfxName(SoundsSoundPlayer.getPlayingBgmCode(), gameConfig) ?? `----`);
+        this._labelOngoing.setText(getBgmSfxName(getPlayingBgmCode(), gameConfig) ?? `----`);
         this._layoutOngoing.arrangeItems();
     }
 
@@ -175,10 +175,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const filterText    = this._inputFilter.getInputText()?.toLocaleLowerCase();
         const gameConfig    = openData.gameConfig;
-        const callback      = HelpersMisc.getExisted(openData.callbackOnConfirm);
+        const callback      = getExisted(openData.callbackOnConfirm);
         const dataArray     : DataForBgmRenderer[] = [];
-        for (const bgmCode of SoundsUtils.getAllBgmCodeArray()) {
-            if ((!filterText) || (LangUtils.getBgmSfxName(bgmCode, gameConfig)?.toLocaleLowerCase().includes(filterText))) {
+        for (const bgmCode of getAllBgmCodeArray()) {
+            if ((!filterText) || (getBgmSfxName(bgmCode, gameConfig)?.toLocaleLowerCase().includes(filterText))) {
                 dataArray.push({
                     callback    : callback,
                     bgmCode     : bgmCode,
@@ -191,30 +191,30 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForBgmRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForBgmRenderer extends UiListItemData {
     bgmCode     : number;
-    gameConfig  : GameConfigGcData.GcData;
+    gameConfig  : GcData;
     callback    : (bgmCode: number) => void;
     panel       : Panel;
 }
-class BgmRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForBgmRenderer> {
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBg!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgSelected!  : UiInterfacesIUiImage.IUiImage;
+class BgmRenderer extends UiListItemRenderer<DataForBgmRenderer> {
+    private readonly _group!        : IUiContainer;
+    private readonly _imgBg!        : IUiImage;
+    private readonly _imgSelected!  : IUiImage;
 
-    private readonly _layoutText!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTag!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutText!   : IUiLayout;
+    private readonly _labelTag!     : IUiLabel;
+    private readonly _labelName!    : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._imgSelected,    callback: this._onTouchedImgSelected },
             { ui: this,                 callback: this._onTouchedSelf },
         ]);
-        this._setShortSfxCode(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        this._setShortSfxCode(ShortSfxCode.ButtonNeutral01);
         this.setIsTouchEnabled(true);
 
         this._imgSelected.setIsTouchEnabled(true);
@@ -224,15 +224,15 @@ class BgmRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Data
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        TweenExecutor.Executor.removeTweens(imgSelected);
-        TweenExecutor.Executor.get(imgSelected, { loop: true })
+        Executor.removeTweens(imgSelected);
+        Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         await super._onClosed();
 
-        TweenExecutor.Executor.removeTweens(this._imgSelected);
+        Executor.removeTweens(this._imgSelected);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -243,9 +243,9 @@ class BgmRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Data
         this._updateView();
     }
 
-    private _onTouchedImgSelected(e: VendorEgretEgret.Event): void {
+    private _onTouchedImgSelected(e: Event): void {
         e.stopPropagation();
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonConfirm01);
+        playShortSfx(ShortSfxCode.ButtonConfirm01);
 
         const openData = this.getOpenData();
         if (openData == null) {
@@ -258,7 +258,7 @@ class BgmRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Data
     private _onTouchedSelf(): void {
         const bgmCode = this.getOpenData()?.bgmCode;
         if (bgmCode != null) {
-            SoundsSoundPlayer.playBgm(bgmCode);
+            playBgm(bgmCode);
         }
     }
 
@@ -279,7 +279,7 @@ class BgmRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Data
             return;
         }
 
-        const name      = LangUtils.getBgmSfxName(openData.bgmCode, openData.gameConfig) ?? LangConstants.UndefinedError;
+        const name      = getBgmSfxName(openData.bgmCode, openData.gameConfig) ?? UndefinedError;
         const index     = name.lastIndexOf(`(`);
         const labelTag  = this._labelTag;
         const labelName = this._labelName;

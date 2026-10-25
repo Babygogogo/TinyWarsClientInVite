@@ -1,13 +1,13 @@
-import type * as UiInterfacesIUiContainer from "./IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "./IUiLabel.ts";
-import type * as UiInterfacesIUiTextInput from "./IUiTextInput.ts";
+import type { IUiContainer } from "./IUiContainer.ts";
+import type { IUiLabel } from "./IUiLabel.ts";
+import type { IUiTextInput } from "./IUiTextInput.ts";
 
-export interface IUiPromptedInput extends UiInterfacesIUiContainer.IUiContainer {
-    getPromptComponent(): UiInterfacesIUiLabel.IUiLabel | undefined;
+export interface IUiPromptedInput extends IUiContainer {
+    getPromptComponent(): IUiLabel | undefined;
     getPromptText(): string | undefined;
     setPromptText(text: string): void;
 
-    getInputComponent(): UiInterfacesIUiTextInput.IUiTextInput | undefined;
+    getInputComponent(): IUiTextInput | undefined;
     getInputText(): string | undefined;
     setInputText(text: string): void;
     trimInputText(): string | undefined;

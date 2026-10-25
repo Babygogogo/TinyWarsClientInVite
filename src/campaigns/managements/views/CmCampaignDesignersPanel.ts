@@ -1,38 +1,38 @@
-import * as CampaignsMainsProvider from "../../mains/Provider.ts";
-import * as CampaignsManagementsGateway from "../Gateway.ts";
-import * as FloatText2 from "../../../FloatText.ts";
-import * as GamePanelsDict from "../../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../../gamePanels/Manager.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../../notifications/TypeId.ts";
-import * as UiComponentsUiListItemRenderer from "../../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../../users/Model.ts";
+import { getCampaignInfo } from "../../mains/Provider.ts";
+import { reqCmUpdateCampaignDesigners } from "../Gateway.ts";
+import { showLang } from "../../../FloatText.ts";
+import { getDict } from "../../../gamePanels/Dict.ts";
+import { openPanel } from "../../../gamePanels/Manager.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
+import { TypeId } from "../../../notifications/TypeId.ts";
+import { UiListItemRenderer } from "../../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
+import { getIsSelfCampaignManager, getUserNickname } from "../../../users/Model.ts";
 
 export interface OpenData {
     campaignId  : number;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAddDesigner!       : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _btnAddDesigner!       : IUiButton;
 
-    private readonly _listDesigner!         : UiInterfacesIUiScrollList.IUiScrollList<DataForCampaignRenderer>;
-    private readonly _labelNoData!          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _listDesigner!         : IUiScrollList<DataForCampaignRenderer>;
+    private readonly _labelNoData!          : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgCmUpdateCampaignDesigners,    callback: this._onNotifyMsgCmUpdateCampaignDesigners },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgCmUpdateCampaignDesigners,    callback: this._onNotifyMsgCmUpdateCampaignDesigners },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -65,13 +65,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const campaignInfo = await CampaignsMainsProvider.getCampaignInfo(campaignId);
+        const campaignInfo = await getCampaignInfo(campaignId);
         if (campaignInfo == null) {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonSearchMultiUserPanel, {
-            getTitleText        : () => LangUtils.getText(LangConstants.TextType.B1138),
+        openPanel(getDict().CommonSearchMultiUserPanel, {
+            getTitleText        : () => getText(TextType.B1138),
             minChooseCount      : 1,
             maxChooseCount      : 5,
             callbackOnConfirm   : userIdArray => {
@@ -80,7 +80,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     userIdSet.delete(userId);
                 }
                 if (userIdSet.size) {
-                    CampaignsManagementsGateway.reqCmUpdateCampaignDesigners(campaignId, [...userIdSet], []);
+                    reqCmUpdateCampaignDesigners(campaignId, [...userIdSet], []);
                 }
             },
         });
@@ -91,7 +91,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCmUpdateCampaignDesigners(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
         this._updateComponentsForListDesigner();
     }
 
@@ -106,12 +106,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1136));
-        this._labelNoData.setText(LangUtils.getText(LangConstants.TextType.B0278));
+        this._labelTitle.setText(getText(TextType.B1136));
+        this._labelNoData.setText(getText(TextType.B0278));
     }
 
     private _updateTopButtons(): void {
-        this._btnAddDesigner.setIsVisible(UsersModel.getIsSelfCampaignManager());
+        this._btnAddDesigner.setIsVisible(getIsSelfCampaignManager());
     }
 
     private async _updateComponentsForListDesigner(): Promise<void> {
@@ -122,7 +122,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const label                 = this._labelNoData;
         const list                  = this._listDesigner;
-        const designerUserIdArray   = (await CampaignsMainsProvider.getCampaignInfo(campaignId))?.getDesignerUserIdArray();
+        const designerUserIdArray   = (await getCampaignInfo(campaignId))?.getDesignerUserIdArray();
         if (!designerUserIdArray?.length) {
             label.setIsVisible(true);
             await list.removeAllItems();
@@ -144,19 +144,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForCampaignRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForCampaignRenderer extends UiListItemData {
     index           : number;
     campaignId      : number;
     designerUserId  : number;
 }
-class CampaignRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForCampaignRenderer> {
-    private readonly _imgBg!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnDelete!    : UiInterfacesIUiButton.IUiButton;
+class CampaignRenderer extends UiListItemRenderer<DataForCampaignRenderer> {
+    private readonly _imgBg!        : IUiImage;
+    private readonly _labelName!    : IUiLabel;
+    private readonly _btnDelete!    : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnDelete,                      callback: this._onTouchedBtnDelete },
@@ -165,7 +165,7 @@ class CampaignRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
 
     protected override _doApplyOpenData(): void {
         // this._imgBg.alpha       = this._getData().index % 2 < 1 ? 0.2 : 0.5;
-        this._btnDelete.setIsVisible(UsersModel.getIsSelfCampaignManager());
+        this._btnDelete.setIsVisible(getIsSelfCampaignManager());
 
         this._updateComponentsForLanguage();
     }
@@ -180,14 +180,14 @@ class CampaignRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent     : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => CampaignsManagementsGateway.reqCmUpdateCampaignDesigners(openData.campaignId, [], [openData.designerUserId]),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+            callback    : () => reqCmUpdateCampaignDesigners(openData.campaignId, [], [openData.designerUserId]),
         });
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDelete.setText(LangUtils.getText(LangConstants.TextType.B0220));
+        this._btnDelete.setText(getText(TextType.B0220));
         this._updateLabelName();
     }
 
@@ -200,9 +200,9 @@ class CampaignRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const userNickname = await UsersModel.getUserNickname(userId);
+        const userNickname = await getUserNickname(userId);
         if (userId === this.getOpenData()?.designerUserId) {
-            label.setText(`#${userId} ${userNickname ?? LangUtils.getText(LangConstants.TextType.B0277)}`);
+            label.setText(`#${userId} ${userNickname ?? getText(TextType.B0277)}`);
         }
     }
 }

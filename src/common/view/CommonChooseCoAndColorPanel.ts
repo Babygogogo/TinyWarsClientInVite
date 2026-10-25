@@ -1,44 +1,44 @@
-import * as CosConstants from "../../cos/Constants.ts";
-import * as ForceSkinsConstants from "../../forceSkins/Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
+import { CoId } from "../../cos/Constants.ts";
+import { SkinId } from "../../forceSkins/Constants.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getCoEye, getSkinCircle } from "../../helpers/ImageSource.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 
 export interface OpenData {
-    gcData                  : GameConfigGcData.GcData;
+    gcData                  : GcData;
     availableCoIdArray      : number[];
     availableSkinIdArray    : number[];
     currentCoId             : number;
     currentSkinId           : number;
     callback                : (coId: number, unitAndTileSkinId: number) => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
 
-    private readonly _layoutCo!         : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnCo!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _imgCo!            : UiInterfacesIUiImage.IUiImage;
+    private readonly _layoutCo!         : IUiLayout;
+    private readonly _btnCo!            : IUiButton;
+    private readonly _imgCo!            : IUiImage;
 
-    private readonly _layoutColor!      : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnColor!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _imgColor!         : UiInterfacesIUiImage.IUiImage;
+    private readonly _layoutColor!      : IUiLayout;
+    private readonly _btnColor!         : IUiButton;
+    private readonly _imgColor!         : IUiImage;
 
-    private readonly _btnConfirm!       : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnConfirm!       : IUiButton;
 
-    private _coId                       = CosConstants.CoId.Empty;
-    private _skinId                     = ForceSkinsConstants.SkinId.First;
+    private _coId                       = CoId.Empty;
+    private _skinId                     = SkinId.First;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -49,7 +49,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnConfirm,                         callback: this._onTouchedBtnConfirm },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -80,7 +80,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleCoIdPanel, {
+        openPanel(getDict().CommonChooseSingleCoIdPanel, {
             gameConfig          : openData.gcData,
             availableCoIdArray  : openData.availableCoIdArray,
             currentCoId         : this._coId,
@@ -97,7 +97,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleSkinIdPanel, {
+        openPanel(getDict().CommonChooseSingleSkinIdPanel, {
             availableSkinIdArray    : openData.availableSkinIdArray,
             currentSkinId           : this._skinId,
             callback                : skinId => {
@@ -120,10 +120,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0560);
+        this._labelTitle.setLangText(TextType.B0560);
         this._btnCo.setText(`CO`);
-        this._btnColor.setLangText(LangConstants.TextType.B0397);
-        this._btnConfirm.setLangText(LangConstants.TextType.B0026);
+        this._btnColor.setLangText(TextType.B0397);
+        this._btnConfirm.setLangText(TextType.B0026);
     }
 
     private _updateLayoutCo(): void {
@@ -132,12 +132,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._imgCo.loadSource(HelpersImageSource.getCoEye(gcData, this._coId, true) ?? ``);
+        this._imgCo.loadSource(getCoEye(gcData, this._coId, true) ?? ``);
         this._layoutCo.arrangeItems();
     }
 
     private _updateLayoutColor(): void {
-        this._imgColor.loadSource(HelpersImageSource.getSkinCircle(this._skinId, true));
+        this._imgColor.loadSource(getSkinCircle(this._skinId, true));
         this._layoutColor.arrangeItems();
     }
 }

@@ -1,80 +1,86 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesMapFilter from "../../auxiliaryTypes/MapFilter.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GameConfigGcMap from "../../gameConfig/GcMap.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as MultiCustomRoomModelMcrRoomCreator from "../model/McrRoomCreator.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiMapInfo from "../../ui/interfaces/IUiMapInfo.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiInterfacesIUiZoomableMap from "../../ui/interfaces/IUiZoomableMap.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
+import { showLang } from "../../FloatText.ts";
+import { SortType } from "../../gameConfig/GcMap.ts";
+import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getLanguageText } from "../../lang/Utils.ts";
+import { McrRoomCreator } from "../model/McrRoomCreator.ts";
+import {
+    getRawData,
+    getEnabledNormalMapIdSet,
+    getBriefData,
+    checkIsMeetFilter,
+    sortMapArray,
+} from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiMapInfo } from "../../ui/interfaces/IUiMapInfo.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { callLater, Event } from "../../vendor/egret/Egret.ts";
 
 const MapsPerPage           = 50;
 let _pageIndex              = 0;
 let _selectedNormalMapId    : number | undefined;
-let _previousFilter         : AuxiliaryTypesMapFilter.MapFilter | null = null;
-let _mapSorter              : AuxiliaryTypesAuxiliaryTypes.MapSorter = {
-    sortType    : GameConfigGcMap.SortType.MapName,
+let _previousFilter         : MapFilter | null = null;
+let _mapSorter              : MapSorter = {
+    sortType    : SortType.MapName,
     isAscending : true,
 };
 
 export interface OpenData {
-    mapFilter               : AuxiliaryTypesMapFilter.MapFilter | null;
-    mapSorter               : AuxiliaryTypesAuxiliaryTypes.MapSorter | null;
+    mapFilter               : MapFilter | null;
+    mapSorter               : MapSorter | null;
     usePreviousFilter       : boolean;
     usePreviousPageIndex    : boolean;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _groupMapView!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _zoomMap!                  : UiInterfacesIUiZoomableMap.IUiZoomableMap;
-    private readonly _labelLoading!             : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _groupMapView!             : IUiContainer;
+    private readonly _zoomMap!                  : IUiZoomableMap;
+    private readonly _labelLoading!             : IUiLabel;
 
-    private readonly _groupNavigator!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _layoutNavName!            : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMultiPlayer!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelCreateRoom!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelChooseMap!           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupNavigator!           : IUiLayout;
+    private readonly _layoutNavName!            : IUiLayout;
+    private readonly _labelMultiPlayer!         : IUiLabel;
+    private readonly _labelCreateRoom!          : IUiLabel;
+    private readonly _labelChooseMap!           : IUiLabel;
 
-    private readonly _btnBack!                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnNextStep!              : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnBack!                  : IUiButton;
+    private readonly _btnNextStep!              : IUiButton;
 
-    private readonly _groupTopRightButtons!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnSwitch!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSearch!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSort!                  : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupTopRightButtons!     : IUiContainer;
+    private readonly _btnSwitch!                : IUiButton;
+    private readonly _btnSearch!                : IUiButton;
+    private readonly _btnSort!                  : IUiButton;
 
-    private readonly _groupSearch!              : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnPrevPage!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnNextPage!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _layoutPage!               : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelPageTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPage!                : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupSearch!              : IUiContainer;
+    private readonly _btnPrevPage!              : IUiButton;
+    private readonly _btnNextPage!              : IUiButton;
+    private readonly _layoutPage!               : IUiLayout;
+    private readonly _labelPageTitle!           : IUiLabel;
+    private readonly _labelPage!                : IUiLabel;
 
-    private readonly _groupMapList!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listMap!                  : UiInterfacesIUiScrollList.IUiScrollList<DataForMapNameRenderer>;
-    private readonly _labelNoMap!               : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupMapList!             : IUiContainer;
+    private readonly _listMap!                  : IUiScrollList<DataForMapNameRenderer>;
+    private readonly _labelNoMap!               : IUiLabel;
 
-    private readonly _uiMapInfo!                : UiInterfacesIUiMapInfo.IUiMapInfo;
-    private _mapFilter                          : AuxiliaryTypesMapFilter.MapFilter | null = null;
+    private readonly _uiMapInfo!                : IUiMapInfo;
+    private _mapFilter                          : MapFilter | null = null;
     private _cachedListDataArray                : DataForMapNameRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
@@ -89,10 +95,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnNextPage,    callback: this._onTouchedBtnNextPage },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -120,10 +126,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         _selectedNormalMapId = newNormalMapId;
 
         const listMap   = this._listMap;
-        const index     = HelpersMisc.getExisted(listMap.getRevisedFirstIndex(v => v?.normalMapId === newNormalMapId));
+        const index     = getExisted(listMap.getRevisedFirstIndex(v => v?.normalMapId === newNormalMapId));
         listMap.setSelectedItemIndex(index);
         if (needScroll) {
-            VendorEgretEgret.callLater(() => listMap.scrollToItem(Math.max(0, index - 1)), undefined); // callLater是为了防止sizer延迟导致的scroll失效；index-1是为了让玩家看到上面还有选项
+            callLater(() => listMap.scrollToItem(Math.max(0, index - 1)), undefined); // callLater是为了防止sizer延迟导致的scroll失效；index-1是为了让玩家看到上面还有选项
         }
 
         this._showMap(listMap.getFirstSelectedData()?.normalMapId ?? null);
@@ -136,10 +142,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnSearch(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonMapFilterPanel, {
+        openPanel(getDict().CommonMapFilterPanel, {
             mapFilter           : this._mapFilter,
             callbackOnConfirm   : mapFilter => {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().McrCreateMapListPanel, {
+                openPanel(getDict().McrCreateMapListPanel, {
                     mapFilter               : mapFilter,
                     mapSorter               : _mapSorter,
                     usePreviousFilter       : false,
@@ -150,10 +156,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSort(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMapSorterPanel, {
+        openPanel(getDict().CommonChooseMapSorterPanel, {
             currentSorter       : _mapSorter,
-            callbackOnConfirm   : (mapSorter: AuxiliaryTypesAuxiliaryTypes.MapSorter) => {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().McrCreateMapListPanel, {
+            callbackOnConfirm   : (mapSorter: MapSorter) => {
+                openPanel(getDict().McrCreateMapListPanel, {
                     mapFilter               : null,
                     mapSorter               : mapSorter,
                     usePreviousFilter       : true,
@@ -165,9 +171,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().McrMainMenuPanel, void 0);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyTopPanel, void 0);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyBottomPanel, void 0);
+        openPanel(getDict().McrMainMenuPanel, void 0);
+        openPanel(getDict().LobbyTopPanel, void 0);
+        openPanel(getDict().LobbyBottomPanel, void 0);
     }
 
     private async _onTouchedBtnNextStep(): Promise<void> {
@@ -175,10 +181,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if (selectedNormalMapId != null) {
             this.closePanel();
 
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().McrCreateSettingsPanel, {
-                roomCreator : new MultiCustomRoomModelMcrRoomCreator.McrRoomCreator(
-                    await GameConfigGcModel.getLatestGameConfig(),
-                    HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(selectedNormalMapId))
+            openPanel(getDict().McrCreateSettingsPanel, {
+                roomCreator : new McrRoomCreator(
+                    await getLatestGameConfig(),
+                    getExisted(await getRawData(selectedNormalMapId))
                 ),
             });
         }
@@ -187,11 +193,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private async _onTouchedGroupMapView(): Promise<void> {
         const normalMapId = this._getSelectedNormalMapId();
         if (normalMapId != null) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowMapPanel, {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            openPanel(getDict().CommonShowMapPanel, {
                 mapInfo : {
-                    gameConfig          : await GameConfigGcModel.getLatestGameConfig(),
-                    mapRawData          : HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId)),
+                    gameConfig          : await getLatestGameConfig(),
+                    mapRawData          : getExisted(await getRawData(normalMapId)),
                     overridingPlayers   : null,
                 },
             });
@@ -199,10 +205,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnSwitch(): Promise<void> {
-        FloatText2.showLang(LangConstants.TextType.A0936);
+        showLang(TextType.A0936);
 
         this.closePanel();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CcrCreateMapListPanel, {
+        openPanel(getDict().CcrCreateMapListPanel, {
             mapFilter               : null,
             mapSorter               : null,
             usePreviousFilter       : true,
@@ -211,7 +217,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnPrevPage(): Promise<void> {
-        const newPageIndex = NumbersUtils.getValueInRange({
+        const newPageIndex = getValueInRange({
             minValue    : 0,
             maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
             rawValue    : _pageIndex - 1,
@@ -222,7 +228,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
     private async _onTouchedBtnNextPage(): Promise<void> {
-        const newPageIndex = NumbersUtils.getValueInRange({
+        const newPageIndex = getValueInRange({
             minValue    : 0,
             maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
             rawValue    : _pageIndex + 1,
@@ -265,17 +271,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelCreateRoom.setText(LangUtils.getText(LangConstants.TextType.B0000));
-        this._labelMultiPlayer.setText(LangUtils.getText(LangConstants.TextType.B1011));
-        this._labelChooseMap.setText(LangUtils.getText(LangConstants.TextType.B0227));
-        this._labelLoading.setText(LangUtils.getText(LangConstants.TextType.A0150));
-        this._labelNoMap.setText(LangUtils.getText(LangConstants.TextType.A0010));
-        this._btnBack.setText(LangUtils.getText(LangConstants.TextType.B0146));
-        this._btnSearch.setText(LangUtils.getText(LangConstants.TextType.B0228));
-        this._btnSort.setText(LangUtils.getText(LangConstants.TextType.B1049));
-        this._btnNextStep.setText(LangUtils.getText(LangConstants.TextType.B1383));
-        this._btnPrevPage.setText(LangUtils.getText(LangConstants.TextType.B1384));
-        this._btnNextPage.setText(LangUtils.getText(LangConstants.TextType.B1385));
+        this._labelCreateRoom.setText(getText(TextType.B0000));
+        this._labelMultiPlayer.setText(getText(TextType.B1011));
+        this._labelChooseMap.setText(getText(TextType.B0227));
+        this._labelLoading.setText(getText(TextType.A0150));
+        this._labelNoMap.setText(getText(TextType.A0010));
+        this._btnBack.setText(getText(TextType.B0146));
+        this._btnSearch.setText(getText(TextType.B0228));
+        this._btnSort.setText(getText(TextType.B1049));
+        this._btnNextStep.setText(getText(TextType.B1383));
+        this._btnPrevPage.setText(getText(TextType.B1384));
+        this._btnNextPage.setText(getText(TextType.B1385));
         this._updateLabelPageTitle();
 
         this._layoutPage.arrangeItems();
@@ -299,10 +305,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const mapFilter = this._mapFilter;
         if ((mapFilter == null) || (mapFilter.checkIsEmpty())) {
             label.setTextColor(0xCCCCCC);
-            label.setText(LangUtils.getText(LangConstants.TextType.B1386));
+            label.setText(getText(TextType.B1386));
         } else {
             label.setTextColor(0xFFFF00);
-            label.setText(`${LangUtils.getText(LangConstants.TextType.B1386)}(${LangUtils.getText(LangConstants.TextType.B1387)})`);
+            label.setText(`${getText(TextType.B1386)}(${getText(TextType.B1387)})`);
         }
         this._layoutPage.arrangeItems();
     }
@@ -311,12 +317,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const mapFilter     = this._mapFilter;
         const dataArray     : DataForMapNameRenderer[] = [];
         const promiseArray  : Promise<void>[] = [];
-        for (const normalMapId of await NormalMapModelNormalMapModel.getEnabledNormalMapIdSet()) {
+        for (const normalMapId of await getEnabledNormalMapIdSet()) {
             promiseArray.push((async () => {
-                const mapBriefData = await NormalMapModelNormalMapModel.getBriefData(normalMapId);
+                const mapBriefData = await getBriefData(normalMapId);
                 if ((mapBriefData == null)                                                      ||
                     (!mapBriefData.getRuleAvailability()?.getCanMcw())                          ||
-                    (!await NormalMapModelNormalMapModel.checkIsMeetFilter(normalMapId, mapFilter))
+                    (!await checkIsMeetFilter(normalMapId, mapFilter))
                 ) {
                     return;
                 }
@@ -329,7 +335,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
         await Promise.all(promiseArray);
 
-        this._cachedListDataArray = (await NormalMapModelNormalMapModel.sortMapArray(
+        this._cachedListDataArray = (await sortMapArray(
             dataArray.map(v => ({ normalMapId: v.normalMapId, extraData: v })),
             _mapSorter,
         )).map(v => v.extraData);
@@ -353,8 +359,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             uiMapInfo.setIsVisible(true);
             labelLoading.setIsVisible(true);
 
-            const mapRawData        = HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId));
-            const gameConfig        = await GameConfigGcModel.getLatestGameConfig();
+            const mapRawData        = getExisted(await getRawData(normalMapId));
+            const gameConfig        = await getLatestGameConfig();
             labelLoading.setIsVisible(false);
             zoomMap.showMapByMapData({
                 mapRawData          : mapRawData,
@@ -373,107 +379,107 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupMapView,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTopRightButtons,
             beginProps  : { customAlpha: 0, customY: 16 - 40 },
             endProps    : { customAlpha: 1, customY: 16 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupSearch,
             beginProps  : { customAlpha: 0, customY: 30 },
             endProps    : { customAlpha: 1, customY: 70 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnNextStep,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupMapList,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._uiMapInfo,
             beginProps  : { customAlpha: 0, customX: 40 },
             endProps    : { customAlpha: 1, customX: 0 },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupMapView,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTopRightButtons,
             beginProps  : { customAlpha: 1, customY: 16 },
             endProps    : { customAlpha: 0, customY: 16 - 40 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupSearch,
             beginProps  : { customAlpha: 1, customY: 70 },
             endProps    : { customAlpha: 0, customY: 30 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnNextStep,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupMapList,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._uiMapInfo,
             beginProps  : { customAlpha: 1, customX: 0 },
             endProps    : { customAlpha: 0, customX: 40 },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 }
 
-interface DataForMapNameRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForMapNameRenderer extends UiListItemData {
     normalMapId : number;
     panel       : Panel;
 }
-class MapNameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForMapNameRenderer> {
-    private readonly _btnHelp!          : UiInterfacesIUiButton.IUiButton;
+class MapNameRenderer extends UiListItemRenderer<DataForMapNameRenderer> {
+    private readonly _btnHelp!          : IUiButton;
 
-    private readonly _groupName!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelId!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDesigner!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupName!        : IUiContainer;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelName!        : IUiLabel;
+    private readonly _labelId!          : IUiLabel;
+    private readonly _labelDesigner!    : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -490,13 +496,13 @@ class MapNameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
             return;
         }
 
-        const hasDescription = !!(await NormalMapModelNormalMapModel.getBriefData(normalMapId))?.getHasDescription();
+        const hasDescription = !!(await getBriefData(normalMapId))?.getHasDescription();
         if (normalMapId === this.getOpenData()?.normalMapId) {
             this._btnHelp.setIsVisible(hasDescription);
         }
     }
 
-    private async _onTouchedBtnHelp(e: VendorEgretEgret.Event): Promise<void> {
+    private async _onTouchedBtnHelp(e: Event): Promise<void> {
         e.stopPropagation();
 
         const openData = this.getOpenData();
@@ -507,14 +513,14 @@ class MapNameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
         const normalMapId = openData.normalMapId;
         openData.panel.setAndReviseSelectedNormalMapId(normalMapId, false);
 
-        const mapRawData = await NormalMapModelNormalMapModel.getRawData(normalMapId);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getLanguageText({ textArray: mapRawData?.getMapExtraText()?.getMapDescription() }) ?? LangConstants.UndefinedError,
+        const mapRawData = await getRawData(normalMapId);
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getLanguageText({ textArray: mapRawData?.getMapExtraText()?.getMapDescription() }) ?? UndefinedError,
         });
     }
 
     private _onTouchedGroupName(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const openData = this.getOpenData();
         openData?.panel.setAndReviseSelectedNormalMapId(openData.normalMapId, false);
@@ -530,13 +536,13 @@ class MapNameRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
         this._labelId.setText(`#${normalMapId}`);
         labelName.setText(``);
 
-        const mapBriefData = await NormalMapModelNormalMapModel.getBriefData(normalMapId);
+        const mapBriefData = await getBriefData(normalMapId);
         if ((normalMapId !== this.getOpenData()?.normalMapId) || (mapBriefData == null)) {
             return;
         }
 
-        labelName.setText(LangUtils.getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? LangConstants.UndefinedError);
-        this._labelDesigner.setText(mapBriefData.getDesignerName() ?? LangConstants.UndefinedError);
+        labelName.setText(getLanguageText({ textArray: mapBriefData.getMapNameArray() }) ?? UndefinedError);
+        this._labelDesigner.setText(mapBriefData.getDesignerName() ?? UndefinedError);
         this._layoutName.arrangeItems();
     }
 }

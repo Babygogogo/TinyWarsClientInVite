@@ -1,38 +1,40 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwDrawVoteManager from "../interface/IBwDrawVoteManager.ts";
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as PlayersUtilsCommon from "../../players/utils/Common.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialPlayerManager from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwDrawVoteManager } from "../interface/IBwDrawVoteManager.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { newError, getExisted } from "../../helpers/Misc.ts";
+import { checkIsValidPlayerIndexSubset } from "../../players/utils/Common.ts";
+import type { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
+import type {
+    SerialPlayerManager as ProtoSchemaCommonProtoWarSerializationSerialPlayerManager,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type SerialPlayerManager        = ProtoSchemaCommonProtoWarSerializationSerialPlayerManager.SerialPlayerManager;
+type SerialPlayerManager        = ProtoSchemaCommonProtoWarSerializationSerialPlayerManager;
 
-export class BwDrawVoteManager implements BaseWarInterfaceIBwDrawVoteManager.IBwDrawVoteManager {
-    private _remainingVotes     : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    private _drawVoteData       : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager.SerialDrawVoteManager>;
-    private _war?               : BaseWarInterfaceIBwWar.IBwWar;
+export class BwDrawVoteManager implements IBwDrawVoteManager {
+    private _remainingVotes     : Undefinable<number>;
+    private _drawVoteData       : Undefinable<SerialDrawVoteManager>;
+    private _war?               : IBwWar;
 
     public init(
-        playerManagerData   : AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialPlayerManager>,
-        remainingVotes      : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>,
-        drawVoteManagerData : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager.SerialDrawVoteManager>,
+        playerManagerData   : Undefinable<SerialPlayerManager>,
+        remainingVotes      : Undefinable<number>,
+        drawVoteManagerData : Undefinable<SerialDrawVoteManager>,
     ): void {
         const totalPlayersCount = playerManagerData?.getPlayers()?.length ?? 0;
         if (remainingVotes == null) {
             if ((drawVoteManagerData != null)                                                                                           &&
-                (!PlayersUtilsCommon.checkIsValidPlayerIndexSubset(drawVoteManagerData.getAgreedPlayerIndexArray(), totalPlayersCount - 1))
+                (!checkIsValidPlayerIndexSubset(drawVoteManagerData.getAgreedPlayerIndexArray(), totalPlayersCount - 1))
             ) {
-                throw HelpersMisc.newError(`Invalid agreedPlayerIndexArray.`, UtilsClientErrorCode.ClientErrorCode.BwDrawVoteManager_Init_00);
+                throw newError(`Invalid agreedPlayerIndexArray.`, ClientErrorCode.BwDrawVoteManager_Init_00);
             }
 
         } else {
             if (remainingVotes >= totalPlayersCount) {
-                throw HelpersMisc.newError(`remainingVotes >= maxVotes.`, UtilsClientErrorCode.ClientErrorCode.BwDrawVoteManager_Init_01);
+                throw newError(`remainingVotes >= maxVotes.`, ClientErrorCode.BwDrawVoteManager_Init_01);
             }
             if (drawVoteManagerData != null) {
-                throw HelpersMisc.newError(`Invalid data.`, UtilsClientErrorCode.ClientErrorCode.BwDrawVoteManager_Init_02);
+                throw newError(`Invalid data.`, ClientErrorCode.BwDrawVoteManager_Init_02);
             }
         }
 
@@ -40,28 +42,28 @@ export class BwDrawVoteManager implements BaseWarInterfaceIBwDrawVoteManager.IBw
         this._setDrawVoteData(drawVoteManagerData);
     }
     public fastInit(
-        remainingVotes      : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>,
-        drawVoteManagerData : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager.SerialDrawVoteManager>,
+        remainingVotes      : Undefinable<number>,
+        drawVoteManagerData : Undefinable<SerialDrawVoteManager>,
     ): void {
         this._setRemainingVotes(remainingVotes);
         this._setDrawVoteData(drawVoteManagerData);
     }
 
-    public startRunning(war: BaseWarInterfaceIBwWar.IBwWar): void {
+    public startRunning(war: IBwWar): void {
         this._setWar(war);
     }
 
-    public getRemainingVotes(): AuxiliaryTypesAuxiliaryTypes.Undefinable<number> {
+    public getRemainingVotes(): Undefinable<number> {
         return this._remainingVotes;
     }
-    private _setRemainingVotes(votes: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>): void {
+    private _setRemainingVotes(votes: Undefinable<number>): void {
         this._remainingVotes = votes;
     }
 
-    public getDrawVoteData(): AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager.SerialDrawVoteManager> {
+    public getDrawVoteData(): Undefinable<SerialDrawVoteManager> {
         return this._drawVoteData;
     }
-    private _setDrawVoteData(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager.SerialDrawVoteManager>) {
+    private _setDrawVoteData(data: Undefinable<SerialDrawVoteManager>) {
         this._drawVoteData = data;
     }
 
@@ -160,11 +162,11 @@ export class BwDrawVoteManager implements BaseWarInterfaceIBwDrawVoteManager.IBw
         }
     }
 
-    private _setWar(war: BaseWarInterfaceIBwWar.IBwWar): void {
+    private _setWar(war: IBwWar): void {
         this._war = war;
     }
-    private _getWar(): BaseWarInterfaceIBwWar.IBwWar {
-        return HelpersMisc.getExisted(this._war);
+    private _getWar(): IBwWar {
+        return getExisted(this._war);
     }
 
     private _getMaxVotes(): number {

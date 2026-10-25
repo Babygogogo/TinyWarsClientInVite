@@ -1,17 +1,17 @@
-import * as ExpressionParsersContextsBase from "./Base.ts";
-import * as ExpressionParsersContextsWar from "./War.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersFunctionInfo from "../FunctionInfo.ts";
-import type * as ExpressionParsersResultsBase from "../results/Base.ts";
-import * as ExpressionParsersResultsNum from "../results/Num.ts";
-import * as ExpressionParsersResultsWar from "../results/War.ts";
-import type * as ExpressionParsersTypes from "../Types.ts";
-import * as ExpressionParsersUtils from "../Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import { Base } from "./Base.ts";
+import { War } from "./War.ts";
+import { ResultType, ContextType } from "../Enums.ts";
+import { FunctionInfo } from "../FunctionInfo.ts";
+import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import { Num as ExpressionParsersResultsNum } from "../results/Num.ts";
+import { War as ExpressionParsersResultsWar } from "../results/War.ts";
+import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
+import { extendVariableInfoDict, extendFunctionInfoDict, getErrorTextForParameterCount } from "../Utils.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-export class Num extends ExpressionParsersContextsBase.Base {
+export class Num extends Base {
     private static readonly VnSelf      = "self";
     private static readonly VnWar       = "war";
 
@@ -21,63 +21,63 @@ export class Num extends ExpressionParsersContextsBase.Base {
 
     public static readonly Variables    = Num.generateVariables();
     public static readonly Functions    = Num.generateFunctions();
-    private static generateVariables(): ExpressionParsersTypes.EpVariableInfoDict {
-        const variables = ExpressionParsersUtils.extendVariableInfoDict(ExpressionParsersContextsWar.War.Variables);
-        variables.set(Num.VnSelf,   { desc: LangConstants.TextType.A0965, resultType: ExpressionParsersEnums.ResultType.Number,    isExtension: false } );
-        variables.set(Num.VnWar,    { desc: LangConstants.TextType.A0384, resultType: ExpressionParsersEnums.ResultType.War,       isExtension: false } );
+    private static generateVariables(): EpVariableInfoDict {
+        const variables = extendVariableInfoDict(War.Variables);
+        variables.set(Num.VnSelf,   { desc: TextType.A0965, resultType: ResultType.Number,    isExtension: false } );
+        variables.set(Num.VnWar,    { desc: TextType.A0384, resultType: ResultType.War,       isExtension: false } );
 
         return variables;
     }
-    private static generateFunctions(): ExpressionParsersTypes.EpFunctionInfoDict {
-        const functions = ExpressionParsersUtils.extendFunctionInfoDict(ExpressionParsersContextsWar.War.Functions);
+    private static generateFunctions(): EpFunctionInfoDict {
+        const functions = extendFunctionInfoDict(War.Functions);
         functions.set(
             Num.FnAbs,
-            new ExpressionParsersFunctionInfo.FunctionInfo(
-                LangConstants.TextType.A0522,
+            new FunctionInfo(
+                TextType.A0522,
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 (argArray, contextType, lambdaArgumentInfoDict) => {
                     if (argArray.length !== 0) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterCount(Num.FnAbs, 0, argArray.length),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextNumber_GenerateFunctions_00
+                        throw newError(
+                            getErrorTextForParameterCount(Num.FnAbs, 0, argArray.length),
+                            ClientErrorCode.EpContextNumber_GenerateFunctions_00
                         );
                     }
 
-                    return ExpressionParsersEnums.ResultType.Number;
+                    return ResultType.Number;
                 },
             )
         );
         functions.set(
             Num.FnFloor,
-            new ExpressionParsersFunctionInfo.FunctionInfo(
-                LangConstants.TextType.A0523,
+            new FunctionInfo(
+                TextType.A0523,
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 (argArray, contextType, lambdaArgumentInfoDict) => {
                     if (argArray.length !== 0) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterCount(Num.FnFloor, 0, argArray.length),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextNumber_GenerateFunctions_01
+                        throw newError(
+                            getErrorTextForParameterCount(Num.FnFloor, 0, argArray.length),
+                            ClientErrorCode.EpContextNumber_GenerateFunctions_01
                         );
                     }
 
-                    return ExpressionParsersEnums.ResultType.Number;
+                    return ResultType.Number;
                 },
             )
         );
         functions.set(
             Num.FnCeil,
-            new ExpressionParsersFunctionInfo.FunctionInfo(
-                LangConstants.TextType.A0524,
+            new FunctionInfo(
+                TextType.A0524,
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 (argArray, contextType, lambdaArgumentInfoDict) => {
                     if (argArray.length !== 0) {
-                        throw HelpersMisc.newError(
-                            ExpressionParsersUtils.getErrorTextForParameterCount(Num.FnCeil, 0, argArray.length),
-                            UtilsClientErrorCode.ClientErrorCode.EpContextNumber_GenerateFunctions_02
+                        throw newError(
+                            getErrorTextForParameterCount(Num.FnCeil, 0, argArray.length),
+                            ClientErrorCode.EpContextNumber_GenerateFunctions_02
                         );
                     }
 
-                    return ExpressionParsersEnums.ResultType.Number;
+                    return ResultType.Number;
                 },
             ),
         );
@@ -86,45 +86,45 @@ export class Num extends ExpressionParsersContextsBase.Base {
     }
 
     private readonly _num   : number;
-    private _contextWar     : ExpressionParsersContextsWar.War | null = null;
+    private _contextWar     : War | null = null;
 
-    public constructor(data: ExpressionParsersResultsNum.Num) {
+    public constructor(data: ExpressionParsersResultsNum) {
         super(data.war);
 
         this._num = data.num;
     }
 
-    public getContextType(): ExpressionParsersEnums.ContextType {
-        return ExpressionParsersEnums.ContextType.Number;
+    public getContextType(): ContextType {
+        return ContextType.Number;
     }
 
-    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase.Base {
+    public override resolveVariable(identifierName: string): ExpressionParsersResultsBase {
         const war = this.getWar();
         switch (identifierName) {
-            case Num.VnSelf     : return new ExpressionParsersResultsNum.Num(war, this._num);
-            case Num.VnWar      : return new ExpressionParsersResultsWar.War(war);
-            default                         : return (this._contextWar ??= new ExpressionParsersContextsWar.War(war)).resolveVariable(identifierName);
+            case Num.VnSelf     : return new ExpressionParsersResultsNum(war, this._num);
+            case Num.VnWar      : return new ExpressionParsersResultsWar(war);
+            default                         : return (this._contextWar ??= new War(war)).resolveVariable(identifierName);
         }
     }
 
-    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase.Base[], rootCtx: ExpressionParsersContextsBase.Base, localVariableDict: Map<string, ExpressionParsersResultsBase.Base> | null, isRestricted: boolean): ExpressionParsersResultsBase.Base {
+    public override callFunction(identifierName: string, argumentArray: ExpressionParsersResultsBase[], rootCtx: Base, localVariableDict: Map<string, ExpressionParsersResultsBase> | null, isRestricted: boolean): ExpressionParsersResultsBase {
         switch (identifierName) {
             case Num.FnAbs      : return this.callAbs();
             case Num.FnFloor    : return this.callFloor();
             case Num.FnCeil     : return this.callCeil();
-            default                         : return (this._contextWar ??= new ExpressionParsersContextsWar.War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
+            default                         : return (this._contextWar ??= new War(this.getWar())).callFunction(identifierName, argumentArray, rootCtx, localVariableDict, isRestricted);
         }
     }
 
-    private callAbs(): ExpressionParsersResultsNum.Num {
-        return new ExpressionParsersResultsNum.Num(this.getWar(), Math.abs(this._num));
+    private callAbs(): ExpressionParsersResultsNum {
+        return new ExpressionParsersResultsNum(this.getWar(), Math.abs(this._num));
     }
 
-    private callFloor(): ExpressionParsersResultsNum.Num {
-        return new ExpressionParsersResultsNum.Num(this.getWar(), Math.floor(this._num));
+    private callFloor(): ExpressionParsersResultsNum {
+        return new ExpressionParsersResultsNum(this.getWar(), Math.floor(this._num));
     }
 
-    private callCeil(): ExpressionParsersResultsNum.Num {
-        return new ExpressionParsersResultsNum.Num(this.getWar(), Math.ceil(this._num));
+    private callCeil(): ExpressionParsersResultsNum {
+        return new ExpressionParsersResultsNum(this.getWar(), Math.ceil(this._num));
     }
 }

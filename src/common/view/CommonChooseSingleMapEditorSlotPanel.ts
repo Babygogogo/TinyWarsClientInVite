@@ -1,30 +1,30 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GameConfigGcMap from "../../gameConfig/GcMap.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as MapEditorModelMeModel from "../../mapEditor/model/MeModel.ts";
-import * as MapsUtilsMapRawData from "../../maps/utils/MapRawData.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiInterfacesIUiZoomableMap from "../../ui/interfaces/IUiZoomableMap.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { showLang } from "../../FloatText.ts";
+import { ReviewStatus } from "../../gameConfig/GcMap.ts";
+import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
+import { checkAndCreateSimulation, checkAndCreateMultiFreeWar } from "../../helpers/GameFlow.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { MouseStyleType } from "../../helpers/PointerInput.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getLanguageText, getMapReviewStatusText } from "../../lang/Utils.ts";
+import { getMapEditorData, getMaxSlotsCount } from "../../mapEditor/model/MeModel.ts";
+import { getErrorCode } from "../../maps/utils/MapRawData.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
     currentSlotIndex        : number;
@@ -35,25 +35,25 @@ export interface OpenData {
     getHelpText             : (() => string) | null;
     callback                : (slotIndex: number) => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnHelp!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelTips!        : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnHelp!          : IUiButton;
+    private readonly _btnClose!         : IUiButton;
+    private readonly _labelTips!        : IUiLabel;
 
-    private readonly _listSlot!         : UiInterfacesIUiScrollList.IUiScrollList<DataForSlotRenderer>;
-    private readonly _labelNoData!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _listSlot!         : IUiScrollList<DataForSlotRenderer>;
+    private readonly _labelNoData!      : IUiLabel;
 
-    private readonly _groupZoomMap!     : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _zoomMap!          : UiInterfacesIUiZoomableMap.IUiZoomableMap;
+    private readonly _groupZoomMap!     : IUiContainer;
+    private readonly _zoomMap!          : IUiZoomableMap;
 
     private _slotIndexForShowMap        = -1;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -85,7 +85,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const zoomMap       = this._zoomMap;
         const labelNoData   = this._labelNoData;
-        const mapData       = slotIndex == null ? null : (await MapEditorModelMeModel.getMapEditorData(slotIndex))?.mapRawData;
+        const mapData       = slotIndex == null ? null : (await getMapEditorData(slotIndex))?.mapRawData;
         if (!mapData) {
             labelNoData.setIsVisible(true);
             zoomMap.setIsVisible(false);
@@ -96,7 +96,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             zoomMap.setIsVisible(true);
             zoomMap.showMapByMapData({
                 mapRawData          : mapData,
-                gameConfig          : await GameConfigGcModel.getLatestGameConfig(),
+                gameConfig          : await getLatestGameConfig(),
                 overridingPlayers   : null,
             });
         }
@@ -108,21 +108,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const isEmptySlot = (await MapEditorModelMeModel.getMapEditorData(slotIndex))?.mapRawData == null;
+        const isEmptySlot = (await getMapEditorData(slotIndex))?.mapRawData == null;
         if ((openData.needNonEmptySlot) && (isEmptySlot)) {
-            FloatText2.showLang(LangConstants.TextType.A0442);
+            showLang(TextType.A0442);
             return;
         }
 
         const callback  = () => {
             openData.callback(slotIndex);
-            GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonChooseSingleMapEditorSlotPanel);
+            closePanel(getDict().CommonChooseSingleMapEditorSlotPanel);
         };
         if ((!openData.needConfirmOverwrite) || (isEmptySlot)) {
             callback();
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent     : () => LangUtils.getText(LangConstants.TextType.A0070),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent     : () => getText(TextType.A0070),
                 callback    : callback,
             });
         }
@@ -138,23 +138,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnHelp(): void {
         const callback = this.getOpenData()?.getHelpText;
         if (callback) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
+            openPanel(getDict().CommonHelpPanel, {
                 getContent : () => callback(),
             });
         }
     }
 
     private async _onTouchedGroupZoomMap(): Promise<void> {
-        const mapRawData = (await MapEditorModelMeModel.getMapEditorData(this._slotIndexForShowMap))?.mapRawData;
+        const mapRawData = (await getMapEditorData(this._slotIndexForShowMap))?.mapRawData;
         if (mapRawData) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowMapPanel, {
+            openPanel(getDict().CommonShowMapPanel, {
                 mapInfo : {
                     mapRawData          : mapRawData,
-                    gameConfig          : await GameConfigGcModel.getLatestGameConfig(),
+                    gameConfig          : await getLatestGameConfig(),
                     overridingPlayers   : null,
                 },
             });
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
 
@@ -181,13 +181,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(this.getOpenData()?.getTitleText?.() ?? LangUtils.getText(LangConstants.TextType.B1256));
-        this._labelNoData.setLangText(LangConstants.TextType.B0278);
-        this._labelTips.setLangText(LangConstants.TextType.B1249);
+        this._labelTitle.setText(this.getOpenData()?.getTitleText?.() ?? getText(TextType.B1256));
+        this._labelNoData.setLangText(TextType.B0278);
+        this._labelTips.setLangText(TextType.B1249);
     }
 
     private async _createDataForList(): Promise<DataForSlotRenderer[]> {
-        const maxSlotsCount = MapEditorModelMeModel.getMaxSlotsCount();
+        const maxSlotsCount = getMaxSlotsCount();
         const allowPlay     = !!this.getOpenData()?.allowPlay;
         const dataArray     : DataForSlotRenderer[] = [];
         for (let slotIndex = 0; slotIndex < maxSlotsCount; ++slotIndex) {
@@ -202,41 +202,41 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForSlotRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForSlotRenderer extends UiListItemData {
     slotIndex   : number;
     allowPlay   : boolean;
     panel       : Panel;
 }
-class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForSlotRenderer> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgSelected!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _btnPlay!          : UiInterfacesIUiButton.IUiButton;
+class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
+    private readonly _group!            : IUiContainer;
+    private readonly _imgSelected!      : IUiImage;
+    private readonly _btnPlay!          : IUiButton;
 
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelSlotIndex!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapName!     : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelSlotIndex!   : IUiLabel;
+    private readonly _labelMapName!     : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._imgSelected,    callback: this._onTouchedImgSelected },
             { ui: this._btnPlay,        callback: this._onTouchedBtnPlay },
         ]);
-        this._setShortSfxCode(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        this._setShortSfxCode(ShortSfxCode.ButtonNeutral01);
         this.setIsTouchEnabled(true);
-        this.setMouseStyle(HelpersPointerInput.MouseStyleType.Pointer);
+        this.setMouseStyle(MouseStyleType.Pointer);
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        TweenExecutor.Executor.removeTweens(imgSelected);
-        TweenExecutor.Executor.get(imgSelected, { loop: true })
+        Executor.removeTweens(imgSelected);
+        Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.6 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
-        TweenExecutor.Executor.removeTweens(this._imgSelected);
+        Executor.removeTweens(this._imgSelected);
         await super._onClosed();
     }
 
@@ -248,7 +248,7 @@ class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const openData = this.getOpenData();
         openData?.panel.updateOnSelectedData(openData.slotIndex);
     }
-    private async _onTouchedBtnPlay(e: VendorEgretEgret.Event): Promise<void> {
+    private async _onTouchedBtnPlay(e: Event): Promise<void> {
         e.stopPropagation();
 
         const openData = this.getOpenData();
@@ -256,28 +256,28 @@ class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             return;
         }
 
-        const mapEditorData = await MapEditorModelMeModel.getMapEditorData(openData.slotIndex);
+        const mapEditorData = await getMapEditorData(openData.slotIndex);
         const mapRawData    = mapEditorData?.mapRawData;
         if (mapRawData == null) {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
+        openPanel(getDict().CommonChooseSingleNumberPanel, {
             availableNumberArray    : [1, 2],
             currentNumber           : 1,
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.B0401),
+            getTitleText            : () => getText(TextType.B0401),
             getNumberMainText       : num => {
                 switch (num) {
-                    case 1  : return LangUtils.getText(LangConstants.TextType.B0325);
-                    case 2  : return LangUtils.getText(LangConstants.TextType.B0557);
-                    default : throw HelpersMisc.newError(`Invalid num: ${num}`);
+                    case 1  : return getText(TextType.B0325);
+                    case 2  : return getText(TextType.B0557);
+                    default : throw newError(`Invalid num: ${num}`);
                 }
             },
             callbackOnConfirm       : num => {
                 switch (num) {
-                    case 1  : return HelpersGameFlow.checkAndCreateSimulation(mapRawData, mapEditorData?.gridMarkData);
-                    case 2  : return HelpersGameFlow.checkAndCreateMultiFreeWar(mapRawData);
-                    default : throw HelpersMisc.newError(`Invalid num: ${num}`);
+                    case 1  : return checkAndCreateSimulation(mapRawData, mapEditorData?.gridMarkData);
+                    case 2  : return checkAndCreateMultiFreeWar(mapRawData);
+                    default : throw newError(`Invalid num: ${num}`);
                 }
             },
         });
@@ -301,14 +301,14 @@ class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         }
 
         const slotIndex     = openData.slotIndex;
-        const mapEditorData = await MapEditorModelMeModel.getMapEditorData(slotIndex);
+        const mapEditorData = await getMapEditorData(slotIndex);
         if (slotIndex !== this.getOpenData()?.slotIndex) {
             return;
         }
 
         const mapRawData = mapEditorData?.mapRawData;
         if ((mapRawData) && (openData.allowPlay)) {
-            const errorCode = await MapsUtilsMapRawData.getErrorCode({
+            const errorCode = await getErrorCode({
                 mapRawData                          : mapRawData,
                 allowRedundantWarEvents             : false,
                 allowRedundantMapSimpleDialogues    : false,
@@ -323,29 +323,29 @@ class SlotRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const status            = mapEditorData?.reviewStatus ?? 0;
         const labelSlotIndex    = this._labelSlotIndex;
         labelSlotIndex.setTextColor(getReviewStatusTextColor(status));
-        this._labelMapName.setText(LangUtils.getLanguageText({ textArray: mapRawData ? mapRawData.getMapNameArray() : [] }) || `(${LangUtils.getText(LangConstants.TextType.B0277)})`);
+        this._labelMapName.setText(getLanguageText({ textArray: mapRawData ? mapRawData.getMapNameArray() : [] }) || `(${getText(TextType.B0277)})`);
 
         const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent;
         if (srcNormalMapIdForAddEvent != null) {
-            labelSlotIndex.setText(`#${slotIndex} ${LangUtils.getText(LangConstants.TextType.B1006)} #${srcNormalMapIdForAddEvent}`);
+            labelSlotIndex.setText(`#${slotIndex} ${getText(TextType.B1006)} #${srcNormalMapIdForAddEvent}`);
         } else {
             const campaignMapData = mapRawData?.getCampaignMapData();
             if (campaignMapData == null) {
-                labelSlotIndex.setText(`#${slotIndex} ${LangUtils.getMapReviewStatusText(status) ?? LangConstants.UndefinedError}`);
+                labelSlotIndex.setText(`#${slotIndex} ${getMapReviewStatusText(status) ?? UndefinedError}`);
             } else {
-                labelSlotIndex.setText(`#${slotIndex} ${LangUtils.getText(LangConstants.TextType.B1135)} ${campaignMapData.getCampaignId() ?? 0}-${campaignMapData.getCampaignMapId() ?? 0}`);
+                labelSlotIndex.setText(`#${slotIndex} ${getText(TextType.B1135)} ${campaignMapData.getCampaignId() ?? 0}-${campaignMapData.getCampaignMapId() ?? 0}`);
             }
         }
         this._layoutName.arrangeItems();
     }
 }
 
-function getReviewStatusTextColor(status: GameConfigGcMap.ReviewStatus): number {
+function getReviewStatusTextColor(status: ReviewStatus): number {
     switch (status) {
-        case GameConfigGcMap.ReviewStatus.None       : return 0xc9d3df;
-        case GameConfigGcMap.ReviewStatus.Reviewing  : return 0xffff00;
-        case GameConfigGcMap.ReviewStatus.Rejected   : return 0xff0000;
-        case GameConfigGcMap.ReviewStatus.Accepted   : return 0x00ff00;
+        case ReviewStatus.None       : return 0xc9d3df;
+        case ReviewStatus.Reviewing  : return 0xffff00;
+        case ReviewStatus.Rejected   : return 0xff0000;
+        case ReviewStatus.Accepted   : return 0x00ff00;
         default                         : return 0xffffff;
     }
 }

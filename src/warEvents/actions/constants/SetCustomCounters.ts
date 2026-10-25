@@ -1,24 +1,24 @@
-import * as ExpressionParsersEnums from "../../../expressionParsers/Enums.ts";
-import type * as ExpressionParsersTypes from "../../../expressionParsers/Types.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
+import { ContextType, ResultType } from "../../../expressionParsers/Enums.ts";
+import type { EpExpressionInfo } from "../../../expressionParsers/Types.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
 
 export const ExpressionInfoDict: {
-    IdExpression    : ExpressionParsersTypes.EpExpressionInfo;
-    ValueExpression : ExpressionParsersTypes.EpExpressionInfo;
+    IdExpression    : EpExpressionInfo;
+    ValueExpression : EpExpressionInfo;
 } = {
     IdExpression       : {
-        contextType     : ExpressionParsersEnums.ContextType.CustomCounter,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.CustomCounter,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B0792),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0531),
+        getTitleText    : () => getText(TextType.B0792),
+        getHelpText     : () => getText(TextType.A0531),
     },
     ValueExpression : {
-        contextType     : ExpressionParsersEnums.ContextType.CustomCounter,
-        resultTypes     : [ExpressionParsersEnums.ResultType.Number],
+        contextType     : ContextType.CustomCounter,
+        resultTypes     : [ResultType.Number],
         isRequired      : true,
-        getTitleText    : () => LangUtils.getText(LangConstants.TextType.B0803),
-        getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0532),
+        getTitleText    : () => getText(TextType.B0803),
+        getHelpText     : () => getText(TextType.A0532),
     },
 };

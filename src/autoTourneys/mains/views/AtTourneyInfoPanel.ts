@@ -1,74 +1,81 @@
-import * as AutoTourneysConstants from "../../Constants.ts";
-import * as AutoTourneysMainsProvider from "../Provider.ts";
-import * as FloatText2 from "../../../FloatText.ts";
-import * as GameConfigGcModel from "../../../gameConfig/GcModel.ts";
-import * as GamePanelsDict from "../../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../../helpers/GameFlow.ts";
-import * as HelpersImageSource from "../../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NormalMapModelNormalMapModel from "../../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoAutoTourneySingleBracketInfo from "../../../proto/schema/CommonProto/AutoTourney/SingleBracketInfo.ts";
-import * as ReplayWarModelRwModel from "../../../replayWar/model/RwModel.ts";
-import * as SoundsConstants from "../../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../../timer/TimerModel.ts";
-import * as UiComponentsUiListItemRenderer from "../../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../../users/Model.ts";
-import * as WatchWarModelWwModel from "../../../watchWar/model/WwModel.ts";
+import { PhaseId } from "../../Constants.ts";
+import {
+    getLastTourneyId,
+    getAllTourneyIdArray,
+    getAtFullBracketInfo,
+    getAtTourneyInfo,
+    getTourneyInfoPhase,
+    getAtFullMapInfo,
+} from "../Provider.ts";
+import { showLang } from "../../../FloatText.ts";
+import { getLatestGameConfig } from "../../../gameConfig/GcModel.ts";
+import { getDict } from "../../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../../gamePanels/Manager.ts";
+import { gotoReplayWar, gotoMultiPlayerWar } from "../../../helpers/GameFlow.ts";
+import { getMedal } from "../../../helpers/ImageSource.ts";
+import { getExisted } from "../../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getLanguageText, getAutoTourneyPhaseName, getTimeDurationText2, getText } from "../../../lang/Utils.ts";
+import { getRawData, getMapNameInCurrentLanguage } from "../../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../../notifications/TypeId.ts";
+import type { SingleBracketInfo } from "../../../proto/schema/CommonProto/AutoTourney/SingleBracketInfo.ts";
+import { getReplayData } from "../../../replayWar/model/RwModel.ts";
+import { ShortSfxCode } from "../../../sounds/Constants.ts";
+import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
+import { getServerTimestamp } from "../../../timer/TimerModel.ts";
+import { UiListItemRenderer } from "../../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
+import { getIsSelfAutoTourneyCommittee, getUserNickname } from "../../../users/Model.ts";
+import { getWatchOutgoingInfo, getWatchWarData } from "../../../watchWar/model/WwModel.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnSettings!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnSettings!              : IUiButton;
+    private readonly _btnClose!                 : IUiButton;
 
-    private readonly _labelInfoTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTourneyIdTitle!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTourneyId!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnPreviousTourney!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnNextTourney!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelInfoTitle!           : IUiLabel;
+    private readonly _labelTourneyIdTitle!      : IUiLabel;
+    private readonly _labelTourneyId!           : IUiLabel;
+    private readonly _btnPreviousTourney!       : IUiButton;
+    private readonly _btnNextTourney!           : IUiButton;
 
-    private readonly _labelPhaseTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _layoutPhase!              : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelPhase!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPhaseCountdown!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelPhaseTitle!          : IUiLabel;
+    private readonly _layoutPhase!              : IUiLayout;
+    private readonly _labelPhase!               : IUiLabel;
+    private readonly _labelPhaseCountdown!      : IUiLabel;
 
-    private readonly _labeBracketRoundTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelBracketRound!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnPreviousBracket!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnNextBracket!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _labeBracketRoundTitle!    : IUiLabel;
+    private readonly _labelBracketRound!        : IUiLabel;
+    private readonly _btnPreviousBracket!       : IUiButton;
+    private readonly _btnNextBracket!           : IUiButton;
 
-    private readonly _groupMapName!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelMapNameTitle!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMapName!             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupMapName!             : IUiContainer;
+    private readonly _labelMapNameTitle!        : IUiLabel;
+    private readonly _labelMapName!             : IUiLabel;
 
-    private readonly _labelBracketTitle!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listBracket!              : UiInterfacesIUiScrollList.IUiScrollList<DataForBracketRenderer>;
-    private readonly _labelNoData!              : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelBracketTitle!        : IUiLabel;
+    private readonly _listBracket!              : IUiScrollList<DataForBracketRenderer>;
+    private readonly _labelNoData!              : IUiLabel;
 
     private _tourneyId      = 1;
     private _bracketRoundId = 1;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.TimeTick,                callback: this._onNotifyTimeTick },
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgAtSetName,            callback: this._onNotifyMsgAtSetName },
-            { type: NotificationsTypeId.TypeId.MsgMpwWatchMakeRequest,  callback: this._onNotifyMsgMpwWatchMakeRequest },
+            { type: TypeId.TimeTick,                callback: this._onNotifyTimeTick },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgAtSetName,            callback: this._onNotifyMsgAtSetName },
+            { type: TypeId.MsgMpwWatchMakeRequest,  callback: this._onNotifyMsgMpwWatchMakeRequest },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -87,7 +94,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._listBracket.setItemRendererClass(BracketRenderer);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        this._tourneyId         = HelpersMisc.getExisted(await AutoTourneysMainsProvider.getLastTourneyId());
+        this._tourneyId         = getExisted(await getLastTourneyId());
         this._bracketRoundId    = 1;
         this._updateView();
     }
@@ -101,71 +108,71 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private async _onTouchedBtnPreviousTourney(): Promise<void> {
-        const tourneyIdArray    = await AutoTourneysMainsProvider.getAllTourneyIdArray();
+        const tourneyIdArray    = await getAllTourneyIdArray();
         const tourneyId         = this._tourneyId - 1;
         if (tourneyIdArray.indexOf(tourneyId) >= 0) {
             this._tourneyId         = tourneyId;
             this._bracketRoundId    = 1;
             this._updateView();
         } else {
-            FloatText2.showLang(LangConstants.TextType.B0278);
+            showLang(TextType.B0278);
         }
     }
     private _onTouchedBtnSettings(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().AtTourneySettingsPanel, { tourneyId: this._tourneyId });
+        openPanel(getDict().AtTourneySettingsPanel, { tourneyId: this._tourneyId });
     }
     private async _onTouchedBtnNextTourney(): Promise<void> {
-        const tourneyIdArray    = await AutoTourneysMainsProvider.getAllTourneyIdArray();
+        const tourneyIdArray    = await getAllTourneyIdArray();
         const tourneyId         = this._tourneyId + 1;
         if (tourneyIdArray.indexOf(tourneyId) >= 0) {
             this._tourneyId         = tourneyId;
             this._bracketRoundId    = 1;
             this._updateView();
         } else {
-            FloatText2.showLang(LangConstants.TextType.B0278);
+            showLang(TextType.B0278);
         }
     }
     private async _onTouchedBtnPreviousBracket(): Promise<void> {
-        const bracketInfoArray  = (await AutoTourneysMainsProvider.getAtFullBracketInfo(this._tourneyId))?.getSingleBracketInfoArray() ?? [];
+        const bracketInfoArray  = (await getAtFullBracketInfo(this._tourneyId))?.getSingleBracketInfoArray() ?? [];
         const bracketRoundId    = this._bracketRoundId - 1;
         if (bracketInfoArray.some(v => (v.getBracketRoundId() ?? 0) == bracketRoundId)) {
             this._bracketRoundId = bracketRoundId;
             this._updateView();
         } else {
-            FloatText2.showLang(LangConstants.TextType.B0278);
+            showLang(TextType.B0278);
         }
     }
     private async _onTouchedGroupMapName(): Promise<void> {
         const tourneyId     = this._tourneyId;
-        const tourneyInfo   = await AutoTourneysMainsProvider.getAtTourneyInfo(tourneyId);
+        const tourneyInfo   = await getAtTourneyInfo(tourneyId);
         if (tourneyInfo == null) {
             return;
         }
-        if (AutoTourneysMainsProvider.getTourneyInfoPhase(tourneyInfo) === AutoTourneysConstants.PhaseId.Registration) {
+        if (getTourneyInfoPhase(tourneyInfo) === PhaseId.Registration) {
             return;
         }
 
-        const mapInfoArray  = (await AutoTourneysMainsProvider.getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? [];
-        const mapRawData    = await NormalMapModelNormalMapModel.getRawData(mapInfoArray[(this._bracketRoundId - 1) % mapInfoArray.length].getNormalMapId() ?? 0);
+        const mapInfoArray  = (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? [];
+        const mapRawData    = await getRawData(mapInfoArray[(this._bracketRoundId - 1) % mapInfoArray.length].getNormalMapId() ?? 0);
         if (mapRawData != null) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowMapPanel, {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
+            openPanel(getDict().CommonShowMapPanel, {
                 mapInfo : {
                     mapRawData          : mapRawData,
-                    gameConfig          : await GameConfigGcModel.getLatestGameConfig(),
+                    gameConfig          : await getLatestGameConfig(),
                     overridingPlayers   : null,
                 },
             });
         }
     }
     private async _onTouchedBtnNextBracket(): Promise<void> {
-        const bracketInfoArray  = (await AutoTourneysMainsProvider.getAtFullBracketInfo(this._tourneyId))?.getSingleBracketInfoArray() ?? [];
+        const bracketInfoArray  = (await getAtFullBracketInfo(this._tourneyId))?.getSingleBracketInfoArray() ?? [];
         const bracketRoundId    = this._bracketRoundId + 1;
         if (bracketInfoArray.some(v => (v.getBracketRoundId() ?? 0) == bracketRoundId)) {
             this._bracketRoundId = bracketRoundId;
             this._updateView();
         } else {
-            FloatText2.showLang(LangConstants.TextType.B0278);
+            showLang(TextType.B0278);
         }
     }
 
@@ -182,7 +189,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgMpwWatchMakeRequest(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,7 +200,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const tourneyId                 = this._tourneyId;
         const bracketRoundId            = this._bracketRoundId;
-        this._btnSettings.setIsVisible(UsersModel.getIsSelfAutoTourneyCommittee());
+        this._btnSettings.setIsVisible(getIsSelfAutoTourneyCommittee());
         this._updateLabelTourneyId();
         this._updateLabelBracketRound();
         this._updateLabelPhase();
@@ -211,11 +218,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             labelNoData.setIsVisible(false);
         }
 
-        const bracketInfoArray = (await AutoTourneysMainsProvider.getAtFullBracketInfo(tourneyId))?.getSingleBracketInfoArray() ?? [];
+        const bracketInfoArray = (await getAtFullBracketInfo(tourneyId))?.getSingleBracketInfoArray() ?? [];
         this._btnNextBracket.setIsVisible(bracketInfoArray.some(v => (v.getBracketRoundId() ?? 0) === bracketRoundId + 1));
         this._btnPreviousBracket.setIsVisible(bracketInfoArray.some(v => (v.getBracketRoundId() ?? 0) === bracketRoundId - 1));
 
-        const allTourneyIdArray = await AutoTourneysMainsProvider.getAllTourneyIdArray();
+        const allTourneyIdArray = await getAllTourneyIdArray();
         this._btnPreviousTourney.setIsVisible(allTourneyIdArray.indexOf(tourneyId - 1) >= 0);
         this._btnNextTourney.setIsVisible(allTourneyIdArray.indexOf(tourneyId + 1) >= 0);
     }
@@ -224,7 +231,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const dataArray                 : DataForBracketRenderer[] = [];
         const tourneyId                 = this._tourneyId;
         const bracketRoundId            = this._bracketRoundId;
-        const bracketInfoArray          = (await AutoTourneysMainsProvider.getAtFullBracketInfo(tourneyId))?.getSingleBracketInfoArray() ?? [];
+        const bracketInfoArray          = (await getAtFullBracketInfo(tourneyId))?.getSingleBracketInfoArray() ?? [];
         const firstRoundBracketsCount   = bracketInfoArray.filter(v => v.getBracketRoundId() == 1).length;
         const maxBracketRound           = firstRoundBracketsCount > 0 ? Math.log2(firstRoundBracketsCount) + 1 : -1;
         let index                       = 0;
@@ -241,14 +248,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1022);
-        this._labelNoData.setLangText(LangConstants.TextType.B1042);
-        this._labelTourneyIdTitle.setLangText(LangConstants.TextType.B1026);
-        this._labelPhaseTitle.setLangText(LangConstants.TextType.B0367);
-        this._labeBracketRoundTitle.setLangText(LangConstants.TextType.B1033);
-        this._labelMapNameTitle.setLangText(LangConstants.TextType.B0225);
-        this._labelInfoTitle.setLangText(LangConstants.TextType.B0423);
-        this._labelBracketTitle.setLangText(LangConstants.TextType.B1293);
+        this._labelTitle.setLangText(TextType.B1022);
+        this._labelNoData.setLangText(TextType.B1042);
+        this._labelTourneyIdTitle.setLangText(TextType.B1026);
+        this._labelPhaseTitle.setLangText(TextType.B0367);
+        this._labeBracketRoundTitle.setLangText(TextType.B1033);
+        this._labelMapNameTitle.setLangText(TextType.B0225);
+        this._labelInfoTitle.setLangText(TextType.B0423);
+        this._labelBracketTitle.setLangText(TextType.B1293);
 
         this._updateLabelTourneyId();
         this._updateLabelMapName();
@@ -257,13 +264,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private async _updateLabelBracketRound(): Promise<void> {
         const tourneyId     = this._tourneyId;
-        const tourneyInfo   = await AutoTourneysMainsProvider.getAtTourneyInfo(tourneyId);
+        const tourneyInfo   = await getAtTourneyInfo(tourneyId);
         const label         = this._labelBracketRound;
         if (tourneyInfo == null) {
-            label.setText(LangConstants.UndefinedError);
+            label.setText(UndefinedError);
             return;
         }
-        if (AutoTourneysMainsProvider.getTourneyInfoPhase(tourneyInfo) === AutoTourneysConstants.PhaseId.Registration) {
+        if (getTourneyInfoPhase(tourneyInfo) === PhaseId.Registration) {
             label.setText(`----`);
             return;
         }
@@ -272,7 +279,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     private async _updateLabelTourneyId(): Promise<void> {
         const tourneyId             = this._tourneyId;
-        const tourneyName           = LangUtils.getLanguageText({ textArray: (await AutoTourneysMainsProvider.getAtTourneyInfo(tourneyId))?.getNameArray() });
+        const tourneyName           = getLanguageText({ textArray: (await getAtTourneyInfo(tourneyId))?.getNameArray() });
         this._labelTourneyId.setText(`#${tourneyId} ${tourneyName ?? ``}`);
     }
     private async _updateLabelMapName(): Promise<void> {
@@ -280,31 +287,31 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         label.setText(``);
 
         const tourneyId     = this._tourneyId;
-        const tourneyInfo   = await AutoTourneysMainsProvider.getAtTourneyInfo(tourneyId);
+        const tourneyInfo   = await getAtTourneyInfo(tourneyId);
         if (tourneyInfo == null) {
-            label.setText(LangConstants.UndefinedError);
+            label.setText(UndefinedError);
             return;
         }
-        if (AutoTourneysMainsProvider.getTourneyInfoPhase(tourneyInfo) === AutoTourneysConstants.PhaseId.Registration) {
+        if (getTourneyInfoPhase(tourneyInfo) === PhaseId.Registration) {
             label.setText(`----`);
             return;
         }
 
-        const mapInfoArray  = (await AutoTourneysMainsProvider.getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? [];
-        label.setText(await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(mapInfoArray[(this._bracketRoundId - 1) % mapInfoArray.length].getNormalMapId() ?? 0) ?? LangConstants.UndefinedError);
+        const mapInfoArray  = (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? [];
+        label.setText(await getMapNameInCurrentLanguage(mapInfoArray[(this._bracketRoundId - 1) % mapInfoArray.length].getNormalMapId() ?? 0) ?? UndefinedError);
     }
     private async _updateLabelPhase(): Promise<void> {
-        const info  = (await AutoTourneysMainsProvider.getAtTourneyInfo(this._tourneyId));
+        const info  = (await getAtTourneyInfo(this._tourneyId));
         const label = this._labelPhase;
         if (info == null) {
-            label.setText(LangConstants.UndefinedError);
+            label.setText(UndefinedError);
         } else {
-            label.setText(LangUtils.getAutoTourneyPhaseName(AutoTourneysMainsProvider.getTourneyInfoPhase(info)) ?? LangConstants.UndefinedError);
+            label.setText(getAutoTourneyPhaseName(getTourneyInfoPhase(info)) ?? UndefinedError);
         }
         this._layoutPhase.arrangeItems();
     }
     private async _updateLabelPhaseCountdown(): Promise<void> {
-        const info      = await AutoTourneysMainsProvider.getAtTourneyInfo(this._tourneyId);
+        const info      = await getAtTourneyInfo(this._tourneyId);
         const label     = this._labelPhaseCountdown;
         const layout    = this._layoutPhase;
         if (info == null) {
@@ -313,12 +320,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const phase = AutoTourneysMainsProvider.getTourneyInfoPhase(info);
-        if (phase === AutoTourneysConstants.PhaseId.Registration) {
-            label.setText(`  (${LangUtils.getTimeDurationText2((info.getRegistrationDuration() ?? 0) + (info.getRegistrationTimestamp() ?? 0) - TimerTimerModel.getServerTimestamp())})`);
+        const phase = getTourneyInfoPhase(info);
+        if (phase === PhaseId.Registration) {
+            label.setText(`  (${getTimeDurationText2((info.getRegistrationDuration() ?? 0) + (info.getRegistrationTimestamp() ?? 0) - getServerTimestamp())})`);
 
-        } else if (phase === AutoTourneysConstants.PhaseId.Adjustment) {
-            label.setText(`  (${LangUtils.getTimeDurationText2((info.getAdjustmentDuration() ?? 0) + (info.getAdjustmentTimestamp() ?? 0) - TimerTimerModel.getServerTimestamp())})`);
+        } else if (phase === PhaseId.Adjustment) {
+            label.setText(`  (${getTimeDurationText2((info.getAdjustmentDuration() ?? 0) + (info.getAdjustmentTimestamp() ?? 0) - getServerTimestamp())})`);
 
         } else {
             label.setText(``);
@@ -328,31 +335,31 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForBracketRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForBracketRenderer extends UiListItemData {
     index           : number;
-    bracketInfo     : ProtoSchemaCommonProtoAutoTourneySingleBracketInfo.SingleBracketInfo;
+    bracketInfo     : SingleBracketInfo;
     maxBracketRound : number;
     tourneyId       : number;
 }
-class BracketRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForBracketRenderer> {
-    private readonly _imgBg!                : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelGameId!          : UiInterfacesIUiLabel.IUiLabel;
+class BracketRenderer extends UiListItemRenderer<DataForBracketRenderer> {
+    private readonly _imgBg!                : IUiImage;
+    private readonly _labelGameId!          : IUiLabel;
 
-    private readonly _groupName1!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelName1!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgMedal1!            : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupName1!           : IUiLayout;
+    private readonly _labelName1!           : IUiLabel;
+    private readonly _imgMedal1!            : IUiImage;
 
-    private readonly _groupName2!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelName2!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgMedal2!            : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupName2!           : IUiLayout;
+    private readonly _labelName2!           : IUiLabel;
+    private readonly _imgMedal2!            : IUiImage;
 
-    private readonly _btnReplay!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSpectateRequest!   : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSpectateContinue!  : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnReplay!            : IUiButton;
+    private readonly _btnSpectateRequest!   : IUiButton;
+    private readonly _btnSpectateContinue!  : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._groupName1,                 callback: this._onTouchedGroupName1 },
@@ -401,33 +408,33 @@ class BracketRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
     private _onTouchedGroupName1(): void {
         const userId = (this.getOpenData()?.bracketInfo.getUserIdArray() ?? [])[0];
         if (userId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: userId });
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            openPanel(getDict().UserPanel, { userId: userId });
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
     private _onTouchedGroupName2(): void {
         const userId = (this.getOpenData()?.bracketInfo.getUserIdArray() ?? [])[1];
         if (userId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, { userId: userId });
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+            openPanel(getDict().UserPanel, { userId: userId });
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
     private _onTouchedBtnReplay(): void {
         const replayId = this.getOpenData()?.bracketInfo.getReplayId();
         if (replayId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent : () => LangUtils.getText(LangConstants.TextType.A0406),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent : () => getText(TextType.A0406),
                 callback: async () => {
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonBlockPanel, {
-                        title   : LangUtils.getText(LangConstants.TextType.B0088),
-                        content : LangUtils.getText(LangConstants.TextType.A0040),
+                    openPanel(getDict().CommonBlockPanel, {
+                        title   : getText(TextType.B0088),
+                        content : getText(TextType.A0040),
                     });
 
-                    const data = await ReplayWarModelRwModel.getReplayData(replayId);
+                    const data = await getReplayData(replayId);
                     if (data) {
-                        HelpersGameFlow.gotoReplayWar(data, HelpersMisc.getExisted(replayId));
+                        gotoReplayWar(data, getExisted(replayId));
                     } else {
-                        GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonBlockPanel);
+                        closePanel(getDict().CommonBlockPanel);
                     }
                 },
             });
@@ -436,33 +443,33 @@ class BracketRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
     private async _onTouchedBtnSpectate(): Promise<void> {
         const warId = this.getOpenData()?.bracketInfo.getWarId();
         if (warId == null) {
-            FloatText2.showLang(LangConstants.TextType.A0297);
+            showLang(TextType.A0297);
             return;
         }
 
-        const watchOutgoingInfo = await WatchWarModelWwModel.getWatchOutgoingInfo(warId);
+        const watchOutgoingInfo = await getWatchOutgoingInfo(warId);
         if (watchOutgoingInfo == null) {
-            FloatText2.showLang(LangConstants.TextType.A0297);
+            showLang(TextType.A0297);
             return;
         }
 
         if (watchOutgoingInfo.getOngoingDstUserIdArray()?.length) {
-            const warData = await WatchWarModelWwModel.getWatchWarData(warId);
+            const warData = await getWatchWarData(warId);
             if (warData) {
-                HelpersGameFlow.gotoMultiPlayerWar(warData);
+                gotoMultiPlayerWar(warData);
             } else {
-                FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                showLang(TextType.YouCanNotDoThisRightNow);
             }
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().WwMakeRequestDetailPanel, {
+            openPanel(getDict().WwMakeRequestDetailPanel, {
                 warId   : warId,
             });
         }
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnReplay.setText(LangUtils.getText(LangConstants.TextType.B0710));
-        this._btnSpectateRequest.setText(LangUtils.getText(LangConstants.TextType.B0872));
+        this._btnReplay.setText(getText(TextType.B0710));
+        this._btnSpectateRequest.setText(getText(TextType.B0872));
     }
 
     private async _updateBtnSpectate(): Promise<void> {
@@ -478,7 +485,7 @@ class BracketRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
 
         const warId = bracketInfo.getWarId();
         if ((warId != null) && (bracketInfo.getReplayId() == null)) {
-            const watchOutgoingInfo = await WatchWarModelWwModel.getWatchOutgoingInfo(warId);
+            const watchOutgoingInfo = await getWatchOutgoingInfo(warId);
             if ((watchOutgoingInfo != null) && (warId === this.getOpenData()?.bracketInfo.getWarId())) {
                 const canContinue   = !!watchOutgoingInfo.getOngoingDstUserIdArray().length;
                 btnRequest.setIsVisible(!canContinue);
@@ -487,9 +494,9 @@ class BracketRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
         }
     }
 
-    private async _updateLabelName(label: UiInterfacesIUiLabel.IUiLabel, userId: number | null, winnerUserId: number | null): Promise<void> {
+    private async _updateLabelName(label: IUiLabel, userId: number | null, winnerUserId: number | null): Promise<void> {
         if (userId != null) {
-            label.setText((await UsersModel.getUserNickname(userId)) || LangConstants.UndefinedError);
+            label.setText((await getUserNickname(userId)) || UndefinedError);
             label.setTextColor(userId === winnerUserId ? 0x44FF44 : 0xFFFFFF);
         } else {
             label.setText(winnerUserId == null ? `????` : `----`);
@@ -497,7 +504,7 @@ class BracketRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
         }
     }
 
-    private async _updateImgMedal(img: UiInterfacesIUiImage.IUiImage, userId: number | null): Promise<void> {
+    private async _updateImgMedal(img: IUiImage, userId: number | null): Promise<void> {
         const openData = this.getOpenData();
         if (openData == null) {
             return;
@@ -519,14 +526,14 @@ class BracketRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
         if (bracketInfo.getBracketGameId() == 1) {
             img.setIsVisible(true);
             if (userId === winnerUserId) {
-                img.loadSource(HelpersImageSource.getMedal(tourneyId * 3 + 1));
+                img.loadSource(getMedal(tourneyId * 3 + 1));
             } else {
-                img.loadSource(HelpersImageSource.getMedal(tourneyId * 3 + 2));
+                img.loadSource(getMedal(tourneyId * 3 + 2));
             }
         } else {
             if (userId === winnerUserId) {
                 img.setIsVisible(true);
-                img.loadSource(HelpersImageSource.getMedal(tourneyId * 3 + 3));
+                img.loadSource(getMedal(tourneyId * 3 + 3));
             } else {
                 img.setIsVisible(false);
             }

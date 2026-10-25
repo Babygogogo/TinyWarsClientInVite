@@ -1,41 +1,54 @@
-import * as AutoTourneysConstants from "../../autoTourneys/Constants.ts";
-import * as AutoTourneysMainsProvider from "../../autoTourneys/mains/Provider.ts";
-import * as AutoTourneysRoomsProvider from "../../autoTourneys/rooms/Provider.ts";
-import * as AuxiliaryTypesChatToTarget from "../../auxiliaryTypes/ChatToTarget.ts";
-import * as ChatModel from "../../chat/Model.ts";
-import * as CoopCustomRoomModelCcrModel from "../../coopCustomRoom/model/CcrModel.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LobbyModelLobbyModel from "../model/LobbyModel.ts";
-import * as MultiCustomRoomModelMcrModel from "../../multiCustomRoom/model/McrModel.ts";
-import * as MultiFreeRoomModelMfrModel from "../../multiFreeRoom/model/MfrModel.ts";
-import * as MultiMatchRoomModelMmrModel from "../../multiMatchRoom/model/MmrModel.ts";
-import * as MultiPlayerRoomsConstants from "../../multiPlayerRooms/Constants.ts";
-import * as MultiPlayerWarModelMpwModel from "../../multiPlayerWar/model/MpwModel.ts";
-import * as MultiRankRoomModelMrrModel from "../../multiRankRoom/model/MrrModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
-import * as WatchWarModelWwModel from "../../watchWar/model/WwModel.ts";
+import { PhaseId } from "../../autoTourneys/Constants.ts";
+import {
+    getSinglePhaseInfoArrayForPhase,
+    setIsNotifiedForRegistration,
+    checkIsRedForRegistration,
+    getLastTourneyId,
+    getAtPhaseInfo,
+} from "../../autoTourneys/mains/Provider.ts";
+import { checkIsRed } from "../../autoTourneys/rooms/Provider.ts";
+import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
+import { checkHasUnreadMessage } from "../../chat/Model.ts";
+import { checkIsRed as CoopCustomRoomModelCcrModelCheckIsRed } from "../../coopCustomRoom/model/CcrModel.ts";
+import { showLang } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { unloadAllWarsAndOpenCommonPanels, gotoMyWarListPanel } from "../../helpers/GameFlow.ts";
+import { checkIsAnyPromiseTrue, getExisted } from "../../helpers/Misc.ts";
+import { MouseStyleType } from "../../helpers/PointerInput.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { checkIsRedForMultiPlayer, checkIsRedForGameSettings } from "../model/LobbyModel.ts";
+import { checkIsRed as MultiCustomRoomModelMcrModelCheckIsRed } from "../../multiCustomRoom/model/McrModel.ts";
+import { checkIsRed as MultiFreeRoomModelMfrModelCheckIsRed } from "../../multiFreeRoom/model/MfrModel.ts";
+import { checkIsRed as MultiMatchRoomModelMmrModelCheckIsRed } from "../../multiMatchRoom/model/MmrModel.ts";
+import { MultiPlayerRoomType } from "../../multiPlayerRooms/Constants.ts";
+import {
+    checkIsRedForMyMrwWars,
+    checkIsRedForMyMcwWars,
+    checkIsRedForMyMfwWars,
+    checkIsRedForMyCcwWars,
+    checkIsRedForMyMmwWars,
+    checkIsRedForMyAtwWars,
+} from "../../multiPlayerWar/model/MpwModel.ts";
+import { checkIsRed as MultiRankRoomModelMrrModelCheckIsRed } from "../../multiRankRoom/model/MrrModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getSelfUserId } from "../../users/Model.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
+import { getRequestedWarIdArray, checkIsRed as WatchWarModelWwModelCheckIsRed } from "../../watchWar/model/WwModel.ts";
 
 // eslint-disable-next-line no-shadow
 const enum CommandType {
@@ -93,26 +106,26 @@ const ListMaxItems  = 9;
 const ListMaxHeight = ItemHeight * ListMaxItems + ItemGap * (ListMaxItems - 1);
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupContainer!   : UiInterfacesIUiContainer.IUiContainer;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _groupContainer!   : IUiContainer;
 
-    private readonly _group0!           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listCommand0!     : UiInterfacesIUiScrollList.IUiScrollList<DataForCommandRenderer>;
+    private readonly _group0!           : IUiContainer;
+    private readonly _listCommand0!     : IUiScrollList<DataForCommandRenderer>;
 
-    private readonly _group1!           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listCommand1!     : UiInterfacesIUiScrollList.IUiScrollList<DataForCommandRenderer>;
+    private readonly _group1!           : IUiContainer;
+    private readonly _listCommand1!     : IUiScrollList<DataForCommandRenderer>;
 
-    private readonly _group2!           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listCommand2!     : UiInterfacesIUiScrollList.IUiScrollList<DataForCommandRenderer>;
+    private readonly _group2!           : IUiContainer;
+    private readonly _listCommand2!     : IUiScrollList<DataForCommandRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._group,          callback: this._onTouchedGroup,  mouseStyle: HelpersPointerInput.MouseStyleType.Default },
+            { ui: this._group,          callback: this._onTouchedGroup,  mouseStyle: MouseStyleType.Default },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -147,7 +160,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroup(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+        playShortSfx(ShortSfxCode.ButtonCancel01);
 
         this.closePanel();
     }
@@ -164,7 +177,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const count0    = dataArray0.length;
         const group0    = this._group0;
         group0.setY(Math.max(0, ListMaxItems - count0) * (ItemHeight + ItemGap));
-        group0.setUnscaledManualHeight(NumbersUtils.getValueInRange({
+        group0.setUnscaledManualHeight(getValueInRange({
             minValue    : 0,
             maxValue    : ListMaxHeight,
             rawValue    : count0 * ItemHeight + (count0 - 1) * ItemGap,
@@ -189,16 +202,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                             commandType     : CommandType.C1_Sp_Campaign,
                             isExpandVisible : false,
                             callback        : () => {
-                                HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                GamePanelsManager.openPanel(GamePanelsDict.getDict().CampaignCreateCampaignsPanel, void 0);
+                                unloadAllWarsAndOpenCommonPanels();
+                                openPanel(getDict().CampaignCreateCampaignsPanel, void 0);
                             },
                         },
                         {
                             commandType     : CommandType.C1_Sp_WarRoom,
                             isExpandVisible : false,
                             callback        : () => {
-                                HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                GamePanelsManager.openPanel(GamePanelsDict.getDict().SrrCreateMapListPanel, {
+                                unloadAllWarsAndOpenCommonPanels();
+                                openPanel(getDict().SrrCreateMapListPanel, {
                                     mapFilter               : null,
                                     mapSorter               : null,
                                     usePreviousFilter       : true,
@@ -210,8 +223,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                             commandType     : CommandType.C1_Sp_Sandbox,
                             isExpandVisible : false,
                             callback        : () => {
-                                HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                GamePanelsManager.openPanel(GamePanelsDict.getDict().ScrCreateMapListPanel, {
+                                unloadAllWarsAndOpenCommonPanels();
+                                openPanel(getDict().ScrCreateMapListPanel, {
                                     mapFilter               : null,
                                     mapSorter               : null,
                                     usePreviousFilter       : true,
@@ -223,8 +236,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                             commandType     : CommandType.C1_Sp_Continue,
                             isExpandVisible : false,
                             callback        : () => {
-                                HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                GamePanelsManager.openPanel(GamePanelsDict.getDict().SpmWarListPanel, void 0);
+                                unloadAllWarsAndOpenCommonPanels();
+                                openPanel(getDict().SpmWarListPanel, void 0);
                             },
                         },
                     ]);
@@ -248,7 +261,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         isExpandVisible : false,
                                         callback        : () => {
                                             this.closePanel();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().MrrSetMaxConcurrentCountPanel, void 0);
+                                            openPanel(getDict().MrrSetMaxConcurrentCountPanel, void 0);
                                         },
                                     },
                                     {
@@ -256,7 +269,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         isExpandVisible : false,
                                         callback        : () => {
                                             this.closePanel();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().MrrSetTimerPanel, void 0);
+                                            openPanel(getDict().MrrSetTimerPanel, void 0);
                                         },
                                     },
                                     {
@@ -264,15 +277,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         isExpandVisible : false,
                                         callback        : () => {
                                             this.closePanel();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().MrrBanMapPanel, void 0);
+                                            openPanel(getDict().MrrBanMapPanel, void 0);
                                         },
                                     },
                                     {
                                         commandType     : CommandType.C2_Mp_RankedMode_PreviewMap,
                                         isExpandVisible : false,
                                         callback        : () => {
-                                            HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().MrrPreviewMapListPanel, {
+                                            unloadAllWarsAndOpenCommonPanels();
+                                            openPanel(getDict().MrrPreviewMapListPanel, {
                                                 hasFog: false,
                                             });
                                         },
@@ -291,7 +304,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         isExpandVisible : false,
                                         callback        : () => {
                                             this.closePanel();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().MmrSetMaxConcurrentCountPanel, void 0);
+                                            openPanel(getDict().MmrSetMaxConcurrentCountPanel, void 0);
                                         },
                                     },
                                     {
@@ -299,7 +312,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         isExpandVisible : false,
                                         callback        : () => {
                                             this.closePanel();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().MmrSetTimerPanel, void 0);
+                                            openPanel(getDict().MmrSetTimerPanel, void 0);
                                         },
                                     },
                                     {
@@ -307,15 +320,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         isExpandVisible : false,
                                         callback        : () => {
                                             this.closePanel();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().MmrBanMapPanel, void 0);
+                                            openPanel(getDict().MmrBanMapPanel, void 0);
                                         },
                                     },
                                     {
                                         commandType     : CommandType.C2_Mp_MatchMode_PreviewMap,
                                         isExpandVisible : false,
                                         callback        : () => {
-                                            HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().MmrPreviewMapListPanel, {
+                                            unloadAllWarsAndOpenCommonPanels();
+                                            openPanel(getDict().MmrPreviewMapListPanel, {
                                                 hasFog: false,
                                             });
                                         },
@@ -333,46 +346,46 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         commandType     : CommandType.C2_Mp_AutoTourney_Registration,
                                         isExpandVisible : false,
                                         callback        : async () => {
-                                            const tourneyIdArray = (await AutoTourneysMainsProvider.getSinglePhaseInfoArrayForPhase(AutoTourneysConstants.PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
+                                            const tourneyIdArray = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
                                             if (tourneyIdArray.length <= 0) {
-                                                FloatText2.showLang(LangConstants.TextType.A0403);
+                                                showLang(TextType.A0403);
                                                 return;
                                             }
 
                                             for (const tourneyId of tourneyIdArray) {
-                                                AutoTourneysMainsProvider.setIsNotifiedForRegistration(tourneyId, true);
+                                                setIsNotifiedForRegistration(tourneyId, true);
                                             }
 
                                             this.closePanel();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().AtRegisterPanel, void 0);
+                                            openPanel(getDict().AtRegisterPanel, void 0);
                                         },
-                                        checkIsRed      : () => AutoTourneysMainsProvider.checkIsRedForRegistration(),
+                                        checkIsRed      : () => checkIsRedForRegistration(),
                                     },
                                     {
                                         commandType     : CommandType.C2_Mp_AutoTourney_TourneyInfo,
                                         isExpandVisible : false,
                                         callback        : async () => {
-                                            if ((await AutoTourneysMainsProvider.getLastTourneyId()) == null) {
-                                                FloatText2.showLang(LangConstants.TextType.B0278);
+                                            if ((await getLastTourneyId()) == null) {
+                                                showLang(TextType.B0278);
                                                 return;
                                             }
 
                                             this.closePanel();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().AtTourneyInfoPanel, void 0);
+                                            openPanel(getDict().AtTourneyInfoPanel, void 0);
                                         },
                                     },
                                     {
                                         commandType     : CommandType.C2_Mp_AutoTourney_PreviewMap,
                                         isExpandVisible : false,
                                         callback        : async () => {
-                                            const tourneyIdArray = (await AutoTourneysMainsProvider.getAtPhaseInfo())?.infoArray.map(v => v.getTourneyId() ?? 0) ?? [];
+                                            const tourneyIdArray = (await getAtPhaseInfo())?.infoArray.map(v => v.getTourneyId() ?? 0) ?? [];
                                             if (tourneyIdArray.length <= 0) {
-                                                FloatText2.showLang(LangConstants.TextType.B0278);
+                                                showLang(TextType.B0278);
                                                 return;
                                             }
 
-                                            HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().AtrPreviewMapListPanel, {
+                                            unloadAllWarsAndOpenCommonPanels();
+                                            openPanel(getDict().AtrPreviewMapListPanel, {
                                                 tourneyId: Math.max(...tourneyIdArray),
                                             });
                                         },
@@ -380,7 +393,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                 ]);
                                 this._showGroup2();
                             },
-                            checkIsRed      : () => AutoTourneysMainsProvider.checkIsRedForRegistration(),
+                            checkIsRed      : () => checkIsRedForRegistration(),
                         },
                         {
                             commandType     : CommandType.C1_Mp_CreateRoom,
@@ -391,8 +404,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         commandType     : CommandType.C2_Mp_CreateRoom_Mcr,
                                         isExpandVisible : false,
                                         callback        : () => {
-                                            HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().McrCreateMapListPanel, {
+                                            unloadAllWarsAndOpenCommonPanels();
+                                            openPanel(getDict().McrCreateMapListPanel, {
                                                 mapFilter               : null,
                                                 mapSorter               : null,
                                                 usePreviousFilter       : true,
@@ -404,8 +417,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         commandType     : CommandType.C2_Mp_CreateRoom_Ccr,
                                         isExpandVisible : false,
                                         callback        : () => {
-                                            HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().CcrCreateMapListPanel, {
+                                            unloadAllWarsAndOpenCommonPanels();
+                                            openPanel(getDict().CcrCreateMapListPanel, {
                                                 mapFilter               : null,
                                                 mapSorter               : null,
                                                 usePreviousFilter       : true,
@@ -422,9 +435,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                             commandType     : CommandType.C1_Mp_JoinRoom,
                             isExpandVisible : false,
                             callback        : () => {
-                                HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                GamePanelsManager.openPanel(GamePanelsDict.getDict().MpwJoinRoomListPanel, {
-                                    preferredRoomType   : MultiPlayerRoomsConstants.MultiPlayerRoomType.Mcr,
+                                unloadAllWarsAndOpenCommonPanels();
+                                openPanel(getDict().MpwJoinRoomListPanel, {
+                                    preferredRoomType   : MultiPlayerRoomType.Mcr,
                                     filter              : null
                                 });
                             },
@@ -433,32 +446,32 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                             commandType     : CommandType.C1_Mp_MyRooms,
                             isExpandVisible : false,
                             callback        : () => {
-                                HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                GamePanelsManager.openPanel(GamePanelsDict.getDict().MpwMyRoomListPanel, void 0);
+                                unloadAllWarsAndOpenCommonPanels();
+                                openPanel(getDict().MpwMyRoomListPanel, void 0);
                             },
-                            checkIsRed      : () => HelpersMisc.checkIsAnyPromiseTrue([
-                                MultiRankRoomModelMrrModel.checkIsRed(),
-                                MultiCustomRoomModelMcrModel.checkIsRed(),
-                                MultiFreeRoomModelMfrModel.checkIsRed(),
-                                CoopCustomRoomModelCcrModel.checkIsRed(),
-                                MultiMatchRoomModelMmrModel.checkIsRed(),
-                                AutoTourneysRoomsProvider.checkIsRed(),
+                            checkIsRed      : () => checkIsAnyPromiseTrue([
+                                MultiRankRoomModelMrrModelCheckIsRed(),
+                                MultiCustomRoomModelMcrModelCheckIsRed(),
+                                MultiFreeRoomModelMfrModelCheckIsRed(),
+                                CoopCustomRoomModelCcrModelCheckIsRed(),
+                                MultiMatchRoomModelMmrModelCheckIsRed(),
+                                checkIsRed(),
                             ]),
                         },
                         {
                             commandType     : CommandType.C1_Mp_MyGames,
                             isExpandVisible : false,
                             callback        : () => {
-                                HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                GamePanelsManager.openPanel(GamePanelsDict.getDict().MpwMyWarListPanel, void 0);
+                                unloadAllWarsAndOpenCommonPanels();
+                                openPanel(getDict().MpwMyWarListPanel, void 0);
                             },
-                            checkIsRed      : () => HelpersMisc.checkIsAnyPromiseTrue([
-                                MultiPlayerWarModelMpwModel.checkIsRedForMyMrwWars(),
-                                MultiPlayerWarModelMpwModel.checkIsRedForMyMcwWars(),
-                                MultiPlayerWarModelMpwModel.checkIsRedForMyMfwWars(),
-                                MultiPlayerWarModelMpwModel.checkIsRedForMyCcwWars(),
-                                MultiPlayerWarModelMpwModel.checkIsRedForMyMmwWars(),
-                                MultiPlayerWarModelMpwModel.checkIsRedForMyAtwWars(),
+                            checkIsRed      : () => checkIsAnyPromiseTrue([
+                                checkIsRedForMyMrwWars(),
+                                checkIsRedForMyMcwWars(),
+                                checkIsRedForMyMfwWars(),
+                                checkIsRedForMyCcwWars(),
+                                checkIsRedForMyMmwWars(),
+                                checkIsRedForMyAtwWars(),
                             ]),
                         },
                         {
@@ -470,8 +483,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         commandType     : CommandType.C2_Mp_Spectate_MakeRequest,
                                         isExpandVisible : false,
                                         callback        : () => {
-                                            HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().WwMakeRequestWarsPanel, {
+                                            unloadAllWarsAndOpenCommonPanels();
+                                            openPanel(getDict().WwMakeRequestWarsPanel, {
                                                 filter: null
                                             });
                                         },
@@ -480,39 +493,39 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                                         commandType     : CommandType.C2_Mp_Spectate_HandleRequest,
                                         isExpandVisible : false,
                                         callback        : () => {
-                                            HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().WwHandleRequestWarsPanel, void 0);
+                                            unloadAllWarsAndOpenCommonPanels();
+                                            openPanel(getDict().WwHandleRequestWarsPanel, void 0);
                                         },
-                                        checkIsRed      : async () => !!WatchWarModelWwModel.getRequestedWarIdArray()?.length,
+                                        checkIsRed      : async () => !!getRequestedWarIdArray()?.length,
                                     },
                                     {
                                         commandType     : CommandType.C2_Mp_Spectate_DeleteSpectator,
                                         isExpandVisible : false,
                                         callback        : () => {
-                                            HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().WwDeleteWatcherWarsPanel, void 0);
+                                            unloadAllWarsAndOpenCommonPanels();
+                                            openPanel(getDict().WwDeleteWatcherWarsPanel, void 0);
                                         },
                                     },
                                     {
                                         commandType     : CommandType.C2_Mp_Spectate_Continue,
                                         isExpandVisible : false,
                                         callback        : () => {
-                                            HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                            GamePanelsManager.openPanel(GamePanelsDict.getDict().WwOngoingWarsPanel, void 0);
+                                            unloadAllWarsAndOpenCommonPanels();
+                                            openPanel(getDict().WwOngoingWarsPanel, void 0);
                                         },
                                     },
                                 ]);
 
                                 this._showGroup2();
                             },
-                            checkIsRed      : () => WatchWarModelWwModel.checkIsRed(),
+                            checkIsRed      : () => WatchWarModelWwModelCheckIsRed(),
                         },
                         {
                             commandType     : CommandType.C1_Mp_Replay,
                             isExpandVisible : false,
                             callback        : () => {
-                                HelpersGameFlow.unloadAllWarsAndOpenCommonPanels();
-                                GamePanelsManager.openPanel(GamePanelsDict.getDict().RwReplayListPanel, {
+                                unloadAllWarsAndOpenCommonPanels();
+                                openPanel(getDict().RwReplayListPanel, {
                                     filter                  : null,
                                     usePreviousFilter       : true,
                                     usePreviousPageIndex    : true,
@@ -524,14 +537,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     this._showGroup1();
                     this._hideGroup2();
                 },
-                checkIsRed      : () => LobbyModelLobbyModel.checkIsRedForMultiPlayer(true),
+                checkIsRed      : () => checkIsRedForMultiPlayer(true),
             },
             {
                 commandType     : CommandType.C0_MapEditor,
                 isExpandVisible : false,
                 callback        : () => {
                     this.closePanel();
-                    HelpersGameFlow.gotoMyWarListPanel(WarTypesConstants.WarTypeId.Me);
+                    gotoMyWarListPanel(WarTypeId.Me);
                 },
             },
             {
@@ -539,17 +552,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 isExpandVisible : false,
                 callback        : () => {
                     this.closePanel();
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().ChatPanel, { toTarget: new AuxiliaryTypesChatToTarget.ChatToTarget({}) });
+                    openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({}) });
                 },
-                checkIsRed      : async () => ChatModel.checkHasUnreadMessage(),
+                checkIsRed      : async () => checkHasUnreadMessage(),
             },
             {
                 commandType     : CommandType.C0_MyProfile,
                 isExpandVisible : false,
                 callback        : () => {
                     this.closePanel();
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().UserPanel, {
-                        userId: HelpersMisc.getExisted(UsersModel.getSelfUserId()),
+                    openPanel(getDict().UserPanel, {
+                        userId: getExisted(getSelfUserId()),
                     });
                 },
             },
@@ -558,7 +571,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 isExpandVisible : false,
                 callback        : () => {
                     this.closePanel();
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonGameChartPanel, void 0);
+                    openPanel(getDict().CommonGameChartPanel, void 0);
                 },
             },
             {
@@ -566,40 +579,40 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 isExpandVisible : false,
                 callback        : () => {
                     this.closePanel();
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().UserSettingsPanel, void 0);
+                    openPanel(getDict().UserSettingsPanel, void 0);
                 },
-                checkIsRed      : () => LobbyModelLobbyModel.checkIsRedForGameSettings(),
+                checkIsRed      : () => checkIsRedForGameSettings(),
             },
         ];
     }
 
     protected _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._imgMask,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupContainer,
             beginProps  : { customAlpha: 0, customY: 40 },
             endProps    : { customAlpha: 1, customY: 0 },
         });
 
-        return TimerTimerModel.wait(TweenTime);
+        return wait(TweenTime);
     }
     protected _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._imgMask,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupContainer,
             beginProps  : { customAlpha: 1, customY: 0 },
             endProps    : { customAlpha: 0, customY: 40 },
         });
 
-        return TimerTimerModel.wait(TweenTime);
+        return wait(TweenTime);
     }
     private _showGroup1(): void {
         const list0     = this._listCommand0;
@@ -614,15 +627,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         // group1.height   = Math.max(0, length1 * ItemHeight + (length1 - 1) * ItemGap);
         // group1.bottom   = offset1 * ItemHeight + offset1 * ItemGap;
         group1.setY(offset1 * (ItemHeight + ItemGap));
-        group1.setUnscaledManualHeight(NumbersUtils.getValueInRange({
+        group1.setUnscaledManualHeight(getValueInRange({
             minValue    : 0,
             maxValue    : ListMaxHeight - group1.getY(),
             rawValue    : length1 * ItemHeight + (length1 - 1) * ItemGap,
         }));
         list1.setSelectedItemIndex(-1);
 
-        TweenExecutor.Executor.removeTweens(group1);
-        TweenExecutor.Executor.get(group1)
+        Executor.removeTweens(group1);
+        Executor.get(group1)
             .set({ customVisible: true, customX: 150, customAlpha: 0 })
             .to({ customX: 190, customAlpha: 1 }, TweenTime);
     }
@@ -649,41 +662,41 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         // group2.height   = Math.max(0, length2 * ItemHeight + (length2 - 1) * ItemGap);
         // group2.bottom   = offset2 * ItemHeight + offset2 * ItemGap;
         group2.setY(offset2 * (ItemHeight + ItemGap));
-        group2.setUnscaledManualHeight(NumbersUtils.getValueInRange({
+        group2.setUnscaledManualHeight(getValueInRange({
             minValue    : 0,
             maxValue    : ListMaxHeight - group2.getY(),
             rawValue    : length2 * ItemHeight + (length2 - 1) * ItemGap,
         }));
         list2.setSelectedItemIndex(-1);
 
-        TweenExecutor.Executor.removeTweens(group2);
-        TweenExecutor.Executor.get(group2)
+        Executor.removeTweens(group2);
+        Executor.get(group2)
             .set({ customVisible: true, customX: 340, customAlpha: 0 })
             .to({ customX: 380, customAlpha: 1 }, TweenTime);
     }
     private _hideGroup2(): void {
         const group2 = this._group2;
         group2.setIsVisible(false);
-        TweenExecutor.Executor.removeTweens(group2);
+        Executor.removeTweens(group2);
     }
 }
 
-interface DataForCommandRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForCommandRenderer extends UiListItemData {
     commandType     : CommandType;
     isExpandVisible : boolean;
     callback        : () => void;
     checkIsRed?     : () => Promise<boolean>;
 }
-class CommandRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForCommandRenderer> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgSelected!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgExpand!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgRed!           : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
+class CommandRenderer extends UiListItemRenderer<DataForCommandRenderer> {
+    private readonly _group!            : IUiContainer;
+    private readonly _imgSelected!      : IUiImage;
+    private readonly _imgExpand!        : IUiImage;
+    private readonly _imgRed!           : IUiImage;
+    private readonly _labelName!        : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this,         callback: this._onTouchedSelf },
@@ -699,7 +712,7 @@ class CommandRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
         this._updateLabelName();
     }
 
-    private _onTouchedSelf(e: VendorEgretEgret.Event): void {
+    private _onTouchedSelf(e: Event): void {
         e.stopPropagation();
 
         this.getOpenData()?.callback();
@@ -720,7 +733,7 @@ class CommandRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
             return;
         }
 
-        this._labelName.setText(getCommandName(commandType) ?? LangConstants.UndefinedError);
+        this._labelName.setText(getCommandName(commandType) ?? UndefinedError);
     }
 
     private async _updateImgRed(): Promise<void> {
@@ -739,43 +752,43 @@ class CommandRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
 
 function getCommandName(commandType: CommandType): string | null {
     switch (commandType) {
-        case CommandType.C0_SinglePlayer                : return LangUtils.getText(LangConstants.TextType.B0138);
-        case CommandType.C0_MultiPlayer                 : return LangUtils.getText(LangConstants.TextType.B0137);
-        case CommandType.C0_MyProfile                   : return LangUtils.getText(LangConstants.TextType.B0169);
-        case CommandType.C0_Chat                        : return LangUtils.getText(LangConstants.TextType.B0383);
-        case CommandType.C0_GameChart                   : return LangUtils.getText(LangConstants.TextType.B0900);
-        case CommandType.C0_GameSettings                : return LangUtils.getText(LangConstants.TextType.B0604);
-        case CommandType.C0_MapEditor                   : return LangUtils.getText(LangConstants.TextType.B0271);
-        case CommandType.C1_Sp_Campaign                 : return LangUtils.getText(LangConstants.TextType.B1135);
-        case CommandType.C1_Sp_Continue                 : return LangUtils.getText(LangConstants.TextType.B0024);
-        case CommandType.C1_Sp_Sandbox                  : return LangUtils.getText(LangConstants.TextType.B1262);
-        case CommandType.C1_Sp_WarRoom                  : return LangUtils.getText(LangConstants.TextType.B0614);
-        case CommandType.C1_Mp_AutoTourneyMode          : return LangUtils.getText(LangConstants.TextType.B1022);
-        case CommandType.C1_Mp_MatchMode                : return LangUtils.getText(LangConstants.TextType.B1012);
-        case CommandType.C1_Mp_RankedMode               : return LangUtils.getText(LangConstants.TextType.B0404);
-        case CommandType.C1_Mp_CreateRoom               : return LangUtils.getText(LangConstants.TextType.B0000);
-        case CommandType.C1_Mp_JoinRoom                 : return LangUtils.getText(LangConstants.TextType.B0580);
-        case CommandType.C1_Mp_MyRooms                  : return LangUtils.getText(LangConstants.TextType.B0410);
-        case CommandType.C1_Mp_MyGames                  : return LangUtils.getText(LangConstants.TextType.B1283);
-        case CommandType.C1_Mp_Replay                   : return LangUtils.getText(LangConstants.TextType.B0710);
-        case CommandType.C1_Mp_Spectate                 : return LangUtils.getText(LangConstants.TextType.B0872);
-        case CommandType.C2_Mp_CreateRoom_Ccr           : return LangUtils.getText(LangConstants.TextType.B0646);
-        case CommandType.C2_Mp_CreateRoom_Mcr           : return LangUtils.getText(LangConstants.TextType.B1011);
-        case CommandType.C2_Mp_Spectate_Continue        : return LangUtils.getText(LangConstants.TextType.B0222);
-        case CommandType.C2_Mp_Spectate_DeleteSpectator : return LangUtils.getText(LangConstants.TextType.B0219);
-        case CommandType.C2_Mp_Spectate_HandleRequest   : return LangUtils.getText(LangConstants.TextType.B0208);
-        case CommandType.C2_Mp_Spectate_MakeRequest     : return LangUtils.getText(LangConstants.TextType.B0207);
-        case CommandType.C2_Mp_RankedMode_BanMap        : return LangUtils.getText(LangConstants.TextType.B0084);
-        case CommandType.C2_Mp_RankedMode_PreviewMap    : return LangUtils.getText(LangConstants.TextType.B0594);
-        case CommandType.C2_Mp_RankedMode_SetGameNumber : return LangUtils.getText(LangConstants.TextType.B0413);
-        case CommandType.C2_Mp_RankedMode_SetGameTimer  : return LangUtils.getText(LangConstants.TextType.B1284);
-        case CommandType.C2_Mp_MatchMode_BanMap         : return LangUtils.getText(LangConstants.TextType.B0084);
-        case CommandType.C2_Mp_MatchMode_PreviewMap     : return LangUtils.getText(LangConstants.TextType.B0594);
-        case CommandType.C2_Mp_MatchMode_SetGameNumber  : return LangUtils.getText(LangConstants.TextType.B0413);
-        case CommandType.C2_Mp_MatchMode_SetGameTimer   : return LangUtils.getText(LangConstants.TextType.B1284);
-        case CommandType.C2_Mp_AutoTourney_PreviewMap   : return LangUtils.getText(LangConstants.TextType.B0594);
-        case CommandType.C2_Mp_AutoTourney_Registration : return LangUtils.getText(LangConstants.TextType.B1025);
-        case CommandType.C2_Mp_AutoTourney_TourneyInfo  : return LangUtils.getText(LangConstants.TextType.B0423);
+        case CommandType.C0_SinglePlayer                : return getText(TextType.B0138);
+        case CommandType.C0_MultiPlayer                 : return getText(TextType.B0137);
+        case CommandType.C0_MyProfile                   : return getText(TextType.B0169);
+        case CommandType.C0_Chat                        : return getText(TextType.B0383);
+        case CommandType.C0_GameChart                   : return getText(TextType.B0900);
+        case CommandType.C0_GameSettings                : return getText(TextType.B0604);
+        case CommandType.C0_MapEditor                   : return getText(TextType.B0271);
+        case CommandType.C1_Sp_Campaign                 : return getText(TextType.B1135);
+        case CommandType.C1_Sp_Continue                 : return getText(TextType.B0024);
+        case CommandType.C1_Sp_Sandbox                  : return getText(TextType.B1262);
+        case CommandType.C1_Sp_WarRoom                  : return getText(TextType.B0614);
+        case CommandType.C1_Mp_AutoTourneyMode          : return getText(TextType.B1022);
+        case CommandType.C1_Mp_MatchMode                : return getText(TextType.B1012);
+        case CommandType.C1_Mp_RankedMode               : return getText(TextType.B0404);
+        case CommandType.C1_Mp_CreateRoom               : return getText(TextType.B0000);
+        case CommandType.C1_Mp_JoinRoom                 : return getText(TextType.B0580);
+        case CommandType.C1_Mp_MyRooms                  : return getText(TextType.B0410);
+        case CommandType.C1_Mp_MyGames                  : return getText(TextType.B1283);
+        case CommandType.C1_Mp_Replay                   : return getText(TextType.B0710);
+        case CommandType.C1_Mp_Spectate                 : return getText(TextType.B0872);
+        case CommandType.C2_Mp_CreateRoom_Ccr           : return getText(TextType.B0646);
+        case CommandType.C2_Mp_CreateRoom_Mcr           : return getText(TextType.B1011);
+        case CommandType.C2_Mp_Spectate_Continue        : return getText(TextType.B0222);
+        case CommandType.C2_Mp_Spectate_DeleteSpectator : return getText(TextType.B0219);
+        case CommandType.C2_Mp_Spectate_HandleRequest   : return getText(TextType.B0208);
+        case CommandType.C2_Mp_Spectate_MakeRequest     : return getText(TextType.B0207);
+        case CommandType.C2_Mp_RankedMode_BanMap        : return getText(TextType.B0084);
+        case CommandType.C2_Mp_RankedMode_PreviewMap    : return getText(TextType.B0594);
+        case CommandType.C2_Mp_RankedMode_SetGameNumber : return getText(TextType.B0413);
+        case CommandType.C2_Mp_RankedMode_SetGameTimer  : return getText(TextType.B1284);
+        case CommandType.C2_Mp_MatchMode_BanMap         : return getText(TextType.B0084);
+        case CommandType.C2_Mp_MatchMode_PreviewMap     : return getText(TextType.B0594);
+        case CommandType.C2_Mp_MatchMode_SetGameNumber  : return getText(TextType.B0413);
+        case CommandType.C2_Mp_MatchMode_SetGameTimer   : return getText(TextType.B1284);
+        case CommandType.C2_Mp_AutoTourney_PreviewMap   : return getText(TextType.B0594);
+        case CommandType.C2_Mp_AutoTourney_Registration : return getText(TextType.B1025);
+        case CommandType.C2_Mp_AutoTourney_TourneyInfo  : return getText(TextType.B0423);
         case CommandType.TODO                           : return `TODO`;
         default                                         : return null;
     }

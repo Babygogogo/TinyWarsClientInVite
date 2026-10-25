@@ -1,82 +1,82 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as KeyboardKbTypes from "../../keyboard/KbTypes.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { showLang, show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 
 export interface OpenData {
     getTitle        : () => string;
-    currentValue    : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    currentValue    : Undefinable<number>;
     maxValue        : number;
     minValue        : number;
     getHelpText?    : (() => string);
-    callback        : (value: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>) => any;
+    callback        : (value: Undefinable<number>) => any;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnHelp!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSwitch!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnHelp!              : IUiButton;
+    private readonly _btnSwitch!            : IUiButton;
+    private readonly _btnClose!             : IUiButton;
 
-    private readonly _groupValue!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelTips!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelValue!           : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupValue!           : IUiLayout;
+    private readonly _labelTips!            : IUiLabel;
+    private readonly _labelValue!           : IUiLabel;
 
-    private readonly _btnMin!               : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnMax!               : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnMin!               : IUiButton;
+    private readonly _btnMax!               : IUiButton;
 
-    private readonly _labelKeyboardTips!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnEmpty!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClear!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!           : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelKeyboardTips!    : IUiLabel;
+    private readonly _btnEmpty!             : IUiButton;
+    private readonly _btnClear!             : IUiButton;
+    private readonly _btnConfirm!           : IUiButton;
 
-    private readonly _groupOperator!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnAdd1!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAdd10!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAdd100!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAdd1000!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAdd10000!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAdd100000!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSub1!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSub10!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSub100!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSub1000!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSub10000!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSub100000!         : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupOperator!        : IUiContainer;
+    private readonly _btnAdd1!              : IUiButton;
+    private readonly _btnAdd10!             : IUiButton;
+    private readonly _btnAdd100!            : IUiButton;
+    private readonly _btnAdd1000!           : IUiButton;
+    private readonly _btnAdd10000!          : IUiButton;
+    private readonly _btnAdd100000!         : IUiButton;
+    private readonly _btnSub1!              : IUiButton;
+    private readonly _btnSub10!             : IUiButton;
+    private readonly _btnSub100!            : IUiButton;
+    private readonly _btnSub1000!           : IUiButton;
+    private readonly _btnSub10000!          : IUiButton;
+    private readonly _btnSub100000!         : IUiButton;
 
-    private readonly _groupNumber!          : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btn7!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btn8!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btn9!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btn6!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btn5!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btn4!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btn3!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btn2!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btn1!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btn0!                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSign!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnBackspace!         : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupNumber!          : IUiContainer;
+    private readonly _btn7!                 : IUiButton;
+    private readonly _btn8!                 : IUiButton;
+    private readonly _btn9!                 : IUiButton;
+    private readonly _btn6!                 : IUiButton;
+    private readonly _btn5!                 : IUiButton;
+    private readonly _btn4!                 : IUiButton;
+    private readonly _btn3!                 : IUiButton;
+    private readonly _btn2!                 : IUiButton;
+    private readonly _btn1!                 : IUiButton;
+    private readonly _btn0!                 : IUiButton;
+    private readonly _btnSign!              : IUiButton;
+    private readonly _btnBackspace!         : IUiButton;
 
-    private _value: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    private _value: Undefinable<number>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel, },
@@ -156,7 +156,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         this._labelTitle.setText(openData.getTitle());
-        this._labelKeyboardTips.setText(LangUtils.getText(LangConstants.TextType.A0827));
+        this._labelKeyboardTips.setText(getText(TextType.A0827));
         this._btnHelp.setIsVisible(!!openData.getHelpText);
         this._groupNumber.setIsVisible(true);
         this._groupOperator.setIsVisible(false);
@@ -165,7 +165,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateLabelValue();
     }
 
-    private _onKeyboard(data: KeyboardKbTypes.EventData): void {
+    private _onKeyboard(data: EventData): void {
         if (this._getIsShowingCloseAnimation()) {
             return;
         }
@@ -178,73 +178,73 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const newKeys   = data.newKeys;
         const allKeys   = data.allKeys;
         const oldValue  = this._value;
-        if (newKeys.has(KeyboardKbTypes.KeyCode.Escape)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+        if (newKeys.has(KeyCode.Escape)) {
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this.closePanel();
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Enter)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonConfirm01);
+        } else if (newKeys.has(KeyCode.Enter)) {
+            playShortSfx(ShortSfxCode.ButtonConfirm01);
             this._onTouchedBtnConfirm();
 
-        } else if ((allKeys.has(KeyboardKbTypes.KeyCode.Control)) && (newKeys.has(KeyboardKbTypes.KeyCode.C))) {
+        } else if ((allKeys.has(KeyCode.Control)) && (newKeys.has(KeyCode.C))) {
             this._handleKeyboardCtrlC();
 
-        } else if ((allKeys.has(KeyboardKbTypes.KeyCode.Control)) && (newKeys.has(KeyboardKbTypes.KeyCode.V))) {
+        } else if ((allKeys.has(KeyCode.Control)) && (newKeys.has(KeyCode.V))) {
             this._handleKeyboardCtrlV();
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num0)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Num0)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             this._updateOnTouchedButtonsForAddDigit(0);
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num1)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Num1)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             this._updateOnTouchedButtonsForAddDigit(1);
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num2)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Num2)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             this._updateOnTouchedButtonsForAddDigit(2);
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num3)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Num3)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             this._updateOnTouchedButtonsForAddDigit(3);
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num4)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Num4)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             this._updateOnTouchedButtonsForAddDigit(4);
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num5)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Num5)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             this._updateOnTouchedButtonsForAddDigit(5);
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num6)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Num6)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             this._updateOnTouchedButtonsForAddDigit(6);
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num7)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Num7)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             this._updateOnTouchedButtonsForAddDigit(7);
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num8)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Num8)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             this._updateOnTouchedButtonsForAddDigit(8);
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Num9)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Num9)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             this._updateOnTouchedButtonsForAddDigit(9);
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Backspace)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+        } else if (newKeys.has(KeyCode.Backspace)) {
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._updateOnBackspace();
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Add)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Add)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             if (oldValue != null) {
                 this._value = Math.abs(oldValue);
                 this._updateLabelValue();
             }
 
-        } else if (newKeys.has(KeyboardKbTypes.KeyCode.Sub)) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        } else if (newKeys.has(KeyCode.Sub)) {
+            playShortSfx(ShortSfxCode.ButtonNeutral01);
             if (oldValue != null) {
                 this._value = -Math.abs(oldValue);
                 this._updateLabelValue();
@@ -262,7 +262,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if ((value != null)                                             &&
             ((value < openData.minValue) || (value > openData.maxValue))
         ) {
-            FloatText2.showLang(LangConstants.TextType.A0098);
+            showLang(TextType.A0098);
             return;
         }
 
@@ -280,7 +280,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnHelp(): void {
         const func = this.getOpenData()?.getHelpText;
         if (func) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
+            openPanel(getDict().CommonHelpPanel, {
                 getContent : () => func(),
             });
         }
@@ -403,9 +403,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._labelTips.setText(`${LangUtils.getText(LangConstants.TextType.B0319)}: [${openData.minValue}, ${openData.maxValue}]`);
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnEmpty.setText(LangUtils.getText(LangConstants.TextType.B0022));
+        this._labelTips.setText(`${getText(TextType.B0319)}: [${openData.minValue}, ${openData.maxValue}]`);
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._btnEmpty.setText(getText(TextType.B0022));
         this._btnClear.setText(`C`);
         this._groupValue.arrangeItems();
     }
@@ -413,7 +413,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _updateLabelValue(): void {
         const value = this._value;
         const label = this._labelValue;
-        label.setText(`${value == null ? LangUtils.getText(LangConstants.TextType.B0022) : value}`);
+        label.setText(`${value == null ? getText(TextType.B0022) : value}`);
 
         const openData = this.getOpenData();
         if (openData != null) {
@@ -452,7 +452,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if (openData == null) {
             return undefined;
         } else {
-            return NumbersUtils.getValueInRange({
+            return getValueInRange({
                 minValue    : openData.minValue,
                 maxValue    : openData.maxValue,
                 rawValue    : rawValue,
@@ -462,35 +462,35 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private async _handleKeyboardCtrlC(): Promise<void> {
         if (navigator?.clipboard?.writeText == null) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0275));
+            show(getText(TextType.A0275));
         } else {
             try {
                 await navigator.clipboard.writeText(`${this._value}`);
-                FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+                showLang(TextType.OperationSucceeded);
             } catch {
-                FloatText2.show(LangUtils.getText(LangConstants.TextType.A0275));
+                show(getText(TextType.A0275));
             }
         }
     }
     private async _handleKeyboardCtrlV(): Promise<void> {
         if (navigator?.clipboard?.writeText == null) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0275));
+            show(getText(TextType.A0275));
         } else {
             let text = ``;
             try {
                 text = await navigator.clipboard.readText();
             } catch {
-                FloatText2.show(LangUtils.getText(LangConstants.TextType.A0275));
+                show(getText(TextType.A0275));
                 return;
             }
 
             const value = parseInt(text);
             if (isNaN(value)) {
-                FloatText2.showLang(LangConstants.TextType.A0098);
+                showLang(TextType.A0098);
             } else {
                 this._value = value;
                 this._updateLabelValue();
-                FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+                showLang(TextType.OperationSucceeded);
             }
         }
     }

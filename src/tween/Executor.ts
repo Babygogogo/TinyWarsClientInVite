@@ -1,7 +1,7 @@
-import * as GraphicsConstants from "../graphics/Constants.ts";
-import * as TimerTimerModel from "../timer/TimerModel.ts";
-import * as TweenEase from "./Ease.ts";
-import * as VendorEgretEgret from "../vendor/egret/Egret.ts";
+import { Tween } from "../graphics/Constants.ts";
+import { addTickCallback } from "../timer/TimerModel.ts";
+import { sineOut } from "./Ease.ts";
+import { EventDispatcher, getTimer } from "../vendor/egret/Egret.ts";
 
 const NONE      = 0;
 // const LOOP      = 1;
@@ -26,7 +26,7 @@ interface TweenProps {
     position?           : null;
 }
 
-export class Executor<T extends TweenTarget> extends VendorEgretEgret.EventDispatcher {
+export class Executor<T extends TweenTarget> extends EventDispatcher {
     private static _initialized         = false;
     private static _lastTime            = 0;
 
@@ -129,7 +129,7 @@ export class Executor<T extends TweenTarget> extends VendorEgretEgret.EventDispa
         const tween = Executor.get(obj)
             .set(beginProps)
             .wait(waitTime || 0)
-            .to(endProps, tweenTime || GraphicsConstants.Tween.DefaultDuration, TweenEase.sineOut);
+            .to(endProps, tweenTime || Tween.DefaultDuration, sineOut);
         if (callback) {
             tween.call(callback);
         }
@@ -159,9 +159,9 @@ export class Executor<T extends TweenTarget> extends VendorEgretEgret.EventDispa
             }
             tweens.push(tween);
             if (!Executor._initialized) {
-                Executor._lastTime = VendorEgretEgret.getTimer();
+                Executor._lastTime = getTimer();
                 // egret.ticker.$startTick(Tween.tick, null);
-                TimerTimerModel.addTickCallback(Executor.tick);
+                addTickCallback(Executor.tick);
                 Executor._initialized = true;
             }
         }

@@ -1,36 +1,51 @@
-import * as ArrayModifiersUtils from "../../../arrayModifiers/Utils.ts";
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesMapSize from "../../../auxiliaryTypes/MapSize.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as MultiplierAndOffsetsUtils from "../../../multiplierAndOffsets/Utils.ts";
-import * as NumbersUtils from "../../../numbers/Utils.ts";
-import type * as PlayersIPlayer from "../../../players/IPlayer.ts";
-import * as PlayersUtilsFilter from "../../../players/utils/Filter.ts";
-import type * as ProtoSchemaCommonProtoStructurePlayerFilter from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetCustomBuildingStateSimple from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomBuildingStateSimple.ts";
-import * as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData from "../../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import * as TilesConstantsCustomLimits from "../../../tiles/constants/CustomLimits.ts";
-import type * as TilesITile from "../../../tiles/ITile.ts";
-import * as TilesUtilsCommon from "../../../tiles/utils/Common.ts";
-import * as TilesUtilsFilter from "../../../tiles/utils/Filter.ts";
-import * as TilesUtilsSerialization from "../../../tiles/utils/Serialization.ts";
-import * as UnitsUtilsFilter from "../../../units/utils/Filter.ts";
-import * as ValueAndComparatorsUtils from "../../../valueAndComparators/Utils.ts";
+import { checkIsValid as ArrayModifiersUtilsCheckIsValid, getResultValue } from "../../../arrayModifiers/Utils.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText, getFormattedText } from "../../../lang/Utils.ts";
+import {
+    checkIsValid as MultiplierAndOffsetsUtilsCheckIsValid,
+    getResultValue as MultiplierAndOffsetsUtilsGetResultValue,
+} from "../../../multiplierAndOffsets/Utils.ts";
+import { getValueInRange } from "../../../numbers/Utils.ts";
+import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
+import type {
+    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
+} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type {
+    WeaSetCustomBuildingStateSimple as ProtoSchemaCommonProtoWarEventWeaSetCustomBuildingStateSimple,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomBuildingStateSimple.ts";
+import { TileCustomBuildingData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import { Building } from "../../../tiles/constants/CustomLimits.ts";
+import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import { getMaxBuildPoint, getMaxCapturePoint, getMaxHp } from "../../../tiles/utils/Common.ts";
+import {
+    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
+    checkIsValid as TilesUtilsFilterCheckIsValid,
+    checkIsMeet as TilesUtilsFilterCheckIsMeet,
+} from "../../../tiles/utils/Filter.ts";
+import { create } from "../../../tiles/utils/Serialization.ts";
+import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
+import {
+    getDesc,
+    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
+    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
+} from "../../../valueAndComparators/Utils.ts";
 
-type PlayerFilter                       = ProtoSchemaCommonProtoStructurePlayerFilter.PlayerFilter;
-type WeaSetCustomBuildingStateSimple    = ProtoSchemaCommonProtoWarEventWeaSetCustomBuildingStateSimple.WeaSetCustomBuildingStateSimple;
-type Undefinable<T>                     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type IPlayer                            = PlayersIPlayer.IPlayer;
-type ITile                              = TilesITile.ITile;
+type PlayerFilter                       = ProtoSchemaCommonProtoStructurePlayerFilter;
+type WeaSetCustomBuildingStateSimple    = ProtoSchemaCommonProtoWarEventWeaSetCustomBuildingStateSimple;
+type Undefinable<T>                     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type IPlayer                            = PlayersIPlayer;
+type ITile                              = TilesITile;
 
-export function checkIsValid(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomBuildingStateSimple>, gameConfig: GameConfigGcData.GcData, mapSize: AuxiliaryTypesMapSize.MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetCustomBuildingStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomBuildingStateSimple>): string | null {
+export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetCustomBuildingStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -39,107 +54,107 @@ export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaS
     {
         const act = data.getActDefenseAmount();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.DefBonus$));
+            actTextArray.push(getText(TextType.DefBonus$));
         }
     }
     {
         const act = data.getActDefenseUnitTypeArray();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.DefensibleUnits));
+            actTextArray.push(getText(TextType.DefensibleUnits));
         }
     }
     {
         const act1 = data.getActMaxCapturePoint();
         const act2 = data.getActDeleteMaxCapturePoint();
         if ((act1 != null) || (act2)) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.MaxCapturePoint));
+            actTextArray.push(getText(TextType.MaxCapturePoint));
         }
     }
     {
         const act = data.getActIsDefeatedOnCapture();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.DefeatIfCaptured));
+            actTextArray.push(getText(TextType.DefeatIfCaptured));
         }
     }
     {
         const act1 = data.getActRepairNormalizedHp();
         const act2 = data.getActDeleteRepairNormalizedHp();
         if ((act1 != null) || (act2)) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.RepairHpAmount));
+            actTextArray.push(getText(TextType.RepairHpAmount));
         }
     }
     {
         const act = data.getActRepairUnitTypeArray();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.RepairableUnits));
+            actTextArray.push(getText(TextType.RepairableUnits));
         }
     }
     {
         const act = data.getActIncomePerTurn();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.Income));
+            actTextArray.push(getText(TextType.Income));
         }
     }
     {
         const act = data.getActVisionRange();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.VisionRange));
+            actTextArray.push(getText(TextType.VisionRange));
         }
     }
     {
         const act = data.getActIsVisionEnabledForAllPlayers();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.SharedVision));
+            actTextArray.push(getText(TextType.SharedVision));
         }
     }
     {
         const act = data.getActHideUnitTypeArray();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.HidableUnits));
+            actTextArray.push(getText(TextType.HidableUnits));
         }
     }
     {
         const act = data.getActProduceUnitTypeArray();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.ProducibleUnits));
+            actTextArray.push(getText(TextType.ProducibleUnits));
         }
     }
     {
         const act = data.getActGlobalAttackBonus();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.GlobalAtkBonus));
+            actTextArray.push(getText(TextType.GlobalAtkBonus));
         }
     }
     {
         const act = data.getActGlobalDefenseBonus();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.GlobalDefBonus));
+            actTextArray.push(getText(TextType.GlobalDefBonus));
         }
     }
     {
         const act = data.getActUnitTypeArrayForCoBoard();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.CoBoardableUnit));
+            actTextArray.push(getText(TextType.CoBoardableUnit));
         }
     }
     {
         const act = data.getActBlockEnemyUnitTypeArray();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.BlockableEnemyUnits));
+            actTextArray.push(getText(TextType.BlockableEnemyUnits));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(LangUtils.getText(LangConstants.TextType.A0957));
+        actTextArray.push(getText(TextType.A0957));
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0254,
-        LangUtils.getText(LangConstants.TextType.MystBuilding),
+    return getFormattedText(
+        TextType.F0254,
+        getText(TextType.MystBuilding),
         actTextArray.join(`, `),
     );
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetCustomBuildingStateSimple>): string | null {
+export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetCustomBuildingStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -148,195 +163,195 @@ export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<Wea
     {
         const filter = data.getConTileFilter();
         if (filter != null) {
-            conTextArray.push(`- ${TilesUtilsFilter.getDescForEmbed(filter)}`);
+            conTextArray.push(`- ${TilesUtilsFilterGetDescForEmbed(filter)}`);
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if (filter != null) {
-            conTextArray.push(`- (${LangUtils.getText(LangConstants.TextType.B1421)}) ${PlayersUtilsFilter.getDescForEmbed(filter)}`);
+            conTextArray.push(`- (${getText(TextType.B1421)}) ${getDescForEmbed(filter)}`);
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if (comparator != null) {
-            conTextArray.push(`- ${ValueAndComparatorsUtils.getDesc(
+            conTextArray.push(`- ${getDesc(
                 comparator,
-                LangUtils.getText(data.getConUnitFilter() == null ? LangConstants.TextType.B1418 : LangConstants.TextType.B1419)
+                getText(data.getConUnitFilter() == null ? TextType.B1418 : TextType.B1419)
             )}`);
         }
     }
 
     if (!conTextArray.length) {
-        conTextArray.push(`- ${LangUtils.getText(LangConstants.TextType.A0944)}`);
+        conTextArray.push(`- ${getText(TextType.A0944)}`);
     }
 
     const actTextArray: string[] = [];
     {
         const act = data.getActDefenseAmount();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.DefBonus$));
+            actTextArray.push(getText(TextType.DefBonus$));
         }
     }
     {
         const act = data.getActDefenseUnitTypeArray();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.DefensibleUnits));
+            actTextArray.push(getText(TextType.DefensibleUnits));
         }
     }
     {
         const act1 = data.getActMaxCapturePoint();
         const act2 = data.getActDeleteMaxCapturePoint();
         if ((act1 != null) || (act2)) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.MaxCapturePoint));
+            actTextArray.push(getText(TextType.MaxCapturePoint));
         }
     }
     {
         const act = data.getActIsDefeatedOnCapture();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.DefeatIfCaptured));
+            actTextArray.push(getText(TextType.DefeatIfCaptured));
         }
     }
     {
         const act1 = data.getActRepairNormalizedHp();
         const act2 = data.getActDeleteRepairNormalizedHp();
         if ((act1 != null) || (act2)) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.RepairHpAmount));
+            actTextArray.push(getText(TextType.RepairHpAmount));
         }
     }
     {
         const act = data.getActRepairUnitTypeArray();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.RepairableUnits));
+            actTextArray.push(getText(TextType.RepairableUnits));
         }
     }
     {
         const act = data.getActIncomePerTurn();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.Income));
+            actTextArray.push(getText(TextType.Income));
         }
     }
     {
         const act = data.getActVisionRange();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.VisionRange));
+            actTextArray.push(getText(TextType.VisionRange));
         }
     }
     {
         const act = data.getActIsVisionEnabledForAllPlayers();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.SharedVision));
+            actTextArray.push(getText(TextType.SharedVision));
         }
     }
     {
         const act = data.getActHideUnitTypeArray();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.HidableUnits));
+            actTextArray.push(getText(TextType.HidableUnits));
         }
     }
     {
         const act = data.getActProduceUnitTypeArray();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.ProducibleUnits));
+            actTextArray.push(getText(TextType.ProducibleUnits));
         }
     }
     {
         const act = data.getActGlobalAttackBonus();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.GlobalAtkBonus));
+            actTextArray.push(getText(TextType.GlobalAtkBonus));
         }
     }
     {
         const act = data.getActGlobalDefenseBonus();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.GlobalDefBonus));
+            actTextArray.push(getText(TextType.GlobalDefBonus));
         }
     }
     {
         const act = data.getActUnitTypeArrayForCoBoard();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.CoBoardableUnit));
+            actTextArray.push(getText(TextType.CoBoardableUnit));
         }
     }
     {
         const act = data.getActBlockEnemyUnitTypeArray();
         if (act != null) {
-            actTextArray.push(LangUtils.getText(LangConstants.TextType.BlockableEnemyUnits));
+            actTextArray.push(getText(TextType.BlockableEnemyUnits));
         }
     }
 
     if (!actTextArray.length) {
-        actTextArray.push(LangUtils.getText(LangConstants.TextType.A0957));
+        actTextArray.push(getText(TextType.A0957));
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0255,
-        LangUtils.getText(LangConstants.TextType.MystBuilding),
+    return getFormattedText(
+        TextType.F0255,
+        getText(TextType.MystBuilding),
         conTextArray.join(`\n`),
-        LangUtils.getText(LangConstants.TextType.MystBuilding),
+        getText(TextType.MystBuilding),
         actTextArray.join(`, `),
     );
 }
 
-export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: AuxiliaryTypesMapSize.MapSize, playersCountUnneutral: number, gameConfig: GameConfigGcData.GcData): string | null {
+export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
-            if (!UnitsUtilsFilter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.UnitFilter));
+            if (!UnitsUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig)) {
+                return getFormattedText(TextType.F0091, getText(TextType.UnitFilter));
             }
             if (data.getConUnitComparator() == null) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Comparator));
+                return getFormattedText(TextType.F0091, getText(TextType.Comparator));
             }
         }
     }
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&
-            (!PlayersUtilsFilter.checkIsValid(filter, playersCountUnneutral, gameConfig))
+            (!PlayersUtilsFilterCheckIsValid(filter, playersCountUnneutral, gameConfig))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.PlayerFilter));
+            return getFormattedText(TextType.F0091, getText(TextType.PlayerFilter));
         }
     }
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
-            (!TilesUtilsFilter.checkIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
+            (!TilesUtilsFilterCheckIsValid(filter, playersCountUnneutral, mapSize, gameConfig))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.TileFilter));
+            return getFormattedText(TextType.F0091, getText(TextType.TileFilter));
         }
     }
     {
         const comparator = data.getConUnitComparator();
         if ((comparator != null)                            &&
-            (!ValueAndComparatorsUtils.checkIsValid(comparator))
+            (!ValueAndComparatorsUtilsCheckIsValid(comparator))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Comparator));
+            return getFormattedText(TextType.F0091, getText(TextType.Comparator));
         }
     }
 
     {
         const act = data.getActDefenseAmount();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtils.checkIsValid(act))
+            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.DefBonus$));
+            return getFormattedText(TextType.F0091, getText(TextType.DefBonus$));
         }
     }
     {
         const act = data.getActDefenseUnitTypeArray();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.DefensibleUnits));
+            return getFormattedText(TextType.F0091, getText(TextType.DefensibleUnits));
         }
     }
     {
         const act = data.getActMaxCapturePoint();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtils.checkIsValid(act))
+            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.MaxCapturePoint));
+            return getFormattedText(TextType.F0091, getText(TextType.MaxCapturePoint));
         }
     }
     {
@@ -350,9 +365,9 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
     {
         const act = data.getActRepairNormalizedHp();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtils.checkIsValid(act))
+            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RepairHpAmount));
+            return getFormattedText(TextType.F0091, getText(TextType.RepairHpAmount));
         }
     }
     {
@@ -362,25 +377,25 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
     {
         const act = data.getActRepairUnitTypeArray();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.RepairableUnits));
+            return getFormattedText(TextType.F0091, getText(TextType.RepairableUnits));
         }
     }
     {
         const act = data.getActIncomePerTurn();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtils.checkIsValid(act))
+            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Income));
+            return getFormattedText(TextType.F0091, getText(TextType.Income));
         }
     }
     {
         const act = data.getActVisionRange();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtils.checkIsValid(act))
+            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.VisionRange));
+            return getFormattedText(TextType.F0091, getText(TextType.VisionRange));
         }
     }
     {
@@ -390,49 +405,49 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
     {
         const act = data.getActHideUnitTypeArray();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.HidableUnits));
+            return getFormattedText(TextType.F0091, getText(TextType.HidableUnits));
         }
     }
     {
         const act = data.getActProduceUnitTypeArray();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.ProducibleUnits));
+            return getFormattedText(TextType.F0091, getText(TextType.ProducibleUnits));
         }
     }
     {
         const act = data.getActGlobalAttackBonus();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtils.checkIsValid(act))
+            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.GlobalAtkBonus));
+            return getFormattedText(TextType.F0091, getText(TextType.GlobalAtkBonus));
         }
     }
     {
         const act = data.getActGlobalDefenseBonus();
         if ((act != null)                                       &&
-            (!MultiplierAndOffsetsUtils.checkIsValid(act))
+            (!MultiplierAndOffsetsUtilsCheckIsValid(act))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.GlobalDefBonus));
+            return getFormattedText(TextType.F0091, getText(TextType.GlobalDefBonus));
         }
     }
     {
         const act = data.getActUnitTypeArrayForCoBoard();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.CoBoardableUnit));
+            return getFormattedText(TextType.F0091, getText(TextType.CoBoardableUnit));
         }
     }
     {
         const act = data.getActBlockEnemyUnitTypeArray();
         if ((act != null)                                                                               &&
-            (!ArrayModifiersUtils.checkIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
+            (!ArrayModifiersUtilsCheckIsValid(act, new Set(gameConfig.getAllUnitTypeArray())))
         ) {
-            return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.BlockableEnemyUnits));
+            return getFormattedText(TextType.F0091, getText(TextType.BlockableEnemyUnits));
         }
     }
 
@@ -455,7 +470,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
         (data.getActUnitTypeArrayForCoBoard() == null)       &&
         (data.getActBlockEnemyUnitTypeArray() == null)
     ) {
-        return LangUtils.getText(LangConstants.TextType.A0957);
+        return getText(TextType.A0957);
     }
 
     return null;
@@ -465,7 +480,7 @@ export function getErrorTip(data: WeaSetCustomBuildingStateSimple, mapSize: Auxi
 export async function applyWithExtraData(_action: WeaSetCustomBuildingStateSimple): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSimple, isFastExecute: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
     const targetTileArray: ITile[] = [];
     {
         const unitMap           = war.getUnitMap();
@@ -479,7 +494,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
                 continue;
             }
 
-            if ((conTileFilter != null) && (!TilesUtilsFilter.checkIsMeet(conTileFilter, tile))) {
+            if ((conTileFilter != null) && (!TilesUtilsFilterCheckIsMeet(conTileFilter, tile))) {
                 continue;
             }
 
@@ -490,11 +505,11 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
             if (conUnitComparator != null) {
                 let count = 0;
                 for (const unit of unitMap.getAllUnitsOnGrid(tile.getGridIndex())) {
-                    if ((conUnitFilter == null) || (UnitsUtilsFilter.checkIsMeet(conUnitFilter, unit))) {
+                    if ((conUnitFilter == null) || (UnitsUtilsFilterCheckIsMeet(conUnitFilter, unit))) {
                         ++count;
                     }
                 }
-                if (!ValueAndComparatorsUtils.checkIsMeet(conUnitComparator, count)) {
+                if (!ValueAndComparatorsUtilsCheckIsMeet(conUnitComparator, count)) {
                     continue;
                 }
             }
@@ -507,10 +522,10 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
         }
     }
 
-    const dataDict = new Map<ITile, ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData>();
+    const dataDict = new Map<ITile, TileCustomBuildingData>();
     {
         for (const tile of targetTileArray) {
-            dataDict.set(tile, ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData.TileCustomBuildingData.fromJson({
+            dataDict.set(tile, TileCustomBuildingData.fromJson({
                 defenseAmount                 : evalActDefenseAmount(action, tile),
                 isDefeatedOnCapture           : evalActIsDefeatedOnCapture(action, tile),
                 incomePerTurn                 : evalActIncomePerTurn(action, tile),
@@ -533,7 +548,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
     {
         for (const [tile, tileCustomBuildingData] of dataDict) {
             const cfg       = tile.getTemplateCfg();
-            const newData   = TilesUtilsSerialization.create({
+            const newData   = create({
                 gridIndex               : tile.getGridIndex().toProto().toJson(),
                 playerIndex             : tile.getPlayerIndex(),
                 baseType                : tile.getBaseType(),
@@ -548,9 +563,9 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
                 groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
                 isHighlighted           : tile.getIsHighlighted(),
 
-                currentBuildPoint       : Math.min(tile.getCurrentBuildPoint(),     TilesUtilsCommon.getMaxBuildPoint(cfg, tileCustomBuildingData) ?? 0),
-                currentCapturePoint     : Math.min(tile.getCurrentCapturePoint(),   TilesUtilsCommon.getMaxCapturePoint(cfg, tileCustomBuildingData) ?? 0),
-                currentHp               : Math.min(tile.getCurrentHp(),             TilesUtilsCommon.getMaxHp(cfg, tileCustomBuildingData) ?? 0),
+                currentBuildPoint       : Math.min(tile.getCurrentBuildPoint(),     getMaxBuildPoint(cfg, tileCustomBuildingData) ?? 0),
+                currentCapturePoint     : Math.min(tile.getCurrentCapturePoint(),   getMaxCapturePoint(cfg, tileCustomBuildingData) ?? 0),
+                currentHp               : Math.min(tile.getCurrentHp(),             getMaxHp(cfg, tileCustomBuildingData) ?? 0),
 
                 customBuildingData      : tileCustomBuildingData.toJson(),
                 customCrystalData       : null,
@@ -570,7 +585,7 @@ export async function applyWithoutExtraData(action: WeaSetCustomBuildingStateSim
 }
 function checkIsMeetConPlayerFilter(resultDict: Map<IPlayer, boolean>, filter: PlayerFilter, player: IPlayer): boolean {
     if (!resultDict.has(player)) {
-        resultDict.set(player, PlayersUtilsFilter.checkIsMeet(filter, player));
+        resultDict.set(player, checkIsMeet(filter, player));
     }
     return !!resultDict.get(player);
 }
@@ -581,10 +596,10 @@ function evalActDefenseAmount(action: WeaSetCustomBuildingStateSimple, tile: ITi
         return defaultValue;
     }
 
-    return NumbersUtils.getValueInRange({
-        minValue    : TilesConstantsCustomLimits.Building.DefenseAmount.MinValue,
-        maxValue    : TilesConstantsCustomLimits.Building.DefenseAmount.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtils.getResultValue(act, defaultValue),
+    return getValueInRange({
+        minValue    : Building.DefenseAmount.MinValue,
+        maxValue    : Building.DefenseAmount.MaxValue,
+        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue),
     });
 }
 function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: ITile): number[] {
@@ -595,7 +610,7 @@ function evalActDefenseUnitTypeArray(action: WeaSetCustomBuildingStateSimple, ti
     }
 
     const gameConfig = tile.getGameConfig();
-    return ArrayModifiersUtils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
 function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateSimple, tile: ITile): Undefinable<number> {
     if (action.getActDeleteMaxCapturePoint()) {
@@ -608,10 +623,10 @@ function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateSimple, tile: I
         return defaultValue;
     }
 
-    return NumbersUtils.getValueInRange({
-        minValue    : TilesConstantsCustomLimits.Building.MaxCapturePoint.MinValue,
-        maxValue    : TilesConstantsCustomLimits.Building.MaxCapturePoint.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtils.getResultValue(act, defaultValue ?? 0),
+    return getValueInRange({
+        minValue    : Building.MaxCapturePoint.MinValue,
+        maxValue    : Building.MaxCapturePoint.MaxValue,
+        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue ?? 0),
     });
 }
 function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateSimple, tile: ITile): boolean {
@@ -634,10 +649,10 @@ function evalActRepairNormalizedHp(action: WeaSetCustomBuildingStateSimple, tile
         return defaultValue;
     }
 
-    return NumbersUtils.getValueInRange({
-        minValue    : TilesConstantsCustomLimits.Building.RepairNormalizedHp.MinValue,
-        maxValue    : TilesConstantsCustomLimits.Building.RepairNormalizedHp.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtils.getResultValue(act, defaultValue ?? 0),
+    return getValueInRange({
+        minValue    : Building.RepairNormalizedHp.MinValue,
+        maxValue    : Building.RepairNormalizedHp.MaxValue,
+        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue ?? 0),
     });
 }
 function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: ITile): number[] {
@@ -648,7 +663,7 @@ function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateSimple, til
     }
 
     const gameConfig = tile.getGameConfig();
-    return ArrayModifiersUtils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
 function evalActIncomePerTurn(action: WeaSetCustomBuildingStateSimple, tile: ITile): number {
     const defaultValue  = tile.getIncomePerTurn();
@@ -657,10 +672,10 @@ function evalActIncomePerTurn(action: WeaSetCustomBuildingStateSimple, tile: ITi
         return defaultValue;
     }
 
-    return NumbersUtils.getValueInRange({
-        minValue    : TilesConstantsCustomLimits.Building.IncomePerTurn.MinValue,
-        maxValue    : TilesConstantsCustomLimits.Building.IncomePerTurn.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtils.getResultValue(act, defaultValue),
+    return getValueInRange({
+        minValue    : Building.IncomePerTurn.MinValue,
+        maxValue    : Building.IncomePerTurn.MaxValue,
+        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue),
     });
 }
 function evalActVisionRange(action: WeaSetCustomBuildingStateSimple, tile: ITile): number {
@@ -670,10 +685,10 @@ function evalActVisionRange(action: WeaSetCustomBuildingStateSimple, tile: ITile
         return defaultValue;
     }
 
-    return NumbersUtils.getValueInRange({
-        minValue    : TilesConstantsCustomLimits.Building.VisionRange.MinValue,
-        maxValue    : TilesConstantsCustomLimits.Building.VisionRange.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtils.getResultValue(act, defaultValue),
+    return getValueInRange({
+        minValue    : Building.VisionRange.MinValue,
+        maxValue    : Building.VisionRange.MaxValue,
+        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue),
     });
 }
 function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateSimple, tile: ITile): boolean {
@@ -693,7 +708,7 @@ function evalActHideUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile:
     }
 
     const gameConfig = tile.getGameConfig();
-    return ArrayModifiersUtils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
 function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: ITile): number[] {
     const defaultValue  = tile.getRegularProducibleUnitTypeArray() ?? [];
@@ -703,7 +718,7 @@ function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateSimple, ti
     }
 
     const gameConfig = tile.getGameConfig();
-    return ArrayModifiersUtils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
 function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateSimple, tile: ITile): number {
     const defaultValue  = tile.getGlobalAttackBonus();
@@ -712,10 +727,10 @@ function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateSimple, tile:
         return defaultValue;
     }
 
-    return NumbersUtils.getValueInRange({
-        minValue    : TilesConstantsCustomLimits.Building.GlobalAttackBonus.MinValue,
-        maxValue    : TilesConstantsCustomLimits.Building.GlobalAttackBonus.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtils.getResultValue(act, defaultValue),
+    return getValueInRange({
+        minValue    : Building.GlobalAttackBonus.MinValue,
+        maxValue    : Building.GlobalAttackBonus.MaxValue,
+        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue),
     });
 }
 function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateSimple, tile: ITile): number {
@@ -725,10 +740,10 @@ function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateSimple, tile
         return defaultValue;
     }
 
-    return NumbersUtils.getValueInRange({
-        minValue    : TilesConstantsCustomLimits.Building.GlobalDefenseBonus.MinValue,
-        maxValue    : TilesConstantsCustomLimits.Building.GlobalDefenseBonus.MaxValue,
-        rawValue    : MultiplierAndOffsetsUtils.getResultValue(act, defaultValue),
+    return getValueInRange({
+        minValue    : Building.GlobalDefenseBonus.MinValue,
+        maxValue    : Building.GlobalDefenseBonus.MaxValue,
+        rawValue    : MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue),
     });
 }
 function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateSimple, tile: ITile): number[] {
@@ -739,7 +754,7 @@ function evalActUnitTypeArrayForCoBoard(action: WeaSetCustomBuildingStateSimple,
     }
 
     const gameConfig = tile.getGameConfig();
-    return ArrayModifiersUtils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }
 function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateSimple, tile: ITile): number[] {
     const defaultValue  = tile.getBlockEnemyUnitTypeArray() ?? [];
@@ -749,5 +764,5 @@ function evalActBlockEnemyUnitTypeArray(action: WeaSetCustomBuildingStateSimple,
     }
 
     const gameConfig = tile.getGameConfig();
-    return ArrayModifiersUtils.getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
+    return getResultValue(act, defaultValue).filter(v => gameConfig.checkIsValidUnitType(v));
 }

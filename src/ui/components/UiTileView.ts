@@ -1,32 +1,37 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as CommonModelCommonModel from "../../common/model/CommonModel.ts";
-import * as ForceSkinsConstants from "../../forceSkins/Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GraphicsUtils from "../../graphics/Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as TilesConstantsCommon from "../../tiles/constants/Common.ts";
-import type * as UiInterfacesIUiImage from "../interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiTileView from "../interfaces/IUiTileView.ts";
-import type * as UiTypesUiTileViewData from "../types/UiTileViewData.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
-import * as UsersModel from "../../users/Model.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import {
+    getTileAnimationTickCount,
+    getCachedTileObjectImageSource,
+    getCachedTileBaseImageSource,
+    getCachedTileDecorationImageSource,
+} from "../../common/model/CommonModel.ts";
+import { SkinId } from "../../forceSkins/Constants.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
+import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
+import { ThemeTypeId } from "../../tiles/constants/Common.ts";
+import type { IUiImage } from "../interfaces/IUiImage.ts";
+import type { IUiTileView } from "../interfaces/IUiTileView.ts";
+import type { UiTileViewData } from "../types/UiTileViewData.ts";
+import { getUiImageClass } from "../utils/UiFactory.ts";
+import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
 
-const getGridHeight = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridHeight);
+const getGridHeight = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
 
-export class UiTileView implements UiInterfacesIUiTileView.IUiTileView {
-    private readonly _imgBase       = new (UiUtilsUiFactory.getUiImageClass())();
-    private readonly _imgDecoration = new (UiUtilsUiFactory.getUiImageClass())();
-    private readonly _imgObject     = new (UiUtilsUiFactory.getUiImageClass())();
+export class UiTileView implements IUiTileView {
+    private readonly _imgBase       = new (getUiImageClass())();
+    private readonly _imgDecoration = new (getUiImageClass())();
+    private readonly _imgObject     = new (getUiImageClass())();
 
-    private _gameConfig         : GameConfigGcData.GcData | null = null;
-    private _baseType           : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    private _baseShapeId        : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    private _decorationType     : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    private _decorationShapeId  : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    private _objectType         : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    private _objectShapeId      : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    private _skinId             : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    private _overridingSkinId   : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    private _gameConfig         : GcData | null = null;
+    private _baseType           : Undefinable<number>;
+    private _baseShapeId        : Undefinable<number>;
+    private _decorationType     : Undefinable<number>;
+    private _decorationShapeId  : Undefinable<number>;
+    private _objectType         : Undefinable<number>;
+    private _objectShapeId      : Undefinable<number>;
+    private _skinId             : Undefinable<number>;
+    private _overridingSkinId   : Undefinable<number>;
 
     public constructor() {
         {
@@ -48,7 +53,7 @@ export class UiTileView implements UiInterfacesIUiTileView.IUiTileView {
         }
     }
 
-    public init(data: UiTypesUiTileViewData.UiTileViewData): UiInterfacesIUiTileView.IUiTileView {
+    public init(data: UiTileViewData): IUiTileView {
         this._gameConfig        = data.gameConfig;
         this._baseType          = data.tileBaseType;
         this._baseShapeId       = data.tileBaseShapeId;
@@ -70,13 +75,13 @@ export class UiTileView implements UiInterfacesIUiTileView.IUiTileView {
         this._updateImages();
     }
 
-    public getImgObject(): UiInterfacesIUiImage.IUiImage {
+    public getImgObject(): IUiImage {
         return this._imgObject;
     }
-    public getImgBase(): UiInterfacesIUiImage.IUiImage {
+    public getImgBase(): IUiImage {
         return this._imgBase;
     }
-    public getImgDecoration(): UiInterfacesIUiImage.IUiImage {
+    public getImgDecoration(): IUiImage {
         return this._imgDecoration;
     }
 
@@ -90,8 +95,8 @@ export class UiTileView implements UiInterfacesIUiTileView.IUiTileView {
             return;
         }
 
-        const version   = UsersModel.getSelfSettingsTextureVersion();
-        const tickCount = CommonModelCommonModel.getTileAnimationTickCount();
+        const version   = getSelfSettingsTextureVersion();
+        const tickCount = getTileAnimationTickCount();
         {
             const objectType    = this._objectType;
             const imgObject     = this.getImgObject();
@@ -101,10 +106,10 @@ export class UiTileView implements UiInterfacesIUiTileView.IUiTileView {
                 imgObject.setIsVisible(true);
 
                 const overridingSkinId = this._overridingSkinId ?? -1;
-                imgObject.loadSource(CommonModelCommonModel.getCachedTileObjectImageSource({
+                imgObject.loadSource(getCachedTileObjectImageSource({
                     version     : version,
-                    themeType   : TilesConstantsCommon.ThemeTypeId.Normal,
-                    skinId      : overridingSkinId > 0 ? overridingSkinId : HelpersMisc.getExisted(this._skinId),
+                    themeType   : ThemeTypeId.Normal,
+                    skinId      : overridingSkinId > 0 ? overridingSkinId : getExisted(this._skinId),
                     objectType  : objectType,
                     isDark      : false,
                     shapeId     : this._objectShapeId ?? 0,
@@ -120,13 +125,13 @@ export class UiTileView implements UiInterfacesIUiTileView.IUiTileView {
                 imgBase.setIsVisible(false);
             } else {
                 imgBase.setIsVisible(true);
-                imgBase.loadSource(CommonModelCommonModel.getCachedTileBaseImageSource({
+                imgBase.loadSource(getCachedTileBaseImageSource({
                     version,
-                    themeType   : TilesConstantsCommon.ThemeTypeId.Normal,
-                    skinId      : ForceSkinsConstants.SkinId.Neutral,
+                    themeType   : ThemeTypeId.Normal,
+                    skinId      : SkinId.Neutral,
                     baseType,
                     isDark      : false,
-                    shapeId     : HelpersMisc.getExisted(this._baseShapeId),
+                    shapeId     : getExisted(this._baseShapeId),
                     tickCount,
                 }));
             }
@@ -139,13 +144,13 @@ export class UiTileView implements UiInterfacesIUiTileView.IUiTileView {
                 imgDecoration.setIsVisible(false);
             } else {
                 imgDecoration.setIsVisible(true);
-                imgDecoration.loadSource(CommonModelCommonModel.getCachedTileDecorationImageSource({
+                imgDecoration.loadSource(getCachedTileDecorationImageSource({
                     version,
-                    themeType   : TilesConstantsCommon.ThemeTypeId.Normal,
-                    skinId      : ForceSkinsConstants.SkinId.Neutral,
+                    themeType   : ThemeTypeId.Normal,
+                    skinId      : SkinId.Neutral,
                     tileDecorationType: decorationType,
                     isDark      : false,
-                    shapeId     : HelpersMisc.getExisted(this._decorationShapeId),
+                    shapeId     : getExisted(this._decorationShapeId),
                     tickCount,
                 }));
             }

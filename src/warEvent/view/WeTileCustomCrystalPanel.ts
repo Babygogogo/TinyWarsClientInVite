@@ -1,45 +1,45 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData from "../../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { TileCustomCrystalData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 
 export interface OpenData {
-    currentData             : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData>;
-    callback                : ((customData: ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData | null) => void) | null;
+    currentData             : Undefinable<TileCustomCrystalData>;
+    callback                : ((customData: TileCustomCrystalData | null) => void) | null;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _labelTitle!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClear!                                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelError!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgInnerTouchMask!                        : UiInterfacesIUiImage.IUiImage;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _labelTitle!                               : IUiLabel;
+    private readonly _btnClear!                                 : IUiButton;
+    private readonly _btnClose!                                 : IUiButton;
+    private readonly _labelError!                               : IUiLabel;
+    private readonly _imgInnerTouchMask!                        : IUiImage;
 
-    private readonly _btnCanAffectSelf!                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelCanAffectSelf!                       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnCanAffectAlly!                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelCanAffectAlly!                       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnCanAffectEnemy!                        : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelCanAffectEnemy!                      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnCanAffectSelf!                         : IUiButton;
+    private readonly _labelCanAffectSelf!                       : IUiLabel;
+    private readonly _btnCanAffectAlly!                         : IUiButton;
+    private readonly _labelCanAffectAlly!                       : IUiLabel;
+    private readonly _btnCanAffectEnemy!                        : IUiButton;
+    private readonly _labelCanAffectEnemy!                      : IUiLabel;
 
-    private readonly _labelPriority!                            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputPriority!                            : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelRadius!                              : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputRadius!                              : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelDeltaFund!                           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputDeltaFund!                           : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelDeltaEnergyPercentage!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputDeltaEnergyPercentage!               : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelDeltaHp!                             : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputDeltaHp!                             : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelDeltaFuelPercentage!                 : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputDeltaFuelPercentage!                 : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelDeltaPrimaryAmmoPercentage!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputDeltaPrimaryAmmoPercentage!          : UiInterfacesIUiPromptedInput.IUiPromptedInput;
+    private readonly _labelPriority!                            : IUiLabel;
+    private readonly _inputPriority!                            : IUiPromptedInput;
+    private readonly _labelRadius!                              : IUiLabel;
+    private readonly _inputRadius!                              : IUiPromptedInput;
+    private readonly _labelDeltaFund!                           : IUiLabel;
+    private readonly _inputDeltaFund!                           : IUiPromptedInput;
+    private readonly _labelDeltaEnergyPercentage!               : IUiLabel;
+    private readonly _inputDeltaEnergyPercentage!               : IUiPromptedInput;
+    private readonly _labelDeltaHp!                             : IUiLabel;
+    private readonly _inputDeltaHp!                             : IUiPromptedInput;
+    private readonly _labelDeltaFuelPercentage!                 : IUiLabel;
+    private readonly _inputDeltaFuelPercentage!                 : IUiPromptedInput;
+    private readonly _labelDeltaPrimaryAmmoPercentage!          : IUiLabel;
+    private readonly _inputDeltaPrimaryAmmoPercentage!          : IUiPromptedInput;
 
-    private _customData = new ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData.TileCustomCrystalData();
+    private _customData = new TileCustomCrystalData();
 
     // public updateOnLoadedSkin(): void {
     //     this._setNotifyListenerArray([

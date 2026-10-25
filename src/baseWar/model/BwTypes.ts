@@ -1,10 +1,10 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialTile from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import type * as UnitsConstants from "../../units/Constants.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { ActionTypeId } from "../../units/Constants.ts";
+import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
 
-type IUnit              = UnitsIUnit.IUnit;
+type IUnit              = UnitsIUnit;
 
 export interface DamagePreviewSettings {
     isEnabled   : boolean;
@@ -16,7 +16,7 @@ export interface DamagePreviewSettings {
 }
 
 export interface DataForUnitAction {
-    actionType          : UnitsConstants.ActionTypeId;
+    actionType          : ActionTypeId;
     callback            : () => void;
     unitForLaunch?      : IUnit;
     unitForDrop?        : IUnit;
@@ -25,11 +25,11 @@ export interface DataForUnitAction {
 }
 
 export interface DataForTileView {
-    gameConfig          : GameConfigGcData.GcData;
-    tileData            : ProtoSchemaCommonProtoWarSerializationSerialTile.SerialTile;
+    gameConfig          : GcData;
+    tileData            : SerialTile;
     themeType           : number;
     hasFog              : boolean;
     isFullReplay        : boolean;
     skinId              : number;
-    overridingSkinId    : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+    overridingSkinId    : Undefinable<number>;
 }

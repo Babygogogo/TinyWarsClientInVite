@@ -1,42 +1,44 @@
-import type * as ActionPlannersIActionPlanner from "../../actionPlanners/IActionPlanner.ts";
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwCommonSettingManager from "./IBwCommonSettingManager.ts";
-import type * as BaseWarInterfaceIBwCursor from "./IBwCursor.ts";
-import type * as BaseWarInterfaceIBwDrawVoteManager from "./IBwDrawVoteManager.ts";
-import type * as BaseWarInterfaceIBwExecutedOperationManager from "./IBwExecutedOperationManager.ts";
-import type * as BaseWarInterfaceIBwGridVisualEffect from "./IBwGridVisualEffect.ts";
-import type * as BaseWarInterfaceIBwRandomNumberManager from "./IBwRandomNumberManager.ts";
-import type * as BaseWarInterfaceIBwWarEventManager from "./IBwWarEventManager.ts";
-import type * as BaseWarInterfaceIBwWarStatisticsManager from "./IBwWarStatisticsManager.ts";
-import type * as BaseWarInterfaceIBwWarView from "./IBwWarView.ts";
-import type * as BaseWarModelBwTypes from "../model/BwTypes.ts";
-import type * as FieldsIField from "../../fields/IField.ts";
-import type * as FogMapsIFogMap from "../../fogMaps/IFogMap.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import type * as PlayersIPlayer from "../../players/IPlayer.ts";
-import type * as PlayersIPlayerManager from "../../players/IPlayerManager.ts";
-import type * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type * as ProtoSchemaCommonProtoStructureMovingUnitAndPath from "../../proto/schema/CommonProto/Structure/MovingUnitAndPath.ts";
-import type * as ProtoSchemaCommonProtoWarRuleInstanceWarRule from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as TaskObjectivesITaskObjectiveManager from "../../taskObjectives/ITaskObjectiveManager.ts";
-import type * as TilesITileMap from "../../tiles/ITileMap.ts";
-import type * as TurnsConstants from "../../turns/Constants.ts";
-import type * as TurnsITurnManager from "../../turns/ITurnManager.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import type * as UnitsIUnitMap from "../../units/IUnitMap.ts";
-import type * as WarTypesConstants from "../../warTypes/Constants.ts";
-import type * as WeathersIManager from "../../weathers/IManager.ts";
+import type { IActionPlanner } from "../../actionPlanners/IActionPlanner.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { IBwCommonSettingManager } from "./IBwCommonSettingManager.ts";
+import type { IBwCursor } from "./IBwCursor.ts";
+import type { IBwDrawVoteManager } from "./IBwDrawVoteManager.ts";
+import type { IBwExecutedOperationManager } from "./IBwExecutedOperationManager.ts";
+import type { IBwGridVisualEffect } from "./IBwGridVisualEffect.ts";
+import type { IBwRandomNumberManager } from "./IBwRandomNumberManager.ts";
+import type { IBwWarEventManager } from "./IBwWarEventManager.ts";
+import type { IBwWarStatisticsManager } from "./IBwWarStatisticsManager.ts";
+import type { IBwWarView } from "./IBwWarView.ts";
+import type { DamagePreviewSettings } from "../model/BwTypes.ts";
+import type { IField } from "../../fields/IField.ts";
+import type { IFogMap as FogMapsIFogMap } from "../../fogMaps/IFogMap.ts";
+import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { IPlayer as PlayersIPlayer } from "../../players/IPlayer.ts";
+import type { IPlayerManager as PlayersIPlayerManager } from "../../players/IPlayerManager.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { MovingUnitAndPath } from "../../proto/schema/CommonProto/Structure/MovingUnitAndPath.ts";
+import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
+import type {
+    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { ITaskObjectiveManager } from "../../taskObjectives/ITaskObjectiveManager.ts";
+import type { ITileMap as TilesITileMap } from "../../tiles/ITileMap.ts";
+import type { PhaseCode } from "../../turns/Constants.ts";
+import type { ITurnManager } from "../../turns/ITurnManager.ts";
+import type { IUnit } from "../../units/IUnit.ts";
+import type { IUnitMap } from "../../units/IUnitMap.ts";
+import type { WarTypeId } from "../../warTypes/Constants.ts";
+import type { IManager } from "../../weathers/IManager.ts";
 
-type WarType            = WarTypesConstants.WarTypeId;
-type GcData             = GameConfigGcData.GcData;
-type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type IFogMap            = FogMapsIFogMap.IFogMap;
-type IPlayerManager     = PlayersIPlayerManager.IPlayerManager;
-type IPlayer            = PlayersIPlayer.IPlayer;
-type ITileMap           = TilesITileMap.ITileMap;
+type WarType            = WarTypeId;
+type GcData             = GameConfigGcData;
+type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar;
+type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type IFogMap            = FogMapsIFogMap;
+type IPlayerManager     = PlayersIPlayerManager;
+type IPlayer            = PlayersIPlayer;
+type ITileMap           = TilesITileMap;
 
 export interface IBwWar {
     init(data: SerialWar, gcData: GcData): void;
@@ -46,10 +48,10 @@ export interface IBwWar {
     getCanCheat(): boolean;
     getShouldSerializeFullInfoForFreeModeGames(): boolean;
     getPlayerManager(): IPlayerManager;
-    getWarStatisticsManager(): BaseWarInterfaceIBwWarStatisticsManager.IBwWarStatisticsManager;
-    getField(): FieldsIField.IField;
-    getCommonSettingManager(): BaseWarInterfaceIBwCommonSettingManager.IBwCommonSettingManager;
-    getWarEventManager(): BaseWarInterfaceIBwWarEventManager.IBwWarEventManager;
+    getWarStatisticsManager(): IBwWarStatisticsManager;
+    getField(): IField;
+    getCommonSettingManager(): IBwCommonSettingManager;
+    getWarEventManager(): IBwWarEventManager;
     getBootRestTime(playerIndex: number): number | null;
     getSettingsBootTimerParams(): number[];
     getIsExecuteActionsWithExtraData(): boolean;
@@ -57,11 +59,11 @@ export interface IBwWar {
 
     fastLoadState(warData: SerialWar): void;
 
-    getView(): BaseWarInterfaceIBwWarView.IBwWarView;
+    getView(): IBwWarView;
 
     serializeForCreateSfw(): SerialWar;
     serializeForCreateMfr(): SerialWar;
-    serializeForMap(): Promise<ProtoSchemaCommonProtoMapMapRawData.MapRawData>;
+    serializeForMap(): Promise<MapRawData>;
 
     startRunning(): IBwWar;
     startRunningView(): IBwWar;
@@ -91,9 +93,9 @@ export interface IBwWar {
 
     getGcData(): GcData;
 
-    getDamagePreviewSettings(): BaseWarModelBwTypes.DamagePreviewSettings;
+    getDamagePreviewSettings(): DamagePreviewSettings;
 
-    getInstanceWarRule(): ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule;
+    getInstanceWarRule(): InstanceWarRule;
 
     getPlayersCountUnneutral(): number;
     getPlayer(playerIndex: number): IPlayer;
@@ -101,38 +103,38 @@ export interface IBwWar {
     getPlayerIndexInTurn(): number;
     checkIsHumanInTurn(): boolean;
 
-    getTurnManager(): TurnsITurnManager.ITurnManager;
+    getTurnManager(): ITurnManager;
     getFogMap(): IFogMap;
-    getUnitMap(): UnitsIUnitMap.IUnitMap;
+    getUnitMap(): IUnitMap;
     getTileMap(): ITileMap;
-    getActionPlanner(): ActionPlannersIActionPlanner.IActionPlanner;
-    getGridVisualEffect(): BaseWarInterfaceIBwGridVisualEffect.IBwGridVisualEffect;
-    getCursor(): BaseWarInterfaceIBwCursor.IBwCursor;
+    getActionPlanner(): IActionPlanner;
+    getGridVisualEffect(): IBwGridVisualEffect;
+    getCursor(): IBwCursor;
 
     getEnterTurnTime(): number;
-    getTurnPhaseCode(): TurnsConstants.PhaseCode;
+    getTurnPhaseCode(): PhaseCode;
 
-    getWeatherManager(): WeathersIManager.IManager;
-    getDrawVoteManager(): BaseWarInterfaceIBwDrawVoteManager.IBwDrawVoteManager;
-    getRandomNumberManager(): BaseWarInterfaceIBwRandomNumberManager.IBwRandomNumberManager;
-    getExecutedOperationManager(): BaseWarInterfaceIBwExecutedOperationManager.IBwExecutedOperationManager;
-    getTaskObjectiveManager(): TaskObjectivesITaskObjectiveManager.ITaskObjectiveManager;
+    getWeatherManager(): IManager;
+    getDrawVoteManager(): IBwDrawVoteManager;
+    getRandomNumberManager(): IBwRandomNumberManager;
+    getExecutedOperationManager(): IBwExecutedOperationManager;
+    getTaskObjectiveManager(): ITaskObjectiveManager;
 
     moveUnit({ pathNodes, launchUnitId, fuelConsumption }: {
-        pathNodes       : AuxiliaryTypesGridIndex.GridIndex[];
+        pathNodes       : GridIndex[];
         launchUnitId    : Undefinable<number>;
         fuelConsumption : number;
     }): void;
     moveExtraUnit({ movingUnitAndPath, aiming, deleteViewAfterMoving }: {
-        movingUnitAndPath       : Undefinable<ProtoSchemaCommonProtoStructureMovingUnitAndPath.MovingUnitAndPath>;
-        aiming                  : Undefinable<AuxiliaryTypesGridIndex.GridIndex>;
+        movingUnitAndPath       : Undefinable<MovingUnitAndPath>;
+        aiming                  : Undefinable<GridIndex>;
         deleteViewAfterMoving   : boolean;
-    }): Promise<UnitsIUnit.IUnit | null>;
+    }): Promise<IUnit | null>;
 
     checkCanProduceUnitByOpaAndRule(playerIndex: number, unitType: number): boolean;
 
-    getIdleBuildingGridIndex(): Undefinable<AuxiliaryTypesGridIndex.GridIndex>;
-    getIdleUnitGridIndex(): Undefinable<AuxiliaryTypesGridIndex.GridIndex>;
+    getIdleBuildingGridIndex(): Undefinable<GridIndex>;
+    getIdleUnitGridIndex(): Undefinable<GridIndex>;
 
     getHintForEndTurn(): string;
 }

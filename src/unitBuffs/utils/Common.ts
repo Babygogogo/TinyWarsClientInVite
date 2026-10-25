@@ -1,25 +1,25 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as ProtoSchemaCommonProtoStructureUnitBuff from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
-import * as UnitBuffsConstants from "../Constants.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { UnitBuff } from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
+import { EndTimeModification, AllBuffTypeIdArray, BuffTypeId } from "../Constants.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 export function checkIsValidModificationEndPlayerIndex(playerIndex: number): boolean {
-    return (playerIndex >= UnitBuffsConstants.EndTimeModification.MinEndPlayerIndex)
-        && (playerIndex <= UnitBuffsConstants.EndTimeModification.MaxEndPlayerIndex);
+    return (playerIndex >= EndTimeModification.MinEndPlayerIndex)
+        && (playerIndex <= EndTimeModification.MaxEndPlayerIndex);
 }
 export function checkIsValidModificationEndTurnIndex(turnIndex: number): boolean {
-    return (turnIndex >= UnitBuffsConstants.EndTimeModification.MinEndTurnIndex)
-        && (turnIndex <= UnitBuffsConstants.EndTimeModification.MaxEndTurnIndex);
+    return (turnIndex >= EndTimeModification.MinEndTurnIndex)
+        && (turnIndex <= EndTimeModification.MaxEndTurnIndex);
 }
 
 export function create({ buffTypeId, expiringTurnIndex, expiringPlayerIndex, extraParams, }: {
     buffTypeId          : number;
-    expiringTurnIndex   : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    expiringPlayerIndex : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-    extraParams         : AuxiliaryTypesAuxiliaryTypes.Undefinable<number[]>;
-}): ProtoSchemaCommonProtoStructureUnitBuff.UnitBuff {
-    const data = new ProtoSchemaCommonProtoStructureUnitBuff.UnitBuff();
+    expiringTurnIndex   : Undefinable<number>;
+    expiringPlayerIndex : Undefinable<number>;
+    extraParams         : Undefinable<number[]>;
+}): UnitBuff {
+    const data = new UnitBuff();
     data.setBuffTypeId(buffTypeId);
     data.setExpiringTurnIndex(expiringTurnIndex);
     data.setExpiringPlayerIndex(expiringPlayerIndex);
@@ -29,7 +29,7 @@ export function create({ buffTypeId, expiringTurnIndex, expiringPlayerIndex, ext
 }
 
 export function checkIsValidTypeId(buffTypeId: number): boolean {
-    return UnitBuffsConstants.AllBuffTypeIdArray.includes(buffTypeId);
+    return AllBuffTypeIdArray.includes(buffTypeId);
 }
 export function checkIsValidTypeIdSubset(buffTypeIdArray: number[]): boolean {
     return (buffTypeIdArray.length === new Set(buffTypeIdArray).size)
@@ -38,53 +38,53 @@ export function checkIsValidTypeIdSubset(buffTypeIdArray: number[]): boolean {
 
 export function getIsExtraParamSupported(buffTypeId: number): boolean {
     switch (buffTypeId) {
-        case UnitBuffsConstants.BuffTypeId.Fire        : return false;
-        case UnitBuffsConstants.BuffTypeId.Disease     : return false;
-        case UnitBuffsConstants.BuffTypeId.Custom      : return false;
-        default                     : throw HelpersMisc.newError(`Invalid buffType: ${buffTypeId}`);
+        case BuffTypeId.Fire        : return false;
+        case BuffTypeId.Disease     : return false;
+        case BuffTypeId.Custom      : return false;
+        default                     : throw newError(`Invalid buffType: ${buffTypeId}`);
     }
 }
-export function checkIsValidExtraParams(buffType: number, extraParams: AuxiliaryTypesAuxiliaryTypes.Undefinable<number[]>): boolean {
+export function checkIsValidExtraParams(buffType: number, extraParams: Undefinable<number[]>): boolean {
     const count = extraParams?.length ?? 0;
-    if (buffType === UnitBuffsConstants.BuffTypeId.Fire) {
+    if (buffType === BuffTypeId.Fire) {
         return count === 0;
-    } else if (buffType === UnitBuffsConstants.BuffTypeId.Disease) {
+    } else if (buffType === BuffTypeId.Disease) {
         return count === 0;
-    } else if (buffType === UnitBuffsConstants.BuffTypeId.Custom) {
+    } else if (buffType === BuffTypeId.Custom) {
         return count === 0;
     } else {
         return false;
     }
 }
 
-export function checkIsValid(data: ProtoSchemaCommonProtoStructureUnitBuff.UnitBuff): boolean {
-    return getErrorCode(data) === UtilsClientErrorCode.ClientErrorCode.NoError;
+export function checkIsValid(data: UnitBuff): boolean {
+    return getErrorCode(data) === ClientErrorCode.NoError;
 }
-export function getErrorCode(data: ProtoSchemaCommonProtoStructureUnitBuff.UnitBuff): UtilsClientErrorCode.ClientErrorCode {
+export function getErrorCode(data: UnitBuff): ClientErrorCode {
     const buffTypeId = data.getBuffTypeId();
     if ((buffTypeId == null) || (!checkIsValidTypeId(buffTypeId))) {
-        return UtilsClientErrorCode.ClientErrorCode.PhUnitBuff_GetErrorCode_00;
+        return ClientErrorCode.PhUnitBuff_GetErrorCode_00;
     }
 
     const expiringTurnIndex     = data.getExpiringTurnIndex();
     const expiringPlayerIndex   = data.getExpiringPlayerIndex();
     if ((expiringTurnIndex != null) != (expiringPlayerIndex != null)) {
-        return UtilsClientErrorCode.ClientErrorCode.PhUnitBuff_GetErrorCode_01;
+        return ClientErrorCode.PhUnitBuff_GetErrorCode_01;
     }
     if ((expiringTurnIndex != null) && (expiringTurnIndex < 0)) {
-        return UtilsClientErrorCode.ClientErrorCode.PhUnitBuff_GetErrorCode_02;
+        return ClientErrorCode.PhUnitBuff_GetErrorCode_02;
     }
     if ((expiringPlayerIndex != null) && (expiringPlayerIndex < 0)) {
-        return UtilsClientErrorCode.ClientErrorCode.PhUnitBuff_GetErrorCode_03;
+        return ClientErrorCode.PhUnitBuff_GetErrorCode_03;
     }
     if (!checkIsValidExtraParams(buffTypeId, data.getExtraParamArray())) {
-        return UtilsClientErrorCode.ClientErrorCode.PhUnitBuff_GetErrorCode_04;
+        return ClientErrorCode.PhUnitBuff_GetErrorCode_04;
     }
 
-    return UtilsClientErrorCode.ClientErrorCode.NoError;
+    return ClientErrorCode.NoError;
 }
 
-export function checkIsExpired(data: ProtoSchemaCommonProtoStructureUnitBuff.UnitBuff, turnIndex: number, playerIndex: number): boolean {
+export function checkIsExpired(data: UnitBuff, turnIndex: number, playerIndex: number): boolean {
     const expiringTurnIndex = data.getExpiringTurnIndex();
     if (expiringTurnIndex == null) {
         return false;
@@ -99,7 +99,7 @@ export function checkIsExpired(data: ProtoSchemaCommonProtoStructureUnitBuff.Uni
         || ((expiringTurnIndex == turnIndex) && (expiringPlayerIndex <= playerIndex));
 }
 
-export function checkIsEverlasting(data: ProtoSchemaCommonProtoStructureUnitBuff.UnitBuff): boolean {
+export function checkIsEverlasting(data: UnitBuff): boolean {
     return (data.getExpiringTurnIndex() == null)
         || (data.getExpiringPlayerIndex() == null);
 }

@@ -1,7 +1,7 @@
-import * as LocationsConstants from "./Constants.ts";
+import { MinId, MaxId, GroupCount, GroupSize } from "./Constants.ts";
 
 export function checkIsValidLocationId(locationId: number): boolean {
-    return (locationId >= LocationsConstants.MinId) && (locationId <= LocationsConstants.MaxId);
+    return (locationId >= MinId) && (locationId <= MaxId);
 }
 export function checkIsValidLocationIdSubset(locationIdArray: number[]): boolean {
     return (locationIdArray.length === new Set(locationIdArray).size)
@@ -24,8 +24,8 @@ export function checkHasAnyOverlap(encodedLocationIdArray1: number[] | null, enc
 }
 
 export function encode(locationIdArray: number[]): number[] {
-    const groupedArray  = new Array<number>(LocationsConstants.GroupCount).fill(0);
-    const groupSize     = LocationsConstants.GroupSize;
+    const groupedArray  = new Array<number>(GroupCount).fill(0);
+    const groupSize     = GroupSize;
     for (const id of locationIdArray) {
         groupedArray[Math.floor((id - 1) / groupSize)] |= 1 << ((id - 1) % groupSize);
     }
@@ -36,9 +36,9 @@ export function decode(encodedLocationIdArray: number[]): number[] {
     const locationIdArray: number[] = [];
     for (let i = 0; i < encodedLocationIdArray.length; ++i) {
         let groupedLocationId = encodedLocationIdArray[i];
-        for (let j = 0; j < LocationsConstants.GroupSize; ++j) {
+        for (let j = 0; j < GroupSize; ++j) {
             if (groupedLocationId & 1) {
-                locationIdArray.push(i * LocationsConstants.GroupSize + j + 1);
+                locationIdArray.push(i * GroupSize + j + 1);
             }
             groupedLocationId = groupedLocationId >>> 1;
         }

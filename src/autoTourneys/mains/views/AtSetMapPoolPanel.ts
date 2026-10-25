@@ -1,49 +1,54 @@
-import * as AutoTourneysConstants from "../../Constants.ts";
-import * as AutoTourneysMainsGateway from "../Gateway.ts";
-import * as AutoTourneysMainsProvider from "../Provider.ts";
-import * as FloatText2 from "../../../FloatText.ts";
-import * as GameConfigGcModel from "../../../gameConfig/GcModel.ts";
-import * as GamePanelsDict from "../../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NormalMapModelNormalMapModel from "../../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoNetMessageMsgAtSetMapPoolSimpleMapInfo from "../../../proto/schema/CommonProto/NetMessage/MsgAtSetMapPool/SimpleMapInfo.ts";
-import type * as ProtoSchemaCommonProtoWarRuleInstanceWarRule from "../../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import * as SoundsConstants from "../../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../../ui/types/UiListItemData.ts";
-import * as WarRulesUtilsInstance from "../../../warRules/utils/Instance.ts";
+import { Common } from "../../Constants.ts";
+import { reqAtSetMapPool } from "../Gateway.ts";
+import { getAtFullMapInfo } from "../Provider.ts";
+import { showLang } from "../../../FloatText.ts";
+import { getLatestGameConfig } from "../../../gameConfig/GcModel.ts";
+import { getDict } from "../../../gamePanels/Dict.ts";
+import { openPanel } from "../../../gamePanels/Manager.ts";
+import { getExisted } from "../../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getText, getLanguageText } from "../../../lang/Utils.ts";
+import {
+    getRawData,
+    getEnabledNormalMapIdSet,
+    getBriefData,
+    getMapNameInCurrentLanguage,
+} from "../../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../../notifications/TypeId.ts";
+import { SimpleMapInfo } from "../../../proto/schema/CommonProto/NetMessage/MsgAtSetMapPool/SimpleMapInfo.ts";
+import type { InstanceWarRule } from "../../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
+import { ShortSfxCode } from "../../../sounds/Constants.ts";
+import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
+import { create } from "../../../warRules/utils/Instance.ts";
 
 export interface OpenData {
     tourneyId   : number;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!   : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!      : IUiImage;
+    private readonly _group!        : IUiContainer;
+    private readonly _labelTitle!   : IUiLabel;
 
-    private readonly _btnConfirm!   : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCancel!    : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnConfirm!   : IUiButton;
+    private readonly _btnCancel!    : IUiButton;
 
-    private readonly _listMap!      : UiInterfacesIUiScrollList.IUiScrollList<DataForMapRenderer>;
+    private readonly _listMap!      : IUiScrollList<DataForMapRenderer>;
 
     private _dataArrayForListMap    : DataForMapRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgAtSetMapPool,     callback: this._onNotifyMsgAtSetMapPool },
+            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgAtSetMapPool,     callback: this._onNotifyMsgAtSetMapPool },
         ]);
         this._setUiListenerArray([
             { ui: this._btnCancel,          callback: this.closePanel },
@@ -66,7 +71,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     public async updateOnSetMap(mapIndex: number, normalMapId: number): Promise<void> {
-        const mapRawData = await NormalMapModelNormalMapModel.getRawData(normalMapId);
+        const mapRawData = await getRawData(normalMapId);
         if (mapRawData == null) {
             return;
         }
@@ -75,8 +80,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const dataIndex         = dataArray.findIndex(v => v.mapIndex === mapIndex);
         const data              = dataArray[dataIndex];
         data.normalMapId        = normalMapId;
-        data.instanceWarRule    = WarRulesUtilsInstance.create({
-            templateWarRule             : HelpersMisc.getExisted(mapRawData.getTemplateWarRuleArray())[0],
+        data.instanceWarRule    = create({
+            templateWarRule             : getExisted(mapRawData.getTemplateWarRuleArray())[0],
             warEventFullData            : mapRawData.getWarEventFullData(),
             allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
             taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
@@ -87,7 +92,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const dataArray     = this._dataArrayForListMap;
         const dataIndex     = dataArray.findIndex(v => v.mapIndex === mapIndex);
         const data          = dataArray[dataIndex];
-        const mapRawData    = await NormalMapModelNormalMapModel.getRawData(data.normalMapId);
+        const mapRawData    = await getRawData(data.normalMapId);
         if (mapRawData == null) {
             return;
         }
@@ -100,7 +105,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const ruleId            = data.instanceWarRule.getTemplateWarRuleId() ?? 0;
         const templateWarRule   = templateWarRuleArray[(templateWarRuleArray.findIndex(v => (v.getRuleId() ?? 0) === ruleId) + 1) % rulesCount];
-        data.instanceWarRule    = WarRulesUtilsInstance.create({
+        data.instanceWarRule    = create({
             templateWarRule             : templateWarRule,
             warEventFullData            : mapRawData.getWarEventFullData(),
             allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
@@ -127,7 +132,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     public async updateOnAdd(mapIndex: number): Promise<void> {
         const dataArray = this._dataArrayForListMap;
-        if (dataArray.length >= AutoTourneysConstants.Common.MaxMapsCount) {
+        if (dataArray.length >= Common.MaxMapsCount) {
             return;
         }
 
@@ -171,9 +176,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private async _onTouchedBtnConfirm(): Promise<void> {
-        const dataArray: ProtoSchemaCommonProtoNetMessageMsgAtSetMapPoolSimpleMapInfo.SimpleMapInfo[] = [];
+        const dataArray: SimpleMapInfo[] = [];
         for (const data of this._dataArrayForListMap) {
-            dataArray.push(ProtoSchemaCommonProtoNetMessageMsgAtSetMapPoolSimpleMapInfo.SimpleMapInfo.fromJson({
+            dataArray.push(SimpleMapInfo.fromJson({
                 normalMapId : data.normalMapId,
                 ruleId      : data.instanceWarRule.getTemplateWarRuleId() ?? 0,
             }));
@@ -181,7 +186,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const tourneyId = this.getOpenData()?.tourneyId;
         if (tourneyId != null) {
-            AutoTourneysMainsGateway.reqAtSetMapPool(tourneyId, dataArray);
+            reqAtSetMapPool(tourneyId, dataArray);
         }
     }
 
@@ -190,7 +195,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgAtSetMapPool(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
         this.closePanel();
     }
 
@@ -211,11 +216,11 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const dataArray : DataForMapRenderer[] = [];
         let index       = 1;
-        for (const mapInfo of (await AutoTourneysMainsProvider.getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? []) {
+        for (const mapInfo of (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? []) {
             dataArray.push({
                 mapIndex        : index++,
                 normalMapId     : mapInfo.getNormalMapId() ?? 0,
-                instanceWarRule : HelpersMisc.getExisted(mapInfo.getInstanceWarRule()),
+                instanceWarRule : getExisted(mapInfo.getInstanceWarRule()),
                 panel           : this,
             });
         }
@@ -224,35 +229,35 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1045);
-        this._btnConfirm.setLangText(LangConstants.TextType.B0026);
-        this._btnCancel.setLangText(LangConstants.TextType.B0154);
+        this._labelTitle.setLangText(TextType.B1045);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
     }
 }
 
-interface DataForMapRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForMapRenderer extends UiListItemData {
     mapIndex            : number;
     normalMapId         : number;
-    instanceWarRule     : ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule;
+    instanceWarRule     : InstanceWarRule;
     panel               : Panel;
 }
-class MapRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForMapRenderer> {
-    private readonly _imgBg!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelIndex!       : UiInterfacesIUiLabel.IUiLabel;
+class MapRenderer extends UiListItemRenderer<DataForMapRenderer> {
+    private readonly _imgBg!            : IUiImage;
+    private readonly _labelIndex!       : IUiLabel;
 
-    private readonly _layoutName!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelMapName!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRuleName!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!       : IUiLayout;
+    private readonly _labelMapName!     : IUiLabel;
+    private readonly _labelRuleName!    : IUiLabel;
 
-    private readonly _btnMap!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnRule!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnUp!            : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAdd!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDelete!        : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnMap!           : IUiButton;
+    private readonly _btnRule!          : IUiButton;
+    private readonly _btnUp!            : IUiButton;
+    private readonly _btnAdd!           : IUiButton;
+    private readonly _btnDelete!        : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._layoutName,     callback: this._onTouchedLayoutName },
@@ -277,16 +282,16 @@ class MapRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Data
             return;
         }
 
-        const mapRawData = await NormalMapModelNormalMapModel.getRawData(normalMapId);
+        const mapRawData = await getRawData(normalMapId);
         if (mapRawData == null) {
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonShowMapPanel, {
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
+        openPanel(getDict().CommonShowMapPanel, {
             mapInfo: {
                 mapRawData          : mapRawData,
-                gameConfig          : await GameConfigGcModel.getLatestGameConfig(),
+                gameConfig          : await getLatestGameConfig(),
                 overridingPlayers   : null,
             },
         });
@@ -299,19 +304,19 @@ class MapRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Data
 
         const normalMapIdArray  : number[] = [];
         const promiseArray      : Promise<void>[] = [];
-        for (const normalMapId of await NormalMapModelNormalMapModel.getEnabledNormalMapIdSet()) {
+        for (const normalMapId of await getEnabledNormalMapIdSet()) {
             promiseArray.push((async () => {
-                const briefData = await NormalMapModelNormalMapModel.getBriefData(normalMapId);
-                if (briefData?.getPlayersCountUnneutral() === AutoTourneysConstants.Common.PlayersCountUnneutral) {
+                const briefData = await getBriefData(normalMapId);
+                if (briefData?.getPlayersCountUnneutral() === Common.PlayersCountUnneutral) {
                     normalMapIdArray.push(normalMapId);
                 }
             })());
         }
         await Promise.all(promiseArray);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNormalMapIdPanel, {
+        openPanel(getDict().CommonChooseSingleNormalMapIdPanel, {
             availableNormalMapIdArray   : normalMapIdArray,
-            getTitleText                : () => LangUtils.getText(LangConstants.TextType.B0227),
+            getTitleText                : () => getText(TextType.B0227),
             callback                    : normalMapId => {
                 if ((normalMapId != null) && (normalMapId !== openData.normalMapId)) {
                     openData.panel.updateOnSetMap(openData.mapIndex, normalMapId);
@@ -345,11 +350,11 @@ class MapRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Data
         const index = openData.mapIndex;
         this._imgBg.setIsVisible(index % 2 < 1);
         this._labelIndex.setText(`#${index}`);
-        this._btnAdd.setLangText(LangConstants.TextType.B0320);
-        this._btnDelete.setLangText(LangConstants.TextType.B0220);
-        this._btnUp.setLangText(LangConstants.TextType.B0463);
-        this._btnMap.setLangText(LangConstants.TextType.B1047);
-        this._btnRule.setLangText(LangConstants.TextType.B0318);
+        this._btnAdd.setLangText(TextType.B0320);
+        this._btnDelete.setLangText(TextType.B0220);
+        this._btnUp.setLangText(TextType.B0463);
+        this._btnMap.setLangText(TextType.B1047);
+        this._btnRule.setLangText(TextType.B0318);
 
         this._updateLabelMapName();
         this._updateLabelRuleName();
@@ -361,7 +366,7 @@ class MapRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Data
             return;
         }
 
-        this._labelMapName.setText(`#${normalMapId} ${await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId) ?? LangConstants.UndefinedError}`);
+        this._labelMapName.setText(`#${normalMapId} ${await getMapNameInCurrentLanguage(normalMapId) ?? UndefinedError}`);
         this._layoutName.arrangeItems();
     }
     private async _updateLabelRuleName(): Promise<void> {
@@ -370,8 +375,8 @@ class MapRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Data
             return;
         }
 
-        const textForMode = LangUtils.getText(rule.getWarRuleCommonData()?.getHasFogByDefault() ? LangConstants.TextType.B0549 : LangConstants.TextType.B0548);
-        this._labelRuleName.setText(`#${rule.getTemplateWarRuleId() ?? 0} (${textForMode}) ${(LangUtils.getLanguageText({ textArray: rule.getRuleNameArray() }) ?? LangConstants.UndefinedError)}`);
+        const textForMode = getText(rule.getWarRuleCommonData()?.getHasFogByDefault() ? TextType.B0549 : TextType.B0548);
+        this._labelRuleName.setText(`#${rule.getTemplateWarRuleId() ?? 0} (${textForMode}) ${(getLanguageText({ textArray: rule.getRuleNameArray() }) ?? UndefinedError)}`);
         this._layoutName.arrangeItems();
     }
 }

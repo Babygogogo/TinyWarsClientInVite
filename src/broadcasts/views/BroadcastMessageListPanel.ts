@@ -1,37 +1,37 @@
-import * as BroadcastsGateway from "../Gateway.ts";
-import * as BroadcastsProvider from "../Provider.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { reqBroadcastGetAllMessageIdArray, reqBroadcastDeleteMessage } from "../Gateway.ts";
+import { getAllMessageIdArray, getMessageData } from "../Provider.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, LanguageType } from "../../lang/Constants.ts";
+import { getText, getTimestampShortText, getLanguageText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getIsSelfAdmin } from "../../users/Model.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAddMessage!    : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _btnClose!         : IUiButton;
+    private readonly _btnAddMessage!    : IUiButton;
 
-    private readonly _listMessage!      : UiInterfacesIUiScrollList.IUiScrollList<DataForMessageRenderer>;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelNoMessage!   : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _listMessage!      : IUiScrollList<DataForMessageRenderer>;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _labelNoMessage!   : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgBroadcastGetAllMessageIdArray,    callback: this._onNotifyMsgBroadcastGetAllMessageIdArray },
+            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgBroadcastGetAllMessageIdArray,    callback: this._onNotifyMsgBroadcastGetAllMessageIdArray },
         ]);
         this._setUiListenerArray([
             { ui: this._btnAddMessage,                              callback: this._onTouchedBtnAddMessage },
@@ -47,7 +47,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     protected override async _doApplyOpenData(): Promise<void> {
         this._updateView();
 
-        BroadcastsGateway.reqBroadcastGetAllMessageIdArray();
+        reqBroadcastGetAllMessageIdArray();
     }
     protected override async _onClosed(): Promise<void> {
         await this._listMessage.removeAllItems();
@@ -63,7 +63,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnAddMessage(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().BroadcastAddMessagePanel, void 0);
+        openPanel(getDict().BroadcastAddMessagePanel, void 0);
     }
 
     private _updateView(): void {
@@ -74,12 +74,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._updateListMessageAndLabelNoMessage();
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0881));
-        this._labelNoMessage.setText(LangUtils.getText(LangConstants.TextType.B0278));
+        this._labelTitle.setText(getText(TextType.B0881));
+        this._labelNoMessage.setText(getText(TextType.B0278));
     }
     private async _updateListMessageAndLabelNoMessage(): Promise<void> {
         const dataArray: DataForMessageRenderer[] = [];
-        for (const messageId of BroadcastsProvider.getAllMessageIdArray()) {
+        for (const messageId of getAllMessageIdArray()) {
             dataArray.push({
                 messageId,
             });
@@ -90,24 +90,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     private _updateBtnAddMessage(): void {
         const btn = this._btnAddMessage;
-        btn.setIsVisible(UsersModel.getIsSelfAdmin());
+        btn.setIsVisible(getIsSelfAdmin());
     }
 }
 
-interface DataForMessageRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForMessageRenderer extends UiListItemData {
     messageId: number;
 }
-class MessageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForMessageRenderer> {
-    private readonly _labelIndex!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelContent! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnDelete!    : UiInterfacesIUiButton.IUiButton;
+class MessageRenderer extends UiListItemRenderer<DataForMessageRenderer> {
+    private readonly _labelIndex!   : IUiLabel;
+    private readonly _labelContent! : IUiLabel;
+    private readonly _btnDelete!    : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
             { ui: this._btnDelete,              callback: this._onTouchedBtnDelete },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -120,24 +120,24 @@ class MessageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
         }
 
         const messageId     = openData.messageId;
-        const messageData   = await BroadcastsProvider.getMessageData(messageId);
+        const messageData   = await getMessageData(messageId);
         if (messageData == null) {
             return;
         }
 
-        this._labelIndex.setText(`#${messageId}    ${LangUtils.getTimestampShortText(HelpersMisc.getExisted(messageData.getStartTime()))} ~ ${LangUtils.getTimestampShortText(HelpersMisc.getExisted(messageData.getEndTime()))}`);
+        this._labelIndex.setText(`#${messageId}    ${getTimestampShortText(getExisted(messageData.getStartTime()))} ~ ${getTimestampShortText(getExisted(messageData.getEndTime()))}`);
 
         const textArray     = messageData.getTextList();
         const labelContent  = this._labelContent;
         labelContent.setText([
-            `${LangUtils.getText(LangConstants.TextType.B0455)}: ${LangUtils.getLanguageText({ textArray, languageType: LangConstants.LanguageType.Chinese, useAlternate: false }) ?? `----`}`,
-            `${LangUtils.getText(LangConstants.TextType.B0456)}: ${LangUtils.getLanguageText({ textArray, languageType: LangConstants.LanguageType.English, useAlternate: false }) ?? `----`}`,
+            `${getText(TextType.B0455)}: ${getLanguageText({ textArray, languageType: LanguageType.Chinese, useAlternate: false }) ?? `----`}`,
+            `${getText(TextType.B0456)}: ${getLanguageText({ textArray, languageType: LanguageType.English, useAlternate: false }) ?? `----`}`,
         ].join(`\n\n`));
 
         this.setUnscaledManualHeight(labelContent.getScaledHeight() + 28);
     }
 
-    private _onTouchedBtnDelete(e: VendorEgretEgret.Event): void {
+    private _onTouchedBtnDelete(e: Event): void {
         e.stopPropagation();
 
         const messageId = this.getOpenData()?.messageId;
@@ -145,11 +145,11 @@ class MessageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0220),
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0220),
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
-                BroadcastsGateway.reqBroadcastDeleteMessage(messageId);
+                reqBroadcastDeleteMessage(messageId);
             },
         });
     }
@@ -159,6 +159,6 @@ class MessageRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDelete.setText(LangUtils.getText(LangConstants.TextType.B0220));
+        this._btnDelete.setText(getText(TextType.B0220));
     }
 }

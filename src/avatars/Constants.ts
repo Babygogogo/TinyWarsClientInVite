@@ -1,6 +1,6 @@
-import type * as AvatarsTypes from "./Types.ts";
+import type { AvatarCfg } from "./Types.ts";
 
-export const CfgDict = new Map<number, AvatarsTypes.AvatarCfg>([
+export const CfgDict = new Map<number, AvatarCfg>([
     [1,        { avatarId: 1,       sortWeight: 1 } ],     // will
     [2,        { avatarId: 2,       sortWeight: 2 } ],     // isabella
     [3,        { avatarId: 3,       sortWeight: 8 } ],     // waylon

@@ -1,34 +1,36 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesGridIndexAndWeight from "../auxiliaryTypes/GridIndexAndWeight.ts";
-import type * as AuxiliaryTypesUnitVisionInfo from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as CoSkillsConstants from "../coSkills/Constants.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import type * as LangConstants from "../lang/Constants.ts";
-import type * as PlayersIPlayer from "../players/IPlayer.ts";
-import type * as ProtoSchemaCommonProtoConfigBuildableTileCfg from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigUnitTemplateCfg from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
-import type * as ProtoSchemaCommonProtoStructureUnitBuff from "../proto/schema/CommonProto/Structure/UnitBuff.ts";
-import type * as ProtoSchemaCommonProtoStructureWeightedGridIndex from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialUnit from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-import type * as TilesITile from "../tiles/ITile.ts";
-import type * as UnitsConstants from "./Constants.ts";
-import type * as UnitsIUnitView from "./IUnitView.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { GridIndexAndWeight as AuxiliaryTypesGridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts";
+import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { SkillTypeId } from "../coSkills/Constants.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
+import type { LanguageType } from "../lang/Constants.ts";
+import type { IPlayer as PlayersIPlayer } from "../players/IPlayer.ts";
+import type { BuildableTileCfg } from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
+import type { UnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
+import type { UnitBuff as ProtoSchemaCommonProtoStructureUnitBuff } from "../proto/schema/CommonProto/Structure/UnitBuff.ts";
+import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
+import type {
+    SerialUnit as ProtoSchemaCommonProtoWarSerializationSerialUnit,
+} from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
+import type { ITile } from "../tiles/ITile.ts";
+import type { ActionStateId, AiModeId, WeaponTypeId } from "./Constants.ts";
+import type { IUnitView } from "./IUnitView.ts";
 
-type GridIndex          = AuxiliaryTypesGridIndex.GridIndex;
-type GridIndexAndWeight = AuxiliaryTypesGridIndexAndWeight.GridIndexAndWeight;
-type UnitActionState    = UnitsConstants.ActionStateId;
-type UnitAiMode         = UnitsConstants.AiModeId;
-type UnitWeaponType     = UnitsConstants.WeaponTypeId;
-type CoSkillType        = CoSkillsConstants.SkillTypeId;
-type GameConfiguration  = GameConfigGcData.GcData;
-type UnitBuff           = ProtoSchemaCommonProtoStructureUnitBuff.UnitBuff;
-type SerialUnit         = ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type IPlayer            = PlayersIPlayer.IPlayer;
-type IBwWar             = BaseWarInterfaceIBwWar.IBwWar;
-type IBwTile            = TilesITile.ITile;
+type GridIndex          = AuxiliaryTypesGridIndex;
+type GridIndexAndWeight = AuxiliaryTypesGridIndexAndWeight;
+type UnitActionState    = ActionStateId;
+type UnitAiMode         = AiModeId;
+type UnitWeaponType     = WeaponTypeId;
+type CoSkillType        = SkillTypeId;
+type GameConfiguration  = GcData;
+type UnitBuff           = ProtoSchemaCommonProtoStructureUnitBuff;
+type SerialUnit         = ProtoSchemaCommonProtoWarSerializationSerialUnit;
+type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type IPlayer            = PlayersIPlayer;
+type IBwWar             = BaseWarInterfaceIBwWar;
+type IBwTile            = ITile;
 
 export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +52,7 @@ export interface IUnit {
 
     getGcData(): GameConfiguration;
 
-    getTemplateCfg(): ProtoSchemaCommonProtoConfigUnitTemplateCfg.UnitTemplateCfg;
+    getTemplateCfg(): UnitTemplateCfg;
 
     getUnitType(): number;
 
@@ -59,7 +61,7 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////
-    getView(): UnitsIUnitView.IUnitView;
+    getView(): IUnitView;
 
     updateView(): void;
     setViewVisible(visible: boolean): void;
@@ -301,7 +303,7 @@ export interface IUnit {
     checkIsTileBuilder(): boolean;
     checkCanBuildOnTile(tile: IBwTile): boolean;
 
-    getBuildTargetTileCfg(baseType: number, objectType: number): ProtoSchemaCommonProtoConfigBuildableTileCfg.BuildableTileCfg | null;
+    getBuildTargetTileCfg(baseType: number, objectType: number): BuildableTileCfg | null;
 
     getBuildAmount(): number | null;
 
@@ -339,7 +341,7 @@ export interface IUnit {
     getLoaderUnit(): IUnit | null;
     checkIsMeetLoadedState(state: number): boolean;
 
-    getRepairHpAndCostForLoadedUnit(unit: IUnit): AuxiliaryTypesAuxiliaryTypes.RepairHpAndCost | null;
+    getRepairHpAndCostForLoadedUnit(unit: IUnit): RepairHpAndCost | null;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for supply unit.
@@ -358,8 +360,8 @@ export interface IUnit {
     getCfgVisionRange(): number;
     getVisionRangeBonusOnTile(tileType: number): number;
 
-    getVisionInfo(): AuxiliaryTypesUnitVisionInfo.UnitVisionInfo;
-    getFinalVisionRange(visionInfo: AuxiliaryTypesUnitVisionInfo.UnitVisionInfo, gridIndex: GridIndex): number;
+    getVisionInfo(): UnitVisionInfo;
+    getFinalVisionRange(visionInfo: UnitVisionInfo, gridIndex: GridIndex): number;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for join.
@@ -400,7 +402,7 @@ export interface IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for weighted destination.
     ////////////////////////////////////////////////////////////////////////////////
-    setAiWeightedDestinationWithProto(proto: Undefinable<ProtoSchemaCommonProtoStructureWeightedGridIndex.WeightedGridIndex>): void;
+    setAiWeightedDestinationWithProto(proto: Undefinable<WeightedGridIndex>): void;
     getAiWeightedDestination(): Undefinable<GridIndexAndWeight>;
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -434,5 +436,5 @@ export interface IUnit {
     getCustomNameId(): Undefinable<number>;
     setCustomNameId(nameId: Undefinable<number>): void;
 
-    getCustomName(languageType?: LangConstants.LanguageType): AuxiliaryTypesAuxiliaryTypes.Undefinable<string>;
+    getCustomName(languageType?: LanguageType): AuxiliaryTypesAuxiliaryTypesUndefinable<string>;
 }

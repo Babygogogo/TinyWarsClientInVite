@@ -1,23 +1,25 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "./AuxiliaryTypes.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoMapMapRawData from "../proto/schema/CommonProto/Map/MapRawData.ts";
-import type * as ProtoSchemaCommonProtoStructureDataForPlayerInRoom from "../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
-import type * as ProtoSchemaCommonProtoWarRuleInstanceWarRule from "../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import * as ProtoSchemaCommonProtoWarSettingsSettingsForCommon from "../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
-import * as TurnsConstants from "../turns/Constants.ts";
-import * as WarOperationsConstants from "../warOperations/Constants.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "./AuxiliaryTypes.ts";
+import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import { getExisted } from "../helpers/Misc.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
+import type {
+    DataForPlayerInRoom as ProtoSchemaCommonProtoStructureDataForPlayerInRoom,
+} from "../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
+import type { InstanceWarRule } from "../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
+import { SettingsForCommon } from "../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
+import { TurnIndex } from "../turns/Constants.ts";
+import { Common } from "../warOperations/Constants.ts";
 
-type DataForPlayerInRoom    = ProtoSchemaCommonProtoStructureDataForPlayerInRoom.DataForPlayerInRoom;
-type GcData                 = GameConfigGcData.GcData;
-type MapRawData             = ProtoSchemaCommonProtoMapMapRawData.MapRawData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type DataForPlayerInRoom    = ProtoSchemaCommonProtoStructureDataForPlayerInRoom;
+type GcData                 = GameConfigGcData;
+type MapRawData             = ProtoSchemaCommonProtoMapMapRawData;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export class WarCreatorBase {
     private readonly _gcData            : GcData;
-    private readonly _settingsForCommon : ProtoSchemaCommonProtoWarSettingsSettingsForCommon.SettingsForCommon;
+    private readonly _settingsForCommon : SettingsForCommon;
 
     private readonly _mapRawData        : MapRawData;
 
@@ -28,10 +30,10 @@ export class WarCreatorBase {
 
     public constructor(gcData: GcData, mapRawData: MapRawData, saveSlotIndex: number) {
         this._gcData            = gcData;
-        this._settingsForCommon = ProtoSchemaCommonProtoWarSettingsSettingsForCommon.SettingsForCommon.fromJson({
+        this._settingsForCommon = SettingsForCommon.fromJson({
             configVersion       : gcData.getVersion(),
-            turnsLimit          : TurnsConstants.TurnIndex.DefaultLimit,
-            warOperationsLimit  : WarOperationsConstants.Common.DefaultLimit,
+            turnsLimit          : TurnIndex.DefaultLimit,
+            warOperationsLimit  : Common.DefaultLimit,
         });
 
         this._mapRawData = mapRawData;
@@ -42,11 +44,11 @@ export class WarCreatorBase {
     public getGcData(): GcData {
         return this._gcData;
     }
-    public getSettingsForCommon(): ProtoSchemaCommonProtoWarSettingsSettingsForCommon.SettingsForCommon {
+    public getSettingsForCommon(): SettingsForCommon {
         return this._settingsForCommon;
     }
-    public getInstanceWarRule(): ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule {
-        return HelpersMisc.getExisted(this.getSettingsForCommon().getInstanceWarRule());
+    public getInstanceWarRule(): InstanceWarRule {
+        return getExisted(this.getSettingsForCommon().getInstanceWarRule());
     }
 
     public getMapRawData(): MapRawData {
@@ -61,7 +63,7 @@ export class WarCreatorBase {
         selfList.splice(0, selfList.length, ...list);
     }
     public getPlayerInfo(playerIndex: number): DataForPlayerInRoom {
-        return HelpersMisc.getExisted(this._getPlayerInfoList().find(v => v.getPlayerIndex() === playerIndex));
+        return getExisted(this._getPlayerInfoList().find(v => v.getPlayerIndex() === playerIndex));
     }
 
     public getSaveSlotIndex(): number {
@@ -70,7 +72,7 @@ export class WarCreatorBase {
     public setSaveSlotIndex(slotIndex: number): void {
         if (this.getSaveSlotIndex() !== slotIndex) {
             this._saveSlotIndex = slotIndex;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarCreator_SaveSlotIndexChanged);
+            dispatch(TypeId.WarCreator_SaveSlotIndexChanged);
         }
     }
 

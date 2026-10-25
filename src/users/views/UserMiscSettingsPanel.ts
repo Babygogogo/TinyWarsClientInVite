@@ -1,55 +1,60 @@
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocalDataStorage from "../../localData/Storage.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiSwitch from "../../ui/interfaces/IUiSwitch.ts";
-import * as UsersModel from "../Model.ts";
-import * as UsersProxy from "../Proxy.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType, LanguageType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getCurrentLanguageType, getLanguageTypeName, setCurrentLanguageType } from "../../lang/Utils.ts";
+import { setLanguageType } from "../../localData/Storage.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiSwitch } from "../../ui/interfaces/IUiSwitch.ts";
+import {
+    getSelfSettingsIsAutoScrollMap,
+    getSelfSettingsIsReplayResultVisible,
+    getSelfSettingsIsSetPathMode,
+    getSelfSettingsCanAcceptNotFollowingMessages,
+} from "../Model.ts";
+import { reqUserSetSettings } from "../Proxy.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                                  : IUiImage;
+    private readonly _group!                                    : IUiContainer;
+    private readonly _labelTitle!                               : IUiLabel;
+    private readonly _btnClose!                                 : IUiButton;
 
-    private readonly _labelLanguage!                            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnLanguage!                              : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelLanguage!                            : IUiLabel;
+    private readonly _btnLanguage!                              : IUiButton;
 
-    private readonly _groupHelpAutoScrollMap!                   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelAutoScrollMap!                       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _uiSwitchAutoScrollMap!                    : UiInterfacesIUiSwitch.IUiSwitch;
+    private readonly _groupHelpAutoScrollMap!                   : IUiLayout;
+    private readonly _labelAutoScrollMap!                       : IUiLabel;
+    private readonly _uiSwitchAutoScrollMap!                    : IUiSwitch;
 
-    private readonly _groupHelpIsReplayResultVisible!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelIsReplayResultVisible!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _uiSwitchIsReplayResultVisible!            : UiInterfacesIUiSwitch.IUiSwitch;
+    private readonly _groupHelpIsReplayResultVisible!           : IUiLayout;
+    private readonly _labelIsReplayResultVisible!               : IUiLabel;
+    private readonly _uiSwitchIsReplayResultVisible!            : IUiSwitch;
 
-    private readonly _groupHelpSetPath!                         : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelSetPath!                             : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _uiSwitchSetPath!                          : UiInterfacesIUiSwitch.IUiSwitch;
+    private readonly _groupHelpSetPath!                         : IUiLayout;
+    private readonly _labelSetPath!                             : IUiLabel;
+    private readonly _uiSwitchSetPath!                          : IUiSwitch;
 
-    private readonly _groupHelpCanAcceptNotFollowingMessages!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelCanAcceptNotFollowingMessages!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _uiSwitchCanAcceptNotFollowingMessages!    : UiInterfacesIUiSwitch.IUiSwitch;
+    private readonly _groupHelpCanAcceptNotFollowingMessages!   : IUiLayout;
+    private readonly _labelCanAcceptNotFollowingMessages!       : IUiLabel;
+    private readonly _uiSwitchCanAcceptNotFollowingMessages!    : IUiSwitch;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                                     callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.UserSettingsIsAutoScrollMapChanged,                  callback: this._onNotifyUserSettingsIsAutoScrollMapChanged },
-            { type: NotificationsTypeId.TypeId.UserSettingsIsReplayResultVisibleChanged,            callback: this._onNotifyUserSettingsIsReplayResultVisibleChanged },
-            { type: NotificationsTypeId.TypeId.UserSettingsIsSetPathModeChanged,                    callback: this._onNotifyUserSettingsIsSetPathModeChanged },
-            { type: NotificationsTypeId.TypeId.UserSettingsCanAcceptNotFollowingMessagesChanged,    callback: this._onNotifyUserSettingsCanAcceptNotFollowingMessagesChanged },
+            { type: TypeId.LanguageChanged,                                     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.UserSettingsIsAutoScrollMapChanged,                  callback: this._onNotifyUserSettingsIsAutoScrollMapChanged },
+            { type: TypeId.UserSettingsIsReplayResultVisibleChanged,            callback: this._onNotifyUserSettingsIsReplayResultVisibleChanged },
+            { type: TypeId.UserSettingsIsSetPathModeChanged,                    callback: this._onNotifyUserSettingsIsSetPathModeChanged },
+            { type: TypeId.UserSettingsCanAcceptNotFollowingMessagesChanged,    callback: this._onNotifyUserSettingsCanAcceptNotFollowingMessagesChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                                   callback: this.closePanel },
@@ -65,26 +70,26 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
 
         this._uiSwitchAutoScrollMap.setCallbackOnTouch(() => {
-            UsersProxy.reqUserSetSettings({
-                isAutoScrollMap : !UsersModel.getSelfSettingsIsAutoScrollMap(),
+            reqUserSetSettings({
+                isAutoScrollMap : !getSelfSettingsIsAutoScrollMap(),
                 coBgmSettings   : [],
             });
         });
         this._uiSwitchIsReplayResultVisible.setCallbackOnTouch(() => {
-            UsersProxy.reqUserSetSettings({
-                isReplayResultVisible   : !UsersModel.getSelfSettingsIsReplayResultVisible(),
+            reqUserSetSettings({
+                isReplayResultVisible   : !getSelfSettingsIsReplayResultVisible(),
                 coBgmSettings           : [],
             });
         });
         this._uiSwitchSetPath.setCallbackOnTouch(() => {
-            UsersProxy.reqUserSetSettings({
-                isSetPathMode   : !UsersModel.getSelfSettingsIsSetPathMode(),
+            reqUserSetSettings({
+                isSetPathMode   : !getSelfSettingsIsSetPathMode(),
                 coBgmSettings   : [],
             });
         });
         this._uiSwitchCanAcceptNotFollowingMessages.setCallbackOnTouch(() => {
-            UsersProxy.reqUserSetSettings({
-                canAcceptNotFollowingMessages   : !UsersModel.getSelfSettingsCanAcceptNotFollowingMessages(),
+            reqUserSetSettings({
+                canAcceptNotFollowingMessages   : !getSelfSettingsCanAcceptNotFollowingMessages(),
                 coBgmSettings                   : [],
             });
         });
@@ -109,49 +114,49 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnLanguage(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.B0627),
+        openPanel(getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => getText(TextType.B0627),
             availableNumberArray    : [
-                LangConstants.LanguageType.Chinese,
-                LangConstants.LanguageType.English,
-                LangConstants.LanguageType.Spanish,
+                LanguageType.Chinese,
+                LanguageType.English,
+                LanguageType.Spanish,
             ],
-            currentNumber           : LangUtils.getCurrentLanguageType(),
-            getNumberMainText       : num => LangUtils.getLanguageTypeName(num) ?? LangConstants.UndefinedError,
+            currentNumber           : getCurrentLanguageType(),
+            getNumberMainText       : num => getLanguageTypeName(num) ?? UndefinedError,
             callbackOnConfirm       : num => {
-                LangUtils.setCurrentLanguageType(num);
-                LocalDataStorage.setLanguageType(num);
+                setCurrentLanguageType(num);
+                setLanguageType(num);
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.LanguageChanged);
+                dispatch(TypeId.LanguageChanged);
             },
         });
     }
     private _onTouchedGroupHelpAutoScrollMap(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0823),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0823),
         });
     }
     private _onTouchedGroupHelpIsReplayResultVisible(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0824),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0824),
         });
     }
     private _onTouchedGroupHelpSetPath(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0822),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0822),
         });
     }
     private _onTouchedGroupHelpCanAcceptNotFollowingMessages(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0888),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0888),
         });
     }
 
@@ -165,14 +170,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1278);
-        this._labelLanguage.setLangText(LangConstants.TextType.B0627);
-        this._labelAutoScrollMap.setLangText(LangConstants.TextType.B0793);
-        this._labelIsReplayResultVisible.setLangText(LangConstants.TextType.B1241);
-        this._labelSetPath.setLangText(LangConstants.TextType.B0430);
-        this._labelCanAcceptNotFollowingMessages.setLangText(LangConstants.TextType.B1353);
+        this._labelTitle.setLangText(TextType.B1278);
+        this._labelLanguage.setLangText(TextType.B0627);
+        this._labelAutoScrollMap.setLangText(TextType.B0793);
+        this._labelIsReplayResultVisible.setLangText(TextType.B1241);
+        this._labelSetPath.setLangText(TextType.B0430);
+        this._labelCanAcceptNotFollowingMessages.setLangText(TextType.B1353);
 
-        this._btnLanguage.setText(LangUtils.getLanguageTypeName(LangUtils.getCurrentLanguageType()) ?? LangConstants.UndefinedError);
+        this._btnLanguage.setText(getLanguageTypeName(getCurrentLanguageType()) ?? UndefinedError);
         this._groupHelpAutoScrollMap.arrangeItems();
         this._groupHelpCanAcceptNotFollowingMessages.arrangeItems();
         this._groupHelpIsReplayResultVisible.arrangeItems();
@@ -180,15 +185,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateSwitchAutoScrollMap(isTween: boolean): void {
-        this._uiSwitchAutoScrollMap.setIsSwitchOn(UsersModel.getSelfSettingsIsAutoScrollMap(), isTween);
+        this._uiSwitchAutoScrollMap.setIsSwitchOn(getSelfSettingsIsAutoScrollMap(), isTween);
     }
     private _updateSwitchIsReplayResultVisible(isTween: boolean): void {
-        this._uiSwitchIsReplayResultVisible.setIsSwitchOn(UsersModel.getSelfSettingsIsReplayResultVisible(), isTween);
+        this._uiSwitchIsReplayResultVisible.setIsSwitchOn(getSelfSettingsIsReplayResultVisible(), isTween);
     }
     private _updateSwitchSetPath(isTween: boolean): void {
-        this._uiSwitchSetPath.setIsSwitchOn(UsersModel.getSelfSettingsIsSetPathMode(), isTween);
+        this._uiSwitchSetPath.setIsSwitchOn(getSelfSettingsIsSetPathMode(), isTween);
     }
     private _updateSwitchCanAcceptNotFollowingMessages(isTween: boolean): void {
-        this._uiSwitchCanAcceptNotFollowingMessages.setIsSwitchOn(UsersModel.getSelfSettingsCanAcceptNotFollowingMessages(), isTween);
+        this._uiSwitchCanAcceptNotFollowingMessages.setIsSwitchOn(getSelfSettingsCanAcceptNotFollowingMessages(), isTween);
     }
 }

@@ -1,6 +1,8 @@
-import type * as ProtoSchemaCommonProtoChangeLogChangeLogMessage from "../../proto/schema/CommonProto/ChangeLog/ChangeLogMessage.ts";
+import type {
+    ChangeLogMessage as ProtoSchemaCommonProtoChangeLogChangeLogMessage,
+} from "../../proto/schema/CommonProto/ChangeLog/ChangeLogMessage.ts";
 
-type ChangeLogMessage   = ProtoSchemaCommonProtoChangeLogChangeLogMessage.ChangeLogMessage;
+type ChangeLogMessage   = ProtoSchemaCommonProtoChangeLogChangeLogMessage;
 
 let _messageList: ChangeLogMessage[] | null = null;
 

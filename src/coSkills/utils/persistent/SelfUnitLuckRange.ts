@@ -1,6 +1,6 @@
-import type * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitLuckRange from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitLuckRange.ts";
+import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { SelfUnitLuckRange } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitLuckRange.ts";
 
 export function getTotalOffset({
     cfg,
@@ -11,13 +11,13 @@ export function getTotalOffset({
     coZoneRadius,
     getCoGridIndexArrayOnMap,
 }: {
-    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitLuckRange.SelfUnitLuckRange | null | undefined;
-    gameConfig                  : GameConfigGcData.GcData;
+    cfg                         : SelfUnitLuckRange | null | undefined;
+    gameConfig                  : GcData;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
-    gridIndex                   : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex                   : GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => AuxiliaryTypesGridIndex.GridIndex[];
+    getCoGridIndexArrayOnMap    : () => GridIndex[];
 }): { lower: number; upper: number } {
     if (cfg == null) {
         return { lower: 0, upper: 0 };
@@ -47,8 +47,8 @@ export function getTotalOffsetForDamageCalculatorPanel({
     gameConfig,
     unitTypeId,
 }: {
-    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfUnitLuckRange.SelfUnitLuckRange | null | undefined;
-    gameConfig                  : GameConfigGcData.GcData;
+    cfg                         : SelfUnitLuckRange | null | undefined;
+    gameConfig                  : GcData;
     unitTypeId                  : number;
 }): { lower: number; upper: number } {
     if (cfg == null) {

@@ -1,22 +1,22 @@
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesMovePathNode from "../../auxiliaryTypes/MovePathNode.ts";
-import type * as BotsCommonParams from "../CommonParams.ts";
-import type * as BotsTypes from "../Types.ts";
-import * as ProtoSchemaCommonProtoStructureDropDestination from "../../proto/schema/CommonProto/Structure/DropDestination.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
+import type { CommonParams } from "../CommonParams.ts";
+import type { ScoreAndAction } from "../Types.ts";
+import { DropDestination } from "../../proto/schema/CommonProto/Structure/DropDestination.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = UnitsIUnit.IUnit;
-type GrScoreAndAction   = BotsTypes.ScoreAndAction;
+type IBwUnit            = IUnit;
+type GrScoreAndAction   = ScoreAndAction;
 
 export async function getScoreAndActionUnitDropUnit({ commonParams, unit, gridIndex, pathNodes }: {
-    commonParams    : BotsCommonParams.CommonParams;
+    commonParams    : CommonParams;
     unit            : IBwUnit;
-    gridIndex       : AuxiliaryTypesGridIndex.GridIndex;
-    pathNodes       : AuxiliaryTypesMovePathNode.MovePathNode[];
+    gridIndex       : GridIndex;
+    pathNodes       : MovePathNode[];
 }): Promise<GrScoreAndAction | null> {
-    await TimerTimerModel.checkAndCallLater();
+    await checkAndCallLater();
 
     if ((!unit.getCfgCanDropLoadedUnit()) || (unit.getLoadedUnitsCount() <= 0)) {
         return null;
@@ -49,11 +49,11 @@ export async function getScoreAndActionUnitDropUnit({ commonParams, unit, gridIn
             }
         });
 
-    const dropDestinations: ProtoSchemaCommonProtoStructureDropDestination.DropDestination[] = [];
+    const dropDestinations: DropDestination[] = [];
     for (const loadedUnit of loadedUnitArray) {
         const index = targetTileArray.findIndex(v => commonParams.getMoveCost(loadedUnit, v) != null);
         if (index >= 0) {
-            dropDestinations.push(ProtoSchemaCommonProtoStructureDropDestination.DropDestination.fromJson({
+            dropDestinations.push(DropDestination.fromJson({
                 unitId      : loadedUnit.getUnitId(),
                 gridIndex   : targetTileArray[index].getGridIndex().toProto().toJson(),
             }));
@@ -67,7 +67,7 @@ export async function getScoreAndActionUnitDropUnit({ commonParams, unit, gridIn
         const score = await getScoreForActionUnitDropUnit(dropDestinations);
         return {
             score   : score,
-            action  : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({ WoUnitDropUnit: {
+            action  : WoContainer.fromJson({ WoUnitDropUnit: {
                 path        : {
                     nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                     fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
@@ -81,8 +81,8 @@ export async function getScoreAndActionUnitDropUnit({ commonParams, unit, gridIn
     }
 }
 
-async function getScoreForActionUnitDropUnit(dropDestinations: ProtoSchemaCommonProtoStructureDropDestination.DropDestination[]): Promise<number> {
-    await TimerTimerModel.checkAndCallLater();
+async function getScoreForActionUnitDropUnit(dropDestinations: DropDestination[]): Promise<number> {
+    await checkAndCallLater();
 
     return dropDestinations.length * 100;
 }

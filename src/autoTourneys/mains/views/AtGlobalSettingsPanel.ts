@@ -1,45 +1,45 @@
-import * as AutoTourneysConstants from "../../Constants.ts";
-import * as AutoTourneysMainsGateway from "../Gateway.ts";
-import * as AutoTourneysMainsProvider from "../Provider.ts";
-import * as FloatText2 from "../../../FloatText.ts";
-import * as GamePanelsDict from "../../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../../gamePanels/Manager.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../../notifications/TypeId.ts";
-import * as TimerTimerModel from "../../../timer/TimerModel.ts";
-import * as UiComponentsUiPanel from "../../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../../ui/interfaces/IUiLabel.ts";
+import { Common } from "../../Constants.ts";
+import { reqAtCreateTourney, reqAtDeleteLastTourney, reqAtSetGlobalSettings } from "../Gateway.ts";
+import { getGlobalSettings } from "../Provider.ts";
+import { showLang, show } from "../../../FloatText.ts";
+import { getDict } from "../../../gamePanels/Dict.ts";
+import { openPanel } from "../../../gamePanels/Manager.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText, getTimeDurationText2, getFormattedText, getTimeDurationText, getTextForYesOrNo } from "../../../lang/Utils.ts";
+import { TypeId } from "../../../notifications/TypeId.ts";
+import { getServerTimestamp } from "../../../timer/TimerModel.ts";
+import { UiPanel } from "../../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnCreateTourney!     : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeleteLastTourney! : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnCreateTourney!     : IUiButton;
+    private readonly _btnDeleteLastTourney! : IUiButton;
 
-    private readonly _btnIsEnabled!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelIsEnabled!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnInterval!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelInterval!        : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnIsEnabled!         : IUiButton;
+    private readonly _labelIsEnabled!       : IUiLabel;
+    private readonly _btnInterval!          : IUiButton;
+    private readonly _labelInterval!        : IUiLabel;
 
-    private readonly _btnConfirm!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCancel!            : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnConfirm!           : IUiButton;
+    private readonly _btnCancel!            : IUiButton;
 
     private _isEnabled  = false;
     private _interval   = 0;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgAtGetGlobalSettings,      callback: this._onNotifyMsgAtGetGlobalSettings },
-            { type: NotificationsTypeId.TypeId.MsgAtSetGlobalSettings,      callback: this._onNotifyMsgAtSetGlobalSettings },
-            { type: NotificationsTypeId.TypeId.MsgAtCreateTourney,          callback: this._onNotifyMsgAtCreateTourney },
-            { type: NotificationsTypeId.TypeId.MsgAtDeleteLastTourney,      callback: this._onNotifyMsgAtDeleteLastTourney },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgAtGetGlobalSettings,      callback: this._onNotifyMsgAtGetGlobalSettings },
+            { type: TypeId.MsgAtSetGlobalSettings,      callback: this._onNotifyMsgAtSetGlobalSettings },
+            { type: TypeId.MsgAtCreateTourney,          callback: this._onNotifyMsgAtCreateTourney },
+            { type: TypeId.MsgAtDeleteLastTourney,      callback: this._onNotifyMsgAtDeleteLastTourney },
         ]);
         this._setUiListenerArray([
             { ui: this._btnIsEnabled,           callback: this._onTouchedBtnIsEnabled },
@@ -55,7 +55,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        const globalSettings    = await AutoTourneysMainsProvider.getGlobalSettings();
+        const globalSettings    = await getGlobalSettings();
         this._isEnabled         = !!globalSettings?.isEnabled;
         this._interval          = globalSettings?.interval ?? 0;
 
@@ -71,15 +71,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnInterval(): void {
-        const minValue = AutoTourneysConstants.Common.MinCreateInterval;
-        const maxValue = AutoTourneysConstants.Common.MaxCreateInterval;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputDurationPanel, {
-            title           : LangUtils.getText(LangConstants.TextType.B1035),
+        const minValue = Common.MinCreateInterval;
+        const maxValue = Common.MaxCreateInterval;
+        openPanel(getDict().CommonInputDurationPanel, {
+            title           : getText(TextType.B1035),
             minValue        : minValue,
             maxValue        : maxValue,
             currentValue    : this._interval,
-            tips            : `${LangUtils.getText(LangConstants.TextType.B0319)}: [${LangUtils.getTimeDurationText2(minValue)}, ${LangUtils.getTimeDurationText2(maxValue)}]`,
-            getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0847),
+            tips            : `${getText(TextType.B0319)}: [${getTimeDurationText2(minValue)}, ${getTimeDurationText2(maxValue)}]`,
+            getHelpText     : () => getText(TextType.A0847),
             callback        : interval => {
                 this._interval = interval;
                 this._updateLabelInterval();
@@ -88,32 +88,32 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnCreateTourney(): Promise<void> {
-        const globalSettings = await AutoTourneysMainsProvider.getGlobalSettings();
+        const globalSettings = await getGlobalSettings();
         if (globalSettings == null) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
-        const duration = globalSettings.lastCreateTimestamp + AutoTourneysConstants.Common.MinCreateInterval - TimerTimerModel.getServerTimestamp();
+        const duration = globalSettings.lastCreateTimestamp + Common.MinCreateInterval - getServerTimestamp();
         if (duration > 0) {
-            FloatText2.show(LangUtils.getFormattedText(LangConstants.TextType.F0201, LangUtils.getTimeDurationText2(duration)));
+            show(getFormattedText(TextType.F0201, getTimeDurationText2(duration)));
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent     : () => LangUtils.getText(LangConstants.TextType.A0846),
-                callback    : () => AutoTourneysMainsGateway.reqAtCreateTourney(),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent     : () => getText(TextType.A0846),
+                callback    : () => reqAtCreateTourney(),
             });
         }
     }
 
     private _onTouchedBtnDeleteLastTourney(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent     : () => LangUtils.getText(LangConstants.TextType.A0405),
-            callback    : () => AutoTourneysMainsGateway.reqAtDeleteLastTourney(),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent     : () => getText(TextType.A0405),
+            callback    : () => reqAtDeleteLastTourney(),
         });
     }
 
     private _onTouchedBtnConfirm(): void {
-        AutoTourneysMainsGateway.reqAtSetGlobalSettings(this._isEnabled, this._interval);
+        reqAtSetGlobalSettings(this._isEnabled, this._interval);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -125,15 +125,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgAtSetGlobalSettings(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
     }
 
     private _onNotifyMsgAtCreateTourney(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
     }
 
     private _onNotifyMsgAtDeleteLastTourney(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,20 +147,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1022));
-        this._btnIsEnabled.setText(LangUtils.getText(LangConstants.TextType.B1034));
-        this._btnInterval.setText(LangUtils.getText(LangConstants.TextType.B1035));
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnCancel.setText(LangUtils.getText(LangConstants.TextType.B0154));
+        this._labelTitle.setText(getText(TextType.B1022));
+        this._btnIsEnabled.setText(getText(TextType.B1034));
+        this._btnInterval.setText(getText(TextType.B1035));
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._btnCancel.setText(getText(TextType.B0154));
 
         this._updateLabelIsEnabled();
     }
 
     private _updateLabelInterval(): void {
-        this._labelInterval.setText(LangUtils.getTimeDurationText(this._interval));
+        this._labelInterval.setText(getTimeDurationText(this._interval));
     }
 
     private _updateLabelIsEnabled(): void {
-        this._labelIsEnabled.setText(LangUtils.getTextForYesOrNo(this._isEnabled));
+        this._labelIsEnabled.setText(getTextForYesOrNo(this._isEnabled));
     }
 }

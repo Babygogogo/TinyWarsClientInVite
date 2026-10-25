@@ -1,27 +1,27 @@
-import * as BroadcastsProvider from "../Provider.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as StagesStageManager from "../../stages/StageManager.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
+import { getOngoingMessageIdArray, getMessageData } from "../Provider.ts";
+import { UndefinedError } from "../../lang/Constants.ts";
+import { getLanguageText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getStage } from "../../stages/StageManager.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 
 const _FLOW_SPEED = 80;
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _groupLamp!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelLamp!    : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _groupLamp!    : IUiContainer;
+    private readonly _labelLamp!    : IUiLabel;
 
     private _ongoingMessageIdSet    = new Set<number>();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.TimeTick,                            callback: this._onNotifyTimeTick },
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgBroadcastGetAllMessageIdArray,    callback: this._onMsgBroadcastGetAllMessageIdArray },
+            { type: TypeId.TimeTick,                            callback: this._onNotifyTimeTick },
+            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgBroadcastGetAllMessageIdArray,    callback: this._onMsgBroadcastGetAllMessageIdArray },
         ]);
 
         this.setIsTouchChildrenEnabled(false);
@@ -30,7 +30,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private async _onNotifyTimeTick(): Promise<void> {
-        const messageIdArray    = await BroadcastsProvider.getOngoingMessageIdArray();
+        const messageIdArray    = await getOngoingMessageIdArray();
         const ongoingSet        = this._ongoingMessageIdSet;
         if ((messageIdArray.length !== ongoingSet.size)     ||
             (messageIdArray.some(v => !ongoingSet.has(v)))
@@ -48,7 +48,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private async _resetView(): Promise<void> {
-        this._resetComponentsForLamp(await BroadcastsProvider.getOngoingMessageIdArray());
+        this._resetComponentsForLamp(await getOngoingMessageIdArray());
     }
 
     private async _resetComponentsForLamp(messageIdArray: number[]): Promise<void> {
@@ -58,12 +58,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const textList: string[] = [];
         for (const messageId of messageIdArray) {
             ongoingSet.add(messageId);
-            textList.push(LangUtils.getLanguageText({ textArray: (await BroadcastsProvider.getMessageData(messageId))?.getTextList() }) ?? LangConstants.UndefinedError);
+            textList.push(getLanguageText({ textArray: (await getMessageData(messageId))?.getTextList() }) ?? UndefinedError);
         }
 
         const group = this._groupLamp;
         const label = this._labelLamp;
-        TweenExecutor.Executor.removeTweens(label);
+        Executor.removeTweens(label);
 
         if (!textList.length) {
             group.setIsVisible(false);
@@ -71,9 +71,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             group.setIsVisible(true);
 
             label.setText(textList.join("    "));
-            const stageWidth    = StagesStageManager.getStage().stageWidth;
+            const stageWidth    = getStage().stageWidth;
             const textWidth     = label.getScaledWidth();
-            TweenExecutor.Executor.get(label, { loop: true })
+            Executor.get(label, { loop: true })
                 .set({ customX: stageWidth })
                 .to({ customX: -textWidth }, (stageWidth + textWidth) / _FLOW_SPEED * 1000);
         }

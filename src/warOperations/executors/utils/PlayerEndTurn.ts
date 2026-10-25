@@ -1,22 +1,24 @@
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as GameHelpersGhFactory from "../../../gameHelpers/GhFactory.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../../mapEditor/interface/IMeWar.ts";
-import type * as MultiPlayerWarInterfaceIMpwWar from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoPlayerEndTurn from "../../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
-import type * as ReplayWarInterfaceIRwWarBase from "../../../replayWar/interface/IRwWarBase.ts";
-import type * as SinglePlayerWarInterfaceISpwWar from "../../../singlePlayerWar/interface/ISpwWar.ts";
-import type * as TestWarInterfaceITwWar from "../../../testWar/interface/ITwWar.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getFormattedText } from "../../../lang/Utils.ts";
+import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
+import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
+import type {
+    WoPlayerEndTurn as ProtoSchemaCommonProtoWarOperationWoPlayerEndTurn,
+} from "../../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
+import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
+import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
+import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 
-type IBwWar             = BaseWarInterfaceIBwWar.IBwWar;
-type WoPlayerEndTurn    = ProtoSchemaCommonProtoWarOperationWoPlayerEndTurn.WoPlayerEndTurn;
+type IBwWar             = BaseWarInterfaceIBwWar;
+type WoPlayerEndTurn    = ProtoSchemaCommonProtoWarOperationWoPlayerEndTurn;
 
-let _meWarClass     : new () => MapEditorInterfaceIMeWar.IMeWar;
-let _mpwWarClass    : new () => MultiPlayerWarInterfaceIMpwWar.IMpwWar;
-let _rwWarBaseClass : new () => ReplayWarInterfaceIRwWarBase.IRwWarBase;
-let _spwWarClass    : new () => SinglePlayerWarInterfaceISpwWar.ISpwWar;
-let _twWarClass     : new () => TestWarInterfaceITwWar.ITwWar;
+let _meWarClass     : new () => IMeWar;
+let _mpwWarClass    : new () => IMpwWar;
+let _rwWarBaseClass : new () => IRwWarBase;
+let _spwWarClass    : new () => ISpwWar;
+let _twWarClass     : new () => ITwWar;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function execute(war: IBwWar, action: WoPlayerEndTurn, isFast: boolean): Promise<void> {
@@ -42,20 +44,20 @@ function normalExePlayerEndTurn(war: IBwWar, action: WoPlayerEndTurn): void {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function getDesc(war: IBwWar, action: WoPlayerEndTurn): Promise<string | null> {
-    _meWarClass     ??= GameHelpersGhFactory.getMeWarClass();
-    _mpwWarClass    ??= GameHelpersGhFactory.getMpwWarClass();
-    _rwWarBaseClass ??= GameHelpersGhFactory.getRwWarBaseClass();
-    _spwWarClass    ??= GameHelpersGhFactory.getSpwWarClass();
-    _twWarClass     ??= GameHelpersGhFactory.getTwWarClass();
+    _meWarClass     ??= getMeWarClass();
+    _mpwWarClass    ??= getMpwWarClass();
+    _rwWarBaseClass ??= getRwWarBaseClass();
+    _spwWarClass    ??= getSpwWarClass();
+    _twWarClass     ??= getTwWarClass();
 
     if (war instanceof _meWarClass) {
         return null;
     } else if (war instanceof _mpwWarClass) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0030, await war.getPlayerInTurn().getNickname(), war.getPlayerIndexInTurn());
+        return getFormattedText(TextType.F0030, await war.getPlayerInTurn().getNickname(), war.getPlayerIndexInTurn());
     } else if (war instanceof _rwWarBaseClass) {
-        return `${LangUtils.getFormattedText(LangConstants.TextType.F0030, await war.getPlayerInTurn().getNickname(), war.getPlayerIndexInTurn())} ${war.getWarOperationDescSuffix()}`;
+        return `${getFormattedText(TextType.F0030, await war.getPlayerInTurn().getNickname(), war.getPlayerIndexInTurn())} ${war.getWarOperationDescSuffix()}`;
     } else if (war instanceof _spwWarClass) {
-        return LangUtils.getFormattedText(LangConstants.TextType.F0030, await war.getPlayerInTurn().getNickname(), war.getPlayerIndexInTurn());
+        return getFormattedText(TextType.F0030, await war.getPlayerInTurn().getNickname(), war.getPlayerIndexInTurn());
     } else if (war instanceof _twWarClass) {
         return null;
     } else {

@@ -1,19 +1,19 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as CommonViewCommonMapView from "../../common/view/CommonMapView.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import type * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import type * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialPlayer from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import * as UiComponentsUiContainer from "./UiContainer.ts";
-import type * as UiInterfacesIUiZoomableMap from "../interfaces/IUiZoomableMap.ts";
-import * as UiTypesUiHorizontalAlign from "../types/UiHorizontalAlign.ts";
-import * as UiTypesUiVerticalAlign from "../types/UiVerticalAlign.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { CommonMapView } from "../../common/view/CommonMapView.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import type { MouseStyleType } from "../../helpers/PointerInput.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import { UiContainer } from "./UiContainer.ts";
+import type { IUiZoomableMap } from "../interfaces/IUiZoomableMap.ts";
+import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
+import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
+import { getUiZoomableComponentClass } from "../utils/UiFactory.ts";
 
-export class UiZoomableMap extends UiComponentsUiContainer.UiContainer implements UiInterfacesIUiZoomableMap.IUiZoomableMap {
-    private readonly _mapView           = new CommonViewCommonMapView.CommonMapView();
-    private readonly _zoomableComponent = new (UiUtilsUiFactory.getUiZoomableComponentClass())();
+export class UiZoomableMap extends UiContainer implements IUiZoomableMap {
+    private readonly _mapView           = new CommonMapView();
+    private readonly _zoomableComponent = new (getUiZoomableComponentClass())();
 
     public constructor() {
         super();
@@ -22,17 +22,17 @@ export class UiZoomableMap extends UiComponentsUiContainer.UiContainer implement
         zoom.checkAndInitSizerInfo().setSizerOptions({
             width           : { percentage: 100 },
             height          : { percentage: 100 },
-            horizontalAlign : { align: UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
-            verticalAlign   : { align: UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
+            horizontalAlign : { align: UiHorizontalAlign.Center },
+            verticalAlign   : { align: UiVerticalAlign.Middle },
         });
         zoom.addContent(this._mapView);
         this.addUiChild(zoom);
     }
 
     public showMapByMapData({ mapRawData, gameConfig, overridingPlayers }: {
-        mapRawData          : ProtoSchemaCommonProtoMapMapRawData.MapRawData;
-        gameConfig          : GameConfigGcData.GcData;
-        overridingPlayers   : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer[]>;
+        mapRawData          : MapRawData;
+        gameConfig          : GcData;
+        overridingPlayers   : Undefinable<SerialPlayer[]>;
     }): void {
         const mapView = this._mapView;
         mapView.showMapByMapData({ mapRawData, gameConfig, overridingPlayers });
@@ -42,8 +42,8 @@ export class UiZoomableMap extends UiComponentsUiContainer.UiContainer implement
         zoom.setContentScale(0, true);
     }
     public async showMapByWarData({ warData, overridingPlayers, showInitialWarData }: {
-        warData             : ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
-        overridingPlayers   : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer[]>;
+        warData             : SerialWar;
+        overridingPlayers   : Undefinable<SerialPlayer[]>;
         showInitialWarData  : boolean;
     }): Promise<void> {
         const mapView = this._mapView;
@@ -58,7 +58,7 @@ export class UiZoomableMap extends UiComponentsUiContainer.UiContainer implement
         this._mapView.clear();
     }
 
-    public setContentCursor(style: HelpersPointerInput.MouseStyleType): void {
+    public setContentCursor(style: MouseStyleType): void {
         this._zoomableComponent.setMouseStyle(style);
     }
     public setMouseWheelListenerEnabled(enabled: boolean): void {

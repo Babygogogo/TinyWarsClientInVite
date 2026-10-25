@@ -1,15 +1,15 @@
-import type * as GamePanelsTypes from "./Types.ts";
-import type * as GraphicsConstants from "../graphics/Constants.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as Logger2 from "../Logger.ts";
-import * as ResManager2 from "../ResManager.ts";
-import * as StagesStageManager from "../stages/StageManager.ts";
-import type * as UiInterfacesIUiPanel from "../ui/interfaces/IUiPanel.ts";
-import * as UiUtilsUiSkinHelpers from "../ui/utils/UiSkinHelpers.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
+import type { PanelConfig as GamePanelsTypesPanelConfig } from "./Types.ts";
+import type { DisplayLayerId } from "../graphics/Constants.ts";
+import { getExisted, newError } from "../helpers/Misc.ts";
+import { warn } from "../Logger.ts";
+import { getSkin } from "../ResManager.ts";
+import { getLayer } from "../stages/StageManager.ts";
+import type { IUiPanel as UiInterfacesIUiPanel } from "../ui/interfaces/IUiPanel.ts";
+import { loadSkin } from "../ui/utils/UiSkinHelpers.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type PanelConfig<T>     = GamePanelsTypes.PanelConfig<T>;
-type IUiPanel<T>        = UiInterfacesIUiPanel.IUiPanel<T>;
+type PanelConfig<T>     = GamePanelsTypesPanelConfig<T>;
+type IUiPanel<T>        = UiInterfacesIUiPanel<T>;
 const _IS_CACHE_ENABLED = true;
 const _runningPanelDict = new Map<PanelConfig<any>, IUiPanel<any>>();
 const _cachedPanelDict  = new Map<PanelConfig<any>, IUiPanel<any>>();
@@ -40,20 +40,20 @@ async function doOpen<T>(config: PanelConfig<T>, openData: T): Promise<IUiPanel<
         );
 }
 async function openViaRunningPanel<T>(config: PanelConfig<T>, openData: T): Promise<IUiPanel<T>> {
-    const panel = HelpersMisc.getExisted(getRunningPanel(config), UtilsClientErrorCode.ClientErrorCode.PanelManager_OpenViaRunningPanel_00);
+    const panel = getExisted(getRunningPanel(config), ClientErrorCode.PanelManager_OpenViaRunningPanel_00);
     panel.setOpenData(openData);
     await panel.applyOpenData();
 
-    Logger2.warn(`Panel opened via running: ${config.skinName}`);
+    warn(`Panel opened via running: ${config.skinName}`);
     return panel;
 }
 async function openViaCachedPanel<T>(config: PanelConfig<T>, openData: T): Promise<IUiPanel<T>> {
-    const panel     = HelpersMisc.getExisted(getCachedPanel(config), UtilsClientErrorCode.ClientErrorCode.PanelManager_OpenViaCachedPanel_00);
+    const panel     = getExisted(getCachedPanel(config), ClientErrorCode.PanelManager_OpenViaCachedPanel_00);
     const layerType = config.layer;
     if (config.isExclusive) {
         closeAllPanelsInLayerExcept(layerType, [config]);
     }
-    StagesStageManager.getLayer(layerType).addUiChild(panel);
+    getLayer(layerType).addUiChild(panel);
 
     panel.setOpenData(openData);
     await Promise.all([
@@ -63,7 +63,7 @@ async function openViaCachedPanel<T>(config: PanelConfig<T>, openData: T): Promi
 
     addRunningPanel(config, panel);
 
-    Logger2.warn(`Panel opened via cache: ${config.skinName}`);
+    warn(`Panel opened via cache: ${config.skinName}`);
     return panel;
 }
 async function openViaCreatePanel<T>(config: PanelConfig<T>, openData: T): Promise<IUiPanel<T>> {
@@ -72,7 +72,7 @@ async function openViaCreatePanel<T>(config: PanelConfig<T>, openData: T): Promi
     if (config.isExclusive) {
         closeAllPanelsInLayerExcept(layerType, [config]);
     }
-    StagesStageManager.getLayer(layerType).addUiChild(panel);
+    getLayer(layerType).addUiChild(panel);
 
     // if (!panel.getIsChildrenCreated()) {
     //     await new Promise<void>(resolve => panel.once(TwnsUiPanel.EVENT_PANEL_CHILDREN_CREATED, resolve, null));
@@ -89,7 +89,7 @@ async function openViaCreatePanel<T>(config: PanelConfig<T>, openData: T): Promi
         addCachedPanel(config, panel);
     }
 
-    Logger2.warn(`Panel opened via creating: ${config.skinName}`);
+    warn(`Panel opened via creating: ${config.skinName}`);
     return panel;
 }
 
@@ -112,10 +112,10 @@ async function doClose<T>(config: PanelConfig<T>): Promise<void> {
 
     await panel.close();
 
-    StagesStageManager.getLayer(config.layer).removeUiChild(panel);
+    getLayer(config.layer).removeUiChild(panel);
     deleteRunningPanel(config);
 
-    Logger2.warn(`Panel closed: ${config.skinName}`);
+    warn(`Panel closed: ${config.skinName}`);
 }
 export async function closeAllPanelsExcept(exceptions: PanelConfig<any>[] = []): Promise<void> {
     const promiseArray: Promise<void>[] = [];
@@ -129,7 +129,7 @@ export async function closeAllPanelsExcept(exceptions: PanelConfig<any>[] = []):
 
     await Promise.all(promiseArray);
 }
-async function closeAllPanelsInLayerExcept(layer: GraphicsConstants.DisplayLayerId, exceptions: PanelConfig<any>[] = []): Promise<void> {
+async function closeAllPanelsInLayerExcept(layer: DisplayLayerId, exceptions: PanelConfig<any>[] = []): Promise<void> {
     const promiseArray: Promise<void>[] = [];
     for (const [config, queue] of _queueDict) {
         if (((queue.length) || (getRunningPanel(config)))   &&
@@ -145,7 +145,7 @@ async function closeAllPanelsInLayerExcept(layer: GraphicsConstants.DisplayLayer
 
 async function createPanel<T>(config: PanelConfig<T>): Promise<IUiPanel<T>> {
     const panel = new config.cls();
-    UiUtilsUiSkinHelpers.loadSkin(panel, HelpersMisc.getExisted(ResManager2.getSkin(config.skinName)));
+    loadSkin(panel, getExisted(getSkin(config.skinName)));
     panel.setPanelConfig(config);
 
     // if (!panel.getSkinInfo()?.getIsLoaded()) {
@@ -177,14 +177,14 @@ function addToQueue<T>(config: PanelConfig<any>, rawFunc: () => Promise<T>): Pro
         const func = async (): Promise<void> => {
             const funcList = _queueDict.get(config);
             if (!funcList) {
-                throw HelpersMisc.newError(`PanelManager.addToQueue() exception queueing 1!!`, UtilsClientErrorCode.ClientErrorCode.PanelManager_AddToQueue_00);
+                throw newError(`PanelManager.addToQueue() exception queueing 1!!`, ClientErrorCode.PanelManager_AddToQueue_00);
             } else {
                 if (funcList[0] !== func) {
-                    throw HelpersMisc.newError(`PanelManager.addToQueue() exception queueing 2!!`, UtilsClientErrorCode.ClientErrorCode.PanelManager_AddToQueue_01);
+                    throw newError(`PanelManager.addToQueue() exception queueing 2!!`, ClientErrorCode.PanelManager_AddToQueue_01);
                 } else {
                     const result = await rawFunc();
                     if (funcList.shift() !== func) {
-                        throw HelpersMisc.newError(`PanelManager.addToQueue() exception queueing 3!!`, UtilsClientErrorCode.ClientErrorCode.PanelManager_AddToQueue_02);
+                        throw newError(`PanelManager.addToQueue() exception queueing 3!!`, ClientErrorCode.PanelManager_AddToQueue_02);
                     }
                     resolve(result);
 

@@ -1,20 +1,20 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
 
-export class NumArray extends ExpressionParsersResultsBase.Base {
+export class NumArray extends Base {
     public readonly numberArray: number[];
 
-    public constructor(war: BaseWarInterfaceIBwWar.IBwWar, array: number[]) {
+    public constructor(war: IBwWar, array: number[]) {
         super(war);
 
         this.numberArray = array;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.NumberArray;
+    public override getResultType(): ResultType {
+        return ResultType.NumberArray;
     }
-    public checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public checkIsEqual(rhs: Base): boolean {
         if (!(rhs instanceof NumArray)) {
             return false;
         }

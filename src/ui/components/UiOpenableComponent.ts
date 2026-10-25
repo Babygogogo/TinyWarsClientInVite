@@ -1,45 +1,45 @@
-import * as AuxiliaryTypesTaskQueue from "../../auxiliaryTypes/TaskQueue.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as KeyboardKbManager from "../../keyboard/KbManager.ts";
-import type * as KeyboardKbTypes from "../../keyboard/KbTypes.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import type * as NotificationsTypes from "../../notifications/Types.ts";
-import * as UiComponentsUiContainer from "./UiContainer.ts";
-import type * as UiInterfacesIUiOpenableComponent from "../interfaces/IUiOpenableComponent.ts";
-import type * as UiTypesUiInputEventListener from "../types/UiInputEventListener.ts";
-import type * as UiTypesUiPointerEventListener from "../types/UiPointerEventListener.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
+import { TaskQueue } from "../../auxiliaryTypes/TaskQueue.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
+import { addListener, deleteListener } from "../../keyboard/KbManager.ts";
+import type { KeyCallback } from "../../keyboard/KbTypes.ts";
+import { addEventListeners, removeEventListeners } from "../../notifications/Dispatcher.ts";
+import type { Listener } from "../../notifications/Types.ts";
+import { UiContainer } from "./UiContainer.ts";
+import type { IUiOpenableComponent } from "../interfaces/IUiOpenableComponent.ts";
+import type { UiInputEventListener as UiTypesUiInputEventListener } from "../types/UiInputEventListener.ts";
+import type { UiPointerEventListener as UiTypesUiPointerEventListener } from "../types/UiPointerEventListener.ts";
+import { getUiTextInputClass, getUiPromptedInputClass } from "../utils/UiFactory.ts";
 
-type UiPointerEventListener = UiTypesUiPointerEventListener.UiPointerEventListener;
-type UiInputEventListener   = UiTypesUiInputEventListener.UiInputEventListener;
+type UiPointerEventListener = UiTypesUiPointerEventListener;
+type UiInputEventListener   = UiTypesUiInputEventListener;
 interface KeyboardListener {
-    callback    : KeyboardKbTypes.KeyCallback;
+    callback    : KeyCallback;
     thisObject  : unknown;
     priority?   : number;
 }
 
 export abstract class UiOpenableComponent<OpenData>
-    extends     UiComponentsUiContainer.UiContainer
-    implements  UiInterfacesIUiOpenableComponent.IUiOpenableComponent<OpenData>
+    extends     UiContainer
+    implements  IUiOpenableComponent<OpenData>
 {
-    private readonly _taskQueueForOpenClose = new AuxiliaryTypesTaskQueue.TaskQueue<void>();
-    private readonly _taskQueueForOpenData  = new AuxiliaryTypesTaskQueue.TaskQueue<void>();
+    private readonly _taskQueueForOpenClose = new TaskQueue<void>();
+    private readonly _taskQueueForOpenData  = new TaskQueue<void>();
 
     private _isOpened               = false;
 
     private _previousOpenData?      : OpenData;
     private _openData?              : OpenData;
 
-    private _notifyListenerArray?   : NotificationsTypes.Listener[];
+    private _notifyListenerArray?   : Listener[];
     private _pointerListenerArray?  : UiPointerEventListener[];
     private _inputListenerArray?    : UiInputEventListener[];
     private _keyboardListener?      : KeyboardListener;
 
-    private _getTaskQueueForOpenClose(): AuxiliaryTypesTaskQueue.TaskQueue<void> {
+    private _getTaskQueueForOpenClose(): TaskQueue<void> {
         return this._taskQueueForOpenClose;
     }
-    private _getTaskQueueForOpenData(): AuxiliaryTypesTaskQueue.TaskQueue<void> {
+    private _getTaskQueueForOpenData(): TaskQueue<void> {
         return this._taskQueueForOpenData;
     }
 
@@ -51,10 +51,10 @@ export abstract class UiOpenableComponent<OpenData>
         //     throw Helpers.Misc.newError(`Skin not loaded.`);
         // }
         if (!this.getParent()) {
-            throw HelpersMisc.newError(`No parent.`);
+            throw newError(`No parent.`);
         }
         if (this._getIsOpened()) {
-            throw HelpersMisc.newError(`Already opened.`);
+            throw newError(`Already opened.`);
         }
 
         this._setIsOpened(true);
@@ -70,7 +70,7 @@ export abstract class UiOpenableComponent<OpenData>
     }
     private async _doClose(): Promise<void> {
         if (!this._getIsOpened()) {
-            throw HelpersMisc.newError(`Not opened.`);
+            throw newError(`Not opened.`);
         }
 
         this._unregisterNotifyListeners();
@@ -119,10 +119,10 @@ export abstract class UiOpenableComponent<OpenData>
         // to be overridden
     }
 
-    protected _getNotifyListenerArray(): NotificationsTypes.Listener[] | undefined {
+    protected _getNotifyListenerArray(): Listener[] | undefined {
         return this._notifyListenerArray;
     }
-    protected _setNotifyListenerArray(array: NotificationsTypes.Listener[] | undefined): void {
+    protected _setNotifyListenerArray(array: Listener[] | undefined): void {
         this._notifyListenerArray = array;
     }
     protected _getUiListenerArray(): UiPointerEventListener[] | undefined {
@@ -148,7 +148,7 @@ export abstract class UiOpenableComponent<OpenData>
         {
             const arr = this._getNotifyListenerArray();
             if (arr) {
-                NotificationsDispatcher.addEventListeners(arr, this);
+                addEventListeners(arr, this);
             }
         }
     }
@@ -159,8 +159,8 @@ export abstract class UiOpenableComponent<OpenData>
                 const ui        = l.ui;
                 // ui.eventMode    = "static";
                 ui.setIsTouchEnabled(true);
-                ui.setMouseStyle(l.mouseStyle ?? ui.getMouseStyle() ?? HelpersPointerInput.MouseStyleType.Pointer);
-                ui.getEventAgent().addPointerEventListener(l.eventType ?? HelpersPointerInput.PointerEventType.Tap, l.callback, l.thisObject ?? this);
+                ui.setMouseStyle(l.mouseStyle ?? ui.getMouseStyle() ?? MouseStyleType.Pointer);
+                ui.getEventAgent().addPointerEventListener(l.eventType ?? PointerEventType.Tap, l.callback, l.thisObject ?? this);
             }
         }
     }
@@ -169,12 +169,12 @@ export abstract class UiOpenableComponent<OpenData>
         if (arr) {
             for (const l of arr) {
                 const ui = l.ui;
-                if (ui instanceof UiUtilsUiFactory.getUiTextInputClass()) {
+                if (ui instanceof getUiTextInputClass()) {
                     ui.getEventAgent().addInputEventListener(l.eventType, l.callback, l.thisObject ?? this);
-                } else if (ui instanceof UiUtilsUiFactory.getUiPromptedInputClass()) {
+                } else if (ui instanceof getUiPromptedInputClass()) {
                     ui.getInputComponent()?.getEventAgent().addInputEventListener(l.eventType, l.callback, l.thisObject ?? this);
                 } else {
-                    throw HelpersMisc.newError(`Unknown input.`);
+                    throw newError(`Unknown input.`);
                 }
             }
         }
@@ -182,13 +182,13 @@ export abstract class UiOpenableComponent<OpenData>
     private _registerKeyboardListener(): void {
         const listener = this._getKeyboardListener();
         if (listener) {
-            KeyboardKbManager.addListener(listener.callback, listener.thisObject, listener.priority);
+            addListener(listener.callback, listener.thisObject, listener.priority);
         }
     }
     private _unregisterNotifyListeners(): void {
         const arr = this._getNotifyListenerArray();
         if (arr) {
-            NotificationsDispatcher.removeEventListeners(arr, this);
+            removeEventListeners(arr, this);
         }
     }
     private _unregisterUiListeners(): void {
@@ -198,7 +198,7 @@ export abstract class UiOpenableComponent<OpenData>
                 const ui        = l.ui;
                 // ui.eventMode    = "passive";
                 ui.setIsTouchEnabled(false);
-                ui.getEventAgent().removePointerEventListener(l.eventType ?? HelpersPointerInput.PointerEventType.Tap, l.callback, l.thisObject ?? this);
+                ui.getEventAgent().removePointerEventListener(l.eventType ?? PointerEventType.Tap, l.callback, l.thisObject ?? this);
             }
         }
     }
@@ -207,12 +207,12 @@ export abstract class UiOpenableComponent<OpenData>
         if (arr) {
             for (const l of arr) {
                 const ui = l.ui;
-                if (ui instanceof UiUtilsUiFactory.getUiTextInputClass()) {
+                if (ui instanceof getUiTextInputClass()) {
                     ui.getEventAgent().removeInputEventListener(l.eventType, l.callback, l.thisObject ?? this);
-                } else if (ui instanceof UiUtilsUiFactory.getUiPromptedInputClass()) {
+                } else if (ui instanceof getUiPromptedInputClass()) {
                     ui.getInputComponent()?.getEventAgent().removeInputEventListener(l.eventType, l.callback, l.thisObject ?? this);
                 } else {
-                    throw HelpersMisc.newError(`Unknown input.`);
+                    throw newError(`Unknown input.`);
                 }
             }
         }
@@ -220,7 +220,7 @@ export abstract class UiOpenableComponent<OpenData>
     private _unregisterKeyboardListener(): void {
         const listener = this._getKeyboardListener();
         if (listener) {
-            KeyboardKbManager.deleteListener(listener.callback, listener.thisObject);
+            deleteListener(listener.callback, listener.thisObject);
         }
     }
 }

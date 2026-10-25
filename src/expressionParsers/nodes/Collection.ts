@@ -1,40 +1,40 @@
-import type * as ExpressionParsersContextsBase from "../contexts/Base.ts";
-import type * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersNodesAssignment from "./Assignment.ts";
-import type * as ExpressionParsersNodesBase from "./Base.ts";
-import type * as ExpressionParsersResultsBase from "../results/Base.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { Base } from "../contexts/Base.ts";
+import type { ContextType, ResultType } from "../Enums.ts";
+import { Assignment } from "./Assignment.ts";
+import type { Base as ExpressionParsersNodesBase } from "./Base.ts";
+import type { Base as ExpressionParsersResultsBase } from "../results/Base.ts";
+import { newError } from "../../helpers/Misc.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 export class Collection {
-    private _nodeArray: ExpressionParsersNodesBase.Base[];
+    private _nodeArray: ExpressionParsersNodesBase[];
 
-    public constructor(nodeArray: ExpressionParsersNodesBase.Base[]) {
+    public constructor(nodeArray: ExpressionParsersNodesBase[]) {
         const length = nodeArray.length;
         if (!length) {
-            throw HelpersMisc.newError(``, UtilsClientErrorCode.ClientErrorCode.EpNodeCollection_Constructor_00);
+            throw newError(``, ClientErrorCode.EpNodeCollection_Constructor_00);
         }
 
         for (let i = 0; i < length - 1; ++i) {
-            if (!(nodeArray[i] instanceof ExpressionParsersNodesAssignment.Assignment)) {
-                throw HelpersMisc.newError(``, UtilsClientErrorCode.ClientErrorCode.EpNodeCollection_Constructor_01);
+            if (!(nodeArray[i] instanceof Assignment)) {
+                throw newError(``, ClientErrorCode.EpNodeCollection_Constructor_01);
             }
         }
 
         this._nodeArray = nodeArray;
     }
 
-    public eval(ctx: ExpressionParsersContextsBase.Base, isRestricted: boolean): ExpressionParsersResultsBase.Base {
+    public eval(ctx: Base, isRestricted: boolean): ExpressionParsersResultsBase {
         const nodeArray = this._nodeArray;
         const length    = nodeArray.length;
         if (length === 1) {
             return nodeArray[0].eval(ctx, ctx, null, null, isRestricted);
         }
 
-        const localVariableDict = new Map<string, ExpressionParsersResultsBase.Base>();
+        const localVariableDict = new Map<string, ExpressionParsersResultsBase>();
         for (let i = 0; i < length - 1; ++i) {
             const node = nodeArray[i];
-            if (!(node instanceof ExpressionParsersNodesAssignment.Assignment)) {
+            if (!(node instanceof Assignment)) {
                 continue;
             }
 
@@ -46,7 +46,7 @@ export class Collection {
 
         return nodeArray[length - 1].eval(ctx, ctx, null, localVariableDict, isRestricted);
     }
-    public getResultType(contextType: ExpressionParsersEnums.ContextType, customCounterNameSet: Set<string>): ExpressionParsersEnums.ResultType {
+    public getResultType(contextType: ContextType, customCounterNameSet: Set<string>): ResultType {
         const nodeArray = this._nodeArray;
         const length    = nodeArray.length;
         if (length === 1) {
@@ -58,10 +58,10 @@ export class Collection {
             });
         }
 
-        const localVariableDict = new Map<string, ExpressionParsersEnums.ResultType>();
+        const localVariableDict = new Map<string, ResultType>();
         for (let i = 0; i < length - 1; ++i) {
             const node = nodeArray[i];
-            if (!(node instanceof ExpressionParsersNodesAssignment.Assignment)) {
+            if (!(node instanceof Assignment)) {
                 continue;
             }
 

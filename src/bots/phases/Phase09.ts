@@ -1,46 +1,48 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import * as AuxiliaryTypesMovableArea from "../../auxiliaryTypes/MovableArea.ts";
-import type * as BotsCommonParams from "../CommonParams.ts";
-import type * as BotsTypes from "../Types.ts";
-import * as BotsUtils from "../Utils.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as NumbersConstants from "../../numbers/Constants.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfTileEnabledForUnitProduction from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as TileBuffsConstants from "../../tileBuffs/Constants.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import * as UnitsUtilsCommon from "../../units/utils/Common.ts";
-import * as UnitsUtilsSerialization from "../../units/utils/Serialization.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import { MovableArea } from "../../auxiliaryTypes/MovableArea.ts";
+import type { CommonParams } from "../CommonParams.ts";
+import type { ScoreAndAction } from "../Types.ts";
+import { getBestScoreAndAction } from "../Utils.ts";
+import { getUnitClass } from "../../gameHelpers/GhFactory.ts";
+import { getNonNullElements } from "../../helpers/Collection.ts";
+import { getExisted, createLazyFunc } from "../../helpers/Misc.ts";
+import { MinValue, MaxValue } from "../../numbers/Constants.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import type {
+    SelfTileEnabledForUnitProduction,
+} from "../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { BuffTypeId } from "../../tileBuffs/Constants.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
+import { CategoryId, Hp } from "../../units/Constants.ts";
+import type { IUnit } from "../../units/IUnit.ts";
+import { getNormalizedHp } from "../../units/utils/Common.ts";
+import { create } from "../../units/utils/Serialization.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
-type IBwUnit            = UnitsIUnit.IUnit;
-type GrScoreAndAction   = BotsTypes.ScoreAndAction;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type IBwUnit            = IUnit;
+type GrScoreAndAction   = ScoreAndAction;
+type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 interface ProduceUnitInfo {
-    gridIndex           : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex           : GridIndex;
     unitTypeArray       : number[];
-    effectiveCoSkill    : Undefinable<ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfTileEnabledForUnitProduction.SelfTileEnabledForUnitProduction>;
+    effectiveCoSkill    : Undefinable<SelfTileEnabledForUnitProduction>;
 }
 
-export async function getActionForPhase09(commonParams: BotsCommonParams.CommonParams): Promise<ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer | null> {
-    await TimerTimerModel.checkAndCallLater();
+export async function getActionForPhase09(commonParams: CommonParams): Promise<WoContainer | null> {
+    await checkAndCallLater();
 
     return await getBestActionPlayerProduceUnit(commonParams);
 }
 
-async function getBestActionPlayerProduceUnit(commonParams: BotsCommonParams.CommonParams): Promise<ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer | null> {
-    await TimerTimerModel.checkAndCallLater();
+async function getBestActionPlayerProduceUnit(commonParams: CommonParams): Promise<WoContainer | null> {
+    await checkAndCallLater();
 
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
-    if (playerIndexInTurn === PlayersConstants.PlayerIndex.Neutral) {
+    if (playerIndexInTurn === PlayerIndex.Neutral) {
         return null;
     }
 
@@ -66,13 +68,13 @@ async function getBestActionPlayerProduceUnit(commonParams: BotsCommonParams.Com
         const gridIndex = tile.getGridIndex();
         if ((unitMap.getUnitOnMap(gridIndex))                                                                                   ||
             (tile.getPlayerIndex() !== playerIndexInTurn)                                                                       ||
-            (tile.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === TileBuffsConstants.BuffTypeId.NoProduction))
+            (tile.getUnfixedBuffList()?.some(v => v.getBuffTypeId() === BuffTypeId.NoProduction))
         ) {
             continue;
         }
 
         const effectiveSkill  = tile.getEffectiveSelfUnitProductionSkillCfg(playerIndexInTurn);
-        const unitTypeList    = (effectiveSkill ? gameConfig.getUnitCategoryCfg(effectiveSkill.getUnitCategoryId() ?? UnitsConstants.CategoryId.All)?.getUnitTypeIds() : tile.getRegularProducibleUnitTypeArray())
+        const unitTypeList    = (effectiveSkill ? gameConfig.getUnitCategoryCfg(effectiveSkill.getUnitCategoryId() ?? CategoryId.All)?.getUnitTypeIds() : tile.getRegularProducibleUnitTypeArray())
             ?.filter(unitType => {
                 if (!producibleUnitDict.has(unitType)) {
                     producibleUnitDict.set(unitType, war.checkCanProduceUnitByOpaAndRule(playerIndexInTurn, unitType));
@@ -91,8 +93,8 @@ async function getBestActionPlayerProduceUnit(commonParams: BotsCommonParams.Com
     const mapSize                       = commonParams.getMapSize();
     const maxAttackRangeDict            = new Map<IBwUnit, number | null>();
     const moveRangeDict                 = new Map<IBwUnit, number>();
-    const movableAreaDict               = new Map<IBwUnit, AuxiliaryTypesMovableArea.MovableArea>();
-    const rawGetMinTurnsCountForAttack  = async (attackerUnit: IBwUnit, targetGridIndex: AuxiliaryTypesGridIndex.GridIndex) => {
+    const movableAreaDict               = new Map<IBwUnit, MovableArea>();
+    const rawGetMinTurnsCountForAttack  = async (attackerUnit: IBwUnit, targetGridIndex: GridIndex) => {
         if (!maxAttackRangeDict.has(attackerUnit)) {
             maxAttackRangeDict.set(attackerUnit, attackerUnit.getCfgMaxAttackRange());
         }
@@ -103,8 +105,8 @@ async function getBestActionPlayerProduceUnit(commonParams: BotsCommonParams.Com
         }
 
         if (!movableAreaDict.has(attackerUnit)) {
-            await TimerTimerModel.checkAndCallLater();
-            movableAreaDict.set(attackerUnit, AuxiliaryTypesMovableArea.MovableArea.create({
+            await checkAndCallLater();
+            movableAreaDict.set(attackerUnit, MovableArea.create({
                 maxMoveCost     : Number.MAX_SAFE_INTEGER,
                 gridIndex       : attackerUnit.getGridIndex(),
                 mapSize         : mapSize,
@@ -114,8 +116,8 @@ async function getBestActionPlayerProduceUnit(commonParams: BotsCommonParams.Com
             }));
         }
 
-        const movableArea   = HelpersMisc.getExisted(movableAreaDict.get(attackerUnit), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetBestActionPlayerProduceUnit_00).getArea();
-        const minDistance   = HelpersCollection.getNonNullElements(targetGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: maxAttackRange, mapSize }).map(g => {
+        const movableArea   = getExisted(movableAreaDict.get(attackerUnit), ClientErrorCode.SpwRobot_GetBestActionPlayerProduceUnit_00).getArea();
+        const minDistance   = getNonNullElements(targetGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: maxAttackRange, mapSize }).map(g => {
             const column = movableArea[g.getX()];
             return (column ? column[g.getY()] : null)?.totalMoveCost;
         })).sort((d1, d2) => d1 - d2)[0];
@@ -126,7 +128,7 @@ async function getBestActionPlayerProduceUnit(commonParams: BotsCommonParams.Com
                 moveRangeDict.set(attackerUnit, attackerUnit.getFinalMoveRange());
             }
 
-            const moveRange = HelpersMisc.getExisted(moveRangeDict.get(attackerUnit), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetBestActionPlayerProduceUnit_01);
+            const moveRange = getExisted(moveRangeDict.get(attackerUnit), ClientErrorCode.SpwRobot_GetBestActionPlayerProduceUnit_01);
             return (moveRange <= 0)
                 ? (minDistance <= 0 ? 1 : null)
                 : Math.max(
@@ -136,12 +138,12 @@ async function getBestActionPlayerProduceUnit(commonParams: BotsCommonParams.Com
         }
     };
     const minTurnsCountDict         = new Map<IBwUnit, Map<number, number | null>>();
-    const getMinTurnsCountForAttack = async (attackerUnit: IBwUnit, targetGridIndex: AuxiliaryTypesGridIndex.GridIndex) => {
+    const getMinTurnsCountForAttack = async (attackerUnit: IBwUnit, targetGridIndex: GridIndex) => {
         const gridId = targetGridIndex.getGridId(mapSize);
         if (!minTurnsCountDict.has(attackerUnit)) {
             minTurnsCountDict.set(attackerUnit, new Map([[gridId, await rawGetMinTurnsCountForAttack(attackerUnit, targetGridIndex)]]));
         } else {
-            const dict = HelpersMisc.getExisted(minTurnsCountDict.get(attackerUnit), UtilsClientErrorCode.ClientErrorCode.SpwRobot_GetBestActionPlayerProduceUnit_02);
+            const dict = getExisted(minTurnsCountDict.get(attackerUnit), ClientErrorCode.SpwRobot_GetBestActionPlayerProduceUnit_02);
             if (!dict.has(gridId)) {
                 dict.set(gridId, await rawGetMinTurnsCountForAttack(attackerUnit, targetGridIndex));
             }
@@ -159,15 +161,15 @@ async function getBestActionPlayerProduceUnit(commonParams: BotsCommonParams.Com
         }));
     }
 
-    return BotsUtils.getBestScoreAndAction(await Promise.all(promiseArray), commonParams)?.action ?? null;
+    return getBestScoreAndAction(await Promise.all(promiseArray), commonParams)?.action ?? null;
 }
 
 async function getBestScoreAndActionPlayerProduceUnitWithGridIndex({ commonParams, produceUnitInfo, getMinTurnsCountForAttack }: {
-    commonParams                : BotsCommonParams.CommonParams;
+    commonParams                : CommonParams;
     produceUnitInfo             : ProduceUnitInfo;
-    getMinTurnsCountForAttack   : (attackerUnit: IBwUnit, targetGridIndex: AuxiliaryTypesGridIndex.GridIndex) => Promise<number | null>;
+    getMinTurnsCountForAttack   : (attackerUnit: IBwUnit, targetGridIndex: GridIndex) => Promise<number | null>;
 }): Promise<GrScoreAndAction | null> {
-    await TimerTimerModel.checkAndCallLater();
+    await checkAndCallLater();
 
     const gridIndex             = produceUnitInfo.gridIndex;
     const effectiveCoSkill      = produceUnitInfo.effectiveCoSkill;
@@ -200,9 +202,9 @@ async function getBestScoreAndActionPlayerProduceUnitWithGridIndex({ commonParam
     } else {
         return {
             score   : bestScoreAndUnitType.score,
-            action  : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({ WoPlayerProduceUnit: {
+            action  : WoContainer.fromJson({ WoPlayerProduceUnit: {
                 unitType    : bestScoreAndUnitType.unitType,
-                unitHp      : effectiveCoSkill?.getHpUpperLimit() ?? UnitsConstants.Hp.MaxHp,
+                unitHp      : effectiveCoSkill?.getHpUpperLimit() ?? Hp.MaxHp,
                 gridIndex   : gridIndex.toProto().toJson(),
             } }),
         };
@@ -210,13 +212,13 @@ async function getBestScoreAndActionPlayerProduceUnitWithGridIndex({ commonParam
 }
 
 async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridIndex, producingUnitType, effectiveCoSkill, getMinTurnsCountForAttack }: {
-    commonParams                : BotsCommonParams.CommonParams;
-    producingGridIndex          : AuxiliaryTypesGridIndex.GridIndex;
+    commonParams                : CommonParams;
+    producingGridIndex          : GridIndex;
     producingUnitType           : number;
-    effectiveCoSkill            : Undefinable<ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfTileEnabledForUnitProduction.SelfTileEnabledForUnitProduction>;
-    getMinTurnsCountForAttack   : (attackerUnit: IBwUnit, targetGridIndex: AuxiliaryTypesGridIndex.GridIndex) => Promise<number | null>;
+    effectiveCoSkill            : Undefinable<SelfTileEnabledForUnitProduction>;
+    getMinTurnsCountForAttack   : (attackerUnit: IBwUnit, targetGridIndex: GridIndex) => Promise<number | null>;
 }): Promise<number | null> {
-    await TimerTimerModel.checkAndCallLater();
+    await checkAndCallLater();
 
     const war           = commonParams.getWar();
     const gameConfig    = war.getGcData();
@@ -231,9 +233,9 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
     }
 
     const playerIndexInTurn = commonParams.getPlayerIndexInTurn();
-    let score               = NumbersUtils.getValueInRange({
-        minValue    : NumbersConstants.MinValue,
-        maxValue    : NumbersConstants.MaxValue,
+    let score               = getValueInRange({
+        minValue    : MinValue,
+        maxValue    : MaxValue,
         rawValue    : (
             ((war.getFogMap().checkHasFogCurrently() ? aiProductionScoreCfg.getBaseFog() : aiProductionScoreCfg.getBaseStd()) ?? 0)       +
             war.getWarEventManager().getOpaAiUnitProductionBonusScore(playerIndexInTurn, producingUnitType, producingGridIndex)
@@ -244,9 +246,9 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
     }
 
     const player            = war.getPlayerManager().getPlayer(playerIndexInTurn);
-    const producingUnitHp   = effectiveCoSkill?.getHpUpperLimit() ?? UnitsConstants.Hp.MaxHp;
-    const producingUnit     = new (GameHelpersGhFactory.getUnitClass())();
-    producingUnit.init(UnitsUtilsSerialization.create({
+    const producingUnitHp   = effectiveCoSkill?.getHpUpperLimit() ?? Hp.MaxHp;
+    const producingUnit     = new (getUnitClass())();
+    producingUnit.init(create({
         unitType                        : producingUnitType,
         unitId                          : 0,
         playerIndex                     : playerIndexInTurn,
@@ -277,8 +279,8 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
 
     const productionCost = producingUnit.getProductionFinalCost(
         (effectiveCoSkill == null ? 1 : ((effectiveCoSkill.getCostMultiplierPct() ?? 0) / 100)) *
-        UnitsUtilsCommon.getNormalizedHp(producingUnitHp)                                                 /
-        UnitsUtilsCommon.getNormalizedHp(UnitsConstants.Hp.MaxHp)
+        getNormalizedHp(producingUnitHp)                                                 /
+        getNormalizedHp(Hp.MaxHp)
     );
     if (player.getFund() < productionCost) {
         return null;
@@ -291,8 +293,8 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
     const producingUnitMoveRange        = producingUnit.getFinalMoveRange();
     const mapSize                       = commonParams.getMapSize();
     const unitValueRatio                = commonParams.getUnitValueRatio();
-    const getProducingUnitMovableArea   = HelpersMisc.createLazyFunc(() => {
-        return AuxiliaryTypesMovableArea.MovableArea.create({
+    const getProducingUnitMovableArea   = createLazyFunc(() => {
+        return MovableArea.create({
             gridIndex       : producingGridIndex,
             maxMoveCost     : Number.MAX_SAFE_INTEGER,
             mapSize         : mapSize,
@@ -325,7 +327,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
             const baseDamage = producingUnit.getBaseDamage(unit.getArmorType());
             if (baseDamage != null) {
                 const movableArea = getProducingUnitMovableArea().getArea();
-                const minDistance = HelpersCollection.getNonNullElements(unitGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: producingUnitMaxAttackRange, mapSize }).map(g => {
+                const minDistance = getNonNullElements(unitGridIndex.getGridsWithinDistance({ minDistance: 0, maxDistance: producingUnitMaxAttackRange, mapSize }).map(g => {
                     const column = movableArea[g.getX()];
                     return (column ? column[g.getY()] : null)?.totalMoveCost;
                 })).sort((d1, d2) => d1 - d2)[0];
@@ -353,7 +355,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
             if (baseDamage != null) {
                 const turnsCount = await getMinTurnsCountForAttack(unit, producingGridIndex);
                 if (turnsCount != null) {
-                    const damage    = Math.min(baseDamage * UnitsUtilsCommon.getNormalizedHp(unitCurrentHp) / unit.getNormalizedMaxHp(), producingUnitCurrentHp);
+                    const damage    = Math.min(baseDamage * getNormalizedHp(unitCurrentHp) / unit.getNormalizedMaxHp(), producingUnitCurrentHp);
                     score           += -damage * productionCost / 1000 / Math.max(1, unitValueRatio) / turnsCount;
                 }
             }

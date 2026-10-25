@@ -1,43 +1,43 @@
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import type * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiContainer from "./UiContainer.ts";
-import type * as UiInterfacesIUiButton from "../interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiImage from "../interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../interfaces/IUiLabel.ts";
-import type * as UiTypesUiSkinAttrs from "../types/UiSkinAttrs.ts";
-import * as UiTypesUiSkinState from "../types/UiSkinState.ts";
-import * as UiUtilsUiHelpers from "../utils/UiHelpers.ts";
-import * as UiUtilsUiSkinHelpers from "../utils/UiSkinHelpers.ts";
+import { ColorId } from "../../graphics/Constants.ts";
+import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
+import type { TextType, LanguageType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiContainer } from "./UiContainer.ts";
+import type { IUiButton } from "../interfaces/IUiButton.ts";
+import type { IUiImage } from "../interfaces/IUiImage.ts";
+import type { IUiLabel } from "../interfaces/IUiLabel.ts";
+import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import { UiSkinState } from "../types/UiSkinState.ts";
+import { changeColor } from "../utils/UiHelpers.ts";
+import { getRevisedAttrValue, commonLoadSkinAttrsForSizer, loadSkinStateRecursively } from "../utils/UiSkinHelpers.ts";
 
-type UiSkinAttrs    = UiTypesUiSkinAttrs.UiSkinAttrs;
+type UiSkinAttrs    = UiTypesUiSkinAttrs;
 
-export class UiButton extends UiComponentsUiContainer.UiContainer implements UiInterfacesIUiButton.IUiButton {
-    private readonly _labelDisplay? : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgIcon?      : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgRed?       : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgExtra?     : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelExtra?   : UiInterfacesIUiLabel.IUiLabel;
+export class UiButton extends UiContainer implements IUiButton {
+    private readonly _labelDisplay? : IUiLabel;
+    private readonly _imgIcon?      : IUiImage;
+    private readonly _imgRed?       : IUiImage;
+    private readonly _imgExtra?     : IUiImage;
+    private readonly _labelExtra?   : IUiLabel;
 
-    private _shortSfxCode           = SoundsConstants.ShortSfxCode.ButtonNeutral01;
+    private _shortSfxCode           = ShortSfxCode.ButtonNeutral01;
 
     public constructor() {
         super();
 
         this.setIsTouchEnabled(true);
         this.setIsTouchChildrenEnabled(false);
-        this.setMouseStyle(HelpersPointerInput.MouseStyleType.Pointer);
+        this.setMouseStyle(MouseStyleType.Pointer);
         // this.setEnabled(true);
 
         {
             const agent = this.getEventAgent();
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.Press,        this._onPointerPress,       this);
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.ReleaseIn,    this._onPointerReleaseIn,   this);
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.ReleaseOut,   this._onPointerReleaseOut,  this);
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.Tap,          this._onPointerTap,         this);
+            agent.addPointerEventListener(PointerEventType.Press,        this._onPointerPress,       this);
+            agent.addPointerEventListener(PointerEventType.ReleaseIn,    this._onPointerReleaseIn,   this);
+            agent.addPointerEventListener(PointerEventType.ReleaseOut,   this._onPointerReleaseOut,  this);
+            agent.addPointerEventListener(PointerEventType.Tap,          this._onPointerTap,         this);
         }
         // TODO: 悬停和按下的视觉提示
     }
@@ -47,12 +47,12 @@ export class UiButton extends UiComponentsUiContainer.UiContainer implements UiI
         this.setImgExtraVisible(false);
     }
     public override loadSkinAttrs(oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
-        const icon          = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "icon");
-        const label         = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "label");
+        const icon          = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "icon");
+        const label         = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "label");
         (icon.needChange)   && (this.setIconSource(icon.value ?? ""));
         (label.needChange)  && (this.setText(label.value ?? ""));
 
-        UiUtilsUiSkinHelpers.commonLoadSkinAttrsForSizer(this, oldSkinAttrs, newSkinAttrs);
+        commonLoadSkinAttrsForSizer(this, oldSkinAttrs, newSkinAttrs);
     }
 
     // /**
@@ -107,21 +107,21 @@ export class UiButton extends UiComponentsUiContainer.UiContainer implements UiI
     public setText(text: string): void {
         this._labelDisplay?.setText(text);
     }
-    public setLangText(langTextType: LangConstants.TextType, languageType?: LangConstants.LanguageType): void {
-        this.setText(LangUtils.getText(langTextType, languageType));
+    public setLangText(langTextType: TextType, languageType?: LanguageType): void {
+        this.setText(getText(langTextType, languageType));
     }
 
     public setExtraText(text: string): void {
         this._labelExtra?.setText(text);
     }
-    public setExtraLangText(langTextType: LangConstants.TextType, languageType?: LangConstants.LanguageType): void {
-        this.setExtraText(LangUtils.getText(langTextType, languageType));
+    public setExtraLangText(langTextType: TextType, languageType?: LanguageType): void {
+        this.setExtraText(getText(langTextType, languageType));
     }
 
-    public setShortSfxCode(code: SoundsConstants.ShortSfxCode): void {
+    public setShortSfxCode(code: ShortSfxCode): void {
         this._shortSfxCode = code;
     }
-    public getShortSfxCode(): SoundsConstants.ShortSfxCode {
+    public getShortSfxCode(): ShortSfxCode {
         return this._shortSfxCode;
     }
 
@@ -135,15 +135,15 @@ export class UiButton extends UiComponentsUiContainer.UiContainer implements UiI
         this._updateViewOnButtonEvents(false);
     }
     private _onPointerTap(): void {
-        SoundsSoundPlayer.playShortSfx(this.getShortSfxCode());
+        playShortSfx(this.getShortSfxCode());
     }
 
     private _updateViewOnButtonEvents(isDown: boolean): void {
-        UiUtilsUiSkinHelpers.loadSkinStateRecursively(this, isDown ? UiTypesUiSkinState.UiSkinState.Down : UiTypesUiSkinState.UiSkinState.Up);
+        loadSkinStateRecursively(this, isDown ? UiSkinState.Down : UiSkinState.Up);
         if (isDown) {
-            UiUtilsUiHelpers.changeColor(this, GraphicsConstants.ColorId.White, 50);
+            changeColor(this, ColorId.White, 50);
         } else {
-            UiUtilsUiHelpers.changeColor(this, GraphicsConstants.ColorId.Origin);
+            changeColor(this, ColorId.Origin);
         }
     }
 }

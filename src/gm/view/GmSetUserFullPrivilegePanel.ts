@@ -1,73 +1,73 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GmModelGmProxy from "../model/GmProxy.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoUserUserPrivilege from "../../proto/schema/CommonProto/User/UserPrivilege.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as UsersModel from "../../users/Model.ts";
+import { show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { reqGmSetUserPrivilege } from "../model/GmProxy.ts";
+import { MouseStyleType } from "../../helpers/PointerInput.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UserPrivilege } from "../../proto/schema/CommonProto/User/UserPrivilege.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { getUserNickname, getSelfUserPrivilege, getUserPublicInfo } from "../../users/Model.ts";
 
 export interface OpenData {
     userId  : number;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnSearchUser!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelUserName!                : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                      : IUiImage;
+    private readonly _group!                        : IUiContainer;
+    private readonly _labelTitle!                   : IUiLabel;
+    private readonly _btnSearchUser!                : IUiButton;
+    private readonly _labelUserName!                : IUiLabel;
 
-    private readonly _groupPrivilege!               : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _groupPrivilege!               : IUiLayout;
 
-    private readonly _groupIsAdmin!                 : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgIsAdmin!                   : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelIsAdmin!                 : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupIsAdmin!                 : IUiContainer;
+    private readonly _imgIsAdmin!                   : IUiImage;
+    private readonly _labelIsAdmin!                 : IUiLabel;
 
-    private readonly _groupCanLogin!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgCanLogin!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelCanLogin!                : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupCanLogin!                : IUiContainer;
+    private readonly _imgCanLogin!                  : IUiImage;
+    private readonly _labelCanLogin!                : IUiLabel;
 
-    private readonly _groupIsMapCommittee!          : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgIsMapCommittee!            : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelIsMapCommittee!          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupIsMapCommittee!          : IUiContainer;
+    private readonly _imgIsMapCommittee!            : IUiImage;
+    private readonly _labelIsMapCommittee!          : IUiLabel;
 
-    private readonly _groupIsChangeLogEditor!       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgIsChangeLogEditor!         : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelIsChangeLogEditor!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupIsChangeLogEditor!       : IUiContainer;
+    private readonly _imgIsChangeLogEditor!         : IUiImage;
+    private readonly _labelIsChangeLogEditor!       : IUiLabel;
 
-    private readonly _groupIsCampaignManager!       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgIsCampaignManager!         : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelIsCampaignManager!       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupIsCampaignManager!       : IUiContainer;
+    private readonly _imgIsCampaignManager!         : IUiImage;
+    private readonly _labelIsCampaignManager!       : IUiLabel;
 
-    private readonly _groupCanChat!                 : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgCanChat!                   : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelCanChat!                 : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupCanChat!                 : IUiContainer;
+    private readonly _imgCanChat!                   : IUiImage;
+    private readonly _labelCanChat!                 : IUiLabel;
 
-    private readonly _groupChatManager!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgChatManager!               : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelChatManager!             : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupChatManager!             : IUiContainer;
+    private readonly _imgChatManager!               : IUiImage;
+    private readonly _labelChatManager!             : IUiLabel;
 
-    private readonly _groupAutoTourneyCommittee!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgAutoTourneyCommittee!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelAutoTourneyCommittee!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupAutoTourneyCommittee!    : IUiContainer;
+    private readonly _imgAutoTourneyCommittee!      : IUiImage;
+    private readonly _labelAutoTourneyCommittee!    : IUiLabel;
 
-    private readonly _btnCancel!                    : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!                   : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnCancel!                    : IUiButton;
+    private readonly _btnConfirm!                   : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgGmSetUserPrivilege,   callback: this._onNotifyMsgUserSetPrivilege },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgGmSetUserPrivilege,   callback: this._onNotifyMsgUserSetPrivilege },
         ]);
         this._setUiListenerArray([
             { ui: this._btnSearchUser,                  callback: this._onTouchedBtnSearchUser },
@@ -106,13 +106,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgUserSetPrivilege(): void {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0157));
+        show(getText(TextType.A0157));
     }
 
     private _onTouchedBtnSearchUser(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonSearchSingleUserPanel, {
+        openPanel(getDict().CommonSearchSingleUserPanel, {
             getTitleText        : null,
-            callbackOnConfirm   : userId => GamePanelsManager.openPanel(GamePanelsDict.getDict().GmSetUserFullPrivilegePanel, {
+            callbackOnConfirm   : userId => openPanel(getDict().GmSetUserFullPrivilegePanel, {
                 userId  : userId,
             }),
         });
@@ -121,7 +121,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnConfirm(): void {
         const userId = this._getUserId();
         if (userId) {
-            GmModelGmProxy.reqGmSetUserPrivilege(userId, ProtoSchemaCommonProtoUserUserPrivilege.UserPrivilege.fromJson({
+            reqGmSetUserPrivilege(userId, UserPrivilege.fromJson({
                 canChat                 : !!this._imgCanChat.getIsVisible(),
                 canLogin                : !!this._imgCanLogin.getIsVisible(),
                 isAdmin                 : !!this._imgIsAdmin.getIsVisible(),
@@ -135,59 +135,59 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupCanChat(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         const img = this._imgCanChat;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupChatManager(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         const img = this._imgChatManager;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupAutoTourneyCommittee(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         const img = this._imgAutoTourneyCommittee;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupCanLogin(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         const img = this._imgCanLogin;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupIsAdmin(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         const img = this._imgIsAdmin;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupIsChangeLogEditor(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         const img = this._imgIsChangeLogEditor;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupIsMapCommittee(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         const img = this._imgIsMapCommittee;
         img.setIsVisible(!img.getIsVisible());
     }
     private _onTouchedGroupIsCampaignManager(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         const img = this._imgIsCampaignManager;
         img.setIsVisible(!img.getIsVisible());
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0460));
-        this._btnSearchUser.setText(LangUtils.getText(LangConstants.TextType.B0228));
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnCancel.setText(LangUtils.getText(LangConstants.TextType.B0154));
-        this._labelCanChat.setText(LangUtils.getText(LangConstants.TextType.B0383));
-        this._labelCanLogin.setText(LangUtils.getText(LangConstants.TextType.B0173));
-        this._labelIsAdmin.setText(LangUtils.getText(LangConstants.TextType.B1116));
-        this._labelChatManager.setText(LangUtils.getText(LangConstants.TextType.B1117));
-        this._labelIsChangeLogEditor.setText(LangUtils.getText(LangConstants.TextType.B1118));
-        this._labelIsMapCommittee.setText(LangUtils.getText(LangConstants.TextType.B1119));
-        this._labelAutoTourneyCommittee.setText(LangUtils.getText(LangConstants.TextType.B1120));
-        this._labelIsCampaignManager.setText(LangUtils.getText(LangConstants.TextType.B1132));
+        this._labelTitle.setText(getText(TextType.B0460));
+        this._btnSearchUser.setText(getText(TextType.B0228));
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._btnCancel.setText(getText(TextType.B0154));
+        this._labelCanChat.setText(getText(TextType.B0383));
+        this._labelCanLogin.setText(getText(TextType.B0173));
+        this._labelIsAdmin.setText(getText(TextType.B1116));
+        this._labelChatManager.setText(getText(TextType.B1117));
+        this._labelIsChangeLogEditor.setText(getText(TextType.B1118));
+        this._labelIsMapCommittee.setText(getText(TextType.B1119));
+        this._labelAutoTourneyCommittee.setText(getText(TextType.B1120));
+        this._labelIsCampaignManager.setText(getText(TextType.B1132));
         this._updateLabelUserName();
     }
     private async _updateLabelUserName(): Promise<void> {
@@ -196,9 +196,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const nickname = await UsersModel.getUserNickname(userId);
+        const nickname = await getUserNickname(userId);
         if (userId === this._getUserId()) {
-            this._labelUserName.setText(`#${userId} ${nickname ?? LangConstants.UndefinedError}`);
+            this._labelUserName.setText(`#${userId} ${nickname ?? UndefinedError}`);
         }
     }
 
@@ -210,7 +210,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const group = this._groupPrivilege;
         group.removeAllItems(false);
 
-        const privilege = UsersModel.getSelfUserPrivilege();
+        const privilege = getSelfUserPrivilege();
         if (privilege == null) {
             return;
         }
@@ -255,7 +255,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const privilege = (await UsersModel.getUserPublicInfo(userId))?.getUserPrivilege();
+        const privilege = (await getUserPublicInfo(userId))?.getUserPrivilege();
         const isValid   = userId === this._getUserId();
         this._imgCanChat.setIsVisible((isValid) && (privilege != null) && (privilege.getCanChat()));
         this._imgChatManager.setIsVisible((isValid) && (privilege != null) && (privilege.getIsChatManager()));
@@ -272,8 +272,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-function applyTouchEnabled(container: UiInterfacesIUiContainer.IUiContainer): void {
+function applyTouchEnabled(container: IUiContainer): void {
     container.setIsTouchEnabled(true);
     container.setIsTouchChildrenEnabled(false);
-    container.setMouseStyle(HelpersPointerInput.MouseStyleType.Pointer);
+    container.setMouseStyle(MouseStyleType.Pointer);
 }

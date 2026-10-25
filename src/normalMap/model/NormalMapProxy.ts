@@ -1,151 +1,203 @@
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as NetworksManager from "../../networks/Manager.ts";
-import * as NetworksMessageCodes from "../../networks/MessageCodes.ts";
-import * as NormalMapModelNormalMapModel from "./NormalMapModel.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoMapMapSimpleDialogue from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
-import type * as ProtoSchemaCommonProtoMapMapTagMapTagSingleData from "../../proto/schema/CommonProto/Map/MapTag/MapTagSingleData.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMapGetMapTagS from "../../proto/schema/CommonProto/NetMessage/MsgMapGetMapTag/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMapGetRawDataS from "../../proto/schema/CommonProto/NetMessage/MsgMapGetRawData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmAddIgnoredReviewingMapS from "../../proto/schema/CommonProto/NetMessage/MsgMmAddIgnoredReviewingMap/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmAddWarEventS from "../../proto/schema/CommonProto/NetMessage/MsgMmAddWarEvent/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmAddWarRuleS from "../../proto/schema/CommonProto/NetMessage/MsgMmAddWarRule/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmDeleteRedundantWarEventS from "../../proto/schema/CommonProto/NetMessage/MsgMmDeleteRedundantWarEvent/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmDeleteWarRuleS from "../../proto/schema/CommonProto/NetMessage/MsgMmDeleteWarRule/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmGetReviewingMapsS from "../../proto/schema/CommonProto/NetMessage/MsgMmGetReviewingMaps/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmReviewMapS from "../../proto/schema/CommonProto/NetMessage/MsgMmReviewMap/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetMapEnabledS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapEnabled/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapName/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagIdFlagsS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapTagIdFlags/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagSingleDataS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapTagSingleData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleAvailability/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleFixedTileTheme/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleName/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSubmitMapSimpleDialogueS from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMmSubmitMapSimpleDialogueWarRuleDialogueInfo from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/WarRuleDialogueInfo.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetAllEnabledBriefDataVersionsS from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetAllEnabledBriefDataVersions/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefData/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataArrayS from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataVersion/S.ts";
-import type * as ProtoSchemaCommonProtoStructureLanguageText from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarRuleRuleAvailability from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
-import type * as ProtoSchemaCommonProtoWarRuleTemplateWarRule from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { addListeners, send } from "../../networks/Manager.ts";
+import { MessageCodes } from "../../networks/MessageCodes.ts";
+import {
+    setMapTag,
+    updateOnMsgNormalMapGetAllEnabledBriefDataVersions,
+    updateOnFailedMsgNormalMapGetBriefData,
+    updateOnMsgNormalMapGetBriefData,
+    updateOnMsgNormalMapGetBriefDataArray,
+    updateOnFailedMsgNormalMapGetBriefDataVersion,
+    updateOnMsgNormalMapGetBriefDataVersion,
+    updateOnFailedMsgMapGetRawData,
+    updateOnMsgMapGetRawData,
+    updateOnMsgMmSetWarRuleAvailability,
+    updateOnMsgMmGetReviewingMaps,
+    updateOnMsgMmSetMapTagIdFlags,
+    updateOnMsgMmSetMapName,
+    updateOnMsgMmAddWarRule,
+    updateOnMsgMmDeleteWarRule,
+    updateOnMsgMmSetWarRuleName,
+    updateOnMsgMmSetWarRuleFixedTileTheme,
+} from "./NormalMapModel.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
+import type { MapTagSingleData } from "../../proto/schema/CommonProto/Map/MapTag/MapTagSingleData.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMapGetMapTag/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMapGetRawDataS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMapGetRawData/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmAddIgnoredReviewingMapS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmAddIgnoredReviewingMap/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmAddWarEventS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmAddWarEvent/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMmAddWarRuleS } from "../../proto/schema/CommonProto/NetMessage/MsgMmAddWarRule/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmDeleteRedundantWarEventS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmDeleteRedundantWarEvent/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmDeleteWarRuleS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmDeleteWarRule/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmGetReviewingMapsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmGetReviewingMaps/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMmReviewMapS } from "../../proto/schema/CommonProto/NetMessage/MsgMmReviewMap/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSetMapEnabledS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapEnabled/S.ts";
+import type { S as ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS } from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapName/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagIdFlagsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapTagIdFlags/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagSingleDataS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetMapTagSingleData/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleAvailability/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleFixedTileTheme/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSetWarRuleName/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgMmSubmitMapSimpleDialogueS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/S.ts";
+import type { WarRuleDialogueInfo } from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/WarRuleDialogueInfo.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetAllEnabledBriefDataVersionsS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetAllEnabledBriefDataVersions/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefData/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataArrayS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS,
+} from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataVersion/S.ts";
+import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export function init(): void {
-    NetworksManager.addListeners([
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMapGetMapTag,                             callback: _onMsgMapGetMapTag },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgNormalMapGetAllEnabledBriefDataVersions,  callback: _onMsgNormalMapGetAllEnabledBriefDataVersions },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgNormalMapGetBriefDataVersion,             callback: _onMsgNormalMapGetBriefDataVersion },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgNormalMapGetBriefData,                    callback: _onMsgNormalMapGetBriefData },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgNormalMapGetBriefDataArray,               callback: _onMsgNormalMapGetBriefDataArray },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMapGetRawData,                            callback: _onMsgMapGetRawData },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmAddIgnoredReviewingMap,                 callback: _onMsgMmAddIgnoredReviewingMap },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmSetWarRuleAvailability,                 callback: _onMsgMmSetWarRuleAvailability },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmSetMapEnabled,                          callback: _onMsgMmSetMapEnabled },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmGetReviewingMaps,                       callback: _onMsgMmGetReviewingMaps },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmReviewMap,                              callback: _onMsgMmReviewMap },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmSetMapTagIdFlags,                       callback: _onMsgMmSetMapTagIdFlags },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmSetMapName,                             callback: _onMsgMmSetMapName },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmAddWarRule,                             callback: _onMsgMmAddWarRule },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmAddWarEvent,                            callback: _onMsgMmAddWarEvent },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmSubmitMapSimpleDialogue,                callback: _onMsgMmSubmitMapSimpleDialogue },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmDeleteRedundantWarEvent,                callback: _onMsgMmDeleteRedundantWarEvent },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmDeleteWarRule,                          callback: _onMsgMmDeleteWarRule },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmSetWarRuleName,                         callback: _onMsgMmSetWarRuleName },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmSetWarRuleFixedTileTheme,               callback: _onMsgMmSetWarRuleFixedTileTheme },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgMmSetMapTagSingleData,                    callback: _onMsgMmSetMapTagSingleData },
+    addListeners([
+        { msgCode: MessageCodes.MsgMapGetMapTag,                             callback: _onMsgMapGetMapTag },
+        { msgCode: MessageCodes.MsgNormalMapGetAllEnabledBriefDataVersions,  callback: _onMsgNormalMapGetAllEnabledBriefDataVersions },
+        { msgCode: MessageCodes.MsgNormalMapGetBriefDataVersion,             callback: _onMsgNormalMapGetBriefDataVersion },
+        { msgCode: MessageCodes.MsgNormalMapGetBriefData,                    callback: _onMsgNormalMapGetBriefData },
+        { msgCode: MessageCodes.MsgNormalMapGetBriefDataArray,               callback: _onMsgNormalMapGetBriefDataArray },
+        { msgCode: MessageCodes.MsgMapGetRawData,                            callback: _onMsgMapGetRawData },
+        { msgCode: MessageCodes.MsgMmAddIgnoredReviewingMap,                 callback: _onMsgMmAddIgnoredReviewingMap },
+        { msgCode: MessageCodes.MsgMmSetWarRuleAvailability,                 callback: _onMsgMmSetWarRuleAvailability },
+        { msgCode: MessageCodes.MsgMmSetMapEnabled,                          callback: _onMsgMmSetMapEnabled },
+        { msgCode: MessageCodes.MsgMmGetReviewingMaps,                       callback: _onMsgMmGetReviewingMaps },
+        { msgCode: MessageCodes.MsgMmReviewMap,                              callback: _onMsgMmReviewMap },
+        { msgCode: MessageCodes.MsgMmSetMapTagIdFlags,                       callback: _onMsgMmSetMapTagIdFlags },
+        { msgCode: MessageCodes.MsgMmSetMapName,                             callback: _onMsgMmSetMapName },
+        { msgCode: MessageCodes.MsgMmAddWarRule,                             callback: _onMsgMmAddWarRule },
+        { msgCode: MessageCodes.MsgMmAddWarEvent,                            callback: _onMsgMmAddWarEvent },
+        { msgCode: MessageCodes.MsgMmSubmitMapSimpleDialogue,                callback: _onMsgMmSubmitMapSimpleDialogue },
+        { msgCode: MessageCodes.MsgMmDeleteRedundantWarEvent,                callback: _onMsgMmDeleteRedundantWarEvent },
+        { msgCode: MessageCodes.MsgMmDeleteWarRule,                          callback: _onMsgMmDeleteWarRule },
+        { msgCode: MessageCodes.MsgMmSetWarRuleName,                         callback: _onMsgMmSetWarRuleName },
+        { msgCode: MessageCodes.MsgMmSetWarRuleFixedTileTheme,               callback: _onMsgMmSetWarRuleFixedTileTheme },
+        { msgCode: MessageCodes.MsgMmSetMapTagSingleData,                    callback: _onMsgMmSetMapTagSingleData },
     ], null);
 }
 
 export function reqMapGetMapTag(): void {
-    NetworksManager.send({
+    send({
         MsgMapGetMapTag: { c: {
         } }
     });
 }
-function _onMsgMapGetMapTag(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMapGetMapTagS.S;
+function _onMsgMapGetMapTag(e: Event): void {
+    const data = e.data as S;
     if (!data.getErrorCode()) {
-        NormalMapModelNormalMapModel.setMapTag(HelpersMisc.getExisted(data.getMapTag()));
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMapGetMapTag, data);
+        setMapTag(getExisted(data.getMapTag()));
+        dispatch(TypeId.MsgMapGetMapTag, data);
     }
 }
 
 export function reqNormalMapGetAllEnabledBriefDataVersions(): void {
-    NetworksManager.send({ MsgNormalMapGetAllEnabledBriefDataVersions: { c: {
+    send({ MsgNormalMapGetAllEnabledBriefDataVersions: { c: {
     } } });
 }
-async function _onMsgNormalMapGetAllEnabledBriefDataVersions(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetAllEnabledBriefDataVersionsS.S;
+async function _onMsgNormalMapGetAllEnabledBriefDataVersions(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetAllEnabledBriefDataVersionsS;
     if (!data.getErrorCode()) {
-        await NormalMapModelNormalMapModel.updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgNormalMapGetAllEnabledBriefDataVersions, data);
+        await updateOnMsgNormalMapGetAllEnabledBriefDataVersions(data);
+        dispatch(TypeId.MsgNormalMapGetAllEnabledBriefDataVersions, data);
     }
 }
 
 export function reqNormalMapGetBriefData(normalMapId: number): void {
-    NetworksManager.send({ MsgNormalMapGetBriefData: { c: {
+    send({ MsgNormalMapGetBriefData: { c: {
         normalMapId : normalMapId,
     }, }, });
 }
-async function _onMsgNormalMapGetBriefData(e: VendorEgretEgret.Event): Promise<void> {
-    const data  = e.data as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS.S;
+async function _onMsgNormalMapGetBriefData(e: Event): Promise<void> {
+    const data  = e.data as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataS;
     if (data.getErrorCode()) {
-        NormalMapModelNormalMapModel.updateOnFailedMsgNormalMapGetBriefData(data);
+        updateOnFailedMsgNormalMapGetBriefData(data);
     } else {
-        await NormalMapModelNormalMapModel.updateOnMsgNormalMapGetBriefData(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgNormalMapGetBriefData, data);
+        await updateOnMsgNormalMapGetBriefData(data);
+        dispatch(TypeId.MsgNormalMapGetBriefData, data);
     }
 }
 
 export function reqNormalMapGetBriefDataArray(normalMapIdArray: number[]): void {
-    NetworksManager.send({ MsgNormalMapGetBriefDataArray: { c: {
+    send({ MsgNormalMapGetBriefDataArray: { c: {
         normalMapIdArray : normalMapIdArray,
     }, }, });
 }
-async function _onMsgNormalMapGetBriefDataArray(e: VendorEgretEgret.Event): Promise<void> {
-    const data  = e.data as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataArrayS.S;
+async function _onMsgNormalMapGetBriefDataArray(e: Event): Promise<void> {
+    const data  = e.data as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataArrayS;
     if (!data.getErrorCode()) {
-        await NormalMapModelNormalMapModel.updateOnMsgNormalMapGetBriefDataArray(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgNormalMapGetBriefDataArray, data);
+        await updateOnMsgNormalMapGetBriefDataArray(data);
+        dispatch(TypeId.MsgNormalMapGetBriefDataArray, data);
     }
 }
 
 export function reqNormalMapGetBriefDataVersion(normalMapId: number): void {
-    NetworksManager.send({ MsgNormalMapGetBriefDataVersion: { c: {
+    send({ MsgNormalMapGetBriefDataVersion: { c: {
         normalMapId : normalMapId,
     }, }, });
 }
-async function _onMsgNormalMapGetBriefDataVersion(e: VendorEgretEgret.Event): Promise<void> {
-    const data  = e.data as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS.S;
+async function _onMsgNormalMapGetBriefDataVersion(e: Event): Promise<void> {
+    const data  = e.data as ProtoSchemaCommonProtoNetMessageMsgNormalMapGetBriefDataVersionS;
     if (data.getErrorCode()) {
-        NormalMapModelNormalMapModel.updateOnFailedMsgNormalMapGetBriefDataVersion(data);
+        updateOnFailedMsgNormalMapGetBriefDataVersion(data);
     } else {
-        await NormalMapModelNormalMapModel.updateOnMsgNormalMapGetBriefDataVersion(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgNormalMapGetBriefDataVersion, data);
+        await updateOnMsgNormalMapGetBriefDataVersion(data);
+        dispatch(TypeId.MsgNormalMapGetBriefDataVersion, data);
     }
 }
 
 export function reqGetMapRawData(normalMapId: number): void {
-    NetworksManager.send({ MsgMapGetRawData: { c: {
+    send({ MsgMapGetRawData: { c: {
         normalMapId: normalMapId,
     }, }, });
 }
-async function _onMsgMapGetRawData(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMapGetRawDataS.S;
+async function _onMsgMapGetRawData(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMapGetRawDataS;
     if (data.getErrorCode()) {
-        NormalMapModelNormalMapModel.updateOnFailedMsgMapGetRawData(data);
+        updateOnFailedMsgMapGetRawData(data);
     } else {
-        await NormalMapModelNormalMapModel.updateOnMsgMapGetRawData(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMapGetRawData, data);
+        await updateOnMsgMapGetRawData(data);
+        dispatch(TypeId.MsgMapGetRawData, data);
     }
 }
 
 export function reqMmAddIgnoredReviewingMap(designerUserId: number, slotIndex: number, dataTimestamp: number): void {
-    NetworksManager.send({
+    send({
         MsgMmAddIgnoredReviewingMap: { c: {
             designerUserId  : designerUserId,
             slotIndex       : slotIndex,
@@ -153,19 +205,19 @@ export function reqMmAddIgnoredReviewingMap(designerUserId: number, slotIndex: n
         }, }
     });
 }
-function _onMsgMmAddIgnoredReviewingMap(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmAddIgnoredReviewingMapS.S;
+function _onMsgMmAddIgnoredReviewingMap(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmAddIgnoredReviewingMapS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmAddIgnoredReviewingMap, data);
+        dispatch(TypeId.MsgMmAddIgnoredReviewingMap, data);
     }
 }
 
 export function reqMmSetWarRuleAvailability({ normalMapId, ruleId, availability }: {
     normalMapId     : number;
     ruleId          : number;
-    availability    : ProtoSchemaCommonProtoWarRuleRuleAvailability.RuleAvailability;
+    availability    : RuleAvailability;
 }): void {
-    NetworksManager.send({
+    send({
         MsgMmSetWarRuleAvailability: { c: {
             normalMapId     : normalMapId,
             ruleId          : ruleId,
@@ -173,39 +225,39 @@ export function reqMmSetWarRuleAvailability({ normalMapId, ruleId, availability 
         }, },
     });
 }
-async function _onMsgMmSetWarRuleAvailability(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS.S;
+async function _onMsgMmSetWarRuleAvailability(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS;
     if (!data.getErrorCode()) {
-        await NormalMapModelNormalMapModel.updateOnMsgMmSetWarRuleAvailability(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmSetWarRuleAvailability, data);
+        await updateOnMsgMmSetWarRuleAvailability(data);
+        dispatch(TypeId.MsgMmSetWarRuleAvailability, data);
     }
 }
 
 export function reqMmSetMapEnabled(normalMapId: number, isEnabled: boolean): void {
-    NetworksManager.send({
+    send({
         MsgMmSetMapEnabled: { c: {
             normalMapId : normalMapId,
             isEnabled   : isEnabled,
         }, }
     });
 }
-function _onMsgMmSetMapEnabled(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetMapEnabledS.S;
+function _onMsgMmSetMapEnabled(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetMapEnabledS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmSetMapEnabled, data);
+        dispatch(TypeId.MsgMmSetMapEnabled, data);
     }
 }
 
 export function reqMmGetReviewingMaps(): void {
-    NetworksManager.send({
+    send({
         MsgMmGetReviewingMaps: { c: {} },
     });
 }
-function _onMsgMmGetReviewingMaps(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmGetReviewingMapsS.S;
+function _onMsgMmGetReviewingMaps(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmGetReviewingMapsS;
     if (!data.getErrorCode()) {
-        NormalMapModelNormalMapModel.updateOnMsgMmGetReviewingMaps(data.getMaps());
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmGetReviewingMaps, data);
+        updateOnMsgMmGetReviewingMaps(data.getMaps());
+        dispatch(TypeId.MsgMmGetReviewingMaps, data);
     }
 }
 
@@ -216,7 +268,7 @@ export function reqMmReviewMap({ designerUserId, slotIndex, modifiedTime, isAcce
     isAccept        : boolean;
     reviewComment   : string | null;
 }): void {
-    NetworksManager.send({
+    send({
         MsgMmReviewMap: { c: {
             designerUserId,
             slotIndex,
@@ -226,78 +278,78 @@ export function reqMmReviewMap({ designerUserId, slotIndex, modifiedTime, isAcce
         }, },
     });
 }
-function _onMsgMmReviewMap(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmReviewMapS.S;
+function _onMsgMmReviewMap(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmReviewMapS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmReviewMap, data);
+        dispatch(TypeId.MsgMmReviewMap, data);
     }
 }
 
 export function reqMmSetMapTagIdFlags(normalMapId: number, mapTagIdFlags: number): void {
-    NetworksManager.send({ MsgMmSetMapTagIdFlags: { c: {
+    send({ MsgMmSetMapTagIdFlags: { c: {
         normalMapId     : normalMapId,
         mapTagIdFlags,
     } } });
 }
-async function _onMsgMmSetMapTagIdFlags(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagIdFlagsS.S;
+async function _onMsgMmSetMapTagIdFlags(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagIdFlagsS;
     if (!data.getErrorCode()) {
-        await NormalMapModelNormalMapModel.updateOnMsgMmSetMapTagIdFlags(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmSetMapTagIdFlags, data);
+        await updateOnMsgMmSetMapTagIdFlags(data);
+        dispatch(TypeId.MsgMmSetMapTagIdFlags, data);
     }
 }
 
-export function reqMmSetMapName(normalMapId: number, mapNameArray: ProtoSchemaCommonProtoStructureLanguageText.LanguageText[]): void {
-    NetworksManager.send({ MsgMmSetMapName: { c: {
+export function reqMmSetMapName(normalMapId: number, mapNameArray: LanguageText[]): void {
+    send({ MsgMmSetMapName: { c: {
         normalMapId     : normalMapId,
         mapNameArray    : mapNameArray.map(v => v.toJson()),
     } } });
 }
-async function _onMsgMmSetMapName(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS.S;
+async function _onMsgMmSetMapName(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS;
     if (!data.getErrorCode()) {
-        await NormalMapModelNormalMapModel.updateOnMsgMmSetMapName(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmSetMapName, data);
+        await updateOnMsgMmSetMapName(data);
+        dispatch(TypeId.MsgMmSetMapName, data);
     }
 }
 
-export function reqMmAddWarRule(normalMapId: number, templateWarRule: ProtoSchemaCommonProtoWarRuleTemplateWarRule.TemplateWarRule): void {
-    NetworksManager.send({
+export function reqMmAddWarRule(normalMapId: number, templateWarRule: TemplateWarRule): void {
+    send({
         MsgMmAddWarRule: { c: {
             normalMapId     : normalMapId,
             templateWarRule : templateWarRule.toJson(),
         } },
     });
 }
-async function _onMsgMmAddWarRule(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmAddWarRuleS.S;
+async function _onMsgMmAddWarRule(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmAddWarRuleS;
     if (!data.getErrorCode()) {
-        await NormalMapModelNormalMapModel.updateOnMsgMmAddWarRule(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmAddWarRule, data);
+        await updateOnMsgMmAddWarRule(data);
+        dispatch(TypeId.MsgMmAddWarRule, data);
     }
 }
 
-export function reqMmAddWarEvent(normalMapId: number, incrementalWarEventFullData: ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData): void {
-    NetworksManager.send({
+export function reqMmAddWarEvent(normalMapId: number, incrementalWarEventFullData: WarEventFullData): void {
+    send({
         MsgMmAddWarEvent: { c: {
             normalMapId                     : normalMapId,
             incrementalWarEventFullData     : incrementalWarEventFullData.toJson(),
         } },
     });
 }
-async function _onMsgMmAddWarEvent(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmAddWarEventS.S;
+async function _onMsgMmAddWarEvent(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmAddWarEventS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmAddWarEvent, data);
+        dispatch(TypeId.MsgMmAddWarEvent, data);
     }
 }
 
 export function reqMmSubmitMapSimpleDialogue(
     normalMapId                 : number,
-    mapSimpleDialogueArray      : ProtoSchemaCommonProtoMapMapSimpleDialogue.MapSimpleDialogue[],
-    warRuleDialogueInfoArray    : ProtoSchemaCommonProtoNetMessageMsgMmSubmitMapSimpleDialogueWarRuleDialogueInfo.WarRuleDialogueInfo[],
+    mapSimpleDialogueArray      : MapSimpleDialogue[],
+    warRuleDialogueInfoArray    : WarRuleDialogueInfo[],
 ): void {
-    NetworksManager.send({
+    send({
         MsgMmSubmitMapSimpleDialogue: { c: {
             normalMapId                 : normalMapId,
             mapSimpleDialogueArray      : mapSimpleDialogueArray.map(v => v.toJson()),
@@ -305,45 +357,45 @@ export function reqMmSubmitMapSimpleDialogue(
         } },
     });
 }
-function _onMsgMmSubmitMapSimpleDialogue(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSubmitMapSimpleDialogueS.S;
+function _onMsgMmSubmitMapSimpleDialogue(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSubmitMapSimpleDialogueS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmSubmitMapSimpleDialogue, data);
+        dispatch(TypeId.MsgMmSubmitMapSimpleDialogue, data);
     }
 }
 
 export function reqMmDeleteRedundantWarEvent(normalMapId: number): void {
-    NetworksManager.send({
+    send({
         MsgMmDeleteRedundantWarEvent: { c: {
             normalMapId : normalMapId,
         } },
     });
 }
-async function _onMsgMmDeleteRedundantWarEvent(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmDeleteRedundantWarEventS.S;
+async function _onMsgMmDeleteRedundantWarEvent(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmDeleteRedundantWarEventS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmDeleteRedundantWarEvent, data);
+        dispatch(TypeId.MsgMmDeleteRedundantWarEvent, data);
     }
 }
 
 export function reqMmDeleteWarRule(normalMapId: number, ruleId: number): void {
-    NetworksManager.send({
+    send({
         MsgMmDeleteWarRule: { c: {
             normalMapId : normalMapId,
             ruleId,
         } },
     });
 }
-async function _onMsgMmDeleteWarRule(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmDeleteWarRuleS.S;
+async function _onMsgMmDeleteWarRule(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmDeleteWarRuleS;
     if (!data.getErrorCode()) {
-        await NormalMapModelNormalMapModel.updateOnMsgMmDeleteWarRule(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmDeleteWarRule, data);
+        await updateOnMsgMmDeleteWarRule(data);
+        dispatch(TypeId.MsgMmDeleteWarRule, data);
     }
 }
 
-export function reqMmSetWarRuleName(normalMapId: number, ruleId: number, ruleNameArray: ProtoSchemaCommonProtoStructureLanguageText.LanguageText[]): void {
-    NetworksManager.send({
+export function reqMmSetWarRuleName(normalMapId: number, ruleId: number, ruleNameArray: LanguageText[]): void {
+    send({
         MsgMmSetWarRuleName : { c: {
             normalMapId     : normalMapId,
             ruleId          : ruleId,
@@ -351,16 +403,16 @@ export function reqMmSetWarRuleName(normalMapId: number, ruleId: number, ruleNam
         } },
     });
 }
-async function _onMsgMmSetWarRuleName(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS.S;
+async function _onMsgMmSetWarRuleName(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS;
     if (!data.getErrorCode()) {
-        await NormalMapModelNormalMapModel.updateOnMsgMmSetWarRuleName(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmSetWarRuleName, data);
+        await updateOnMsgMmSetWarRuleName(data);
+        dispatch(TypeId.MsgMmSetWarRuleName, data);
     }
 }
 
 export function reqMmSetWarRuleFixedTileTheme(normalMapId: number, ruleId: number, tileTheme: number | null): void {
-    NetworksManager.send({
+    send({
         MsgMmSetWarRuleFixedTileTheme : { c: {
             normalMapId : normalMapId,
             ruleId      : ruleId,
@@ -368,24 +420,24 @@ export function reqMmSetWarRuleFixedTileTheme(normalMapId: number, ruleId: numbe
         } },
     });
 }
-async function _onMsgMmSetWarRuleFixedTileTheme(e: VendorEgretEgret.Event): Promise<void> {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS.S;
+async function _onMsgMmSetWarRuleFixedTileTheme(e: Event): Promise<void> {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS;
     if (!data.getErrorCode()) {
-        await NormalMapModelNormalMapModel.updateOnMsgMmSetWarRuleFixedTileTheme(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmSetWarRuleFixedTileTheme, data);
+        await updateOnMsgMmSetWarRuleFixedTileTheme(data);
+        dispatch(TypeId.MsgMmSetWarRuleFixedTileTheme, data);
     }
 }
 
-export function reqMmSetMapTagSingleData(data: ProtoSchemaCommonProtoMapMapTagMapTagSingleData.MapTagSingleData): void {
-    NetworksManager.send({
+export function reqMmSetMapTagSingleData(data: MapTagSingleData): void {
+    send({
         MsgMmSetMapTagSingleData: { c: {
             data: data.toJson(),
         } },
     });
 }
-function _onMsgMmSetMapTagSingleData(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagSingleDataS.S;
+function _onMsgMmSetMapTagSingleData(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgMmSetMapTagSingleDataS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgMmSetMapTagSingleData, data);
+        dispatch(TypeId.MsgMmSetMapTagSingleData, data);
     }
 }

@@ -1,16 +1,16 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "./AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "./GridIndex.ts";
-import type * as AuxiliaryTypesMapSize from "./MapSize.ts";
-import * as AuxiliaryTypesMovePathNode from "./MovePathNode.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
+import type { Undefinable } from "./AuxiliaryTypes.ts";
+import type { GridIndex } from "./GridIndex.ts";
+import type { MapSize } from "./MapSize.ts";
+import { MovePathNode } from "./MovePathNode.ts";
+import { getExisted } from "../helpers/Misc.ts";
 
 type Data = {
-    prevGridIndex   : AuxiliaryTypesGridIndex.GridIndex | null;
+    prevGridIndex   : GridIndex | null;
     totalMoveCost   : number;
 };
 type AvailableMovableGrid = {
-    currGridIndex   : AuxiliaryTypesGridIndex.GridIndex;
-    prevGridIndex   : AuxiliaryTypesGridIndex.GridIndex | null;
+    currGridIndex   : GridIndex;
+    prevGridIndex   : GridIndex | null;
     totalMoveCost   : number;
 };
 
@@ -30,21 +30,21 @@ export class MovableArea {
         const column = this._area[x];
         return column ? column[y] : null;
     }
-    public getDataByGridIndex(gridIndex: AuxiliaryTypesGridIndex.GridIndex): Data | null {
+    public getDataByGridIndex(gridIndex: GridIndex): Data | null {
         return this.getData(gridIndex.getX(), gridIndex.getY());
     }
     public checkHasGrid(x: number, y: number): boolean {
         return this.getData(x, y) != null;
     }
-    public checkHasGridByGridIndex(gridIndex: AuxiliaryTypesGridIndex.GridIndex): boolean {
+    public checkHasGridByGridIndex(gridIndex: GridIndex): boolean {
         return this.checkHasGrid(gridIndex.getX(), gridIndex.getY());
     }
 
     public static create({ gridIndex, maxMoveCost, mapSize, moveCostGetter }: {
-        gridIndex       : AuxiliaryTypesGridIndex.GridIndex;
+        gridIndex       : GridIndex;
         maxMoveCost     : number;
-        mapSize         : AuxiliaryTypesMapSize.MapSize;
-        moveCostGetter  : (g: AuxiliaryTypesGridIndex.GridIndex) => AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
+        mapSize         : MapSize;
+        moveCostGetter  : (g: GridIndex) => Undefinable<number>;
     }): MovableArea {
         const area              : Data[][] = [];
         const availableGrids    : AvailableMovableGrid[] = [];
@@ -56,7 +56,7 @@ export class MovableArea {
             totalMoveCost   : 0,
         });
 
-        const moveCostDict  = new Map<number, AuxiliaryTypesAuxiliaryTypes.Undefinable<number>>();
+        const moveCostDict  = new Map<number, Undefinable<number>>();
         let index           = 0;
         while (index < availableGrids.length) {
             const availableGrid                     = _sortAvailableMovableGrids(availableGrids, index);
@@ -80,13 +80,13 @@ export class MovableArea {
         return new MovableArea(area);
     }
 
-    public createShortestMovePath(destination: AuxiliaryTypesGridIndex.GridIndex): AuxiliaryTypesMovePathNode.MovePathNode[] {
-        const reversedPath  : AuxiliaryTypesMovePathNode.MovePathNode[] = [];
-        let gridIndex       : AuxiliaryTypesGridIndex.GridIndex | null = destination;
-        let movableNode     = HelpersMisc.getExisted(this.getDataByGridIndex(gridIndex));
+    public createShortestMovePath(destination: GridIndex): MovePathNode[] {
+        const reversedPath  : MovePathNode[] = [];
+        let gridIndex       : GridIndex | null = destination;
+        let movableNode     = getExisted(this.getDataByGridIndex(gridIndex));
 
         for (;;) {
-            reversedPath.push(new AuxiliaryTypesMovePathNode.MovePathNode(
+            reversedPath.push(new MovePathNode(
                 gridIndex.clone(),
                 movableNode.totalMoveCost,
             ));
@@ -95,7 +95,7 @@ export class MovableArea {
             if (!gridIndex) {
                 return reversedPath.reverse();
             }
-            movableNode = HelpersMisc.getExisted(this.getDataByGridIndex(gridIndex));
+            movableNode = getExisted(this.getDataByGridIndex(gridIndex));
         }
     }
 }
@@ -103,8 +103,8 @@ export class MovableArea {
 function _updateAvailableGrids({ grids, index, gridIndex, prev, totalMoveCost }: {
     grids           : AvailableMovableGrid[];
     index           : number;
-    gridIndex       : AuxiliaryTypesGridIndex.GridIndex;
-    prev            : AuxiliaryTypesGridIndex.GridIndex | null;
+    gridIndex       : GridIndex;
+    prev            : GridIndex | null;
     totalMoveCost   : number;
 }): void {
     const newNode: AvailableMovableGrid = {
@@ -126,8 +126,8 @@ function _updateAvailableGrids({ grids, index, gridIndex, prev, totalMoveCost }:
 }
 function _checkAndUpdateMovableArea({ area, gridIndex, prev, totalMoveCost }: {
     area            : Data[][];
-    gridIndex       : AuxiliaryTypesGridIndex.GridIndex;
-    prev            : AuxiliaryTypesGridIndex.GridIndex | null;
+    gridIndex       : GridIndex;
+    prev            : GridIndex | null;
     totalMoveCost   : number;
 }): boolean {
     const x = gridIndex.getX();

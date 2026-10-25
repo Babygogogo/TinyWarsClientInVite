@@ -1,30 +1,30 @@
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiContainer from "./UiContainer.ts";
-import type * as UiInterfacesIUiContainer from "../interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiSwitch from "../interfaces/IUiSwitch.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiContainer } from "./UiContainer.ts";
+import type { IUiContainer } from "../interfaces/IUiContainer.ts";
+import type { IUiImage } from "../interfaces/IUiImage.ts";
+import type { IUiSwitch } from "../interfaces/IUiSwitch.ts";
 
 const TweenTime = 100;
 
-export class UiSwitch extends UiComponentsUiContainer.UiContainer implements UiInterfacesIUiSwitch.IUiSwitch {
-    private readonly _groupSlider?  : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgEnabled?   : UiInterfacesIUiImage.IUiImage;
+export class UiSwitch extends UiContainer implements IUiSwitch {
+    private readonly _groupSlider?  : IUiContainer;
+    private readonly _imgEnabled?   : IUiImage;
     // private readonly _imgDisabled?  : UiImage | UiImage9;
 
     private _isSwitchOn             = false;
     private _isRunningTween         = false;
-    private _shortSfxCode           = SoundsConstants.ShortSfxCode.ButtonNeutral01;
+    private _shortSfxCode           = ShortSfxCode.ButtonNeutral01;
     private _callbackOnTouch?       : () => void;
 
     public constructor() {
         super();
 
-        this.setMouseStyle(HelpersPointerInput.MouseStyleType.Pointer);
-        this.getEventAgent().addPointerEventListener(HelpersPointerInput.PointerEventType.Tap, this._onTouchedTap, this);
+        this.setMouseStyle(MouseStyleType.Pointer);
+        this.getEventAgent().addPointerEventListener(PointerEventType.Tap, this._onTouchedTap, this);
     }
     public updateOnLoadedSkin(): void {
         this.setIsTouchEnabled(true);
@@ -37,12 +37,12 @@ export class UiSwitch extends UiComponentsUiContainer.UiContainer implements UiI
     public setIsSwitchOn(isOn: boolean, isTween: boolean): void {
         this._isSwitchOn = isOn;
 
-        const groupSlider       = HelpersMisc.getExisted(this._groupSlider);
-        const imgEnabled        = HelpersMisc.getExisted(this._imgEnabled);
+        const groupSlider       = getExisted(this._groupSlider);
+        const imgEnabled        = getExisted(this._imgEnabled);
         // const imgDisabled       = this._imgDisabled;
         this._isRunningTween    = false;
-        TweenExecutor.Executor.removeTweens(groupSlider);
-        TweenExecutor.Executor.removeTweens(imgEnabled);
+        Executor.removeTweens(groupSlider);
+        Executor.removeTweens(imgEnabled);
         // Tween.removeTweens(imgDisabled);
 
         const endX              = isOn ? this.getUnscaledWidth() - groupSlider.getScaledWidth() : 0;
@@ -54,16 +54,16 @@ export class UiSwitch extends UiComponentsUiContainer.UiContainer implements UiI
             // imgDisabled.alpha   = endDisabledAlpha;
         } else {
             this._isRunningTween = true;
-            TweenExecutor.Executor.get(groupSlider).to({ customX: endX }, TweenTime).call(() => this._isRunningTween = false);
-            TweenExecutor.Executor.get(imgEnabled).to({ customAlpha: endEnabledAlpha }, TweenTime);
+            Executor.get(groupSlider).to({ customX: endX }, TweenTime).call(() => this._isRunningTween = false);
+            Executor.get(imgEnabled).to({ customAlpha: endEnabledAlpha }, TweenTime);
             // Tween.get(imgDisabled).to({ alpha: endDisabledAlpha }, TweenTime);
         }
     }
 
-    public setShortSfxCode(code: SoundsConstants.ShortSfxCode): void {
+    public setShortSfxCode(code: ShortSfxCode): void {
         this._shortSfxCode = code;
     }
-    public getShortSfxCode(): SoundsConstants.ShortSfxCode {
+    public getShortSfxCode(): ShortSfxCode {
         return this._shortSfxCode;
     }
 
@@ -79,7 +79,7 @@ export class UiSwitch extends UiComponentsUiContainer.UiContainer implements UiI
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(this.getShortSfxCode());
+        playShortSfx(this.getShortSfxCode());
 
         const callback = this._callbackOnTouch;
         (callback) && (callback());

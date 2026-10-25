@@ -1,20 +1,20 @@
-import * as ExpressionParsersEnums from "../Enums.ts";
-import * as ExpressionParsersResultsBase from "./Base.ts";
-import type * as WeathersIManager from "../../weathers/IManager.ts";
+import { ResultType } from "../Enums.ts";
+import { Base } from "./Base.ts";
+import type { IManager } from "../../weathers/IManager.ts";
 
-export class WeatherManager extends ExpressionParsersResultsBase.Base {
-    public readonly weatherManager: WeathersIManager.IManager;
+export class WeatherManager extends Base {
+    public readonly weatherManager: IManager;
 
-    public constructor(weatherManager: WeathersIManager.IManager) {
+    public constructor(weatherManager: IManager) {
         super(weatherManager.getWar());
 
         this.weatherManager = weatherManager;
     }
 
-    public override getResultType(): ExpressionParsersEnums.ResultType {
-        return ExpressionParsersEnums.ResultType.Weather;
+    public override getResultType(): ResultType {
+        return ResultType.Weather;
     }
-    public checkIsEqual(rhs: ExpressionParsersResultsBase.Base): boolean {
+    public checkIsEqual(rhs: Base): boolean {
         return (rhs instanceof WeatherManager)
             && (this.weatherManager === rhs.weatherManager);
     }

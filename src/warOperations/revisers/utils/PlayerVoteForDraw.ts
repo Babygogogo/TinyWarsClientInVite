@@ -1,42 +1,42 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as HelpersMisc from "../../../helpers/Misc.ts";
-import * as PlayersConstants from "../../../players/Constants.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoPlayerVoteForDraw from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
-import * as UtilsClientErrorCode from "../../../utils/ClientErrorCode.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { newError } from "../../../helpers/Misc.ts";
+import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
+import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { WoPlayerVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
+import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type IBwWar                 = BaseWarInterfaceIBwWar;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-export function revise(war: IBwWar, rawAction: ProtoSchemaCommonProtoWarOperationWoPlayerVoteForDraw.WoPlayerVoteForDraw, requesterUserId: Undefinable<number>): ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer {
+export function revise(war: IBwWar, rawAction: WoPlayerVoteForDraw, requesterUserId: Undefinable<number>): WoContainer {
     const playerIndex = rawAction.getPlayerIndex();
     if (playerIndex == null) {
-        throw HelpersMisc.newError(`Empty playerIndex.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_00);
+        throw newError(`Empty playerIndex.`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_00);
     }
     if (!war.getPlayerManager().checkHasPlayer(playerIndex)) {
-        throw HelpersMisc.newError(`Invalid playerIndex.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_01);
+        throw newError(`Invalid playerIndex.`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_01);
     }
-    if (playerIndex === PlayersConstants.PlayerIndex.Neutral) {
-        throw HelpersMisc.newError(`Invalid neutral playerIndex.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_02);
+    if (playerIndex === PlayerIndex.Neutral) {
+        throw newError(`Invalid neutral playerIndex.`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_02);
     }
 
     const player = war.getPlayer(playerIndex);
-    if ((player.getAliveState() !== PlayersConstants.AliveStateId.Alive)   ||
+    if ((player.getAliveState() !== AliveStateId.Alive)   ||
         (player.getUserId() != requesterUserId)
     ) {
-        throw HelpersMisc.newError(`Invalid aliveState.`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_03);
+        throw newError(`Invalid aliveState.`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_03);
     }
 
     const isAgree = rawAction.getIsAgree();
     if (isAgree == null) {
-        throw HelpersMisc.newError(`Invalid isAgree: ${isAgree}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_04);
+        throw newError(`Invalid isAgree: ${isAgree}`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_04);
     }
     if (!war.getDrawVoteManager().checkCanVote(playerIndex, isAgree)) {
-        throw HelpersMisc.newError(`Cannot vote currently: ${isAgree}`, UtilsClientErrorCode.ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_05);
+        throw newError(`Cannot vote currently: ${isAgree}`, ClientErrorCode.WarOperationReviser_RevisePlayerVoteForDraw_05);
     }
 
-    return ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({
+    return WoContainer.fromJson({
         WoPlayerVoteForDraw: {
             playerIndex : playerIndex,
             isAgree     : isAgree,

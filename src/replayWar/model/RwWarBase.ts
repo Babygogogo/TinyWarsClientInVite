@@ -1,58 +1,62 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWarEventManager from "../../baseWar/interface/IBwWarEventManager.ts";
-import * as BaseWarModelBwWar from "../../baseWar/model/BwWar.ts";
-import * as BootTimersConstants from "../../bootTimers/Constants.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersProtoSchemaWarSerializationSerialWar from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocalDataStorage from "../../localData/Storage.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoStructureGridMarkData from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForAtw from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForCcw from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForMcw from "../../proto/schema/CommonProto/WarSettings/SettingsForMcw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForMfw from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForMmw from "../../proto/schema/CommonProto/WarSettings/SettingsForMmw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForMrw from "../../proto/schema/CommonProto/WarSettings/SettingsForMrw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForScw from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForSfw from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
-import type * as ProtoSchemaCommonProtoWarSettingsSettingsForSrw from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
-import type * as ReplayWarInterfaceIRwWarBase from "../interface/IRwWarBase.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
-import * as WarOperationsExecutorsExecutor from "../../warOperations/executors/Executor.ts";
+import type {
+    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+    ReplayCheckpointData,
+    ReplayCheckpointInfo,
+} from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
+import { BwWar } from "../../baseWar/model/BwWar.ts";
+import { TimerTypeId } from "../../bootTimers/Constants.ts";
+import { show } from "../../FloatText.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { getReplayPauseTime } from "../../localData/Storage.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { SerialExecutedOperationManager } from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
+import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
+import type { SettingsForCcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
+import type { SettingsForMcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMcw.ts";
+import type { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
+import type { SettingsForMmw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMmw.ts";
+import type { SettingsForMrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMrw.ts";
+import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
+import type { SettingsForSfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
+import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
+import type { IRwWarBase } from "../interface/IRwWarBase.ts";
+import { playCoBgmWithWar } from "../../sounds/SoundPlayer.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
+import { getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import { setTimeout } from "../../vendor/egret/Egret.ts";
+import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
 
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 type TurnIndexAndPlayerIndex = {
     turnIndex   : number;
     playerIndex : number;
 };
 
-export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements ReplayWarInterfaceIRwWarBase.IRwWarBase {
-    private readonly _warEventManager               = new (GameHelpersGhFactory.getBwWarEventManagerClass())();
-    private _srcExecutedOperationArray              : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer[] | null = null;
+export abstract class RwWarBase extends BwWar implements IRwWarBase {
+    private readonly _warEventManager               = new (getBwWarEventManagerClass())();
+    private _srcExecutedOperationArray              : WoContainer[] | null = null;
 
-    private _settingsForMcw                         : Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMcw.SettingsForMcw>;
-    private _settingsForMfw                         : Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMfw.SettingsForMfw>;
-    private _settingsForMrw                         : Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMrw.SettingsForMrw>;
-    private _settingsForMmw                         : Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMmw.SettingsForMmw>;
-    private _settingsForCcw                         : Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForCcw.SettingsForCcw>;
-    private _settingsForAtw                         : Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForAtw.SettingsForAtw>;
-    private _settingsForScw                         : Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForScw.SettingsForScw>;
-    private _settingsForSfw                         : Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForSfw.SettingsForSfw>;
-    private _settingsForSrw                         : Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForSrw.SettingsForSrw>;
+    private _settingsForMcw                         : Undefinable<SettingsForMcw>;
+    private _settingsForMfw                         : Undefinable<SettingsForMfw>;
+    private _settingsForMrw                         : Undefinable<SettingsForMrw>;
+    private _settingsForMmw                         : Undefinable<SettingsForMmw>;
+    private _settingsForCcw                         : Undefinable<SettingsForCcw>;
+    private _settingsForAtw                         : Undefinable<SettingsForAtw>;
+    private _settingsForScw                         : Undefinable<SettingsForScw>;
+    private _settingsForSfw                         : Undefinable<SettingsForSfw>;
+    private _settingsForSrw                         : Undefinable<SettingsForSrw>;
 
     private _visionTeamIndex                        : number | null = null;
     private _isTickingReplay                        = false;
@@ -62,19 +66,19 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
     private _firstOperationId                       = 0;
     private _nextOperationId                        = 0;
     private _checkpointIdsForNextOperationId        = new Map<number, number>();
-    private _checkpointDataListForCheckpointId      = new Map<number, AuxiliaryTypesAuxiliaryTypes.ReplayCheckpointData>();
+    private _checkpointDataListForCheckpointId      = new Map<number, ReplayCheckpointData>();
     private _turnAndPlayerIndexesForCheckpointId    = new Map<number, TurnIndexAndPlayerIndex>();
-    private readonly _gridMarkData                  = new ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData();
+    private readonly _gridMarkData                  = new GridMarkData();
 
-    public abstract serializeForCheckpoint(): AuxiliaryTypesAuxiliaryTypes.ReplayCheckpointData;
+    public abstract serializeForCheckpoint(): ReplayCheckpointData;
     public abstract tickVisionTeamIndex(): number | null;
 
-    public init(warData: ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, gameConfig: GameConfigGcData.GcData): void {
+    public init(warData: SerialWar, gameConfig: GcData): void {
         warData                             = warData.clone();
         const srcExecutedOperationArray     = warData.getExecutedOperationManager()?.getExecutedOperationArray() ?? [];
         this._srcExecutedOperationArray     = srcExecutedOperationArray;
-        warData.setExecutedOperationManager(new ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager.SerialExecutedOperationManager());
-        this._baseInit(warData, gameConfig, HelpersProtoSchemaWarSerializationSerialWar.getWarTypeId(warData));
+        warData.setExecutedOperationManager(new SerialExecutedOperationManager());
+        this._baseInit(warData, gameConfig, getWarTypeId(warData));
 
         this._setSettingsForMcw(warData.getSettingsForMcw());
         this._setSettingsForScw(warData.getSettingsForScw());
@@ -97,7 +101,7 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
         });
     }
 
-    public getWarEventManager(): BaseWarInterfaceIBwWarEventManager.IBwWarEventManager {
+    public getWarEventManager(): IBwWarEventManager {
         return this._warEventManager;
     }
 
@@ -111,7 +115,7 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
         return null;
     }
     public getSettingsBootTimerParams(): number[] {
-        return [BootTimersConstants.TimerTypeId.NoBoot];
+        return [TimerTypeId.NoBoot];
     }
     public getNormalMapId(): number | null {
         const settingsForMcw = this.getSettingsForMcw();
@@ -154,65 +158,65 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
 
     public getWarOperationDescSuffix(): string {
         const lastOperationId = this._getLastOperationId();
-        return `(${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${LangUtils.getText(LangConstants.TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`;
+        return `(${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${getText(TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`;
     }
 
-    public getSettingsForMcw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMcw.SettingsForMcw> {
+    public getSettingsForMcw(): Undefinable<SettingsForMcw> {
         return this._settingsForMcw;
     }
-    protected _setSettingsForMcw(value: Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMcw.SettingsForMcw>): void {
+    protected _setSettingsForMcw(value: Undefinable<SettingsForMcw>): void {
         this._settingsForMcw = value;
     }
-    public getSettingsForScw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForScw.SettingsForScw> {
+    public getSettingsForScw(): Undefinable<SettingsForScw> {
         return this._settingsForScw;
     }
-    protected _setSettingsForScw(value: Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForScw.SettingsForScw>): void {
+    protected _setSettingsForScw(value: Undefinable<SettingsForScw>): void {
         this._settingsForScw = value;
     }
-    public getSettingsForSfw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForSfw.SettingsForSfw> {
+    public getSettingsForSfw(): Undefinable<SettingsForSfw> {
         return this._settingsForSfw;
     }
-    protected _setSettingsForSfw(value: Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForSfw.SettingsForSfw>): void {
+    protected _setSettingsForSfw(value: Undefinable<SettingsForSfw>): void {
         this._settingsForSfw = value;
     }
-    public getSettingsForSrw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForSrw.SettingsForSrw> {
+    public getSettingsForSrw(): Undefinable<SettingsForSrw> {
         return this._settingsForSrw;
     }
-    protected _setSettingsForSrw(value: Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForSrw.SettingsForSrw>): void {
+    protected _setSettingsForSrw(value: Undefinable<SettingsForSrw>): void {
         this._settingsForSrw = value;
     }
-    public getSettingsForMrw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMrw.SettingsForMrw> {
+    public getSettingsForMrw(): Undefinable<SettingsForMrw> {
         return this._settingsForMrw;
     }
-    protected _setSettingsForMrw(value: Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMrw.SettingsForMrw>): void {
+    protected _setSettingsForMrw(value: Undefinable<SettingsForMrw>): void {
         this._settingsForMrw = value;
     }
-    public getSettingsForMmw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMmw.SettingsForMmw> {
+    public getSettingsForMmw(): Undefinable<SettingsForMmw> {
         return this._settingsForMmw;
     }
-    protected _setSettingsForMmw(value: Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMmw.SettingsForMmw>): void {
+    protected _setSettingsForMmw(value: Undefinable<SettingsForMmw>): void {
         this._settingsForMmw = value;
     }
-    public getSettingsForAtw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForAtw.SettingsForAtw> {
+    public getSettingsForAtw(): Undefinable<SettingsForAtw> {
         return this._settingsForAtw;
     }
-    protected _setSettingsForAtw(value: Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForAtw.SettingsForAtw>): void {
+    protected _setSettingsForAtw(value: Undefinable<SettingsForAtw>): void {
         this._settingsForAtw = value;
     }
-    public getSettingsForCcw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForCcw.SettingsForCcw> {
+    public getSettingsForCcw(): Undefinable<SettingsForCcw> {
         return this._settingsForCcw;
     }
-    protected _setSettingsForCcw(value: Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForCcw.SettingsForCcw>): void {
+    protected _setSettingsForCcw(value: Undefinable<SettingsForCcw>): void {
         this._settingsForCcw = value;
     }
-    public getSettingsForMfw(): Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMfw.SettingsForMfw> {
+    public getSettingsForMfw(): Undefinable<SettingsForMfw> {
         return this._settingsForMfw;
     }
-    protected _setSettingsForMfw(value: Undefinable<ProtoSchemaCommonProtoWarSettingsSettingsForMfw.SettingsForMfw>): void {
+    protected _setSettingsForMfw(value: Undefinable<SettingsForMfw>): void {
         this._settingsForMfw = value;
     }
 
-    public getGridMarkData(): ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData {
+    public getGridMarkData(): GridMarkData {
         return this._gridMarkData;
     }
 
@@ -258,7 +262,7 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
     public setIsAutoReplay(isAuto: boolean): void {
         if (this.getIsAutoReplay() !== isAuto) {
             this._isAutoReplay = isAuto;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.ReplayAutoReplayChanged);
+            dispatch(TypeId.ReplayAutoReplayChanged);
 
             if ((isAuto) && (!this.getIsExecutingAction()) && (!this.checkIsInEnd())) {
                 this._executeNextAction(false);
@@ -289,9 +293,9 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
     }
     public setNextOperationId(nextOperationId: number): void {
         this._nextOperationId = nextOperationId;
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.RwNextOperationIdChanged);
+        dispatch(TypeId.RwNextOperationIdChanged);
     }
-    public getNextAction(): ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer | null {
+    public getNextAction(): WoContainer | null {
         const array = this._srcExecutedOperationArray;
         if (!array?.length) {
             return null;
@@ -307,19 +311,19 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
         this._checkpointIdsForNextOperationId.set(nextOperationId, checkpointId);
     }
 
-    private _getCheckpointData(checkpointId: number): AuxiliaryTypesAuxiliaryTypes.ReplayCheckpointData | null {
+    private _getCheckpointData(checkpointId: number): ReplayCheckpointData | null {
         return this._checkpointDataListForCheckpointId.get(checkpointId) ?? null;
     }
-    private _setCheckpointData(checkpointId: number, data: AuxiliaryTypesAuxiliaryTypes.ReplayCheckpointData): void {
+    private _setCheckpointData(checkpointId: number, data: ReplayCheckpointData): void {
         this._checkpointDataListForCheckpointId.set(checkpointId, data);
     }
 
-    public getAllCheckpointInfoArray(): AuxiliaryTypesAuxiliaryTypes.ReplayCheckpointInfo[] {
-        const turnManager   = HelpersMisc.getExisted(ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersMisc.getExisted(this._getCheckpointData(0)?.warData)).getTurnManager(), UtilsClientErrorCode.ClientErrorCode.HrwWar_GetAllCheckpointInfoArray_00);
+    public getAllCheckpointInfoArray(): ReplayCheckpointInfo[] {
+        const turnManager   = getExisted(SerialWar.decode(getExisted(this._getCheckpointData(0)?.warData)).getTurnManager(), ClientErrorCode.HrwWar_GetAllCheckpointInfoArray_00);
         let checkpointId    = 0;
         let turnIndex       = turnManager.getTurnIndex() ?? 0;
         let playerIndex     = turnManager.getPlayerIndex() ?? 0;
-        const infoArray     : AuxiliaryTypesAuxiliaryTypes.ReplayCheckpointInfo[] = [{
+        const infoArray     : ReplayCheckpointInfo[] = [{
             checkpointId        : checkpointId,
             nextOperationId     : this._getFirstOperationId(),
             turnIndex           : turnIndex,
@@ -361,7 +365,7 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
         this._setIsTickingReplay(true);
         await this._doLoadCheckpoint(checkpointId, floatText);
         this._setIsTickingReplay(false);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.ReplayTick);
+        dispatch(TypeId.ReplayTick);
     }
     /** 不加锁，也不判断当前是否被锁 */
     private async _doLoadCheckpoint(checkpointId: number, floatText = true): Promise<void> {
@@ -369,7 +373,7 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
 
         this.setIsBatchExecuteAction(true);
         while (!this._getCheckpointData(checkpointId)) {
-            await TimerTimerModel.checkAndCallLater(50);
+            await checkAndCallLater(50);
             await this._executeNextAction(true);
         }
         this.setIsBatchExecuteAction(false);
@@ -388,12 +392,12 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
         this._setIsTickingReplay(true);
         await this._doLoadPreviousCheckpoint(floatText);
         this._setIsTickingReplay(false);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.ReplayTick);
+        dispatch(TypeId.ReplayTick);
     }
     /** 不加锁，也不判断当前是否被锁 */
     private _doLoadPreviousCheckpoint(floatText = true): Promise<void> {
         const nextOperationId   = this.getNextOperationId();
-        const checkpointId      = Math.min(HelpersMisc.getExisted(this._getCheckpointId(nextOperationId)), HelpersMisc.getExisted(this._getCheckpointId(nextOperationId - 1)));
+        const checkpointId      = Math.min(getExisted(this._getCheckpointId(nextOperationId)), getExisted(this._getCheckpointId(nextOperationId - 1)));
         return this._doLoadCheckpoint(checkpointId, floatText);
     }
     public async loadNextCheckpoint(): Promise<void> {
@@ -406,27 +410,27 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
         }
 
         this._setIsTickingReplay(true);
-        await this._doLoadCheckpoint(HelpersMisc.getExisted(this._getCheckpointId(this.getNextOperationId())) + 1);
+        await this._doLoadCheckpoint(getExisted(this._getCheckpointId(this.getNextOperationId())) + 1);
         this._setIsTickingReplay(false);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.ReplayTick);
+        dispatch(TypeId.ReplayTick);
     }
     private async _loadExistingCheckpoint(checkpointId: number, floatText = true): Promise<void> {
         if ((this.getIsExecutingAction()) || (!this.getIsRunning())) {
-            throw HelpersMisc.newError(`RwWarBase._loadExistingCheckpoint() can't load!`);
+            throw newError(`RwWarBase._loadExistingCheckpoint() can't load!`);
         }
 
         this.setIsAutoReplay(false);
 
-        const checkpointData = HelpersMisc.getExisted(this._getCheckpointData(checkpointId));
-        this.fastLoadState(ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(checkpointData.warData));
-        await TimerTimerModel.checkAndCallLater();
+        const checkpointData = getExisted(this._getCheckpointData(checkpointId));
+        this.fastLoadState(SerialWar.decode(checkpointData.warData));
+        await checkAndCallLater();
 
         this.setNextOperationId(checkpointData.nextOperationId);
         this.setIsEnded(this.checkIsInEnd());
 
         if (floatText) {
             const lastOperationId = this._getLastOperationId();
-            FloatText2.show(`${LangUtils.getText(LangConstants.TextType.A0045)} (${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${LangUtils.getText(LangConstants.TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`);
+            show(`${getText(TextType.A0045)} (${this.getNextOperationId()} / ${lastOperationId == null ? `??` : lastOperationId + 1} ${getText(TextType.B0191)}: ${this.getTurnManager().getTurnIndex()})`);
         }
     }
 
@@ -454,14 +458,14 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
         this.startRunning().startRunningView();
         this.updateTilesAndUnitsOnVisibilityChanged(false);
         this.getView().updatePersistentText();
-        SoundsSoundPlayer.playCoBgmWithWar({
+        playCoBgmWithWar({
             war                             : this,
             force                           : false,
-            coBgmCodeArrayFromUserSettings  : UsersModel.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
+            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
         });
 
         this._setIsTickingReplay(false);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.ReplayTick);
+        dispatch(TypeId.ReplayTick);
     }
     public async loadNextAction(): Promise<void> {
         if ((this.checkIsInEnd())           ||
@@ -480,14 +484,14 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
         this.startRunning().startRunningView();
         this.updateTilesAndUnitsOnVisibilityChanged(false);
         this.getView().updatePersistentText();
-        SoundsSoundPlayer.playCoBgmWithWar({
+        playCoBgmWithWar({
             war                             : this,
             force                           : false,
-            coBgmCodeArrayFromUserSettings  : UsersModel.getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
+            coBgmCodeArrayFromUserSettings  : getSelfSettingsCoBgmCodeArray(this.getPlayerInTurn().getCoCategoryId()),
         });
 
         this._setIsTickingReplay(false);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.ReplayTick);
+        dispatch(TypeId.ReplayTick);
     }
 
     private async _executeNextAction(isFastExecute: boolean): Promise<void> {
@@ -497,14 +501,14 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
             (this.checkIsInEnd())        ||
             (this.getIsExecutingAction())
         ) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.B0110));
+            show(getText(TextType.B0110));
         } else {
             await this._doExecuteAction(action, isFastExecute);
         }
     }
-    private async _doExecuteAction(action: ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer, isFastExecute: boolean): Promise<void> {
+    private async _doExecuteAction(action: WoContainer, isFastExecute: boolean): Promise<void> {
         this.setNextOperationId(this.getNextOperationId() + 1);
-        await WarOperationsExecutorsExecutor.checkAndExecute(this, action, isFastExecute);
+        await checkAndExecute(this, action, isFastExecute);
 
         const isInEnd = this.checkIsInEnd();
         if (isInEnd) {
@@ -513,7 +517,7 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
 
         const operationId       = this.getNextOperationId();
         const turnManager       = this.getTurnManager();
-        const prevCheckpointId  = HelpersMisc.getExisted(this._getCheckpointId(operationId - 1));
+        const prevCheckpointId  = getExisted(this._getCheckpointId(operationId - 1));
         const prevTurnData      = this._getTurnAndPlayerIndexByCheckpointId(prevCheckpointId);
         const isNewCheckpoint   = (isInEnd) || (turnManager.getTurnIndex() !== prevTurnData.turnIndex) || (turnManager.getPlayerIndexInTurn() !== prevTurnData.playerIndex);
         const checkpointId      = isNewCheckpoint ? prevCheckpointId + 1 : prevCheckpointId;
@@ -525,23 +529,23 @@ export abstract class RwWarBase extends BaseWarModelBwWar.BwWar implements Repla
         }
 
         if (!isFastExecute) {
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.ReplayTick);
+            dispatch(TypeId.ReplayTick);
         }
 
         if ((!isInEnd) && (this.getIsAutoReplay()) && (!this.getIsExecutingAction()) && (this.getIsRunning())) {
-            VendorEgretEgret.setTimeout(() => {
+            setTimeout(() => {
                 if ((!this.checkIsInEnd()) && (this.getIsAutoReplay()) && (!this.getIsExecutingAction()) && (this.getIsRunning())) {
-                    this._doExecuteAction(HelpersMisc.getExisted(this.getNextAction()), isFastExecute);
+                    this._doExecuteAction(getExisted(this.getNextAction()), isFastExecute);
                 }
-            }, null, LocalDataStorage.getReplayPauseTime());
+            }, null, getReplayPauseTime());
         }
     }
     private _getTurnAndPlayerIndexByCheckpointId(checkpointId: number): TurnIndexAndPlayerIndex {
         const dict = this._turnAndPlayerIndexesForCheckpointId;
         if (dict.has(checkpointId)) {
-            return HelpersMisc.getExisted(dict.get(checkpointId));
+            return getExisted(dict.get(checkpointId));
         } else {
-            const turnData      = HelpersMisc.getExisted(ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.decode(HelpersMisc.getExisted(this._getCheckpointData(checkpointId)).warData).getTurnManager());
+            const turnData      = getExisted(SerialWar.decode(getExisted(this._getCheckpointData(checkpointId)).warData).getTurnManager());
             const turnIndex     = turnData.getTurnIndex() ?? 0;
             const playerIndex   = turnData.getPlayerIndex() ?? 0;
             const data          : TurnIndexAndPlayerIndex = {

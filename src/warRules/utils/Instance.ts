@@ -1,56 +1,58 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesMapSize from "../../auxiliaryTypes/MapSize.ts";
-import * as DialoguesUtilsMapSmallDialogue from "../../dialogues/utils/MapSmallDialogue.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as PlayerRulesUtils from "../../playerRules/Utils.ts";
-import type * as ProtoSchemaCommonProtoMapMapSimpleDialogue from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
-import type * as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import * as ProtoSchemaCommonProtoWarRuleInstanceWarRule from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import * as ProtoSchemaCommonProtoWarRuleRuleAvailability from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
-import type * as ProtoSchemaCommonProtoWarRuleTemplateWarRule from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import * as TaskObjectivesUtils from "../../taskObjectives/Utils.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import * as WarEventsFullDatasUtils from "../../warEvents/fullDatas/Utils.ts";
-import * as WarRulesConstants from "../Constants.ts";
-import * as WarRulesUtilsCommonData from "./CommonData.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
+import { getErrorCode as DialoguesUtilsMapSmallDialogueGetErrorCode } from "../../dialogues/utils/MapSmallDialogue.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getCurrentLanguageType, getSecondaryLanguageType, getText, checkIsValidLanguageTextArray } from "../../lang/Utils.ts";
+import { createDefaultPlayerRuleList, getErrorCodeForPlayerRuleList } from "../../playerRules/Utils.ts";
+import type { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
+import type {
+    TaskObjectiveFullData as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData,
+} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
+import { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import { trimAndClone, getErrorCodeForFullData } from "../../taskObjectives/Utils.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import { trimWarEventFullData, getErrorCodeForWarEventFullData } from "../../warEvents/fullDatas/Utils.ts";
+import { Constants } from "../Constants.ts";
+import { getErrorCode as WarRulesUtilsCommonDataGetErrorCode } from "./CommonData.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
 
-type TemplateWarRuleSchema      = ProtoSchemaCommonProtoWarRuleTemplateWarRule.TemplateWarRule;
-type TaskObjectiveFullData      = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData;
+type TemplateWarRuleSchema      = TemplateWarRule;
+type TaskObjectiveFullData      = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData;
 
 export function create({ templateWarRule, warEventFullData, allMapSimpleDialogueArray, taskObjectiveFullData }: {
     templateWarRule             : TemplateWarRuleSchema;
-    warEventFullData            : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData>;
-    allMapSimpleDialogueArray   : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoMapMapSimpleDialogue.MapSimpleDialogue[]>;
-    taskObjectiveFullData       : AuxiliaryTypesAuxiliaryTypes.Undefinable<TaskObjectiveFullData>;
-}): ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule {
-    return ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule.fromJson({
+    warEventFullData            : Undefinable<WarEventFullData>;
+    allMapSimpleDialogueArray   : Undefinable<MapSimpleDialogue[]>;
+    taskObjectiveFullData       : Undefinable<TaskObjectiveFullData>;
+}): InstanceWarRule {
+    return InstanceWarRule.fromJson({
         templateWarRuleId       : templateWarRule.getRuleId(),
         ruleNameArray           : templateWarRule.getRuleNameArray().map(v => v.clone().toJson()),
 
         warRuleCommonData       : templateWarRule.getWarRuleCommonData()?.clone().toJson(),
-        warEventFullData        : WarEventsFullDatasUtils.trimWarEventFullData(warEventFullData, templateWarRule.getWarEventIdArray(), true).toJson(),
-        mapSimpleDialogueArray  : templateWarRule.getMapSimpleDialogueIdArray().map(id => HelpersMisc.getExisted(allMapSimpleDialogueArray?.find(v => (v.getDialogueId() ?? 0) === id))).map(v => v.clone().toJson()),
-        taskObjectiveFullData   : TaskObjectivesUtils.trimAndClone(taskObjectiveFullData, templateWarRule.getTaskObjectiveIdArray())?.toJson(),
+        warEventFullData        : trimWarEventFullData(warEventFullData, templateWarRule.getWarEventIdArray(), true).toJson(),
+        mapSimpleDialogueArray  : templateWarRule.getMapSimpleDialogueIdArray().map(id => getExisted(allMapSimpleDialogueArray?.find(v => (v.getDialogueId() ?? 0) === id))).map(v => v.clone().toJson()),
+        taskObjectiveFullData   : trimAndClone(taskObjectiveFullData, templateWarRule.getTaskObjectiveIdArray())?.toJson(),
     });
 }
-export function createDefault(playersCount: number, gcData: GameConfigGcData.GcData): ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule {
-    const languageType1 = LangUtils.getCurrentLanguageType();
-    const languageType2 = LangUtils.getSecondaryLanguageType();
-    return ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule.fromJson({
+export function createDefault(playersCount: number, gcData: GcData): InstanceWarRule {
+    const languageType1 = getCurrentLanguageType();
+    const languageType2 = getSecondaryLanguageType();
+    return InstanceWarRule.fromJson({
         templateWarRuleId       : null,
         ruleNameArray           : [
-            { languageType: languageType1, text: LangUtils.getText(LangConstants.TextType.None, languageType1) },
-            { languageType: languageType2, text: LangUtils.getText(LangConstants.TextType.None, languageType2) },
+            { languageType: languageType1, text: getText(TextType.None, languageType1) },
+            { languageType: languageType2, text: getText(TextType.None, languageType2) },
         ],
         warRuleCommonData       : {
             hasFogByDefault     : false,
             defaultWeatherType  : gcData.getDefaultWeatherType(),
-            playerRuleList      : PlayerRulesUtils.createDefaultPlayerRuleList(playersCount, gcData).map(v => v.toJson()),
+            playerRuleList      : createDefaultPlayerRuleList(playersCount, gcData).map(v => v.toJson()),
         },
         warEventFullData        : {
             eventArray              : [],
@@ -66,38 +68,38 @@ export function createDefault(playersCount: number, gcData: GameConfigGcData.GcD
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function getErrorCode({ instanceWarRule, gameConfig, playersCountUnneutral, warType, mapSize }: {
-    instanceWarRule         : ProtoSchemaCommonProtoWarRuleInstanceWarRule.InstanceWarRule;
-    gameConfig              : GameConfigGcData.GcData;
+    instanceWarRule         : InstanceWarRule;
+    gameConfig              : GcData;
     playersCountUnneutral   : number;
-    warType                 : WarTypesConstants.WarTypeId;
-    mapSize                 : AuxiliaryTypesMapSize.MapSize;
-}): UtilsClientErrorCode.ClientErrorCode {
-    if (!LangUtils.checkIsValidLanguageTextArray({
+    warType                 : WarTypeId;
+    mapSize                 : MapSize;
+}): ClientErrorCode {
+    if (!checkIsValidLanguageTextArray({
         list            : instanceWarRule.getRuleNameArray(),
         minTextLength   : 1,
-        maxTextLength   : WarRulesConstants.Constants.MaxNameLength,
+        maxTextLength   : Constants.MaxNameLength,
         minTextCount    : 1,
     })) {
-        return UtilsClientErrorCode.ClientErrorCode.WarRuleHelpers_GetErrorCodeForInstanceWarRule_00;
+        return ClientErrorCode.WarRuleHelpers_GetErrorCodeForInstanceWarRule_00;
     }
 
     const playerRuleList = instanceWarRule.getWarRuleCommonData()?.getPlayerRuleList();
     if (playerRuleList == null) {
-        return UtilsClientErrorCode.ClientErrorCode.WarRuleHelpers_GetErrorCodeForInstanceWarRule_01;
+        return ClientErrorCode.WarRuleHelpers_GetErrorCodeForInstanceWarRule_01;
     }
 
-    const ruleAvailability = ProtoSchemaCommonProtoWarRuleRuleAvailability.RuleAvailability.fromJson({
-        canCcw  : (warType === WarTypesConstants.WarTypeId.CcwFog) || (warType === WarTypesConstants.WarTypeId.CcwStd),
-        canMcw  : (warType === WarTypesConstants.WarTypeId.McwFog) || (warType === WarTypesConstants.WarTypeId.McwStd),
-        canMrw  : (warType === WarTypesConstants.WarTypeId.MrwFog) || (warType === WarTypesConstants.WarTypeId.MrwStd) || (warType === WarTypesConstants.WarTypeId.MmwStd) || (warType === WarTypesConstants.WarTypeId.MmwFog) || (warType === WarTypesConstants.WarTypeId.AtwStd) || (warType === WarTypesConstants.WarTypeId.AtwFog),
-        canSrw  : (warType === WarTypesConstants.WarTypeId.SrwFog) || (warType === WarTypesConstants.WarTypeId.SrwStd),
+    const ruleAvailability = RuleAvailability.fromJson({
+        canCcw  : (warType === WarTypeId.CcwFog) || (warType === WarTypeId.CcwStd),
+        canMcw  : (warType === WarTypeId.McwFog) || (warType === WarTypeId.McwStd),
+        canMrw  : (warType === WarTypeId.MrwFog) || (warType === WarTypeId.MrwStd) || (warType === WarTypeId.MmwStd) || (warType === WarTypeId.MmwFog) || (warType === WarTypeId.AtwStd) || (warType === WarTypeId.AtwFog),
+        canSrw  : (warType === WarTypeId.SrwFog) || (warType === WarTypeId.SrwStd),
     });
-    const errorCodeForRuleForPlayers = PlayerRulesUtils.getErrorCodeForPlayerRuleList({
+    const errorCodeForRuleForPlayers = getErrorCodeForPlayerRuleList({
         playerRuleList          : playerRuleList,
         gameConfig              : gameConfig,
         playersCountUnneutral   : playersCountUnneutral,
         ruleAvailability        : ruleAvailability,
-        isCampaignMap           : (warType === WarTypesConstants.WarTypeId.CampFog) || (warType === WarTypesConstants.WarTypeId.CampStd),
+        isCampaignMap           : (warType === WarTypeId.CampFog) || (warType === WarTypeId.CampStd),
     });
     if (errorCodeForRuleForPlayers) {
         return errorCodeForRuleForPlayers;
@@ -105,16 +107,16 @@ export function getErrorCode({ instanceWarRule, gameConfig, playersCountUnneutra
 
     const ruleForGlobalParams = instanceWarRule.getWarRuleCommonData();
     if (ruleForGlobalParams == null) {
-        return UtilsClientErrorCode.ClientErrorCode.WarRuleHelpers_GetErrorCodeForInstanceWarRule_02;
+        return ClientErrorCode.WarRuleHelpers_GetErrorCodeForInstanceWarRule_02;
     }
 
-    const errorCodeForGlobalParams = WarRulesUtilsCommonData.getErrorCode(ruleForGlobalParams, gameConfig);
+    const errorCodeForGlobalParams = WarRulesUtilsCommonDataGetErrorCode(ruleForGlobalParams, gameConfig);
     if (errorCodeForGlobalParams) {
         return errorCodeForGlobalParams;
     }
 
     const warEventFullData      = instanceWarRule.getWarEventFullData();
-    const errorCodeForWarEvent  = WarEventsFullDatasUtils.getErrorCodeForWarEventFullData({
+    const errorCodeForWarEvent  = getErrorCodeForWarEventFullData({
         warEventFullData        : warEventFullData,
         mapSize                 : mapSize,
         gameConfig              : gameConfig,
@@ -128,11 +130,11 @@ export function getErrorCode({ instanceWarRule, gameConfig, playersCountUnneutra
         const mapSimpleDialogueArray    = instanceWarRule.getMapSimpleDialogueArray();
         const simpleDialogueIdArray     = mapSimpleDialogueArray.map(v => v.getDialogueId() ?? 0);
         if (mapSimpleDialogueArray.length != new Set(simpleDialogueIdArray).size) {
-            return UtilsClientErrorCode.ClientErrorCode.WarRuleHelpers_GetErrorCodeForInstanceWarRule_03;
+            return ClientErrorCode.WarRuleHelpers_GetErrorCodeForInstanceWarRule_03;
         }
 
         for (const mapSimpleDialogue of mapSimpleDialogueArray) {
-            const errorCode = DialoguesUtilsMapSmallDialogue.getErrorCode(mapSimpleDialogue, playersCountUnneutral, gameConfig);
+            const errorCode = DialoguesUtilsMapSmallDialogueGetErrorCode(mapSimpleDialogue, playersCountUnneutral, gameConfig);
             if (errorCode) {
                 return errorCode;
             }
@@ -142,7 +144,7 @@ export function getErrorCode({ instanceWarRule, gameConfig, playersCountUnneutra
     {
         const taskObjectiveFullData = instanceWarRule.getTaskObjectiveFullData();
         if (taskObjectiveFullData != null) {
-            const errorCode = TaskObjectivesUtils.getErrorCodeForFullData(
+            const errorCode = getErrorCodeForFullData(
                 taskObjectiveFullData,
                 new Set(warEventFullData?.getCustomCounterNameArray()?.map(v => v.getName() ?? ``))
             );
@@ -152,5 +154,5 @@ export function getErrorCode({ instanceWarRule, gameConfig, playersCountUnneutra
         }
     }
 
-    return UtilsClientErrorCode.ClientErrorCode.NoError;
+    return ClientErrorCode.NoError;
 }

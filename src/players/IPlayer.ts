@@ -1,23 +1,27 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as CosConstants from "../cos/Constants.ts";
-import type * as CoSkillsConstants from "../coSkills/Constants.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import type * as PlayersConstants from "./Constants.ts";
-import type * as ProtoSchemaCommonProtoConfigCoBasicCfg from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
-import type * as ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialPlayer from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { EnergyTypeId } from "../cos/Constants.ts";
+import type { SkillTypeId } from "../coSkills/Constants.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
+import type { AliveStateId } from "./Constants.ts";
+import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
+import type {
+    GridIdAndMarkTypeId as ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId,
+} from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
+import type {
+    SerialPlayer as ProtoSchemaCommonProtoWarSerializationSerialPlayer,
+} from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 
-type GridIndex              = AuxiliaryTypesGridIndex.GridIndex;
-type PlayerAliveState       = PlayersConstants.AliveStateId;
-type CoSkillType            = CoSkillsConstants.SkillTypeId;
-type CoEnergyType           = CosConstants.EnergyTypeId;
-type GameConfiguration      = GameConfigGcData.GcData;
-type SerialPlayer           = ProtoSchemaCommonProtoWarSerializationSerialPlayer.SerialPlayer;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
-type GridIdAndMarkTypeId    = ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId.GridIdAndMarkTypeId;
+type GridIndex              = AuxiliaryTypesGridIndex;
+type PlayerAliveState       = AliveStateId;
+type CoSkillType            = SkillTypeId;
+type CoEnergyType           = EnergyTypeId;
+type GameConfiguration      = GcData;
+type SerialPlayer           = ProtoSchemaCommonProtoWarSerializationSerialPlayer;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type IBwWar                 = BaseWarInterfaceIBwWar;
+type GridIdAndMarkTypeId    = ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId;
 
 export interface IPlayer {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -124,5 +128,5 @@ export interface IPlayer {
 
     getUnitCostModifier(unitTypeId: number): number;
 
-    getCoBasicCfg(): ProtoSchemaCommonProtoConfigCoBasicCfg.CoBasicCfg;
+    getCoBasicCfg(): CoBasicCfg;
 }

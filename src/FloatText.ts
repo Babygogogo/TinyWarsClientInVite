@@ -1,19 +1,19 @@
-import * as GraphicsConstants from "./graphics/Constants.ts";
+import { DisplayLayerId } from "./graphics/Constants.ts";
 import type { TextType } from "./lang/Constants.ts";
-import * as LangUtils from "./lang/Utils.ts";
+import { getText } from "./lang/Utils.ts";
 import { Dimension } from "./stages/Constants.ts";
-import * as StageManager from "./stages/StageManager.ts";
+import { getLayer } from "./stages/StageManager.ts";
 import { Executor } from "./tween/Executor.ts";
 import { UiContainer } from "./ui/components/UiContainer.ts";
 import type { IUiLayer } from "./ui/interfaces/IUiLayer.ts";
 import { UiHorizontalAlign } from "./ui/types/UiHorizontalAlign.ts";
-import * as UiFactory from "./ui/utils/UiFactory.ts";
+import { getUiLabelClass } from "./ui/utils/UiFactory.ts";
 
 const StartY    = 100;
 let Container   : IUiLayer;
 
 export function show(text: string): void {
-    Container ??= StageManager.getLayer(GraphicsConstants.DisplayLayerId.FloatText);
+    Container ??= getLayer(DisplayLayerId.FloatText);
 
     const uiTextCount = Container.getUiChildren().length;
     for (let i = 0; i < uiTextCount; ++i) {
@@ -29,7 +29,7 @@ export function show(text: string): void {
     Container.addUiChild(newUiText);
 }
 export function showLang(langTextType: TextType): void {
-    show(LangUtils.getText(langTextType));
+    show(getText(langTextType));
 }
 
 class UiFloatText extends UiContainer {
@@ -37,7 +37,7 @@ class UiFloatText extends UiContainer {
         super();
 
         const width = Dimension.DesignWidth;
-        const label = new (UiFactory.getUiLabelClass());
+        const label = new (getUiLabelClass());
         label.setTextColor(0xFFFFFF);
         label.setStrokeWidth(2);
         label.setFontSize(16);

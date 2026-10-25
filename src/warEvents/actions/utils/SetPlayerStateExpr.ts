@@ -1,32 +1,34 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesPlayerDataForWeaSetPlayerState from "../../../auxiliaryTypes/PlayerDataForWeaSetPlayerState.ts";
-import type * as BaseWarInterfaceIBwWar from "../../../baseWar/interface/IBwWar.ts";
-import * as CosUtils from "../../../cos/Utils.ts";
-import * as CoSkillsUtilsCommon from "../../../coSkills/utils/Common.ts";
-import * as ExpressionParsersContextsPlayer from "../../../expressionParsers/contexts/Player.ts";
-import * as ExpressionParsersParser from "../../../expressionParsers/Parser.ts";
-import * as ExpressionParsersResultsNum from "../../../expressionParsers/results/Num.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NumbersUtils from "../../../numbers/Utils.ts";
-import * as PlayersConstants from "../../../players/Constants.ts";
-import type * as PlayersIPlayer from "../../../players/IPlayer.ts";
-import * as PlayersUtilsCommon from "../../../players/utils/Common.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaSetPlayerStateExpr from "../../../proto/schema/CommonProto/WarEvent/WeaSetPlayerStateExpr.ts";
-import * as WarEventsActionsConstantsSetPlayerStateExpr from "../constants/SetPlayerStateExpr.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { PlayerDataForWeaSetPlayerState } from "../../../auxiliaryTypes/PlayerDataForWeaSetPlayerState.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import { getValidEnergy } from "../../../cos/Utils.ts";
+import { checkIsValidSkillTypeId } from "../../../coSkills/utils/Common.ts";
+import { Player } from "../../../expressionParsers/contexts/Player.ts";
+import { Parser } from "../../../expressionParsers/Parser.ts";
+import { Num } from "../../../expressionParsers/results/Num.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getFormattedText } from "../../../lang/Utils.ts";
+import { getValueInRange, getValueInInt32 } from "../../../numbers/Utils.ts";
+import { Fund } from "../../../players/Constants.ts";
+import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import { checkIsValidAliveStateId } from "../../../players/utils/Common.ts";
+import type {
+    WeaSetPlayerStateExpr as ProtoSchemaCommonProtoWarEventWeaSetPlayerStateExpr,
+} from "../../../proto/schema/CommonProto/WarEvent/WeaSetPlayerStateExpr.ts";
+import { ExpressionInfoDict } from "../constants/SetPlayerStateExpr.ts";
 
-type WeaSetPlayerStateExpr  = ProtoSchemaCommonProtoWarEventWeaSetPlayerStateExpr.WeaSetPlayerStateExpr;
-type IPlayer                = PlayersIPlayer.IPlayer;
+type WeaSetPlayerStateExpr  = ProtoSchemaCommonProtoWarEventWeaSetPlayerStateExpr;
+type IPlayer                = PlayersIPlayer;
 
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetPlayerStateExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: Undefinable<WeaSetPlayerStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getConPlayerFilter(),
-            expressionInfo          : WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ConPlayerFilter,
+            expressionInfo          : ExpressionInfoDict.ConPlayerFilter,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -34,9 +36,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActAliveState(),
-            expressionInfo          : WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActAliveState,
+            expressionInfo          : ExpressionInfoDict.ActAliveState,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -44,9 +46,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCoId(),
-            expressionInfo          : WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActCoId,
+            expressionInfo          : ExpressionInfoDict.ActCoId,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -54,9 +56,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCoEnergy(),
-            expressionInfo          : WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActCoEnergy,
+            expressionInfo          : ExpressionInfoDict.ActCoEnergy,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -64,9 +66,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActFund(),
-            expressionInfo          : WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActFund,
+            expressionInfo          : ExpressionInfoDict.ActFund,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -74,9 +76,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActIsSkipTurn(),
-            expressionInfo          : WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActSkipTurn,
+            expressionInfo          : ExpressionInfoDict.ActSkipTurn,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -84,9 +86,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActCoUsingSkillType(),
-            expressionInfo          : WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActCoUsingSkillType,
+            expressionInfo          : ExpressionInfoDict.ActCoUsingSkillType,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -94,9 +96,9 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     }
 
     {
-        if (!ExpressionParsersParser.Parser.checkIsValidString2({
+        if (!Parser.checkIsValidString2({
             str                     : action.getActActivateCoSkillType(),
-            expressionInfo          : WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActActivateCoSkillType,
+            expressionInfo          : ExpressionInfoDict.ActActivateCoSkillType,
             customCounterNameSet    : customCounterNameSet,
         })) {
             return false;
@@ -106,125 +108,125 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypes.Undefinable<We
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetPlayerStateExpr>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetPlayerStateExpr>): string | null {
     if (data == null) {
         return null;
     }
 
-    return LangUtils.getFormattedText(LangConstants.TextType.F0045, data.getConPlayerFilter() ?? LangConstants.UndefinedError);
+    return getFormattedText(TextType.F0045, data.getConPlayerFilter() ?? UndefinedError);
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<WeaSetPlayerStateExpr>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetPlayerStateExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     const additionalText = [
-        data.getActAliveState()             ? `${WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActAliveState.getTitleText()}: ${data.getActAliveState()}`                      : null,
-        data.getActCoId()                   ? `${WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActCoId.getTitleText()}: ${data.getActCoId()}`                                  : null,
-        data.getActCoEnergy()               ? `${WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActCoEnergy.getTitleText()}: ${data.getActCoEnergy()}`                          : null,
-        data.getActFund()                   ? `${WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActFund.getTitleText()}: ${data.getActFund()}`                                  : null,
-        data.getActIsSkipTurn()             ? `${WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActSkipTurn.getTitleText()}: ${data.getActIsSkipTurn()}`                        : null,
-        data.getActCoUsingSkillType()       ? `${WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActCoUsingSkillType.getTitleText()}: ${data.getActCoUsingSkillType()}`          : null,
-        data.getActActivateCoSkillType()    ? `${WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActActivateCoSkillType.getTitleText()}: ${data.getActActivateCoSkillType()}`    : null,
+        data.getActAliveState()             ? `${ExpressionInfoDict.ActAliveState.getTitleText()}: ${data.getActAliveState()}`                      : null,
+        data.getActCoId()                   ? `${ExpressionInfoDict.ActCoId.getTitleText()}: ${data.getActCoId()}`                                  : null,
+        data.getActCoEnergy()               ? `${ExpressionInfoDict.ActCoEnergy.getTitleText()}: ${data.getActCoEnergy()}`                          : null,
+        data.getActFund()                   ? `${ExpressionInfoDict.ActFund.getTitleText()}: ${data.getActFund()}`                                  : null,
+        data.getActIsSkipTurn()             ? `${ExpressionInfoDict.ActSkipTurn.getTitleText()}: ${data.getActIsSkipTurn()}`                        : null,
+        data.getActCoUsingSkillType()       ? `${ExpressionInfoDict.ActCoUsingSkillType.getTitleText()}: ${data.getActCoUsingSkillType()}`          : null,
+        data.getActActivateCoSkillType()    ? `${ExpressionInfoDict.ActActivateCoSkillType.getTitleText()}: ${data.getActActivateCoSkillType()}`    : null,
     ].filter(v => v != null).join(`\n`);
 
-    return `${LangUtils.getFormattedText(LangConstants.TextType.F0045, data.getConPlayerFilter() ?? LangConstants.UndefinedError)}\n${additionalText}`;
+    return `${getFormattedText(TextType.F0045, data.getConPlayerFilter() ?? UndefinedError)}\n${additionalText}`;
 }
 
 export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: Set<string>): string | null {
     {
-        const info      = WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ConPlayerFilter;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ConPlayerFilter;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getConPlayerFilter(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActAliveState;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActAliveState;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActAliveState(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActCoId;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCoId;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCoId(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActCoEnergy;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCoEnergy;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCoEnergy(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActFund;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActFund;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActFund(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActSkipTurn;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActSkipTurn;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActIsSkipTurn(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActCoUsingSkillType;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActCoUsingSkillType;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActCoUsingSkillType(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
     {
-        const info      = WarEventsActionsConstantsSetPlayerStateExpr.ExpressionInfoDict.ActActivateCoSkillType;
-        const errorData = ExpressionParsersParser.Parser.getErrorDataForString2({
+        const info      = ExpressionInfoDict.ActActivateCoSkillType;
+        const errorData = Parser.getErrorDataForString2({
             str                     : data.getActActivateCoSkillType(),
             expressionInfo          : info,
             customCounterNameSet    : customCounterNameSet,
         });
         if (errorData.errorCode) {
-            return `${LangUtils.getFormattedText(LangConstants.TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
+            return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
         }
     }
 
@@ -233,8 +235,8 @@ export function getErrorTip(data: WeaSetPlayerStateExpr, customCounterNameSet: S
 
 function checkIsMeetConditionForPlayer(action: WeaSetPlayerStateExpr, player: IPlayer): boolean {
     try {
-        const result = ExpressionParsersParser.Parser.getParseResult(action.getConPlayerFilter() ?? ``).eval(new ExpressionParsersContextsPlayer.Player(player), false);
-        return (result instanceof ExpressionParsersResultsNum.Num) && (result.num !== 0);
+        const result = Parser.getParseResult(action.getConPlayerFilter() ?? ``).eval(new Player(player), false);
+        return (result instanceof Num) && (result.num !== 0);
     } catch {
         return false;
     }
@@ -244,7 +246,7 @@ function checkIsMeetConditionForPlayer(action: WeaSetPlayerStateExpr, player: IP
 export async function applyWithExtraData(_action: WeaSetPlayerStateExpr): Promise<void> {
     // nothing to do
 }
-export async function applyWithoutExtraData(action: WeaSetPlayerStateExpr, isFastExecute: boolean, war: BaseWarInterfaceIBwWar.IBwWar): Promise<void> {
+export async function applyWithoutExtraData(action: WeaSetPlayerStateExpr, isFastExecute: boolean, war: IBwWar): Promise<void> {
     const playerList: IPlayer[] = [];
     for (const player of [...war.getPlayerManager().getAllPlayersDict().values()].sort((v1, v2) => v1.getPlayerIndex() - v2.getPlayerIndex())) {
         if (checkIsMeetConditionForPlayer(action, player)) {
@@ -252,7 +254,7 @@ export async function applyWithoutExtraData(action: WeaSetPlayerStateExpr, isFas
         }
     }
 
-    for (const newPlayerData of playerList.map(player => new AuxiliaryTypesPlayerDataForWeaSetPlayerState.PlayerDataForWeaSetPlayerState({
+    for (const newPlayerData of playerList.map(player => new PlayerDataForWeaSetPlayerState({
         playerIndex         : player.getPlayerIndex(),
         fund                : evalActFundForPlayer(action, player),
         aliveState          : evalActAliveStateForPlayer(action, player),
@@ -273,11 +275,11 @@ function evalActFundForPlayer(action: WeaSetPlayerStateExpr, player: IPlayer): n
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsPlayer.Player(player), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return NumbersUtils.getValueInRange({
-                minValue    : PlayersConstants.Fund.MinFund,
-                maxValue    : PlayersConstants.Fund.MaxFund,
+        const epResult = Parser.getParseResult(act).eval(new Player(player), false);
+        if (epResult instanceof Num) {
+            return getValueInRange({
+                minValue    : Fund.MinFund,
+                maxValue    : Fund.MaxFund,
                 rawValue    : Math.floor(epResult.num),
             });
         } else {
@@ -295,10 +297,10 @@ function evalActAliveStateForPlayer(action: WeaSetPlayerStateExpr, player: IPlay
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsPlayer.Player(player), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            const aliveState = NumbersUtils.getValueInInt32(epResult.num);
-            return PlayersUtilsCommon.checkIsValidAliveStateId(aliveState) ? aliveState : null;
+        const epResult = Parser.getParseResult(act).eval(new Player(player), false);
+        if (epResult instanceof Num) {
+            const aliveState = getValueInInt32(epResult.num);
+            return checkIsValidAliveStateId(aliveState) ? aliveState : null;
         } else {
             return null;
         }
@@ -314,9 +316,9 @@ function evalActCoId(action: WeaSetPlayerStateExpr, player: IPlayer): number | n
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsPlayer.Player(player), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            const coId = NumbersUtils.getValueInInt32(epResult.num);
+        const epResult = Parser.getParseResult(act).eval(new Player(player), false);
+        if (epResult instanceof Num) {
+            const coId = getValueInInt32(epResult.num);
             return player.getWar().getGcData().getCoBasicCfg(coId) != null ? coId : null;
         } else {
             return null;
@@ -333,9 +335,9 @@ function evalActCoEnergyForPlayer(action: WeaSetPlayerStateExpr, player: IPlayer
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsPlayer.Player(player), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            return CosUtils.getValidEnergy(epResult.num);
+        const epResult = Parser.getParseResult(act).eval(new Player(player), false);
+        if (epResult instanceof Num) {
+            return getValidEnergy(epResult.num);
         } else {
             return null;
         }
@@ -351,8 +353,8 @@ function evalActIsSkipTurnForPlayer(action: WeaSetPlayerStateExpr, player: IPlay
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsPlayer.Player(player), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
+        const epResult = Parser.getParseResult(act).eval(new Player(player), false);
+        if (epResult instanceof Num) {
             return epResult.num !== 0;
         } else {
             return null;
@@ -369,10 +371,10 @@ function evalActCoUsingSkillTypeForPlayer(action: WeaSetPlayerStateExpr, player:
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsPlayer.Player(player), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            const skillType = NumbersUtils.getValueInInt32(epResult.num);
-            return CoSkillsUtilsCommon.checkIsValidSkillTypeId(skillType) ? skillType : null;
+        const epResult = Parser.getParseResult(act).eval(new Player(player), false);
+        if (epResult instanceof Num) {
+            const skillType = getValueInInt32(epResult.num);
+            return checkIsValidSkillTypeId(skillType) ? skillType : null;
         } else {
             return null;
         }
@@ -388,10 +390,10 @@ function evalActActivateCoSkillTypeForPlayer(action: WeaSetPlayerStateExpr, play
     }
 
     try {
-        const epResult = ExpressionParsersParser.Parser.getParseResult(act).eval(new ExpressionParsersContextsPlayer.Player(player), false);
-        if (epResult instanceof ExpressionParsersResultsNum.Num) {
-            const skillType = NumbersUtils.getValueInInt32(epResult.num);
-            return CoSkillsUtilsCommon.checkIsValidSkillTypeId(skillType) ? skillType : null;
+        const epResult = Parser.getParseResult(act).eval(new Player(player), false);
+        if (epResult instanceof Num) {
+            const skillType = getValueInInt32(epResult.num);
+            return checkIsValidSkillTypeId(skillType) ? skillType : null;
         } else {
             return null;
         }

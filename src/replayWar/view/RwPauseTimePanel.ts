@@ -1,32 +1,32 @@
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocalDataStorage2 from "../../localData/Storage.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ReplayWarInterfaceIRwWarBase from "../interface/IRwWarBase.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getTextForYesOrNo } from "../../lang/Utils.ts";
+import { getReplayPauseTime, setReplayPauseTime } from "../../localData/Storage.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { IRwWarBase } from "../interface/IRwWarBase.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 
 export interface OpenData {
-    war     : ReplayWarInterfaceIRwWarBase.IRwWarBase;
+    war     : IRwWarBase;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                     : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                      : IUiImage;
+    private readonly _group!                        : IUiContainer;
+    private readonly _labelTitle!                   : IUiLabel;
+    private readonly _btnClose!                     : IUiButton;
 
-    private readonly _labelPauseTimeTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPauseTime!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnPauseTime!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelPauseTimeTitle!          : IUiLabel;
+    private readonly _labelPauseTime!               : IUiLabel;
+    private readonly _btnPauseTime!                 : IUiButton;
 
-    private readonly _labelTurnStartTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelTurnStart!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnTurnStart!                 : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelTurnStartTitle!          : IUiLabel;
+    private readonly _labelTurnStart!               : IUiLabel;
+    private readonly _btnTurnStart!                 : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -36,7 +36,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnTurnStart,               callback: this._onTouchedBtnTurnStart },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -51,14 +51,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnPauseTime(): void {
         const minValue  = 0;
         const maxValue  = 5000;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0846),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle           : () => getText(TextType.B0846),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : LocalDataStorage2.getReplayPauseTime(),
-            getHelpText     : () => LangUtils.getText(LangConstants.TextType.A0290),
+            currentValue    : getReplayPauseTime(),
+            getHelpText     : () => getText(TextType.A0290),
             callback        : value => {
-                LocalDataStorage2.setReplayPauseTime(value);
+                setReplayPauseTime(value);
                 this._updateLabelPauseTime();
             },
         });
@@ -79,9 +79,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0846));
-        this._labelPauseTimeTitle.setText(LangUtils.getText(LangConstants.TextType.B0846));
-        this._labelTurnStartTitle.setText(LangUtils.getText(LangConstants.TextType.B1337));
+        this._labelTitle.setText(getText(TextType.B0846));
+        this._labelPauseTimeTitle.setText(getText(TextType.B0846));
+        this._labelTurnStartTitle.setText(getText(TextType.B1337));
     }
     private _updateComponentsForFilter(): void {
         this._updateLabelPauseTime();
@@ -89,10 +89,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateLabelPauseTime(): void {
-        this._labelPauseTime.setText(`${LocalDataStorage2.getReplayPauseTime()}ms`);
+        this._labelPauseTime.setText(`${getReplayPauseTime()}ms`);
     }
 
     private _updateLabelTurnStart(): void {
-        this._labelTurnStart.setText(LangUtils.getTextForYesOrNo(this.getOpenData()?.war.getIsShowTurnStartPopUp()));
+        this._labelTurnStart.setText(getTextForYesOrNo(this.getOpenData()?.war.getIsShowTurnStartPopUp()));
     }
 }

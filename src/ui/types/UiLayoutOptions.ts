@@ -1,16 +1,16 @@
-import type * as UiTypesUiHorizontalAlign from "./UiHorizontalAlign.ts";
-import type * as UiTypesUiLayoutOrientation from "./UiLayoutOrientation.ts";
-import type * as UiTypesUiPadding from "./UiPadding.ts";
-import type * as UiTypesUiVerticalAlign from "./UiVerticalAlign.ts";
+import type { UiHorizontalAlign } from "./UiHorizontalAlign.ts";
+import type { UiLayoutOrientation } from "./UiLayoutOrientation.ts";
+import type { UiPadding } from "./UiPadding.ts";
+import type { UiVerticalAlign } from "./UiVerticalAlign.ts";
 
 export interface UiLayoutOptions {
-    itemsHAlign?                : UiTypesUiHorizontalAlign.UiHorizontalAlign;
-    itemsVAlign?                : UiTypesUiVerticalAlign.UiVerticalAlign;
+    itemsHAlign?                : UiHorizontalAlign;
+    itemsVAlign?                : UiVerticalAlign;
     itemsHMargin?               : number;
     itemsVMargin?               : number;
-    orientation?                : UiTypesUiLayoutOrientation.UiLayoutOrientation;
+    orientation?                : UiLayoutOrientation;
     multiItemsPerBlock?         : boolean;
-    padding?                    : UiTypesUiPadding.UiPadding;
+    padding?                    : UiPadding;
     unscaledRequestedWidth?     : number;
     unscaledRequestedHeight?    : number;
 }

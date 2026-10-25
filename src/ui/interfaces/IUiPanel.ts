@@ -1,9 +1,9 @@
-import type * as GamePanelsTypes from "../../gamePanels/Types.ts";
-import type * as UiInterfacesIUiOpenableComponent from "./IUiOpenableComponent.ts";
+import type { PanelConfig as GamePanelsTypesPanelConfig } from "../../gamePanels/Types.ts";
+import type { IUiOpenableComponent } from "./IUiOpenableComponent.ts";
 
-type PanelConfig<T> = GamePanelsTypes.PanelConfig<T>;
+type PanelConfig<T> = GamePanelsTypesPanelConfig<T>;
 
-export interface IUiPanel<OpenData> extends UiInterfacesIUiOpenableComponent.IUiOpenableComponent<OpenData> {
+export interface IUiPanel<OpenData> extends IUiOpenableComponent<OpenData> {
     setPanelConfig(config: PanelConfig<OpenData>): void;
     getPanelConfig(): PanelConfig<OpenData>;
 

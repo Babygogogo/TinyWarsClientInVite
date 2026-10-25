@@ -1,29 +1,29 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesCachedDataAccessor from "../auxiliaryTypes/CachedDataAccessor.ts";
-import * as GameConfigGcData from "./GcData.ts";
-import * as GameConfigGcProxy from "./GcProxy.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as HelpersText from "../helpers/Text.ts";
-import * as ProtoSchemaCommonProtoConfigFullConfig from "../proto/schema/CommonProto/Config/FullConfig.ts";
-import * as VendorEgretRes from "../vendor/egret/Res.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
+import { GcData } from "./GcData.ts";
+import { reqCommonLatestConfigVersion } from "./GcProxy.ts";
+import { getExisted } from "../helpers/Misc.ts";
+import { getNumText } from "../helpers/Text.ts";
+import { FullConfig } from "../proto/schema/CommonProto/Config/FullConfig.ts";
+import { getResByUrl, ResourceItemHelper } from "../vendor/egret/Res.ts";
 
-const _latestVersionAccessor    = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<null, string>({
-    reqData : () => GameConfigGcProxy.reqCommonLatestConfigVersion(),
+const _latestVersionAccessor    = new CachedDataAccessor<null, string>({
+    reqData : () => reqCommonLatestConfigVersion(),
 });
-const _gameConfigAccessor       = new AuxiliaryTypesCachedDataAccessor.CachedDataAccessor<string, GameConfigGcData.GcData>({
+const _gameConfigAccessor       = new CachedDataAccessor<string, GcData>({
     reqData : async (version: string) => {
-        const configBin : AuxiliaryTypesAuxiliaryTypes.Undefinable<ArrayBuffer> = await VendorEgretRes.getResByUrl(
+        const configBin : Undefinable<ArrayBuffer> = await getResByUrl(
             `resource/config/FullConfig${version}.bin`,
             void 0,
             null,
-            VendorEgretRes.ResourceItemHelper.TYPE_BIN
+            ResourceItemHelper.TYPE_BIN
         );
-        const rawConfig = configBin ? ProtoSchemaCommonProtoConfigFullConfig.FullConfig.decode(new Uint8Array(configBin)) : null;
+        const rawConfig = configBin ? FullConfig.decode(new Uint8Array(configBin)) : null;
 
         if (rawConfig == null) {
             _gameConfigAccessor.setData(version, null);
         } else {
-            _gameConfigAccessor.setData(version, new GameConfigGcData.GcData(version, rawConfig));
+            _gameConfigAccessor.setData(version, new GcData(version, rawConfig));
         }
     },
 });
@@ -36,7 +36,7 @@ export function init(): void {
 }
 
 export async function getLatestConfigVersion(): Promise<string> {
-    return HelpersMisc.getExisted(await _latestVersionAccessor.getData(null));
+    return getExisted(await _latestVersionAccessor.getData(null));
 }
 export function setLatestConfigVersion(version: string): void {
     _latestVersionAccessor.setData(null, version);
@@ -59,7 +59,7 @@ export async function getPreviousConfigVersion(version: string): Promise<string 
         return null;
     }
 
-    return `${version[0]}${HelpersText.getNumText(num, 7)}`;
+    return `${version[0]}${getNumText(num, 7)}`;
 }
 export async function getNextConfigVersion(version: string): Promise<string | null> {
     if (version.length != 8) {
@@ -76,12 +76,12 @@ export async function getNextConfigVersion(version: string): Promise<string | nu
         return null;
     }
 
-    return `${version[0]}${HelpersText.getNumText(num, 7)}`;
+    return `${version[0]}${getNumText(num, 7)}`;
 }
 
-export async function getGameConfig(version: string): Promise<GameConfigGcData.GcData> {
-    return HelpersMisc.getExisted(await _gameConfigAccessor.getData(version));
+export async function getGameConfig(version: string): Promise<GcData> {
+    return getExisted(await _gameConfigAccessor.getData(version));
 }
-export async function getLatestGameConfig(): Promise<GameConfigGcData.GcData> {
+export async function getLatestGameConfig(): Promise<GcData> {
     return await getGameConfig(await getLatestConfigVersion());
 }

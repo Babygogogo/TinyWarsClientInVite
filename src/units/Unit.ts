@@ -1,64 +1,83 @@
-import * as AuxiliaryTypesAttackableArea from "../auxiliaryTypes/AttackableArea.ts";
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as AuxiliaryTypesGridIndexAndWeight from "../auxiliaryTypes/GridIndexAndWeight.ts";
-import * as AuxiliaryTypesMovableArea from "../auxiliaryTypes/MovableArea.ts";
-import * as AuxiliaryTypesUnitVisionInfo from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import * as CosConstants from "../cos/Constants.ts";
-import * as CoSkillsConstants from "../coSkills/Constants.ts";
-import * as CoSkillsUtilsCommon from "../coSkills/utils/Common.ts";
-import * as CoSkillsUtilsPersistentSelfCanCoBoard from "../coSkills/utils/persistent/SelfCanCoBoard.ts";
-import * as CoSkillsUtilsPersistentSelfUnitAttackRange from "../coSkills/utils/persistent/SelfUnitAttackRange.ts";
-import * as CoSkillsUtilsPersistentSelfUnitCaptureAmount from "../coSkills/utils/persistent/SelfUnitCaptureAmount.ts";
-import * as CoSkillsUtilsPersistentSelfUnitDefense from "../coSkills/utils/persistent/SelfUnitDefense.ts";
-import * as CoSkillsUtilsPersistentSelfUnitFuelConsumption from "../coSkills/utils/persistent/SelfUnitFuelConsumption.ts";
-import * as CoSkillsUtilsPersistentSelfUnitLuckRange from "../coSkills/utils/persistent/SelfUnitLuckRange.ts";
-import * as CoSkillsUtilsPersistentSelfUnitMoveRange from "../coSkills/utils/persistent/SelfUnitMoveRange.ts";
-import * as CoSkillsUtilsPersistentSelfUnitOffense from "../coSkills/utils/persistent/SelfUnitOffense.ts";
-import * as CoSkillsUtilsPersistentSelfUnitVision from "../coSkills/utils/persistent/SelfUnitVision.ts";
-import type * as GameConfigGcData from "../gameConfig/GcData.ts";
-import * as GameHelpersGhFactory from "../gameHelpers/GhFactory.ts";
-import * as HelpersCollection from "../helpers/Collection.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import * as LocationsUtils from "../locations/Utils.ts";
-import type * as NotificationsDataTypes from "../notifications/DataTypes.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import * as NumbersConstants from "../numbers/Constants.ts";
-import * as NumbersUtils from "../numbers/Utils.ts";
-import type * as PlayersIPlayer from "../players/IPlayer.ts";
-import type * as ProtoSchemaCommonProtoConfigBuildableTileCfg from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigDamageChartCfg from "../proto/schema/CommonProto/Config/DamageChartCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigUnitTemplateCfg from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigVisionBonusCfg from "../proto/schema/CommonProto/Config/VisionBonusCfg.ts";
-import type * as ProtoSchemaCommonProtoStructureUnitBuff from "../proto/schema/CommonProto/Structure/UnitBuff.ts";
-import type * as ProtoSchemaCommonProtoStructureWeightedGridIndex from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialUnit from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-import type * as TilesITile from "../tiles/ITile.ts";
-import * as TilesUtilsCommon from "../tiles/utils/Common.ts";
-import * as UnitBuffsConstants from "../unitBuffs/Constants.ts";
-import * as UnitBuffsUtilsCommon from "../unitBuffs/utils/Common.ts";
-import * as UnitsConstants from "./Constants.ts";
-import type * as UnitsIUnit from "./IUnit.ts";
-import type * as UnitsIUnitView from "./IUnitView.ts";
-import * as UnitsUtilsCommon from "./utils/Common.ts";
-import * as UnitsUtilsCustomName from "./utils/CustomName.ts";
-import * as UnitsUtilsSerialization from "./utils/Serialization.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
-import * as WeightedGridIndexesUtils from "../weightedGridIndexes/Utils.ts";
+import { AttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { GridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts";
+import { MovableArea } from "../auxiliaryTypes/MovableArea.ts";
+import { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import { CoId, EnergyTypeId } from "../cos/Constants.ts";
+import { SkillTypeId } from "../coSkills/Constants.ts";
+import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
+import { checkCanCoBoard } from "../coSkills/utils/persistent/SelfCanCoBoard.ts";
+import { getTotalUpperOffset } from "../coSkills/utils/persistent/SelfUnitAttackRange.ts";
+import { getTotalOffsetPct } from "../coSkills/utils/persistent/SelfUnitCaptureAmount.ts";
+import {
+    getTotalOffsetPct as CoSkillsUtilsPersistentSelfUnitDefenseGetTotalOffsetPct,
+} from "../coSkills/utils/persistent/SelfUnitDefense.ts";
+import { getTotalOffset } from "../coSkills/utils/persistent/SelfUnitFuelConsumption.ts";
+import {
+    getTotalOffset as CoSkillsUtilsPersistentSelfUnitLuckRangeGetTotalOffset,
+} from "../coSkills/utils/persistent/SelfUnitLuckRange.ts";
+import {
+    getTotalOffset as CoSkillsUtilsPersistentSelfUnitMoveRangeGetTotalOffset,
+} from "../coSkills/utils/persistent/SelfUnitMoveRange.ts";
+import {
+    getTotalOffsetPct as CoSkillsUtilsPersistentSelfUnitOffenseGetTotalOffsetPct,
+} from "../coSkills/utils/persistent/SelfUnitOffense.ts";
+import { getTotalRangeOffset, checkCanSeeThrough } from "../coSkills/utils/persistent/SelfUnitVision.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
+import { getUnitViewClass, getUnitClass } from "../gameHelpers/GhFactory.ts";
+import { deleteElementFromList } from "../helpers/Collection.ts";
+import { newError, getExisted, createLazyFunc, createLazyFunc2 } from "../helpers/Misc.ts";
+import { getCurrentLanguageType, getLanguageText } from "../lang/Utils.ts";
+import { decode } from "../locations/Utils.ts";
+import type { BwUnitBuffChanged } from "../notifications/DataTypes.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import { MaxInt32 } from "../numbers/Constants.ts";
+import { getValueInRange, getValueInInt32 } from "../numbers/Utils.ts";
+import type { IPlayer as PlayersIPlayer } from "../players/IPlayer.ts";
+import type {
+    BuildableTileCfg as ProtoSchemaCommonProtoConfigBuildableTileCfg,
+} from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
+import type { DamageChartCfg } from "../proto/schema/CommonProto/Config/DamageChartCfg.ts";
+import type { UnitTemplateCfg as ProtoSchemaCommonProtoConfigUnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
+import type { VisionBonusCfg } from "../proto/schema/CommonProto/Config/VisionBonusCfg.ts";
+import type { UnitBuff as ProtoSchemaCommonProtoStructureUnitBuff } from "../proto/schema/CommonProto/Structure/UnitBuff.ts";
+import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
+import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
+import type { ITile } from "../tiles/ITile.ts";
+import { checkCanCoBoard as TilesUtilsCommonCheckCanCoBoard } from "../tiles/utils/Common.ts";
+import { BuffTypeId } from "../unitBuffs/Constants.ts";
+import { checkIsValid, checkIsExpired } from "../unitBuffs/utils/Common.ts";
+import { ActionStateId, WeaponTypeId, Hp, TagId, AiModeId } from "./Constants.ts";
+import type { IUnit } from "./IUnit.ts";
+import type { IUnitView } from "./IUnitView.ts";
+import {
+    getNormalizedHp,
+    checkIsValidPrimaryAmmo,
+    getValidPrimaryAmmo,
+    checkIsValidProduceMaterial,
+    getValidProduceMaterial,
+    checkIsMeetLoadedStateId,
+    checkIsValidEncodedTagId,
+    checkIsValidAiModeId,
+} from "./utils/Common.ts";
+import { checkIsValidCustomNameId } from "./utils/CustomName.ts";
+import { getErrorCodeForUnitDataIgnoringUnitId, create } from "./utils/Serialization.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+import { toGridIndexAndWeight } from "../weightedGridIndexes/Utils.ts";
 
-type UnitBuff               = ProtoSchemaCommonProtoStructureUnitBuff.UnitBuff;
-type BuildableTileCfg       = ProtoSchemaCommonProtoConfigBuildableTileCfg.BuildableTileCfg;
-type UnitTemplateCfg        = ProtoSchemaCommonProtoConfigUnitTemplateCfg.UnitTemplateCfg;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
-type IPlayer                = PlayersIPlayer.IPlayer;
-type IBwWar                 = BaseWarInterfaceIBwWar.IBwWar;
-type IBwTile                = TilesITile.ITile;
+type UnitBuff               = ProtoSchemaCommonProtoStructureUnitBuff;
+type BuildableTileCfg       = ProtoSchemaCommonProtoConfigBuildableTileCfg;
+type UnitTemplateCfg        = ProtoSchemaCommonProtoConfigUnitTemplateCfg;
+type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+type IPlayer                = PlayersIPlayer;
+type IBwWar                 = BaseWarInterfaceIBwWar;
+type IBwTile                = ITile;
 
-export class Unit implements UnitsIUnit.IUnit {
-    private _gameConfig?                        : GameConfigGcData.GcData;
+export class Unit implements IUnit {
+    private _gameConfig?                        : GcData;
     private _templateCfg?                       : UnitTemplateCfg;
     private _playerIndex                        = 0;
     private _gridX                              = 0;
@@ -79,29 +98,29 @@ export class Unit implements UnitsIUnit.IUnit {
     private _aiMode                             = 0;
     private _encodedTagIds                      = 0;
     private _forbiddenGroupedLocationIdArray    : number[] = [];
-    private _aiWeightedDestination?             : AuxiliaryTypesGridIndexAndWeight.GridIndexAndWeight | null;
+    private _aiWeightedDestination?             : GridIndexAndWeight | null;
     private _buffArray                          : UnitBuff[] = [];
     private _customNameId                       : Undefinable<number>;
 
-    private readonly _view              = new (GameHelpersGhFactory.getUnitViewClass())();
+    private readonly _view              = new (getUnitViewClass())();
     private _war?                       : IBwWar;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Initializers and serializers.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public init(unitData: ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit, gameConfig: GameConfigGcData.GcData): void {
-        const validationError = UnitsUtilsSerialization.getErrorCodeForUnitDataIgnoringUnitId({
+    public init(unitData: SerialUnit, gameConfig: GcData): void {
+        const validationError = getErrorCodeForUnitDataIgnoringUnitId({
             unitData                : unitData,
             gameConfig              : gameConfig,
             mapSize                 : null,
             playersCountUnneutral   : null,
         });
         if (validationError) {
-            throw HelpersMisc.newError(`ValidationError: ${validationError}`, validationError);
+            throw newError(`ValidationError: ${validationError}`, validationError);
         }
 
-        const unitTemplateCfg = HelpersMisc.getExisted(gameConfig.getUnitTemplateCfg(unitData.getUnitType()));
-        this.setGridIndex(HelpersMisc.getExisted(AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(unitData.getGridIndex())));
+        const unitTemplateCfg = getExisted(gameConfig.getUnitTemplateCfg(unitData.getUnitType()));
+        this.setGridIndex(getExisted(GridIndex.convertGridIndex(unitData.getGridIndex())));
         this.setUnitId(unitData.getUnitId());
         this._setGameConfig(gameConfig);
         this._setTemplateCfg(unitTemplateCfg);
@@ -130,7 +149,7 @@ export class Unit implements UnitsIUnit.IUnit {
 
     public startRunning(war: IBwWar): void {
         if (war.getGcData() !== this.getGcData()) {
-            throw HelpersMisc.newError(`IUnit.startRunning() invalid gameConfig.`);
+            throw newError(`IUnit.startRunning() invalid gameConfig.`);
         }
 
         this._setWar(war);
@@ -142,16 +161,16 @@ export class Unit implements UnitsIUnit.IUnit {
         this.getView().stopRunningView();
     }
 
-    public clone(): UnitsIUnit.IUnit {
-        const unit = new (GameHelpersGhFactory.getUnitClass())();
+    public clone(): IUnit {
+        const unit = new (getUnitClass())();
         unit.init(this.serialize(), this.getGcData());
         unit.startRunning(this.getWar());
 
         return unit;
     }
 
-    public serialize(): ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit {
-        return UnitsUtilsSerialization.create({
+    public serialize(): SerialUnit {
+        return create({
             gridIndex                       : this.getGridIndex().toProto().toJson(),
             playerIndex                     : this.getPlayerIndex(),
             unitType                        : this.getUnitType(),
@@ -179,10 +198,10 @@ export class Unit implements UnitsIUnit.IUnit {
             loaderUnitId                    : this.getLoaderUnitId() ?? null,
         });
     }
-    public serializeForCreateSfw(): ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit {
+    public serializeForCreateSfw(): SerialUnit {
         return this.serialize();
     }
-    public serializeForCreateMfr(): ProtoSchemaCommonProtoWarSerializationSerialUnit.SerialUnit {
+    public serializeForCreateMfr(): SerialUnit {
         return this.serializeForCreateSfw();
     }
 
@@ -190,13 +209,13 @@ export class Unit implements UnitsIUnit.IUnit {
         this._war = war;
     }
     public getWar(): IBwWar {
-        return HelpersMisc.getExisted(this._war);
+        return getExisted(this._war);
     }
 
-    public getGcData(): GameConfigGcData.GcData {
-        return HelpersMisc.getExisted(this._gameConfig);
+    public getGcData(): GcData {
+        return getExisted(this._gameConfig);
     }
-    private _setGameConfig(config: GameConfigGcData.GcData): void {
+    private _setGameConfig(config: GcData): void {
         this._gameConfig = config;
     }
 
@@ -204,19 +223,19 @@ export class Unit implements UnitsIUnit.IUnit {
         this._templateCfg = cfg;
     }
     public getTemplateCfg(): UnitTemplateCfg {
-        return HelpersMisc.getExisted(this._templateCfg);
+        return getExisted(this._templateCfg);
     }
 
     public getUnitType(): number {
-        return HelpersMisc.getExisted(this.getTemplateCfg().getUnitTypeId());
+        return getExisted(this.getTemplateCfg().getUnitTypeId());
     }
-    private _getDamageChartCfg(): { [armorType: number]: { [weaponType: number]: ProtoSchemaCommonProtoConfigDamageChartCfg.DamageChartCfg } } {
-        return HelpersMisc.getExisted(this.getGcData().getDamageChartCfgs(this.getUnitType()));
+    private _getDamageChartCfg(): { [armorType: number]: { [weaponType: number]: DamageChartCfg } } {
+        return getExisted(this.getGcData().getDamageChartCfgs(this.getUnitType()));
     }
     private _getBuildableTileCfg(): { [srcBaseType: number]: { [srcObjectType: number]: BuildableTileCfg } } | null {
         return this.getGcData().getBuildableTileCfgs(this.getUnitType());
     }
-    private _getVisionBonusCfg(): { [tileType: number]: ProtoSchemaCommonProtoConfigVisionBonusCfg.VisionBonusCfg } | null {
+    private _getVisionBonusCfg(): { [tileType: number]: VisionBonusCfg } | null {
         return this.getGcData().getVisionBonusCfg(this.getUnitType());
     }
 
@@ -227,7 +246,7 @@ export class Unit implements UnitsIUnit.IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////
-    public getView(): UnitsIUnitView.IUnitView {
+    public getView(): IUnitView {
         return this._view;
     }
 
@@ -239,10 +258,10 @@ export class Unit implements UnitsIUnit.IUnit {
     }
 
     public moveViewAlongPath({ pathNodes, isDiving, isBlocked, aiming, updateViewAfterMove }: {
-        pathNodes           : AuxiliaryTypesGridIndex.GridIndex[];
+        pathNodes           : GridIndex[];
         isDiving            : boolean;
         isBlocked           : boolean;
-        aiming              : AuxiliaryTypesGridIndex.GridIndex | null;
+        aiming              : GridIndex | null;
         updateViewAfterMove : boolean;
     }): Promise<void> {
         return this.getView().moveAlongPath({ path: pathNodes, isDiving, isBlocked, aiming, updateViewAfterMove });
@@ -266,10 +285,10 @@ export class Unit implements UnitsIUnit.IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for state.
     ////////////////////////////////////////////////////////////////////////////////
-    public getActionState(): UnitsConstants.ActionStateId {
+    public getActionState(): ActionStateId {
         return this._actionState;
     }
-    public setActionState(state: UnitsConstants.ActionStateId): void {
+    public setActionState(state: ActionStateId): void {
         this._actionState = state;
     }
 
@@ -294,11 +313,11 @@ export class Unit implements UnitsIUnit.IUnit {
         return this.getTemplateCfg().getMaxHp();
     }
     public getNormalizedMaxHp(): number {
-        return UnitsUtilsCommon.getNormalizedHp(this.getMaxHp());
+        return getNormalizedHp(this.getMaxHp());
     }
 
     public getNormalizedCurrentHp(): number {
-        return UnitsUtilsCommon.getNormalizedHp(this.getCurrentHp());
+        return getNormalizedHp(this.getCurrentHp());
     }
     public getCurrentHp(): number {
         return this._currentHp;
@@ -308,7 +327,7 @@ export class Unit implements UnitsIUnit.IUnit {
         if (((maxHp == null) && (hp != null))               ||
             ((maxHp != null) && ((hp < 0) || (hp > maxHp)))
         ) {
-            throw HelpersMisc.newError(`IUnit.setCurrentHp() invalid hp: ${hp}, maxHp: ${maxHp}`);
+            throw newError(`IUnit.setCurrentHp() invalid hp: ${hp}, maxHp: ${maxHp}`);
         }
         this._currentHp = hp;
     }
@@ -322,7 +341,7 @@ export class Unit implements UnitsIUnit.IUnit {
     }
 
     public getArmorType(): number {
-        return HelpersMisc.getExisted(this.getTemplateCfg()?.getArmorTypeId());
+        return getExisted(this.getTemplateCfg()?.getArmorTypeId());
     }
 
     public checkIsArmorAffectByLuck(): boolean {
@@ -348,13 +367,13 @@ export class Unit implements UnitsIUnit.IUnit {
         return this._primaryWeaponCurrentAmmo;
     }
     private _setPrimaryWeaponCurrentAmmo(ammo: number): void {
-        if (!UnitsUtilsCommon.checkIsValidPrimaryAmmo(ammo)) {
-            throw HelpersMisc.newError(`Invalid primary weapon ammo: ${ammo}`);
+        if (!checkIsValidPrimaryAmmo(ammo)) {
+            throw newError(`Invalid primary weapon ammo: ${ammo}`);
         }
         this._primaryWeaponCurrentAmmo = ammo;
     }
     public setAndValidatePrimaryWeaponCurrentAmmo(ammo: number): void {
-        this._setPrimaryWeaponCurrentAmmo(UnitsUtilsCommon.getValidPrimaryAmmo(ammo));
+        this._setPrimaryWeaponCurrentAmmo(getValidPrimaryAmmo(ammo));
     }
     public addAndValidatePrimaryWeaponCurrentAmmo(offset: number): void {
         if (offset === 0) {
@@ -367,7 +386,7 @@ export class Unit implements UnitsIUnit.IUnit {
         if (((offset > 0) && (currentAmmo < maxAmmo)) ||
             ((offset < 0) && (currentAmmo > minAmmo))
         ) {
-            this.setAndValidatePrimaryWeaponCurrentAmmo(NumbersUtils.getValueInRange({
+            this.setAndValidatePrimaryWeaponCurrentAmmo(getValueInRange({
                 minValue    : minAmmo,
                 maxValue    : maxAmmo,
                 rawValue    : currentAmmo + offset,
@@ -382,7 +401,7 @@ export class Unit implements UnitsIUnit.IUnit {
         } else {
             const currentAmmo = this.getPrimaryWeaponCurrentAmmo();
             if (currentAmmo == null) {
-                throw HelpersMisc.newError(`Empty currentAmmo.`);
+                throw newError(`Empty currentAmmo.`);
             } else {
                 return maxAmmo - currentAmmo;
             }
@@ -399,18 +418,18 @@ export class Unit implements UnitsIUnit.IUnit {
 
     public getPrimaryWeaponBaseDamage(armorType: number): number | null {
         return (this.getPrimaryWeaponCurrentAmmo() > 0)
-            ? this.getCfgBaseDamage(armorType, UnitsConstants.WeaponTypeId.Primary)
+            ? this.getCfgBaseDamage(armorType, WeaponTypeId.Primary)
             : null;
     }
 
     public getAttackModifierByCo({ selfGridIndex, isCounter, observerTeamIndexSet, useDamagePreviewSettings }: {
-        selfGridIndex               : AuxiliaryTypesGridIndex.GridIndex;
+        selfGridIndex               : GridIndex;
         isCounter                   : boolean;
         observerTeamIndexSet        : Set<number> | null;
         useDamagePreviewSettings    : boolean;
     }): number {
         const player = this.getPlayer();
-        if (player.getCoId() === CosConstants.CoId.Empty) {
+        if (player.getCoId() === CoId.Empty) {
             return 0;
         }
 
@@ -433,12 +452,12 @@ export class Unit implements UnitsIUnit.IUnit {
             ? damagePreviewSettings.settings.find(v => v.playerIndex === selfPlayerIndex)?.isForcedInCoZone ?? false
             : false;
         const weatherTypeId             = war.getWeatherManager().getCurrentWeatherType();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() =>
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() =>
             observerTeamIndexSet == null
                 ? player.getCoGridIndexListOnMap()
                 : player.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet)
         );
-        const getOwnTilesCount          = HelpersMisc.createLazyFunc2((tileCategoryId: number): number => {
+        const getOwnTilesCount          = createLazyFunc2((tileCategoryId: number): number => {
             let count = 0;
             for (const column of tileMap.getMap()) {
                 for (const tile of column) {
@@ -452,7 +471,7 @@ export class Unit implements UnitsIUnit.IUnit {
 
         let modifier = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkillsUtilsPersistentSelfUnitOffense.getTotalOffsetPct({
+            modifier += CoSkillsUtilsPersistentSelfUnitOffenseGetTotalOffsetPct({
                 cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitOffense(),
                 gameConfig                  : gameConfig,
                 unitTypeId                  : unitTypeId,
@@ -475,7 +494,7 @@ export class Unit implements UnitsIUnit.IUnit {
 
         return modifier;
     }
-    public getAttackModifierByWeather(selfGridIndex: AuxiliaryTypesGridIndex.GridIndex, observerTeamIndexSet: Set<number> | null, useDamagePreviewSettings: boolean): number {
+    public getAttackModifierByWeather(selfGridIndex: GridIndex, observerTeamIndexSet: Set<number> | null, useDamagePreviewSettings: boolean): number {
         const war               = this.getWar();
         const weatherManager    = war.getWeatherManager();
         const offenseBonusCfg   = weatherManager.getCurrentWeatherCfg().getOffenseBonus();
@@ -503,7 +522,7 @@ export class Unit implements UnitsIUnit.IUnit {
         const isInCozByPreviewSettings  = ((useDamagePreviewSettings) && (damagePreviewSettings.isEnabled))
             ? damagePreviewSettings.settings.find(v => v.playerIndex === selfPlayerIndex)?.isForcedInCoZone ?? false
             : false;
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() =>
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() =>
             observerTeamIndexSet == null
                 ? player.getCoGridIndexListOnMap()
                 : player.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet)
@@ -527,10 +546,10 @@ export class Unit implements UnitsIUnit.IUnit {
 
         return modifier;
     }
-    public getEffectiveOffensePierce(selfGridIndex: AuxiliaryTypesGridIndex.GridIndex): number[] {
+    public getEffectiveOffensePierce(selfGridIndex: GridIndex): number[] {
         const result    = new Array<number>(6).fill(0);
         const player    = this.getPlayer();
-        if (player.getCoId() == CosConstants.CoId.Empty) {
+        if (player.getCoId() == CoId.Empty) {
             return result;
         }
 
@@ -538,7 +557,7 @@ export class Unit implements UnitsIUnit.IUnit {
         const unitType                  = this.getUnitType();
         const coZoneRadius              = player.getCoZoneRadius();
         const isCoOnboard               = this.getIsCoOnboard();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         for (const skillId of player.getCoCurrentSkills()) {
             const skillCfg = gameConfig.getCoSkillCfg(skillId);
             if (skillCfg == null) {
@@ -568,7 +587,7 @@ export class Unit implements UnitsIUnit.IUnit {
         return result;
     }
     public getDefenseModifierByCo({ selfGridIndex, attackerUnitTypeId, observerTeamIndexSet, useDamagePreviewSettings }: {
-        selfGridIndex               : AuxiliaryTypesGridIndex.GridIndex;
+        selfGridIndex               : GridIndex;
         attackerUnitTypeId          : number | null;
         observerTeamIndexSet        : Set<number> | null;
         useDamagePreviewSettings    : boolean;
@@ -597,12 +616,12 @@ export class Unit implements UnitsIUnit.IUnit {
         const isInCozByPreviewSettings  = ((useDamagePreviewSettings) && (damagePreviewSettings.isEnabled))
             ? damagePreviewSettings.settings.find(v => v.playerIndex === selfPlayerIndex)?.isForcedInCoZone ?? false
             : false;
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() =>
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() =>
             observerTeamIndexSet == null
                 ? player.getCoGridIndexListOnMap()
                 : player.getVisibleCoGridIndexArrayOnMap(observerTeamIndexSet)
         );
-        const getOwnTilesCount          = HelpersMisc.createLazyFunc2((tileCategoryId: number): number => {
+        const getOwnTilesCount          = createLazyFunc2((tileCategoryId: number): number => {
             let count = 0;
             for (const column of tileMap.getMap()) {
                 for (const tile of column) {
@@ -616,7 +635,7 @@ export class Unit implements UnitsIUnit.IUnit {
 
         let modifier = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkillsUtilsPersistentSelfUnitDefense.getTotalOffsetPct({
+            modifier += CoSkillsUtilsPersistentSelfUnitDefenseGetTotalOffsetPct({
                 cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitDefense(),
                 gameConfig                  : gameConfig,
                 unitTypeId1                 : attackerUnitTypeId,
@@ -640,9 +659,9 @@ export class Unit implements UnitsIUnit.IUnit {
         return modifier;
     }
 
-    public checkCanBeCounterAttackedByCo(selfGridIndex: AuxiliaryTypesGridIndex.GridIndex): boolean {
+    public checkCanBeCounterAttackedByCo(selfGridIndex: GridIndex): boolean {
         const player = this.getPlayer();
-        if (player.getCoId() === CosConstants.CoId.Empty) {
+        if (player.getCoId() === CoId.Empty) {
             return true;
         }
 
@@ -650,10 +669,10 @@ export class Unit implements UnitsIUnit.IUnit {
         const unitType                  = this.getUnitType();
         const tileType                  = this.getWar().getTileMap().getTile(selfGridIndex).getTileTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
         for (const skillId of player.getCoCurrentSkills()) {
-            const skillCfg = HelpersMisc.getExisted(gameConfig.getCoSkillCfg(skillId));
+            const skillCfg = getExisted(gameConfig.getCoSkillCfg(skillId));
 
             {
                 const cfg = skillCfg.getPersistent()?.getSelfCannotBeCounterAttacked();
@@ -673,9 +692,9 @@ export class Unit implements UnitsIUnit.IUnit {
 
         return true;
     }
-    public checkCanCounterAttackByCo(selfGridIndex: AuxiliaryTypesGridIndex.GridIndex): boolean {
+    public checkCanCounterAttackByCo(selfGridIndex: GridIndex): boolean {
         const player = this.getPlayer();
-        if (player.getCoId() === CosConstants.CoId.Empty) {
+        if (player.getCoId() === CoId.Empty) {
             return true;
         }
 
@@ -683,10 +702,10 @@ export class Unit implements UnitsIUnit.IUnit {
         const unitType                  = this.getUnitType();
         const tileType                  = this.getWar().getTileMap().getTile(selfGridIndex).getTileTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
         for (const skillId of player.getCoCurrentSkills()) {
-            const skillCfg = HelpersMisc.getExisted(gameConfig.getCoSkillCfg(skillId));
+            const skillCfg = getExisted(gameConfig.getCoSkillCfg(skillId));
 
             {
                 const cfg = skillCfg.getPersistent()?.getSelfCannotCounterAttack();
@@ -707,17 +726,17 @@ export class Unit implements UnitsIUnit.IUnit {
         return true;
     }
 
-    public getLuckLimitModifierByCo(selfGridIndex: AuxiliaryTypesGridIndex.GridIndex): { lower: number, upper: number } {
+    public getLuckLimitModifierByCo(selfGridIndex: GridIndex): { lower: number, upper: number } {
         const player                    = this.getPlayer();
         const gameConfig                = this.getGcData();
         const selfUnitType                  = this.getUnitType();
         const coZoneRadius              = player.getCoZoneRadius();
         const isCoOnboard               = this.getIsCoOnboard();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         let lowerModifier               = 0;
         let upperModifier               = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            const offset = CoSkillsUtilsPersistentSelfUnitLuckRange.getTotalOffset({
+            const offset = CoSkillsUtilsPersistentSelfUnitLuckRangeGetTotalOffset({
                 cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitLuckRange(),
                 gameConfig                  : gameConfig,
                 unitTypeId                  : selfUnitType,
@@ -741,7 +760,7 @@ export class Unit implements UnitsIUnit.IUnit {
     }
 
     public getCfgSecondaryWeaponBaseDamage(armorType: number): number | null {
-        return this.getCfgBaseDamage(armorType, UnitsConstants.WeaponTypeId.Secondary);
+        return this.getCfgBaseDamage(armorType, WeaponTypeId.Secondary);
     }
     public getSecondaryWeaponBaseDamage(armorType: number): number | null {
         return this.checkHasSecondaryWeapon()
@@ -749,7 +768,7 @@ export class Unit implements UnitsIUnit.IUnit {
             : null;
     }
 
-    public getCfgBaseDamage(targetArmorType: number, weaponType: UnitsConstants.WeaponTypeId): number | null {
+    public getCfgBaseDamage(targetArmorType: number, weaponType: WeaponTypeId): number | null {
         const cfgs  = this._getDamageChartCfg();
         const cfg   = cfgs ? cfgs[targetArmorType] : null;
         return cfg ? (cfg[weaponType]?.getDamage() ?? null) : null;
@@ -771,14 +790,14 @@ export class Unit implements UnitsIUnit.IUnit {
             return null;
         }
 
-        return NumbersUtils.getValueInInt32(cfgRange
+        return getValueInInt32(cfgRange
             + this._getMaxAttackRangeModifierByCo()
             + this.getWar().getWarEventManager().getOpaMaxAttackRangeModifier(this)
         );
     }
     private _getMaxAttackRangeModifierByCo(): number {
         const player = this.getPlayer();
-        if (player.getCoId() === CosConstants.CoId.Empty) {
+        if (player.getCoId() === CoId.Empty) {
             return 0;
         }
 
@@ -787,10 +806,10 @@ export class Unit implements UnitsIUnit.IUnit {
         const isCoOnboard               = this.getIsCoOnboard();
         const selfOldGridIndex          = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills() || []) {
-            modifier += CoSkillsUtilsPersistentSelfUnitAttackRange.getTotalUpperOffset({
+            modifier += getTotalUpperOffset({
                 cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitAttackRange(),
                 gameConfig                  : gameConfig,
                 unitTypeId                  : selfUnitTypeId,
@@ -813,7 +832,7 @@ export class Unit implements UnitsIUnit.IUnit {
 
 
     /** 此函数不考虑指定的移动路径是否合法。也就是说，如果移动路径上存在隐藏的敌军，也会返回true */
-    public checkCanAttackTargetAfterMovePath(movePath: AuxiliaryTypesGridIndex.GridIndex[], targetGridIndex: AuxiliaryTypesGridIndex.GridIndex): boolean {
+    public checkCanAttackTargetAfterMovePath(movePath: GridIndex[], targetGridIndex: GridIndex): boolean {
         const war           = this.getWar();
         const unitMap       = war.getUnitMap();
         const pathLength    = movePath.length;
@@ -868,7 +887,7 @@ export class Unit implements UnitsIUnit.IUnit {
     }
 
     /** 此函数不考虑指定的移动路径是否合法。也就是说，如果移动路径上存在隐藏的敌军，也会返回true */
-    public checkCanAttackUnitAfterMovePath(movePath: AuxiliaryTypesGridIndex.GridIndex[], targetGridIndex: AuxiliaryTypesGridIndex.GridIndex): boolean {
+    public checkCanAttackUnitAfterMovePath(movePath: GridIndex[], targetGridIndex: GridIndex): boolean {
         const war           = this.getWar();
         const unitMap       = war.getUnitMap();
         const pathLength    = movePath.length;
@@ -914,7 +933,7 @@ export class Unit implements UnitsIUnit.IUnit {
     }
 
     /** 此函数不考虑指定的移动路径是否合法。也就是说，如果移动路径上存在隐藏的敌军，也会返回true */
-    public checkCanAttackTileAfterMovePath(movePath: AuxiliaryTypesGridIndex.GridIndex[], targetGridIndex: AuxiliaryTypesGridIndex.GridIndex): boolean {
+    public checkCanAttackTileAfterMovePath(movePath: GridIndex[], targetGridIndex: GridIndex): boolean {
         const war           = this.getWar();
         const unitMap       = war.getUnitMap();
         const pathLength    = movePath.length;
@@ -973,25 +992,25 @@ export class Unit implements UnitsIUnit.IUnit {
             && (tile.getMaxCapturePoint() != null);
     }
 
-    public getFinalCaptureAmount(selfGridIndex: AuxiliaryTypesGridIndex.GridIndex): number | null {
+    public getFinalCaptureAmount(selfGridIndex: GridIndex): number | null {
         const cfgAmount = this._getCfgCaptureAmount();
         if (cfgAmount == null) {
             return null;
         }
 
         const player = this.getPlayer();
-        if (player.getCoId() === CosConstants.CoId.Empty) {
+        if (player.getCoId() === CoId.Empty) {
             return cfgAmount;
         }
 
         const gameConfig                = this.getGcData();
         const selfUnitTypeId            = this.getUnitType();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
         let modifier                    = 100;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkillsUtilsPersistentSelfUnitCaptureAmount.getTotalOffsetPct({
+            modifier += getTotalOffsetPct({
                 cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCaptureAmount(),
                 unitTypeId                  : selfUnitTypeId,
                 gridIndex                   : selfGridIndex,
@@ -1031,13 +1050,13 @@ export class Unit implements UnitsIUnit.IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for invisible.
     ////////////////////////////////////////////////////////////////////////////////
-    public checkIsInvisible(selfGridIndex: AuxiliaryTypesGridIndex.GridIndex): boolean {
+    public checkIsInvisible(selfGridIndex: GridIndex): boolean {
         const player                    = this.getPlayer();
         const gameConfig                = this.getGcData();
         const unitType                  = this.getUnitType();
         const tileType                  = this.getWar().getTileMap().getTile(selfGridIndex).getTileTypeId();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
         for (const skillId of player.getCoCurrentSkills()) {
             const skillCfg = gameConfig.getCoSkillCfg(skillId);
@@ -1072,7 +1091,7 @@ export class Unit implements UnitsIUnit.IUnit {
     }
     public setCurrentFuel(fuel: number): void {
         if ((fuel < 0) || (fuel > this.getMaxFuel())) {
-            throw HelpersMisc.newError(`Invalid fuel: ${fuel}`);
+            throw newError(`Invalid fuel: ${fuel}`);
         }
 
         this._currentFuel = fuel;
@@ -1106,11 +1125,11 @@ export class Unit implements UnitsIUnit.IUnit {
         const selfUnitTypeId            = this.getUnitType();
         const selfGridIndex             = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkillsUtilsPersistentSelfUnitFuelConsumption.getTotalOffset({
+            modifier += getTotalOffset({
                 cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitFuelConsumption(),
                 gameConfig                  : gameConfig,
                 unitTypeId                  : selfUnitTypeId,
@@ -1138,24 +1157,24 @@ export class Unit implements UnitsIUnit.IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for flare.
     ////////////////////////////////////////////////////////////////////////////////
-    public getFlareRadius(gridIndex: AuxiliaryTypesGridIndex.GridIndex): number | null {
+    public getFlareRadius(gridIndex: GridIndex): number | null {
         const cfgRadius = this.getTemplateCfg().getFlareRadius();
         return cfgRadius == null
             ? null
-            : NumbersUtils.getValueInRange({
+            : getValueInRange({
                 minValue    : 0,
-                maxValue    : NumbersConstants.MaxInt32,
+                maxValue    : MaxInt32,
                 rawValue    : Math.floor(cfgRadius + this.getWar().getWarEventManager().getOpaFlareRadiusModifier(this, gridIndex))
             });
     }
 
-    public getFlareMaxRange(gridIndex: AuxiliaryTypesGridIndex.GridIndex): number | null {
+    public getFlareMaxRange(gridIndex: GridIndex): number | null {
         const cfgMaxRange = this.getTemplateCfg().getFlareMaxRange();
         return cfgMaxRange == null
             ? null
-            : NumbersUtils.getValueInRange({
+            : getValueInRange({
                 minValue    : 0,
-                maxValue    : NumbersConstants.MaxInt32,
+                maxValue    : MaxInt32,
                 rawValue    : Math.floor(cfgMaxRange + this.getWar().getWarEventManager().getOpaFlareRangeModifier(this, gridIndex))
             });
     }
@@ -1169,14 +1188,14 @@ export class Unit implements UnitsIUnit.IUnit {
     }
     public setFlareCurrentAmmo(ammo: number): void {
         if ((ammo < 0) || (ammo > (this.getFlareMaxAmmo() ?? 0))) {
-            throw HelpersMisc.newError(`Invalid flare ammo: ${ammo}`);
+            throw newError(`Invalid flare ammo: ${ammo}`);
         }
 
         this._flareCurrentAmmo = ammo;
     }
     public addFlareCurrentAmmo(offsetAmmo: number): void {
         if (offsetAmmo !== 0) {
-            this.setFlareCurrentAmmo(HelpersMisc.getExisted(this.getFlareCurrentAmmo()) + offsetAmmo);
+            this.setFlareCurrentAmmo(getExisted(this.getFlareCurrentAmmo()) + offsetAmmo);
         }
     }
 
@@ -1187,7 +1206,7 @@ export class Unit implements UnitsIUnit.IUnit {
         } else {
             const currentAmmo = this.getFlareCurrentAmmo();
             if (currentAmmo == null) {
-                throw HelpersMisc.newError(`Empty currentAmmo.`);
+                throw newError(`Empty currentAmmo.`);
             } else {
                 return maxAmmo - currentAmmo;
             }
@@ -1201,7 +1220,7 @@ export class Unit implements UnitsIUnit.IUnit {
         } else {
             const currentAmmo = this.getFlareCurrentAmmo();
             if (currentAmmo == null) {
-                throw HelpersMisc.newError(`Empty currentAmmo.`);
+                throw newError(`Empty currentAmmo.`);
             }
 
             return currentAmmo <= maxAmmo * 0.4;
@@ -1225,13 +1244,13 @@ export class Unit implements UnitsIUnit.IUnit {
         this._gridY = y;
     }
 
-    public getGridIndex(): AuxiliaryTypesGridIndex.GridIndex {
-        return new AuxiliaryTypesGridIndex.GridIndex(
+    public getGridIndex(): GridIndex {
+        return new GridIndex(
             this.getGridX(),
             this.getGridY(),
         );
     }
-    public setGridIndex(gridIndex: AuxiliaryTypesGridIndex.GridIndex): void {
+    public setGridIndex(gridIndex: GridIndex): void {
         this.setGridX(gridIndex.getX());
         this.setGridY(gridIndex.getY());
     }
@@ -1246,10 +1265,10 @@ export class Unit implements UnitsIUnit.IUnit {
     public getProduceUnitCost(): number {
         const produceUnitType = this.getProduceUnitTypeId();
         if (produceUnitType == null) {
-            throw HelpersMisc.newError(`Empty produceUnitType.`);
+            throw newError(`Empty produceUnitType.`);
         }
 
-        const cfgCost   = HelpersMisc.getExisted(this.getGcData().getUnitTemplateCfg(produceUnitType)?.getProductionCost());
+        const cfgCost   = getExisted(this.getGcData().getUnitTemplateCfg(produceUnitType)?.getProductionCost());
         const modifier  = this.getPlayer().getUnitCostModifier(produceUnitType);
         return Math.floor(cfgCost * modifier);
     }
@@ -1262,13 +1281,13 @@ export class Unit implements UnitsIUnit.IUnit {
         return this._currentProduceMaterial;
     }
     private _setCurrentProduceMaterial(material: number): void {
-        if (!UnitsUtilsCommon.checkIsValidProduceMaterial(material)) {
-            throw HelpersMisc.newError(`Invalid material: ${material}`);
+        if (!checkIsValidProduceMaterial(material)) {
+            throw newError(`Invalid material: ${material}`);
         }
         this._currentProduceMaterial = material;
     }
     public setAndValidateCurrentProduceMaterial(material: number): void {
-        this._setCurrentProduceMaterial(UnitsUtilsCommon.getValidProduceMaterial(material));
+        this._setCurrentProduceMaterial(getValidProduceMaterial(material));
     }
     public addAndValidateCurrentProduceMaterial(offset: number): void {
         if (offset == 0) {
@@ -1281,7 +1300,7 @@ export class Unit implements UnitsIUnit.IUnit {
         if (((offset > 0) && (currentMaterial < maxMaterial)) ||
             ((offset < 0) && (currentMaterial > minMaterial))
         ) {
-            this.setAndValidateCurrentProduceMaterial(NumbersUtils.getValueInRange({
+            this.setAndValidateCurrentProduceMaterial(getValueInRange({
                 minValue    : minMaterial,
                 maxValue    : maxMaterial,
                 rawValue    : currentMaterial + offset,
@@ -1296,7 +1315,7 @@ export class Unit implements UnitsIUnit.IUnit {
         } else {
             const currentMaterial = this.getCurrentProduceMaterial();
             if (currentMaterial == null) {
-                throw HelpersMisc.newError(`IUnit.checkIsProduceMaterialInShort() empty currentMaterial.`);
+                throw newError(`IUnit.checkIsProduceMaterialInShort() empty currentMaterial.`);
             }
 
             return currentMaterial / maxMaterial <= 0.4;
@@ -1315,7 +1334,7 @@ export class Unit implements UnitsIUnit.IUnit {
             return 0;
         } else {
             const war = this.getWar();
-            return NumbersUtils.getValueInRange({
+            return getValueInRange({
                 minValue    : 0,
                 maxValue    : currentFuel,
                 rawValue    : Math.floor(this.getCfgMoveRange()
@@ -1329,7 +1348,7 @@ export class Unit implements UnitsIUnit.IUnit {
     }
     private _getMoveRangeModifierByCo(): number {
         const player = this.getPlayer();
-        if (player.getCoId() === CosConstants.CoId.Empty) {
+        if (player.getCoId() === CoId.Empty) {
             return 0;
         }
 
@@ -1341,10 +1360,10 @@ export class Unit implements UnitsIUnit.IUnit {
         const selfTileTypeId            = war.getTileMap().getTile(selfGridIndex).getTileTypeId();
         const weatherTypeId             = war.getWeatherManager().getCurrentWeatherType();
         const isCoOnboard               = this.getIsCoOnboard();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills()) {
-            modifier += CoSkillsUtilsPersistentSelfUnitMoveRange.getTotalOffset({
+            modifier += CoSkillsUtilsPersistentSelfUnitMoveRangeGetTotalOffset({
                 cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitMoveRange(),
                 gameConfig                  : gameConfig,
                 unitTypeId                  : selfUnitTypeId,
@@ -1383,7 +1402,7 @@ export class Unit implements UnitsIUnit.IUnit {
         const isCoOnboard               = this.getIsCoOnboard();
         const player                    = this.getPlayer();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         for (const skillId of this.getPlayer().getCoCurrentSkills()) {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
             if ((cfg)                                                                               &&
@@ -1434,12 +1453,12 @@ export class Unit implements UnitsIUnit.IUnit {
     public setCurrentPromotion(promotion: number): void {
         const maxPromotion = this.getMaxPromotion();
         if ((maxPromotion == null) || (promotion < 0) || (promotion > maxPromotion)) {
-            throw HelpersMisc.newError(`IUnit.setCurrentPromotion() invalid promotion: ${promotion}, maxPromotion: ${maxPromotion}`);
+            throw newError(`IUnit.setCurrentPromotion() invalid promotion: ${promotion}, maxPromotion: ${maxPromotion}`);
         }
         this._currentPromotion = promotion;
     }
     public addAndReviseCurrentPromotion(offset: number): void {
-        this.setCurrentPromotion(NumbersUtils.getValueInRange({
+        this.setCurrentPromotion(getValueInRange({
             minValue    : 0,
             maxValue    : this.getMaxPromotion(),
             rawValue    : this.getCurrentPromotion() + offset,
@@ -1482,12 +1501,12 @@ export class Unit implements UnitsIUnit.IUnit {
     public checkCanBuildOnTile(tile: IBwTile): boolean {
         const tileObjectType = tile.getObjectType();
         if (tileObjectType == null) {
-            throw HelpersMisc.newError(`IUnit.checkCanBuildOnTile() tileObjectType is empty.`);
+            throw newError(`IUnit.checkCanBuildOnTile() tileObjectType is empty.`);
         }
 
         const tileBaseType = tile.getBaseType();
         if (tileBaseType == null) {
-            throw HelpersMisc.newError(`IUnit.checkCanBuildOnTile() empty tileBaseType.`);
+            throw newError(`IUnit.checkCanBuildOnTile() empty tileBaseType.`);
         }
 
         const material = this.getCurrentBuildMaterial();
@@ -1515,7 +1534,7 @@ export class Unit implements UnitsIUnit.IUnit {
     }
     public setCurrentBuildMaterial(material: number): void {
         if ((material < 0) || (material > (this.getMaxBuildMaterial() ?? 0))) {
-            throw HelpersMisc.newError(`Invalid material: ${material}`);
+            throw newError(`Invalid material: ${material}`);
         }
 
         this._currentBuildMaterial = material;
@@ -1528,7 +1547,7 @@ export class Unit implements UnitsIUnit.IUnit {
         } else {
             const currentMaterial = this.getCurrentBuildMaterial();
             if (currentMaterial == null) {
-                throw HelpersMisc.newError(`IUnit.checkIsBuildMaterialInShort() empty currentMaterial.`);
+                throw newError(`IUnit.checkIsBuildMaterialInShort() empty currentMaterial.`);
                 return false;
             }
 
@@ -1545,7 +1564,7 @@ export class Unit implements UnitsIUnit.IUnit {
     public getLoadedUnitsCount(): number {
         return this.getLoadedUnits().length;
     }
-    public getLoadedUnits(): UnitsIUnit.IUnit[] {
+    public getLoadedUnits(): IUnit[] {
         return this.getWar()?.getUnitMap()?.getUnitsLoadedByLoader(this, false) || [];
     }
 
@@ -1562,7 +1581,7 @@ export class Unit implements UnitsIUnit.IUnit {
         return false;
     }
 
-    public checkCanLoadUnit(unit: UnitsIUnit.IUnit): boolean {
+    public checkCanLoadUnit(unit: IUnit): boolean {
         const cfg                       = this.getTemplateCfg();
         const gameConfig                = this.getGcData();
         const maxLoadUnitsCount         = this.getMaxLoadUnitsCount();
@@ -1594,7 +1613,7 @@ export class Unit implements UnitsIUnit.IUnit {
     public checkCanSupplyLoadedUnit(): boolean {
         return !!this.getTemplateCfg()?.getCanSupplyLoadedUnits();
     }
-    private _checkCanRepairLoadedUnit(unit: UnitsIUnit.IUnit): boolean {
+    private _checkCanRepairLoadedUnit(unit: IUnit): boolean {
         return (this.getNormalizedRepairHpForLoadedUnit() != null)
             && (unit.getLoaderUnitId() === this.getUnitId())
             && ((!unit.checkIsFullHp()) || (unit.checkCanBeSupplied()));
@@ -1608,7 +1627,7 @@ export class Unit implements UnitsIUnit.IUnit {
         const gameConfig                = this.getGcData();
         const gridIndex                 = this.getGridIndex();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         let amountModifier              = 0;
         let costMultiplierPct           = 100;
         for (const skillId of player.getCoCurrentSkills()) {
@@ -1634,7 +1653,7 @@ export class Unit implements UnitsIUnit.IUnit {
     public getLoaderUnitId(): Undefinable<number> {
         return this._loaderUnitId;
     }
-    public getLoaderUnit(): UnitsIUnit.IUnit | null {
+    public getLoaderUnit(): IUnit | null {
         const unitId = this.getLoaderUnitId();
         if (unitId == null) {
             return null;
@@ -1644,10 +1663,10 @@ export class Unit implements UnitsIUnit.IUnit {
         }
     }
     public checkIsMeetLoadedState(state: number): boolean {
-        return UnitsUtilsCommon.checkIsMeetLoadedStateId(state, this.getLoaderUnitId() != null);
+        return checkIsMeetLoadedStateId(state, this.getLoaderUnitId() != null);
     }
 
-    public getRepairHpAndCostForLoadedUnit(unit: UnitsIUnit.IUnit): AuxiliaryTypesAuxiliaryTypes.RepairHpAndCost | null {
+    public getRepairHpAndCostForLoadedUnit(unit: IUnit): RepairHpAndCost | null {
         if (!this._checkCanRepairLoadedUnit(unit)) {
             return null;
         }
@@ -1668,7 +1687,7 @@ export class Unit implements UnitsIUnit.IUnit {
                     : Number.MAX_SAFE_INTEGER,
             );
             return {
-                hp  : (normalizedRepairHp + normalizedCurrentHp) * UnitsConstants.Hp.Normalizer - unit.getCurrentHp(),
+                hp  : (normalizedRepairHp + normalizedCurrentHp) * Hp.Normalizer - unit.getCurrentHp(),
                 cost: Math.floor(normalizedRepairHp * productionCost / normalizedMaxHp),
             };
         }
@@ -1680,7 +1699,7 @@ export class Unit implements UnitsIUnit.IUnit {
     public checkIsAdjacentUnitSupplier(): boolean {
         return !!this.getTemplateCfg()?.getCanSupplyAdjacentUnits();
     }
-    public checkCanSupplyAdjacentUnit(unit: UnitsIUnit.IUnit): boolean {
+    public checkCanSupplyAdjacentUnit(unit: IUnit): boolean {
         return (this.checkIsAdjacentUnitSupplier())
             && (this.getLoaderUnitId() == null)
             && (unit.getLoaderUnitId() == null)
@@ -1692,13 +1711,13 @@ export class Unit implements UnitsIUnit.IUnit {
     public checkCanBeSuppliedWithFuel(): boolean {
         const maxFuel = this.getMaxFuel();
         if (maxFuel == null) {
-            throw HelpersMisc.newError(`IUnit.checkCanBeSuppliedWithFuel() empty maxFuel.`);
+            throw newError(`IUnit.checkCanBeSuppliedWithFuel() empty maxFuel.`);
             return false;
         }
 
         const currentFuel = this.getCurrentFuel();
         if (currentFuel == null) {
-            throw HelpersMisc.newError(`IUnit.checkCanBeSuppliedWithFuel() empty currentFuel.`);
+            throw newError(`IUnit.checkCanBeSuppliedWithFuel() empty currentFuel.`);
             return false;
         }
 
@@ -1711,7 +1730,7 @@ export class Unit implements UnitsIUnit.IUnit {
         } else {
             const currentAmmo = this.getPrimaryWeaponCurrentAmmo();
             if (currentAmmo == null) {
-                throw HelpersMisc.newError(`IUnit.checkCanBeSuppliedWithPrimaryWeaponAmmo() empty currentAmmo.`);
+                throw newError(`IUnit.checkCanBeSuppliedWithPrimaryWeaponAmmo() empty currentAmmo.`);
                 return false;
             }
 
@@ -1725,7 +1744,7 @@ export class Unit implements UnitsIUnit.IUnit {
         } else {
             const currentAmmo = this.getFlareCurrentAmmo();
             if (currentAmmo == null) {
-                throw HelpersMisc.newError(`IUnit.checkCanBeSuppliedWithFlareAmmo() empty currentAmmo.`);
+                throw newError(`IUnit.checkCanBeSuppliedWithFlareAmmo() empty currentAmmo.`);
                 return false;
             }
 
@@ -1750,7 +1769,7 @@ export class Unit implements UnitsIUnit.IUnit {
         return cfg ? cfg.getVisionBonus() || 0 : 0;
     }
 
-    public getVisionInfo(): AuxiliaryTypesUnitVisionInfo.UnitVisionInfo {
+    public getVisionInfo(): UnitVisionInfo {
         const war                   = this.getWar();
         const gridIndex             = this.getGridIndex();
         const tileType              = war.getTileMap().getTile(gridIndex).getTileTypeId();
@@ -1767,7 +1786,7 @@ export class Unit implements UnitsIUnit.IUnit {
                 const player                    = this.getPlayer();
                 const coZoneRadius              = player.getCoZoneRadius();
                 const isCoOnboard               = this.getIsCoOnboard();
-                const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+                const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
                 if (!player.getCoCurrentSkills().some(skillId => {
                     const skillCfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
                     return (skillCfg != null)
@@ -1780,7 +1799,7 @@ export class Unit implements UnitsIUnit.IUnit {
                             getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
                         })));
                 })) {
-                    return new AuxiliaryTypesUnitVisionInfo.UnitVisionInfo({
+                    return new UnitVisionInfo({
                         baseRange       : unitVisionFixedCfg[2] + modifierByCo,
                         isFixed         : true,
                         isPenetrating   : this._checkVisionCanSeeThrough(),
@@ -1791,17 +1810,17 @@ export class Unit implements UnitsIUnit.IUnit {
 
         const modifierBySettings    = war.getCommonSettingManager().getPlayerRule(this.getPlayerIndex()).getUnitVisionRangeModifier();
         const modifierByOpa         = war.getWarEventManager().getOpaUnitVisionRangeModifier(this, gridIndex);
-        return new AuxiliaryTypesUnitVisionInfo.UnitVisionInfo({
+        return new UnitVisionInfo({
             baseRange       : this.getCfgVisionRange() + modifierByCo + modifierBySettings + modifierByOpa,
             isFixed         : false,
             isPenetrating    : this._checkVisionCanSeeThrough(),
         });
     }
-    public getFinalVisionRange(visionInfo: AuxiliaryTypesUnitVisionInfo.UnitVisionInfo, gridIndex: AuxiliaryTypesGridIndex.GridIndex): number {
+    public getFinalVisionRange(visionInfo: UnitVisionInfo, gridIndex: GridIndex): number {
         const baseRange = visionInfo.baseRange;
         const tileMap   = this.getWar().getTileMap();
         const mapSize   = tileMap.getMapSize();
-        return NumbersUtils.getValueInRange({
+        return getValueInRange({
             minValue    : 1,
             maxValue    : mapSize.getWidth() + mapSize.getHeight(),
             rawValue    : Math.floor(visionInfo.isFixed
@@ -1811,20 +1830,20 @@ export class Unit implements UnitsIUnit.IUnit {
         });
     }
 
-    private _getVisionRangeModifierByCo(selfGridIndex: AuxiliaryTypesGridIndex.GridIndex): number {
+    private _getVisionRangeModifierByCo(selfGridIndex: GridIndex): number {
         const player = this.getPlayer();
-        if (player.getCoId() === CosConstants.CoId.Empty) {
+        if (player.getCoId() === CoId.Empty) {
             return 0;
         }
 
         const gameConfig                = this.getGcData();
         const selfUnitTypeId            = this.getUnitType();
         const coZoneRadius              = player.getCoZoneRadius();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         const isCoOnboard               = this.getIsCoOnboard();
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills() || []) {
-            modifier += CoSkillsUtilsPersistentSelfUnitVision.getTotalRangeOffset({
+            modifier += getTotalRangeOffset({
                 cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitVision(),
                 gameConfig                  : gameConfig,
                 gridIndex                   : selfGridIndex,
@@ -1853,11 +1872,11 @@ export class Unit implements UnitsIUnit.IUnit {
 
         const gameConfig                = this.getGcData();
         const selfUnitTypeId            = this.getUnitType();
-        const getCoGridIndexArrayOnMap  = HelpersMisc.createLazyFunc(() => player.getCoGridIndexListOnMap());
+        const getCoGridIndexArrayOnMap  = createLazyFunc(() => player.getCoGridIndexListOnMap());
         const coZoneRadius              = player.getCoZoneRadius();
         const isCoOnboard               = this.getIsCoOnboard();
         const selfGridIndex             = this.getGridIndex();
-        return player.getCoCurrentSkills().some(skillId => CoSkillsUtilsPersistentSelfUnitVision.checkCanSeeThrough({
+        return player.getCoCurrentSkills().some(skillId => checkCanSeeThrough({
             cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitVision(),
             gameConfig                  : gameConfig,
             gridIndex                   : selfGridIndex,
@@ -1871,7 +1890,7 @@ export class Unit implements UnitsIUnit.IUnit {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for join.
     ////////////////////////////////////////////////////////////////////////////////
-    public checkCanJoinUnit(unit: UnitsIUnit.IUnit): boolean {
+    public checkCanJoinUnit(unit: IUnit): boolean {
         const playerIndex = this.getPlayerIndex();
         return (this !== unit)
             && (this.getUnitType() === unit.getUnitType())
@@ -1880,13 +1899,13 @@ export class Unit implements UnitsIUnit.IUnit {
             && (unit.getNormalizedCurrentHp() < unit.getNormalizedMaxHp())
             && (this.getLoadedUnitsCount() === 0)
             && (unit.getLoadedUnitsCount() === 0)
-            && (!this.checkHasBuff(UnitBuffsConstants.BuffTypeId.Disease))
-            && (!unit.checkHasBuff(UnitBuffsConstants.BuffTypeId.Disease));
+            && (!this.checkHasBuff(BuffTypeId.Disease))
+            && (!unit.checkHasBuff(BuffTypeId.Disease));
     }
 
-    public getJoinIncome(unit: UnitsIUnit.IUnit): number {
+    public getJoinIncome(unit: IUnit): number {
         if (!this.checkCanJoinUnit(unit)) {
-            throw HelpersMisc.newError(`Can not join.`);
+            throw newError(`Can not join.`);
         }
 
         const maxHp         = this.getNormalizedMaxHp();
@@ -1909,7 +1928,7 @@ export class Unit implements UnitsIUnit.IUnit {
         return this._isCoOnboard;
     }
 
-    public checkCanCoBoardAfterMovePath(movePath: AuxiliaryTypesGridIndex.GridIndex[]): boolean {
+    public checkCanCoBoardAfterMovePath(movePath: GridIndex[]): boolean {
         const war           = this.getWar();
         const playerIndex   = this.getPlayerIndex();
         const player        = war.getPlayer(playerIndex);
@@ -1917,7 +1936,7 @@ export class Unit implements UnitsIUnit.IUnit {
         if ((maxBoardCount <= 0)                                                                            ||
             (movePath.length !== 1)                                                                         ||
             (this.getLoaderUnitId() != null)                                                                ||
-            (player.getCoId() == CosConstants.CoId.Empty)                                                ||
+            (player.getCoId() == CoId.Empty)                                                ||
             (!war.getCommonSettingManager().getPlayerRule(playerIndex).getCanCoBoard())                     ||
             (war.getUnitMap().getAllCoUnits(playerIndex).length >= maxBoardCount)                           ||
             (player.getCoIsDestroyedInTurn())                                                               ||
@@ -1941,7 +1960,7 @@ export class Unit implements UnitsIUnit.IUnit {
             {
                 const cfg = skillCfg.getPersistent()?.getSelfCanCoBoard();
                 if (cfg != null) {
-                    const canCoBoard = CoSkillsUtilsPersistentSelfCanCoBoard.checkCanCoBoard({
+                    const canCoBoard = checkCanCoBoard({
                         cfg         : cfg,
                         gameConfig  : gameConfig,
                         unitTypeId  : unitTypeId,
@@ -1959,7 +1978,7 @@ export class Unit implements UnitsIUnit.IUnit {
             return false;
         }
 
-        return TilesUtilsCommon.checkCanCoBoard({
+        return TilesUtilsCommonCheckCanCoBoard({
             gameConfig          : gameConfig,
             templateCfg         : tile.getTemplateCfg(),
             customBuildingData  : tile.getCustomBuildingData(),
@@ -1967,15 +1986,15 @@ export class Unit implements UnitsIUnit.IUnit {
         });
     }
 
-    public checkCanUseCoSkill(skillType: CoSkillsConstants.SkillTypeId): boolean {
+    public checkCanUseCoSkill(skillType: SkillTypeId): boolean {
         const player        = this.getPlayer();
         const war           = this.getWar();
         const playerIndex   = this.getPlayerIndex();
         if ((!this.getIsCoOnboard())                                                                                                                    ||
             (player.checkCoIsUsingActiveSkill())                                                                                                        ||
             (!player.getCoSkills(skillType))                                                                                                            ||
-            (player.getCoEnergyType() !== CosConstants.EnergyTypeId.Dor)                                                                             ||
-            (CoSkillsUtilsCommon.getPowerSkillTargetsCount(player.getCoBasicCfg(), skillType) > war.getTileMap().getMapSize().getGridsCount())
+            (player.getCoEnergyType() !== EnergyTypeId.Dor)                                                                             ||
+            (getPowerSkillTargetsCount(player.getCoBasicCfg(), skillType) > war.getTileMap().getMapSize().getGridsCount())
         ) {
             return false;
         }
@@ -1992,11 +2011,11 @@ export class Unit implements UnitsIUnit.IUnit {
         }
 
         const energy = player.getCoCurrentEnergy();
-        if (skillType === CoSkillsConstants.SkillTypeId.Power) {
+        if (skillType === SkillTypeId.Power) {
             const powerEnergy = player.getCoPowerEnergy();
             return (powerEnergy != null) && (energy >= powerEnergy);
 
-        } else if (skillType === CoSkillsConstants.SkillTypeId.SuperPower) {
+        } else if (skillType === SkillTypeId.SuperPower) {
             const superPowerEnergy = player.getCoSuperPowerEnergy();
             return (superPowerEnergy != null) && (energy >= superPowerEnergy);
 
@@ -2023,15 +2042,15 @@ export class Unit implements UnitsIUnit.IUnit {
             }
         }
 
-        return NumbersUtils.getValueInInt32(percentage * this.getProductionCfgCost() / 100);
+        return getValueInInt32(percentage * this.getProductionCfgCost() / 100);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for tag.
     ////////////////////////////////////////////////////////////////////////////////
     public setGroupedTagId(encodedTagIds: number): void {
-        if (!UnitsUtilsCommon.checkIsValidEncodedTagId(encodedTagIds)) {
-            throw HelpersMisc.newError(`Invalid encodedTagIds: ${encodedTagIds}`);
+        if (!checkIsValidEncodedTagId(encodedTagIds)) {
+            throw newError(`Invalid encodedTagIds: ${encodedTagIds}`);
         }
 
         this._encodedTagIds = encodedTagIds;
@@ -2046,7 +2065,7 @@ export class Unit implements UnitsIUnit.IUnit {
 
     public getTagIdArray(hasTag: boolean): number[] {
         const tagIdArray: number[] = [];
-        for (let tagId = UnitsConstants.TagId.MinTagId; tagId <= UnitsConstants.TagId.MaxTagId; ++tagId) {
+        for (let tagId = TagId.MinTagId; tagId <= TagId.MaxTagId; ++tagId) {
             if (hasTag === this.getHasTagId(tagId)) {
                 tagIdArray.push(tagId);
             }
@@ -2064,32 +2083,32 @@ export class Unit implements UnitsIUnit.IUnit {
         return this._forbiddenGroupedLocationIdArray;
     }
     public getForbiddenLocationIdArray(): number[] {
-        return LocationsUtils.decode(this.getForbiddenGroupedLocationIdArray());
+        return decode(this.getForbiddenGroupedLocationIdArray());
     }
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for weighted destination.
     ////////////////////////////////////////////////////////////////////////////////
-    public setAiWeightedDestinationWithProto(proto: Undefinable<ProtoSchemaCommonProtoStructureWeightedGridIndex.WeightedGridIndex>): void {
+    public setAiWeightedDestinationWithProto(proto: Undefinable<WeightedGridIndex>): void {
         this._aiWeightedDestination = proto == null
             ? null
-            : HelpersMisc.getExisted(WeightedGridIndexesUtils.toGridIndexAndWeight(proto));
+            : getExisted(toGridIndexAndWeight(proto));
     }
-    public getAiWeightedDestination(): Undefinable<AuxiliaryTypesGridIndexAndWeight.GridIndexAndWeight> {
+    public getAiWeightedDestination(): Undefinable<GridIndexAndWeight> {
         return this._aiWeightedDestination;
     }
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for ai mode.
     ////////////////////////////////////////////////////////////////////////////////
-    public setAiMode(aiMode: UnitsConstants.AiModeId): void {
-        if (!UnitsUtilsCommon.checkIsValidAiModeId(aiMode)) {
-            throw HelpersMisc.newError(`Invalid aiMode: ${aiMode}`, UtilsClientErrorCode.ClientErrorCode.BwUnit_SetAiMode_00);
+    public setAiMode(aiMode: AiModeId): void {
+        if (!checkIsValidAiModeId(aiMode)) {
+            throw newError(`Invalid aiMode: ${aiMode}`, ClientErrorCode.BwUnit_SetAiMode_00);
         }
 
         this._aiMode = aiMode;
     }
-    public getAiMode(): UnitsConstants.AiModeId {
+    public getAiMode(): AiModeId {
         return this._aiMode;
     }
 
@@ -2102,11 +2121,11 @@ export class Unit implements UnitsIUnit.IUnit {
         }
 
         const currentMode = this.getAiMode();
-        if (currentMode === UnitsConstants.AiModeId.Normal) {
+        if (currentMode === AiModeId.Normal) {
             // nothing to do
             return false;
 
-        } else if (currentMode === UnitsConstants.AiModeId.WaitUntilCanAttack) {
+        } else if (currentMode === AiModeId.WaitUntilCanAttack) {
             const selfGridIndex     = this.getGridIndex();
             const minAttackRange    = this.getMinAttackRange();
             const maxAttackRange    = this.getFinalMaxAttackRange();
@@ -2120,7 +2139,7 @@ export class Unit implements UnitsIUnit.IUnit {
             const mapSize               = unitMap.getMapSize();
             const selfTeamIndex         = this.getTeamIndex();
             const canAttackAfterMoving  = this.getFinalCanAttackAfterMoving();
-            const movableArea           = AuxiliaryTypesMovableArea.MovableArea.create({
+            const movableArea           = MovableArea.create({
                 gridIndex       : selfGridIndex,
                 maxMoveCost     : this.getFinalMoveRange(),
                 mapSize         : mapSize,
@@ -2137,12 +2156,12 @@ export class Unit implements UnitsIUnit.IUnit {
                     }
                 },
             });
-            const attackableArea = AuxiliaryTypesAttackableArea.AttackableArea.create({
+            const attackableArea = AttackableArea.create({
                 movableArea         : movableArea,
                 mapSize             : mapSize,
                 minAttackRange      : minAttackRange,
                 maxAttackRange      : maxAttackRange,
-                checkCanAttack      : (moveGridIndex: AuxiliaryTypesGridIndex.GridIndex, targetGridIndex: AuxiliaryTypesGridIndex.GridIndex): boolean => {
+                checkCanAttack      : (moveGridIndex: GridIndex, targetGridIndex: GridIndex): boolean => {
                     const hasMoved = !moveGridIndex.checkIsEqual(selfGridIndex);
                     if (((this.getLoaderUnitId() == null) || (hasMoved))    &&
                         ((canAttackAfterMoving) || (!hasMoved))
@@ -2172,21 +2191,21 @@ export class Unit implements UnitsIUnit.IUnit {
             if (!attackableArea.length) {
                 return false;
             } else {
-                this.setAiMode(UnitsConstants.AiModeId.Normal);
+                this.setAiMode(AiModeId.Normal);
                 return true;
             }
 
-        } else if (currentMode === UnitsConstants.AiModeId.NoMove) {
+        } else if (currentMode === AiModeId.NoMove) {
             // nothing to do
             return false;
 
         } else {
-            throw HelpersMisc.newError(`Invalid currentMode: ${currentMode}`, UtilsClientErrorCode.ClientErrorCode.BwUnit_CheckAndUpdateAiMode_00);
+            throw newError(`Invalid currentMode: ${currentMode}`, ClientErrorCode.BwUnit_CheckAndUpdateAiMode_00);
         }
     }
 
     public checkCanAiDoAction(): boolean {
-        return this.getAiMode() !== UnitsConstants.AiModeId.WaitUntilCanAttack;
+        return this.getAiMode() !== AiModeId.WaitUntilCanAttack;
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -2196,8 +2215,8 @@ export class Unit implements UnitsIUnit.IUnit {
         return this._buffArray;
     }
     public setBuffList(buffArray: UnitBuff[]): void {
-        if (buffArray.some(buff => !UnitBuffsUtilsCommon.checkIsValid(buff))) {
-            throw HelpersMisc.newError(`Invalid buffArray: ${buffArray}`);
+        if (buffArray.some(buff => !checkIsValid(buff))) {
+            throw newError(`Invalid buffArray: ${buffArray}`);
         }
 
         this._buffArray = buffArray;
@@ -2214,7 +2233,7 @@ export class Unit implements UnitsIUnit.IUnit {
         const playerIndex   = turnManager.getPlayerIndexInTurn();
         let isUpdated       = false;
         for (let i = 0; i < buffArray.length; ++i) {
-            if (UnitBuffsUtilsCommon.checkIsExpired(buffArray[i], turnIndex, playerIndex)) {
+            if (checkIsExpired(buffArray[i], turnIndex, playerIndex)) {
                 isUpdated = true;
                 buffArray.splice(i--, 1);
             }
@@ -2224,9 +2243,9 @@ export class Unit implements UnitsIUnit.IUnit {
             if (updateView) {
                 this.updateView();
             }
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwUnitBuffChanged, {
+            dispatch(TypeId.BwUnitBuffChanged, {
                 unit    : this,
-            } as NotificationsDataTypes.BwUnitBuffChanged);
+            } as BwUnitBuffChanged);
         }
 
         return isUpdated;
@@ -2243,9 +2262,9 @@ export class Unit implements UnitsIUnit.IUnit {
             this.updateView();
         }
         if (needNotify) {
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwUnitBuffChanged, {
+            dispatch(TypeId.BwUnitBuffChanged, {
                 unit    : this,
-            } as NotificationsDataTypes.BwUnitBuffChanged);
+            } as BwUnitBuffChanged);
         }
     }
     public deleteBuff(buff: UnitBuff, updateView: boolean): boolean {
@@ -2254,16 +2273,16 @@ export class Unit implements UnitsIUnit.IUnit {
             return false;
         }
 
-        if (!HelpersCollection.deleteElementFromList(buffArray, buff)) {
+        if (!deleteElementFromList(buffArray, buff)) {
             return false;
         }
 
         if (updateView) {
             this.updateView();
         }
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwUnitBuffChanged, {
+        dispatch(TypeId.BwUnitBuffChanged, {
             unit    : this,
-        } as NotificationsDataTypes.BwUnitBuffChanged);
+        } as BwUnitBuffChanged);
 
         return true;
     }
@@ -2280,20 +2299,20 @@ export class Unit implements UnitsIUnit.IUnit {
     }
     public setCustomNameId(nameId: Undefinable<number>): void {
         if ((nameId != null)                                        &&
-            ((!UnitsUtilsCustomName.checkIsValidCustomNameId(nameId)))
+            ((!checkIsValidCustomNameId(nameId)))
         ) {
-            throw HelpersMisc.newError(`Invalid nameId: ${nameId}`);
+            throw newError(`Invalid nameId: ${nameId}`);
         }
 
         if (this.getCustomNameId() != nameId) {
             this._customNameId = nameId;
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.BwUnitCustomNameIdChanged);
+            dispatch(TypeId.BwUnitCustomNameIdChanged);
         }
     }
 
-    public getCustomName(languageType = LangUtils.getCurrentLanguageType()): AuxiliaryTypesAuxiliaryTypes.Undefinable<string> {
+    public getCustomName(languageType = getCurrentLanguageType()): AuxiliaryTypesAuxiliaryTypesUndefinable<string> {
         const nameId = this.getCustomNameId();
-        return LangUtils.getLanguageText({
+        return getLanguageText({
             textArray       : this.getWar().getUnitMap().getUnitCustomNameArray()?.find(v => (v.getNameId() ?? 0) === nameId)?.getNameTextArray(),
             languageType    : languageType,
             useAlternate    : false,

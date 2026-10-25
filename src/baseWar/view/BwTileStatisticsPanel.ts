@@ -1,49 +1,49 @@
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as TilesITile from "../../tiles/ITile.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UiUtilsUiFactory from "../../ui/utils/UiFactory.ts";
-import * as UiUtilsUiSizerHelpers from "../../ui/utils/UiSizerHelpers.ts";
-import * as VisibilitiesUtils from "../../visibilities/Utils.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import type { ITile as TilesITile } from "../../tiles/ITile.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
+import { checkAndAddAutoSizerInfo } from "../../ui/utils/UiSizerHelpers.ts";
+import { getAllTilesVisibleToTeams } from "../../visibilities/Utils.ts";
 
-type ITile          = TilesITile.ITile;
+type ITile          = TilesITile;
 
 export interface OpenData {
-    war             : BaseWarInterfaceIBwWar.IBwWar;
+    war             : IBwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnClose!                 : IUiButton;
 
-    private readonly _groupTitle!               : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTotal!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP0!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP1!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP2!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP3!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP4!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP5!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP6!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP7!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP8!                  : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupTitle!               : IUiContainer;
+    private readonly _labelTotal!               : IUiLabel;
+    private readonly _labelP0!                  : IUiLabel;
+    private readonly _labelP1!                  : IUiLabel;
+    private readonly _labelP2!                  : IUiLabel;
+    private readonly _labelP3!                  : IUiLabel;
+    private readonly _labelP4!                  : IUiLabel;
+    private readonly _labelP5!                  : IUiLabel;
+    private readonly _labelP6!                  : IUiLabel;
+    private readonly _labelP7!                  : IUiLabel;
+    private readonly _labelP8!                  : IUiLabel;
 
-    private readonly _listTile!                 : UiInterfacesIUiScrollList.IUiScrollList<DataForTileRenderer>;
+    private readonly _listTile!                 : IUiScrollList<DataForTileRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -85,10 +85,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1296);
-        this._labelTotal.setLangText(LangConstants.TextType.B1295);
+        this._labelTitle.setLangText(TextType.B1296);
+        this._labelTotal.setLangText(TextType.B1295);
 
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this._groupTitle, false);
+        checkAndAddAutoSizerInfo(this._groupTitle, false);
     }
 
     private _updateView(): void {
@@ -118,7 +118,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const gameConfig            = war.getGcData();
         const playersCountUnneutral = war.getPlayersCountUnneutral();
         const allTiles              = war.getTileMap().getAllTiles();
-        const visibleTileSet        = VisibilitiesUtils.getAllTilesVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
+        const visibleTileSet        = getAllTilesVisibleToTeams(war, war.getPlayerManager().getWatcherTeamIndexesForSelf());
         const allTilesForPlayers    : ITile[][] = [];
         for (let i = 0; i <= playersCountUnneutral; ++i) {
             allTilesForPlayers.push([]);
@@ -158,36 +158,36 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForTileRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTileRenderer extends UiListItemData {
     index                   : number;
-    gameConfig              : GameConfigGcData.GcData;
+    gameConfig              : GcData;
     tileObjectType          : number;
     playersCountUnneutral   : number;
     total                   : number;
     countArray              : number[];
 }
-class UnitRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForTileRenderer> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBackground!    : UiInterfacesIUiImage.IUiImage;
-    private readonly _conTileView!      : UiInterfacesIUiContainer.IUiContainer;
+class UnitRenderer extends UiListItemRenderer<DataForTileRenderer> {
+    private readonly _group!            : IUiContainer;
+    private readonly _imgBackground!    : IUiImage;
+    private readonly _conTileView!      : IUiContainer;
 
-    private readonly _groupValue!       : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTotal!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP0!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP1!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP2!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP3!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP4!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP5!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP6!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP7!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelP8!          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupValue!       : IUiContainer;
+    private readonly _labelTotal!       : IUiLabel;
+    private readonly _labelP0!          : IUiLabel;
+    private readonly _labelP1!          : IUiLabel;
+    private readonly _labelP2!          : IUiLabel;
+    private readonly _labelP3!          : IUiLabel;
+    private readonly _labelP4!          : IUiLabel;
+    private readonly _labelP5!          : IUiLabel;
+    private readonly _labelP6!          : IUiLabel;
+    private readonly _labelP7!          : IUiLabel;
+    private readonly _labelP8!          : IUiLabel;
 
-    private readonly _tileView          = new (UiUtilsUiFactory.getUiTileViewClass())();
+    private readonly _tileView          = new (getUiTileViewClass())();
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.TileAnimationTick,       callback: this._onNotifyTileAnimationTick },
+            { type: TypeId.TileAnimationTick,       callback: this._onNotifyTileAnimationTick },
         ]);
 
         const conTileView   = this._conTileView;
@@ -225,7 +225,7 @@ class UnitRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
                 tileDecorationShapeId   : null,
                 tileObjectType          : openData.tileObjectType,
                 tileObjectShapeId       : 0,
-                skinId                  : PlayersConstants.PlayerIndex.Neutral,
+                skinId                  : PlayerIndex.Neutral,
                 overridingSkinId        : undefined,
                 gameConfig              : gameConfig,
             });
@@ -246,7 +246,7 @@ class UnitRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
            this._labelP7.setText(playersCountUnneutral >= 7 ? `${countArray[7]}` : ``);
            this._labelP8.setText(playersCountUnneutral >= 8 ? `${countArray[8]}` : ``);
 
-           UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this._groupValue, false);
+           checkAndAddAutoSizerInfo(this._groupValue, false);
         }
     }
 }

@@ -1,66 +1,70 @@
-import type * as BaseWarInterfaceIBwWar from "../../baseWar/interface/IBwWar.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as ProtoSchemaCommonProtoStructureValueAndComparator from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventCondition from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarEventWecManualActionStatistics from "../../proto/schema/CommonProto/WarEvent/WecManualActionStatistics.ts";
-import * as TurnsConstants from "../../turns/Constants.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as ValueAndComparatorsConstants from "../../valueAndComparators/Constants.ts";
-import * as ValueAndComparatorsUtils from "../../valueAndComparators/Utils.ts";
-import * as WarEventsConditionsUtilsCommon from "../../warEvents/conditions/utils/Common.ts";
-import * as WarOperationsConstants from "../../warOperations/Constants.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { createRange } from "../../helpers/Collection.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getFormattedText, getText, getComparatorName } from "../../lang/Utils.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
+import type {
+    WarEventCondition as ProtoSchemaCommonProtoWarEventWarEventCondition,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import type {
+    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WecManualActionStatistics } from "../../proto/schema/CommonProto/WarEvent/WecManualActionStatistics.ts";
+import { TurnIndex } from "../../turns/Constants.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { ComparatorId } from "../../valueAndComparators/Constants.ts";
+import { tickComparator } from "../../valueAndComparators/Utils.ts";
+import { getErrorTipForCondition, getDetailedDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
+import { Common } from "../../warOperations/Constants.ts";
 
-type WarEventFullData               = ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
-type WarEventCondition              = ProtoSchemaCommonProtoWarEventWarEventCondition.WarEventCondition;
+type WarEventFullData               = ProtoSchemaCommonProtoWarEventWarEventFullData;
+type WarEventCondition              = ProtoSchemaCommonProtoWarEventWarEventCondition;
 
 export interface OpenData {
-    war         : BaseWarInterfaceIBwWar.IBwWar;
+    war         : IBwWar;
     fullData    : WarEventFullData;
     condition   : WarEventCondition;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnType!                          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                          : IUiImage;
+    private readonly _group!                            : IUiContainer;
+    private readonly _labelTitle!                       : IUiLabel;
+    private readonly _btnType!                          : IUiButton;
+    private readonly _btnClose!                         : IUiButton;
 
-    private readonly _groupDesc!                        : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelDesc!                        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelError!                       : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupDesc!                        : IUiLayout;
+    private readonly _labelDesc!                        : IUiLabel;
+    private readonly _labelError!                       : IUiLabel;
 
-    private readonly _btnPlayerIndex!                   : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelPlayerIndex!                 : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnIsPlayerInTurn!                : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelIsPlayerInTurn!              : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnPlayerIndex!                   : IUiButton;
+    private readonly _labelPlayerIndex!                 : IUiLabel;
+    private readonly _btnIsPlayerInTurn!                : IUiButton;
+    private readonly _labelIsPlayerInTurn!              : IUiLabel;
 
-    private readonly _btnRecentTurnsCount!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelRecentTurnsCount!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnRecentTurnsCount!              : IUiButton;
+    private readonly _labelRecentTurnsCount!            : IUiLabel;
 
-    private readonly _btnActionsCount!                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActionsCount!                : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnActionsCountComparator!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelActionsCountComparator!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnActionsCount!                  : IUiButton;
+    private readonly _labelActionsCount!                : IUiLabel;
+    private readonly _btnActionsCountComparator!        : IUiButton;
+    private readonly _labelActionsCountComparator!      : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.WarEventFullDataChanged, callback: this._onNotifyWarEventFullDataChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                       callback: this.closePanel },
@@ -95,7 +99,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().WeConditionTypeListPanel, {
+        openPanel(getDict().WeConditionTypeListPanel, {
             fullData    : openData.fullData,
             condition   : openData.condition,
             war         : openData.war,
@@ -108,14 +112,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         const condition = this._getCondition();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseMultiNumberPanel, {
+        openPanel(getDict().CommonChooseMultiNumberPanel, {
             currentNumberArray          : condition.getPlayerIndexArray(),
-            availableNumberArray        : HelpersCollection.createRange(PlayersConstants.PlayerIndex.Neutral, war.getPlayersCountUnneutral() + 1, 1),
-            getTitleText                : () => LangUtils.getFormattedText(LangConstants.TextType.F0092, LangUtils.getText(LangConstants.TextType.B0031)),
+            availableNumberArray        : createRange(PlayerIndex.Neutral, war.getPlayersCountUnneutral() + 1, 1),
+            getTitleText                : () => getFormattedText(TextType.F0092, getText(TextType.B0031)),
             getNumberMainText           : playerIndex => `P${playerIndex}`,
             callbackOnConfirm           : playerIndexArray => {
                 condition.setPlayerIndexArray(playerIndexArray);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -129,19 +133,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         } else {
             condition.setIsPlayerInTurn(null);
         }
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+        dispatch(TypeId.WarEventFullDataChanged);
     }
 
     private _onTouchedBtnRecentTurnsCount(): void {
         const condition = this._getCondition();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.B0930),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.B0930),
             minValue        : 1,
-            maxValue        : TurnsConstants.TurnIndex.MaxLimit,
+            maxValue        : TurnIndex.MaxLimit,
             currentValue    : condition.getRecentTurnsCount() ?? 0,
             callback        : value => {
                 condition.setRecentTurnsCount(value);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -149,22 +153,22 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private _onTouchedBtnActionsCount(): void {
         const condition = this._getCondition();
         const oldCon    = condition.getTotalActions();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle        : () => LangUtils.getText(LangConstants.TextType.B0090),
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle        : () => getText(TextType.B0090),
             minValue        : 0,
-            maxValue        : WarOperationsConstants.Common.MaxLimit,
+            maxValue        : Common.MaxLimit,
             currentValue    : oldCon?.getValue() ?? 0,
             callback        : value => {
                 if (oldCon) {
                     oldCon.setValue(value);
                 } else {
-                    condition.setTotalActions(ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
+                    condition.setTotalActions(ValueAndComparator.fromJson({
                         value       : value,
-                        comparator  : ValueAndComparatorsConstants.ComparatorId.EqualTo,
+                        comparator  : ComparatorId.EqualTo,
                     }));
                 }
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             },
         });
     }
@@ -172,15 +176,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const condition = this._getCondition();
         const oldCon    = condition.getTotalActions();
         if (oldCon) {
-            ValueAndComparatorsUtils.tickComparator(oldCon);
+            tickComparator(oldCon);
         } else {
-            condition.setTotalActions(ProtoSchemaCommonProtoStructureValueAndComparator.ValueAndComparator.fromJson({
+            condition.setTotalActions(ValueAndComparator.fromJson({
                 value       : 0,
-                comparator  : ValueAndComparatorsConstants.ComparatorId.EqualTo,
+                comparator  : ComparatorId.EqualTo,
             }));
         }
 
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+        dispatch(TypeId.WarEventFullDataChanged);
     }
 
     private _updateView(): void {
@@ -195,14 +199,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(`${LangUtils.getText(LangConstants.TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
-        this._btnClose.setText(LangUtils.getText(LangConstants.TextType.B0146));
-        this._btnType.setText(LangUtils.getText(LangConstants.TextType.B0516));
-        this._btnPlayerIndex.setText(LangUtils.getText(LangConstants.TextType.PlayerIndex));
-        this._btnIsPlayerInTurn.setText(LangUtils.getText(LangConstants.TextType.B0086));
-        this._btnRecentTurnsCount.setText(LangUtils.getText(LangConstants.TextType.B0930));
-        this._btnActionsCount.setText(LangUtils.getText(LangConstants.TextType.B0090));
-        this._btnActionsCountComparator.setText(LangUtils.getText(LangConstants.TextType.Comparator));
+        this._labelTitle.setText(`${getText(TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
+        this._btnClose.setText(getText(TextType.B0146));
+        this._btnType.setText(getText(TextType.B0516));
+        this._btnPlayerIndex.setText(getText(TextType.PlayerIndex));
+        this._btnIsPlayerInTurn.setText(getText(TextType.B0086));
+        this._btnRecentTurnsCount.setText(getText(TextType.B0930));
+        this._btnActionsCount.setText(getText(TextType.B0090));
+        this._btnActionsCountComparator.setText(getText(TextType.Comparator));
 
         this._updateLabelDescAndLabelError();
     }
@@ -215,16 +219,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const condition         = openData.condition;
         const war               = openData.war;
-        const errorTip          = WarEventsConditionsUtilsCommon.getErrorTipForCondition(openData.fullData, condition, war);
+        const errorTip          = getErrorTipForCondition(openData.fullData, condition, war);
         const labelError        = this._labelError;
-        labelError.setText(errorTip || LangUtils.getText(LangConstants.TextType.B0493));
-        labelError.setTextColor(errorTip ? GraphicsConstants.ColorValue.Red : GraphicsConstants.ColorValue.Green);
-        this._labelDesc.setText(WarEventsConditionsUtilsCommon.getDetailedDescForCondition(condition, war.getGcData()) || LangConstants.UndefinedError);
+        labelError.setText(errorTip || getText(TextType.B0493));
+        labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
+        this._labelDesc.setText(getDetailedDescForCondition(condition, war.getGcData()) || UndefinedError);
         this._groupDesc.arrangeItems();
     }
     private _updateLabelPlayerIndex(): void {
         const playerIndexArray = this._getCondition().getPlayerIndexArray();
-        this._labelPlayerIndex.setText(playerIndexArray?.length ? playerIndexArray.map(v => `P${v}`).join(`, `) : LangUtils.getText(LangConstants.TextType.B0776));
+        this._labelPlayerIndex.setText(playerIndexArray?.length ? playerIndexArray.map(v => `P${v}`).join(`, `) : getText(TextType.B0776));
     }
     private _updateLabelIsPlayerInTurn(): void {
         const isPlayerInTurn    = this._getCondition().getIsPlayerInTurn();
@@ -232,7 +236,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if (isPlayerInTurn == null) {
             label.setText(`--`);
         } else {
-            label.setText(LangUtils.getText(isPlayerInTurn ? LangConstants.TextType.Yes : LangConstants.TextType.No));
+            label.setText(getText(isPlayerInTurn ? TextType.Yes : TextType.No));
         }
     }
     private _updateInputRecentTurnsCount(): void {
@@ -241,14 +245,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     private _updateInputActionsCount(): void {
         const actionsCount = this._getCondition().getTotalActions()?.getValue();
-        this._labelActionsCount.setText(actionsCount == null ? LangConstants.UndefinedError : `${actionsCount}`);
+        this._labelActionsCount.setText(actionsCount == null ? UndefinedError : `${actionsCount}`);
     }
     private _updatePlayersCountComparator(): void {
         const comparator = this._getCondition().getTotalActions()?.getComparator();
-        this._labelActionsCountComparator.setText(LangUtils.getComparatorName(comparator) ?? LangConstants.UndefinedError);
+        this._labelActionsCountComparator.setText(getComparatorName(comparator) ?? UndefinedError);
     }
 
-    private _getCondition(): ProtoSchemaCommonProtoWarEventWecManualActionStatistics.WecManualActionStatistics {
-        return HelpersMisc.getExisted(this.getOpenData()?.condition.getWecManualActionStatistics());
+    private _getCondition(): WecManualActionStatistics {
+        return getExisted(this.getOpenData()?.condition.getWecManualActionStatistics());
     }
 }

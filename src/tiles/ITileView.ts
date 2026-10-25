@@ -1,7 +1,7 @@
-import type * as BaseWarModelBwTypes from "../baseWar/model/BwTypes.ts";
-import type * as UiInterfacesIUiImage from "../ui/interfaces/IUiImage.ts";
+import type { DataForTileView as BaseWarModelBwTypesDataForTileView } from "../baseWar/model/BwTypes.ts";
+import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
 
-type DataForTileView = BaseWarModelBwTypes.DataForTileView;
+type DataForTileView = BaseWarModelBwTypesDataForTileView;
 
 export interface ITileView {
     setData(data: DataForTileView): void;
@@ -11,9 +11,9 @@ export interface ITileView {
     updateTileAnimation(): void;
     updateImgBuff(): void;
 
-    getImgHighlight(): UiInterfacesIUiImage.IUiImage;
-    getImgObject(): UiInterfacesIUiImage.IUiImage;
-    getImgBuff(): UiInterfacesIUiImage.IUiImage;
-    getImgDecoration(): UiInterfacesIUiImage.IUiImage;
-    getImgBase(): UiInterfacesIUiImage.IUiImage;
+    getImgHighlight(): IUiImage;
+    getImgObject(): IUiImage;
+    getImgBuff(): IUiImage;
+    getImgDecoration(): IUiImage;
+    getImgBase(): IUiImage;
 }

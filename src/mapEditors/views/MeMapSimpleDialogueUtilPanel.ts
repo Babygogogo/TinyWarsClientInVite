@@ -1,33 +1,33 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
+import { showLang } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getFormattedText } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 
 export type OpenData = {
-    war                 : MapEditorInterfaceIMeWar.IMeWar;
+    war                 : IMeWar;
 };
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
 
-    private readonly _btnDeleteAll!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeleteRedundancy!  : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnDeleteAll!         : IUiButton;
+    private readonly _btnDeleteRedundancy!  : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MeMapSimpleDialogueChanged,  callback: this._onNotifyMeMapSimpleDialogueChanged },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MeMapSimpleDialogueChanged,  callback: this._onNotifyMeMapSimpleDialogueChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel },
@@ -56,24 +56,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (war.getIsReviewingMap()) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         if (!war.getMapSimpleDialogueArray().length) {
-            FloatText2.showLang(LangConstants.TextType.B0278);
+            showLang(TextType.B0278);
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => getText(TextType.AreYouSureYouWantToContinue),
             callback: () => {
                 war.deleteAllMapSimpleDialogues();
                 for (const rule of war.getTemplateWarRuleArray()) {
                     rule.setMapSimpleDialogueIdArray([]);
                 }
 
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MeMapSimpleDialogueChanged);
+                dispatch(TypeId.MeMapSimpleDialogueChanged);
             },
         });
     }
@@ -84,7 +84,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (war.getIsReviewingMap()) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -102,15 +102,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (!unusedDialogueIdArray.length) {
-            FloatText2.showLang(LangConstants.TextType.A0389);
+            showLang(TextType.A0389);
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent : () => LangUtils.getFormattedText(LangConstants.TextType.F0191, unusedDialogueIdArray.map(v => `#${v}`).join(`, `)),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent : () => getFormattedText(TextType.F0191, unusedDialogueIdArray.map(v => `#${v}`).join(`, `)),
                 callback: () => {
                     war.deleteMapSimpleDialogues(unusedDialogueIdArray);
-                    FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+                    showLang(TextType.OperationSucceeded);
 
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MeMapSimpleDialogueChanged);
+                    dispatch(TypeId.MeMapSimpleDialogueChanged);
                 },
             });
         }
@@ -121,8 +121,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B1095);
-        this._btnDeleteAll.setLangText(LangConstants.TextType.B0931);
-        this._btnDeleteRedundancy.setLangText(LangConstants.TextType.B0498);
+        this._labelTitle.setLangText(TextType.B1095);
+        this._btnDeleteAll.setLangText(TextType.B0931);
+        this._btnDeleteRedundancy.setLangText(TextType.B0498);
     }
 }

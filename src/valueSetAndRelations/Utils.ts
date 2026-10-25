@@ -1,13 +1,15 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import type * as ProtoSchemaCommonProtoStructureValueSetAndRelation from "../proto/schema/CommonProto/Structure/ValueSetAndRelation.ts";
-import * as ValueSetAndRelationsConstants from "./Constants.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import { UndefinedError, TextType } from "../lang/Constants.ts";
+import { getFormattedText } from "../lang/Utils.ts";
+import type {
+    ValueSetAndRelation as ProtoSchemaCommonProtoStructureValueSetAndRelation,
+} from "../proto/schema/CommonProto/Structure/ValueSetAndRelation.ts";
+import { AllSetRelationIdArray, SetRelationId } from "./Constants.ts";
 
-type ValueSetAndRelation    = ProtoSchemaCommonProtoStructureValueSetAndRelation.ValueSetAndRelation;
+type ValueSetAndRelation    = ProtoSchemaCommonProtoStructureValueSetAndRelation;
 
-export function checkIsValidSetRelation(setRelation: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>): boolean {
-    return (setRelation != null) && (ValueSetAndRelationsConstants.AllSetRelationIdArray.includes(setRelation));
+export function checkIsValidSetRelation(setRelation: Undefinable<number>): boolean {
+    return (setRelation != null) && (AllSetRelationIdArray.includes(setRelation));
 }
 export function checkIsValid(data: ValueSetAndRelation): boolean {
     const arr = data.getValueArray();
@@ -17,18 +19,18 @@ export function checkIsValid(data: ValueSetAndRelation): boolean {
         && (checkIsValidSetRelation(data.getSetRelation()));
 }
 
-export function getDesc(data: ValueSetAndRelation, valueName: string, getValueText: (v: number) => AuxiliaryTypesAuxiliaryTypes.Undefinable<string>): string {
-    const textForValue = data.getValueArray()?.map(v => getValueText(v)).join(`, `) ?? LangConstants.UndefinedError;
+export function getDesc(data: ValueSetAndRelation, valueName: string, getValueText: (v: number) => Undefinable<string>): string {
+    const textForValue = data.getValueArray()?.map(v => getValueText(v)).join(`, `) ?? UndefinedError;
     switch (data.getSetRelation()) {
-        case ValueSetAndRelationsConstants.SetRelationId.EqualTo          : return LangUtils.getFormattedText(LangConstants.TextType.F0237, valueName, textForValue);
-        case ValueSetAndRelationsConstants.SetRelationId.NotEqualTo       : return LangUtils.getFormattedText(LangConstants.TextType.F0238, valueName, textForValue);
-        case ValueSetAndRelationsConstants.SetRelationId.SupersetOf       : return LangUtils.getFormattedText(LangConstants.TextType.F0239, valueName, textForValue);
-        case ValueSetAndRelationsConstants.SetRelationId.NotSupersetOf    : return LangUtils.getFormattedText(LangConstants.TextType.F0240, valueName, textForValue);
-        case ValueSetAndRelationsConstants.SetRelationId.SubsetOf         : return LangUtils.getFormattedText(LangConstants.TextType.F0241, valueName, textForValue);
-        case ValueSetAndRelationsConstants.SetRelationId.NotSubsetOf      : return LangUtils.getFormattedText(LangConstants.TextType.F0242, valueName, textForValue);
-        case ValueSetAndRelationsConstants.SetRelationId.Intersection     : return LangUtils.getFormattedText(LangConstants.TextType.F0243, valueName, textForValue);
-        case ValueSetAndRelationsConstants.SetRelationId.NoIntersection   : return LangUtils.getFormattedText(LangConstants.TextType.F0244, valueName, textForValue);
-        default                             : return LangConstants.UndefinedError;
+        case SetRelationId.EqualTo          : return getFormattedText(TextType.F0237, valueName, textForValue);
+        case SetRelationId.NotEqualTo       : return getFormattedText(TextType.F0238, valueName, textForValue);
+        case SetRelationId.SupersetOf       : return getFormattedText(TextType.F0239, valueName, textForValue);
+        case SetRelationId.NotSupersetOf    : return getFormattedText(TextType.F0240, valueName, textForValue);
+        case SetRelationId.SubsetOf         : return getFormattedText(TextType.F0241, valueName, textForValue);
+        case SetRelationId.NotSubsetOf      : return getFormattedText(TextType.F0242, valueName, textForValue);
+        case SetRelationId.Intersection     : return getFormattedText(TextType.F0243, valueName, textForValue);
+        case SetRelationId.NoIntersection   : return getFormattedText(TextType.F0244, valueName, textForValue);
+        default                             : return UndefinedError;
     }
 }
 
@@ -36,21 +38,21 @@ export function checkIsMeet(data: ValueSetAndRelation, targetValueArray: number[
     const setRelation   = data.getSetRelation();
     const conSet        = new Set(data.getValueArray());
     const targetSet     = new Set(targetValueArray);
-    if (setRelation === ValueSetAndRelationsConstants.SetRelationId.EqualTo) {
+    if (setRelation === SetRelationId.EqualTo) {
         return checkIsSetEqual(targetSet, conSet);
-    } else if (setRelation === ValueSetAndRelationsConstants.SetRelationId.NotEqualTo) {
+    } else if (setRelation === SetRelationId.NotEqualTo) {
         return !checkIsSetEqual(targetSet, conSet);
-    } else if (setRelation === ValueSetAndRelationsConstants.SetRelationId.SupersetOf) {
+    } else if (setRelation === SetRelationId.SupersetOf) {
         return checkIsSupersetOf(targetSet, conSet);
-    } else if (setRelation === ValueSetAndRelationsConstants.SetRelationId.NotSupersetOf) {
+    } else if (setRelation === SetRelationId.NotSupersetOf) {
         return !checkIsSupersetOf(targetSet, conSet);
-    } else if (setRelation === ValueSetAndRelationsConstants.SetRelationId.SubsetOf) {
+    } else if (setRelation === SetRelationId.SubsetOf) {
         return checkIsSupersetOf(conSet, targetSet);
-    } else if (setRelation === ValueSetAndRelationsConstants.SetRelationId.NotSubsetOf) {
+    } else if (setRelation === SetRelationId.NotSubsetOf) {
         return !checkIsSupersetOf(conSet, targetSet);
-    } else if (setRelation === ValueSetAndRelationsConstants.SetRelationId.Intersection) {
+    } else if (setRelation === SetRelationId.Intersection) {
         return checkHasIntersection(targetSet, conSet);
-    } else if (setRelation === ValueSetAndRelationsConstants.SetRelationId.NoIntersection) {
+    } else if (setRelation === SetRelationId.NoIntersection) {
         return !checkHasIntersection(targetSet, conSet);
     } else {
         return false;

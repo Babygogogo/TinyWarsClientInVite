@@ -1,41 +1,45 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWarEventManager from "../../baseWar/interface/IBwWarEventManager.ts";
-import * as BaseWarModelBwWar from "../../baseWar/model/BwWar.ts";
-import * as BootTimersConstants from "../../bootTimers/Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import type * as MapEditorInterfaceIMeDrawer from "../interface/IMeDrawer.ts";
-import type * as MapEditorInterfaceIMeWar from "../interface/IMeWar.ts";
-import * as MapEditorModelMeHelpers from "./MeHelpers.ts";
-import * as PlayerRulesUtils from "../../playerRules/Utils.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoMapCampaignMapData from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";
-import * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import * as ProtoSchemaCommonProtoMapMapSimpleDialogue from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
-import * as ProtoSchemaCommonProtoStructureGridMarkData from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import type * as ProtoSchemaCommonProtoStructureLanguageText from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type * as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
-import type * as ProtoSchemaCommonProtoWarRuleTemplateWarRule from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
-import * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as WarEventsActionsUtilsCommon from "../../warEvents/actions/utils/Common.ts";
-import * as WarRulesUtilsTemplate from "../../warRules/utils/Template.ts";
-import * as WarTypesConstants from "../../warTypes/Constants.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
+import { BwWar } from "../../baseWar/model/BwWar.ts";
+import { TimerTypeId } from "../../bootTimers/Constants.ts";
+import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import { getMeDrawerClass, getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
+import { pickRandomElement } from "../../helpers/Collection.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import type { IMeDrawer } from "../interface/IMeDrawer.ts";
+import type { IMeWar } from "../interface/IMeWar.ts";
+import { createISerialWar, createRevisedTemplateWarRuleArrayForMeWar, reviseAllUnitIds } from "./MeHelpers.ts";
+import { getFinalSfwHumanCoIdSet } from "../../playerRules/Utils.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import type { CampaignMapData as ProtoSchemaCommonProtoMapCampaignMapData } from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";
+import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
+import { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
+import type { LanguageText as ProtoSchemaCommonProtoStructureLanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
+import type {
+    TaskObjectiveFullData as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData,
+} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
+import type {
+    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
+} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
+import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import { getServerTimestamp } from "../../timer/TimerModel.ts";
+import { getSelfUserId } from "../../users/Model.ts";
+import { getDefaultSimpleCoDialogueData } from "../../warEvents/actions/utils/Common.ts";
+import { createDefault } from "../../warRules/utils/Template.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
 
-type GcData                     = GameConfigGcData.GcData;
-type TemplateWarRule            = ProtoSchemaCommonProtoWarRuleTemplateWarRule.TemplateWarRule;
-type CampaignMapData            = ProtoSchemaCommonProtoMapCampaignMapData.CampaignMapData;
-type LanguageText               = ProtoSchemaCommonProtoStructureLanguageText.LanguageText;
-type TaskObjectiveFullData      = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData.TaskObjectiveFullData;
-type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type GcData                     = GameConfigGcData;
+type TemplateWarRule            = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
+type CampaignMapData            = ProtoSchemaCommonProtoMapCampaignMapData;
+type LanguageText               = ProtoSchemaCommonProtoStructureLanguageText;
+type TaskObjectiveFullData      = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData;
+type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterfaceIMeWar.IMeWar {
-    private readonly _drawer                = new (GameHelpersGhFactory.getMeDrawerClass())();
-    private readonly _warEventManager       = new (GameHelpersGhFactory.getBwWarEventManagerClass())();
+export class MeWar extends BwWar implements IMeWar {
+    private readonly _drawer                = new (getMeDrawerClass())();
+    private readonly _warEventManager       = new (getBwWarEventManagerClass())();
 
     private _srcNormalMapIdForAddEvent      : number | null = null;
     private _mapModifiedTime?               : number;
@@ -48,34 +52,34 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
     private _templateWarRuleArray           : TemplateWarRule[] = [];
     private _isMapModified                  = false;
     private _groupedMapTagId                : number | null = null;
-    private _mapSimpleDialogueArray         : ProtoSchemaCommonProtoMapMapSimpleDialogue.MapSimpleDialogue[] = [];
+    private _mapSimpleDialogueArray         : MapSimpleDialogue[] = [];
     private _campaignMapData                : CampaignMapData | null = null;
     private _taskObjectiveFullData          : TaskObjectiveFullData | null = null;
-    private readonly _gridMarkData          = new ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData();
+    private readonly _gridMarkData          = new GridMarkData();
 
-    public init(data: ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar, gameConfig: GcData): void {
-        this._baseInit(data, gameConfig, WarTypesConstants.WarTypeId.Me);
+    public init(data: SerialWar, gameConfig: GcData): void {
+        this._baseInit(data, gameConfig, WarTypeId.Me);
         this.getDrawer().init();
 
         this._initView();
     }
     public async initWithMapRawData({ mapRawData, slotIndex, gameConfig, srcNormalMapIdForAddEvent, gridMarkData }: {
-        mapRawData                  : ProtoSchemaCommonProtoMapMapRawData.MapRawData;
+        mapRawData                  : MapRawData;
         slotIndex                   : number;
         gameConfig                  : GcData;
         srcNormalMapIdForAddEvent   : number | null;
-        gridMarkData                : Undefinable<ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData>;
+        gridMarkData                : Undefinable<GridMarkData>;
     }): Promise<void> {
-        this.init((await MapEditorModelMeHelpers.createISerialWar(mapRawData)).clone(), gameConfig);
+        this.init((await createISerialWar(mapRawData)).clone(), gameConfig);
 
         this.setSrcNormalMapIdForAddEvent(srcNormalMapIdForAddEvent);
         this.setMapSlotIndex(slotIndex);
-        this.setMapModifiedTime(mapRawData.getModifiedTime() ?? TimerTimerModel.getServerTimestamp());
-        this.setMapDesignerUserId(mapRawData.getDesignerUserId() ?? UsersModel.getSelfUserId() ?? 0);
+        this.setMapModifiedTime(mapRawData.getModifiedTime() ?? getServerTimestamp());
+        this.setMapDesignerUserId(mapRawData.getDesignerUserId() ?? getSelfUserId() ?? 0);
         this.setMapDesignerName(mapRawData.getDesignerName() ?? `??`);
         this.setMapNameArray(mapRawData.getMapNameArray());
         this.setMapDescArray(mapRawData.getMapExtraText()?.getMapDescription() ?? []);
-        this._setTemplateWarRuleArray(MapEditorModelMeHelpers.createRevisedTemplateWarRuleArrayForMeWar(mapRawData.getTemplateWarRuleArray(), gameConfig));
+        this._setTemplateWarRuleArray(createRevisedTemplateWarRuleArrayForMeWar(mapRawData.getTemplateWarRuleArray(), gameConfig));
         this.setGroupedMapTagId(mapRawData.getMapTagIdFlags() ?? null);
         this.setMapSimpleDialogueArray(mapRawData.getMapSimpleDialogueArray());
         this._setCampaignMapData(mapRawData.getCampaignMapData() ?? null);
@@ -83,14 +87,14 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
         this._setGridMarkData(gridMarkData);
     }
 
-    public startRunning(): MapEditorInterfaceIMeWar.IMeWar {
+    public startRunning(): IMeWar {
         super.startRunning();
 
         this.getDrawer().startRunning(this);
 
         return this;
     }
-    public stopRunning(): MapEditorInterfaceIMeWar.IMeWar {
+    public stopRunning(): IMeWar {
         super.stopRunning();
 
         this.getDrawer().stopRunning();
@@ -98,7 +102,7 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
         return this;
     }
 
-    public serializeForCreateSfwWithTemplateWarRule(warRule: TemplateWarRule): ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar {
+    public serializeForCreateSfwWithTemplateWarRule(warRule: TemplateWarRule): SerialWar {
         const playerManagerData     = this.getPlayerManager().serializeForCreateSfw();
         const playerRuleDataArray   = warRule.getWarRuleCommonData()?.getPlayerRuleList();
         const gameConfig            = this.getGcData();
@@ -112,9 +116,9 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
                 } else {
                     const campaignHumanCoIdArray = playerRule.getCampaignHumanCoIdArray();
                     if (campaignHumanCoIdArray?.length) {
-                        player.setCoId(HelpersCollection.pickRandomElement(campaignHumanCoIdArray));
+                        player.setCoId(pickRandomElement(campaignHumanCoIdArray));
                     } else {
-                        player.setCoId(HelpersCollection.pickRandomElement([...PlayerRulesUtils.getFinalSfwHumanCoIdSet({
+                        player.setCoId(pickRandomElement([...getFinalSfwHumanCoIdSet({
                             playerRule      : playerRule,
                             gameConfig      : gameConfig,
                             hasFogByDefault : !!warRule.getWarRuleCommonData()?.getHasFogByDefault(),
@@ -125,7 +129,7 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
             }
         }
 
-        return ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.fromJson({
+        return SerialWar.fromJson({
             settingsForCommon           : this.getCommonSettingManager().serializeForCreateSfwWithTemplateWarRule(warRule).toJson(),
             settingsForMcw              : null,
             settingsForMrw              : null,
@@ -142,7 +146,7 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
             seedRandomCurrentState      : null,
             executedOperationManager    : null,
             remainingVotesForDraw       : null,
-            drawVoteManager             : new ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager.SerialDrawVoteManager().toJson(),
+            drawVoteManager             : new SerialDrawVoteManager().toJson(),
             weatherManager              : this.getWeatherManager().serializeForCreateSfw().toJson(),
             warEventManager             : this.getWarEventManager().serializeForCreateSfw().toJson(),
             playerManager               : playerManagerData.toJson(),
@@ -152,8 +156,8 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
             taskObjectiveManager        : this.getTaskObjectiveManager().serializeForCreateSfw().toJson(),
         });
     }
-    public serializeForCreateMfrWithTemplateWarRule(warRule: TemplateWarRule): ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar {
-        return ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar.fromJson({
+    public serializeForCreateMfrWithTemplateWarRule(warRule: TemplateWarRule): SerialWar {
+        return SerialWar.fromJson({
             settingsForCommon           : this.getCommonSettingManager().serializeForCreateMfwWithTemplateWarRule(warRule).toJson(),
             settingsForMcw              : null,
             settingsForMrw              : null,
@@ -170,7 +174,7 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
             seedRandomCurrentState      : null,
             executedOperationManager    : null,
             remainingVotesForDraw       : null,
-            drawVoteManager             : new ProtoSchemaCommonProtoWarSerializationSerialDrawVoteManager.SerialDrawVoteManager().toJson(),
+            drawVoteManager             : new SerialDrawVoteManager().toJson(),
             weatherManager              : this.getWeatherManager().serializeForCreateMfr().toJson(),
             warEventManager             : this.getWarEventManager().serializeForCreateMfr().toJson(),
             playerManager               : this.getPlayerManager().serializeForCreateMfr().toJson(),
@@ -180,22 +184,22 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
             taskObjectiveManager        : this.getTaskObjectiveManager().serializeForCreateMfr().toJson(),
         });
     }
-    public override async serializeForMap(): Promise<ProtoSchemaCommonProtoMapMapRawData.MapRawData> {
+    public override async serializeForMap(): Promise<MapRawData> {
         const unitMap = this.getUnitMap();
-        MapEditorModelMeHelpers.reviseAllUnitIds(unitMap);
+        reviseAllUnitIds(unitMap);
 
         const mapSize               = unitMap.getMapSize();
         const playersCountUnneutral = this.getPlayersCountUnneutral();
         const serialTileMap         = this.getTileMap().serialize();
         const serialUnitMap         = unitMap.serialize();
-        return ProtoSchemaCommonProtoMapMapRawData.MapRawData.fromJson({
+        return MapRawData.fromJson({
             designerName            : this.getMapDesignerName(),
             designerUserId          : this.getMapDesignerUserId(),
             mapNameArray            : this.getMapNameArray().map(v => v.toJson()),
             mapWidth                : mapSize.getWidth(),
             mapHeight               : mapSize.getHeight(),
             playersCountUnneutral   : playersCountUnneutral,
-            modifiedTime            : TimerTimerModel.getServerTimestamp(),
+            modifiedTime            : getServerTimestamp(),
             tileDataArray           : serialTileMap.getTiles().map(v => v.toJson()),
             unitDataArray           : serialUnitMap.getUnits().map(v => v.toJson()),
             templateWarRuleArray    : this.getRevisedTemplateWarRuleArray(playersCountUnneutral).map(v => v.toJson()),
@@ -233,10 +237,10 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
         return null;
     }
     public getSettingsBootTimerParams(): number[] {
-        return [BootTimersConstants.TimerTypeId.NoBoot];
+        return [TimerTypeId.NoBoot];
     }
 
-    public getWarEventManager(): BaseWarInterfaceIBwWarEventManager.IBwWarEventManager {
+    public getWarEventManager(): IBwWarEventManager {
         return this._warEventManager;
     }
 
@@ -248,7 +252,7 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
         // nothing to do.
     }
 
-    public getDrawer(): MapEditorInterfaceIMeDrawer.IMeDrawer {
+    public getDrawer(): IMeDrawer {
         return this._drawer;
     }
 
@@ -256,7 +260,7 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
         this._mapModifiedTime = time;
     }
     public getMapModifiedTime(): number {
-        return HelpersMisc.getExisted(this._mapModifiedTime);
+        return getExisted(this._mapModifiedTime);
     }
 
     public getSrcNormalMapIdForAddEvent(): number | null {
@@ -267,35 +271,35 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
     }
 
     public getMapSlotIndex(): number {
-        return HelpersMisc.getExisted(this._mapSlotIndex);
+        return getExisted(this._mapSlotIndex);
     }
     public setMapSlotIndex(value: number): void {
         this._mapSlotIndex = value;
     }
 
     public getMapDesignerUserId(): number {
-        return HelpersMisc.getExisted(this._mapDesignerUserId);
+        return getExisted(this._mapDesignerUserId);
     }
     public setMapDesignerUserId(value: number): void {
         this._mapDesignerUserId = value;
     }
 
     public getMapDesignerName(): string {
-        return HelpersMisc.getExisted(this._mapDesignerName);
+        return getExisted(this._mapDesignerName);
     }
     public setMapDesignerName(value: string): void {
         this._mapDesignerName = value;
     }
 
     public getMapNameArray(): LanguageText[] {
-        return HelpersMisc.getExisted(this._mapNameList);
+        return getExisted(this._mapNameList);
     }
     public setMapNameArray(value: LanguageText[]): void {
         this._mapNameList = value;
     }
 
     public getMapDescArray(): LanguageText[] {
-        return HelpersMisc.getExisted(this._mapDescArray);
+        return getExisted(this._mapDescArray);
     }
     public setMapDescArray(value: LanguageText[]): void {
         this._mapDescArray = value;
@@ -322,7 +326,7 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
         this._templateWarRuleArray = value;
     }
     private _getTemplateWarRule(ruleId: number): TemplateWarRule {
-        return HelpersMisc.getExisted(this.getTemplateWarRuleArray().find(v => v.getRuleId() === ruleId));
+        return getExisted(this.getTemplateWarRuleArray().find(v => v.getRuleId() === ruleId));
     }
     public getRevisedTemplateWarRuleArray(playersCountUnneutral: number): TemplateWarRule[] {
         const revisedTemplateWarRuleArray: TemplateWarRule[] = [];
@@ -332,12 +336,12 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
             warRuleCommonData.setPlayerRuleList(
                 warRuleCommonData.getPlayerRuleList()
                     .filter(v => {
-                        const playerIndex = HelpersMisc.getExisted(v.getPlayerIndex());
+                        const playerIndex = getExisted(v.getPlayerIndex());
                         return (playerIndex <= playersCountUnneutral)
-                            && (playerIndex >= PlayersConstants.PlayerIndex.First);
+                            && (playerIndex >= PlayerIndex.First);
                     })
                     .sort((v1, v2) =>
-                        HelpersMisc.getExisted(v1.getPlayerIndex()) - HelpersMisc.getExisted(v2.getPlayerIndex())
+                        getExisted(v1.getPlayerIndex()) - getExisted(v2.getPlayerIndex())
                     )
             );
             revisedTemplateWarRuleArray.push(revisedRule);
@@ -348,7 +352,7 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
 
     public addEmptyTemplateWarRule(): void {
         const templateWarRuleArray = this.getTemplateWarRuleArray();
-        templateWarRuleArray.push(WarRulesUtilsTemplate.createDefault(templateWarRuleArray.length, PlayersConstants.PlayerIndex.Max, this.getGcData()));
+        templateWarRuleArray.push(createDefault(templateWarRuleArray.length, PlayerIndex.Max, this.getGcData()));
     }
     public addTemplateWarRule(rule: TemplateWarRule): void {
         const arr   = this.getTemplateWarRuleArray();
@@ -379,24 +383,24 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
         this._groupedMapTagId = mapTagIdFlags;
     }
 
-    public getMapSimpleDialogueArray(): ProtoSchemaCommonProtoMapMapSimpleDialogue.MapSimpleDialogue[] {
+    public getMapSimpleDialogueArray(): MapSimpleDialogue[] {
         return this._mapSimpleDialogueArray;
     }
-    public setMapSimpleDialogueArray(arr: ProtoSchemaCommonProtoMapMapSimpleDialogue.MapSimpleDialogue[]): void {
+    public setMapSimpleDialogueArray(arr: MapSimpleDialogue[]): void {
         this._mapSimpleDialogueArray = arr;
     }
     public addDefaultMapSimpleDialogue(): number {
         const dialogueArray = this.getMapSimpleDialogueArray();
         for (let dialogueId = 1; ; ++dialogueId) {
             if (!dialogueArray.some(v => (v.getDialogueId() ?? 0) === dialogueId)) {
-                dialogueArray.push(ProtoSchemaCommonProtoMapMapSimpleDialogue.MapSimpleDialogue.fromJson({
+                dialogueArray.push(MapSimpleDialogue.fromJson({
                     dialogueId              : dialogueId,
                     dialogueNameArray       : [
                         // { languageType: LanguageType.Chinese, text: `${Lang.getText(LangTextType.B1097, LanguageType.Chinese)} #${dialogueId}` },
                         // { languageType: LanguageType.English, text: `${Lang.getText(LangTextType.B1097, LanguageType.English)} #${dialogueId}` },
                     ],
                     dataArray               : [
-                        WarEventsActionsUtilsCommon.getDefaultSimpleCoDialogueData().toJson(),
+                        getDefaultSimpleCoDialogueData().toJson(),
                     ],
                 }));
                 dialogueArray.sort((v1, v2) => (v1.getDialogueId() ?? 0) - (v2.getDialogueId() ?? 0));
@@ -461,11 +465,11 @@ export class MeWar extends BaseWarModelBwWar.BwWar implements MapEditorInterface
         return this._taskObjectiveFullData;
     }
 
-    public getGridMarkData(): ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData {
+    public getGridMarkData(): GridMarkData {
         return this._gridMarkData;
     }
-    private _setGridMarkData(newData: Undefinable<ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData>): void {
-        this.getGridMarkData().loadJson(newData?.toJson() ?? new ProtoSchemaCommonProtoStructureGridMarkData.GridMarkData().toJson());
+    private _setGridMarkData(newData: Undefinable<GridMarkData>): void {
+        this.getGridMarkData().loadJson(newData?.toJson() ?? new GridMarkData().toJson());
     }
 
     public getPlayersCountUnneutral(): number {

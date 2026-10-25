@@ -1,39 +1,39 @@
-import * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import * as CommonModelCommonModel from "../../common/model/CommonModel.ts";
-import * as CoSkillsConstants from "../../coSkills/Constants.ts";
-import * as ForceSkinsUtils from "../../forceSkins/Utils.ts";
-import * as GraphicsUtils from "../../graphics/Utils.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import type * as ProtoSchemaCommonProtoConfigUnitTemplateCfg from "../../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
-import * as UiComponentsUiContainerBase from "./UiContainerBase.ts";
-import type * as UiInterfacesIUiUnitView from "../interfaces/IUiUnitView.ts";
-import type * as UiTypesUiUnitViewData from "../types/UiUnitViewData.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
-import * as UnitsUtilsCommon from "../../units/utils/Common.ts";
-import * as UsersModel from "../../users/Model.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import { getUnitAnimationTickCount, getCachedUnitImageSource, getStateIndicatorTickCount } from "../../common/model/CommonModel.ts";
+import { SkillTypeId } from "../../coSkills/Constants.ts";
+import { getFinalSkinId2 } from "../../forceSkins/Utils.ts";
+import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
+import { getUnitHp, getUnitCornerStateIcon, getUnitPromotion, getUnitBuff } from "../../helpers/ImageSource.ts";
+import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
+import type { UnitTemplateCfg } from "../../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
+import { UiContainerBase } from "./UiContainerBase.ts";
+import type { IUiUnitView } from "../interfaces/IUiUnitView.ts";
+import type { UiUnitViewData } from "../types/UiUnitViewData.ts";
+import { getUiImageClass } from "../utils/UiFactory.ts";
+import { ActionStateId, AnimationTypeId, CornerStateIconTypeId } from "../../units/Constants.ts";
+import { getNormalizedHp } from "../../units/utils/Common.ts";
+import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
+import type { DisplayObject } from "../../vendor/egret/Egret.ts";
 
-const getResolutionConfig           = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig());
-const getGridWidth                  = HelpersMisc.createLazyFunc(() => getResolutionConfig().gridWidth);
-const getGridHeight                 = HelpersMisc.createLazyFunc(() => getResolutionConfig().gridHeight);
-const getImgUnitStateWidth          = HelpersMisc.createLazyFunc(() => getResolutionConfig().imgUnitStateWidth);
-const getImgUnitStateHeight         = HelpersMisc.createLazyFunc(() => getResolutionConfig().imgUnitStateHeight);
+const getResolutionConfig           = createLazyFunc(() => getCurrentTextureResolutionConfig());
+const getGridWidth                  = createLazyFunc(() => getResolutionConfig().gridWidth);
+const getGridHeight                 = createLazyFunc(() => getResolutionConfig().gridHeight);
+const getImgUnitStateWidth          = createLazyFunc(() => getResolutionConfig().imgUnitStateWidth);
+const getImgUnitStateHeight         = createLazyFunc(() => getResolutionConfig().imgUnitStateHeight);
 
-const getImgUnitStandX              = HelpersMisc.createLazyFunc(() => getGridWidth() * 3 / 4);
-const getImgUnitStandAnchorOffsetX  = HelpersMisc.createLazyFunc(() => getGridWidth() * 3 / 4);
+const getImgUnitStandX              = createLazyFunc(() => getGridWidth() * 3 / 4);
+const getImgUnitStandAnchorOffsetX  = createLazyFunc(() => getGridWidth() * 3 / 4);
 
-export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase implements UiInterfacesIUiUnitView.IUiUnitView {
-    private readonly _imgUnit                   = new (UiUtilsUiFactory.getUiImageClass())();
-    private readonly _imgHp                     = new (UiUtilsUiFactory.getUiImageClass())();
-    private readonly _imgState                  = new (UiUtilsUiFactory.getUiImageClass())();
+export class UiUnitView extends UiContainerBase implements IUiUnitView {
+    private readonly _imgUnit                   = new (getUiImageClass())();
+    private readonly _imgHp                     = new (getUiImageClass())();
+    private readonly _imgState                  = new (getUiImageClass())();
     private readonly _framesForStateAnimation   : string[] = [];
 
-    private _viewData                           : UiTypesUiUnitViewData.UiUnitViewData | null = null;
+    private _viewData                           : UiUnitViewData | null = null;
     private _isDark                             = false;
 
-    public constructor(data?: UiTypesUiUnitViewData.UiUnitViewData, tickCount?: number) {
+    public constructor(data?: UiUnitViewData, tickCount?: number) {
         super();
 
         {
@@ -42,7 +42,7 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
             imgUnit.setAnchorOffsetX(getImgUnitStandAnchorOffsetX());
             imgUnit.setX(getImgUnitStandX());
             // imgUnit.setY(GRID_HEIGHT);
-            this.addChild(imgUnit as unknown as VendorEgretEgret.DisplayObject);
+            this.addChild(imgUnit as unknown as DisplayObject);
         }
 
         {
@@ -50,7 +50,7 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
             imgHp.setIsSmoothing(false);
             imgHp.setX(getGridWidth() - getImgUnitStateWidth() - 1 + getGridWidth() / 4);
             imgHp.setY(getGridHeight() - getImgUnitStateHeight() + getGridHeight() / 2);
-            this.addChild(imgHp as unknown as VendorEgretEgret.DisplayObject);
+            this.addChild(imgHp as unknown as DisplayObject);
         }
 
         {
@@ -58,31 +58,31 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
             imgState.setIsSmoothing(false);
             imgState.setX(0 + getGridWidth() / 4);
             imgState.setY(getGridHeight() - getImgUnitStateHeight() + getGridHeight() / 2);
-            this.addChild(imgState as unknown as VendorEgretEgret.DisplayObject);
+            this.addChild(imgState as unknown as DisplayObject);
         }
 
         (data) && (this.update(data, tickCount));
     }
 
-    public update(viewData: UiTypesUiUnitViewData.UiUnitViewData, tickCount?: number): void {
+    public update(viewData: UiUnitViewData, tickCount?: number): void {
         this._setViewData(viewData);
 
         const data      = viewData.unitData;
-        const gridIndex = HelpersMisc.getExisted(AuxiliaryTypesGridIndex.GridIndex.convertGridIndex(data.getGridIndex()));
-        this._isDark    = data.getActionState() === UnitsConstants.ActionStateId.Acted;
+        const gridIndex = getExisted(GridIndex.convertGridIndex(data.getGridIndex()));
+        this._isDark    = data.getActionState() === ActionStateId.Acted;
         this.setX(gridIndex.getX() * getGridWidth() - getGridWidth() / 4);
         this.setY(gridIndex.getY() * getGridHeight() - getGridHeight() / 2);
         this._imgUnit.setScaleX((data.getPlayerIndex() ?? 0) % 2 == 0 ? -1 : 1);
-        this.updateOnAnimationTick(tickCount || CommonModelCommonModel.getUnitAnimationTickCount());
+        this.updateOnAnimationTick(tickCount || getUnitAnimationTickCount());
 
         this._updateImageHp();
         this._resetStateAnimationFrames();
     }
 
-    public getViewData(): UiTypesUiUnitViewData.UiUnitViewData | null {
+    public getViewData(): UiUnitViewData | null {
         return this._viewData;
     }
-    private _setViewData(data: UiTypesUiUnitViewData.UiUnitViewData): void {
+    private _setViewData(data: UiUnitViewData): void {
         this._viewData = data;
     }
 
@@ -92,12 +92,12 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
             return;
         }
 
-        this._imgUnit.loadSource(CommonModelCommonModel.getCachedUnitImageSource({
+        this._imgUnit.loadSource(getCachedUnitImageSource({
             gcData      : data.gameConfig,
-            version         : UsersModel.getSelfSettingsTextureVersion(),
-            skinId          : ForceSkinsUtils.getFinalSkinId2(data.skinId, data.overridingSkinId),
+            version         : getSelfSettingsTextureVersion(),
+            skinId          : getFinalSkinId2(data.skinId, data.overridingSkinId),
             unitType        : data.unitData.getUnitType(),
-            animationType   : UnitsConstants.AnimationTypeId.Stand,
+            animationType   : AnimationTypeId.Stand,
             isDark          : this._isDark,
             tickCount       : tickCount,
         }));
@@ -116,16 +116,16 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
         }
 
         const hp            = unitData.getCurrentHp();
-        const normalizedHp  = hp == null ? null : UnitsUtilsCommon.getNormalizedHp(hp);
+        const normalizedHp  = hp == null ? null : getNormalizedHp(hp);
         const imgHp         = this._imgHp;
         if ((normalizedHp == null)                                                                      ||
-            (normalizedHp >= UnitsUtilsCommon.getNormalizedHp(this._getUnitTemplateCfg().getMaxHp()))
+            (normalizedHp >= getNormalizedHp(this._getUnitTemplateCfg().getMaxHp()))
         ) {
             imgHp.setIsVisible(false);
         } else {
             imgHp.setIsVisible(true);
-            imgHp.loadSource(HelpersImageSource.getUnitHp({
-                version : UsersModel.getSelfSettingsTextureVersion(),
+            imgHp.loadSource(getUnitHp({
+                version : getSelfSettingsTextureVersion(),
                 hp      : normalizedHp,
                 isDark  : this._isDark,
             }));
@@ -152,7 +152,7 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
         const framesCount   = frames.length;
         this._imgState.loadSource(framesCount <= 0
             ? ``
-            : frames[CommonModelCommonModel.getStateIndicatorTickCount() % framesCount]
+            : frames[getStateIndicatorTickCount() % framesCount]
         );
     }
 
@@ -163,19 +163,19 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
         }
 
         const skillType = viewData.coUsingSkillType;
-        if (skillType === CoSkillsConstants.SkillTypeId.Power) {
-            this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                version     : UsersModel.getSelfSettingsTextureVersion(),
+        if (skillType === SkillTypeId.Power) {
+            this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                version     : getSelfSettingsTextureVersion(),
                 isDark      : this._isDark,
-                iconTypeId  : UnitsConstants.CornerStateIconTypeId.ActivatingCoPower,
-                skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                iconTypeId  : CornerStateIconTypeId.ActivatingCoPower,
+                skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
-        } else if (skillType === CoSkillsConstants.SkillTypeId.SuperPower) {
-            this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                version     : UsersModel.getSelfSettingsTextureVersion(),
+        } else if (skillType === SkillTypeId.SuperPower) {
+            this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                version     : getSelfSettingsTextureVersion(),
                 isDark      : this._isDark,
-                iconTypeId  : UnitsConstants.CornerStateIconTypeId.ActivatingCoSuperPower,
-                skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                iconTypeId  : CornerStateIconTypeId.ActivatingCoSuperPower,
+                skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -187,20 +187,20 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
 
         const unitData = viewData.unitData;
         if (unitData.getIsCoOnboard()) {
-            this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                version     : UsersModel.getSelfSettingsTextureVersion(),
+            this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                version     : getSelfSettingsTextureVersion(),
                 isDark      : this._isDark,
-                iconTypeId  : UnitsConstants.CornerStateIconTypeId.CoOnboard,
-                skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                iconTypeId  : CornerStateIconTypeId.CoOnboard,
+                skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         } else {
             const promotion = unitData.getCurrentPromotion();
             if (promotion > 0) {
-                this._framesForStateAnimation.push(HelpersImageSource.getUnitPromotion({
-                    version     : UsersModel.getSelfSettingsTextureVersion(),
+                this._framesForStateAnimation.push(getUnitPromotion({
+                    version     : getSelfSettingsTextureVersion(),
                     isDark      : this._isDark,
                     promotion   : promotion,
-                    skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                    skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
                 }));
             }
         }
@@ -213,11 +213,11 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
 
         const fuel = viewData.unitData.getCurrentFuel();
         if ((fuel != null) && (fuel <= this._getUnitTemplateCfg().getMaxFuel() * 0.4)) {
-            this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                version     : UsersModel.getSelfSettingsTextureVersion(),
+            this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                version     : getSelfSettingsTextureVersion(),
                 isDark      : this._isDark,
-                iconTypeId  : UnitsConstants.CornerStateIconTypeId.LowFuel,
-                skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                iconTypeId  : CornerStateIconTypeId.LowFuel,
+                skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -234,11 +234,11 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
             const primaryWeaponMaxAmmo      = cfg.getPrimaryWeaponMaxAmmo();
             const primaryWeaponCurrentAmmo  = unitData.getPrimaryWeaponCurrentAmmo();
             if ((primaryWeaponMaxAmmo != null) && (primaryWeaponCurrentAmmo != null) && (primaryWeaponCurrentAmmo <= primaryWeaponMaxAmmo * 0.4)) {
-                this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                    version     : UsersModel.getSelfSettingsTextureVersion(),
+                this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                    version     : getSelfSettingsTextureVersion(),
                     isDark      : this._isDark,
-                    iconTypeId  : UnitsConstants.CornerStateIconTypeId.LowPrimaryAmmo,
-                    skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                    iconTypeId  : CornerStateIconTypeId.LowPrimaryAmmo,
+                    skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
                 }));
             }
         }
@@ -247,11 +247,11 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
             const flareMaxAmmo      = cfg.getFlareMaxAmmo();
             const flareCurrentAmmo  = unitData.getFlareCurrentAmmo();
             if ((flareMaxAmmo != null) && (flareCurrentAmmo != null) && (flareCurrentAmmo <= flareMaxAmmo * 0.4)) {
-                this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                    version     : UsersModel.getSelfSettingsTextureVersion(),
+                this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                    version     : getSelfSettingsTextureVersion(),
                     isDark      : this._isDark,
-                    iconTypeId  : UnitsConstants.CornerStateIconTypeId.LowFlareAmmo,
-                    skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                    iconTypeId  : CornerStateIconTypeId.LowFlareAmmo,
+                    skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
                 }));
             }
         }
@@ -263,11 +263,11 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
         }
 
         if (viewData.unitData.getIsDiving()) {
-            this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                version     : UsersModel.getSelfSettingsTextureVersion(),
+            this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                version     : getSelfSettingsTextureVersion(),
                 isDark      : this._isDark,
-                iconTypeId  : UnitsConstants.CornerStateIconTypeId.Diving,
-                skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                iconTypeId  : CornerStateIconTypeId.Diving,
+                skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -278,11 +278,11 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
         }
 
         if (viewData.isCapturingTile) {
-            this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                version     : UsersModel.getSelfSettingsTextureVersion(),
+            this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                version     : getSelfSettingsTextureVersion(),
                 isDark      : this._isDark,
-                iconTypeId  : UnitsConstants.CornerStateIconTypeId.CapturingTile,
-                skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                iconTypeId  : CornerStateIconTypeId.CapturingTile,
+                skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -293,11 +293,11 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
         }
 
         if (viewData.isBuildingTile) {
-            this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                version     : UsersModel.getSelfSettingsTextureVersion(),
+            this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                version     : getSelfSettingsTextureVersion(),
                 isDark      : this._isDark,
-                iconTypeId  : UnitsConstants.CornerStateIconTypeId.BuildingTile,
-                skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                iconTypeId  : CornerStateIconTypeId.BuildingTile,
+                skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -308,11 +308,11 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
         }
 
         if (viewData.hasLoadedUnit) {
-            this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                version     : UsersModel.getSelfSettingsTextureVersion(),
+            this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                version     : getSelfSettingsTextureVersion(),
                 isDark      : this._isDark,
-                iconTypeId  : UnitsConstants.CornerStateIconTypeId.LoadingUnits,
-                skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                iconTypeId  : CornerStateIconTypeId.LoadingUnits,
+                skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
             }));
         }
     }
@@ -328,11 +328,11 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
             const maxBuildMaterial          = cfg.getMaxBuildMaterial();
             const currentBuildMaterial      = unitData.getCurrentBuildMaterial();
             if ((maxBuildMaterial != null) && (currentBuildMaterial != null) && (currentBuildMaterial <= maxBuildMaterial * 0.4)) {
-                this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                    version     : UsersModel.getSelfSettingsTextureVersion(),
+                this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                    version     : getSelfSettingsTextureVersion(),
                     isDark      : this._isDark,
-                    iconTypeId  : UnitsConstants.CornerStateIconTypeId.LowBuildMaterial,
-                    skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                    iconTypeId  : CornerStateIconTypeId.LowBuildMaterial,
+                    skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
                 }));
             }
         }
@@ -341,11 +341,11 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
             const maxProduceMaterial        = cfg.getMaxProduceMaterial();
             const currentProduceMaterial    = unitData.getCurrentProduceMaterial();
             if ((maxProduceMaterial != null) && (currentProduceMaterial != null) && (currentProduceMaterial <= maxProduceMaterial * 0.4)) {
-                this._framesForStateAnimation.push(HelpersImageSource.getUnitCornerStateIcon({
-                    version     : UsersModel.getSelfSettingsTextureVersion(),
+                this._framesForStateAnimation.push(getUnitCornerStateIcon({
+                    version     : getSelfSettingsTextureVersion(),
                     isDark      : this._isDark,
-                    iconTypeId  : UnitsConstants.CornerStateIconTypeId.LowProduceMaterial,
-                    skinId      : ForceSkinsUtils.getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
+                    iconTypeId  : CornerStateIconTypeId.LowProduceMaterial,
+                    skinId      : getFinalSkinId2(viewData.skinId, viewData.overridingSkinId),
                 }));
             }
         }
@@ -353,16 +353,16 @@ export class UiUnitView extends UiComponentsUiContainerBase.UiContainerBase impl
     private _addFrameForBuff(): void {
         const arr = this._framesForStateAnimation;
         for (const buff of this.getViewData()?.unitData?.getBuffArray() ?? []) {
-            arr.push(HelpersImageSource.getUnitBuff({
-                version     : UsersModel.getSelfSettingsTextureVersion(),
+            arr.push(getUnitBuff({
+                version     : getSelfSettingsTextureVersion(),
                 isDark      : this._isDark,
                 buffTypeId  : buff.getBuffTypeId(),
             }));
         }
     }
 
-    private _getUnitTemplateCfg(): ProtoSchemaCommonProtoConfigUnitTemplateCfg.UnitTemplateCfg {
-        const data = HelpersMisc.getExisted(this.getViewData());
-        return HelpersMisc.getExisted(data.gameConfig.getUnitTemplateCfg(data.unitData.getUnitType()));
+    private _getUnitTemplateCfg(): UnitTemplateCfg {
+        const data = getExisted(this.getViewData());
+        return getExisted(data.gameConfig.getUnitTemplateCfg(data.unitData.getUnitType()));
     }
 }

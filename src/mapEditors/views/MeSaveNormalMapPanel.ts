@@ -1,63 +1,63 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as MapEditorModelMeHelpers from "../../mapEditor/model/MeHelpers.ts";
-import * as MapEditorModelMeModel from "../../mapEditor/model/MeModel.ts";
-import * as MapEditorModelMeProxy from "../../mapEditor/model/MeProxy.ts";
-import * as MapsUtilsMapRawData from "../../maps/utils/MapRawData.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NormalMapModelNormalMapProxy from "../../normalMap/model/NormalMapProxy.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoMapMapRawData from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import * as ProtoSchemaCommonProtoNetMessageMsgMmSubmitMapSimpleDialogueWarRuleDialogueInfo from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/WarRuleDialogueInfo.ts";
-import * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarRuleRuleAvailability from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { showLang, show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorValue } from "../../graphics/Constants.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getFormattedText, getErrorText } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { getCriticalErrorCodeForMapRawData } from "../../mapEditor/model/MeHelpers.ts";
+import { getReviewingMapSlotIndex } from "../../mapEditor/model/MeModel.ts";
+import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
+import { getErrorCode } from "../../maps/utils/MapRawData.ts";
+import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
+import { reqMmAddWarEvent, reqMmSubmitMapSimpleDialogue } from "../../normalMap/model/NormalMapProxy.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import { WarRuleDialogueInfo } from "../../proto/schema/CommonProto/NetMessage/MsgMmSubmitMapSimpleDialogue/WarRuleDialogueInfo.ts";
+import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 export interface OpenData {
-    war : MapEditorInterfaceIMeWar.IMeWar;
+    war : IMeWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                  : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                 : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                  : IUiImage;
+    private readonly _group!                    : IUiContainer;
+    private readonly _labelTitle!               : IUiLabel;
+    private readonly _btnClose!                 : IUiButton;
 
-    private readonly _labelReviewDescTitle!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelReviewDesc!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupCommand!             : UiInterfacesIUiLayout.IUiLayout;
+    private readonly _labelReviewDescTitle!     : IUiLabel;
+    private readonly _labelReviewDesc!          : IUiLabel;
+    private readonly _groupCommand!             : IUiLayout;
 
-    private readonly _groupSave!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnSave!                  : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelpSave!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSaveAndSubmit!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelpSaveAndSubmit!     : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupSave!                : IUiContainer;
+    private readonly _btnSave!                  : IUiButton;
+    private readonly _btnHelpSave!              : IUiButton;
+    private readonly _btnSaveAndSubmit!         : IUiButton;
+    private readonly _btnHelpSaveAndSubmit!     : IUiButton;
 
-    private readonly _groupEventAndDialogue!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnAddWarEvent!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSubmitDialogue!        : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupEventAndDialogue!    : IUiContainer;
+    private readonly _btnAddWarEvent!           : IUiButton;
+    private readonly _btnSubmitDialogue!        : IUiButton;
 
-    private _mapRawData         : ProtoSchemaCommonProtoMapMapRawData.MapRawData | null = null;
-    private _mapErrorCode       = UtilsClientErrorCode.ClientErrorCode.NoError;
+    private _mapRawData         : MapRawData | null = null;
+    private _mapErrorCode       = ClientErrorCode.NoError;
     private _canSubmitForReview = false;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgMmAddWarEvent,                callback: this._onNotifyMsgMmAddWarEvent },
-            { type: NotificationsTypeId.TypeId.MsgMmSubmitMapSimpleDialogue,    callback: this._onNotifyMsgMmSubmitMapSimpleDialogue },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgMmAddWarEvent,                callback: this._onNotifyMsgMmAddWarEvent },
+            { type: TypeId.MsgMmSubmitMapSimpleDialogue,    callback: this._onNotifyMsgMmSubmitMapSimpleDialogue },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,               callback: this.closePanel, },
@@ -86,7 +86,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     private async _onTouchedBtnSave(): Promise<void> {
         const mapRawData = this._mapRawData;
         if (mapRawData == null) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
@@ -97,12 +97,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const slotIndex                 = war.getMapSlotIndex();
         const srcNormalMapIdForAddEvent = war.getSrcNormalMapIdForAddEvent();
-        const reviewingSlotIndex        = await MapEditorModelMeModel.getReviewingMapSlotIndex();
+        const reviewingSlotIndex        = await getReviewingMapSlotIndex();
         if (reviewingSlotIndex === slotIndex) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent : () => LangUtils.getText(LangConstants.TextType.A0245),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent : () => getText(TextType.A0245),
                 callback: () => {
-                    MapEditorModelMeProxy.reqMeSubmitNormalMap({
+                    reqMeSubmitNormalMap({
                         slotIndex                   : slotIndex,
                         mapRawData                  : mapRawData,
                         needReview                  : false,
@@ -113,7 +113,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 },
             });
         } else {
-            MapEditorModelMeProxy.reqMeSubmitNormalMap({
+            reqMeSubmitNormalMap({
                 slotIndex                   : slotIndex,
                 mapRawData                  : mapRawData,
                 needReview                  : false,
@@ -125,14 +125,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnHelpSave(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0420),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0420),
         });
     }
 
     private async _onTouchedBtnAddWarEvent(): Promise<void> {
         if (!this._canSubmitForReview) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0394));
+            show(getText(TextType.A0394));
             return;
         }
 
@@ -146,28 +146,28 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const oldWarEventFullData       = HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(srcNormalMapIdForAddEvent)).getWarEventFullData() ?? new ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData();
-        const newWarEventFullData       = war.getWarEventManager().getWarEventFullData() ?? new ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData();
-        const oldActionIdSet            = new Set(oldWarEventFullData.getActionArray().map(v => HelpersMisc.getExisted(v.getWeaCommonData()?.getActionId())));
-        const incrementalActionArray    = newWarEventFullData.getActionArray().filter(v => !oldActionIdSet.has(HelpersMisc.getExisted(v.getWeaCommonData()?.getActionId())));
-        const oldEventIdSet             = new Set(oldWarEventFullData.getEventArray().map(v => HelpersMisc.getExisted(v.getEventId())));
-        const incrementalEventArray     = newWarEventFullData.getEventArray().filter(v => !oldEventIdSet.has(HelpersMisc.getExisted(v.getEventId())));
-        const oldNodeIdSet              = new Set(oldWarEventFullData.getConditionNodeArray().map(v => HelpersMisc.getExisted(v.getNodeId())));
-        const incrementalNodeArray      = newWarEventFullData.getConditionNodeArray().filter(v => !oldNodeIdSet.has(HelpersMisc.getExisted(v.getNodeId())));
-        const oldConditionIdSet         = new Set(oldWarEventFullData.getConditionArray().map(v => HelpersMisc.getExisted(v.getWecCommonData()?.getConditionId())));
-        const incrementalConditionArray = newWarEventFullData.getConditionArray().filter(v => !oldConditionIdSet.has(HelpersMisc.getExisted(v.getWecCommonData()?.getConditionId())));
+        const oldWarEventFullData       = getExisted(await getRawData(srcNormalMapIdForAddEvent)).getWarEventFullData() ?? new WarEventFullData();
+        const newWarEventFullData       = war.getWarEventManager().getWarEventFullData() ?? new WarEventFullData();
+        const oldActionIdSet            = new Set(oldWarEventFullData.getActionArray().map(v => getExisted(v.getWeaCommonData()?.getActionId())));
+        const incrementalActionArray    = newWarEventFullData.getActionArray().filter(v => !oldActionIdSet.has(getExisted(v.getWeaCommonData()?.getActionId())));
+        const oldEventIdSet             = new Set(oldWarEventFullData.getEventArray().map(v => getExisted(v.getEventId())));
+        const incrementalEventArray     = newWarEventFullData.getEventArray().filter(v => !oldEventIdSet.has(getExisted(v.getEventId())));
+        const oldNodeIdSet              = new Set(oldWarEventFullData.getConditionNodeArray().map(v => getExisted(v.getNodeId())));
+        const incrementalNodeArray      = newWarEventFullData.getConditionNodeArray().filter(v => !oldNodeIdSet.has(getExisted(v.getNodeId())));
+        const oldConditionIdSet         = new Set(oldWarEventFullData.getConditionArray().map(v => getExisted(v.getWecCommonData()?.getConditionId())));
+        const incrementalConditionArray = newWarEventFullData.getConditionArray().filter(v => !oldConditionIdSet.has(getExisted(v.getWecCommonData()?.getConditionId())));
         if ((!incrementalActionArray?.length)   &&
             (!incrementalEventArray?.length)    &&
             (!incrementalNodeArray?.length)     &&
             (!incrementalConditionArray?.length)
         ) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0395));
+            show(getText(TextType.A0395));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent     : () => LangUtils.getFormattedText(
-                LangConstants.TextType.F0157,
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent     : () => getFormattedText(
+                TextType.F0157,
                 incrementalEventArray.length,
                 incrementalEventArray.length ? incrementalEventArray.map(v => `E${v.getEventId()}`).join(`, `) : `----`,
                 incrementalNodeArray.length,
@@ -178,9 +178,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 incrementalActionArray.length ? incrementalActionArray.map(v => `A${v.getWeaCommonData()?.getActionId()}`).join(`, `) : `----`,
             ),
             callback    : () => {
-                NormalMapModelNormalMapProxy.reqMmAddWarEvent(
+                reqMmAddWarEvent(
                     srcNormalMapIdForAddEvent,
-                    ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData.fromJson({
+                    WarEventFullData.fromJson({
                         eventArray              : incrementalEventArray.map(v => v.toJson()),
                         actionArray             : incrementalActionArray.map(v => v.toJson()),
                         conditionArray          : incrementalConditionArray.map(v => v.toJson()),
@@ -193,7 +193,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
     private _onTouchedBtnSubmitDialogue(): void {
         if (!this._canSubmitForReview) {
-            FloatText2.showLang(LangConstants.TextType.A0394);
+            showLang(TextType.A0394);
             return;
         }
 
@@ -207,19 +207,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle       : () => LangUtils.getText(LangConstants.TextType.B1100),
-            getContent     : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle       : () => getText(TextType.B1100),
+            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
             callback    : () => {
-                const mapRawData                = HelpersMisc.getExisted(this._mapRawData);
-                const warRuleDialogueInfoArray  : ProtoSchemaCommonProtoNetMessageMsgMmSubmitMapSimpleDialogueWarRuleDialogueInfo.WarRuleDialogueInfo[] = [];
+                const mapRawData                = getExisted(this._mapRawData);
+                const warRuleDialogueInfoArray  : WarRuleDialogueInfo[] = [];
                 for (const warRule of mapRawData.getTemplateWarRuleArray()) {
-                    warRuleDialogueInfoArray.push(ProtoSchemaCommonProtoNetMessageMsgMmSubmitMapSimpleDialogueWarRuleDialogueInfo.WarRuleDialogueInfo.fromJson({
+                    warRuleDialogueInfoArray.push(WarRuleDialogueInfo.fromJson({
                         templateWarRuleId           : warRule.getRuleId() ?? 0,
                         mapSimpleDialogueIdArray    : warRule.getMapSimpleDialogueIdArray(),
                     }));
                 }
-                NormalMapModelNormalMapProxy.reqMmSubmitMapSimpleDialogue(
+                reqMmSubmitMapSimpleDialogue(
                     srcNormalMapIdForAddEvent,
                     mapRawData.getMapSimpleDialogueArray(),
                     warRuleDialogueInfoArray,
@@ -230,7 +230,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private async _onTouchedBtnSaveAndSubmit(): Promise<void> {
         if (!this._canSubmitForReview) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0316));
+            show(getText(TextType.A0316));
             return;
         }
 
@@ -239,24 +239,24 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
         if (war.getSrcNormalMapIdForAddEvent()) {
-            FloatText2.showLang(LangConstants.TextType.A0434);
+            showLang(TextType.A0434);
             return;
         }
 
         const mapRawData = this._mapRawData;
         if (mapRawData == null) {
-            FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+            showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
 
         const slotIndex                 = war.getMapSlotIndex();
         const srcNormalMapIdForAddEvent = war.getSrcNormalMapIdForAddEvent();
-        const reviewingSlotIndex        = await MapEditorModelMeModel.getReviewingMapSlotIndex();
+        const reviewingSlotIndex        = await getReviewingMapSlotIndex();
         if (reviewingSlotIndex === slotIndex) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent : () => LangUtils.getText(LangConstants.TextType.A0245),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent : () => getText(TextType.A0245),
                 callback: () => {
-                    MapEditorModelMeProxy.reqMeSubmitNormalMap({
+                    reqMeSubmitNormalMap({
                         slotIndex                   : slotIndex,
                         mapRawData                  : mapRawData,
                         needReview                  : true,
@@ -268,7 +268,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             });
         } else {
             if (reviewingSlotIndex == null) {
-                MapEditorModelMeProxy.reqMeSubmitNormalMap({
+                reqMeSubmitNormalMap({
                     slotIndex                   : slotIndex,
                     mapRawData                  : mapRawData,
                     needReview                  : true,
@@ -277,10 +277,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 });
                 this.closePanel();
             } else {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                    getContent : () => LangUtils.getText(LangConstants.TextType.A0084),
+                openPanel(getDict().CommonConfirmPanel, {
+                    getContent : () => getText(TextType.A0084),
                     callback: () => {
-                        MapEditorModelMeProxy.reqMeSubmitNormalMap({
+                        reqMeSubmitNormalMap({
                             slotIndex                   : slotIndex,
                             mapRawData                  : mapRawData,
                             needReview                  : true,
@@ -294,8 +294,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
     private _onTouchedBtnHelpSaveAndSubmit(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0285),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0285),
         });
     }
 
@@ -303,18 +303,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
     }
     private _onNotifyMsgMmAddWarEvent(): void {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.OperationSucceeded));
+        show(getText(TextType.OperationSucceeded));
     }
     private _onNotifyMsgMmSubmitMapSimpleDialogue(): void {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.OperationSucceeded));
+        show(getText(TextType.OperationSucceeded));
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSave.setText(LangUtils.getText(LangConstants.TextType.B0844));
-        this._btnAddWarEvent.setText(LangUtils.getText(LangConstants.TextType.B1007));
-        this._btnSubmitDialogue.setText(LangUtils.getText(LangConstants.TextType.B1100));
-        this._btnSaveAndSubmit.setText(LangUtils.getText(LangConstants.TextType.B0921));
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0155));
+        this._btnSave.setText(getText(TextType.B0844));
+        this._btnAddWarEvent.setText(getText(TextType.B1007));
+        this._btnSubmitDialogue.setText(getText(TextType.B1100));
+        this._btnSaveAndSubmit.setText(getText(TextType.B0921));
+        this._labelTitle.setText(getText(TextType.B0155));
     }
 
     private async _initDataAndUpdateGroupCommand(): Promise<void> {
@@ -331,20 +331,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         groupCommand.arrangeItems();
 
         const mapRawData            = await war.serializeForMap();
-        const criticalErrorCode     = await MapEditorModelMeHelpers.getCriticalErrorCodeForMapRawData(mapRawData);
+        const criticalErrorCode     = await getCriticalErrorCodeForMapRawData(mapRawData);
         const labelReviewDescTitle  = this._labelReviewDescTitle;
         const labelReviewDesc       = this._labelReviewDesc;
         if (criticalErrorCode) {
             this._canSubmitForReview        = false;
             this._mapErrorCode              = criticalErrorCode;
             this._mapRawData                = null;
-            labelReviewDescTitle.setText(LangUtils.getText(LangConstants.TextType.A0433));
-            labelReviewDescTitle.setTextColor(GraphicsConstants.ColorValue.Yellow);
-            labelReviewDesc.setText(LangUtils.getErrorText(criticalErrorCode));
+            labelReviewDescTitle.setText(getText(TextType.A0433));
+            labelReviewDescTitle.setTextColor(ColorValue.Yellow);
+            labelReviewDesc.setText(getErrorText(criticalErrorCode));
             return;
         }
 
-        const errorCode     = await MapsUtilsMapRawData.getErrorCode({
+        const errorCode     = await getErrorCode({
             mapRawData                          : mapRawData,
             allowRedundantWarEvents             : srcNormalMapIdForAddEvent != null,
             allowRedundantMapSimpleDialogues    : srcNormalMapIdForAddEvent != null,
@@ -353,27 +353,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._mapRawData    = mapRawData;
         if (mapRawData.getTemplateWarRuleArray().some(v => !checkIsValidAvailability(v.getRuleAvailability()))) {
             this._canSubmitForReview        = false;
-            labelReviewDescTitle.setText(LangUtils.getText(LangConstants.TextType.A0083));
-            labelReviewDescTitle.setTextColor(GraphicsConstants.ColorValue.Yellow);
-            labelReviewDesc.setText(LangUtils.getText(LangConstants.TextType.A0298));
+            labelReviewDescTitle.setText(getText(TextType.A0083));
+            labelReviewDescTitle.setTextColor(ColorValue.Yellow);
+            labelReviewDesc.setText(getText(TextType.A0298));
             return;
         }
 
         if (errorCode) {
             this._canSubmitForReview        = false;
-            labelReviewDescTitle.setText(LangUtils.getText(LangConstants.TextType.A0083));
-            labelReviewDescTitle.setTextColor(GraphicsConstants.ColorValue.Yellow);
-            labelReviewDesc.setText(LangUtils.getErrorText(errorCode));
+            labelReviewDescTitle.setText(getText(TextType.A0083));
+            labelReviewDescTitle.setTextColor(ColorValue.Yellow);
+            labelReviewDesc.setText(getErrorText(errorCode));
         } else {
             this._canSubmitForReview        = true;
-            labelReviewDescTitle.setText(LangUtils.getText(LangConstants.TextType.A0786));
-            labelReviewDescTitle.setTextColor(GraphicsConstants.ColorValue.Green);
+            labelReviewDescTitle.setText(getText(TextType.A0786));
+            labelReviewDescTitle.setTextColor(ColorValue.Green);
             labelReviewDesc.setText(``);
         }
     }
 }
 
-function checkIsValidAvailability(ruleAvailability: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarRuleRuleAvailability.RuleAvailability>): boolean {
+function checkIsValidAvailability(ruleAvailability: Undefinable<RuleAvailability>): boolean {
     if (ruleAvailability == null) {
         return false;
     }

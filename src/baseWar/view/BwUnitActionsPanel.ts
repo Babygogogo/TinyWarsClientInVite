@@ -1,46 +1,46 @@
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import type * as BaseWarModelBwTypes from "../model/BwTypes.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GraphicsUtils from "../../graphics/Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as KeyboardKbTypes from "../../keyboard/KbTypes.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as StagesStageManager from "../../stages/StageManager.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import * as UnitsUtilsSerialization from "../../units/utils/Serialization.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import type { DataForUnitAction } from "../model/BwTypes.ts";
+import { getUnitClass, getUnitViewClass } from "../../gameHelpers/GhFactory.ts";
+import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
+import { createLazyFunc } from "../../helpers/Misc.ts";
+import { type EventData, KeyCode } from "../../keyboard/KbTypes.ts";
+import { UndefinedError, TextType } from "../../lang/Constants.ts";
+import { getUnitActionName, getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { getStage } from "../../stages/StageManager.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { ActionTypeId } from "../../units/Constants.ts";
+import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import { createDefault } from "../../units/utils/Serialization.ts";
 
-type IUnit              = UnitsIUnit.IUnit;
+type IUnit              = UnitsIUnit;
 
-const getGridWidth      = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridWidth);
-const getGridHeight     = HelpersMisc.createLazyFunc(() => GraphicsUtils.getCurrentTextureResolutionConfig().gridHeight);
+const getGridWidth      = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
+const getGridHeight     = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);
 
 export interface OpenData {
-    war         : BaseWarInterfaceIBwWar.IBwWar;
-    destination : AuxiliaryTypesGridIndex.GridIndex;
-    actionList  : BaseWarModelBwTypes.DataForUnitAction[];
+    war         : IBwWar;
+    destination : GridIndex;
+    actionList  : DataForUnitAction[];
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listAction!   : UiInterfacesIUiScrollList.IUiScrollList<DataForUnitActionRenderer>;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _group!        : IUiContainer;
+    private readonly _listAction!   : IUiScrollList<DataForUnitActionRenderer>;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.ZoomableContentsMoved,      callback: this._onNotifyZoomableContentsMoved },
+            { type: TypeId.ZoomableContentsMoved,      callback: this._onNotifyZoomableContentsMoved },
         ]);
         this._setKeyboardListener({
             callback    : this._onKeyboard,
@@ -65,7 +65,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updatePosition();
     }
 
-    private _onKeyboard(eventData: KeyboardKbTypes.EventData): void {
+    private _onKeyboard(eventData: EventData): void {
         if (this._getIsShowingCloseAnimation()) {
             return;
         }
@@ -76,18 +76,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         eventData.isHandled = true;
 
         const newKeys = eventData.newKeys;
-        if ((newKeys.has(KeyboardKbTypes.KeyCode.K)) || (newKeys.has(KeyboardKbTypes.KeyCode.Escape))) {
+        if ((newKeys.has(KeyCode.K)) || (newKeys.has(KeyCode.Escape))) {
             this.getOpenData()?.war.getActionPlanner().cancelCurrentState();
             return;
         }
 
         const list = this._listAction;
-        if ((newKeys.has(KeyboardKbTypes.KeyCode.J)) || (newKeys.has(KeyboardKbTypes.KeyCode.Enter))) {
+        if ((newKeys.has(KeyCode.J)) || (newKeys.has(KeyCode.Enter))) {
             const data = list.getFirstSelectedData();
             if ((data == null) || (data.war.getActionPlanner().checkIsStateRequesting())) {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonForbidden01);
+                playShortSfx(ShortSfxCode.ButtonForbidden01);
             } else {
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+                playShortSfx(ShortSfxCode.CursorConfirm01);
                 data.callback();
             }
 
@@ -95,12 +95,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         {
-            const offsetIndex   = (newKeys.has(KeyboardKbTypes.KeyCode.W) ? -1 : 0) + (newKeys.has(KeyboardKbTypes.KeyCode.S) ? 1 : 0);
+            const offsetIndex   = (newKeys.has(KeyCode.W) ? -1 : 0) + (newKeys.has(KeyCode.S) ? 1 : 0);
             const length        = list.getBoundDataArray()?.length;
             const index         = list.getFirstSelectedItemIndex();
             if ((offsetIndex !== 0) && (length != null) && (index != null) && (length > 0)) {
                 list.setSelectedItemIndex((index + length + offsetIndex) % length);
-                SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorMove01);
+                playShortSfx(ShortSfxCode.CursorMove01);
                 return;
             }
         }
@@ -129,8 +129,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                     costForProduceUnit  : data.costForProduceUnit ?? null,
                 });
             } else {
-                const unitForProduce = new (GameHelpersGhFactory.getUnitClass())();
-                unitForProduce.init(UnitsUtilsSerialization.createDefault({
+                const unitForProduce = new (getUnitClass())();
+                unitForProduce.init(createDefault({
                     gridIndex   : { x: 0, y: 0 },
                     unitId      : -1,
                     unitTypeId  : produceUnitType,
@@ -163,7 +163,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const container = openData.war.getView().getFieldContainer();
         const gridIndex = openData.destination;
-        const stage     = StagesStageManager.getStage();
+        const stage     = getStage();
         const group     = this._group;
         const point     = container.getContentsContainerLocalToGlobal({
             x: (gridIndex.getX() + 1) * getGridWidth(),
@@ -174,14 +174,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._group,
             beginProps  : { customScaleX: 0, customScaleY: 0 },
             endProps    : { customScaleX: 1, customScaleY: 1 },
             tweenTime   : 100,
         });
 
-        await TimerTimerModel.wait(100);
+        await wait(100);
     }
     protected async _showCloseAnimation(): Promise<void> {
         // 为提升操作手感而屏蔽掉
@@ -196,39 +196,39 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForUnitActionRenderer extends UiTypesUiListItemData.UiListItemData {
-    war                 : BaseWarInterfaceIBwWar.IBwWar;
-    actionType          : UnitsConstants.ActionTypeId;
+interface DataForUnitActionRenderer extends UiListItemData {
+    war                 : IBwWar;
+    actionType          : ActionTypeId;
     callback            : () => void;
     unit?               : IUnit;
     costForProduceUnit  : number | null;
     isLastAction?       : boolean;
 }
-class UnitActionRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForUnitActionRenderer> {
-    private readonly _imgSelected!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelAction!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelCost!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _conUnitView!      : UiInterfacesIUiContainer.IUiContainer;
+class UnitActionRenderer extends UiListItemRenderer<DataForUnitActionRenderer> {
+    private readonly _imgSelected!      : IUiImage;
+    private readonly _labelAction!      : IUiLabel;
+    private readonly _labelCost!        : IUiLabel;
+    private readonly _conUnitView!      : IUiContainer;
 
-    private readonly _unitView      = new (GameHelpersGhFactory.getUnitViewClass())();
+    private readonly _unitView      = new (getUnitViewClass())();
 
     public updateOnLoadedSkin(): void {
         this._conUnitView.addUiChild(this._unitView);
-        this._applySettingsForWholeTouch(undefined, false, undefined, SoundsConstants.ShortSfxCode.None);
+        this._applySettingsForWholeTouch(undefined, false, undefined, ShortSfxCode.None);
     }
     protected override async _onOpened(): Promise<void> {
         await super._onOpened();
 
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
-        TweenExecutor.Executor.removeTweens(imgSelected);
-        TweenExecutor.Executor.get(imgSelected, { loop: true })
+        Executor.removeTweens(imgSelected);
+        Executor.get(imgSelected, { loop: true })
             .to({ customAlpha: 0.3 }, 500)
             .to({ customAlpha: 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         this._unitView.stopRunningView();
-        TweenExecutor.Executor.removeTweens(this._imgSelected);
+        Executor.removeTweens(this._imgSelected);
 
         await super._onClosed();
     }
@@ -239,7 +239,7 @@ class UnitActionRenderer extends UiComponentsUiListItemRenderer.UiListItemRender
             return;
         }
 
-        this._labelAction.setText(LangUtils.getUnitActionName(openData.actionType) || LangConstants.UndefinedError);
+        this._labelAction.setText(getUnitActionName(openData.actionType) || UndefinedError);
 
         const unit      = openData.unit;
         const unitView  = this._unitView;
@@ -248,11 +248,11 @@ class UnitActionRenderer extends UiComponentsUiListItemRenderer.UiListItemRender
             labelCost.setText("");
             unitView.setIsVisible(false);
         } else {
-            if (openData.actionType !== UnitsConstants.ActionTypeId.ProduceUnit) {
+            if (openData.actionType !== ActionTypeId.ProduceUnit) {
                 labelCost.setText(``);
             } else {
                 const cost = openData.costForProduceUnit;
-                labelCost.setText(`${LangUtils.getText(LangConstants.TextType.B0079)}: ${cost != null ? cost : LangConstants.UndefinedError}`);
+                labelCost.setText(`${getText(TextType.B0079)}: ${cost != null ? cost : UndefinedError}`);
             }
             unitView.setIsVisible(true);
             unitView.init(unit).startRunningView();
@@ -266,9 +266,9 @@ class UnitActionRenderer extends UiComponentsUiListItemRenderer.UiListItemRender
         }
 
         if (openData.war.getActionPlanner().checkIsStateRequesting()) {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonForbidden01);
+            playShortSfx(ShortSfxCode.ButtonForbidden01);
         } else {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.CursorConfirm01);
+            playShortSfx(ShortSfxCode.CursorConfirm01);
             openData.callback();
         }
     }

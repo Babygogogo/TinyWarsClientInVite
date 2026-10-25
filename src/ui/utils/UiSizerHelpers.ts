@@ -1,31 +1,31 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as NumbersConstants from "../../numbers/Constants.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import * as StagesStageManager from "../../stages/StageManager.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import type * as UiInterfacesIUiSizerInfo from "../interfaces/IUiSizerInfo.ts";
-import * as UiTypesUiHorizontalAlign from "../types/UiHorizontalAlign.ts";
-import type * as UiTypesUiSizerDimensionOptions from "../types/UiSizerDimensionOptions.ts";
-import type * as UiTypesUiSizerHorizontalAlignOptions from "../types/UiSizerHorizontalAlignOptions.ts";
-import type * as UiTypesUiSizerOptions from "../types/UiSizerOptions.ts";
-import type * as UiTypesUiSizerVerticalAlignOptions from "../types/UiSizerVerticalAlignOptions.ts";
-import type * as UiTypesUiSkinAttrs from "../types/UiSkinAttrs.ts";
-import * as UiTypesUiVerticalAlign from "../types/UiVerticalAlign.ts";
-import * as UiUtilsUiFactory from "./UiFactory.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { Size, Rectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { MaxValue, DegToRad } from "../../numbers/Constants.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import { getStage } from "../../stages/StageManager.ts";
+import { addTickCallback } from "../../timer/TimerModel.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiSizerInfo as UiInterfacesIUiSizerInfo } from "../interfaces/IUiSizerInfo.ts";
+import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
+import type { UiSizerDimensionOptions as UiTypesUiSizerDimensionOptions } from "../types/UiSizerDimensionOptions.ts";
+import type { UiSizerHorizontalAlignOptions as UiTypesUiSizerHorizontalAlignOptions } from "../types/UiSizerHorizontalAlignOptions.ts";
+import type { UiSizerOptions } from "../types/UiSizerOptions.ts";
+import type { UiSizerVerticalAlignOptions as UiTypesUiSizerVerticalAlignOptions } from "../types/UiSizerVerticalAlignOptions.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
+import { getUiContainerClass } from "./UiFactory.ts";
+import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
 
-type UiSizerDimensionOptions        = UiTypesUiSizerDimensionOptions.UiSizerDimensionOptions;
-type UiSizerHorizontalAlignOptions  = UiTypesUiSizerHorizontalAlignOptions.UiSizerHorizontalAlignOptions;
-type UiSizerVerticalAlignOptions    = UiTypesUiSizerVerticalAlignOptions.UiSizerVerticalAlignOptions;
-type IUiSizer                       = UiInterfacesIUiComponent.IUiComponent;
-type IUiSizerInfo                   = UiInterfacesIUiSizerInfo.IUiSizerInfo;
+type UiSizerDimensionOptions        = UiTypesUiSizerDimensionOptions;
+type UiSizerHorizontalAlignOptions  = UiTypesUiSizerHorizontalAlignOptions;
+type UiSizerVerticalAlignOptions    = UiTypesUiSizerVerticalAlignOptions;
+type IUiSizer                       = IUiComponent;
+type IUiSizerInfo                   = UiInterfacesIUiSizerInfo;
 
 export function init(): void {
-    TimerTimerModel.addTickCallback(applyAutoSizerInfoDict, -1);
+    addTickCallback(applyAutoSizerInfoDict, -1);
 }
 
-export function loadSizerOptions(sizer: IUiSizer, skinAttrs: UiTypesUiSkinAttrs.UiSkinAttrs): void {
+export function loadSizerOptions(sizer: IUiSizer, skinAttrs: UiSkinAttrs): void {
     const options = createSizerOptions({
         left                : skinAttrs?.left,
         right               : skinAttrs?.right,
@@ -64,7 +64,7 @@ function createSizerOptions({
     maxWidth            : number | undefined;
     minHeight           : number | undefined;
     maxHeight           : number | undefined;
-}): UiTypesUiSizerOptions.UiSizerOptions | undefined {
+}): UiSizerOptions | undefined {
     let sizerWidth: UiSizerDimensionOptions | undefined = undefined;
     if ((left != null) && (right != null)) {
         sizerWidth = {
@@ -88,17 +88,17 @@ function createSizerOptions({
     let horizontalAlign: UiSizerHorizontalAlignOptions | undefined = undefined;
     if (left != null) {
         horizontalAlign = {
-            align   : UiTypesUiHorizontalAlign.UiHorizontalAlign.Left,
+            align   : UiHorizontalAlign.Left,
             offset  : left,
         };
     } else if (right != null) {
         horizontalAlign = {
-            align   : UiTypesUiHorizontalAlign.UiHorizontalAlign.Right,
+            align   : UiHorizontalAlign.Right,
             offset  : right,
         };
     } else if (horizontalCenter != null) {
         horizontalAlign = {
-            align   : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center,
+            align   : UiHorizontalAlign.Center,
             offset  : horizontalCenter,
         };
     }
@@ -106,17 +106,17 @@ function createSizerOptions({
     let verticalAlign: UiSizerVerticalAlignOptions | undefined = undefined;
     if (top != null) {
         verticalAlign = {
-            align   : UiTypesUiVerticalAlign.UiVerticalAlign.Top,
+            align   : UiVerticalAlign.Top,
             offset  : top,
         };
     } else if (bottom != null) {
         verticalAlign = {
-            align   : UiTypesUiVerticalAlign.UiVerticalAlign.Bottom,
+            align   : UiVerticalAlign.Bottom,
             offset  : bottom,
         };
     } else if (verticalCenter != null) {
         verticalAlign = {
-            align   : UiTypesUiVerticalAlign.UiVerticalAlign.Middle,
+            align   : UiVerticalAlign.Middle,
             offset  : verticalCenter,
         };
     }
@@ -188,7 +188,7 @@ function applyAutoSizerInfoDict(): void {
     AutoSizerInfoDict.clear();
 }
 function getNestedDepth(sizerInfo: IUiSizerInfo): number | null {
-    const stage = StagesStageManager.getStage();
+    const stage = getStage();
     let depth   = 1;
     let parent  = sizerInfo.getSizer().getParent();
     for (;;) {
@@ -244,7 +244,7 @@ function applySizerInfo(appliedInfoSet: Set<IUiSizerInfo>, sizerInfo: IUiSizerIn
     }
 
     if (((isSizeUpdated) || (isSizeChangedManually))        &&
-        (sizer instanceof UiUtilsUiFactory.getUiContainerClass())
+        (sizer instanceof getUiContainerClass())
     ) {
         for (const child of sizer.getUiChildren()) {
             const childSizerInfo = child.getSizerInfo();
@@ -254,8 +254,8 @@ function applySizerInfo(appliedInfoSet: Set<IUiSizerInfo>, sizerInfo: IUiSizerIn
         }
     }
 }
-function getParentSize(parent: VendorEgretEgret.DisplayObjectContainer | null | undefined): Partial<AuxiliaryTypesAuxiliaryTypes.Size> {
-    if (parent instanceof UiUtilsUiFactory.getUiContainerClass()) {
+function getParentSize(parent: DisplayObjectContainer | null | undefined): Partial<Size> {
+    if (parent instanceof getUiContainerClass()) {
         return {
             width   : parent.getUnscaledManualWidth(),
             height  : parent.getUnscaledManualHeight(),
@@ -275,20 +275,20 @@ function updateSize({ sizer, parentWidth, widthOptions, parentHeight, heightOpti
 }): boolean {
     const aabbWidth = ((widthOptions == null) || (parentWidth == null))
         ? undefined
-        : NumbersUtils.getValueInRange({
+        : getValueInRange({
             rawValue    : parentWidth * (widthOptions.percentage ?? 0) / 100 + (widthOptions.extension ?? 0),
             minValue    : widthOptions.minValue ?? 0,
-            maxValue    : widthOptions.maxValue ?? NumbersConstants.MaxValue,
+            maxValue    : widthOptions.maxValue ?? MaxValue,
         });
     const aabbHeight = ((heightOptions == null) || (parentHeight == null))
         ? undefined
-        : NumbersUtils.getValueInRange({
+        : getValueInRange({
             rawValue    : parentHeight * (heightOptions.percentage ?? 0) / 100 + (heightOptions.extension ?? 0),
             minValue    : heightOptions.minValue ?? 0,
-            maxValue    : heightOptions.maxValue ?? NumbersConstants.MaxValue,
+            maxValue    : heightOptions.maxValue ?? MaxValue,
         });
 
-    const rotationInRadian  = sizer.getRotationInDegree() * NumbersConstants.DegToRad;
+    const rotationInRadian  = sizer.getRotationInDegree() * DegToRad;
     const cosValue          = Math.cos(rotationInRadian);
     const sinValue          = Math.sin(rotationInRadian);
     let maxWidth1 = aabbWidth == null  ? undefined : Math.abs(aabbWidth / cosValue);
@@ -334,18 +334,18 @@ function updatePosition({ sizer, parentWidth, widthOptions, parentHeight, height
     parentHeight    : number | undefined;
     heightOptions   : UiSizerVerticalAlignOptions | undefined;
 }): void {
-    let aabb: AuxiliaryTypesAuxiliaryTypes.Rectangle;
+    let aabb: Rectangle;
 
     let x: number | undefined;
     if (widthOptions != null) {
         aabb            ??= sizer.getAabbToParent();
-        const align     = widthOptions.align ?? UiTypesUiHorizontalAlign.UiHorizontalAlign.Left;
+        const align     = widthOptions.align ?? UiHorizontalAlign.Left;
         const offset    = widthOptions.offset ?? 0;
-        if (align === UiTypesUiHorizontalAlign.UiHorizontalAlign.Left) {
+        if (align === UiHorizontalAlign.Left) {
             x = offset - aabb.x;
         } else {
             if (parentWidth != null) {
-                if (align === UiTypesUiHorizontalAlign.UiHorizontalAlign.Center) {
+                if (align === UiHorizontalAlign.Center) {
                     x = offset - aabb.x + (parentWidth - aabb.width) / 2;
                 } else {
                     x = - offset - aabb.x + (parentWidth - aabb.width);
@@ -357,13 +357,13 @@ function updatePosition({ sizer, parentWidth, widthOptions, parentHeight, height
     let y: number | undefined;
     if (heightOptions != null) {
         aabb            ??= sizer.getAabbToParent();
-        const align     = heightOptions.align ?? UiTypesUiVerticalAlign.UiVerticalAlign.Top;
+        const align     = heightOptions.align ?? UiVerticalAlign.Top;
         const offset    = heightOptions.offset ?? 0;
-        if (align === UiTypesUiVerticalAlign.UiVerticalAlign.Top) {
+        if (align === UiVerticalAlign.Top) {
             y = offset - aabb.y;
         } else {
             if (parentHeight != null) {
-                if (align === UiTypesUiVerticalAlign.UiVerticalAlign.Middle) {
+                if (align === UiVerticalAlign.Middle) {
                     y = offset - aabb.y + (parentHeight - aabb.height) / 2;
                 } else {
                     y = - offset - aabb.y + (parentHeight - aabb.height);

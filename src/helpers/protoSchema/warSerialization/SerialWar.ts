@@ -1,7 +1,7 @@
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWar from "../../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import * as WarTypesConstants from "../../../warTypes/Constants.ts";
+import type { SerialWar } from "../../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import { WarTypeId } from "../../../warTypes/Constants.ts";
 
-type SerialWarSchema    = ProtoSchemaCommonProtoWarSerializationSerialWar.SerialWar;
+type SerialWarSchema    = SerialWar;
 
 export function getNormalMapId(warData: SerialWarSchema): number | null {
     const settings = warData.getSettingsForMcw()
@@ -14,34 +14,34 @@ export function getNormalMapId(warData: SerialWarSchema): number | null {
     return settings ? settings.getNormalMapId() ?? 0 : null;
 }
 
-export function getWarTypeId(warData: SerialWarSchema): WarTypesConstants.WarTypeId {
+export function getWarTypeId(warData: SerialWarSchema): WarTypeId {
     const instanceWarRule = warData.getSettingsForCommon()?.getInstanceWarRule();
     if (instanceWarRule == null) {
-        return WarTypesConstants.WarTypeId.Undefined;
+        return WarTypeId.Undefined;
     }
 
     const hasFog = !!instanceWarRule.getWarRuleCommonData()?.getHasFogByDefault();
     if (warData.getSettingsForMcw()) {
-        return hasFog ? WarTypesConstants.WarTypeId.McwFog : WarTypesConstants.WarTypeId.McwStd;
+        return hasFog ? WarTypeId.McwFog : WarTypeId.McwStd;
     } else if (warData.getSettingsForMfw()) {
-        return hasFog ? WarTypesConstants.WarTypeId.MfwFog : WarTypesConstants.WarTypeId.MfwStd;
+        return hasFog ? WarTypeId.MfwFog : WarTypeId.MfwStd;
     } else if (warData.getSettingsForMrw()) {
-        return hasFog ? WarTypesConstants.WarTypeId.MrwFog : WarTypesConstants.WarTypeId.MrwStd;
+        return hasFog ? WarTypeId.MrwFog : WarTypeId.MrwStd;
     } else if (warData.getSettingsForMmw()) {
-        return hasFog ? WarTypesConstants.WarTypeId.MmwFog : WarTypesConstants.WarTypeId.MmwStd;
+        return hasFog ? WarTypeId.MmwFog : WarTypeId.MmwStd;
     } else if (warData.getSettingsForAtw()) {
-        return hasFog ? WarTypesConstants.WarTypeId.AtwFog : WarTypesConstants.WarTypeId.AtwStd;
+        return hasFog ? WarTypeId.AtwFog : WarTypeId.AtwStd;
     } else if (warData.getSettingsForScw()) {
-        return hasFog ? WarTypesConstants.WarTypeId.ScwFog : WarTypesConstants.WarTypeId.ScwStd;
+        return hasFog ? WarTypeId.ScwFog : WarTypeId.ScwStd;
     } else if (warData.getSettingsForSfw()) {
-        return hasFog ? WarTypesConstants.WarTypeId.SfwFog : WarTypesConstants.WarTypeId.SfwStd;
+        return hasFog ? WarTypeId.SfwFog : WarTypeId.SfwStd;
     } else if (warData.getSettingsForCcw()) {
-        return hasFog ? WarTypesConstants.WarTypeId.CcwFog : WarTypesConstants.WarTypeId.CcwStd;
+        return hasFog ? WarTypeId.CcwFog : WarTypeId.CcwStd;
     } else if (warData.getSettingsForSrw()) {
-        return hasFog ? WarTypesConstants.WarTypeId.SrwFog : WarTypesConstants.WarTypeId.SrwStd;
+        return hasFog ? WarTypeId.SrwFog : WarTypeId.SrwStd;
     } else if (warData.getSettingsForCaw()) {
-        return hasFog ? WarTypesConstants.WarTypeId.CampFog : WarTypesConstants.WarTypeId.CampStd;
+        return hasFog ? WarTypeId.CampFog : WarTypeId.CampStd;
     } else {
-        return WarTypesConstants.WarTypeId.Undefined;
+        return WarTypeId.Undefined;
     }
 }

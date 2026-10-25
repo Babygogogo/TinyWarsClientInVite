@@ -1,13 +1,13 @@
-import * as UiComponentsUiLayoutBase from "./UiLayoutBase.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import type * as UiInterfacesIUiLayout from "../interfaces/IUiLayout.ts";
-import * as UiUtilsUiLayoutHelpers from "../utils/UiLayoutHelpers.ts";
-import * as UiUtilsUiSizerHelpers from "../utils/UiSizerHelpers.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { UiLayoutBase } from "./UiLayoutBase.ts";
+import type { IUiComponent as UiInterfacesIUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiLayout } from "../interfaces/IUiLayout.ts";
+import { arrangeItems } from "../utils/UiLayoutHelpers.ts";
+import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
+import type { DisplayObject } from "../../vendor/egret/Egret.ts";
 
-type IUiComponent = UiInterfacesIUiComponent.IUiComponent;
+type IUiComponent = UiInterfacesIUiComponent;
 
-export class UiLayout extends UiComponentsUiLayoutBase.UiLayoutBase implements UiInterfacesIUiLayout.IUiLayout {
+export class UiLayout extends UiLayoutBase implements IUiLayout {
     public getItemAt(index: number): IUiComponent | undefined {
         return (this.getChildAt(index) ?? undefined) as unknown as IUiComponent | undefined;
     }
@@ -16,14 +16,14 @@ export class UiLayout extends UiComponentsUiLayoutBase.UiLayoutBase implements U
     }
 
     public addItem(item: IUiComponent, needArrange: boolean): IUiComponent {
-        const result = this.addChild(item as unknown as VendorEgretEgret.DisplayObject) as unknown as IUiComponent;
+        const result = this.addChild(item as unknown as DisplayObject) as unknown as IUiComponent;
         if ((needArrange) && (result)) {
             this.arrangeItems();
         }
         return result;
     }
     public addItemAt(item: IUiComponent, index: number, needArrange: boolean): IUiComponent {
-        const result = this.addChildAt(item as unknown as VendorEgretEgret.DisplayObject, index) as unknown as IUiComponent;
+        const result = this.addChildAt(item as unknown as DisplayObject, index) as unknown as IUiComponent;
         if ((needArrange) && (result)) {
             this.arrangeItems();
         }
@@ -32,7 +32,7 @@ export class UiLayout extends UiComponentsUiLayoutBase.UiLayoutBase implements U
 
     public removeItem(item: IUiComponent, needArrange: boolean): IUiComponent | undefined {
         const num = this.numChildren;
-        this.removeChild(item as unknown as VendorEgretEgret.DisplayObject);
+        this.removeChild(item as unknown as DisplayObject);
         const result = this.numChildren < num ? item : undefined;
         if ((needArrange) && (result)) {
             this.arrangeItems();
@@ -56,10 +56,10 @@ export class UiLayout extends UiComponentsUiLayoutBase.UiLayoutBase implements U
     }
 
     public arrangeItems(needApplySizer = true): void {
-        UiUtilsUiLayoutHelpers.arrangeItems(this, this.getAllItems());
+        arrangeItems(this, this.getAllItems());
 
         if (needApplySizer) {
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, false);
+            checkAndAddAutoSizerInfo(this, false);
         }
     }
 }

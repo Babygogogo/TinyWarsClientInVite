@@ -1,42 +1,42 @@
-import * as CosConstants from "../../cos/Constants.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiContainer from "../../ui/components/UiContainer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiCoInfo from "../../ui/interfaces/IUiCoInfo.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
-import * as UiUtilsUiFactory from "../../ui/utils/UiFactory.ts";
-import * as UiUtilsUiSkinHelpers from "../../ui/utils/UiSkinHelpers.ts";
+import { DisplayCategoryArray, ForceArray, CategoryId } from "../../cos/Constants.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiContainer } from "../../ui/components/UiContainer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiCoInfo } from "../../ui/interfaces/IUiCoInfo.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
+import { getUiLayoutClass, getUiImageClass } from "../../ui/utils/UiFactory.ts";
+import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 
 export interface OpenData {
     currentCoCategoryId             : number | null;
     availableCoCategoryIdArray      : number[];
-    gameConfig                      : GameConfigGcData.GcData;
+    gameConfig                      : GcData;
     isBan                           : boolean;
     callbackOnConfirm               : (coCategoryId: number) => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _scrollCoCategory!     : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiLayout.IUiLayout>;
-    private readonly _groupCoCategory!      : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _scrollCoCategory!     : IUiScroller<IUiLayout>;
+    private readonly _groupCoCategory!      : IUiLayout;
+    private readonly _btnClose!             : IUiButton;
 
-    private readonly _labelTips!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _uiCoInfo!             : UiInterfacesIUiCoInfo.IUiCoInfo;
+    private readonly _labelTips!            : IUiLabel;
+    private readonly _uiCoInfo!             : IUiCoInfo;
 
     private _renderersForCoNames    : RendererForCoCategory[] = [];
 
@@ -48,7 +48,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnClose,       callback: this.closePanel },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -88,7 +88,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     public updateOnTouchedCoCategoryRenderer(renderer: RendererForCoCategory): void {
-        const coCategoryId = HelpersMisc.getExisted(renderer.getCoCategoryId());
+        const coCategoryId = getExisted(renderer.getCoCategoryId());
         this._setPreviewCoCategoryId(coCategoryId);
 
         if (renderer.getIsSelected()) {
@@ -104,8 +104,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0145));
-        this._labelTips.setText(LangUtils.getText(LangConstants.TextType.B1249));
+        this._labelTitle.setText(getText(TextType.B0145));
+        this._labelTips.setText(getText(TextType.B1249));
     }
 
     private _initGroupCoCategory(): void {
@@ -126,14 +126,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const isBan             = openData.isBan;
         const groupCoCategory   = this._groupCoCategory;
         let isFirstCategory     = true;
-        for (const displayCategory of CosConstants.DisplayCategoryArray) {
+        for (const displayCategory of DisplayCategoryArray) {
             const coIdArray1 = coIdArray.filter(v => gameConfig.getCoBasicCfg(v)?.getDisplayCategoryId() === displayCategory);
             if (coIdArray1.length <= 0) {
                 continue;
             }
 
             let hasCo = false;
-            for (const force of CosConstants.ForceArray) {
+            for (const force of ForceArray) {
                 const coIdArray2 = coIdArray1.filter(v => gameConfig.getCoBasicCfg(v)?.getForce() === force);
                 if (coIdArray2.length <= 0) {
                     continue;
@@ -148,7 +148,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 for (const coId of coIdArray2) {
                     const renderer = new RendererForCoCategory(isBan);
                     renderer.setGameConfig(gameConfig);
-                    renderer.setCoCategoryId(HelpersMisc.getExisted(gameConfig.getCoBasicCfg(coId)?.getCoCategoryId()));
+                    renderer.setCoCategoryId(getExisted(gameConfig.getCoBasicCfg(coId)?.getCoCategoryId()));
                     renderer.setPanel(this);
                     renderer.setIsSelected(false);
                     renderer.setCanSelect(canSelect);
@@ -182,7 +182,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _initComponentsForPreviewCo(): void {
-        this._setPreviewCoCategoryId(CosConstants.CategoryId.Empty);
+        this._setPreviewCoCategoryId(CategoryId.Empty);
     }
 
     private async _updateComponentsForPreviewCoCategoryId(): Promise<void> {
@@ -205,23 +205,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
-    private readonly _imgCoForce!       : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgCoHead!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _groupSelect!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _groupSelected!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelName!        : UiInterfacesIUiLabel.IUiLabel;
+class RendererForCoCategory extends UiContainer {
+    private readonly _imgCoForce!       : IUiImage;
+    private readonly _imgCoHead!        : IUiImage;
+    private readonly _groupSelect!      : IUiContainer;
+    private readonly _groupSelected!    : IUiContainer;
+    private readonly _labelName!        : IUiLabel;
 
     private _isSelected     = false;
     private _canSelect      = false;
     private _panel          : Panel | null = null;
-    private _gameConfig     : GameConfigGcData.GcData | null = null;
+    private _gameConfig     : GcData | null = null;
     private _coCategoryId   : number | null = null;
 
     public constructor(isBan: boolean) {
         super();
 
-        UiUtilsUiSkinHelpers.loadSkinByPath(this, isBan
+        loadSkinByPath(this, isBan
             ? "component/coInfo/CoHead004.exml"
             : "component/coInfo/CoHead003.exml"
         );
@@ -230,13 +230,13 @@ class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
     public updateOnLoadedSkin(): void {
         this.setIsTouchEnabled(true);
         this.setIsTouchChildrenEnabled(false);
-        this.setMouseStyle(HelpersPointerInput.MouseStyleType.Pointer);
-        this.getEventAgent().addPointerEventListener(HelpersPointerInput.PointerEventType.Tap, this._onTouchedSelf, this);
+        this.setMouseStyle(MouseStyleType.Pointer);
+        this.getEventAgent().addPointerEventListener(PointerEventType.Tap, this._onTouchedSelf, this);
 
         this._updateView();
     }
     private _onTouchedSelf(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
         this.getPanel()?.updateOnTouchedCoCategoryRenderer(this);
     }
 
@@ -247,10 +247,10 @@ class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
         return this._panel;
     }
 
-    public setGameConfig(config: GameConfigGcData.GcData): void {
+    public setGameConfig(config: GcData): void {
         this._gameConfig = config;
     }
-    public getGameConfig(): GameConfigGcData.GcData | null {
+    public getGameConfig(): GcData | null {
         return this._gameConfig;
     }
 
@@ -294,27 +294,27 @@ class RendererForCoCategory extends UiComponentsUiContainer.UiContainer {
         const imgCoForce    = this._imgCoForce;
         const imgCoHead     = this._imgCoHead;
         if (coId == null) {
-            labelName.setText(LangConstants.UndefinedError);
+            labelName.setText(UndefinedError);
             imgCoForce.loadSource(``);
             imgCoHead.loadSource(``);
         } else {
-            labelName.setText(gcData?.getCoBasicCfg(coId)?.getName() ?? LangConstants.UndefinedError);
+            labelName.setText(gcData?.getCoBasicCfg(coId)?.getName() ?? UndefinedError);
 
             if (gcData == null) {
                 imgCoForce.loadSource(``);
                 imgCoHead.loadSource(``);
             } else {
-                imgCoForce.loadSource(HelpersImageSource.getCoEyeBackgroundByCoId(gcData, coId) ?? ``);
-                imgCoHead.loadSource(HelpersImageSource.getCoEye(gcData, coId, true) ?? ``);
+                imgCoForce.loadSource(getCoEyeBackgroundByCoId(gcData, coId) ?? ``);
+                imgCoHead.loadSource(getCoEye(gcData, coId, true) ?? ``);
             }
         }
 
-        this._labelName.setText(this._gameConfig?.getCoCategoryCfg(HelpersMisc.getExisted(this._coCategoryId))?.getName() ?? LangConstants.UndefinedError);
+        this._labelName.setText(this._gameConfig?.getCoCategoryCfg(getExisted(this._coCategoryId))?.getName() ?? UndefinedError);
     }
 }
 
-function createCoContainer(): UiInterfacesIUiLayout.IUiLayout {
-    const layout = new (UiUtilsUiFactory.getUiLayoutClass())({
+function createCoContainer(): IUiLayout {
+    const layout = new (getUiLayoutClass())({
         itemsHMargin        : 10,
         itemsVMargin        : 10,
         multiItemsPerBlock  : true,
@@ -324,8 +324,8 @@ function createCoContainer(): UiInterfacesIUiLayout.IUiLayout {
     return layout;
 }
 
-function createSeparator(): UiInterfacesIUiImage.IUiImage {
-    const img = new (UiUtilsUiFactory.getUiImageClass())();
+function createSeparator(): IUiImage {
+    const img = new (getUiImageClass())();
     img.loadSource(`uncompressedColorWhite0000`);
     img.setUnscaledManualWidth(310);
     img.setUnscaledManualHeight(1);

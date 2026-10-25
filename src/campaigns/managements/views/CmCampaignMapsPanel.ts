@@ -1,44 +1,44 @@
-import * as CampaignsMainsProvider from "../../mains/Provider.ts";
-import * as CampaignsManagementsGateway from "../Gateway.ts";
-import * as FloatText2 from "../../../FloatText.ts";
-import * as GamePanelsDict from "../../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../../helpers/GameFlow.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as MapEditorModelMeModel from "../../../mapEditor/model/MeModel.ts";
-import * as MapEditorModelMeProxy from "../../../mapEditor/model/MeProxy.ts";
-import * as NotificationsTypeId from "../../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS from "../../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
-import * as UiComponentsUiListItemRenderer from "../../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../../ui/types/UiListItemData.ts";
-import type * as VendorEgretEgret from "../../../vendor/egret/Egret.ts";
+import { checkIsSelfDesigner, getCampaignInfo, getCampaignMapRawData } from "../../mains/Provider.ts";
+import { reqCmCreateCampaignMap, reqCmSetCampaignMapEnabled } from "../Gateway.ts";
+import { showLang } from "../../../FloatText.ts";
+import { getDict } from "../../../gamePanels/Dict.ts";
+import { openPanel } from "../../../gamePanels/Manager.ts";
+import { gotoMapEditorWar } from "../../../helpers/GameFlow.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText, getLanguageText, getTextForYesOrNo } from "../../../lang/Utils.ts";
+import { getMapEditorData } from "../../../mapEditor/model/MeModel.ts";
+import { reqMeSubmitNormalMap } from "../../../mapEditor/model/MeProxy.ts";
+import { TypeId } from "../../../notifications/TypeId.ts";
+import type { S } from "../../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
+import { UiListItemRenderer } from "../../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
+import type { Event } from "../../../vendor/egret/Egret.ts";
 
 export interface OpenData {
     campaignId  : number;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnAddMap!            : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _btnAddMap!            : IUiButton;
 
-    private readonly _listMap!              : UiInterfacesIUiScrollList.IUiScrollList<DataForCampaignMapRenderer>;
-    private readonly _labelNoData!          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _listMap!              : IUiScrollList<DataForCampaignMapRenderer>;
+    private readonly _labelNoData!          : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgCmCreateCampaignMap,      callback: this._onNotifyMsgCmCreateCampaignMap },
-            { type: NotificationsTypeId.TypeId.MsgCmSetCampaignMapEnabled,  callback: this._onNotifyMsgCmSetCampaignMapEnabled },
-            { type: NotificationsTypeId.TypeId.MsgMeSubmitNormalMap,        callback: this._onNotifyMsgMeSubmitNormalMap },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgCmCreateCampaignMap,      callback: this._onNotifyMsgCmCreateCampaignMap },
+            { type: TypeId.MsgCmSetCampaignMapEnabled,  callback: this._onNotifyMsgCmSetCampaignMapEnabled },
+            { type: TypeId.MsgMeSubmitNormalMap,        callback: this._onNotifyMsgMeSubmitNormalMap },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -71,9 +71,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent     : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => CampaignsManagementsGateway.reqCmCreateCampaignMap(campaignId),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+            callback    : () => reqCmCreateCampaignMap(campaignId),
         });
     }
 
@@ -82,21 +82,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCmCreateCampaignMap(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
         this._updateComponentsForListMap();
     }
     private _onNotifyMsgCmSetCampaignMapEnabled(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
         this._updateComponentsForListMap();
     }
-    private _onNotifyMsgMeSubmitNormalMap(e: VendorEgretEgret.Event): void {
-        const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS.S;
+    private _onNotifyMsgMeSubmitNormalMap(e: Event): void {
+        const data      = e.data as S;
         const slotIndex = data.getSlotIndex() ?? 0;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent  : () => LangUtils.getText(LangConstants.TextType.A0440),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent  : () => getText(TextType.A0440),
             callback    : async () => {
-                const mapEditorData = await MapEditorModelMeModel.getMapEditorData(slotIndex);
-                HelpersGameFlow.gotoMapEditorWar({
+                const mapEditorData = await getMapEditorData(slotIndex);
+                gotoMapEditorWar({
                     mapRawData                  : mapEditorData?.mapRawData,
                     slotIndex                   : slotIndex,
                     isReview                    : false,
@@ -118,8 +118,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1045));
-        this._labelNoData.setText(LangUtils.getText(LangConstants.TextType.B0278));
+        this._labelTitle.setText(getText(TextType.B1045));
+        this._labelNoData.setText(getText(TextType.B0278));
     }
 
     private async _updateTopButtons(): Promise<void> {
@@ -128,7 +128,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        this._btnAddMap.setIsVisible(await CampaignsMainsProvider.checkIsSelfDesigner(campaignId));
+        this._btnAddMap.setIsVisible(await checkIsSelfDesigner(campaignId));
     }
 
     private async _updateComponentsForListMap(): Promise<void> {
@@ -139,7 +139,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const label                 = this._labelNoData;
         const list                  = this._listMap;
-        const allCampaignMapIdArray = (await CampaignsMainsProvider.getCampaignInfo(campaignId))?.getAllCampaignMapIdArray();
+        const allCampaignMapIdArray = (await getCampaignInfo(campaignId))?.getAllCampaignMapIdArray();
         if (!allCampaignMapIdArray?.length) {
             label.setIsVisible(true);
             await list.removeAllItems();
@@ -160,21 +160,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForCampaignMapRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForCampaignMapRenderer extends UiListItemData {
     index           : number;
     campaignId      : number;
     campaignMapId   : number;
 }
-class CampaignMapRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForCampaignMapRenderer> {
-    private readonly _imgBg!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnEnable!    : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnImport!    : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnModify!    : UiInterfacesIUiButton.IUiButton;
+class CampaignMapRenderer extends UiListItemRenderer<DataForCampaignMapRenderer> {
+    private readonly _imgBg!        : IUiImage;
+    private readonly _labelName!    : IUiLabel;
+    private readonly _btnEnable!    : IUiButton;
+    private readonly _btnImport!    : IUiButton;
+    private readonly _btnModify!    : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnModify,                      callback: this._onTouchedBtnModify },
@@ -199,22 +199,22 @@ class CampaignMapRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
         }
 
         const { campaignId, campaignMapId } = openData;
-        const mapRawData                    = await CampaignsMainsProvider.getCampaignMapRawData(campaignId, campaignMapId);
+        const mapRawData                    = await getCampaignMapRawData(campaignId, campaignMapId);
         if (mapRawData == null) {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle    : () => LangUtils.getText(LangConstants.TextType.B0317),
-            getContent  : () => LangUtils.getText(LangConstants.TextType.A0835),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle    : () => getText(TextType.B0317),
+            getContent  : () => getText(TextType.A0835),
             callback    : () => {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleMapEditorSlotPanel, {
+                openPanel(getDict().CommonChooseSingleMapEditorSlotPanel, {
                     currentSlotIndex        : 0,
                     needConfirmOverwrite    : true,
                     needNonEmptySlot        : false,
                     getHelpText             : null,
                     callback                : slotIndex => {
-                        MapEditorModelMeProxy.reqMeSubmitNormalMap({
+                        reqMeSubmitNormalMap({
                             slotIndex                   : slotIndex,
                             mapRawData                  : mapRawData,
                             needReview                  : false,
@@ -233,21 +233,21 @@ class CampaignMapRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
         }
 
         const { campaignId, campaignMapId } = openData;
-        const mapRawData                    = await CampaignsMainsProvider.getCampaignMapRawData(campaignId, campaignMapId);
+        const mapRawData                    = await getCampaignMapRawData(campaignId, campaignMapId);
         if (mapRawData == null) {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle       : () => LangUtils.getText(LangConstants.TextType.B0128),
-            getContent     : () => LangUtils.getText(LangConstants.TextType.A0836),
-            callback    : () => GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleMapEditorSlotPanel, {
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle       : () => getText(TextType.B0128),
+            getContent     : () => getText(TextType.A0836),
+            callback    : () => openPanel(getDict().CommonChooseSingleMapEditorSlotPanel, {
                 currentSlotIndex        : 0,
                 needConfirmOverwrite    : true,
                 needNonEmptySlot        : true,
-                getHelpText             : () => LangUtils.getText(LangConstants.TextType.A0441),
+                getHelpText             : () => getText(TextType.A0441),
                 callback                : async slotIndex => {
-                    const existingData = await MapEditorModelMeModel.getMapEditorData(slotIndex);
+                    const existingData = await getMapEditorData(slotIndex);
                     if (existingData == null) {
                         return;
                     }
@@ -271,7 +271,7 @@ class CampaignMapRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
                         }
                     }
 
-                    MapEditorModelMeProxy.reqMeSubmitNormalMap({
+                    reqMeSubmitNormalMap({
                         slotIndex                   : slotIndex,
                         mapRawData                  : existingMapRawData,
                         needReview                  : false,
@@ -289,15 +289,15 @@ class CampaignMapRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
         }
 
         const campaignId    = openData.campaignId;
-        const campaignInfo  = await CampaignsMainsProvider.getCampaignInfo(campaignId);
+        const campaignInfo  = await getCampaignInfo(campaignId);
         if (campaignInfo == null) {
             return;
         }
 
         const campaignMapId = openData.campaignMapId;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent     : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => CampaignsManagementsGateway.reqCmSetCampaignMapEnabled(
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+            callback    : () => reqCmSetCampaignMapEnabled(
                 campaignId,
                 campaignMapId,
                 (campaignInfo.getEnabledCampaignMapIdArray().indexOf(campaignMapId) ?? -1) < 0,
@@ -306,8 +306,8 @@ class CampaignMapRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnModify.setText(LangUtils.getText(LangConstants.TextType.B0317));
-        this._btnImport.setText(LangUtils.getText(LangConstants.TextType.B0128));
+        this._btnModify.setText(getText(TextType.B0317));
+        this._btnImport.setText(getText(TextType.B0128));
         this._updateLabelName();
         this._updateBtnEnable();
         this._updateBtnModifyAndImport();
@@ -323,10 +323,10 @@ class CampaignMapRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
         }
 
         const { campaignId, campaignMapId } = openData;
-        const mapNameArray                  = (await CampaignsMainsProvider.getCampaignMapRawData(campaignId, campaignMapId))?.getMapNameArray();
+        const mapNameArray                  = (await getCampaignMapRawData(campaignId, campaignMapId))?.getMapNameArray();
         const newOpenData                   = this.getOpenData();
         if ((campaignId === newOpenData?.campaignId) && (campaignMapId === newOpenData?.campaignMapId)) {
-            label.setText(`#${campaignMapId} ${LangUtils.getLanguageText({ textArray: mapNameArray }) ?? LangUtils.getText(LangConstants.TextType.B0277)}`);
+            label.setText(`#${campaignMapId} ${getLanguageText({ textArray: mapNameArray }) ?? getText(TextType.B0277)}`);
         }
     }
 
@@ -340,15 +340,15 @@ class CampaignMapRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
         const btn           = this._btnEnable;
         btn.setIsVisible(false);
 
-        const campaignInfo  = await CampaignsMainsProvider.getCampaignInfo(campaignId);
+        const campaignInfo  = await getCampaignInfo(campaignId);
         const campaignMapId = openData.campaignMapId;
         if ((campaignInfo != null)                                          &&
-            (await CampaignsMainsProvider.checkIsSelfDesigner(campaignId))  &&
+            (await checkIsSelfDesigner(campaignId))  &&
             (campaignId === this.getOpenData()?.campaignId)                 &&
             (campaignMapId === this.getOpenData()?.campaignMapId)
         ) {
             btn.setIsVisible(true);
-            btn.setText(`${LangUtils.getText(LangConstants.TextType.B1140)}: ${LangUtils.getTextForYesOrNo((campaignInfo.getEnabledCampaignMapIdArray().indexOf(campaignMapId) ?? -1) >= 0)}`);
+            btn.setText(`${getText(TextType.B1140)}: ${getTextForYesOrNo((campaignInfo.getEnabledCampaignMapIdArray().indexOf(campaignMapId) ?? -1) >= 0)}`);
         }
     }
 
@@ -363,7 +363,7 @@ class CampaignMapRenderer extends UiComponentsUiListItemRenderer.UiListItemRende
         btnModify.setIsVisible(false);
         btnImport.setIsVisible(false);
 
-        if ((await CampaignsMainsProvider.checkIsSelfDesigner(campaignId)) &&
+        if ((await checkIsSelfDesigner(campaignId)) &&
             (campaignId === this.getOpenData()?.campaignId)
         ) {
             btnModify.setIsVisible(true);

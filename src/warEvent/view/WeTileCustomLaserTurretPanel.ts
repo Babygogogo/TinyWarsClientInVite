@@ -1,47 +1,47 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData from "../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { TileCustomLaserTurretData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
 
 export interface OpenData {
-    currentData             : AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData>;
-    callback                : ((customData: ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData | null) => void) | null;
+    currentData             : Undefinable<TileCustomLaserTurretData>;
+    callback                : ((customData: TileCustomLaserTurretData | null) => void) | null;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _labelTitle!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClear!                                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnClose!                                 : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelError!                               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgInnerTouchMask!                        : UiInterfacesIUiImage.IUiImage;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _labelTitle!                               : IUiLabel;
+    private readonly _btnClear!                                 : IUiButton;
+    private readonly _btnClose!                                 : IUiButton;
+    private readonly _labelError!                               : IUiLabel;
+    private readonly _imgInnerTouchMask!                        : IUiImage;
 
-    private readonly _btnCanAffectSelf!                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelCanAffectSelf!                       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnCanAffectAlly!                         : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelCanAffectAlly!                       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnCanAffectEnemy!                        : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelCanAffectEnemy!                      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _btnCanAffectSelf!                         : IUiButton;
+    private readonly _labelCanAffectSelf!                       : IUiLabel;
+    private readonly _btnCanAffectAlly!                         : IUiButton;
+    private readonly _labelCanAffectAlly!                       : IUiLabel;
+    private readonly _btnCanAffectEnemy!                        : IUiButton;
+    private readonly _labelCanAffectEnemy!                      : IUiLabel;
 
-    private readonly _labelPriority!                            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputPriority!                            : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelDeltaHp!                             : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputDeltaHp!                             : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelDeltaFuelPercentage!                 : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputDeltaFuelPercentage!                 : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelDeltaPrimaryAmmoPercentage!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputDeltaPrimaryAmmoPercentage!          : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelRangeForUp!                          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputRangeForUp!                          : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelRangeForDown!                        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputRangeForDown!                        : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelRangeForLeft!                        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputRangeForLeft!                        : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _labelRangeForRight!                       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _inputRangeForRight!                       : UiInterfacesIUiPromptedInput.IUiPromptedInput;
+    private readonly _labelPriority!                            : IUiLabel;
+    private readonly _inputPriority!                            : IUiPromptedInput;
+    private readonly _labelDeltaHp!                             : IUiLabel;
+    private readonly _inputDeltaHp!                             : IUiPromptedInput;
+    private readonly _labelDeltaFuelPercentage!                 : IUiLabel;
+    private readonly _inputDeltaFuelPercentage!                 : IUiPromptedInput;
+    private readonly _labelDeltaPrimaryAmmoPercentage!          : IUiLabel;
+    private readonly _inputDeltaPrimaryAmmoPercentage!          : IUiPromptedInput;
+    private readonly _labelRangeForUp!                          : IUiLabel;
+    private readonly _inputRangeForUp!                          : IUiPromptedInput;
+    private readonly _labelRangeForDown!                        : IUiLabel;
+    private readonly _inputRangeForDown!                        : IUiPromptedInput;
+    private readonly _labelRangeForLeft!                        : IUiLabel;
+    private readonly _inputRangeForLeft!                        : IUiPromptedInput;
+    private readonly _labelRangeForRight!                       : IUiLabel;
+    private readonly _inputRangeForRight!                       : IUiPromptedInput;
 
-    private _customData = new ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData.TileCustomLaserTurretData();
+    private _customData = new TileCustomLaserTurretData();
 
     // public updateOnLoadedSkin(): void {
     //     this._setNotifyListenerArray([

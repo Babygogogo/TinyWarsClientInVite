@@ -1,11 +1,11 @@
-import type * as UiUtilsUiSlidingNumber from "./UiSlidingNumber.ts";
-import * as UiUtilsUiSpring from "./UiSpring.ts";
+import type { ConstrainEase } from "./UiSlidingNumber.ts";
+import { UiSpring } from "./UiSpring.ts";
 
-export class UiScrollSpring implements UiUtilsUiSlidingNumber.ConstrainEase {
+export class UiScrollSpring implements ConstrainEase {
     public done = false;
     public to   = 0;
 
-    private readonly _spring    = new UiUtilsUiSpring.UiSpring();
+    private readonly _spring    = new UiSpring();
     private _pos                = 0;
     private _speed              = 0;
     private _correctSpeed       = false;

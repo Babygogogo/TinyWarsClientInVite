@@ -1,6 +1,6 @@
-import * as CoSkillsConstants from "../../Constants.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgInstantMiscSelfFundAfterBattle from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfFundAfterBattle.ts";
+import { AreaTypeId } from "../../Constants.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { SelfFundAfterBattle } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfFundAfterBattle.ts";
 
 export function getTotalOffset({
     cfg,
@@ -12,8 +12,8 @@ export function getTotalOffset({
     enemyNormalizedLostHp,
     enemyFinalProductionCost,
 }: {
-    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgInstantMiscSelfFundAfterBattle.SelfFundAfterBattle | null | undefined;
-    gameConfig                  : GameConfigGcData.GcData;
+    cfg                         : SelfFundAfterBattle | null | undefined;
+    gameConfig                  : GcData;
     selfUnitTypeId              : number;
     isSelfInCoZone              : boolean;
     enemyUnitTypeId             : number;
@@ -24,7 +24,7 @@ export function getTotalOffset({
     if ((cfg == null) || (enemyNormalizedLostHp === 0) || (enemyFinalProductionCost === 0)) {
         return 0;
     }
-    if ((!isSelfInCoZone) && ((cfg.getCoSkillAreaTypeId() ?? 0) !== CoSkillsConstants.AreaTypeId.Halo)) {
+    if ((!isSelfInCoZone) && ((cfg.getCoSkillAreaTypeId() ?? 0) !== AreaTypeId.Halo)) {
         return 0;
     }
 

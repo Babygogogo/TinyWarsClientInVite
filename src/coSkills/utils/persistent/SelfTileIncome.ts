@@ -1,6 +1,6 @@
-import type * as AuxiliaryTypesGridIndex from "../../../auxiliaryTypes/GridIndex.ts";
-import type * as GameConfigGcData from "../../../gameConfig/GcData.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfTileIncome from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileIncome.ts";
+import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { SelfTileIncome } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileIncome.ts";
 
 export function getTotalMultiplier({
     cfg,
@@ -10,12 +10,12 @@ export function getTotalMultiplier({
     coZoneRadius,
     getCoGridIndexArrayOnMap,
 }: {
-    cfg                         : ProtoSchemaCommonProtoConfigCoSkillCfgPersistentSelfTileIncome.SelfTileIncome | null | undefined;
-    gameConfig                  : GameConfigGcData.GcData;
+    cfg                         : SelfTileIncome | null | undefined;
+    gameConfig                  : GcData;
     tileTypeId                  : number;
-    gridIndex                   : AuxiliaryTypesGridIndex.GridIndex;
+    gridIndex                   : GridIndex;
     coZoneRadius                : number;
-    getCoGridIndexArrayOnMap    : () => AuxiliaryTypesGridIndex.GridIndex[];
+    getCoGridIndexArrayOnMap    : () => GridIndex[];
 }): number {
     if (cfg == null) {
         return 1;

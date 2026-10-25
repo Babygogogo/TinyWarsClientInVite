@@ -1,21 +1,21 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../auxiliaryTypes/GridIndex.ts";
-import type * as ProtoSchemaCommonProtoStructureGridIndexAndPathInfo from "../proto/schema/CommonProto/Structure/GridIndexAndPathInfo.ts";
-import type * as UiInterfacesIUiContainer from "../ui/interfaces/IUiContainer.ts";
-import type * as UnitsConstants from "./Constants.ts";
-import type * as UnitsIUnit from "./IUnit.ts";
+import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { GridIndexAndPathInfo } from "../proto/schema/CommonProto/Structure/GridIndexAndPathInfo.ts";
+import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
+import type { AnimationTypeId } from "./Constants.ts";
+import type { IUnit } from "./IUnit.ts";
 
-type UnitAnimationType  = UnitsConstants.AnimationTypeId;
-type GridIndex          = AuxiliaryTypesGridIndex.GridIndex;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypes.Undefinable<T>;
+type UnitAnimationType  = AnimationTypeId;
+type GridIndex          = AuxiliaryTypesGridIndex;
+type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
-export interface IUnitView extends UiInterfacesIUiContainer.IUiContainer {
-    init(unit: UnitsIUnit.IUnit): IUnitView;
+export interface IUnitView extends IUiContainer {
+    init(unit: IUnit): IUnitView;
 
     startRunningView(): IUnitView;
     stopRunningView(): void;
 
-    getUnit(): UnitsIUnit.IUnit | null;
+    getUnit(): IUnit | null;
 
     resetAllViews(): void;
 
@@ -31,7 +31,7 @@ export interface IUnitView extends UiInterfacesIUiContainer.IUiContainer {
         updateViewAfterMove : boolean;
     }): Promise<void>;
     moveAlongExtraPath({ path, aiming, deleteViewAfterMoving }: {
-        path                    : ProtoSchemaCommonProtoStructureGridIndexAndPathInfo.GridIndexAndPathInfo[];
+        path                    : GridIndexAndPathInfo[];
         aiming                  : Undefinable<GridIndex>;
         deleteViewAfterMoving   : boolean;
     }): Promise<void>;

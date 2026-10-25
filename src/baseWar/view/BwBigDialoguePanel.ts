@@ -1,42 +1,42 @@
-import type * as BaseWarInterfaceIBwWar from "../interface/IBwWar.ts";
-import * as DialoguesConstants from "../../dialogues/Constants.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GraphicsConstants from "../../graphics/Constants.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoWarEventWeaBigDialogueSimple from "../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import * as UiUtilsUiHelpers from "../../ui/utils/UiHelpers.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
+import { BigDialogueSideId } from "../../dialogues/Constants.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { ColorId } from "../../graphics/Constants.ts";
+import { getBigDialogueBackgroundImage, getCoBust } from "../../helpers/ImageSource.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getLanguageText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { WeaBigDialogueSimple } from "../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx, playBgm } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import { changeColor } from "../../ui/utils/UiHelpers.ts";
 
 export interface OpenData {
-    war             : BaseWarInterfaceIBwWar.IBwWar;
-    actionData      : ProtoSchemaCommonProtoWarEventWeaBigDialogueSimple.WeaBigDialogueSimple;
+    war             : IBwWar;
+    actionData      : WeaBigDialogueSimple;
     callbackOnClose : () => void;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBg!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgCo1!       : UiInterfacesIUiImage.IUiImage;
-    private readonly _imgCo2!       : UiInterfacesIUiImage.IUiImage;
-    private readonly _groupName1!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelName1!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupName2!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelName2!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _imgTouchMask! : UiInterfacesIUiImage.IUiImage;
-    private readonly _btnSkip!      : UiInterfacesIUiButton.IUiButton;
-    private readonly _labelContent! : UiInterfacesIUiLabel.IUiLabel;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _group!        : IUiContainer;
+    private readonly _imgBg!        : IUiImage;
+    private readonly _imgCo1!       : IUiImage;
+    private readonly _imgCo2!       : IUiImage;
+    private readonly _groupName1!   : IUiContainer;
+    private readonly _labelName1!   : IUiLabel;
+    private readonly _groupName2!   : IUiContainer;
+    private readonly _labelName2!   : IUiLabel;
+    private readonly _imgTouchMask! : IUiImage;
+    private readonly _btnSkip!      : IUiButton;
+    private readonly _labelContent! : IUiLabel;
 
     private _dialogueIndex  = 0;
 
@@ -46,7 +46,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._imgTouchMask,   callback: this._onTouchedImgTouchMask },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
         ]);
     }
     protected override async _doApplyOpenData(): Promise<void> {
@@ -57,7 +57,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         this._updateComponentsForLanguage();
 
-        this._imgBg.loadSource(HelpersImageSource.getBigDialogueBackgroundImage(this.getOpenData()?.actionData.getBackgroundId() ?? 0));
+        this._imgBg.loadSource(getBigDialogueBackgroundImage(this.getOpenData()?.actionData.getBackgroundId() ?? 0));
         this._groupName1.setIsVisible(false);
         this._groupName2.setIsVisible(false);
         this._imgCo1.loadSource(``);
@@ -73,18 +73,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedBtnSkip(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0226),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => getText(TextType.A0226),
             callback: () => this.closePanel(),
         });
     }
     private _onTouchedImgTouchMask(): void {
-        if (HelpersMisc.getExisted(this.getOpenData()?.actionData.getDataArray())[this._dialogueIndex + 1]) {
+        if (getExisted(this.getOpenData()?.actionData.getDataArray())[this._dialogueIndex + 1]) {
             this._tickDialogue();
         } else {
             this.closePanel();
         }
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onNotifyLanguageChanged(): void {
@@ -92,7 +92,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSkip.setText(LangUtils.getText(LangConstants.TextType.B0665));
+        this._btnSkip.setText(getText(TextType.B0665));
 
         this._updateComponentsForDialogue();
     }
@@ -188,7 +188,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const imgCo1            = this._imgCo1;
         const imgCo2            = this._imgCo2;
         const war               = openData.war;
-        const dialogueData      = HelpersMisc.getExisted(openData.actionData.getDataArray())[this._dialogueIndex];
+        const dialogueData      = getExisted(openData.actionData.getDataArray())[this._dialogueIndex];
         const dataForCoDialogue = dialogueData.getDataForCoDialogue();
         const dataForAside      = dialogueData.getDataForAside();
         const dataForMisc       = dialogueData.getDataForMisc();
@@ -198,32 +198,32 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             const side          = dataForCoDialogue.getSide();
             const nameArray     = dataForCoDialogue.getNameArray();
             const playerIndex   = dataForCoDialogue.getPlayerIndex();
-            const coId          = playerIndex == null ? HelpersMisc.getExisted(dataForCoDialogue.getCoId()) : war.getPlayer(playerIndex).getCoId();
-            const coImageSource = HelpersImageSource.getCoBust(gameConfig, coId) ?? LangConstants.UndefinedError;
-            const coName        = LangUtils.getLanguageText({ textArray: nameArray }) ?? gameConfig.getCoNameAndTierText(coId) ?? LangConstants.UndefinedError;
+            const coId          = playerIndex == null ? getExisted(dataForCoDialogue.getCoId()) : war.getPlayer(playerIndex).getCoId();
+            const coImageSource = getCoBust(gameConfig, coId) ?? UndefinedError;
+            const coName        = getLanguageText({ textArray: nameArray }) ?? gameConfig.getCoNameAndTierText(coId) ?? UndefinedError;
 
-            if (side === DialoguesConstants.BigDialogueSideId.Left) {
+            if (side === BigDialogueSideId.Left) {
                 groupName1.setIsVisible(true);
                 groupName2.setIsVisible(false);
                 labelName1.setText(coName);
                 imgCo1.loadSource(coImageSource);
-                UiUtilsUiHelpers.changeColor(imgCo1, GraphicsConstants.ColorId.Origin);
-                UiUtilsUiHelpers.changeColor(imgCo2, GraphicsConstants.ColorId.Dark);
+                changeColor(imgCo1, ColorId.Origin);
+                changeColor(imgCo2, ColorId.Dark);
 
-            } else if (side === DialoguesConstants.BigDialogueSideId.Right) {
+            } else if (side === BigDialogueSideId.Right) {
                 groupName1.setIsVisible(false);
                 groupName2.setIsVisible(true);
                 labelName2.setText(coName);
                 imgCo2.loadSource(coImageSource);
-                UiUtilsUiHelpers.changeColor(imgCo1, GraphicsConstants.ColorId.Dark);
-                UiUtilsUiHelpers.changeColor(imgCo2, GraphicsConstants.ColorId.Origin);
+                changeColor(imgCo1, ColorId.Dark);
+                changeColor(imgCo2, ColorId.Origin);
 
             } else {
-                throw HelpersMisc.newError(`BwDialoguePanel._updateComponentsForDialogue() invalid side.`);
+                throw newError(`BwDialoguePanel._updateComponentsForDialogue() invalid side.`);
             }
 
             labelContent.setText(war.getWarEventManager().handleEscapeText(
-                HelpersMisc.getExisted(LangUtils.getLanguageText({ textArray: dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
+                getExisted(getLanguageText({ textArray: dataForCoDialogue.getTextArray() })).replace(/\\n/g, "\n"),
             ));
 
         } else if (dataForAside) {
@@ -233,20 +233,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             imgCo2.loadSource(``);
 
             labelContent.setText(war.getWarEventManager().handleEscapeText(
-                HelpersMisc.getExisted(LangUtils.getLanguageText({ textArray: dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
+                getExisted(getLanguageText({ textArray: dataForAside.getTextArray() })).replace(/\\n/g, "\n"),
             ));
         } else if (dataForMisc) {
             {
                 const dataForPlayBgm = dataForMisc.getDataForPlayBgm();
                 if (dataForPlayBgm) {
-                    SoundsSoundPlayer.playBgm(dataForPlayBgm.getBgmCode() ?? 0);
+                    playBgm(dataForPlayBgm.getBgmCode() ?? 0);
                 }
             }
 
             {
                 const dataForPlaySfx = dataForMisc.getDataForPlaySfx();
                 if (dataForPlaySfx) {
-                    SoundsSoundPlayer.playShortSfx(dataForPlaySfx.getSfxCode() ?? 0);
+                    playShortSfx(dataForPlaySfx.getSfxCode() ?? 0);
                 }
             }
 
@@ -260,21 +260,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._group,
             beginProps  : { customAlpha: 0 },
             endProps    : { customAlpha: 1 },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._group,
             beginProps  : { customAlpha: 1 },
             endProps    : { customAlpha: 0 },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 }

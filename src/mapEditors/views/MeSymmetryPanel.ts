@@ -1,85 +1,85 @@
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as GeometriesConstants from "../../geometries/Constants.ts";
-import * as HelpersImageSource from "../../helpers/ImageSource.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import type * as MapEditorInterfaceIMeWar from "../../mapEditor/interface/IMeWar.ts";
-import * as MapEditorModelMeHelpers from "../../mapEditor/model/MeHelpers.ts";
-import type * as MapEditorModelMeTypes from "../../mapEditor/model/MeTypes.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { SymmetryTypeId } from "../../geometries/Constants.ts";
+import { getSkinCircle } from "../../helpers/ImageSource.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import { getAsymmetricalCounters } from "../../mapEditor/model/MeHelpers.ts";
+import type { AsymmetricalCounters } from "../../mapEditor/model/MeTypes.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
-    war     : MapEditorInterfaceIMeWar.IMeWar
+    war     : IMeWar
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!                      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!                   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!                     : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!                      : IUiImage;
+    private readonly _group!                        : IUiContainer;
+    private readonly _labelTitle!                   : IUiLabel;
+    private readonly _btnClose!                     : IUiButton;
 
-    private readonly _labelTileSymmetry!            : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelDirection!               : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelStatus!                  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelAutoDraw!                : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelTileSymmetry!            : IUiLabel;
+    private readonly _labelDirection!               : IUiLabel;
+    private readonly _labelStatus!                  : IUiLabel;
+    private readonly _labelAutoDraw!                : IUiLabel;
 
-    private readonly _groupLeftRight!               : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelLeftRightTitle!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelLeftRightRate!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupLeftRightBox!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgLeftRight!                 : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupLeftRight!               : IUiContainer;
+    private readonly _labelLeftRightTitle!          : IUiLabel;
+    private readonly _labelLeftRightRate!           : IUiLabel;
+    private readonly _groupLeftRightBox!            : IUiContainer;
+    private readonly _imgLeftRight!                 : IUiImage;
 
-    private readonly _groupUpDown!                  : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelUpDownTitle!             : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelUpDownRate!              : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupUpDownBox!               : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgUpDown!                    : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupUpDown!                  : IUiContainer;
+    private readonly _labelUpDownTitle!             : IUiLabel;
+    private readonly _labelUpDownRate!              : IUiLabel;
+    private readonly _groupUpDownBox!               : IUiContainer;
+    private readonly _imgUpDown!                    : IUiImage;
 
-    private readonly _groupRotational!              : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelRotationalTitle!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRotationalRate!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupRotationalBox!           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgRotational!                : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupRotational!              : IUiContainer;
+    private readonly _labelRotationalTitle!         : IUiLabel;
+    private readonly _labelRotationalRate!          : IUiLabel;
+    private readonly _groupRotationalBox!           : IUiContainer;
+    private readonly _imgRotational!                : IUiImage;
 
-    private readonly _groupUpLeftDownRight!         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelUpLeftDownRightTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelUpLeftDownRightRate!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupUpLeftDownRightBox!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgUpLeftDownRight!           : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupUpLeftDownRight!         : IUiContainer;
+    private readonly _labelUpLeftDownRightTitle!    : IUiLabel;
+    private readonly _labelUpLeftDownRightRate!     : IUiLabel;
+    private readonly _groupUpLeftDownRightBox!      : IUiContainer;
+    private readonly _imgUpLeftDownRight!           : IUiImage;
 
-    private readonly _groupUpRightDownLeft!         : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelUpRightDownLeftTitle!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelUpRightDownLeftRate!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _groupUpRightDownLeftBox!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgUpRightDownLeft!           : UiInterfacesIUiImage.IUiImage;
+    private readonly _groupUpRightDownLeft!         : IUiContainer;
+    private readonly _labelUpRightDownLeftTitle!    : IUiLabel;
+    private readonly _labelUpRightDownLeftRate!     : IUiLabel;
+    private readonly _groupUpRightDownLeftBox!      : IUiContainer;
+    private readonly _imgUpRightDownLeft!           : IUiImage;
 
-    private readonly _labelColorSymmetry!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnColorSymmetry!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelpColorSymmetry!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _groupColorSymmetry!           : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgColorSymmetry!             : UiInterfacesIUiImage.IUiImage;
-    private readonly _listColorSymmetry!            : UiInterfacesIUiScrollList.IUiScrollList<DataForColorSymmetryRenderer>;
+    private readonly _labelColorSymmetry!           : IUiLabel;
+    private readonly _btnColorSymmetry!             : IUiButton;
+    private readonly _btnHelpColorSymmetry!         : IUiButton;
+    private readonly _groupColorSymmetry!           : IUiContainer;
+    private readonly _imgColorSymmetry!             : IUiImage;
+    private readonly _listColorSymmetry!            : IUiScrollList<DataForColorSymmetryRenderer>;
 
-    private readonly _labelFillTile!                : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnFillTile!                  : UiInterfacesIUiButton.IUiButton;
+    private readonly _labelFillTile!                : IUiLabel;
+    private readonly _btnFillTile!                  : IUiButton;
 
-    private _asymmetricalCounters   : MapEditorModelMeTypes.AsymmetricalCounters | null = null;
+    private _asymmetricalCounters   : AsymmetricalCounters | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MeDrawerSymmetricalPlayerIndexChanged,   callback: this._onNotifyMeDrawerSymmetricalPlayerIndexChanged },
+            { type: TypeId.LanguageChanged,                         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MeDrawerSymmetricalPlayerIndexChanged,   callback: this._onNotifyMeDrawerSymmetricalPlayerIndexChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                   callback: this.closePanel },
@@ -115,7 +115,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if (war == null) {
             return;
         }
-        this._asymmetricalCounters  = MapEditorModelMeHelpers.getAsymmetricalCounters(war);
+        this._asymmetricalCounters  = getAsymmetricalCounters(war);
 
         this._updateGroupLeftRight();
         this._updateGroupUpDown();
@@ -131,16 +131,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedLabelStatus(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0396),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0396),
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedLabelAutoDraw(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0397),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0397),
         });
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
     private _onTouchedGroupLeftRightBox(): void {
@@ -149,12 +149,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        if (drawer.getSymmetricalDrawType() !== GeometriesConstants.SymmetryTypeId.LeftToRight) {
-            drawer.setSymmetricalDrawType(GeometriesConstants.SymmetryTypeId.LeftToRight);
+        if (drawer.getSymmetricalDrawType() !== SymmetryTypeId.LeftToRight) {
+            drawer.setSymmetricalDrawType(SymmetryTypeId.LeftToRight);
         } else {
-            drawer.setSymmetricalDrawType(GeometriesConstants.SymmetryTypeId.None);
+            drawer.setSymmetricalDrawType(SymmetryTypeId.None);
         }
         this._updateGroupBoxes();
     }
@@ -164,12 +164,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        if (drawer.getSymmetricalDrawType() !== GeometriesConstants.SymmetryTypeId.UpToDown) {
-            drawer.setSymmetricalDrawType(GeometriesConstants.SymmetryTypeId.UpToDown);
+        if (drawer.getSymmetricalDrawType() !== SymmetryTypeId.UpToDown) {
+            drawer.setSymmetricalDrawType(SymmetryTypeId.UpToDown);
         } else {
-            drawer.setSymmetricalDrawType(GeometriesConstants.SymmetryTypeId.None);
+            drawer.setSymmetricalDrawType(SymmetryTypeId.None);
         }
         this._updateGroupBoxes();
     }
@@ -179,12 +179,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        if (drawer.getSymmetricalDrawType() !== GeometriesConstants.SymmetryTypeId.Rotation) {
-            drawer.setSymmetricalDrawType(GeometriesConstants.SymmetryTypeId.Rotation);
+        if (drawer.getSymmetricalDrawType() !== SymmetryTypeId.Rotation) {
+            drawer.setSymmetricalDrawType(SymmetryTypeId.Rotation);
         } else {
-            drawer.setSymmetricalDrawType(GeometriesConstants.SymmetryTypeId.None);
+            drawer.setSymmetricalDrawType(SymmetryTypeId.None);
         }
         this._updateGroupBoxes();
     }
@@ -194,18 +194,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const drawer    = war.getDrawer();
-        if (drawer.getSymmetricalDrawType() === GeometriesConstants.SymmetryTypeId.UpLeftToDownRight) {
-            drawer.setSymmetricalDrawType(GeometriesConstants.SymmetryTypeId.None);
+        if (drawer.getSymmetricalDrawType() === SymmetryTypeId.UpLeftToDownRight) {
+            drawer.setSymmetricalDrawType(SymmetryTypeId.None);
         } else {
             const mapSize = war.getTileMap().getMapSize();
             if (mapSize.getWidth() === mapSize.getHeight()) {
-                drawer.setSymmetricalDrawType(GeometriesConstants.SymmetryTypeId.UpLeftToDownRight);
+                drawer.setSymmetricalDrawType(SymmetryTypeId.UpLeftToDownRight);
             } else {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-                    getContent : () => LangUtils.getText(LangConstants.TextType.A0780),
+                openPanel(getDict().CommonHelpPanel, {
+                    getContent : () => getText(TextType.A0780),
                 });
                 return;
             }
@@ -218,18 +218,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const drawer    = war.getDrawer();
-        if (drawer.getSymmetricalDrawType() === GeometriesConstants.SymmetryTypeId.UpRightToDownLeft) {
-            drawer.setSymmetricalDrawType(GeometriesConstants.SymmetryTypeId.None);
+        if (drawer.getSymmetricalDrawType() === SymmetryTypeId.UpRightToDownLeft) {
+            drawer.setSymmetricalDrawType(SymmetryTypeId.None);
         } else {
             const mapSize = war.getTileMap().getMapSize();
             if (mapSize.getWidth() === mapSize.getHeight()) {
-                drawer.setSymmetricalDrawType(GeometriesConstants.SymmetryTypeId.UpRightToDownLeft);
+                drawer.setSymmetricalDrawType(SymmetryTypeId.UpRightToDownLeft);
             } else {
-                GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-                    getContent : () => LangUtils.getText(LangConstants.TextType.A0780),
+                openPanel(getDict().CommonHelpPanel, {
+                    getContent : () => getText(TextType.A0780),
                 });
                 return;
             }
@@ -243,13 +243,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().MeSymmetricalPlayerIndexPanel, {
+        openPanel(getDict().MeSymmetricalPlayerIndexPanel, {
             war : war,
         });
     }
     private _onTouchedBtnHelpColorSymmetry(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0779),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0779),
         });
     }
     private _onTouchedGroupColorSymmetry(): void {
@@ -258,7 +258,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         drawer.setIsSymmetricalPlayerIndexEnabled(!drawer.getIsSymmetricalPlayerIndexEnabled());
         this._updateGroupColorSymmetry();
@@ -270,7 +270,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().MeSymmetryFillTilePanel, {
+        openPanel(getDict().MeSymmetryFillTilePanel, {
             war : war,
         });
         this.closePanel();
@@ -284,20 +284,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0306));
-        this._labelTileSymmetry.setText(LangUtils.getText(LangConstants.TextType.B1248));
-        this._labelDirection.setText(LangUtils.getText(LangConstants.TextType.B1247));
-        this._labelStatus.setText(`${LangUtils.getText(LangConstants.TextType.B0367)} ?`);
-        this._labelAutoDraw.setText(`${LangUtils.getText(LangConstants.TextType.B0307)} ?`);
-        this._labelUpDownTitle.setText(LangUtils.getText(LangConstants.TextType.B0308));
-        this._labelLeftRightTitle.setText(LangUtils.getText(LangConstants.TextType.B0309));
-        this._labelRotationalTitle.setText(LangUtils.getText(LangConstants.TextType.B0310));
-        this._labelUpLeftDownRightTitle.setText(LangUtils.getText(LangConstants.TextType.B0311));
-        this._labelUpRightDownLeftTitle.setText(LangUtils.getText(LangConstants.TextType.B0312));
-        this._labelColorSymmetry.setText(LangUtils.getText(LangConstants.TextType.B1155));
-        this._btnColorSymmetry.setText(LangUtils.getText(LangConstants.TextType.B0560));
-        this._labelFillTile.setText(LangUtils.getText(LangConstants.TextType.B1245));
-        this._btnFillTile.setText(LangUtils.getText(LangConstants.TextType.B1246));
+        this._labelTitle.setText(getText(TextType.B0306));
+        this._labelTileSymmetry.setText(getText(TextType.B1248));
+        this._labelDirection.setText(getText(TextType.B1247));
+        this._labelStatus.setText(`${getText(TextType.B0367)} ?`);
+        this._labelAutoDraw.setText(`${getText(TextType.B0307)} ?`);
+        this._labelUpDownTitle.setText(getText(TextType.B0308));
+        this._labelLeftRightTitle.setText(getText(TextType.B0309));
+        this._labelRotationalTitle.setText(getText(TextType.B0310));
+        this._labelUpLeftDownRightTitle.setText(getText(TextType.B0311));
+        this._labelUpRightDownLeftTitle.setText(getText(TextType.B0312));
+        this._labelColorSymmetry.setText(getText(TextType.B1155));
+        this._btnColorSymmetry.setText(getText(TextType.B0560));
+        this._labelFillTile.setText(getText(TextType.B1245));
+        this._btnFillTile.setText(getText(TextType.B1246));
     }
 
     private _updateGroupBoxes(): void {
@@ -321,7 +321,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateGroupLeftRightBox();
     }
     private _updateGroupLeftRightBox(): void {
-        this._imgLeftRight.setIsVisible(this.getOpenData()?.war.getDrawer().getSymmetricalDrawType() === GeometriesConstants.SymmetryTypeId.LeftToRight);
+        this._imgLeftRight.setIsVisible(this.getOpenData()?.war.getDrawer().getSymmetricalDrawType() === SymmetryTypeId.LeftToRight);
     }
 
     private _updateGroupUpDown(): void {
@@ -337,7 +337,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateGroupUpDownBox();
     }
     private _updateGroupUpDownBox(): void {
-        this._imgUpDown.setIsVisible(this.getOpenData()?.war.getDrawer().getSymmetricalDrawType() === GeometriesConstants.SymmetryTypeId.UpToDown);
+        this._imgUpDown.setIsVisible(this.getOpenData()?.war.getDrawer().getSymmetricalDrawType() === SymmetryTypeId.UpToDown);
     }
 
     private _updateGroupRotational(): void {
@@ -353,7 +353,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateGroupRotationalBox();
     }
     private _updateGroupRotationalBox(): void {
-        this._imgRotational.setIsVisible(this.getOpenData()?.war.getDrawer().getSymmetricalDrawType() === GeometriesConstants.SymmetryTypeId.Rotation);
+        this._imgRotational.setIsVisible(this.getOpenData()?.war.getDrawer().getSymmetricalDrawType() === SymmetryTypeId.Rotation);
     }
 
     private _updateGroupUpLeftDownRight(): void {
@@ -369,7 +369,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateGroupUpLeftDownRightBox();
     }
     private _updateGroupUpLeftDownRightBox(): void {
-        this._imgUpLeftDownRight.setIsVisible(this.getOpenData()?.war.getDrawer().getSymmetricalDrawType() === GeometriesConstants.SymmetryTypeId.UpLeftToDownRight);
+        this._imgUpLeftDownRight.setIsVisible(this.getOpenData()?.war.getDrawer().getSymmetricalDrawType() === SymmetryTypeId.UpLeftToDownRight);
     }
 
     private _updateGroupUpRightDownLeft(): void {
@@ -385,7 +385,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateGroupUpRightDownLeftBox();
     }
     private _updateGroupUpRightDownLeftBox(): void {
-        this._imgUpRightDownLeft.setIsVisible(this.getOpenData()?.war.getDrawer().getSymmetricalDrawType() === GeometriesConstants.SymmetryTypeId.UpRightToDownLeft);
+        this._imgUpRightDownLeft.setIsVisible(this.getOpenData()?.war.getDrawer().getSymmetricalDrawType() === SymmetryTypeId.UpRightToDownLeft);
     }
 
     private async _updateGroupColorSymmetry(): Promise<void> {
@@ -398,7 +398,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._imgColorSymmetry.setIsVisible(isEnabled);
 
         const dataArray : DataForColorSymmetryRenderer[] = [];
-        for (let playerIndex = PlayersConstants.PlayerIndex.First; playerIndex <= PlayersConstants.PlayerIndex.Max; ++playerIndex) {
+        for (let playerIndex = PlayerIndex.First; playerIndex <= PlayerIndex.Max; ++playerIndex) {
             dataArray.push({
                 dstPlayerIndex  : drawer.getSymmetricalPlayerIndex(playerIndex),
                 isEnabled       : isEnabled,
@@ -408,12 +408,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForColorSymmetryRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForColorSymmetryRenderer extends UiListItemData {
     dstPlayerIndex  : number;
     isEnabled       : boolean;
 }
-class ColorSymmetryRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForColorSymmetryRenderer> {
-    private readonly _imgColor! : UiInterfacesIUiImage.IUiImage;
+class ColorSymmetryRenderer extends UiListItemRenderer<DataForColorSymmetryRenderer> {
+    private readonly _imgColor! : IUiImage;
 
     protected override _doApplyOpenData(): void {
         this._updateView();
@@ -425,6 +425,6 @@ class ColorSymmetryRenderer extends UiComponentsUiListItemRenderer.UiListItemRen
             return;
         }
 
-        this._imgColor.loadSource(HelpersImageSource.getSkinCircle(openData.dstPlayerIndex, true));
+        this._imgColor.loadSource(getSkinCircle(openData.dstPlayerIndex, true));
     }
 }

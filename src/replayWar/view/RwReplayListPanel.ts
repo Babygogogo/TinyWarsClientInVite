@@ -1,81 +1,87 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesReplayFilter from "../../auxiliaryTypes/ReplayFilter.ts";
-import * as CommonViewCommonWarMapInfoPage from "../../common/view/CommonWarMapInfoPage.ts";
-import * as CommonViewCommonWarPlayerInfoPage from "../../common/view/CommonWarPlayerInfoPage.ts";
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as GameModesUtils from "../../gameModes/Utils.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as NumbersUtils from "../../numbers/Utils.ts";
-import type * as ProtoSchemaCommonProtoReplayReplayInfo from "../../proto/schema/CommonProto/Replay/ReplayInfo.ts";
-import * as ReplayWarModelRwModel from "../model/RwModel.ts";
-import * as ReplayWarViewRwReplayWarInfoPage from "./RwReplayWarInfoPage.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import * as UiComponentsUiTabItemRenderer from "../../ui/components/UiTabItemRenderer.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiListItemRenderer from "../../ui/interfaces/IUiListItemRenderer.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiInterfacesIUiTab from "../../ui/interfaces/IUiTab.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
+import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { ReplayFilter } from "../../auxiliaryTypes/ReplayFilter.ts";
+import { type OpenData as CommonViewCommonWarMapInfoPageOpenData, Page } from "../../common/view/CommonWarMapInfoPage.ts";
+import {
+    type OpenData as CommonViewCommonWarPlayerInfoPageOpenData,
+    Page as CommonViewCommonWarPlayerInfoPage,
+} from "../../common/view/CommonWarPlayerInfoPage.ts";
+import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getEnum } from "../../gameModes/Utils.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import { gotoReplayWar } from "../../helpers/GameFlow.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText, getWarTypeName } from "../../lang/Utils.ts";
+import { getRawData, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getValueInRange } from "../../numbers/Utils.ts";
+import type { ReplayInfo } from "../../proto/schema/CommonProto/Replay/ReplayInfo.ts";
+import { getReplayData, getReplayInfo, getReplayIdSet } from "../model/RwModel.ts";
+import {
+    type OpenData as ReplayWarViewRwReplayWarInfoPageOpenData,
+    Page as ReplayWarViewRwReplayWarInfoPage,
+} from "./RwReplayWarInfoPage.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import { UiTabItemRenderer } from "../../ui/components/UiTabItemRenderer.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getFavoriteReplayIdArray } from "../../users/Model.ts";
 
 const MapsPerPage       = 50;
 let _pageIndex          = 0;
-let _selectedReplayId   : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-let _previousFilter     : AuxiliaryTypesReplayFilter.ReplayFilter | null | undefined;
+let _selectedReplayId   : Undefinable<number>;
+let _previousFilter     : ReplayFilter | null | undefined;
 
 export interface OpenData {
-    filter                  : AuxiliaryTypesAuxiliaryTypes.Undefinable<AuxiliaryTypesReplayFilter.ReplayFilter>;
+    filter                  : Undefinable<ReplayFilter>;
     usePreviousFilter       : boolean;
     usePreviousPageIndex    : boolean;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _groupTab!             : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _tabSettings!          : UiInterfacesIUiTab.IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPage.OpenData | CommonViewCommonWarPlayerInfoPage.OpenData | ReplayWarViewRwReplayWarInfoPage.OpenData>;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _groupTab!             : IUiContainer;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, CommonViewCommonWarMapInfoPageOpenData | CommonViewCommonWarPlayerInfoPageOpenData | ReplayWarViewRwReplayWarInfoPageOpenData>;
 
-    private readonly _groupNavigator!       : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelReplay!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelChooseReplay!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupNavigator!       : IUiLayout;
+    private readonly _labelReplay!          : IUiLabel;
+    private readonly _labelChooseReplay!    : IUiLabel;
 
-    private readonly _btnBack!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnNextStep!          : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnBack!              : IUiButton;
+    private readonly _btnNextStep!          : IUiButton;
 
-    private readonly _groupTopRightButtons! : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnSearch!            : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupTopRightButtons! : IUiContainer;
+    private readonly _btnSearch!            : IUiButton;
 
-    private readonly _groupSearch!          : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _btnPrevPage!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnNextPage!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _layoutPage!           : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelPageTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelPage!            : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupSearch!          : IUiContainer;
+    private readonly _btnPrevPage!          : IUiButton;
+    private readonly _btnNextPage!          : IUiButton;
+    private readonly _layoutPage!           : IUiLayout;
+    private readonly _labelPageTitle!       : IUiLabel;
+    private readonly _labelPage!            : IUiLabel;
 
-    private readonly _groupReplayList!      : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listReplay!           : UiInterfacesIUiScrollList.IUiScrollList<DataForReplayRenderer>;
-    private readonly _labelNoReplay!        : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelLoading!         : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupReplayList!      : IUiContainer;
+    private readonly _listReplay!           : IUiScrollList<DataForReplayRenderer>;
+    private readonly _labelNoReplay!        : IUiLabel;
+    private readonly _labelLoading!         : IUiLabel;
 
     private _isTabInitialized               = false;
-    private _replayFilter                   : AuxiliaryTypesReplayFilter.ReplayFilter | null | undefined;
+    private _replayFilter                   : ReplayFilter | null | undefined;
     private _cachedListDataArray            : DataForReplayRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnBack,        callback: this._onTouchedBtnBack },
@@ -85,7 +91,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnNextPage,    callback: this._onTouchedBtnNextPage },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
-            SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonCancel01);
+            playShortSfx(ShortSfxCode.ButtonCancel01);
             this._onTouchedBtnBack();
         });
 
@@ -139,33 +145,33 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
     private _onTouchedBtnBack(): void {
         this.closePanel();
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().McrMainMenuPanel, void 0);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyTopPanel, void 0);
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().LobbyBottomPanel, void 0);
+        openPanel(getDict().McrMainMenuPanel, void 0);
+        openPanel(getDict().LobbyTopPanel, void 0);
+        openPanel(getDict().LobbyBottomPanel, void 0);
     }
     private _onTouchedBtnSearch(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().RwSearchReplayPanel, {
+        openPanel(getDict().RwSearchReplayPanel, {
             replayFilter    : this._replayFilter,
         });
     }
     private async _onTouchedBtnNextStep(): Promise<void> {
         const replayId = this._getSelectedReplayId();
         if (replayId != null) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonBlockPanel, {
-                title   : LangUtils.getText(LangConstants.TextType.B0088),
-                content : LangUtils.getText(LangConstants.TextType.A0040),
+            openPanel(getDict().CommonBlockPanel, {
+                title   : getText(TextType.B0088),
+                content : getText(TextType.A0040),
             });
 
-            const data = await ReplayWarModelRwModel.getReplayData(replayId);
+            const data = await getReplayData(replayId);
             if (data) {
-                HelpersGameFlow.gotoReplayWar(data, HelpersMisc.getExisted(replayId));
+                gotoReplayWar(data, getExisted(replayId));
             } else {
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().CommonBlockPanel);
+                closePanel(getDict().CommonBlockPanel);
             }
         }
     }
     private async _onTouchedBtnPrevPage(): Promise<void> {
-        const newPageIndex = NumbersUtils.getValueInRange({
+        const newPageIndex = getValueInRange({
             minValue    : 0,
             maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
             rawValue    : _pageIndex - 1,
@@ -176,7 +182,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
     private async _onTouchedBtnNextPage(): Promise<void> {
-        const newPageIndex = NumbersUtils.getValueInRange({
+        const newPageIndex = getValueInRange({
             minValue    : 0,
             maxValue    : Math.max(0, Math.ceil(this._cachedListDataArray.length / MapsPerPage) - 1),
             rawValue    : _pageIndex + 1,
@@ -220,18 +226,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0298) },
-                pageClass   : CommonViewCommonWarMapInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0298) },
+                pageClass   : Page,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0224) },
-                pageClass   : CommonViewCommonWarPlayerInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0224) },
+                pageClass   : CommonViewCommonWarPlayerInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: LangUtils.getText(LangConstants.TextType.B0223) },
-                pageClass   : ReplayWarViewRwReplayWarInfoPage.Page,
+                tabItemData : { name: getText(TextType.B0223) },
+                pageClass   : ReplayWarViewRwReplayWarInfoPage,
                 pageData    : null,
             },
         ]);
@@ -239,14 +245,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setLangText(LangConstants.TextType.A0040);
-        this._labelReplay.setLangText(LangConstants.TextType.B0092);
-        this._labelChooseReplay.setLangText(LangConstants.TextType.B0598);
-        this._btnBack.setLangText(LangConstants.TextType.B0146);
-        this._labelNoReplay.setLangText(LangConstants.TextType.B0241);
-        this._btnNextStep.setLangText(LangConstants.TextType.B0249);
-        this._btnPrevPage.setLangText(LangConstants.TextType.B1384);
-        this._btnNextPage.setLangText(LangConstants.TextType.B1385);
+        this._labelLoading.setLangText(TextType.A0040);
+        this._labelReplay.setLangText(TextType.B0092);
+        this._labelChooseReplay.setLangText(TextType.B0598);
+        this._btnBack.setLangText(TextType.B0146);
+        this._labelNoReplay.setLangText(TextType.B0241);
+        this._btnNextStep.setLangText(TextType.B0249);
+        this._btnPrevPage.setLangText(TextType.B1384);
+        this._btnNextPage.setLangText(TextType.B1385);
         this._updateLabelPageTitle();
 
         this._layoutPage.arrangeItems();
@@ -257,10 +263,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const label = this._labelPageTitle;
         if (_checkIsEmptyFilter(this._replayFilter)) {
             label.setTextColor(0xCCCCCC);
-            label.setLangText(LangConstants.TextType.B1386);
+            label.setLangText(TextType.B1386);
         } else {
             label.setTextColor(0xFFFF00);
-            label.setText(`${LangUtils.getText(LangConstants.TextType.B1386)}(${LangUtils.getText(LangConstants.TextType.B1387)})`);
+            label.setText(`${getText(TextType.B1386)}(${getText(TextType.B1387)})`);
         }
         this._layoutPage.arrangeItems();
     }
@@ -286,7 +292,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             const replayId = this._getSelectedReplayId();
             this._tabSettings.updatePageData(0, await this._createDataForCommonWarMapInfoPage());
             this._tabSettings.updatePageData(1, await this._createDataForCommonWarPlayerInfoPage());
-            this._tabSettings.updatePageData(2, (replayId == null ? null : { replayId }) as ReplayWarViewRwReplayWarInfoPage.OpenData);
+            this._tabSettings.updatePageData(2, (replayId == null ? null : { replayId }) as ReplayWarViewRwReplayWarInfoPageOpenData);
         }
     }
     private _updateBtnNextStep(): void {
@@ -297,7 +303,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const filter = this._replayFilter;
         if (filter?.replayId != null) {
             const replayId      = filter.replayId;
-            const replayInfo    = await ReplayWarModelRwModel.getReplayInfo(replayId);
+            const replayInfo    = await getReplayInfo(replayId);
             if ((replayInfo != null) && (await _checkIsReplayInfoMeetFilter(replayInfo, filter))) {
                 this._cachedListDataArray = [{
                     replayId    : replayId,
@@ -311,9 +317,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
         const promiseArray  : Promise<void>[] = [];
         const dataArray     : DataForReplayRenderer[] = [];
-        for (const replayId of await ReplayWarModelRwModel.getReplayIdSet()) {
+        for (const replayId of await getReplayIdSet()) {
             promiseArray.push((async () => {
-                const replayInfo = await ReplayWarModelRwModel.getReplayInfo(replayId);
+                const replayInfo = await getReplayInfo(replayId);
                 if (replayInfo == null) {
                     return;
                 }
@@ -333,25 +339,25 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         return this._cachedListDataArray.slice(_pageIndex * MapsPerPage, (_pageIndex + 1) * MapsPerPage);
     }
 
-    private async _createDataForCommonWarMapInfoPage(): Promise<CommonViewCommonWarMapInfoPage.OpenData> {
+    private async _createDataForCommonWarMapInfoPage(): Promise<CommonViewCommonWarMapInfoPageOpenData> {
         const replayId = this._getSelectedReplayId();
         if (replayId == null) {
             return null;
         }
 
-        const replayInfo    = HelpersMisc.getExisted(await ReplayWarModelRwModel.getReplayInfo(replayId));
+        const replayInfo    = getExisted(await getReplayInfo(replayId));
         const normalMapId   = replayInfo.getNormalMapId();
         if (normalMapId != null) {
             return {
                 mapInfo : {
                     hasFog              : !!replayInfo.getHasFog(),
-                    mapRawData          : HelpersMisc.getExisted(await NormalMapModelNormalMapModel.getRawData(normalMapId)),
-                    gameConfig          : await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(replayInfo.getConfigVersion())),
+                    mapRawData          : getExisted(await getRawData(normalMapId)),
+                    gameConfig          : await getGameConfig(getExisted(replayInfo.getConfigVersion())),
                     overridingPlayers   : null,
                 },
             };
         } else {
-            const warData = (await ReplayWarModelRwModel.getReplayData(replayId))?.getSettingsForMfw()?.getInitialWarData();
+            const warData = (await getReplayData(replayId))?.getSettingsForMfw()?.getInitialWarData();
             return warData == null
                 ? null
                 : {
@@ -364,23 +370,23 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
     }
 
-    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonViewCommonWarPlayerInfoPage.OpenData> {
+    private async _createDataForCommonWarPlayerInfoPage(): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
         const replayId = this._getSelectedReplayId();
         if (replayId == null) {
             return null;
         }
 
-        const replayBriefInfo = await ReplayWarModelRwModel.getReplayInfo(replayId);
+        const replayBriefInfo = await getReplayInfo(replayId);
         if (replayBriefInfo == null) {
             return null;
         }
 
-        const playerInfoArray: AuxiliaryTypesAuxiliaryTypes.PlayerInfo[] = [];
+        const playerInfoArray: PlayerInfo[] = [];
         for (const playerInfo of replayBriefInfo.getPlayerInfoList()) {
             const userId = playerInfo.getUserId() ?? null;
             playerInfoArray.push({
-                playerIndex         : HelpersMisc.getExisted(playerInfo.getPlayerIndex()),
-                teamIndex           : HelpersMisc.getExisted(playerInfo.getTeamIndex()),
+                playerIndex         : getExisted(playerInfo.getPlayerIndex()),
+                teamIndex           : getExisted(playerInfo.getTeamIndex()),
                 isAi                : userId == null,
                 userId              : userId,
                 coId                : playerInfo.getCoId() ?? 0,
@@ -393,7 +399,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         return {
-            gameConfig              : await GameConfigGcModel.getGameConfig(HelpersMisc.getExisted(replayBriefInfo.getConfigVersion())),
+            gameConfig              : await getGameConfig(getExisted(replayBriefInfo.getConfigVersion())),
             playersCountUnneutral   : playerInfoArray.length,
             roomOwnerPlayerIndex    : null,
             callbackOnExitRoom      : null,
@@ -407,108 +413,108 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     protected async _showOpenAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 0, customY: -20 },
             endProps    : { customAlpha: 1, customY: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTopRightButtons,
             beginProps  : { customAlpha: 0, customY: 16 - 40 },
             endProps    : { customAlpha: 1, customY: 16 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupSearch,
             beginProps  : { customAlpha: 0, customY: 30 },
             endProps    : { customAlpha: 1, customY: 70 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupReplayList,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnNextStep,
             beginProps  : { customAlpha: 0, customX: -20 },
             endProps    : { customAlpha: 1, customX: 20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 0, },
             endProps    : { customAlpha: 1, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnBack,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupNavigator,
             beginProps  : { customAlpha: 1, customY: 20 },
             endProps    : { customAlpha: 0, customY: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTopRightButtons,
             beginProps  : { customAlpha: 1, customY: 16 },
             endProps    : { customAlpha: 0, customY: 16 - 40 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupSearch,
             beginProps  : { customAlpha: 1, customY: 70 },
             endProps    : { customAlpha: 0, customY: 30 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupReplayList,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._btnNextStep,
             beginProps  : { customAlpha: 1, customX: 20 },
             endProps    : { customAlpha: 0, customX: -20 },
         });
-        TweenExecutor.Executor.reset({
+        Executor.reset({
             obj         : this._groupTab,
             beginProps  : { customAlpha: 1, },
             endProps    : { customAlpha: 0, },
         });
 
-        await TimerTimerModel.wait();
+        await wait();
     }
 }
 
-interface DataForTabItemRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForTabItemRenderer extends UiListItemData {
     name: string;
 }
-class TabItemRenderer extends UiComponentsUiTabItemRenderer.UiTabItemRenderer<DataForTabItemRenderer> {
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+class TabItemRenderer extends UiTabItemRenderer<DataForTabItemRenderer> {
+    private readonly _labelName!    : IUiLabel;
 
     protected override _doApplyOpenData(): void {
-        this._labelName.setText(this.getOpenData()?.name ?? LangConstants.UndefinedError);
+        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
     }
 }
 
-interface DataForReplayRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForReplayRenderer extends UiListItemData {
     replayId    : number;
     panel       : Panel;
 }
 class ReplayRenderer
-    extends     UiComponentsUiListItemRenderer.UiListItemRenderer<DataForReplayRenderer>
-    implements  UiInterfacesIUiListItemRenderer.IUiListItemRenderer<DataForReplayRenderer>
+    extends     UiListItemRenderer<DataForReplayRenderer>
+    implements  IUiListItemRenderer<DataForReplayRenderer>
 {
-    private readonly _layoutName!   : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelType!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelId!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _layoutName!   : IUiLayout;
+    private readonly _labelType!    : IUiLabel;
+    private readonly _labelId!      : IUiLabel;
+    private readonly _labelName!    : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._applySettingsForWholeTouch();
@@ -529,7 +535,7 @@ class ReplayRenderer
             return;
         }
 
-        const replayBriefInfo   = await ReplayWarModelRwModel.getReplayInfo(replayId);
+        const replayBriefInfo   = await getReplayInfo(replayId);
         const labelId           = this._labelId;
         const labelType         = this._labelType;
         const labelName         = this._labelName;
@@ -540,17 +546,17 @@ class ReplayRenderer
         } else {
             const normalMapId = replayBriefInfo.getNormalMapId();
             labelId.setText(`#${replayBriefInfo.getReplayId()}`);
-            labelType.setText(LangUtils.getWarTypeName(HelpersMisc.getExisted(replayBriefInfo.getWarType())) ?? LangConstants.UndefinedError);
+            labelType.setText(getWarTypeName(getExisted(replayBriefInfo.getWarType())) ?? UndefinedError);
             labelName.setText(normalMapId == null
                 ? `----`
-                : await NormalMapModelNormalMapModel.getMapNameInCurrentLanguage(normalMapId) ?? LangConstants.UndefinedError
+                : await getMapNameInCurrentLanguage(normalMapId) ?? UndefinedError
             );
         }
         this._layoutName.arrangeItems();
     }
 }
 
-async function _checkIsReplayInfoMeetFilter(replayInfo: ProtoSchemaCommonProtoReplayReplayInfo.ReplayInfo, filter: AuxiliaryTypesReplayFilter.ReplayFilter): Promise<boolean> {
+async function _checkIsReplayInfoMeetFilter(replayInfo: ReplayInfo, filter: ReplayFilter): Promise<boolean> {
     const replayId = replayInfo.getReplayId() ?? 0;
     {
         if ((filter.replayId != null) && (replayId !== filter.replayId)) {
@@ -571,7 +577,7 @@ async function _checkIsReplayInfoMeetFilter(replayInfo: ProtoSchemaCommonProtoRe
     }
 
     {
-        if ((filter.gameMode != null) && (GameModesUtils.getEnum(replayInfo.getWarType() ?? 0) !== filter.gameMode)) {
+        if ((filter.gameMode != null) && (getEnum(replayInfo.getWarType() ?? 0) !== filter.gameMode)) {
             return false;
         }
     }
@@ -688,7 +694,7 @@ async function _checkIsReplayInfoMeetFilter(replayInfo: ProtoSchemaCommonProtoRe
     {
         const isFavorite = filter.isFavorite;
         if ((isFavorite != null) &&
-            (((UsersModel.getFavoriteReplayIdArray() ?? []).indexOf(replayId) >= 0) !== isFavorite)
+            (((getFavoriteReplayIdArray() ?? []).indexOf(replayId) >= 0) !== isFavorite)
         ) {
             return false;
         }
@@ -706,7 +712,7 @@ async function _checkIsReplayInfoMeetFilter(replayInfo: ProtoSchemaCommonProtoRe
 
     {
         if (filter.coCategoryId != null) {
-            const gameConfig = await GameConfigGcModel.getGameConfig(replayInfo.getConfigVersion() ?? ``);
+            const gameConfig = await getGameConfig(replayInfo.getConfigVersion() ?? ``);
             if (gameConfig == null) {
                 return false;
             }
@@ -730,7 +736,7 @@ async function _checkIsReplayInfoMeetFilter(replayInfo: ProtoSchemaCommonProtoRe
     return true;
 }
 
-function _checkIsEmptyFilter(filter: AuxiliaryTypesReplayFilter.ReplayFilter | null | undefined): boolean {
+function _checkIsEmptyFilter(filter: ReplayFilter | null | undefined): boolean {
     if (filter == null) {
         return true;
     }

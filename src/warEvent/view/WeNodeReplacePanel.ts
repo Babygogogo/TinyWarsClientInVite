@@ -1,28 +1,30 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoWarEventConditionNodeAndActions from "../../proto/schema/CommonProto/WarEvent/ConditionNodeAndActions.ts";
-import * as ProtoSchemaCommonProtoWarEventNodeIdAndFlags from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UtilsClientErrorCode from "../../utils/ClientErrorCode.ts";
-import * as WarEventsConditionNodesUtils from "../../warEvents/conditionNodes/Utils.ts";
-import * as WarEventsFullDatasUtils from "../../warEvents/fullDatas/Utils.ts";
+import { showLang, show } from "../../FloatText.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { closePanel } from "../../gamePanels/Manager.ts";
+import { deleteElementFromList2 } from "../../helpers/Collection.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ConditionNodeAndActions } from "../../proto/schema/CommonProto/WarEvent/ConditionNodeAndActions.ts";
+import { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
+import type {
+    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
+} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import { createAndReplaceRootNodeInEvent } from "../../warEvents/conditionNodes/Utils.ts";
+import { getNode, getEvent } from "../../warEvents/fullDatas/Utils.ts";
 
-type WarEventFullData   = ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData;
+type WarEventFullData   = ProtoSchemaCommonProtoWarEventWarEventFullData;
 
 export interface OpenData {
     eventId         : number;
@@ -30,17 +32,17 @@ export interface OpenData {
     oldNodeId       : number | null;
     fullData        : WarEventFullData;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _listNode!     : UiInterfacesIUiScrollList.IUiScrollList<DataForNodeRenderer>;
-    private readonly _labelTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelNoNode!  : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!     : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!      : IUiImage;
+    private readonly _group!        : IUiContainer;
+    private readonly _listNode!     : IUiScrollList<DataForNodeRenderer>;
+    private readonly _labelTitle!   : IUiLabel;
+    private readonly _labelNoNode!  : IUiLabel;
+    private readonly _btnClose!     : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,       callback: this.closePanel },
@@ -72,9 +74,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0258);
-        this._labelNoNode.setLangText(LangConstants.TextType.B0278);
-        this._btnClose.setLangText(LangConstants.TextType.B0146);
+        this._labelTitle.setLangText(TextType.B0258);
+        this._labelNoNode.setLangText(TextType.B0278);
+        this._btnClose.setLangText(TextType.B0146);
     }
     private async _updateListNodeAndLabelNoNode(): Promise<void> {
         const openData = this.getOpenData();
@@ -103,19 +105,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForNodeRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForNodeRenderer extends UiListItemData {
     eventId         : number;
     parentNodeId?   : number;
     oldNodeId       : number | null;
     candidateNodeId : number;
     fullData        : WarEventFullData;
 }
-class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForNodeRenderer> {
-    private readonly _labelNodeId!          : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelSubNode!         : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelSubCondition!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnCopy!              : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSelect!            : UiInterfacesIUiButton.IUiButton;
+class NodeRenderer extends UiListItemRenderer<DataForNodeRenderer> {
+    private readonly _labelNodeId!          : IUiLabel;
+    private readonly _labelSubNode!         : IUiLabel;
+    private readonly _labelSubCondition!    : IUiLabel;
+    private readonly _btnCopy!              : IUiButton;
+    private readonly _btnSelect!            : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -123,7 +125,7 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             { ui: this._btnSelect,  callback: this._onTouchedBtnSelect },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
 
         this._btnCopy.setIsVisible(false);
@@ -147,14 +149,14 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const parentNodeId      = openData.parentNodeId;
         const candidateNodeId   = openData.candidateNodeId;
         const srcNodeId         = openData.oldNodeId;
-        const candidateNode     = HelpersMisc.getExisted(fullData.getConditionNodeArray().find(v => v.getNodeId() === candidateNodeId), UtilsClientErrorCode.ClientErrorCode.WeNodeReplacePanel_NodeRenderer_OnTouchedBtnCopy_00);
+        const candidateNode     = getExisted(fullData.getConditionNodeArray().find(v => v.getNodeId() === candidateNodeId), ClientErrorCode.WeNodeReplacePanel_NodeRenderer_OnTouchedBtnCopy_00);
         const isNeedAnd         = candidateNode.getIsNeedAnd();
         const isNeedFalse       = candidateNode.getIsNeedFalse();
         if (parentNodeId == null) {
             if (srcNodeId == null) {
-                FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                showLang(TextType.YouCanNotDoThisRightNow);
             } else {
-                if (WarEventsConditionNodesUtils.createAndReplaceRootNodeInEvent({
+                if (createAndReplaceRootNodeInEvent({
                     fullData                    : fullData,
                     eventId                     : openData.eventId,
                     oldRootNodeId               : srcNodeId,
@@ -163,12 +165,12 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
                     conditionIdAndFlagsArray    : candidateNode.getConditionIdAndFlagsArray(),
                     subNodeIdAndFlagsArray      : candidateNode.getSubNodeIdAndFlagsArray(),
                 }) != null) {
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }
         } else {
             if (getAllSubNodesAndConditionsForNode({ fullData, nodeId: candidateNodeId }).nodeIdSet.has(parentNodeId)) {
-                FloatText2.show(LangUtils.getText(LangConstants.TextType.A0179));
+                show(getText(TextType.A0179));
                 return;
             }
 
@@ -178,7 +180,7 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
                 nodeIdForClone  : candidateNodeId,
                 nodeIdForDelete : srcNodeId,
             }) != null) {
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                dispatch(TypeId.WarEventFullDataChanged);
             }
         }
     }
@@ -199,12 +201,12 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
                     eventId     : openData.eventId,
                     newNodeId   : newNodeId,
                 })) {
-                    FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                    showLang(TextType.YouCanNotDoThisRightNow);
                 } else {
-                    FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
-                    GamePanelsManager.closePanel(GamePanelsDict.getDict().WeNodeReplacePanel);
-                    GamePanelsManager.closePanel(GamePanelsDict.getDict().WeCommandPanel);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    showLang(TextType.OperationSucceeded);
+                    closePanel(getDict().WeNodeReplacePanel);
+                    closePanel(getDict().WeCommandPanel);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             } else {
                 if (!replaceRootNodeInEvent({
@@ -213,17 +215,17 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
                     oldNodeId   : srcNodeId,
                     newNodeId   : newNodeId,
                 })) {
-                    FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                    showLang(TextType.YouCanNotDoThisRightNow);
                 } else {
-                    FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
-                    GamePanelsManager.closePanel(GamePanelsDict.getDict().WeNodeReplacePanel);
-                    GamePanelsManager.closePanel(GamePanelsDict.getDict().WeCommandPanel);
-                    NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                    showLang(TextType.OperationSucceeded);
+                    closePanel(getDict().WeNodeReplacePanel);
+                    closePanel(getDict().WeCommandPanel);
+                    dispatch(TypeId.WarEventFullDataChanged);
                 }
             }
         } else {
             if (getAllSubNodesAndConditionsForNode({ fullData, nodeId: newNodeId }).nodeIdSet.has(parentNodeId)) {
-                FloatText2.show(LangUtils.getText(LangConstants.TextType.A0179));
+                show(getText(TextType.A0179));
                 return;
             }
 
@@ -233,12 +235,12 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
                 oldNodeId       : srcNodeId,
                 newNodeId       : newNodeId,
             })) {
-                FloatText2.showLang(LangConstants.TextType.YouCanNotDoThisRightNow);
+                showLang(TextType.YouCanNotDoThisRightNow);
             } else {
-                FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().WeNodeReplacePanel);
-                GamePanelsManager.closePanel(GamePanelsDict.getDict().WeCommandPanel);
-                NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.WarEventFullDataChanged);
+                showLang(TextType.OperationSucceeded);
+                closePanel(getDict().WeNodeReplacePanel);
+                closePanel(getDict().WeCommandPanel);
+                dispatch(TypeId.WarEventFullDataChanged);
             }
         }
     }
@@ -247,8 +249,8 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCopy.setText(LangUtils.getText(LangConstants.TextType.B0487));
-        this._btnSelect.setText(LangUtils.getText(LangConstants.TextType.B0492));
+        this._btnCopy.setText(getText(TextType.B0487));
+        this._btnSelect.setText(getText(TextType.B0492));
 
         this._updateLabelNodeId();
         this._updateLabelSubNode();
@@ -262,7 +264,7 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
             const fullData          = data.fullData;
             const obtainerNameArray = (fullData.getConditionNodeArray().filter(node => node.getSubNodeIdAndFlagsArray().some(v => v.getNodeId() === nodeId)).map(v => `N${v.getNodeId()}`))
                 .concat(fullData.getEventArray().filter(event => event.getRootNodeAndActionsArray().some(v => v.getNodeIdAndFlags()?.getNodeId() === nodeId)).map(v => `E${v.getEventId()}`));
-            this._labelNodeId.setText(`N${nodeId} (${LangUtils.getText(LangConstants.TextType.B0749)}: ${obtainerNameArray.length ? obtainerNameArray.join(`, `) : LangUtils.getText(LangConstants.TextType.None)})`);
+            this._labelNodeId.setText(`N${nodeId} (${getText(TextType.B0749)}: ${obtainerNameArray.length ? obtainerNameArray.join(`, `) : getText(TextType.None)})`);
         }
     }
     private _updateLabelSubNode(): void {
@@ -274,14 +276,14 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
         const node  = openData.fullData.getConditionNodeArray().find(v => v.getNodeId() === openData.candidateNodeId);
         const label = this._labelSubNode;
         if (node == null) {
-            label.setText(LangUtils.getText(LangConstants.TextType.A0160));
+            label.setText(getText(TextType.A0160));
         } else {
             const textArray: string[] = [];
             for (const subNodeIdAndFlags of node.getSubNodeIdAndFlagsArray().concat().sort((v1, v2) => v1.getNodeId() - v2.getNodeId())) {
                 textArray.push(`${subNodeIdAndFlags.getIsNegated() ? `! ` : ``}N${subNodeIdAndFlags.getNodeId()}`);
             }
 
-            label.setText(`${LangUtils.getText(LangConstants.TextType.B0489)}: ${textArray.length ? textArray.join(`, `) : LangUtils.getText(LangConstants.TextType.None)}`);
+            label.setText(`${getText(TextType.B0489)}: ${textArray.length ? textArray.join(`, `) : getText(TextType.None)}`);
         }
     }
     private _updateLabelSubCondition(): void {
@@ -300,7 +302,7 @@ class NodeRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<Dat
                 textArray.push(`${conditionIdAndFlags.getIsNegated() ? `! ` : ``}C${conditionIdAndFlags.getConditionId()}`);
             }
 
-            label.setText(`${LangUtils.getText(LangConstants.TextType.B0490)}: ${textArray.length ? textArray.join(`, `) : LangUtils.getText(LangConstants.TextType.None)}`);
+            label.setText(`${getText(TextType.B0490)}: ${textArray.length ? textArray.join(`, `) : getText(TextType.None)}`);
         }
 
         const labelSubNode  = this._labelSubNode;
@@ -337,7 +339,7 @@ function getAllSubNodesAndConditionsForNode({ fullData, nodeId, ignoreNodeIdSet 
 
         nodeIdSet.add(nodeIdForSearch);
 
-        const node = WarEventsFullDatasUtils.getNode(fullData, nodeIdForSearch);
+        const node = getNode(fullData, nodeIdForSearch);
         if (node) {
             for (const conditionIdAndFlags of node.getConditionIdAndFlagsArray()) {
                 conditionIdSet.add(conditionIdAndFlags.getConditionId());
@@ -363,12 +365,12 @@ function cloneAndReplaceNodeInParentNode({ fullData, parentNodeId, nodeIdForDele
         return null;
     }
 
-    const parentNode = WarEventsFullDatasUtils.getNode(fullData, parentNodeId);
+    const parentNode = getNode(fullData, parentNodeId);
     if (parentNode == null) {
         return null;
     }
 
-    const srcNode = WarEventsFullDatasUtils.getNode(fullData, nodeIdForClone);
+    const srcNode = getNode(fullData, nodeIdForClone);
     if (srcNode == null) {
         return null;
     }
@@ -378,11 +380,11 @@ function cloneAndReplaceNodeInParentNode({ fullData, parentNodeId, nodeIdForDele
         if (!nodeArray.some(v => v.getNodeId() === nodeId)) {
             newNode.setNodeId(nodeId);
             nodeArray.push(newNode);
-            nodeArray.sort((v1, v2) => HelpersMisc.getExisted(v1.getNodeId()) - HelpersMisc.getExisted(v2.getNodeId()));
+            nodeArray.sort((v1, v2) => getExisted(v1.getNodeId()) - getExisted(v2.getNodeId()));
 
             const arr = parentNode.getSubNodeIdAndFlagsArray();
-            HelpersCollection.deleteElementFromList2(arr, v => v.getNodeId() === nodeIdForDelete);
-            arr.push(ProtoSchemaCommonProtoWarEventNodeIdAndFlags.NodeIdAndFlags.fromJson({ nodeId: nodeId}));
+            deleteElementFromList2(arr, v => v.getNodeId() === nodeIdForDelete);
+            arr.push(NodeIdAndFlags.fromJson({ nodeId: nodeId}));
             // arr.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
 
             return nodeId;
@@ -395,18 +397,18 @@ function addRootNodeInEvent({ fullData, eventId, newNodeId }: {
     eventId     : number;
     newNodeId   : number;
 }): boolean {
-    if (WarEventsFullDatasUtils.getNode(fullData, newNodeId) == null) {
+    if (getNode(fullData, newNodeId) == null) {
         return false;
     }
 
-    const rootNodeAndActionsArray = WarEventsFullDatasUtils.getEvent(fullData, eventId)?.getRootNodeAndActionsArray();
+    const rootNodeAndActionsArray = getEvent(fullData, eventId)?.getRootNodeAndActionsArray();
     if ((rootNodeAndActionsArray == null)                                                       ||
         (rootNodeAndActionsArray.some(v => v.getNodeIdAndFlags()?.getNodeId() === newNodeId))
     ) {
         return false;
     }
 
-    rootNodeAndActionsArray.push(ProtoSchemaCommonProtoWarEventConditionNodeAndActions.ConditionNodeAndActions.fromJson({
+    rootNodeAndActionsArray.push(ConditionNodeAndActions.fromJson({
         nodeIdAndFlags  : {
             nodeId  : newNodeId,
         },
@@ -426,11 +428,11 @@ function replaceRootNodeInEvent({ fullData, eventId, oldNodeId, newNodeId }: {  
         return false;
     }
 
-    if (WarEventsFullDatasUtils.getNode(fullData, newNodeId) == null) {
+    if (getNode(fullData, newNodeId) == null) {
         return false;
     }
 
-    const rootNodeAndActionsArray = WarEventsFullDatasUtils.getEvent(fullData, eventId)?.getRootNodeAndActionsArray();
+    const rootNodeAndActionsArray = getEvent(fullData, eventId)?.getRootNodeAndActionsArray();
     if ((rootNodeAndActionsArray == null)                                                       ||
         (rootNodeAndActionsArray.some(v => v.getNodeIdAndFlags()?.getNodeId() === newNodeId))
     ) {
@@ -458,18 +460,18 @@ function replaceSubNodeInParentNode({ fullData, parentNodeId, oldNodeId, newNode
         return false;
     }
 
-    if (WarEventsFullDatasUtils.getNode(fullData, newNodeId) == null) {
+    if (getNode(fullData, newNodeId) == null) {
         return false;
     }
 
-    const parentNode = WarEventsFullDatasUtils.getNode(fullData, parentNodeId);
+    const parentNode = getNode(fullData, parentNodeId);
     if (parentNode == null) {
         return false;
     }
 
     const nodeIdAndFlagsArray = parentNode.getSubNodeIdAndFlagsArray();
-    HelpersCollection.deleteElementFromList2(nodeIdAndFlagsArray, v => v.getNodeId() === oldNodeId);
-    nodeIdAndFlagsArray.push(ProtoSchemaCommonProtoWarEventNodeIdAndFlags.NodeIdAndFlags.fromJson({ nodeId: newNodeId }));
+    deleteElementFromList2(nodeIdAndFlagsArray, v => v.getNodeId() === oldNodeId);
+    nodeIdAndFlagsArray.push(NodeIdAndFlags.fromJson({ nodeId: newNodeId }));
     // nodeIdAndFlagsArray.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
     // checkAndDeleteUnusedNode(fullData, oldNodeId);
 

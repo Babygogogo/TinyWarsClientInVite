@@ -1,17 +1,17 @@
-import type * as UiInterfacesIUiContainerBase from "./IUiContainerBase.ts";
-import type * as UiTypesUiHorizontalAlign from "../types/UiHorizontalAlign.ts";
-import type * as UiTypesUiLayoutOptions from "../types/UiLayoutOptions.ts";
-import type * as UiTypesUiLayoutOrientation from "../types/UiLayoutOrientation.ts";
-import type * as UiTypesUiPadding from "../types/UiPadding.ts";
-import type * as UiTypesUiVerticalAlign from "../types/UiVerticalAlign.ts";
+import type { IUiContainerBase } from "./IUiContainerBase.ts";
+import type { UiHorizontalAlign as UiTypesUiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
+import type { UiLayoutOptions as UiTypesUiLayoutOptions } from "../types/UiLayoutOptions.ts";
+import type { UiLayoutOrientation as UiTypesUiLayoutOrientation } from "../types/UiLayoutOrientation.ts";
+import type { UiPadding as UiTypesUiPadding } from "../types/UiPadding.ts";
+import type { UiVerticalAlign as UiTypesUiVerticalAlign } from "../types/UiVerticalAlign.ts";
 
-type UiLayoutOrientation    = UiTypesUiLayoutOrientation.UiLayoutOrientation;
-type UiHorizontalAlign      = UiTypesUiHorizontalAlign.UiHorizontalAlign;
-type UiVerticalAlign        = UiTypesUiVerticalAlign.UiVerticalAlign;
-type UiLayoutOptions        = UiTypesUiLayoutOptions.UiLayoutOptions;
-type UiPadding              = UiTypesUiPadding.UiPadding;
+type UiLayoutOrientation    = UiTypesUiLayoutOrientation;
+type UiHorizontalAlign      = UiTypesUiHorizontalAlign;
+type UiVerticalAlign        = UiTypesUiVerticalAlign;
+type UiLayoutOptions        = UiTypesUiLayoutOptions;
+type UiPadding              = UiTypesUiPadding;
 
-export interface IUiLayoutBase extends UiInterfacesIUiContainerBase.IUiContainerBase {
+export interface IUiLayoutBase extends IUiContainerBase {
     setOptions(options: UiLayoutOptions, needArrange?: boolean): void;
     getOptions(): UiLayoutOptions;
     getUnscaledRequestedWidth(): number | undefined;

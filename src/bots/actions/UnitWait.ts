@@ -1,19 +1,19 @@
-import type * as AuxiliaryTypesMovePathNode from "../../auxiliaryTypes/MovePathNode.ts";
-import type * as BotsTypes from "../Types.ts";
-import * as ProtoSchemaCommonProtoWarOperationWoContainer from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import * as TimerTimerModel from "../../timer/TimerModel.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
+import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
+import type { ScoreAndAction } from "../Types.ts";
+import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import { checkAndCallLater } from "../../timer/TimerModel.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 
-type IBwUnit            = UnitsIUnit.IUnit;
-type GrScoreAndAction   = BotsTypes.ScoreAndAction;
+type IBwUnit            = IUnit;
+type GrScoreAndAction   = ScoreAndAction;
 
-export async function getScoreAndActionUnitWait(unit: IBwUnit, pathNodes: AuxiliaryTypesMovePathNode.MovePathNode[]): Promise<GrScoreAndAction> {
-    await TimerTimerModel.checkAndCallLater();
+export async function getScoreAndActionUnitWait(unit: IBwUnit, pathNodes: MovePathNode[]): Promise<GrScoreAndAction> {
+    await checkAndCallLater();
 
     const score = await getScoreForActionUnitWait();
     return {
         score   : score,
-        action  : ProtoSchemaCommonProtoWarOperationWoContainer.WoContainer.fromJson({ WoUnitWait: {
+        action  : WoContainer.fromJson({ WoUnitWait: {
             path        : {
                 nodes           : pathNodes.map(v => v.getGridIndex().toProto().toJson()),
                 fuelConsumption : pathNodes[pathNodes.length - 1].getTotalMoveCost(),
@@ -25,7 +25,7 @@ export async function getScoreAndActionUnitWait(unit: IBwUnit, pathNodes: Auxili
 }
 
 async function getScoreForActionUnitWait(): Promise<number> {
-    await TimerTimerModel.checkAndCallLater();
+    await checkAndCallLater();
 
     // const tile = war.getTileMap().getTile(gridIndex);
     // if ((tile.getMaxCapturePoint()) && (tile.getTeamIndex() !== unit.getTeamIndex())) {

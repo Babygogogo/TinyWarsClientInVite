@@ -1,39 +1,39 @@
-import * as GameConfigGcModel from "../../gameConfig/GcModel.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersText from "../../helpers/Text.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NormalMapModelNormalMapModel from "../../normalMap/model/NormalMapModel.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SinglePlayerModeModelSpmModel from "../model/SpmModel.ts";
-import * as UiComponentsUiListItemRenderer from "../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../users/Model.ts";
+import { getLatestConfigVersion } from "../../gameConfig/GcModel.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { getSuffixForRankIndex } from "../../helpers/Text.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getLanguageText } from "../../lang/Utils.ts";
+import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { getRankData, getRankIndex } from "../model/SpmModel.ts";
+import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { getSelfInfo, getSelfUserId } from "../../users/Model.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!          : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!       : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!         : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!          : IUiImage;
+    private readonly _group!            : IUiContainer;
+    private readonly _labelTitle!       : IUiLabel;
+    private readonly _btnClose!         : IUiButton;
 
-    private readonly _labelMapName!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRuleName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyScore!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyTurnIndex! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyRank!      : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _listHighScore!    : UiInterfacesIUiScrollList.IUiScrollList<DataForHighScoreRenderer>;
-    private readonly _labelNoData!      : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _labelMapName!     : IUiLabel;
+    private readonly _labelRuleName!    : IUiLabel;
+    private readonly _labelMyScore!     : IUiLabel;
+    private readonly _labelMyTurnIndex! : IUiLabel;
+    private readonly _labelMyRank!      : IUiLabel;
+    private readonly _listHighScore!    : IUiScrollList<DataForHighScoreRenderer>;
+    private readonly _labelNoData!      : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,   callback: this.closePanel },
@@ -71,27 +71,27 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0906);
-        this._labelMapName.setLangText(LangConstants.TextType.B0225);
-        this._labelRuleName.setLangText(LangConstants.TextType.B0318);
-        this._labelMyScore.setLangText(LangConstants.TextType.B0579);
-        this._labelMyTurnIndex.setLangText(LangConstants.TextType.Turns);
-        this._labelMyRank.setLangText(LangConstants.TextType.B0904);
-        this._labelNoData.setLangText(LangConstants.TextType.B0278);
+        this._labelTitle.setLangText(TextType.B0906);
+        this._labelMapName.setLangText(TextType.B0225);
+        this._labelRuleName.setLangText(TextType.B0318);
+        this._labelMyScore.setLangText(TextType.B0579);
+        this._labelMyTurnIndex.setLangText(TextType.Turns);
+        this._labelMyRank.setLangText(TextType.B0904);
+        this._labelNoData.setLangText(TextType.B0278);
     }
 
     private async _updateComponentsForHighScore(): Promise<void> {
-        const configVersion     = await GameConfigGcModel.getLatestConfigVersion();
-        const spwArray          = UsersModel.getSelfInfo()?.getUserComplexInfo()?.getUserWarStatistics()?.getSrwArray() ?? [];
-        const mapRawDataArray   = await Promise.all(spwArray.map(v => NormalMapModelNormalMapModel.getRawData(HelpersMisc.getExisted(v.getNormalMapId()))));
+        const configVersion     = await getLatestConfigVersion();
+        const spwArray          = getSelfInfo()?.getUserComplexInfo()?.getUserWarStatistics()?.getSrwArray() ?? [];
+        const mapRawDataArray   = await Promise.all(spwArray.map(v => getRawData(getExisted(v.getNormalMapId()))));
         const dataArray         : DataForHighScoreRenderer[] = [];
         for (const info of spwArray) {
             if (info.getConfigVersion() !== configVersion) {
                 continue;
             }
 
-            const normalMapId   = HelpersMisc.getExisted(info.getNormalMapId());
-            const ruleId        = HelpersMisc.getExisted(info.getRuleId());
+            const normalMapId   = getExisted(info.getNormalMapId());
+            const ruleId        = getExisted(info.getRuleId());
             if (!mapRawDataArray.find(v => v?.getNormalMapId() === normalMapId)?.getTemplateWarRuleArray().find(v => v.getRuleId() === ruleId)?.getRuleAvailability()?.getCanSrw()) {
                 continue;
             }
@@ -101,7 +101,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                 isLast      : false,
                 normalMapId : normalMapId,
                 ruleId      : ruleId,
-                score       : HelpersMisc.getExisted(info.getHighScore()),
+                score       : getExisted(info.getHighScore()),
             });
         }
         dataArray.sort((v1, v2) => {
@@ -125,21 +125,21 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForHighScoreRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForHighScoreRenderer extends UiListItemData {
     index       : number;
     isLast      : boolean;
     normalMapId : number;
     ruleId      : number;
     score       : number;
 }
-class HighScoreRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForHighScoreRenderer> {
-    private readonly _group!            : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgBottom!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelMapName!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelRuleName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyScore!     : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyTurnIndex! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelMyRank!      : UiInterfacesIUiLabel.IUiLabel;
+class HighScoreRenderer extends UiListItemRenderer<DataForHighScoreRenderer> {
+    private readonly _group!            : IUiContainer;
+    private readonly _imgBottom!        : IUiImage;
+    private readonly _labelMapName!     : IUiLabel;
+    private readonly _labelRuleName!    : IUiLabel;
+    private readonly _labelMyScore!     : IUiLabel;
+    private readonly _labelMyTurnIndex! : IUiLabel;
+    private readonly _labelMyRank!      : IUiLabel;
 
     protected override _doApplyOpenData(): void {
         this._updateView();
@@ -173,12 +173,12 @@ class HighScoreRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
         }
 
         const normalMapId   = openData.normalMapId;
-        const mapRawData    = await NormalMapModelNormalMapModel.getRawData(normalMapId);
+        const mapRawData    = await getRawData(normalMapId);
         if (mapRawData?.getNormalMapId() === normalMapId) {  // 由于异步逻辑，所以需要再次比较
-            labelMapName.setText(LangUtils.getLanguageText({ textArray: mapRawData.getMapNameArray() }) ?? LangConstants.UndefinedError);
+            labelMapName.setText(getLanguageText({ textArray: mapRawData.getMapNameArray() }) ?? UndefinedError);
 
             const ruleId = openData.ruleId;
-            labelRuleName.setText(`#${ruleId}(${LangUtils.getLanguageText({ textArray: mapRawData.getTemplateWarRuleArray()?.find(v => v.getRuleId() === ruleId)?.getRuleNameArray() }) ?? LangConstants.UndefinedError})`);
+            labelRuleName.setText(`#${ruleId}(${getLanguageText({ textArray: mapRawData.getTemplateWarRuleArray()?.find(v => v.getRuleId() === ruleId)?.getRuleNameArray() }) ?? UndefinedError})`);
         }
     }
 
@@ -191,9 +191,9 @@ class HighScoreRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
             return;
         }
 
-        const userId    = HelpersMisc.getExisted(UsersModel.getSelfUserId());
+        const userId    = getExisted(getSelfUserId());
         const ruleId    = openData.ruleId;
-        const rankData  = (await SinglePlayerModeModelSpmModel.getRankData(openData.normalMapId))?.find(v => v.getRuleId() === ruleId)?.getInfoArray().find(v => v.getUserId() === userId);
+        const rankData  = (await getRankData(openData.normalMapId))?.find(v => v.getRuleId() === ruleId)?.getInfoArray().find(v => v.getUserId() === userId);
         if (openData === this.getOpenData()) {
             label.setText((rankData?.getScore() !== openData.score)
                 ? `--`
@@ -211,11 +211,11 @@ class HighScoreRenderer extends UiComponentsUiListItemRenderer.UiListItemRendere
             return;
         }
 
-        const index = await SinglePlayerModeModelSpmModel.getRankIndex(openData.normalMapId, openData.ruleId, openData.score);
+        const index = await getRankIndex(openData.normalMapId, openData.ruleId, openData.score);
         if (openData === this.getOpenData()) { // 由于异步逻辑，所以需要再次比较
             labelMyRank.setText((index == null) || (index <= 0)
                 ? `--`
-                : `${index}${HelpersText.getSuffixForRankIndex(index)}`
+                : `${index}${getSuffixForRankIndex(index)}`
             );
         }
     }

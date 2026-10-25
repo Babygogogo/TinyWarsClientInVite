@@ -1,4 +1,4 @@
-import * as UnitsConstants from "../../units/Constants.ts";
+import { Hp } from "../../units/Constants.ts";
 
 export namespace Common {
     // eslint-disable-next-line no-shadow
@@ -79,8 +79,8 @@ export namespace Crystal {
 
     // eslint-disable-next-line no-shadow
     export const enum OffsetHp {
-        MinValue = -UnitsConstants.Hp.MaxNormalizedHp,
-        MaxValue = UnitsConstants.Hp.MaxNormalizedHp,
+        MinValue = -Hp.MaxNormalizedHp,
+        MaxValue = Hp.MaxNormalizedHp,
     }
 
     // eslint-disable-next-line no-shadow
@@ -135,8 +135,8 @@ export namespace Cannon {
 
     // eslint-disable-next-line no-shadow
     export const enum OffsetHp {
-        MinValue = -UnitsConstants.Hp.MaxNormalizedHp,
-        MaxValue = UnitsConstants.Hp.MaxNormalizedHp,
+        MinValue = -Hp.MaxNormalizedHp,
+        MaxValue = Hp.MaxNormalizedHp,
     }
 
     // eslint-disable-next-line no-shadow
@@ -185,8 +185,8 @@ export namespace LaserTurret {
 
     // eslint-disable-next-line no-shadow
     export const enum OffsetHp {
-        MinValue = -UnitsConstants.Hp.MaxNormalizedHp,
-        MaxValue = UnitsConstants.Hp.MaxNormalizedHp,
+        MinValue = -Hp.MaxNormalizedHp,
+        MaxValue = Hp.MaxNormalizedHp,
     }
 
     // eslint-disable-next-line no-shadow

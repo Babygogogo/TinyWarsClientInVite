@@ -1,28 +1,36 @@
-import * as BroadcastsProvider from "./Provider.ts";
-import * as NetworksManager from "../networks/Manager.ts";
-import * as NetworksMessageCodes from "../networks/MessageCodes.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgBroadcastAddMessageS from "../proto/schema/CommonProto/NetMessage/MsgBroadcastAddMessage/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgBroadcastDeleteMessageS from "../proto/schema/CommonProto/NetMessage/MsgBroadcastDeleteMessage/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgBroadcastDoBroadcastS from "../proto/schema/CommonProto/NetMessage/MsgBroadcastDoBroadcast/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetAllMessageIdArrayS from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetAllMessageIdArray/S.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
-import type * as ProtoSchemaCommonProtoStructureLanguageText from "../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type * as VendorEgretEgret from "../vendor/egret/Egret.ts";
+import { setAllMessageIdArray, updateOnFailedMsgBroadcastGetMessageData, updateOnMsgBroadcastGetMessageData } from "./Provider.ts";
+import { addListeners, send } from "../networks/Manager.ts";
+import { MessageCodes } from "../networks/MessageCodes.ts";
+import { dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { S } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastAddMessage/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastDeleteMessageS,
+} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastDeleteMessage/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastDoBroadcastS,
+} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastDoBroadcast/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetAllMessageIdArrayS,
+} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetAllMessageIdArray/S.ts";
+import type {
+    S as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS,
+} from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
+import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
+import type { Event } from "../vendor/egret/Egret.ts";
 
 export function init(): void {
-    NetworksManager.addListeners([
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgBroadcastAddMessage,              callback: _onMsgBroadcastAddMessage },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgBroadcastDeleteMessage,           callback: _onMsgBroadcastDeleteMessage, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgBroadcastDoBroadcast,             callback: _onMsgBroadcastDoBroadcast },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgBroadcastGetAllMessageIdArray,    callback: _onMsgBroadcastGetAllMessageIdArray, },
-        { msgCode: NetworksMessageCodes.MessageCodes.MsgBroadcastGetMessageData,          callback: _onMsgBroadcastGetMessageData },
+    addListeners([
+        { msgCode: MessageCodes.MsgBroadcastAddMessage,              callback: _onMsgBroadcastAddMessage },
+        { msgCode: MessageCodes.MsgBroadcastDeleteMessage,           callback: _onMsgBroadcastDeleteMessage, },
+        { msgCode: MessageCodes.MsgBroadcastDoBroadcast,             callback: _onMsgBroadcastDoBroadcast },
+        { msgCode: MessageCodes.MsgBroadcastGetAllMessageIdArray,    callback: _onMsgBroadcastGetAllMessageIdArray, },
+        { msgCode: MessageCodes.MsgBroadcastGetMessageData,          callback: _onMsgBroadcastGetMessageData },
     ], null);
 }
 
-export function reqBroadcastAddMessage(textList: ProtoSchemaCommonProtoStructureLanguageText.LanguageText[], startTime: number, endTime: number): void {
-    NetworksManager.send({
+export function reqBroadcastAddMessage(textList: LanguageText[], startTime: number, endTime: number): void {
+    send({
         MsgBroadcastAddMessage: { c: {
             textList    : textList.map(v => v.toJson()),
             startTime   : startTime,
@@ -30,63 +38,63 @@ export function reqBroadcastAddMessage(textList: ProtoSchemaCommonProtoStructure
         } },
     });
 }
-function _onMsgBroadcastAddMessage(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastAddMessageS.S;
+function _onMsgBroadcastAddMessage(e: Event): void {
+    const data = e.data as S;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgBroadcastAddMessage, data);
+        dispatch(TypeId.MsgBroadcastAddMessage, data);
     }
 }
 
 export function reqBroadcastDeleteMessage(messageId: number): void {
-    NetworksManager.send({
+    send({
         MsgBroadcastDeleteMessage: { c: {
             messageId,
         } },
     });
 }
-function _onMsgBroadcastDeleteMessage(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastDeleteMessageS.S;
+function _onMsgBroadcastDeleteMessage(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastDeleteMessageS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgBroadcastDeleteMessage, data);
+        dispatch(TypeId.MsgBroadcastDeleteMessage, data);
     }
 }
 
 export function reqBroadcastDoBroadcast(): void {
-    NetworksManager.send({
+    send({
         MsgBroadcastDoBroadcast: { c: {
         } },
     });
 }
-function _onMsgBroadcastDoBroadcast(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastDoBroadcastS.S;
+function _onMsgBroadcastDoBroadcast(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastDoBroadcastS;
     if (!data.getErrorCode()) {
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgBroadcastDoBroadcast, data);
+        dispatch(TypeId.MsgBroadcastDoBroadcast, data);
     }
 }
 
 export function reqBroadcastGetAllMessageIdArray(): void {
-    NetworksManager.send({ MsgBroadcastGetAllMessageIdArray: { c: {
+    send({ MsgBroadcastGetAllMessageIdArray: { c: {
     } }, });
 }
-function _onMsgBroadcastGetAllMessageIdArray(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetAllMessageIdArrayS.S;
+function _onMsgBroadcastGetAllMessageIdArray(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetAllMessageIdArrayS;
     if (!data.getErrorCode()) {
-        BroadcastsProvider.setAllMessageIdArray(data.getMessageIdArray());
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgBroadcastGetAllMessageIdArray, data);
+        setAllMessageIdArray(data.getMessageIdArray());
+        dispatch(TypeId.MsgBroadcastGetAllMessageIdArray, data);
     }
 }
 
 export function reqBroadcastGetMessageData(messageId: number): void {
-    NetworksManager.send({ MsgBroadcastGetMessageData: { c: {
+    send({ MsgBroadcastGetMessageData: { c: {
         messageId,
     } } });
 }
-function _onMsgBroadcastGetMessageData(e: VendorEgretEgret.Event): void {
-    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS.S;
+function _onMsgBroadcastGetMessageData(e: Event): void {
+    const data = e.data as ProtoSchemaCommonProtoNetMessageMsgBroadcastGetMessageDataS;
     if (data.getErrorCode()) {
-        BroadcastsProvider.updateOnFailedMsgBroadcastGetMessageData(data);
+        updateOnFailedMsgBroadcastGetMessageData(data);
     } else {
-        BroadcastsProvider.updateOnMsgBroadcastGetMessageData(data);
-        NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.MsgBroadcastGetMessageData, data);
+        updateOnMsgBroadcastGetMessageData(data);
+        dispatch(TypeId.MsgBroadcastGetMessageData, data);
     }
 }

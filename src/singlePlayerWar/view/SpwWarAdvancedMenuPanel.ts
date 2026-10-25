@@ -1,65 +1,65 @@
-import * as ActionPlannersConstants from "../../actionPlanners/Constants.ts";
-import * as ActionPlannersStatesRequestingPlayerDeleteUnit from "../../actionPlanners/states/RequestingPlayerDeleteUnit.ts";
-import * as ActionPlannersStatesRequestingPlayerSurrender from "../../actionPlanners/states/RequestingPlayerSurrender.ts";
-import * as ActionPlannersStatesRequestingPlayerVoteForDraw from "../../actionPlanners/states/RequestingPlayerVoteForDraw.ts";
-import * as FloatText2 from "../../FloatText.ts";
-import * as GameConfigGcMap from "../../gameConfig/GcMap.ts";
-import * as GameHelpersGhFactory from "../../gameHelpers/GhFactory.ts";
-import * as GamePanelsDict from "../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../gamePanels/Manager.ts";
-import * as HelpersGameFlow from "../../helpers/GameFlow.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as MapEditorModelMeModel from "../../mapEditor/model/MeModel.ts";
-import * as MapEditorModelMeProxy from "../../mapEditor/model/MeProxy.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
-import * as SinglePlayerModeModelSpmProxy from "../../singlePlayerMode/model/SpmProxy.ts";
-import type * as SinglePlayerWarInterfaceISpwWar from "../interface/ISpwWar.ts";
-import * as TurnsConstants from "../../turns/Constants.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../ui/interfaces/IUiLayout.ts";
-import * as UnitsConstants from "../../units/Constants.ts";
-import * as UsersModel from "../../users/Model.ts";
-import * as UsersProxy from "../../users/Proxy.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { StateId } from "../../actionPlanners/Constants.ts";
+import { RequestingPlayerDeleteUnit } from "../../actionPlanners/states/RequestingPlayerDeleteUnit.ts";
+import { RequestingPlayerSurrender } from "../../actionPlanners/states/RequestingPlayerSurrender.ts";
+import { RequestingPlayerVoteForDraw } from "../../actionPlanners/states/RequestingPlayerVoteForDraw.ts";
+import { show, showLang } from "../../FloatText.ts";
+import { Constants } from "../../gameConfig/GcMap.ts";
+import { getTwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { gotoMapEditorWar, gotoMfrCreateSettingsPanel } from "../../helpers/GameFlow.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getErrorText } from "../../lang/Utils.ts";
+import { getMapEditorData } from "../../mapEditor/model/MeModel.ts";
+import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
+import { reqSpmDeleteWarSaveSlot } from "../../singlePlayerMode/model/SpmProxy.ts";
+import type { ISpwWar } from "../interface/ISpwWar.ts";
+import { PhaseCode } from "../../turns/Constants.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { ActionStateId } from "../../units/Constants.ts";
+import { reqTickSelfSettingsUnitOpacity, getMapRating, getSelfSettingsOpacitySettings } from "../../users/Model.ts";
+import { reqUserSetMapRating } from "../../users/Proxy.ts";
+import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
-    war     : SinglePlayerWarInterfaceISpwWar.ISpwWar;
+    war     : ISpwWar;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
 
-    private readonly _groupButtons!         : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _btnDeleteUnit!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnDeleteGame!        : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnUnitOpacity!       : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnMapRating!         : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnMarkGrid!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnFreeMode!          : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnEditMap!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnOverrideSkin!      : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCustomCounter!     : UiInterfacesIUiButton.IUiButton;
+    private readonly _groupButtons!         : IUiLayout;
+    private readonly _btnDeleteUnit!        : IUiButton;
+    private readonly _btnDeleteGame!        : IUiButton;
+    private readonly _btnUnitOpacity!       : IUiButton;
+    private readonly _btnMapRating!         : IUiButton;
+    private readonly _btnMarkGrid!          : IUiButton;
+    private readonly _btnFreeMode!          : IUiButton;
+    private readonly _btnEditMap!           : IUiButton;
+    private readonly _btnOverrideSkin!      : IUiButton;
+    private readonly _btnCustomCounter!     : IUiButton;
 
-    private readonly _btnSetDraw!           : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSurrender!         : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnSetDraw!           : IUiButton;
+    private readonly _btnSurrender!         : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.UnitAndTileTextureVersionChanged,    callback: this._onNotifyUnitAndTileTextureVersionChanged },
-            { type: NotificationsTypeId.TypeId.UserSettingsOpacitySettingsChanged,  callback: this._onNotifyUserSettingsOpacitySettingsChanged },
-            { type: NotificationsTypeId.TypeId.MsgSpmDeleteWarSaveSlot,             callback: this._onNotifyMsgSpmDeleteWarSaveSlot },
-            { type: NotificationsTypeId.TypeId.MsgUserSetMapRating,                 callback: this._onNotifyMsgUserSetMapRating },
-            { type: NotificationsTypeId.TypeId.MsgMeSubmitNormalMap,                callback: this._onNotifyMsgMeSubmitNormalMap },
+            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
+            { type: TypeId.UnitAndTileTextureVersionChanged,    callback: this._onNotifyUnitAndTileTextureVersionChanged },
+            { type: TypeId.UserSettingsOpacitySettingsChanged,  callback: this._onNotifyUserSettingsOpacitySettingsChanged },
+            { type: TypeId.MsgSpmDeleteWarSaveSlot,             callback: this._onNotifyMsgSpmDeleteWarSaveSlot },
+            { type: TypeId.MsgUserSetMapRating,                 callback: this._onNotifyMsgUserSetMapRating },
+            { type: TypeId.MsgMeSubmitNormalMap,                callback: this._onNotifyMsgMeSubmitNormalMap },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,                                   callback: this.closePanel },
@@ -97,22 +97,22 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgSpmDeleteWarSaveSlot(): void {
-        FloatText2.show(LangUtils.getText(LangConstants.TextType.A0141));
+        show(getText(TextType.A0141));
     }
 
     private _onNotifyMsgUserSetMapRating(): void {
         this._updateBtnMapRating();
     }
 
-    private _onNotifyMsgMeSubmitNormalMap(e: VendorEgretEgret.Event): void {
-        const slotIndex = (e.data as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS.S).getSlotIndex() ?? 0;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent     : () => LangUtils.getText(LangConstants.TextType.A0872),
+    private _onNotifyMsgMeSubmitNormalMap(e: Event): void {
+        const slotIndex = (e.data as S).getSlotIndex() ?? 0;
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent     : () => getText(TextType.A0872),
             callback    : async () => {
-                const mapEditorData             = await MapEditorModelMeModel.getMapEditorData(slotIndex);
+                const mapEditorData             = await getMapEditorData(slotIndex);
                 const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent ?? null;
                 if (srcNormalMapIdForAddEvent == null) {
-                    HelpersGameFlow.gotoMapEditorWar({
+                    gotoMapEditorWar({
                         mapRawData                  : mapEditorData?.mapRawData,
                         slotIndex                   : slotIndex,
                         isReview                    : false,
@@ -120,9 +120,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
                         gridMarkData                : mapEditorData?.gridMarkData,
                     });
                 } else {
-                    GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                        getContent  : () => LangUtils.getText(LangConstants.TextType.R0015),
-                        callback    : () => HelpersGameFlow.gotoMapEditorWar({
+                    openPanel(getDict().CommonConfirmPanel, {
+                        getContent  : () => getText(TextType.R0015),
+                        callback    : () => gotoMapEditorWar({
                             mapRawData                  : mapEditorData?.mapRawData,
                             slotIndex                   : slotIndex,
                             isReview                    : false,
@@ -149,7 +149,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (!this._checkCanDoAction()) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0239));
+            show(getText(TextType.A0239));
             return;
         }
 
@@ -157,16 +157,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const unit          = unitMap.getVisibleUnitOnMap(war.getCursor().getGridIndex());
         const playerIndex   = war.getPlayerIndexInTurn();
         if (!unit) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0027));
-        } else if ((unit.getPlayerIndex() !== playerIndex) || (unit.getActionState() !== UnitsConstants.ActionStateId.Idle)) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0028));
+            show(getText(TextType.A0027));
+        } else if ((unit.getPlayerIndex() !== playerIndex) || (unit.getActionState() !== ActionStateId.Idle)) {
+            show(getText(TextType.A0028));
         } else if (unitMap.countUnitsOnMapForPlayer(playerIndex) <= 1) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0076));
+            show(getText(TextType.A0076));
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getTitle    : () => LangUtils.getText(LangConstants.TextType.B0081),
-                getContent  : () => LangUtils.getText(LangConstants.TextType.A0029),
-                callback    : () => ActionPlannersStatesRequestingPlayerDeleteUnit.RequestingPlayerDeleteUnit.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
+            openPanel(getDict().CommonConfirmPanel, {
+                getTitle    : () => getText(TextType.B0081),
+                getContent  : () => getText(TextType.A0029),
+                callback    : () => RequestingPlayerDeleteUnit.getInstance().doApplyOnChooseAction(war.getActionPlanner()),
             });
         }
     }
@@ -178,52 +178,52 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (!this._checkCanDoAction()) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0239));
+            show(getText(TextType.A0239));
             return;
         }
 
         if (war.getPlayerManager().getAliveOrDyingTeamsCount(false) < 2) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0199));
+            show(getText(TextType.A0199));
             return;
         }
 
         const warData   = war.serializeForCreateMfr();
-        const errorCode = new (GameHelpersGhFactory.getTwWarClass())().getErrorCodeForInitForMfw(warData, war.getGcData());
+        const errorCode = new (getTwWarClass())().getErrorCodeForInitForMfw(warData, war.getGcData());
         if (errorCode) {
-            FloatText2.show(LangUtils.getErrorText(errorCode));
+            show(getErrorText(errorCode));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent : () => `${LangUtils.getText(LangConstants.TextType.R0007)}\n\n\n${LangUtils.getText(LangConstants.TextType.A0201)}`,
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent : () => `${getText(TextType.R0007)}\n\n\n${getText(TextType.A0201)}`,
             callback: () => {
-                HelpersGameFlow.gotoMfrCreateSettingsPanel(warData);
+                gotoMfrCreateSettingsPanel(warData);
             }
         });
     }
 
     private _onTouchedBtnDeleteGame(): void {
         if (!this._checkCanDoAction()) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0239));
+            show(getText(TextType.A0239));
             return;
         }
 
         const saveSlotIndex = this.getOpenData()?.war.getSaveSlotIndex();
         if (saveSlotIndex == null) {
-            FloatText2.showLang(LangConstants.TextType.A0929);
+            showLang(TextType.A0929);
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getContent     : () => LangUtils.getText(LangConstants.TextType.A0140),
+        openPanel(getDict().CommonConfirmPanel, {
+            getContent     : () => getText(TextType.A0140),
             callback    : () => {
-                SinglePlayerModeModelSpmProxy.reqSpmDeleteWarSaveSlot(saveSlotIndex);
+                reqSpmDeleteWarSaveSlot(saveSlotIndex);
             },
         });
     }
 
     private _onTouchedBtnUnitOpacity(): void {
-        UsersModel.reqTickSelfSettingsUnitOpacity();
+        reqTickSelfSettingsUnitOpacity();
     }
 
     private _onTouchedBtnMapRating(): void {
@@ -232,16 +232,16 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        const normalMapId   = HelpersMisc.getExisted(war.getNormalMapId());
-        const minValue      = GameConfigGcMap.Constants.MinRating;
-        const maxValue      = GameConfigGcMap.Constants.MaxRating;
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonInputIntegerPanel, {
-            getTitle           : () => LangUtils.getText(LangConstants.TextType.B0363),
-            currentValue    : UsersModel.getMapRating(normalMapId) || 0,
+        const normalMapId   = getExisted(war.getNormalMapId());
+        const minValue      = Constants.MinRating;
+        const maxValue      = Constants.MaxRating;
+        openPanel(getDict().CommonInputIntegerPanel, {
+            getTitle           : () => getText(TextType.B0363),
+            currentValue    : getMapRating(normalMapId) || 0,
             minValue,
             maxValue,
             callback        : value => {
-                UsersProxy.reqUserSetMapRating(normalMapId, value);
+                reqUserSetMapRating(normalMapId, value);
             },
         });
     }
@@ -252,7 +252,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().BwMarkGridPanel, { war: war });
+        openPanel(getDict().BwMarkGridPanel, { war: war });
         this.closePanel();
     }
 
@@ -262,12 +262,12 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleMapEditorSlotPanel, {
+        openPanel(getDict().CommonChooseSingleMapEditorSlotPanel, {
             currentSlotIndex        : 0,
             needConfirmOverwrite    : true,
             needNonEmptySlot        : false,
             getHelpText             : null,
-            callback                : async slotIndex => MapEditorModelMeProxy.reqMeSubmitNormalMap({
+            callback                : async slotIndex => reqMeSubmitNormalMap({
                 slotIndex                   : slotIndex,
                 mapRawData                  : await war.serializeForMap(),
                 needReview                  : false,
@@ -283,7 +283,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseOverridingSkinIdPanel, { war });
+        openPanel(getDict().CommonChooseOverridingSkinIdPanel, { war });
     }
 
     private _onTouchedBtnCustomCounter(): void {
@@ -292,7 +292,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().BwCustomCounterListPanel, { war });
+        openPanel(getDict().BwCustomCounterListPanel, { war });
     }
 
     private _onTouchedBtnSetDraw(): void {
@@ -302,7 +302,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (!this._checkCanDoAction()) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0239));
+            show(getText(TextType.A0239));
             return;
         }
 
@@ -311,22 +311,22 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         if ((!drawVoteManager.checkCanVote(playerIndex, true))  &&
             (!drawVoteManager.checkCanVote(playerIndex, false))
         ) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0240));
+            show(getText(TextType.A0240));
             return;
         }
 
         const actionPlanner = war.getActionPlanner();
-        const state         = ActionPlannersStatesRequestingPlayerVoteForDraw.RequestingPlayerVoteForDraw.getInstance();
+        const state         = RequestingPlayerVoteForDraw.getInstance();
         if (!drawVoteManager.checkHasOngoingVote()) {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent  : () => LangUtils.getText(LangConstants.TextType.A0031),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent  : () => getText(TextType.A0031),
                 callback    : () => state.doApplyOnChooseAction(actionPlanner, playerIndex, true),
             });
         } else {
-            GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-                getContent          : () => LangUtils.getText(LangConstants.TextType.A0241),
-                getTextForConfirm   : () => LangUtils.getText(LangConstants.TextType.B0214),
-                getTextForCancel    : () => LangUtils.getText(LangConstants.TextType.B0215),
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent          : () => getText(TextType.A0241),
+                getTextForConfirm   : () => getText(TextType.B0214),
+                getTextForCancel    : () => getText(TextType.B0215),
                 showButtonClose     : true,
                 callback            : () => {
                     state.doApplyOnChooseAction(actionPlanner, playerIndex, true);
@@ -347,15 +347,15 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (!this._checkCanDoAction()) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0239));
+            show(getText(TextType.A0239));
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle   : () => LangUtils.getText(LangConstants.TextType.B0055),
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0026),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle   : () => getText(TextType.B0055),
+            getContent : () => getText(TextType.A0026),
             callback: () => {
-                ActionPlannersStatesRequestingPlayerSurrender.RequestingPlayerSurrender.getInstance().doApplyOnChooseAction(war.getActionPlanner(), war.getPlayerIndexInTurn());
+                RequestingPlayerSurrender.getInstance().doApplyOnChooseAction(war.getActionPlanner(), war.getPlayerIndexInTurn());
                 this.closePanel();
             },
         });
@@ -371,22 +371,22 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setLangText(LangConstants.TextType.B0155);
-        this._btnDeleteUnit.setLangText(LangConstants.TextType.B0081);
-        this._btnFreeMode.setLangText(LangConstants.TextType.B1285);
-        this._btnDeleteGame.setLangText(LangConstants.TextType.B0420);
-        this._btnMarkGrid.setLangText(LangConstants.TextType.B1108);
-        this._btnSurrender.setLangText(LangConstants.TextType.B0055);
-        this._btnEditMap.setLangText(LangConstants.TextType.B0458);
-        this._btnOverrideSkin.setLangText(LangConstants.TextType.B0609);
-        this._btnCustomCounter.setLangText(LangConstants.TextType.B1143);
+        this._labelTitle.setLangText(TextType.B0155);
+        this._btnDeleteUnit.setLangText(TextType.B0081);
+        this._btnFreeMode.setLangText(TextType.B1285);
+        this._btnDeleteGame.setLangText(TextType.B0420);
+        this._btnMarkGrid.setLangText(TextType.B1108);
+        this._btnSurrender.setLangText(TextType.B0055);
+        this._btnEditMap.setLangText(TextType.B0458);
+        this._btnOverrideSkin.setLangText(TextType.B0609);
+        this._btnCustomCounter.setLangText(TextType.B1143);
         this._updateBtnUnitOpacity();
         this._updateBtnMapRating();
         this._updateBtnSetDraw();
     }
 
     private _updateBtnUnitOpacity(): void {
-        this._btnUnitOpacity.setText(`${LangUtils.getText(LangConstants.TextType.B0747)}: ${UsersModel.getSelfSettingsOpacitySettings()?.getUnitOpacity() ?? 100}%`);
+        this._btnUnitOpacity.setText(`${getText(TextType.B0747)}: ${getSelfSettingsOpacitySettings()?.getUnitOpacity() ?? 100}%`);
     }
 
     private _updateBtnMapRating(): void {
@@ -396,14 +396,14 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             btn.setIsVisible(false);
         } else {
             btn.setIsVisible(true);
-            btn.setText(`${LangUtils.getText(LangConstants.TextType.B0804)}: ${UsersModel.getMapRating(normalMapId) ?? `--`}`);
+            btn.setText(`${getText(TextType.B0804)}: ${getMapRating(normalMapId) ?? `--`}`);
         }
     }
 
     private _updateBtnSetDraw(): void {
         this._btnSetDraw.setLangText(!this.getOpenData()?.war.getDrawVoteManager().checkHasOngoingVote()
-            ? LangConstants.TextType.B0690
-            : LangConstants.TextType.B0841
+            ? TextType.B0690
+            : TextType.B0841
         );
     }
 
@@ -438,7 +438,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const war = this.getOpenData()?.war;
         return (war != null)
             && (war.checkIsHumanInTurn())
-            && (war.getTurnManager().getPhaseCode() === TurnsConstants.PhaseCode.Main)
-            && (war.getActionPlanner().getStateId() === ActionPlannersConstants.StateId.Idle);
+            && (war.getTurnManager().getPhaseCode() === PhaseCode.Main)
+            && (war.getActionPlanner().getStateId() === StateId.Idle);
     }
 }

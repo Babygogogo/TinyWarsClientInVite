@@ -1,21 +1,21 @@
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as LocalDataStorage from "../localData/Storage.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import type * as NotificationsTypes from "../notifications/Types.ts";
-import * as TweenEase from "../tween/Ease.ts";
-import * as TweenExecutor from "../tween/Executor.ts";
-import * as UiComponentsUiContainer from "../ui/components/UiContainer.ts";
-import type * as UiInterfacesIUiComponent from "../ui/interfaces/IUiComponent.ts";
-import type * as UiInterfacesIUiImage from "../ui/interfaces/IUiImage.ts";
-import * as UiTypesUiHorizontalAlign from "../ui/types/UiHorizontalAlign.ts";
-import * as UiTypesUiVerticalAlign from "../ui/types/UiVerticalAlign.ts";
-import * as UiUtilsUiFactory from "../ui/utils/UiFactory.ts";
-import * as UtilsClientErrorCode from "../utils/ClientErrorCode.ts";
-import type * as VendorEgretEgret from "../vendor/egret/Egret.ts";
-import * as WeathersConstants from "./Constants.ts";
-import type * as WeathersIManager from "./IManager.ts";
-import type * as WeathersIView from "./IView.ts";
+import { getExisted } from "../helpers/Misc.ts";
+import { getShowWeatherAnimation } from "../localData/Storage.ts";
+import { addEventListeners, removeEventListeners } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { Listener } from "../notifications/Types.ts";
+import { sineInOut } from "../tween/Ease.ts";
+import { Executor } from "../tween/Executor.ts";
+import { UiContainer } from "../ui/components/UiContainer.ts";
+import type { IUiComponent } from "../ui/interfaces/IUiComponent.ts";
+import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
+import { UiHorizontalAlign } from "../ui/types/UiHorizontalAlign.ts";
+import { UiVerticalAlign } from "../ui/types/UiVerticalAlign.ts";
+import { getUiContainerClass, getUiImageClass } from "../ui/utils/UiFactory.ts";
+import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
+import type { DisplayObject } from "../vendor/egret/Egret.ts";
+import { AnimationType } from "./Constants.ts";
+import type { IManager } from "./IManager.ts";
+import type { IView } from "./IView.ts";
 
 const RAIN_DENSITY      = 0.15;
 const RAIN_ANGLE        = 20;
@@ -27,26 +27,26 @@ const SANDSTORM_DENSITY = 0.15;
 const SANDSTORM_ANGLE   = 70;
 const SANDSTORM_ALPHA   = 0.9;
 
-export class View extends UiComponentsUiContainer.UiContainer implements WeathersIView.IView {
-    private readonly _notifyListeners   : NotificationsTypes.Listener[] = [
-        { type: NotificationsTypeId.TypeId.UserSettingsIsShowWeatherAnimationChanged,    callback: this._onNotifyUserSettingsIsShowWeatherAnimationChanged },
+export class View extends UiContainer implements IView {
+    private readonly _notifyListeners   : Listener[] = [
+        { type: TypeId.UserSettingsIsShowWeatherAnimationChanged,    callback: this._onNotifyUserSettingsIsShowWeatherAnimationChanged },
     ];
 
-    private _weatherManager?                : WeathersIManager.IManager;
-    private readonly _containerForRain      = new (UiUtilsUiFactory.getUiContainerClass())();
-    private _imgArrayForRain                : UiInterfacesIUiImage.IUiImage[] = [];
-    private readonly _containerForSnow      = new (UiUtilsUiFactory.getUiContainerClass())();
-    private _imgArrayForSnow                : UiInterfacesIUiImage.IUiImage[] = [];
-    private readonly _containerForSandstorm = new (UiUtilsUiFactory.getUiContainerClass())();
-    private _imgArrayForSandstorm           : UiInterfacesIUiImage.IUiImage[] = [];
+    private _weatherManager?                : IManager;
+    private readonly _containerForRain      = new (getUiContainerClass())();
+    private _imgArrayForRain                : IUiImage[] = [];
+    private readonly _containerForSnow      = new (getUiContainerClass())();
+    private _imgArrayForSnow                : IUiImage[] = [];
+    private readonly _containerForSandstorm = new (getUiContainerClass())();
+    private _imgArrayForSandstorm           : IUiImage[] = [];
     private _showingWeatherType             : number | null = null;
 
     public constructor() {
         super();
 
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
+            verticalAlign   : { align       : UiVerticalAlign.Middle },
+            horizontalAlign : { align       : UiHorizontalAlign.Center },
             width           : { percentage  : 100 },
             height          : { percentage  : 100 },
         });
@@ -58,8 +58,8 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
             containerForRain.setAlpha(RAIN_ALPHA);
             containerForRain.setIsTouchChildrenEnabled(false);
             containerForRain.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign : { align   : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
-                verticalAlign   : { align   : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
+                horizontalAlign : { align   : UiHorizontalAlign.Center },
+                verticalAlign   : { align   : UiVerticalAlign.Middle },
             });
             this.addUiChild(containerForRain);
         }
@@ -70,8 +70,8 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
             containerForSnow.setAlpha(SNOW_ALPHA);
             containerForSnow.setIsTouchChildrenEnabled(false);
             containerForSnow.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign : { align   : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
-                verticalAlign   : { align   : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
+                horizontalAlign : { align   : UiHorizontalAlign.Center },
+                verticalAlign   : { align   : UiVerticalAlign.Middle },
             });
             this.addUiChild(containerForSnow);
         }
@@ -82,8 +82,8 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
             containerForSandstorm.setAlpha(SANDSTORM_ALPHA);
             containerForSandstorm.setIsTouchChildrenEnabled(false);
             containerForSandstorm.checkAndInitSizerInfo().setSizerOptions({
-                horizontalAlign : { align   : UiTypesUiHorizontalAlign.UiHorizontalAlign.Center },
-                verticalAlign   : { align   : UiTypesUiVerticalAlign.UiVerticalAlign.Middle },
+                horizontalAlign : { align   : UiHorizontalAlign.Center },
+                verticalAlign   : { align   : UiVerticalAlign.Middle },
             });
             this.addUiChild(containerForSandstorm);
         }
@@ -99,23 +99,23 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
         return true;
     }
 
-    public init(manager: WeathersIManager.IManager): void {
+    public init(manager: IManager): void {
         this._setWeatherManager(manager);
     }
 
     public startRunningView(): void {
-        NotificationsDispatcher.addEventListeners(this._notifyListeners, this);
+        addEventListeners(this._notifyListeners, this);
         this.resetView(true);
     }
     public stopRunningView(): void {
-        NotificationsDispatcher.removeEventListeners(this._notifyListeners, this);
+        removeEventListeners(this._notifyListeners, this);
         this._stopView();
     }
 
-    private _getWeatherManager(): WeathersIManager.IManager {
-        return HelpersMisc.getExisted(this._weatherManager, UtilsClientErrorCode.ClientErrorCode.BwWeatherManagerView_GetWeatherManager_00);
+    private _getWeatherManager(): IManager {
+        return getExisted(this._weatherManager, ClientErrorCode.BwWeatherManagerView_GetWeatherManager_00);
     }
-    private _setWeatherManager(manager: WeathersIManager.IManager): void {
+    private _setWeatherManager(manager: IManager): void {
         this._weatherManager = manager;
     }
 
@@ -124,7 +124,7 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
     }
 
     public resetView(isForce: boolean): void {
-        if (!LocalDataStorage.getShowWeatherAnimation()) {
+        if (!getShowWeatherAnimation()) {
             this._showingWeatherType = null;
             this._stopView();
             return;
@@ -140,9 +140,9 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
 
         this._stopView();
         switch (weatherManager.getWar().getGcData().getWeatherCfg(weatherType)?.getAnim()) {
-            case WeathersConstants.AnimationType.Rainy      : this._showRain();         break;
-            case WeathersConstants.AnimationType.Sandstorm  : this._showSandstorm();    break;
-            case WeathersConstants.AnimationType.Snowy      : this._showSnow();         break;
+            case AnimationType.Rainy      : this._showRain();         break;
+            case AnimationType.Sandstorm  : this._showSandstorm();    break;
+            case AnimationType.Snowy      : this._showSnow();         break;
             default                                 :                           break;
         }
     }
@@ -161,7 +161,7 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
             imgArray.length = imagesCount;
         } else {
             for (let i = imgArray.length; i < imagesCount; ++i) {
-                const img = new (UiUtilsUiFactory.getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000` });
+                const img = new (getUiImageClass())({ textureSourceName: `uncompressedColorWhite0000` });
                 img.setUnscaledManualWidth(1);
                 imgArray.push(img);
             }
@@ -177,11 +177,11 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
     }
     private _stopRain(): void {
         for (const img of this._imgArrayForRain) {
-            TweenExecutor.Executor.removeTweens(img);
-            img.getParent()?.removeChild(img as unknown as VendorEgretEgret.DisplayObject);
+            Executor.removeTweens(img);
+            img.getParent()?.removeChild(img as unknown as DisplayObject);
         }
     }
-    private _resetTweenForImgRain(img: UiInterfacesIUiImage.IUiImage): void {
+    private _resetTweenForImgRain(img: IUiImage): void {
         const container         = this._containerForRain;
         const containerHeight   = container.getUnscaledHeight();
         const imgHeight         = Math.floor(Math.random() * 20 + 10);
@@ -189,8 +189,8 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
         const endingY           = containerHeight;
         img.setUnscaledManualHeight(imgHeight);
 
-        TweenExecutor.Executor.removeTweens(img);
-        TweenExecutor.Executor.get(img)
+        Executor.removeTweens(img);
+        Executor.get(img)
             .set({
                 customX : Math.random() * container.getUnscaledWidth(),
                 customY : startingY
@@ -211,7 +211,7 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
             imgArray.length = imagesCount;
         } else {
             for (let i = imgArray.length; i < imagesCount; ++i) {
-                const img = new (UiUtilsUiFactory.getUiImageClass())({ textureSourceName: `uncompressedColorYellow0001` });
+                const img = new (getUiImageClass())({ textureSourceName: `uncompressedColorYellow0001` });
                 imgArray.push(img);
             }
         }
@@ -226,11 +226,11 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
     }
     private _stopSandstorm(): void {
         for (const img of this._imgArrayForSandstorm) {
-            TweenExecutor.Executor.removeTweens(img);
-            img.getParent()?.removeChild(img as unknown as VendorEgretEgret.DisplayObject);
+            Executor.removeTweens(img);
+            img.getParent()?.removeChild(img as unknown as DisplayObject);
         }
     }
-    private _resetTweenForImgSandstorm(img: UiInterfacesIUiImage.IUiImage): void {
+    private _resetTweenForImgSandstorm(img: IUiImage): void {
         const container         = this._containerForSandstorm;
         const containerHeight   = container.getUnscaledHeight();
         const scale             = 1.2;
@@ -240,8 +240,8 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
         img.setScaleX(scale);
         img.setScaleY(scale);
 
-        TweenExecutor.Executor.removeTweens(img);
-        TweenExecutor.Executor.get(img)
+        Executor.removeTweens(img);
+        Executor.get(img)
             .set({
                 customX : Math.random() * container.getUnscaledWidth(),
                 customY : startingY
@@ -262,7 +262,7 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
             imgArray.length = imagesCount;
         } else {
             for (let i = imgArray.length; i < imagesCount; ++i) {
-                const img = new (UiUtilsUiFactory.getUiImageClass())({ textureSourceName: `commonIcon0022` });
+                const img = new (getUiImageClass())({ textureSourceName: `commonIcon0022` });
                 imgArray.push(img);
             }
         }
@@ -277,11 +277,11 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
     }
     private _stopSnow(): void {
         for (const img of this._imgArrayForSnow) {
-            TweenExecutor.Executor.removeTweens(img);
-            img.getParent()?.removeChild(img as unknown as VendorEgretEgret.DisplayObject);
+            Executor.removeTweens(img);
+            img.getParent()?.removeChild(img as unknown as DisplayObject);
         }
     }
-    private _resetTweenForImgSnow(img: UiInterfacesIUiImage.IUiImage): void {
+    private _resetTweenForImgSnow(img: IUiImage): void {
         const container         = this._containerForSnow;
         const containerHeight   = container.getUnscaledHeight();
         const scale             = Math.random() * 0.3 + 0.2;
@@ -293,21 +293,21 @@ export class View extends UiComponentsUiContainer.UiContainer implements Weather
         img.setScaleY(scale);
         img.setRotationInDegree(Math.random() * 360);
 
-        TweenExecutor.Executor.removeTweens(img);
-        TweenExecutor.Executor.get(img)
+        Executor.removeTweens(img);
+        Executor.get(img)
             .set({ customY: startingY })
             .to(
                 { customY: endingY },
                 (endingY - startingY) * 8 * (Math.random() * 0.2 + 0.9)
             )
             .call(() => this._resetTweenForImgSnow(img));
-        TweenExecutor.Executor.get(img, { loop: true })
+        Executor.get(img, { loop: true })
             .set({ customX: startingX - 20})
-            .to({ customX: startingX + 20 }, 2000, TweenEase.sineInOut)
-            .to({ customX: startingX - 20 }, 2000, TweenEase.sineInOut);
+            .to({ customX: startingX + 20 }, 2000, sineInOut)
+            .to({ customX: startingX - 20 }, 2000, sineInOut);
     }
 
-    private _resetContainerSize(container: UiInterfacesIUiComponent.IUiComponent): void {
+    private _resetContainerSize(container: IUiComponent): void {
         const width             = this.getUnscaledWidth();
         const height            = this.getUnscaledHeight();
         const containerWidth    = Math.sqrt(width * width + height * height);

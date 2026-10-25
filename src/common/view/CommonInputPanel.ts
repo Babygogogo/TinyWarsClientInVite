@@ -1,14 +1,14 @@
-import * as FloatText2 from "../../FloatText.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiPromptedInput from "../../ui/interfaces/IUiPromptedInput.ts";
-import * as UiTypesUiInputEventType from "../../ui/types/UiInputEventType.ts";
+import { showLang } from "../../FloatText.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiPromptedInput } from "../../ui/interfaces/IUiPromptedInput.ts";
+import { UiInputEventType } from "../../ui/types/UiInputEventType.ts";
 
 export type OpenData = {
     title           : string;
@@ -22,18 +22,18 @@ export type OpenData = {
     isAutoClose?    : boolean;          // 留空=true
     callback        : (panel: Panel) => any;
 };
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _input!        : UiInterfacesIUiPromptedInput.IUiPromptedInput;
-    private readonly _btnDelete!    : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCancel!    : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!   : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!      : IUiImage;
+    private readonly _group!        : IUiContainer;
+    private readonly _labelTitle!   : IUiLabel;
+    private readonly _input!        : IUiPromptedInput;
+    private readonly _btnDelete!    : IUiButton;
+    private readonly _btnCancel!    : IUiButton;
+    private readonly _btnConfirm!   : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
             { ui: this._btnDelete,  callback: this._onTouchedBtnDelete },
@@ -41,7 +41,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnConfirm, callback: this._onTouchedBtnConfirm, },
         ]);
         this._setInputListenerArray([
-            { ui: this._input,      callback: this._onFocusOutInput,    eventType: UiTypesUiInputEventType.UiInputEventType.FocusOut },
+            { ui: this._input,      callback: this._onFocusOutInput,    eventType: UiInputEventType.FocusOut },
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel();
@@ -85,13 +85,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         const text          = this.getInputText();
         const textLength    = text.length;
         if ((!openData.canBeEmpty) && (!textLength)) {
-            FloatText2.showLang(LangConstants.TextType.A0787);
+            showLang(TextType.A0787);
             return;
         }
 
         const minLength = openData.minLength;
         if ((minLength != null) && (textLength < minLength)) {
-            FloatText2.showLang(LangConstants.TextType.A0155);
+            showLang(TextType.A0155);
             return;
         }
 
@@ -111,7 +111,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnCancel.setText(LangUtils.getText(LangConstants.TextType.B0154));
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._btnCancel.setText(getText(TextType.B0154));
     }
 }

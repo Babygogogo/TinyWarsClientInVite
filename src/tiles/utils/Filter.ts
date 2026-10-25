@@ -1,45 +1,61 @@
-import type * as AuxiliaryTypesMapSize from "../../auxiliaryTypes/MapSize.ts";
-import type * as GameConfigGcData from "../../gameConfig/GcData.ts";
-import * as GridIndexArrayAndPredicatesUtils from "../../gridIndexArrayAndPredicates/Utils.ts";
-import * as HelpersCollection from "../../helpers/Collection.ts";
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as LocationsUtils from "../../locations/Utils.ts";
-import * as PlayersConstants from "../../players/Constants.ts";
-import * as PlayersUtilsCommon from "../../players/utils/Common.ts";
-import type * as ProtoSchemaCommonProtoStructureTileFilter from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
-import * as TeamsUtils from "../../teams/Utils.ts";
-import * as TileBuffsUtilsCommon from "../../tileBuffs/utils/Common.ts";
-import type * as TilesITile from "../ITile.ts";
-import * as ValueAndComparatorsUtils from "../../valueAndComparators/Utils.ts";
-import * as ValueArrayAndPredicatesUtils from "../../valueArrayAndPredicates/Utils.ts";
-import * as ValueSetAndRelationsUtils from "../../valueSetAndRelations/Utils.ts";
+import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
+import {
+    checkIsMeet as GridIndexArrayAndPredicatesUtilsCheckIsMeet,
+    getDesc as GridIndexArrayAndPredicatesUtilsGetDesc,
+    checkIsValid as GridIndexArrayAndPredicatesUtilsCheckIsValid,
+} from "../../gridIndexArrayAndPredicates/Utils.ts";
+import { getNonNullElements } from "../../helpers/Collection.ts";
+import { TextType } from "../../lang/Constants.ts";
+import { getText, getPlayerTeamName, getTileName, getFormattedText, getTextForYesOrNo, getTileBuffName } from "../../lang/Utils.ts";
+import { checkIsValidLocationIdSubset } from "../../locations/Utils.ts";
+import { PlayerIndex } from "../../players/Constants.ts";
+import { checkIsValidPlayerIndexSubset } from "../../players/utils/Common.ts";
+import type { TileFilter as ProtoSchemaCommonProtoStructureTileFilter } from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
+import { checkIsValidTeamIndexSubset } from "../../teams/Utils.ts";
+import { checkIsValidTypeIdSubset } from "../../tileBuffs/utils/Common.ts";
+import type { ITile as TilesITile } from "../ITile.ts";
+import {
+    checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
+    getDesc as ValueAndComparatorsUtilsGetDesc,
+    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
+} from "../../valueAndComparators/Utils.ts";
+import {
+    checkIsMeet as ValueArrayAndPredicatesUtilsCheckIsMeet,
+    getDesc as ValueArrayAndPredicatesUtilsGetDesc,
+    checkIsValid as ValueArrayAndPredicatesUtilsCheckIsValid,
+} from "../../valueArrayAndPredicates/Utils.ts";
+import {
+    checkIsMeet as ValueSetAndRelationsUtilsCheckIsMeet,
+    getDesc as ValueSetAndRelationsUtilsGetDesc,
+    checkIsValid as ValueSetAndRelationsUtilsCheckIsValid,
+} from "../../valueSetAndRelations/Utils.ts";
 
-type TileFilter                         = ProtoSchemaCommonProtoStructureTileFilter.TileFilter;
-type ITile                              = TilesITile.ITile;
+type TileFilter                         = ProtoSchemaCommonProtoStructureTileFilter;
+type ITile                              = TilesITile;
 
-export function checkIsValid(data: TileFilter, playersCountUnneutral: number, mapSize: AuxiliaryTypesMapSize.MapSize, gameConfig: GameConfigGcData.GcData): boolean {
+export function checkIsValid(data: TileFilter, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GcData): boolean {
     return getErrorTip(data, playersCountUnneutral, mapSize, gameConfig) == null;
 }
 
 export function checkIsMeet(data: TileFilter, tile: ITile): boolean {
     {
         const con = data.getConPlayerIndex();
-        if ((con != null) && (!ValueArrayAndPredicatesUtils.checkIsMeet(con, tile.getPlayerIndex()))) {
+        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, tile.getPlayerIndex()))) {
             return false;
         }
     }
 
     {
         const con = data.getConTeamIndex();
-        if ((con != null) && (!ValueArrayAndPredicatesUtils.checkIsMeet(con, tile.getTeamIndex()))) {
+        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, tile.getTeamIndex()))) {
             return false;
         }
     }
 
     {
         const con = data.getConTileType();
-        if ((con != null) && (!ValueArrayAndPredicatesUtils.checkIsMeet(con, tile.getTileTypeId()))) {
+        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, tile.getTileTypeId()))) {
             return false;
         }
     }
@@ -61,7 +77,7 @@ export function checkIsMeet(data: TileFilter, tile: ITile): boolean {
     {
         const con = data.getConHp();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsMeet(con, tile.getCurrentHp())) {
+            if (!ValueAndComparatorsUtilsCheckIsMeet(con, tile.getCurrentHp())) {
                 return false;
             }
         }
@@ -70,7 +86,7 @@ export function checkIsMeet(data: TileFilter, tile: ITile): boolean {
     {
         const con = data.getConCapturePoint();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsMeet(con, tile.getCurrentCapturePoint())) {
+            if (!ValueAndComparatorsUtilsCheckIsMeet(con, tile.getCurrentCapturePoint())) {
                 return false;
             }
         }
@@ -79,7 +95,7 @@ export function checkIsMeet(data: TileFilter, tile: ITile): boolean {
     {
         const con = data.getConBuildPoint();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsMeet(con, tile.getCurrentBuildPoint())) {
+            if (!ValueAndComparatorsUtilsCheckIsMeet(con, tile.getCurrentBuildPoint())) {
                 return false;
             }
         }
@@ -88,7 +104,7 @@ export function checkIsMeet(data: TileFilter, tile: ITile): boolean {
     {
         const con = data.getConUnitsCount();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsMeet(con, tile.getWar().getUnitMap().getUnitsCountOnGrid(tile.getGridIndex()))) {
+            if (!ValueAndComparatorsUtilsCheckIsMeet(con, tile.getWar().getUnitMap().getUnitsCountOnGrid(tile.getGridIndex()))) {
                 return false;
             }
         }
@@ -97,7 +113,7 @@ export function checkIsMeet(data: TileFilter, tile: ITile): boolean {
     {
         const con = data.getConCustomNameId();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsMeet(con, tile.getCustomNameId() ?? 0)) {
+            if (!ValueAndComparatorsUtilsCheckIsMeet(con, tile.getCustomNameId() ?? 0)) {
                 return false;
             }
         }
@@ -105,7 +121,7 @@ export function checkIsMeet(data: TileFilter, tile: ITile): boolean {
 
     {
         const con = data.getConGridIndex();
-        if ((con != null) && (!GridIndexArrayAndPredicatesUtils.checkIsMeet(con, tile.getGridIndex()))) {
+        if ((con != null) && (!GridIndexArrayAndPredicatesUtilsCheckIsMeet(con, tile.getGridIndex()))) {
             return false;
         }
     }
@@ -113,7 +129,7 @@ export function checkIsMeet(data: TileFilter, tile: ITile): boolean {
     {
         const con = data.getConLocationId();
         if ((con != null)                                                               &&
-            (!ValueSetAndRelationsUtils.checkIsMeet(con, tile.getLocationIdList(true)))
+            (!ValueSetAndRelationsUtilsCheckIsMeet(con, tile.getLocationIdList(true)))
         ) {
             return false;
         }
@@ -122,7 +138,7 @@ export function checkIsMeet(data: TileFilter, tile: ITile): boolean {
     {
         const con = data.getConBuffTypeId();
         if ((con != null)                                                               &&
-            (!ValueSetAndRelationsUtils.checkIsMeet(con, [...tile.getAllBuffTypeIdSet()]))
+            (!ValueSetAndRelationsUtilsCheckIsMeet(con, [...tile.getAllBuffTypeIdSet()]))
         ) {
             return false;
         }
@@ -134,7 +150,7 @@ export function checkIsMeetAsOutOfVision(data: TileFilter, tile: ITile): boolean
     const war         = tile.getWar();
     const playerIndex = (tile.getTemplateCfg().getIsAlwaysShowOwner())
         ? tile.getPlayerIndex()
-        : PlayersConstants.PlayerIndex.Neutral;
+        : PlayerIndex.Neutral;
     {
         const conIsOwnerPlayerInTurn = data.getConIsOwnerPlayerInTurn();
         if ((conIsOwnerPlayerInTurn != null) && (conIsOwnerPlayerInTurn != (playerIndex == war.getPlayerIndexInTurn()))) {
@@ -151,21 +167,21 @@ export function checkIsMeetAsOutOfVision(data: TileFilter, tile: ITile): boolean
 
     {
         const con = data.getConPlayerIndex();
-        if ((con != null) && (!ValueArrayAndPredicatesUtils.checkIsMeet(con, tile.getPlayerIndex()))) {
+        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, tile.getPlayerIndex()))) {
             return false;
         }
     }
 
     {
         const con = data.getConTeamIndex();
-        if ((con != null) && (!ValueArrayAndPredicatesUtils.checkIsMeet(con, tile.getTeamIndex()))) {
+        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, tile.getTeamIndex()))) {
             return false;
         }
     }
 
     {
         const con = data.getConTileType();
-        if ((con != null) && (!ValueArrayAndPredicatesUtils.checkIsMeet(con, tile.getTileTypeId()))) {
+        if ((con != null) && (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, tile.getTileTypeId()))) {
             return false;
         }
     }
@@ -173,7 +189,7 @@ export function checkIsMeetAsOutOfVision(data: TileFilter, tile: ITile): boolean
     {
         const con = data.getConHp();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsMeet(con, tile.getCurrentHp())) {
+            if (!ValueAndComparatorsUtilsCheckIsMeet(con, tile.getCurrentHp())) {
                 return false;
             }
         }
@@ -182,7 +198,7 @@ export function checkIsMeetAsOutOfVision(data: TileFilter, tile: ITile): boolean
     {
         const con = data.getConCapturePoint();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsMeet(con, 0)) {
+            if (!ValueAndComparatorsUtilsCheckIsMeet(con, 0)) {
                 return false;
             }
         }
@@ -191,7 +207,7 @@ export function checkIsMeetAsOutOfVision(data: TileFilter, tile: ITile): boolean
     {
         const con = data.getConBuildPoint();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsMeet(con, 0)) {
+            if (!ValueAndComparatorsUtilsCheckIsMeet(con, 0)) {
                 return false;
             }
         }
@@ -216,141 +232,141 @@ export function checkIsEmpty(data: TileFilter): boolean {
         && (data.getConBuffTypeId() == null);
 }
 
-export function getDesc(data: TileFilter, gameConfig: GameConfigGcData.GcData): string {
+export function getDesc(data: TileFilter, gameConfig: GcData): string {
     const textArrayForSubConditions: string[] = [];
 
     {
         const con = data.getConPlayerIndex();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicatesUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.PlayerIndex), v => `P${v}`));
+            textArrayForSubConditions.push(ValueArrayAndPredicatesUtilsGetDesc(con, getText(TextType.PlayerIndex), v => `P${v}`));
         }
     }
 
     {
         const con = data.getConTeamIndex();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicatesUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.B0019), v => LangUtils.getPlayerTeamName(v)));
+            textArrayForSubConditions.push(ValueArrayAndPredicatesUtilsGetDesc(con, getText(TextType.B0019), v => getPlayerTeamName(v)));
         }
     }
 
     {
         const con = data.getConTileType();
         if (con != null) {
-            textArrayForSubConditions.push(ValueArrayAndPredicatesUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.B0718), v => LangUtils.getTileName(v, gameConfig)));
+            textArrayForSubConditions.push(ValueArrayAndPredicatesUtilsGetDesc(con, getText(TextType.B0718), v => getTileName(v, gameConfig)));
         }
     }
 
     {
         const con = data.getConIsOwnerPlayerInTurn();
         if (con != null) {
-            textArrayForSubConditions.push(LangUtils.getText(con ? LangConstants.TextType.A0831 : LangConstants.TextType.A0832));
+            textArrayForSubConditions.push(getText(con ? TextType.A0831 : TextType.A0832));
         }
     }
 
     {
         const con = data.getConIsHighlighted();
         if (con != null) {
-            textArrayForSubConditions.push(LangUtils.getFormattedText(LangConstants.TextType.F0245, LangUtils.getTextForYesOrNo(con)));
+            textArrayForSubConditions.push(getFormattedText(TextType.F0245, getTextForYesOrNo(con)));
         }
     }
 
     {
         const con = data.getConHp();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.Hp)));
+            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.Hp)));
         }
     }
 
     {
         const con = data.getConCapturePoint();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.CapturePoint)));
+            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.CapturePoint)));
         }
     }
 
     {
         const con = data.getConBuildPoint();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.BuildPoint)));
+            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.BuildPoint)));
         }
     }
 
     {
         const con = data.getConUnitsCount();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.B1418)));
+            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.B1418)));
         }
     }
 
     {
         const con = data.getConCustomNameId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueAndComparatorsUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.CustomNameId)));
+            textArrayForSubConditions.push(ValueAndComparatorsUtilsGetDesc(con, getText(TextType.CustomNameId)));
         }
     }
 
     {
         const con = data.getConGridIndex();
         if (con != null) {
-            textArrayForSubConditions.push(GridIndexArrayAndPredicatesUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.B0531)));
+            textArrayForSubConditions.push(GridIndexArrayAndPredicatesUtilsGetDesc(con, getText(TextType.B0531)));
         }
     }
 
     {
         const con = data.getConLocationId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueSetAndRelationsUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.Location), v => `${v}`));
+            textArrayForSubConditions.push(ValueSetAndRelationsUtilsGetDesc(con, getText(TextType.Location), v => `${v}`));
         }
     }
 
     {
         const con = data.getConBuffTypeId();
         if (con != null) {
-            textArrayForSubConditions.push(ValueSetAndRelationsUtils.getDesc(con, LangUtils.getText(LangConstants.TextType.AbnormalStateTypeId), v => `${LangUtils.getTileBuffName(v)}`));
+            textArrayForSubConditions.push(ValueSetAndRelationsUtilsGetDesc(con, getText(TextType.AbnormalStateTypeId), v => `${getTileBuffName(v)}`));
         }
     }
 
-    return LangUtils.getFormattedText(
-        LangConstants.TextType.F0230,
-        LangUtils.getText(LangConstants.TextType.B1144),
+    return getFormattedText(
+        TextType.F0230,
+        getText(TextType.B1144),
         textArrayForSubConditions.length
             ? textArrayForSubConditions.map(v => `- ${v}`).join(`\n`)
-            : LangUtils.getText(LangConstants.TextType.A0944)
+            : getText(TextType.A0944)
     );
 }
 export function getDescForEmbed(data: TileFilter): string | null {
-    const textArrayForSubConditions = HelpersCollection.getNonNullElements([
-        data.getConPlayerIndex() == null         ? null : LangUtils.getText(LangConstants.TextType.PlayerIndex),
-        data.getConTeamIndex() == null           ? null : LangUtils.getText(LangConstants.TextType.B0019),
-        data.getConTileType() == null            ? null : LangUtils.getText(LangConstants.TextType.B0718),
-        data.getConIsOwnerPlayerInTurn() == null ? null : LangUtils.getText(LangConstants.TextType.B0086),
-        data.getConIsHighlighted() == null       ? null : LangUtils.getText(LangConstants.TextType.IsHighlighted),
-        data.getConHp() == null                  ? null : LangUtils.getText(LangConstants.TextType.Hp),
-        data.getConCapturePoint() == null        ? null : LangUtils.getText(LangConstants.TextType.CapturePoint),
-        data.getConBuildPoint() == null          ? null : LangUtils.getText(LangConstants.TextType.BuildPoint),
-        data.getConUnitsCount() == null          ? null : LangUtils.getText(LangConstants.TextType.B0773),
-        data.getConCustomNameId() == null        ? null : LangUtils.getText(LangConstants.TextType.CustomNameId),
-        data.getConGridIndex() == null           ? null : LangUtils.getText(LangConstants.TextType.B0531),
-        data.getConLocationId() == null          ? null : LangUtils.getText(LangConstants.TextType.Location),
-        data.getConBuffTypeId() == null          ? null : LangUtils.getText(LangConstants.TextType.AbnormalStateTypeId),
+    const textArrayForSubConditions = getNonNullElements([
+        data.getConPlayerIndex() == null         ? null : getText(TextType.PlayerIndex),
+        data.getConTeamIndex() == null           ? null : getText(TextType.B0019),
+        data.getConTileType() == null            ? null : getText(TextType.B0718),
+        data.getConIsOwnerPlayerInTurn() == null ? null : getText(TextType.B0086),
+        data.getConIsHighlighted() == null       ? null : getText(TextType.IsHighlighted),
+        data.getConHp() == null                  ? null : getText(TextType.Hp),
+        data.getConCapturePoint() == null        ? null : getText(TextType.CapturePoint),
+        data.getConBuildPoint() == null          ? null : getText(TextType.BuildPoint),
+        data.getConUnitsCount() == null          ? null : getText(TextType.B0773),
+        data.getConCustomNameId() == null        ? null : getText(TextType.CustomNameId),
+        data.getConGridIndex() == null           ? null : getText(TextType.B0531),
+        data.getConLocationId() == null          ? null : getText(TextType.Location),
+        data.getConBuffTypeId() == null          ? null : getText(TextType.AbnormalStateTypeId),
     ]);
     return !textArrayForSubConditions.length
         ? null
-        : LangUtils.getFormattedText(
-            LangConstants.TextType.F0231,
-            LangUtils.getText(LangConstants.TextType.B1144),
+        : getFormattedText(
+            TextType.F0231,
+            getText(TextType.B1144),
             textArrayForSubConditions.join(`, `)
         );
 }
 
-export function getErrorTip(data: TileFilter, playersCountUnneutral: number, mapSize: AuxiliaryTypesMapSize.MapSize, gameConfig: GameConfigGcData.GcData): string | null {
+export function getErrorTip(data: TileFilter, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GcData): string | null {
     {
         const con = data.getConPlayerIndex();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtils.checkIsValid(con))                                               ||
-                (!PlayersUtilsCommon.checkIsValidPlayerIndexSubset(con.getValueArray() ?? [], playersCountUnneutral))
+            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                                               ||
+                (!checkIsValidPlayerIndexSubset(con.getValueArray() ?? [], playersCountUnneutral))
             ) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.PlayerIndex));
+                return getFormattedText(TextType.F0091, getText(TextType.PlayerIndex));
             }
         }
     }
@@ -358,10 +374,10 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
     {
         const con = data.getConTeamIndex();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtils.checkIsValid(con))                                                   ||
-                (!TeamsUtils.checkIsValidTeamIndexSubset(con.getValueArray() ?? [], playersCountUnneutral))
+            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                                                   ||
+                (!checkIsValidTeamIndexSubset(con.getValueArray() ?? [], playersCountUnneutral))
             ) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0019));
+                return getFormattedText(TextType.F0091, getText(TextType.B0019));
             }
         }
     }
@@ -369,10 +385,10 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
     {
         const con = data.getConTileType();
         if (con != null) {
-            if ((!ValueArrayAndPredicatesUtils.checkIsValid(con))                   ||
+            if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                   ||
                 (!gameConfig.checkIsValidTileTypeSubset(con.getValueArray() ?? []))
             ) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0718));
+                return getFormattedText(TextType.F0091, getText(TextType.B0718));
             }
         }
     }
@@ -390,8 +406,8 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
     {
         const con = data.getConHp();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsValid(con)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Hp));
+            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
+                return getFormattedText(TextType.F0091, getText(TextType.Hp));
             }
         }
     }
@@ -399,8 +415,8 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
     {
         const con = data.getConCapturePoint();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsValid(con)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.CapturePoint));
+            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
+                return getFormattedText(TextType.F0091, getText(TextType.CapturePoint));
             }
         }
     }
@@ -408,8 +424,8 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
     {
         const con = data.getConBuildPoint();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsValid(con)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.BuildPoint));
+            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
+                return getFormattedText(TextType.F0091, getText(TextType.BuildPoint));
             }
         }
     }
@@ -417,8 +433,8 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
     {
         const con = data.getConUnitsCount();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsValid(con)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0773));
+            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
+                return getFormattedText(TextType.F0091, getText(TextType.B0773));
             }
         }
     }
@@ -426,8 +442,8 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
     {
         const con = data.getConCustomNameId();
         if (con != null) {
-            if (!ValueAndComparatorsUtils.checkIsValid(con)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.CustomNameId));
+            if (!ValueAndComparatorsUtilsCheckIsValid(con)) {
+                return getFormattedText(TextType.F0091, getText(TextType.CustomNameId));
             }
         }
     }
@@ -435,8 +451,8 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
     {
         const con = data.getConGridIndex();
         if (con != null) {
-            if (!GridIndexArrayAndPredicatesUtils.checkIsValid(con, mapSize)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.B0531));
+            if (!GridIndexArrayAndPredicatesUtilsCheckIsValid(con, mapSize)) {
+                return getFormattedText(TextType.F0091, getText(TextType.B0531));
             }
         }
     }
@@ -444,11 +460,11 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
     {
         const con = data.getConLocationId();
         if (con != null) {
-            if (!ValueSetAndRelationsUtils.checkIsValid(con)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Location));
+            if (!ValueSetAndRelationsUtilsCheckIsValid(con)) {
+                return getFormattedText(TextType.F0091, getText(TextType.Location));
             }
-            if (!LocationsUtils.checkIsValidLocationIdSubset(con.getValueArray())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.Location));
+            if (!checkIsValidLocationIdSubset(con.getValueArray())) {
+                return getFormattedText(TextType.F0091, getText(TextType.Location));
             }
         }
     }
@@ -456,11 +472,11 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
     {
         const con = data.getConBuffTypeId();
         if (con != null) {
-            if (!ValueSetAndRelationsUtils.checkIsValid(con)) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.AbnormalStateTypeId));
+            if (!ValueSetAndRelationsUtilsCheckIsValid(con)) {
+                return getFormattedText(TextType.F0091, getText(TextType.AbnormalStateTypeId));
             }
-            if (!TileBuffsUtilsCommon.checkIsValidTypeIdSubset(con.getValueArray())) {
-                return LangUtils.getFormattedText(LangConstants.TextType.F0091, LangUtils.getText(LangConstants.TextType.AbnormalStateTypeId));
+            if (!checkIsValidTypeIdSubset(con.getValueArray())) {
+                return getFormattedText(TextType.F0091, getText(TextType.AbnormalStateTypeId));
             }
         }
     }

@@ -1,23 +1,23 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import * as GeometriesUtils from "../../geometries/Utils.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as NotificationsDispatcher from "../../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as TweenExecutor from "../../tween/Executor.ts";
-import * as UiComponentsUiContainerBase from "./UiContainerBase.ts";
-import type * as UiInterfacesIUiComponent from "../interfaces/IUiComponent.ts";
-import type * as UiInterfacesIUiContainer from "../interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiZoomableComponent from "../interfaces/IUiZoomableComponent.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { Point as AuxiliaryTypesAuxiliaryTypesPoint, TouchPoints } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import { getPointDistance } from "../../geometries/Utils.ts";
+import { getExisted } from "../../helpers/Misc.ts";
+import { PointerEventType, MouseStyleType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
+import { dispatch } from "../../notifications/Dispatcher.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiContainerBase } from "./UiContainerBase.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiContainer } from "../interfaces/IUiContainer.ts";
+import type { IUiZoomableComponent } from "../interfaces/IUiZoomableComponent.ts";
+import { getUiContainerClass } from "../utils/UiFactory.ts";
+import type { DisplayObject, Point as VendorEgretEgretPoint, Event } from "../../vendor/egret/Egret.ts";
 
 const MAX_CONTENT_SCALE = 6;
 
-type Point = AuxiliaryTypesAuxiliaryTypes.Point;
+type Point = AuxiliaryTypesAuxiliaryTypesPoint;
 
-export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainerBase implements UiInterfacesIUiZoomableComponent.IUiZoomableComponent {
-    private readonly _contentsContainer = new (UiUtilsUiFactory.getUiContainerClass())();
+export class UiZoomableComponent extends UiContainerBase implements IUiZoomableComponent {
+    private readonly _contentsContainer = new (getUiContainerClass())();
     private _spacingForTop              = 0;
     private _spacingForBottom           = 0;
     private _spacingForLeft             = 0;
@@ -33,7 +33,7 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
         // contents.hitArea                = {
         //     contains    : (x, y): boolean => (x >= 0) && (x <= this.getContentWidth()) && (y >= 0) && (y <= this.getContentHeight()),
         // };
-        this.addChild(contents as unknown as VendorEgretEgret.DisplayObject);
+        this.addChild(contents as unknown as DisplayObject);
     }
 
     public override applySizeFromSizerInfo(width: number | undefined, height: number | undefined): boolean {
@@ -62,16 +62,16 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
     public setMouseWheelListenerEnabled(enabled: boolean): void {
         const agent = this._getContentsContainer().getEventAgent();
         if (enabled) {
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.Wheel,    this._onPointerWheel,   this);
+            agent.addPointerEventListener(PointerEventType.Wheel,    this._onPointerWheel,   this);
         } else {
-            agent.removePointerEventListener(HelpersPointerInput.PointerEventType.Wheel, this._onPointerWheel,   this);
+            agent.removePointerEventListener(PointerEventType.Wheel, this._onPointerWheel,   this);
         }
     }
 
     public getTouchListenerEnabled(): boolean {
         return this._getContentsContainer().getIsTouchEnabled();
     }
-    public setTouchListenerEnabled(enabled: boolean, mouseStyle = HelpersPointerInput.MouseStyleType.Pointer): void {
+    public setTouchListenerEnabled(enabled: boolean, mouseStyle = MouseStyleType.Pointer): void {
         if (this.getTouchListenerEnabled() === enabled) {
             return;
         }
@@ -82,17 +82,17 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
 
         const agent = contents.getEventAgent();
         if (enabled) {
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.Press,        this._onTouchBegin,             this);
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.ReleaseIn,    this._onTouchEnd,               this);
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.ReleaseOut,   this._onTouchReleaseOutside,    this);
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.PressMove,    this._onTouchMove,              this);
+            agent.addPointerEventListener(PointerEventType.Press,        this._onTouchBegin,             this);
+            agent.addPointerEventListener(PointerEventType.ReleaseIn,    this._onTouchEnd,               this);
+            agent.addPointerEventListener(PointerEventType.ReleaseOut,   this._onTouchReleaseOutside,    this);
+            agent.addPointerEventListener(PointerEventType.PressMove,    this._onTouchMove,              this);
             // this.on(egret.TouchEvent.TOUCH_CANCEL,            this._onTouchCancel,            this);
 
         } else {
-            agent.removePointerEventListener(HelpersPointerInput.PointerEventType.Press,         this._onTouchBegin,             this);
-            agent.removePointerEventListener(HelpersPointerInput.PointerEventType.ReleaseIn,     this._onTouchEnd,               this);
-            agent.removePointerEventListener(HelpersPointerInput.PointerEventType.ReleaseOut,    this._onTouchReleaseOutside,    this);
-            agent.removePointerEventListener(HelpersPointerInput.PointerEventType.PressMove,     this._onTouchMove,              this);
+            agent.removePointerEventListener(PointerEventType.Press,         this._onTouchBegin,             this);
+            agent.removePointerEventListener(PointerEventType.ReleaseIn,     this._onTouchEnd,               this);
+            agent.removePointerEventListener(PointerEventType.ReleaseOut,    this._onTouchReleaseOutside,    this);
+            agent.removePointerEventListener(PointerEventType.PressMove,     this._onTouchMove,              this);
             // this.off(egret.TouchEvent.TOUCH_CANCEL,             this._onTouchCancel,            this);
 
             this._currGlobalTouchPoints.clear();
@@ -100,23 +100,23 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
         }
     }
 
-    public addContent(content: UiInterfacesIUiComponent.IUiComponent): void {
+    public addContent(content: IUiComponent): void {
         this._getContentsContainer().addUiChild(content);
         // this.__resetBoundsArea();
     }
-    public removeContent<T extends UiInterfacesIUiComponent.IUiComponent>(content: T): T | undefined {
+    public removeContent<T extends IUiComponent>(content: T): T | undefined {
         return this._getContentsContainer().removeUiChild(content) as unknown as (T | undefined);
     }
-    public removeAllContents(): UiInterfacesIUiComponent.IUiComponent[] {
+    public removeAllContents(): IUiComponent[] {
         return this._getContentsContainer().removeUiChildren();
     }
-    private _getContentsContainer(): UiInterfacesIUiContainer.IUiContainer {
+    private _getContentsContainer(): IUiContainer {
         return this._contentsContainer;
     }
-    public getContentsContainerLocalToGlobal(point: Point): VendorEgretEgret.Point {
+    public getContentsContainerLocalToGlobal(point: Point): VendorEgretEgretPoint {
         return this._getContentsContainer().localToGlobal(point.x, point.y);
     }
-    public getContentsContainerGlobalToLocal(point: Point): VendorEgretEgret.Point {
+    public getContentsContainerGlobalToLocal(point: Point): VendorEgretEgretPoint {
         return this._getContentsContainer().globalToLocal(point.x, point.y);
     }
 
@@ -157,7 +157,7 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
         const newX      = needRevise ? this.getRevisedContentX(x) : x;
         if (newX !== contents.getX()) {
             contents.setX(newX);
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.ZoomableContentsMoved);
+            dispatch(TypeId.ZoomableContentsMoved);
         }
     }
     public set customContentX(x: number) {
@@ -174,7 +174,7 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
         const newY      = needRevise ? this.getRevisedContentY(y) : y;
         if (newY !== contents.getY()) {
             contents.setY(newY);
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.ZoomableContentsMoved);
+            dispatch(TypeId.ZoomableContentsMoved);
         }
     }
     public set customContentY(y: number) {
@@ -192,8 +192,8 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
             contentY = this.getRevisedContentY(contentY);
         }
 
-        TweenExecutor.Executor.removeTweens(this);
-        TweenExecutor.Executor.get(this as UiZoomableComponent)
+        Executor.removeTweens(this);
+        Executor.get(this as UiZoomableComponent)
             .to({ customContentX: contentX, customContentY: contentY }, 200);
     }
 
@@ -221,7 +221,7 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
         }
     }
 
-    public setZoomByTouches(currGlobalPoints: AuxiliaryTypesAuxiliaryTypes.TouchPoints, prevGlobalPoints: AuxiliaryTypesAuxiliaryTypes.TouchPoints): void {
+    public setZoomByTouches(currGlobalPoints: TouchPoints, prevGlobalPoints: TouchPoints): void {
         const currGlobalCenterPoint = this._getCenterPoint(currGlobalPoints);
         const currLocalCenterPoint  = this._getContentsContainer().globalToLocal(currGlobalCenterPoint.x, currGlobalCenterPoint.y);
         if (this._checkIsInsideContents(currLocalCenterPoint)) {
@@ -241,37 +241,37 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
     ////////////////////////////////////////////////////////////////////////////////
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////
-    private _onPointerWheel(e: VendorEgretEgret.Event): void {
+    private _onPointerWheel(e: Event): void {
         e.stopPropagation();
 
-        const data = e.data as HelpersPointerInput.PointerUnifiedEventData;
+        const data = e.data as PointerUnifiedEventData;
         this.setZoomByScroll(data.stageX, data.stageY, data.wheelValue ?? 0);
     }
 
-    private _onTouchBegin(e: VendorEgretEgret.Event): void {
+    private _onTouchBegin(e: Event): void {
         const touchesCount = this._currGlobalTouchPoints.size;
         // if (touchesCount <= 0) {
         //     this.on(UiTypes.RawEventName.PointerGlobalMove,   this._onTouchMove, this);
         // }
 
-        const data      = e.data as HelpersPointerInput.PointerUnifiedEventData;
+        const data      = e.data as PointerUnifiedEventData;
         const touchId   = data.pointerId;
         if (touchesCount <= 1) {
             this._currGlobalTouchPoints.set(touchId, { x: data.stageX, y: data.stageY });
             this._prevGlobalTouchPoints.set(touchId, { x: data.stageX, y: data.stageY });
         }
     }
-    private _onTouchEnd(e: VendorEgretEgret.Event): void {
-        this._removeTouch((e.data as HelpersPointerInput.PointerUnifiedEventData).pointerId);
+    private _onTouchEnd(e: Event): void {
+        this._removeTouch((e.data as PointerUnifiedEventData).pointerId);
     }
     // private _onTouchCancel(e: UiEventTypes.UiTouchEvent): void {
     //     this._removeTouch(e.touchPointID);
     // }
-    private _onTouchReleaseOutside(e: VendorEgretEgret.Event): void {
-        this._removeTouch((e.data as HelpersPointerInput.PointerUnifiedEventData).pointerId);
+    private _onTouchReleaseOutside(e: Event): void {
+        this._removeTouch((e.data as PointerUnifiedEventData).pointerId);
     }
-    private _onTouchMove(e: VendorEgretEgret.Event): void {
-        const data                  = e.data as HelpersPointerInput.PointerUnifiedEventData;
+    private _onTouchMove(e: Event): void {
+        const data                  = e.data as PointerUnifiedEventData;
         const touchId               = data.pointerId;
         const currGlobalTouchPoints = this._currGlobalTouchPoints;
         const prevGlobalTouchPoints = this._prevGlobalTouchPoints;
@@ -281,7 +281,7 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
             this.setZoomByTouches(currGlobalTouchPoints, prevGlobalTouchPoints);
         } else {
             if (prevGlobalTouchPoints.has(touchId)) {
-                this.setDragByTouches(HelpersMisc.getExisted(currGlobalTouchPoints.get(touchId)), HelpersMisc.getExisted(prevGlobalTouchPoints.get(touchId)));
+                this.setDragByTouches(getExisted(currGlobalTouchPoints.get(touchId)), getExisted(prevGlobalTouchPoints.get(touchId)));
             }
         }
 
@@ -302,7 +302,7 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
     private _getScaleModifierByScrollValue(value: number): number {
         return Math.max(0.01, 1 + value / 1000);
     }
-    private _getScaleModifierByTouches(currPoints: AuxiliaryTypesAuxiliaryTypes.TouchPoints, prevPoints: AuxiliaryTypesAuxiliaryTypes.TouchPoints): number {
+    private _getScaleModifierByTouches(currPoints: TouchPoints, prevPoints: TouchPoints): number {
         const contents  = this._getContentsContainer();
         const newPoints : Point[] = [];
         for (const [, point] of currPoints) {
@@ -314,11 +314,11 @@ export class UiZoomableComponent extends UiComponentsUiContainerBase.UiContainer
             oldPoints.push(contents.globalToLocal(point.x, point.y));
         }
 
-        return GeometriesUtils.getPointDistance(newPoints[0].x, newPoints[0].y, newPoints[1].x, newPoints[1].y)
-            /  GeometriesUtils.getPointDistance(oldPoints[0].x, oldPoints[0].y, oldPoints[1].x, oldPoints[1].y);
+        return getPointDistance(newPoints[0].x, newPoints[0].y, newPoints[1].x, newPoints[1].y)
+            /  getPointDistance(oldPoints[0].x, oldPoints[0].y, oldPoints[1].x, oldPoints[1].y);
     }
 
-    private _getCenterPoint(touches: AuxiliaryTypesAuxiliaryTypes.TouchPoints): Point {
+    private _getCenterPoint(touches: TouchPoints): Point {
         const points: Point[] = [];
         for (const [, point] of touches) {
             points.push({ x: point.x, y: point.y });

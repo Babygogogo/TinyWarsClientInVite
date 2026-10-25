@@ -1,15 +1,15 @@
-import * as FloatText2 from "../FloatText.ts";
-import * as GraphicsConstants from "../graphics/Constants.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as LangUtils from "../lang/Utils.ts";
-import * as NetworksManager from "../networks/Manager.ts";
-import * as NotificationsDispatcher from "../notifications/Dispatcher.ts";
-import * as NotificationsTypeId from "../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCommonHeartbeatS from "../proto/schema/CommonProto/NetMessage/MsgCommonHeartbeat/S.ts";
+import { show } from "../FloatText.ts";
+import { Tween } from "../graphics/Constants.ts";
+import { getExisted } from "../helpers/Misc.ts";
+import { TextType } from "../lang/Constants.ts";
+import { getText } from "../lang/Utils.ts";
+import { checkCanAutoReconnect, init as NetworksManagerInit } from "../networks/Manager.ts";
+import { addEventListeners, dispatch } from "../notifications/Dispatcher.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { S } from "../proto/schema/CommonProto/NetMessage/MsgCommonHeartbeat/S.ts";
 import * as TimerTimerModel from "./TimerModel.ts";
-import * as TimerTimerProxy from "./TimerProxy.ts";
-import * as VendorEgretEgret from "../vendor/egret/Egret.ts";
+import { reqCommonHeartbeat } from "./TimerProxy.ts";
+import { setInterval, callLater, setTimeout, startTick, clearInterval } from "../vendor/egret/Egret.ts";
 
 const HEARTBEAT_INTERVAL_MS = 10 * 1000;
 
@@ -19,15 +19,15 @@ let _heartbeatIntervalId    : number;
 let _serverTimestamp        = 0;
 
 export function init(): void {
-    NotificationsDispatcher.addEventListeners([
-        { type: NotificationsTypeId.TypeId.NetworkConnected,       callback: _onNotifyNetworkConnected, },
-        { type: NotificationsTypeId.TypeId.NetworkDisconnected,    callback: _onNotifyNetworkDisconnected, },
+    addEventListeners([
+        { type: TypeId.NetworkConnected,       callback: _onNotifyNetworkConnected, },
+        { type: TypeId.NetworkDisconnected,    callback: _onNotifyNetworkDisconnected, },
     ], TimerTimerModel);
 
-    VendorEgretEgret.setInterval(() => {
+    setInterval(() => {
         if (_serverTimestamp) {
             (++_serverTimestamp);
-            NotificationsDispatcher.dispatch(NotificationsTypeId.TypeId.TimeTick);
+            dispatch(TypeId.TimeTick);
         }
     }, null, 1000);
 }
@@ -45,16 +45,16 @@ let _frameBeginTime = 0;
 export async function checkAndCallLater(maxDuration = 13): Promise<void> {  // DONE
     if (Date.now() - _frameBeginTime > maxDuration) {
         await new Promise<void>((resolve) => {
-            VendorEgretEgret.callLater(() => {
+            callLater(() => {
                 _frameBeginTime = Date.now();
                 resolve();
             }, null);
         });
     }
 }
-export function wait(timeMs: number = GraphicsConstants.Tween.DefaultDuration): Promise<void> {
+export function wait(timeMs: number = Tween.DefaultDuration): Promise<void> {
     return new Promise<void>(resolve => {
-        VendorEgretEgret.setTimeout(resolve, null, timeMs);
+        setTimeout(resolve, null, timeMs);
     });
 }
 
@@ -62,7 +62,7 @@ const _tickCallbackArray    : { callback: (timestamp: number) => void; priority:
 let _isMainTickInitialized  = false;
 export function addTickCallback(callback: (timestamp: number) => void, priority = 0): void {
     if (!_isMainTickInitialized) {
-        VendorEgretEgret.startTick(mainTick, undefined);
+        startTick(mainTick, undefined);
         _isMainTickInitialized = true;
     }
 
@@ -85,8 +85,8 @@ function mainTick(timestamp: number): boolean {
 }
 
 function _onNotifyNetworkConnected(): void {
-    (_heartbeatIntervalId != null) && (VendorEgretEgret.clearInterval(_heartbeatIntervalId));
-    _heartbeatIntervalId = VendorEgretEgret.setInterval(heartbeat, null, HEARTBEAT_INTERVAL_MS);
+    (_heartbeatIntervalId != null) && (clearInterval(_heartbeatIntervalId));
+    _heartbeatIntervalId = setInterval(heartbeat, null, HEARTBEAT_INTERVAL_MS);
 
     _isHeartbeatAnswered = true;
     _heartbeatCounter    = 0;
@@ -94,26 +94,26 @@ function _onNotifyNetworkConnected(): void {
 }
 
 function _onNotifyNetworkDisconnected(): void {
-    (_heartbeatIntervalId != null) && (VendorEgretEgret.clearInterval(_heartbeatIntervalId));
+    (_heartbeatIntervalId != null) && (clearInterval(_heartbeatIntervalId));
 }
 
-export function updateOnMsgCommonHeartbeat(data: ProtoSchemaCommonProtoNetMessageMsgCommonHeartbeatS.S): void {
+export function updateOnMsgCommonHeartbeat(data: S): void {
     if (data.getCounter() === _heartbeatCounter) {
         _isHeartbeatAnswered = true;
         ++_heartbeatCounter;
 
-        checkAndUpdateServerTimestamp(HelpersMisc.getExisted(data.getTimestamp()));
+        checkAndUpdateServerTimestamp(getExisted(data.getTimestamp()));
     }
 }
 
 function heartbeat(): void {
     if (!_isHeartbeatAnswered) {
-        if (!NetworksManager.checkCanAutoReconnect()) {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0013));
+        if (!checkCanAutoReconnect()) {
+            show(getText(TextType.A0013));
         } else {
-            FloatText2.show(LangUtils.getText(LangConstants.TextType.A0008));
-            NetworksManager.init();
+            show(getText(TextType.A0008));
+            NetworksManagerInit();
         }
     }
-    TimerTimerProxy.reqCommonHeartbeat(_heartbeatCounter);
+    reqCommonHeartbeat(_heartbeatCounter);
 }

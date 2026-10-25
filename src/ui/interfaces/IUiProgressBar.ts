@@ -1,6 +1,6 @@
-import type * as UiInterfacesIUiContainer from "./IUiContainer.ts";
+import type { IUiContainer } from "./IUiContainer.ts";
 
-export interface IUiProgressBar extends UiInterfacesIUiContainer.IUiContainer {
+export interface IUiProgressBar extends IUiContainer {
     getStartValue(): number;
     setStartValue(value: number): void;
 

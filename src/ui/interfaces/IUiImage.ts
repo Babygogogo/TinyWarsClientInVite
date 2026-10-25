@@ -1,7 +1,7 @@
-import type * as UiInterfacesIUiComponent from "./IUiComponent.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import type { IUiComponent } from "./IUiComponent.ts";
+import type { DisplayObject, Rectangle } from "../../vendor/egret/Egret.ts";
 
-export interface IUiImage extends UiInterfacesIUiComponent.IUiComponent {
+export interface IUiImage extends IUiComponent {
     getSource(): string | undefined;
     loadSource(
         textureSourceName   : string,
@@ -15,8 +15,8 @@ export interface IUiImage extends UiInterfacesIUiComponent.IUiComponent {
     getIsSmoothing(): boolean;
     setIsSmoothing(value: boolean): void;
 
-    getMask(): VendorEgretEgret.DisplayObject | VendorEgretEgret.Rectangle | null;
-    setMask(mask: VendorEgretEgret.Rectangle | null): void;
+    getMask(): DisplayObject | Rectangle | null;
+    setMask(mask: Rectangle | null): void;
 
     /** 仅用于配合tween */
     get customX(): number;

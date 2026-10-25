@@ -1,9 +1,9 @@
-import * as CustomCountersConstants from "./Constants.ts";
-import * as HelpersText from "../helpers/Text.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationCustomCounter from "../proto/schema/CommonProto/WarSerialization/CustomCounter.ts";
+import { Constants } from "./Constants.ts";
+import { checkIsCharInRange } from "../helpers/Text.ts";
+import type { CustomCounter } from "../proto/schema/CommonProto/WarSerialization/CustomCounter.ts";
 
 export function checkIsValidId(customCounterId: number): boolean {
-    return (customCounterId >= CustomCountersConstants.Constants.MinId) && (customCounterId <= CustomCountersConstants.Constants.MaxId);
+    return (customCounterId >= Constants.MinId) && (customCounterId <= Constants.MaxId);
 }
 export function checkIsValidValue(customCounterValue: number): boolean {
     return isFinite(customCounterValue);
@@ -13,7 +13,7 @@ export function checkIsValidIdSubset(idArray: number[]): boolean {
         && (new Set(idArray).size === idArray.length);
 }
 
-export function checkIsValidCustomCounterArray(customCounterArray: ProtoSchemaCommonProtoWarSerializationCustomCounter.CustomCounter[]): boolean {
+export function checkIsValidCustomCounterArray(customCounterArray: CustomCounter[]): boolean {
     const counterIdSet = new Set<number>();
     for (const data of customCounterArray) {
         const counterId     = data.getCustomCounterId();
@@ -39,13 +39,13 @@ export function checkIsValidName(name: string): boolean {
     }
 
     const tempName = name.toLocaleLowerCase();
-    if (!HelpersText.checkIsCharInRange(tempName[0], `a`, `z`)) {
+    if (!checkIsCharInRange(tempName[0], `a`, `z`)) {
         return false;
     }
     for (let i = 1; i < length; ++i) {
         const char = tempName[i];
-        if ((!HelpersText.checkIsCharInRange(char, `a`, `z`))   &&
-            (!HelpersText.checkIsCharInRange(char, `0`, `9`))
+        if ((!checkIsCharInRange(char, `a`, `z`))   &&
+            (!checkIsCharInRange(char, `0`, `9`))
         ) {
             return false;
         }

@@ -1,39 +1,39 @@
-import * as CampaignsMainsProvider from "../../mains/Provider.ts";
-import * as CampaignsManagementsGateway from "../Gateway.ts";
-import * as CampaignsManagementsProvider from "../Provider.ts";
-import * as FloatText2 from "../../../FloatText.ts";
-import * as GamePanelsDict from "../../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../../gamePanels/Manager.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../../notifications/TypeId.ts";
-import type * as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignNameS from "../../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignName/S.ts";
-import * as UiComponentsUiListItemRenderer from "../../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScrollList from "../../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../../users/Model.ts";
-import type * as VendorEgretEgret from "../../../vendor/egret/Egret.ts";
+import { getCampaignInfo } from "../../mains/Provider.ts";
+import { reqCmCreateCampaign } from "../Gateway.ts";
+import { getAllCampaignIdArray, getDesigningCampaignIdArray } from "../Provider.ts";
+import { showLang } from "../../../FloatText.ts";
+import { getDict } from "../../../gamePanels/Dict.ts";
+import { openPanel } from "../../../gamePanels/Manager.ts";
+import { TextType } from "../../../lang/Constants.ts";
+import { getText, getLanguageText } from "../../../lang/Utils.ts";
+import { TypeId } from "../../../notifications/TypeId.ts";
+import type { S } from "../../../proto/schema/CommonProto/NetMessage/MsgCmSetCampaignName/S.ts";
+import { UiListItemRenderer } from "../../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
+import { getIsSelfCampaignManager } from "../../../users/Model.ts";
+import type { Event } from "../../../vendor/egret/Egret.ts";
 
 export type OpenData = void;
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!              : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!                : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!           : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!             : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCreateCampaign!    : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!              : IUiImage;
+    private readonly _group!                : IUiContainer;
+    private readonly _labelTitle!           : IUiLabel;
+    private readonly _btnClose!             : IUiButton;
+    private readonly _btnCreateCampaign!    : IUiButton;
 
-    private readonly _listCampaign!         : UiInterfacesIUiScrollList.IUiScrollList<DataForCampaignRenderer>;
-    private readonly _labelNoData!          : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _listCampaign!         : IUiScrollList<DataForCampaignRenderer>;
+    private readonly _labelNoData!          : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgCmCreateCampaign,         callback: this._onNotifyMsgCmCreateCampaign },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgCmCreateCampaign,         callback: this._onNotifyMsgCmCreateCampaign },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -61,10 +61,10 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnCreateCampaign(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonConfirmPanel, {
-            getTitle       : () => LangUtils.getText(LangConstants.TextType.B1134),
-            getContent     : () => LangUtils.getText(LangConstants.TextType.AreYouSureYouWantToContinue),
-            callback    : () => CampaignsManagementsGateway.reqCmCreateCampaign(),
+        openPanel(getDict().CommonConfirmPanel, {
+            getTitle       : () => getText(TextType.B1134),
+            getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
+            callback    : () => reqCmCreateCampaign(),
         });
     }
 
@@ -73,7 +73,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgCmCreateCampaign(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
         this._updateComponentsForListCampaign();
     }
 
@@ -88,20 +88,20 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1133));
-        this._labelNoData.setText(LangUtils.getText(LangConstants.TextType.B0278));
+        this._labelTitle.setText(getText(TextType.B1133));
+        this._labelNoData.setText(getText(TextType.B0278));
     }
 
     private _updateTopButtons(): void {
-        this._btnCreateCampaign.setIsVisible(UsersModel.getIsSelfCampaignManager());
+        this._btnCreateCampaign.setIsVisible(getIsSelfCampaignManager());
     }
 
     private async _updateComponentsForListCampaign(): Promise<void> {
         const label = this._labelNoData;
         const list  = this._listCampaign;
-        const campaignIdArray = UsersModel.getIsSelfCampaignManager()
-            ? await CampaignsManagementsProvider.getAllCampaignIdArray()
-            : await CampaignsManagementsProvider.getDesigningCampaignIdArray();
+        const campaignIdArray = getIsSelfCampaignManager()
+            ? await getAllCampaignIdArray()
+            : await getDesigningCampaignIdArray();
         if (!campaignIdArray?.length) {
             label.setIsVisible(true);
             await list.removeAllItems();
@@ -117,19 +117,19 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 }
 
-interface DataForCampaignRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForCampaignRenderer extends UiListItemData {
     index       : number;
     campaignId  : number;
 }
-class CampaignRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForCampaignRenderer> {
-    private readonly _imgBg!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelName!    : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnModify!    : UiInterfacesIUiButton.IUiButton;
+class CampaignRenderer extends UiListItemRenderer<DataForCampaignRenderer> {
+    private readonly _imgBg!        : IUiImage;
+    private readonly _labelName!    : IUiLabel;
+    private readonly _btnModify!    : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgCmSetCampaignName,    callback: this._onNotifyMsgCmSetCampaignName },
+            { type: TypeId.LanguageChanged,         callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgCmSetCampaignName,    callback: this._onNotifyMsgCmSetCampaignName },
         ]);
         this._setUiListenerArray([
             { ui: this._btnModify,                      callback: this._onTouchedBtnModify },
@@ -145,21 +145,21 @@ class CampaignRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
     private _onNotifyLanguageChanged(): void {
         this._updateComponentsForLanguage();
     }
-    private _onNotifyMsgCmSetCampaignName(e: VendorEgretEgret.Event): void {
-        const data = e.data as ProtoSchemaCommonProtoNetMessageMsgCmSetCampaignNameS.S;
+    private _onNotifyMsgCmSetCampaignName(e: Event): void {
+        const data = e.data as S;
         if ((data.getCampaignId() ?? 0) === this.getOpenData()?.campaignId) {
             this._updateLabelName();
         }
     }
 
     private _onTouchedBtnModify(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CmCampaignCommandsPanel, {
+        openPanel(getDict().CmCampaignCommandsPanel, {
             campaignId  : this.getOpenData()?.campaignId,
         });
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnModify.setText(LangUtils.getText(LangConstants.TextType.B0317));
+        this._btnModify.setText(getText(TextType.B0317));
         this._updateLabelName();
     }
 
@@ -172,9 +172,9 @@ class CampaignRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer
             return;
         }
 
-        const campaignInfo = await CampaignsMainsProvider.getCampaignInfo(campaignId);
+        const campaignInfo = await getCampaignInfo(campaignId);
         if (campaignId === this.getOpenData()?.campaignId) {
-            label.setText(`#${campaignId} ${LangUtils.getLanguageText({ textArray: campaignInfo?.getNameArray() }) ?? LangUtils.getText(LangConstants.TextType.B0277)}`);
+            label.setText(`#${campaignId} ${getLanguageText({ textArray: campaignInfo?.getNameArray() }) ?? getText(TextType.B0277)}`);
         }
     }
 }

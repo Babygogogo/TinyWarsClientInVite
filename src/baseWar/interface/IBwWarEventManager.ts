@@ -1,31 +1,33 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as AuxiliaryTypesGridIndex from "../../auxiliaryTypes/GridIndex.ts";
-import type * as BaseWarInterfaceIBwWar from "./IBwWar.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEvent from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventAction from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type * as ProtoSchemaCommonProtoWarEventWarEventFullData from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoSystemCallWarEvent from "../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialWarEventManager from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
-import type * as UnitsIUnit from "../../units/IUnit.ts";
-import type * as WarEventsTypes from "../../warEvents/Types.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar } from "./IBwWar.ts";
+import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WoSystemCallWarEvent } from "../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
+import type {
+    SerialWarEventManager as ProtoSchemaCommonProtoWarSerializationSerialWarEventManager,
+} from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
+import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import type { WarEventIdAndDataIndex as WarEventsTypesWarEventIdAndDataIndex } from "../../warEvents/Types.ts";
 
-type GridIndex              = AuxiliaryTypesGridIndex.GridIndex;
-type SerialWarEventManager  = ProtoSchemaCommonProtoWarSerializationSerialWarEventManager.SerialWarEventManager;
-type IUnit                  = UnitsIUnit.IUnit;
-type WarEventIdAndDataIndex = WarEventsTypes.WarEventIdAndDataIndex;
+type GridIndex              = AuxiliaryTypesGridIndex;
+type SerialWarEventManager  = ProtoSchemaCommonProtoWarSerializationSerialWarEventManager;
+type IUnit                  = UnitsIUnit;
+type WarEventIdAndDataIndex = WarEventsTypesWarEventIdAndDataIndex;
 
 export interface IBwWarEventManager {
-    init(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialWarEventManager>, warEventFullData: AuxiliaryTypesAuxiliaryTypes.Undefinable<ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData>): void;
+    init(data: Undefinable<SerialWarEventManager>, warEventFullData: Undefinable<WarEventFullData>): void;
     fastInit(data: SerialWarEventManager): void;
 
     serialize(): SerialWarEventManager;
     serializeForCreateSfw(): SerialWarEventManager;
     serializeForCreateMfr(): SerialWarEventManager;
 
-    startRunning(war: BaseWarInterfaceIBwWar.IBwWar): void;
+    startRunning(war: IBwWar): void;
 
-    getWarEventFullData(): ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData | null;
-    setWarEventFullData(data: ProtoSchemaCommonProtoWarEventWarEventFullData.WarEventFullData | null): void;
+    getWarEventFullData(): WarEventFullData | null;
+    setWarEventFullData(data: WarEventFullData | null): void;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for called counts.
@@ -77,12 +79,12 @@ export interface IBwWarEventManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Functions for calling events.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    callWarEvent(action: ProtoSchemaCommonProtoWarOperationWoSystemCallWarEvent.WoSystemCallWarEvent, isFastExecute: boolean): Promise<void>;
+    callWarEvent(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void>;
 
     getCallableWarEventIdAndDataIndex(): WarEventIdAndDataIndex | null;
 
-    getWarEvent(warEventId: number): ProtoSchemaCommonProtoWarEventWarEvent.WarEvent;
-    getWarEventAction(actionId: number): ProtoSchemaCommonProtoWarEventWarEventAction.WarEventAction;
+    getWarEvent(warEventId: number): WarEvent;
+    getWarEventAction(actionId: number): WarEventAction;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // misc

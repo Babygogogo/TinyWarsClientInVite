@@ -1,29 +1,29 @@
-import * as AutoTourneysMainsGateway from "../Gateway.ts";
-import * as AutoTourneysMainsProvider from "../Provider.ts";
-import * as FloatText2 from "../../../FloatText.ts";
-import * as GameConfigGcWar from "../../../gameConfig/GcWar.ts";
-import * as GamePanelsDict from "../../../gamePanels/Dict.ts";
-import * as GamePanelsManager from "../../../gamePanels/Manager.ts";
-import * as HelpersCollection from "../../../helpers/Collection.ts";
-import * as LangConstants from "../../../lang/Constants.ts";
-import * as LangUtils from "../../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../../notifications/TypeId.ts";
-import * as ProtoSchemaCommonProtoNetMessageMsgAtSetInitialBracketsInitialBracket from "../../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/InitialBracket.ts";
-import * as SoundsConstants from "../../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../../sounds/SoundPlayer.ts";
-import * as TimerTimerModel from "../../../timer/TimerModel.ts";
-import * as UiComponentsUiListItemRenderer from "../../../ui/components/UiListItemRenderer.ts";
-import * as UiComponentsUiPanel from "../../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiLayout from "../../../ui/interfaces/IUiLayout.ts";
-import type * as UiInterfacesIUiScrollList from "../../../ui/interfaces/IUiScrollList.ts";
-import type * as UiTypesUiListItemData from "../../../ui/types/UiListItemData.ts";
-import * as UsersModel from "../../../users/Model.ts";
-import * as UsersProxy from "../../../users/Proxy.ts";
-import * as WarTypesConstants from "../../../warTypes/Constants.ts";
+import { reqAtSetInitialBrackets } from "../Gateway.ts";
+import { getAtFullBracketInfo } from "../Provider.ts";
+import { showLang } from "../../../FloatText.ts";
+import { MultiRankedWar } from "../../../gameConfig/GcWar.ts";
+import { getDict } from "../../../gamePanels/Dict.ts";
+import { openPanel } from "../../../gamePanels/Manager.ts";
+import { getNonNullElements } from "../../../helpers/Collection.ts";
+import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { getText } from "../../../lang/Utils.ts";
+import { TypeId } from "../../../notifications/TypeId.ts";
+import { InitialBracket } from "../../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/InitialBracket.ts";
+import { ShortSfxCode } from "../../../sounds/Constants.ts";
+import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
+import { wait } from "../../../timer/TimerModel.ts";
+import { UiListItemRenderer } from "../../../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../../ui/interfaces/IUiLayout.ts";
+import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
+import { getUserMrwRankScoreInfo, checkHasUserPublicInfo, getUserNickname } from "../../../users/Model.ts";
+import { reqUserGetPublicInfoArray } from "../../../users/Proxy.ts";
+import { WarTypeId } from "../../../warTypes/Constants.ts";
 
 type Slot = {
     bracketGameId   : number;
@@ -33,26 +33,26 @@ type Slot = {
 export interface OpenData {
     tourneyId   : number;
 }
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!     : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnHelp!      : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnSort!      : UiInterfacesIUiButton.IUiButton;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!      : IUiImage;
+    private readonly _group!        : IUiContainer;
+    private readonly _labelTitle!   : IUiLabel;
+    private readonly _btnClose!     : IUiButton;
+    private readonly _btnHelp!      : IUiButton;
+    private readonly _btnSort!      : IUiButton;
 
-    private readonly _btnConfirm!   : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnCancel!    : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnConfirm!   : IUiButton;
+    private readonly _btnCancel!    : IUiButton;
 
-    private readonly _listBracket!  : UiInterfacesIUiScrollList.IUiScrollList<DataForBracketRenderer>;
+    private readonly _listBracket!  : IUiScrollList<DataForBracketRenderer>;
 
     private _selectedSlot               : Slot | null = null;
     private _dataArrayForListBracket    : DataForBracketRenderer[] = [];
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: NotificationsTypeId.TypeId.MsgAtSetInitialBrackets,     callback: this._onNotifyMsgAtSetInitialBrackets },
+            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgAtSetInitialBrackets,     callback: this._onNotifyMsgAtSetInitialBrackets },
         ]);
         this._setUiListenerArray([
             { ui: this._btnClose,           callback: this.closePanel },
@@ -120,8 +120,8 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onTouchedBtnHelp(): void {
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonHelpPanel, {
-            getContent : () => LangUtils.getText(LangConstants.TextType.A0408),
+        openPanel(getDict().CommonHelpPanel, {
+            getContent : () => getText(TextType.A0408),
         });
     }
 
@@ -131,17 +131,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return;
         }
 
-        GamePanelsManager.openPanel(GamePanelsDict.getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => LangUtils.getText(LangConstants.TextType.B0567),
+        openPanel(getDict().CommonChooseSingleNumberPanel, {
+            getTitleText            : () => getText(TextType.B0567),
             availableNumberArray    : [0, 1, 2, 3],
             currentNumber           : null,
             getNumberMainText       : num => {
                 switch (num) {
-                    case 0  : return LangUtils.getText(LangConstants.TextType.B0198);
-                    case 1  : return LangUtils.getText(LangConstants.TextType.B0199);
-                    case 2  : return LangUtils.getText(LangConstants.TextType.B1445);
-                    case 3  : return LangUtils.getText(LangConstants.TextType.B1207);
-                    default : return LangConstants.UndefinedError;
+                    case 0  : return getText(TextType.B0198);
+                    case 1  : return getText(TextType.B0199);
+                    case 2  : return getText(TextType.B1445);
+                    case 3  : return getText(TextType.B1207);
+                    default : return UndefinedError;
                 }
             },
             callbackOnConfirm       : async num => {
@@ -155,18 +155,18 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
 
                         if (num === 0) {
                             promiseArray.push((async (): Promise<void> => {
-                                const info = await UsersModel.getUserMrwRankScoreInfo(userId, WarTypesConstants.WarTypeId.MrwStd, 2);
-                                userIdAndScoreArray.push({ userId, score: info?.getCurrentScore() ?? GameConfigGcWar.MultiRankedWar.InitialScore });
+                                const info = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2);
+                                userIdAndScoreArray.push({ userId, score: info?.getCurrentScore() ?? MultiRankedWar.InitialScore });
                             })());
                         } else if (num === 1) {
                             promiseArray.push((async (): Promise<void> => {
-                                const info = await UsersModel.getUserMrwRankScoreInfo(userId, WarTypesConstants.WarTypeId.MrwFog, 2);
-                                userIdAndScoreArray.push({ userId, score: info?.getCurrentScore() ?? GameConfigGcWar.MultiRankedWar.InitialScore });
+                                const info = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2);
+                                userIdAndScoreArray.push({ userId, score: info?.getCurrentScore() ?? MultiRankedWar.InitialScore });
                             })());
                         } else if (num === 2) {
                             promiseArray.push((async (): Promise<void> => {
-                                const score1 = (await UsersModel.getUserMrwRankScoreInfo(userId, WarTypesConstants.WarTypeId.MrwStd, 2))?.getCurrentScore() ?? GameConfigGcWar.MultiRankedWar.InitialScore;
-                                const score2 = (await UsersModel.getUserMrwRankScoreInfo(userId, WarTypesConstants.WarTypeId.MrwFog, 2))?.getCurrentScore() ?? GameConfigGcWar.MultiRankedWar.InitialScore;
+                                const score1 = (await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2))?.getCurrentScore() ?? MultiRankedWar.InitialScore;
+                                const score2 = (await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2))?.getCurrentScore() ?? MultiRankedWar.InitialScore;
                                 userIdAndScoreArray.push({ userId, score: score1 + score2 });
                             })());
                         } else {
@@ -204,17 +204,17 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnConfirm(): Promise<void> {
-        const dataArray: ProtoSchemaCommonProtoNetMessageMsgAtSetInitialBracketsInitialBracket.InitialBracket[] = [];
+        const dataArray: InitialBracket[] = [];
         for (const data of this._dataArrayForListBracket) {
-            dataArray.push(ProtoSchemaCommonProtoNetMessageMsgAtSetInitialBracketsInitialBracket.InitialBracket.fromJson({
+            dataArray.push(InitialBracket.fromJson({
                 bracketGameId   : data.bracketGameId,
-                userIdArray     : HelpersCollection.getNonNullElements(data.userIdArray),
+                userIdArray     : getNonNullElements(data.userIdArray),
             }));
         }
 
         const tourneyId = this.getOpenData()?.tourneyId;
         if (tourneyId != null) {
-            AutoTourneysMainsGateway.reqAtSetInitialBrackets(tourneyId, dataArray);
+            reqAtSetInitialBrackets(tourneyId, dataArray);
         }
     }
 
@@ -223,7 +223,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onNotifyMsgAtSetInitialBrackets(): void {
-        FloatText2.showLang(LangConstants.TextType.OperationSucceeded);
+        showLang(TextType.OperationSucceeded);
         this.closePanel();
     }
 
@@ -242,13 +242,13 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             return [];
         }
 
-        const bracketInfoArray  = (await AutoTourneysMainsProvider.getAtFullBracketInfo(tourneyId))?.getSingleBracketInfoArray() ?? [];
+        const bracketInfoArray  = (await getAtFullBracketInfo(tourneyId))?.getSingleBracketInfoArray() ?? [];
         const userIdSet         = new Set<number>();
         const dataArray         : DataForBracketRenderer[] = [];
         for (const bracketInfo of bracketInfoArray.filter(v => v.getBracketRoundId() === 1).sort((v1, v2) => (v1.getBracketGameId() ?? 0) - (v2.getBracketGameId() ?? 0))) {
             const userIdArray = bracketInfo.getUserIdArray();
             for (const userId of userIdArray) {
-                if (!UsersModel.checkHasUserPublicInfo(userId)) {
+                if (!checkHasUserPublicInfo(userId)) {
                     userIdSet.add(userId);
                 }
             }
@@ -261,39 +261,39 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         }
 
         if (userIdSet.size) {
-            UsersProxy.reqUserGetPublicInfoArray([...userIdSet]);
-            FloatText2.showLang(LangConstants.TextType.A0040);
-            await TimerTimerModel.wait(2000);
+            reqUserGetPublicInfoArray([...userIdSet]);
+            showLang(TextType.A0040);
+            await wait(2000);
         }
 
         return dataArray;
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B1046));
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnCancel.setText(LangUtils.getText(LangConstants.TextType.B0154));
+        this._labelTitle.setText(getText(TextType.B1046));
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._btnCancel.setText(getText(TextType.B0154));
     }
 }
 
-interface DataForBracketRenderer extends UiTypesUiListItemData.UiListItemData {
+interface DataForBracketRenderer extends UiListItemData {
     bracketGameId   : number;
     userIdArray     : (number | null)[];
     panel           : Panel;
 }
-class BracketRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<DataForBracketRenderer> {
-    private readonly _imgBg!        : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelGameId!  : UiInterfacesIUiLabel.IUiLabel;
+class BracketRenderer extends UiListItemRenderer<DataForBracketRenderer> {
+    private readonly _imgBg!        : IUiImage;
+    private readonly _labelGameId!  : IUiLabel;
 
-    private readonly _groupName1!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutName1!  : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelName1!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelScore1!  : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupName1!   : IUiContainer;
+    private readonly _layoutName1!  : IUiLayout;
+    private readonly _labelName1!   : IUiLabel;
+    private readonly _labelScore1!  : IUiLabel;
 
-    private readonly _groupName2!   : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _layoutName2!  : UiInterfacesIUiLayout.IUiLayout;
-    private readonly _labelName2!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _labelScore2!  : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupName2!   : IUiContainer;
+    private readonly _layoutName2!  : IUiLayout;
+    private readonly _labelName2!   : IUiLabel;
+    private readonly _labelScore2!  : IUiLabel;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -334,30 +334,30 @@ class BracketRenderer extends UiComponentsUiListItemRenderer.UiListItemRenderer<
         const openData = this.getOpenData();
         openData?.panel.updateOnSelectedSlot(openData.bracketGameId, 0);
         this._updateColorForLabels();
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
     private _onTouchedGroupName2(): void {
         const openData = this.getOpenData();
         openData?.panel.updateOnSelectedSlot(openData.bracketGameId, 1);
         this._updateColorForLabels();
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
     }
 
-    private async _updateLabelName(label: UiInterfacesIUiLabel.IUiLabel, userId: number | null): Promise<void> {
+    private async _updateLabelName(label: IUiLabel, userId: number | null): Promise<void> {
         if (userId == null) {
             label.setText(`----`);
         } else {
-            label.setText((await UsersModel.getUserNickname(userId)) || LangConstants.UndefinedError);
+            label.setText((await getUserNickname(userId)) || UndefinedError);
         }
     }
 
-    private async _updateLabelScore(label: UiInterfacesIUiLabel.IUiLabel, userId: number | null): Promise<void> {
+    private async _updateLabelScore(label: IUiLabel, userId: number | null): Promise<void> {
         if (userId == null) {
             label.setText(`----`);
         } else {
-            const info1 = await UsersModel.getUserMrwRankScoreInfo(userId, WarTypesConstants.WarTypeId.MrwStd, 2);
-            const info2 = await UsersModel.getUserMrwRankScoreInfo(userId, WarTypesConstants.WarTypeId.MrwFog, 2);
-            label.setText(`${info1?.getCurrentScore() ?? GameConfigGcWar.MultiRankedWar.InitialScore}, ${info2?.getCurrentScore() ?? GameConfigGcWar.MultiRankedWar.InitialScore}`);
+            const info1 = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2);
+            const info2 = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2);
+            label.setText(`${info1?.getCurrentScore() ?? MultiRankedWar.InitialScore}, ${info2?.getCurrentScore() ?? MultiRankedWar.InitialScore}`);
         }
     }
 

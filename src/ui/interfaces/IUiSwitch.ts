@@ -1,9 +1,9 @@
-import type * as SoundsConstants from "../../sounds/Constants.ts";
-import type * as UiInterfacesIUiContainer from "./IUiContainer.ts";
+import type { ShortSfxCode as SoundsConstantsShortSfxCode } from "../../sounds/Constants.ts";
+import type { IUiContainer } from "./IUiContainer.ts";
 
-type ShortSfxCode = SoundsConstants.ShortSfxCode;
+type ShortSfxCode = SoundsConstantsShortSfxCode;
 
-export interface IUiSwitch extends UiInterfacesIUiContainer.IUiContainer {
+export interface IUiSwitch extends IUiContainer {
     getIsSwitchOn(): boolean;
     setIsSwitchOn(isOn: boolean, isTween: boolean): void;
 

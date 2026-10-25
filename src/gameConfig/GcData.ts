@@ -1,62 +1,76 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as CosConstants from "../cos/Constants.ts";
-import * as CoSkillsConstants from "../coSkills/Constants.ts";
-import * as GameModesConstants from "../gameModes/Constants.ts";
-import type * as GeometriesConstants from "../geometries/Constants.ts";
-import * as HelpersMisc from "../helpers/Misc.ts";
-import * as LangConstants from "../lang/Constants.ts";
-import * as PlayersConstants from "../players/Constants.ts";
-import type * as ProtoSchemaCommonProtoConfigBuildableTileCfg from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigCoBasicCfg from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigCoCategoryCfg from "../proto/schema/CommonProto/Config/CoCategoryCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillCfg from "../proto/schema/CommonProto/Config/CoSkillCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigCoSkillDescCfg from "../proto/schema/CommonProto/Config/CoSkillDescCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigDamageChartCfg from "../proto/schema/CommonProto/Config/DamageChartCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigFullConfig from "../proto/schema/CommonProto/Config/FullConfig.ts";
-import type * as ProtoSchemaCommonProtoConfigMoveCostCfg from "../proto/schema/CommonProto/Config/MoveCostCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigMoveTypeCfg from "../proto/schema/CommonProto/Config/MoveTypeCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigSystemCfg from "../proto/schema/CommonProto/Config/SystemCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigTextCfg from "../proto/schema/CommonProto/Config/TextCfg.ts";
-import * as ProtoSchemaCommonProtoConfigTileCategoryCfg from "../proto/schema/CommonProto/Config/TileCategoryCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigTileTemplateCfg from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigTileTypeMappingCfg from "../proto/schema/CommonProto/Config/TileTypeMappingCfg.ts";
-import * as ProtoSchemaCommonProtoConfigUnitCategoryCfg from "../proto/schema/CommonProto/Config/UnitCategoryCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigUnitPromotionCfg from "../proto/schema/CommonProto/Config/UnitPromotionCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigUnitTemplateCfg from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigVisionBonusCfg from "../proto/schema/CommonProto/Config/VisionBonusCfg.ts";
-import * as ProtoSchemaCommonProtoConfigWeatherCategoryCfg from "../proto/schema/CommonProto/Config/WeatherCategoryCfg.ts";
-import type * as ProtoSchemaCommonProtoConfigWeatherCfg from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
-import * as TilesConstantsCommon from "../tiles/constants/Common.ts";
-import type * as TilesTypes from "../tiles/Types.ts";
-import * as UnitsConstants from "../units/Constants.ts";
-import type * as WarTypesConstants from "../warTypes/Constants.ts";
-import * as WarTypesUtils from "../warTypes/Utils.ts";
-import * as WeathersConstants from "../weathers/Constants.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { EnergyTypeId } from "../cos/Constants.ts";
+import { SkillTypeId } from "../coSkills/Constants.ts";
+import { ModeId } from "../gameModes/Constants.ts";
+import type { SymmetryTypeId } from "../geometries/Constants.ts";
+import { getExisted, newError } from "../helpers/Misc.ts";
+import { LanguageType } from "../lang/Constants.ts";
+import { PlayerIndex } from "../players/Constants.ts";
+import type {
+    BuildableTileCfg as ProtoSchemaCommonProtoConfigBuildableTileCfg,
+} from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
+import type { CoBasicCfg as ProtoSchemaCommonProtoConfigCoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
+import type { CoCategoryCfg as ProtoSchemaCommonProtoConfigCoCategoryCfg } from "../proto/schema/CommonProto/Config/CoCategoryCfg.ts";
+import type { CoSkillCfg as ProtoSchemaCommonProtoConfigCoSkillCfg } from "../proto/schema/CommonProto/Config/CoSkillCfg.ts";
+import type { CoSkillDescCfg as ProtoSchemaCommonProtoConfigCoSkillDescCfg } from "../proto/schema/CommonProto/Config/CoSkillDescCfg.ts";
+import type { DamageChartCfg as ProtoSchemaCommonProtoConfigDamageChartCfg } from "../proto/schema/CommonProto/Config/DamageChartCfg.ts";
+import type { FullConfig as ProtoSchemaCommonProtoConfigFullConfig } from "../proto/schema/CommonProto/Config/FullConfig.ts";
+import type { MoveCostCfg as ProtoSchemaCommonProtoConfigMoveCostCfg } from "../proto/schema/CommonProto/Config/MoveCostCfg.ts";
+import type { MoveTypeCfg as ProtoSchemaCommonProtoConfigMoveTypeCfg } from "../proto/schema/CommonProto/Config/MoveTypeCfg.ts";
+import type { SystemCfg as ProtoSchemaCommonProtoConfigSystemCfg } from "../proto/schema/CommonProto/Config/SystemCfg.ts";
+import type { TextCfg as ProtoSchemaCommonProtoConfigTextCfg } from "../proto/schema/CommonProto/Config/TextCfg.ts";
+import { TileCategoryCfg } from "../proto/schema/CommonProto/Config/TileCategoryCfg.ts";
+import type { TileTemplateCfg as ProtoSchemaCommonProtoConfigTileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
+import type {
+    TileTypeMappingCfg as ProtoSchemaCommonProtoConfigTileTypeMappingCfg,
+} from "../proto/schema/CommonProto/Config/TileTypeMappingCfg.ts";
+import { UnitCategoryCfg } from "../proto/schema/CommonProto/Config/UnitCategoryCfg.ts";
+import type {
+    UnitPromotionCfg as ProtoSchemaCommonProtoConfigUnitPromotionCfg,
+} from "../proto/schema/CommonProto/Config/UnitPromotionCfg.ts";
+import type { UnitTemplateCfg as ProtoSchemaCommonProtoConfigUnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
+import type { VisionBonusCfg as ProtoSchemaCommonProtoConfigVisionBonusCfg } from "../proto/schema/CommonProto/Config/VisionBonusCfg.ts";
+import { WeatherCategoryCfg } from "../proto/schema/CommonProto/Config/WeatherCategoryCfg.ts";
+import type { WeatherCfg as ProtoSchemaCommonProtoConfigWeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
+import {
+    BaseCfgDict,
+    BaseSymmetryCfgDict,
+    ObjectCfgDict,
+    ObjectSymmetryCfgDict,
+    DecorationCfgDict,
+    DecorationSymmetryCfgDict,
+    CategoryId,
+} from "../tiles/constants/Common.ts";
+import type { TileBaseCfg, TileObjectCfg, TileDecorationCfg } from "../tiles/Types.ts";
+import { CategoryId as UnitsConstantsCategoryId, WeaponTypeId } from "../units/Constants.ts";
+import type { WarTypeId } from "../warTypes/Constants.ts";
+import { checkIsAtw, checkIsMrw } from "../warTypes/Utils.ts";
+import { CategoryId as WeathersConstantsCategoryId } from "../weathers/Constants.ts";
 
-type UnitTemplateCfg        = ProtoSchemaCommonProtoConfigUnitTemplateCfg.UnitTemplateCfg;
-type TileTemplateCfg        = ProtoSchemaCommonProtoConfigTileTemplateCfg.TileTemplateCfg;
-type TileTypeMappingCfg     = ProtoSchemaCommonProtoConfigTileTypeMappingCfg.TileTypeMappingCfg;
-type DamageChartCfg         = ProtoSchemaCommonProtoConfigDamageChartCfg.DamageChartCfg;
-type BuildableTileCfg       = ProtoSchemaCommonProtoConfigBuildableTileCfg.BuildableTileCfg;
-type VisionBonusCfg         = ProtoSchemaCommonProtoConfigVisionBonusCfg.VisionBonusCfg;
-type CoBasicCfg             = ProtoSchemaCommonProtoConfigCoBasicCfg.CoBasicCfg;
-type SystemCfg              = ProtoSchemaCommonProtoConfigSystemCfg.SystemCfg;
-type MoveCostCfg            = ProtoSchemaCommonProtoConfigMoveCostCfg.MoveCostCfg;
-type UnitPromotionCfg       = ProtoSchemaCommonProtoConfigUnitPromotionCfg.UnitPromotionCfg;
-type CoCategoryCfg          = ProtoSchemaCommonProtoConfigCoCategoryCfg.CoCategoryCfg;
-type CoSkillCfg             = ProtoSchemaCommonProtoConfigCoSkillCfg.CoSkillCfg;
-type CoSkillDescCfg         = ProtoSchemaCommonProtoConfigCoSkillDescCfg.CoSkillDescCfg;
-type WeatherCfg             = ProtoSchemaCommonProtoConfigWeatherCfg.WeatherCfg;
-type MoveTypeCfg            = ProtoSchemaCommonProtoConfigMoveTypeCfg.MoveTypeCfg;
-type TextCfg                = ProtoSchemaCommonProtoConfigTextCfg.TextCfg;
-type FullConfig             = ProtoSchemaCommonProtoConfigFullConfig.FullConfig;
+type UnitTemplateCfg        = ProtoSchemaCommonProtoConfigUnitTemplateCfg;
+type TileTemplateCfg        = ProtoSchemaCommonProtoConfigTileTemplateCfg;
+type TileTypeMappingCfg     = ProtoSchemaCommonProtoConfigTileTypeMappingCfg;
+type DamageChartCfg         = ProtoSchemaCommonProtoConfigDamageChartCfg;
+type BuildableTileCfg       = ProtoSchemaCommonProtoConfigBuildableTileCfg;
+type VisionBonusCfg         = ProtoSchemaCommonProtoConfigVisionBonusCfg;
+type CoBasicCfg             = ProtoSchemaCommonProtoConfigCoBasicCfg;
+type SystemCfg              = ProtoSchemaCommonProtoConfigSystemCfg;
+type MoveCostCfg            = ProtoSchemaCommonProtoConfigMoveCostCfg;
+type UnitPromotionCfg       = ProtoSchemaCommonProtoConfigUnitPromotionCfg;
+type CoCategoryCfg          = ProtoSchemaCommonProtoConfigCoCategoryCfg;
+type CoSkillCfg             = ProtoSchemaCommonProtoConfigCoSkillCfg;
+type CoSkillDescCfg         = ProtoSchemaCommonProtoConfigCoSkillDescCfg;
+type WeatherCfg             = ProtoSchemaCommonProtoConfigWeatherCfg;
+type MoveTypeCfg            = ProtoSchemaCommonProtoConfigMoveTypeCfg;
+type TextCfg                = ProtoSchemaCommonProtoConfigTextCfg;
+type FullConfig             = ProtoSchemaCommonProtoConfigFullConfig;
 
 export class GcData {
     private readonly _version                       : string;
     private readonly _systemCfg                     : SystemCfg;
     private readonly _unitMaxPromotion              : number;
-    private readonly _tileCategoryCfgDict           : Map<number, ProtoSchemaCommonProtoConfigTileCategoryCfg.TileCategoryCfg>;
-    private readonly _unitCategoryCfgDict           : Map<number, ProtoSchemaCommonProtoConfigUnitCategoryCfg.UnitCategoryCfg>;
+    private readonly _tileCategoryCfgDict           : Map<number, TileCategoryCfg>;
+    private readonly _unitCategoryCfgDict           : Map<number, UnitCategoryCfg>;
     private readonly _tileTemplateCfgDict           : Map<number, TileTemplateCfg>;
     private readonly _tileTypeMappingCfgDict        : Map<number, Map<number, TileTypeMappingCfg>>;
     private readonly _unitTemplateCfgDict           : Map<number, UnitTemplateCfg>;
@@ -68,7 +82,7 @@ export class GcData {
     private readonly _coSkillCfgDict                : Map<number, CoSkillCfg>;
     private readonly _coSkillDescCfgDict            : Map<number, CoSkillDescCfg>;
     private readonly _weatherCfgDict                : Map<number, WeatherCfg>;
-    private readonly _weatherCategoryCfgDict        : Map<number, ProtoSchemaCommonProtoConfigWeatherCategoryCfg.WeatherCategoryCfg>;
+    private readonly _weatherCategoryCfgDict        : Map<number, WeatherCategoryCfg>;
     private readonly _damageChartCfgDict            : Map<number, { [armorType: number]: { [weaponType: number]: DamageChartCfg } }>;
     private readonly _unitPromotionCfgDict          : Map<number, UnitPromotionCfg>;
     private readonly _secondaryWeaponFlagDict       : Map<number, boolean>;
@@ -162,80 +176,80 @@ export class GcData {
     }
     public getAllTileTypeArraySortedByWeight(): number[] {
         return [...this._tileTemplateCfgDict]
-            .sort((v1, v2) => HelpersMisc.getExisted(v1[1].getSortWeight()) - HelpersMisc.getExisted(v2[1].getSortWeight()))
+            .sort((v1, v2) => getExisted(v1[1].getSortWeight()) - getExisted(v2[1].getSortWeight()))
             .map(v => v[0]);
     }
     public getTileTypeArrayForTileChart(): number[] {
         return [...this._tileTemplateCfgDict]
             .filter(v => v[1].getSortWeightForTileChart() != null)
-            .sort((v1, v2) => HelpersMisc.getExisted(v1[1].getSortWeightForTileChart()) - HelpersMisc.getExisted(v2[1].getSortWeightForTileChart()))
+            .sort((v1, v2) => getExisted(v1[1].getSortWeightForTileChart()) - getExisted(v2[1].getSortWeightForTileChart()))
             .map(v => v[0]);
     }
     public getTileTypeArrayForDamageChart(): number[] {
         return [...this._tileTemplateCfgDict]
             .filter(v => v[1].getSortWeightForDamageChart() != null)
-            .sort((v1, v2) => HelpersMisc.getExisted(v1[1].getSortWeightForDamageChart()) - HelpersMisc.getExisted(v2[1].getSortWeightForDamageChart()))
+            .sort((v1, v2) => getExisted(v1[1].getSortWeightForDamageChart()) - getExisted(v2[1].getSortWeightForDamageChart()))
             .map(v => v[0]);
     }
     public getTileTypeArrayForMapInfo(): number[] {
         return [...this._tileTemplateCfgDict]
             .filter(v => v[1].getSortWeightForMapInfo() != null)
-            .sort((v1, v2) => HelpersMisc.getExisted(v1[1].getSortWeightForMapInfo()) - HelpersMisc.getExisted(v2[1].getSortWeightForMapInfo()))
+            .sort((v1, v2) => getExisted(v1[1].getSortWeightForMapInfo()) - getExisted(v2[1].getSortWeightForMapInfo()))
             .map(v => v[0]);
     }
     public getTileTypeArrayForUnattackable(): number[] {
         return [...this._tileTemplateCfgDict]
             .filter(v => v[1].getMaxHp() == null)
-            .sort((v1, v2) => HelpersMisc.getExisted(v1[1].getSortWeightForTileChart()) - HelpersMisc.getExisted(v2[1].getSortWeightForTileChart()))
+            .sort((v1, v2) => getExisted(v1[1].getSortWeightForTileChart()) - getExisted(v2[1].getSortWeightForTileChart()))
             .map(v => v[0]);
     }
 
-    public getTileBaseCfg(tileBaseType: number): TilesTypes.TileBaseCfg | null {
-        return TilesConstantsCommon.BaseCfgDict.get(tileBaseType) ?? null;
+    public getTileBaseCfg(tileBaseType: number): TileBaseCfg | null {
+        return BaseCfgDict.get(tileBaseType) ?? null;
     }
     public checkIsUsableTileBaseType(tileBaseType: number): boolean {
-        return !!TilesConstantsCommon.BaseCfgDict.get(tileBaseType)?.isEnabled;
+        return !!BaseCfgDict.get(tileBaseType)?.isEnabled;
     }
-    public getAllEnabledTileBaseCfgArray(): TilesTypes.TileBaseCfg[] {
-        return [...TilesConstantsCommon.BaseCfgDict].filter(v => v[1].isEnabled).map(v => v[1]).sort((v1, v2) => v1.tileBaseTypeId - v2.tileBaseTypeId);
+    public getAllEnabledTileBaseCfgArray(): TileBaseCfg[] {
+        return [...BaseCfgDict].filter(v => v[1].isEnabled).map(v => v[1]).sort((v1, v2) => v1.tileBaseTypeId - v2.tileBaseTypeId);
     }
     public getDefaultTileBaseType(): number {
-        for (const [tileBaseType, cfg] of TilesConstantsCommon.BaseCfgDict) {
+        for (const [tileBaseType, cfg] of BaseCfgDict) {
             if (cfg.isDefault) {
                 return tileBaseType;
             }
         }
-        throw HelpersMisc.newError(`No default tile base type.`);
+        throw newError(`No default tile base type.`);
     }
-    public checkIsValidTileBaseShapeId(tileBaseType: number, shapeId: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>): boolean {
+    public checkIsValidTileBaseShapeId(tileBaseType: number, shapeId: Undefinable<number>): boolean {
         const cfg = this.getTileBaseCfg(tileBaseType);
         return (!!cfg?.isEnabled)
             && ((shapeId == null) || ((shapeId >= 0) && (shapeId < cfg.shapesCount)));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getSymmetricalTileBaseShapeId(tileBaseType: number, shapeId: number, symmetryType: GeometriesConstants.SymmetryTypeId): number | null {
-        const shapeIdList = TilesConstantsCommon.BaseSymmetryCfgDict.get(tileBaseType)?.get(shapeId)?.symmetryShapeIds;
+    public getSymmetricalTileBaseShapeId(tileBaseType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
+        const shapeIdList = BaseSymmetryCfgDict.get(tileBaseType)?.get(shapeId)?.symmetryShapeIds;
         return shapeIdList ? shapeIdList[symmetryType] : null;
     }
     public checkIsTileBaseSymmetrical({ baseType, shapeId1, shapeId2, symmetryType }: {
         baseType    : number;
         shapeId1    : number;
         shapeId2    : number;
-        symmetryType: GeometriesConstants.SymmetryTypeId;
+        symmetryType: SymmetryTypeId;
     }): boolean {
         return this.getSymmetricalTileBaseShapeId(baseType, shapeId1, symmetryType) === (shapeId2 || 0);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getTileObjectCfg(tileObjectType: number): TilesTypes.TileObjectCfg | null {
-        return TilesConstantsCommon.ObjectCfgDict.get(tileObjectType) ?? null;
+    public getTileObjectCfg(tileObjectType: number): TileObjectCfg | null {
+        return ObjectCfgDict.get(tileObjectType) ?? null;
     }
     public checkIsValidTileObjectType(tileObjectType: number): boolean {
-        return TilesConstantsCommon.ObjectCfgDict.has(tileObjectType);
+        return ObjectCfgDict.has(tileObjectType);
     }
-    public getAllTileObjectCfgArray(): TilesTypes.TileObjectCfg[] {
-        return [...TilesConstantsCommon.ObjectCfgDict]
+    public getAllTileObjectCfgArray(): TileObjectCfg[] {
+        return [...ObjectCfgDict]
             .sort((v1, v2) => v1[1].sortWeight - v2[1].sortWeight)
             .map(v => v[1]);
     }
@@ -245,44 +259,44 @@ export class GcData {
     }): boolean {
         const cfg = this.getTileObjectCfg(tileObjectType);
         return (cfg != null)
-            && (playerIndex >= PlayersConstants.PlayerIndex.Neutral)
-            && (playerIndex <= PlayersConstants.PlayerIndex.Max)
-            && ((!cfg.isNeutralOnly) || (playerIndex === PlayersConstants.PlayerIndex.Neutral));
+            && (playerIndex >= PlayerIndex.Neutral)
+            && (playerIndex <= PlayerIndex.Max)
+            && ((!cfg.isNeutralOnly) || (playerIndex === PlayerIndex.Neutral));
     }
-    public checkIsValidTileObjectShapeId(tileObjectType: number, shapeId: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>): boolean {
+    public checkIsValidTileObjectShapeId(tileObjectType: number, shapeId: Undefinable<number>): boolean {
         const shapesCount = this.getTileObjectCfg(tileObjectType)?.shapesCount;
         return (shapesCount != null)
             && ((shapeId == null) || ((shapeId >= 0) && (shapeId < shapesCount)));
     }
-    public getSymmetricalTileObjectType(tileObjectType: number, symmetryType: GeometriesConstants.SymmetryTypeId): number {
-        return HelpersMisc.getExisted(this.getTileObjectCfg(tileObjectType)?.symmetryTypes)[symmetryType];
+    public getSymmetricalTileObjectType(tileObjectType: number, symmetryType: SymmetryTypeId): number {
+        return getExisted(this.getTileObjectCfg(tileObjectType)?.symmetryTypes)[symmetryType];
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getSymmetricalTileObjectShapeId(tileObjectType: number, shapeId: number, symmetryType: GeometriesConstants.SymmetryTypeId): number | null {
-        const shapeIdArray = TilesConstantsCommon.ObjectSymmetryCfgDict.get(tileObjectType)?.get(shapeId)?.symmetryShapeIds;
+    public getSymmetricalTileObjectShapeId(tileObjectType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
+        const shapeIdArray = ObjectSymmetryCfgDict.get(tileObjectType)?.get(shapeId)?.symmetryShapeIds;
         return shapeIdArray ? shapeIdArray[symmetryType] : null;
     }
     public checkIsTileObjectSymmetrical({ objectType, shapeId1, shapeId2, symmetryType }: {
         objectType      : number;
         shapeId1        : number;
         shapeId2        : number;
-        symmetryType    : GeometriesConstants.SymmetryTypeId;
+        symmetryType    : SymmetryTypeId;
     }): boolean {
         return this.getSymmetricalTileObjectShapeId(objectType, shapeId1, symmetryType) === (shapeId2 || 0);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getTileDecorationCfg(tileDecorationType: number): TilesTypes.TileDecorationCfg | null {
-        return TilesConstantsCommon.DecorationCfgDict.get(tileDecorationType) ?? null;
+    public getTileDecorationCfg(tileDecorationType: number): TileDecorationCfg | null {
+        return DecorationCfgDict.get(tileDecorationType) ?? null;
     }
     public checkIsValidTileDecorationType(tileDecorationType: number): boolean {
-        return TilesConstantsCommon.DecorationCfgDict.has(tileDecorationType);
+        return DecorationCfgDict.has(tileDecorationType);
     }
-    public getAllTileDecorationCfgArray(): TilesTypes.TileDecorationCfg[] {
-        return [...TilesConstantsCommon.DecorationCfgDict].sort((v1, v2) => v1[0] - v2[0]).map(v => v[1]);
+    public getAllTileDecorationCfgArray(): TileDecorationCfg[] {
+        return [...DecorationCfgDict].sort((v1, v2) => v1[0] - v2[0]).map(v => v[1]);
     }
-    public checkIsValidTileDecorationShapeId(tileDecorationType: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>, shapeId: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>): boolean {
+    public checkIsValidTileDecorationShapeId(tileDecorationType: Undefinable<number>, shapeId: Undefinable<number>): boolean {
         if (tileDecorationType == null) {
             return shapeId == null;
         }
@@ -293,15 +307,15 @@ export class GcData {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getSymmetricalTileDecorationShapeId(tileDecorationType: number, shapeId: number, symmetryType: GeometriesConstants.SymmetryTypeId): number | null {
-        const shapeIdArray = TilesConstantsCommon.DecorationSymmetryCfgDict.get(tileDecorationType)?.get(shapeId)?.symmetryShapeIds;
+    public getSymmetricalTileDecorationShapeId(tileDecorationType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
+        const shapeIdArray = DecorationSymmetryCfgDict.get(tileDecorationType)?.get(shapeId)?.symmetryShapeIds;
         return shapeIdArray ? shapeIdArray[symmetryType] : null;
     }
     public checkIsTileDecorationSymmetrical({ tileDecorationType, shapeId1, shapeId2, symmetryType }: {
         tileDecorationType  : number | null;
-        shapeId1            : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-        shapeId2            : AuxiliaryTypesAuxiliaryTypes.Undefinable<number>;
-        symmetryType        : GeometriesConstants.SymmetryTypeId;
+        shapeId1            : Undefinable<number>;
+        shapeId2            : Undefinable<number>;
+        symmetryType        : SymmetryTypeId;
     }): boolean {
         if (tileDecorationType == null) {
             return (shapeId1 == null) && (shapeId2 == null);
@@ -322,7 +336,7 @@ export class GcData {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getTileCategoryCfg(tileCategory: number): ProtoSchemaCommonProtoConfigTileCategoryCfg.TileCategoryCfg | null {
+    public getTileCategoryCfg(tileCategory: number): TileCategoryCfg | null {
         return this._tileCategoryCfgDict.get(tileCategory) ?? null;
     }
     private _getTileTypeIdsByCategory(tileCategory: number): number[] | null {
@@ -330,9 +344,9 @@ export class GcData {
         return cfg ? cfg.getTileTypeIds() ?? [] : null;
     }
     public checkIsTileTypeInCategory(tileType: number, tileCategory: number): boolean {
-        if (tileCategory === TilesConstantsCommon.CategoryId.All) {
+        if (tileCategory === CategoryId.All) {
             return true;
-        } else if (tileCategory === TilesConstantsCommon.CategoryId.None) {
+        } else if (tileCategory === CategoryId.None) {
             return false;
         } else {
             const typeArray = this._getTileTypeIdsByCategory(tileCategory);
@@ -356,7 +370,7 @@ export class GcData {
         return this._allUnitTypeArray;
     }
 
-    public getUnitCategoryCfg(unitCategory: number): ProtoSchemaCommonProtoConfigUnitCategoryCfg.UnitCategoryCfg | null {
+    public getUnitCategoryCfg(unitCategory: number): UnitCategoryCfg | null {
         return this._unitCategoryCfgDict.get(unitCategory) ?? null;
     }
     public getUnitTypesByCategory(unitCategory: number): number[] | null {
@@ -364,9 +378,9 @@ export class GcData {
         return cfg ? cfg.getUnitTypeIds() ?? [] : null;
     }
     public checkIsUnitTypeInCategory(unitType: number, unitCategory: number): boolean {
-        if (unitCategory === UnitsConstants.CategoryId.All) {
+        if (unitCategory === UnitsConstantsCategoryId.All) {
             return true;
-        } else if (unitCategory === UnitsConstants.CategoryId.None) {
+        } else if (unitCategory === UnitsConstantsCategoryId.None) {
             return false;
         } else {
             const typeArray = this.getUnitTypesByCategory(unitCategory);
@@ -410,9 +424,9 @@ export class GcData {
                 return weatherType;
             }
         }
-        throw HelpersMisc.newError(`No default weather type.`);
+        throw newError(`No default weather type.`);
     }
-    public getNextWeatherType(weatherType: AuxiliaryTypesAuxiliaryTypes.Undefinable<number>): number {
+    public getNextWeatherType(weatherType: Undefinable<number>): number {
         const weatherTypeArray = this.getAllWeatherTypeArray();
         return weatherType == null
             ? weatherTypeArray[0]
@@ -426,7 +440,7 @@ export class GcData {
         return typeArray.sort((v1, v2) => v1 - v2);
     }
 
-    public getWeatherCategoryCfg(category: number): ProtoSchemaCommonProtoConfigWeatherCategoryCfg.WeatherCategoryCfg | null {
+    public getWeatherCategoryCfg(category: number): WeatherCategoryCfg | null {
         return this._weatherCategoryCfgDict.get(category) ?? null;
     }
     public getWeatherTypeIdsByCategory(category: number): number[] | null {
@@ -434,9 +448,9 @@ export class GcData {
         return cfg ? cfg.getWeatherTypeIds() ?? [] : null;
     }
     public checkIsWeatherTypeInCategory(weatherType: number, category: number): boolean {
-        if (category === WeathersConstants.CategoryId.All) {
+        if (category === WeathersConstantsCategoryId.All) {
             return true;
-        } else if (category === WeathersConstants.CategoryId.None) {
+        } else if (category === WeathersConstantsCategoryId.None) {
             return false;
         } else {
             const typeArray = this.getWeatherTypeIdsByCategory(category);
@@ -463,8 +477,8 @@ export class GcData {
         const coCategoryId = this.getCoBasicCfg(coId)?.getCoCategoryId();
         return coCategoryId == null ? null : this.getCoCategoryCfg(coCategoryId);
     }
-    public getEnabledCoCategoryIdArray(warType: WarTypesConstants.WarTypeId): number[] {
-        if ((WarTypesUtils.checkIsAtw(warType)) || (WarTypesUtils.checkIsMrw(warType))) {
+    public getEnabledCoCategoryIdArray(warType: WarTypeId): number[] {
+        if ((checkIsAtw(warType)) || (checkIsMrw(warType))) {
             return this._enabledCoCategoryIdArrayForMrwAndAtw ??= [...new Set([...this._coBasicCfgDict.values()]
                 .filter(v => (v.getCoCategoryId() != null) && (v.getIsEnabled()) && (v.getIsEnabledForMrwAndAtw()))
                 .map(v => v.getCoCategoryId() ?? 0))]
@@ -473,8 +487,8 @@ export class GcData {
             return this.getAllEnabledCoCategoryIdArray();
         }
     }
-    public getEnabledCoCategoryIdArrayByGameModeId(gameModeId: GameModesConstants.ModeId): number[] {
-        if ((gameModeId === GameModesConstants.ModeId.AutoTourney) || (gameModeId === GameModesConstants.ModeId.RankedMatch)) {
+    public getEnabledCoCategoryIdArrayByGameModeId(gameModeId: ModeId): number[] {
+        if ((gameModeId === ModeId.AutoTourney) || (gameModeId === ModeId.RankedMatch)) {
             return this._enabledCoCategoryIdArrayForMrwAndAtw ??= [...new Set([...this._coBasicCfgDict.values()]
                 .filter(v => (v.getCoCategoryId() != null) && (v.getIsEnabled()) && (v.getIsEnabledForMrwAndAtw()))
                 .map(v => v.getCoCategoryId() ?? 0))]
@@ -529,27 +543,27 @@ export class GcData {
                 return coId;
             }
         }
-        throw HelpersMisc.newError(`No available CO ID for coCategoryId: ${coCategoryId}.`);
+        throw newError(`No available CO ID for coCategoryId: ${coCategoryId}.`);
     }
     public getCoNameAndTierText(coId: number): string | null {
         return this.getCoBasicCfg(coId)?.getName() ?? null;
     }
-    public getCoEnergyType(coId: number): CosConstants.EnergyTypeId | null {
+    public getCoEnergyType(coId: number): EnergyTypeId | null {
         return this.getCoBasicCfg(coId)?.getCoEnergyTypeId() ?? null;
     }
     public checkIsOriginCo(coId: number): boolean {
         return this.getCoBasicCfg(coId)?.getDataDesigner() === `Intelligent Systems`;
     }
 
-    public getEnabledCoArray(warType: WarTypesConstants.WarTypeId): CoBasicCfg[] {
-        if ((WarTypesUtils.checkIsAtw(warType)) || (WarTypesUtils.checkIsMrw(warType))) {
+    public getEnabledCoArray(warType: WarTypeId): CoBasicCfg[] {
+        if ((checkIsAtw(warType)) || (checkIsMrw(warType))) {
             return this._enabledCoCfgArrayForMrwAndAtw ??= [...this._coBasicCfgDict.values()].filter(v => (v.getIsEnabled()) && (v.getIsEnabledForMrwAndAtw())).sort(sorterForCoBasicCfgArray);
         } else {
             return this.getAllEnabledCoArray();
         }
     }
-    public getEnabledCoArrayByGameModeId(gameModeId: GameModesConstants.ModeId): CoBasicCfg[] {
-        if ((gameModeId === GameModesConstants.ModeId.AutoTourney) || (gameModeId === GameModesConstants.ModeId.RankedMatch)) {
+    public getEnabledCoArrayByGameModeId(gameModeId: ModeId): CoBasicCfg[] {
+        if ((gameModeId === ModeId.AutoTourney) || (gameModeId === ModeId.RankedMatch)) {
             return this._enabledCoCfgArrayForMrwAndAtw ??= [...this._coBasicCfgDict.values()].filter(v => (v.getIsEnabled()) && (v.getIsEnabledForMrwAndAtw())).sort(sorterForCoBasicCfgArray);
         } else {
             return this.getAllEnabledCoArray();
@@ -585,16 +599,16 @@ export class GcData {
     public getCoSkillCfg(skillId: number): CoSkillCfg | null {
         return this._coSkillCfgDict.get(skillId) ?? null;
     }
-    public getCoSkillArray(coId: number, skillType: CoSkillsConstants.SkillTypeId): number[] | null {
+    public getCoSkillArray(coId: number, skillType: SkillTypeId): number[] | null {
         const coConfig = this.getCoBasicCfg(coId);
         if (coConfig == null) {
             return null;
         }
 
         switch (skillType) {
-            case CoSkillsConstants.SkillTypeId.Passive    : return coConfig.getPassiveSkillIds() ?? [];
-            case CoSkillsConstants.SkillTypeId.Power      : return coConfig.getPowerSkillIds() ?? [];
-            case CoSkillsConstants.SkillTypeId.SuperPower : return coConfig.getSuperPowerSkillIds() ?? [];
+            case SkillTypeId.Passive    : return coConfig.getPassiveSkillIds() ?? [];
+            case SkillTypeId.Power      : return coConfig.getPowerSkillIds() ?? [];
+            case SkillTypeId.SuperPower : return coConfig.getSuperPowerSkillIds() ?? [];
             default                     : return null;
         }
     }
@@ -614,16 +628,16 @@ export class GcData {
     public getTextCfg(textId: number): TextCfg | null {
         return this._textCfgDict.get(textId) ?? null;
     }
-    public getTextArray(textId: number, languageType: LangConstants.LanguageType): string[] | null {
+    public getTextArray(textId: number, languageType: LanguageType): string[] | null {
         const cfg = this.getTextCfg(textId);
         if (cfg == null) {
             return null;
         }
 
         switch (languageType) {
-            case LangConstants.LanguageType.Chinese   : return cfg.getTextArray0() ?? null;
-            case LangConstants.LanguageType.English   : return cfg.getTextArray1() ?? null;
-            case LangConstants.LanguageType.Spanish   : return cfg.getTextArray2() ?? null;
+            case LanguageType.Chinese   : return cfg.getTextArray0() ?? null;
+            case LanguageType.English   : return cfg.getTextArray1() ?? null;
+            case LanguageType.Spanish   : return cfg.getTextArray2() ?? null;
             default                                                 : return null;
         }
     }
@@ -632,19 +646,19 @@ export class GcData {
 function _destructSystemCfg(data: SystemCfg[]): SystemCfg {
     return data[0];
 }
-function _destructTileCategoryCfg(data: ProtoSchemaCommonProtoConfigTileCategoryCfg.TileCategoryCfg[], tileTemplateCfgs: TileTemplateCfg[]): Map<number, ProtoSchemaCommonProtoConfigTileCategoryCfg.TileCategoryCfg> {
-    const dst = new Map<number, ProtoSchemaCommonProtoConfigTileCategoryCfg.TileCategoryCfg>();
+function _destructTileCategoryCfg(data: TileCategoryCfg[], tileTemplateCfgs: TileTemplateCfg[]): Map<number, TileCategoryCfg> {
+    const dst = new Map<number, TileCategoryCfg>();
     for (const d of data) {
         const category = d.getTileCategoryId();
         dst.set(category, d);
     }
 
     {
-        const categoryId = TilesConstantsCommon.CategoryId.None;
+        const categoryId = CategoryId.None;
         if (dst.has(categoryId)) {
-            (HelpersMisc.getExisted(dst.get(categoryId)).getTileTypeIds()).length = 0;
+            (getExisted(dst.get(categoryId)).getTileTypeIds()).length = 0;
         } else {
-            dst.set(categoryId, ProtoSchemaCommonProtoConfigTileCategoryCfg.TileCategoryCfg.fromJson({
+            dst.set(categoryId, TileCategoryCfg.fromJson({
                 tileCategoryId  : categoryId,
                 tileTypeIds     : [],
             }));
@@ -652,12 +666,12 @@ function _destructTileCategoryCfg(data: ProtoSchemaCommonProtoConfigTileCategory
     }
 
     {
-        const categoryId        = TilesConstantsCommon.CategoryId.All;
+        const categoryId        = CategoryId.All;
         const allTileTypeIds    = tileTemplateCfgs.map(v => v.getTileTypeId());
         if (dst.has(categoryId)) {
-            HelpersMisc.getExisted(dst.get(categoryId)).setTileTypeIds(allTileTypeIds);
+            getExisted(dst.get(categoryId)).setTileTypeIds(allTileTypeIds);
         } else {
-            dst.set(categoryId, ProtoSchemaCommonProtoConfigTileCategoryCfg.TileCategoryCfg.fromJson({
+            dst.set(categoryId, TileCategoryCfg.fromJson({
                 tileCategoryId  : categoryId,
                 tileTypeIds     : allTileTypeIds,
             }));
@@ -666,18 +680,18 @@ function _destructTileCategoryCfg(data: ProtoSchemaCommonProtoConfigTileCategory
 
     return dst;
 }
-function _destructUnitCategoryCfg(data: ProtoSchemaCommonProtoConfigUnitCategoryCfg.UnitCategoryCfg[], unitTemplateCfgs: UnitTemplateCfg[]): Map<number, ProtoSchemaCommonProtoConfigUnitCategoryCfg.UnitCategoryCfg> {
-    const dst = new Map<number, ProtoSchemaCommonProtoConfigUnitCategoryCfg.UnitCategoryCfg>();
+function _destructUnitCategoryCfg(data: UnitCategoryCfg[], unitTemplateCfgs: UnitTemplateCfg[]): Map<number, UnitCategoryCfg> {
+    const dst = new Map<number, UnitCategoryCfg>();
     for (const d of data) {
         dst.set(d.getUnitCategoryId(), d);
     }
 
     {
-        const categoryId = UnitsConstants.CategoryId.None;
+        const categoryId = UnitsConstantsCategoryId.None;
         if (dst.has(categoryId)) {
-            (HelpersMisc.getExisted(dst.get(categoryId)).getUnitTypeIds()).length = 0;
+            (getExisted(dst.get(categoryId)).getUnitTypeIds()).length = 0;
         } else {
-            dst.set(categoryId, ProtoSchemaCommonProtoConfigUnitCategoryCfg.UnitCategoryCfg.fromJson({
+            dst.set(categoryId, UnitCategoryCfg.fromJson({
                 unitCategoryId  : categoryId,
                 unitTypeIds     : [],
             }));
@@ -685,12 +699,12 @@ function _destructUnitCategoryCfg(data: ProtoSchemaCommonProtoConfigUnitCategory
     }
 
     {
-        const categoryType      = UnitsConstants.CategoryId.All;
+        const categoryType      = UnitsConstantsCategoryId.All;
         const allUnitTypeArray  = unitTemplateCfgs.map(v => v.getUnitTypeId());
         if (dst.has(categoryType)) {
-            HelpersMisc.getExisted(dst.get(categoryType)).setUnitTypeIds(allUnitTypeArray);
+            getExisted(dst.get(categoryType)).setUnitTypeIds(allUnitTypeArray);
         } else {
-            dst.set(categoryType, ProtoSchemaCommonProtoConfigUnitCategoryCfg.UnitCategoryCfg.fromJson({
+            dst.set(categoryType, UnitCategoryCfg.fromJson({
                 unitCategoryId  : categoryType,
                 unitTypeIds     : allUnitTypeArray,
             }));
@@ -809,18 +823,18 @@ function _destructWeatherCfg(data: WeatherCfg[]): Map<number, WeatherCfg> {
     }
     return dst;
 }
-function _destructWeatherCategoryCfg(data: ProtoSchemaCommonProtoConfigWeatherCategoryCfg.WeatherCategoryCfg[], weatherCfgs: WeatherCfg[]): Map<number, ProtoSchemaCommonProtoConfigWeatherCategoryCfg.WeatherCategoryCfg> {
-    const dst = new Map<number, ProtoSchemaCommonProtoConfigWeatherCategoryCfg.WeatherCategoryCfg>();
+function _destructWeatherCategoryCfg(data: WeatherCategoryCfg[], weatherCfgs: WeatherCfg[]): Map<number, WeatherCategoryCfg> {
+    const dst = new Map<number, WeatherCategoryCfg>();
     for (const d of data) {
         dst.set(d.getWeatherCategoryId(), d);
     }
 
     {
-        const categoryId = WeathersConstants.CategoryId.None;
+        const categoryId = WeathersConstantsCategoryId.None;
         if (dst.has(categoryId)) {
-            HelpersMisc.getExisted(dst.get(categoryId)).getWeatherTypeIds().length = 0;
+            getExisted(dst.get(categoryId)).getWeatherTypeIds().length = 0;
         } else {
-            dst.set(categoryId, ProtoSchemaCommonProtoConfigWeatherCategoryCfg.WeatherCategoryCfg.fromJson({
+            dst.set(categoryId, WeatherCategoryCfg.fromJson({
                 weatherCategoryId   : categoryId,
                 weatherTypeIds      : [],
             }));
@@ -828,12 +842,12 @@ function _destructWeatherCategoryCfg(data: ProtoSchemaCommonProtoConfigWeatherCa
     }
 
     {
-        const categoryId        = WeathersConstants.CategoryId.All;
+        const categoryId        = WeathersConstantsCategoryId.All;
         const allWeatherTypeIds = weatherCfgs.map(v => v.getWeatherTypeId());
         if (dst.has(categoryId)) {
-            HelpersMisc.getExisted(dst.get(categoryId)).setWeatherTypeIds(allWeatherTypeIds);
+            getExisted(dst.get(categoryId)).setWeatherTypeIds(allWeatherTypeIds);
         } else {
-            dst.set(categoryId, ProtoSchemaCommonProtoConfigWeatherCategoryCfg.WeatherCategoryCfg.fromJson({
+            dst.set(categoryId, WeatherCategoryCfg.fromJson({
                 weatherCategoryId   : categoryId,
                 weatherTypeIds      : allWeatherTypeIds,
             }));
@@ -868,7 +882,7 @@ function _getSecondaryWeaponFlags(chartCfgs: Map<number, { [armorType: number]: 
     for (const [attackerType, cfgs] of chartCfgs) {
         let hasWeapon = false;
         for (const armorType in cfgs) {
-            const cfg = cfgs[armorType][UnitsConstants.WeaponTypeId.Secondary];
+            const cfg = cfgs[armorType][WeaponTypeId.Secondary];
             if ((cfg) && (cfg.getDamage() != null)) {
                 hasWeapon = true;
                 break;

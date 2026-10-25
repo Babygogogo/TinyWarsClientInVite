@@ -1,19 +1,21 @@
-import type * as AuxiliaryTypesAuxiliaryTypes from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type * as BaseWarInterfaceIBwWar from "../baseWar/interface/IBwWar.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoPlayerEndTurn from "../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoSystemBeginTurn from "../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
-import type * as ProtoSchemaCommonProtoWarOperationWoSystemEndTurn from "../proto/schema/CommonProto/WarOperation/WoSystemEndTurn.ts";
-import type * as ProtoSchemaCommonProtoWarSerializationSerialTurnManager from "../proto/schema/CommonProto/WarSerialization/SerialTurnManager.ts";
-import type * as TurnsConstants from "./Constants.ts";
-import type * as TurnsTypes from "./Types.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { WoPlayerEndTurn } from "../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
+import type { WoSystemBeginTurn } from "../proto/schema/CommonProto/WarOperation/WoSystemBeginTurn.ts";
+import type { WoSystemEndTurn } from "../proto/schema/CommonProto/WarOperation/WoSystemEndTurn.ts";
+import type {
+    SerialTurnManager as ProtoSchemaCommonProtoWarSerializationSerialTurnManager,
+} from "../proto/schema/CommonProto/WarSerialization/SerialTurnManager.ts";
+import type { PhaseCode } from "./Constants.ts";
+import type { TurnAndPlayerIndex as TurnsTypesTurnAndPlayerIndex } from "./Types.ts";
 
-type TurnPhaseCode      = TurnsConstants.PhaseCode;
-type SerialTurnManager  = ProtoSchemaCommonProtoWarSerializationSerialTurnManager.SerialTurnManager;
-type IBwWar             = BaseWarInterfaceIBwWar.IBwWar;
-type TurnAndPlayerIndex = TurnsTypes.TurnAndPlayerIndex;
+type TurnPhaseCode      = PhaseCode;
+type SerialTurnManager  = ProtoSchemaCommonProtoWarSerializationSerialTurnManager;
+type IBwWar             = BaseWarInterfaceIBwWar;
+type TurnAndPlayerIndex = TurnsTypesTurnAndPlayerIndex;
 
 export interface ITurnManager {
-    init(data: AuxiliaryTypesAuxiliaryTypes.Undefinable<SerialTurnManager>, playersCountUnneutral: number): void;
+    init(data: Undefinable<SerialTurnManager>, playersCountUnneutral: number): void;
     fastInit(data: SerialTurnManager, playersCountUnneutral: number): void;
 
     startRunning(war: IBwWar): void;
@@ -27,9 +29,9 @@ export interface ITurnManager {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The functions for running turn.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    endPhaseStandby(action: ProtoSchemaCommonProtoWarOperationWoSystemBeginTurn.WoSystemBeginTurn, isFastExecute: boolean): Promise<void>;
+    endPhaseStandby(action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void>;
 
-    endPhaseMain(action: ProtoSchemaCommonProtoWarOperationWoPlayerEndTurn.WoPlayerEndTurn | ProtoSchemaCommonProtoWarOperationWoSystemEndTurn.WoSystemEndTurn, isFastExecute: boolean): void;
+    endPhaseMain(action: WoPlayerEndTurn | WoSystemEndTurn, isFastExecute: boolean): void;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // The other functions.

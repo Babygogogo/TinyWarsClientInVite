@@ -1,34 +1,34 @@
-import * as LangConstants from "../../lang/Constants.ts";
-import * as LangUtils from "../../lang/Utils.ts";
-import * as NotificationsTypeId from "../../notifications/TypeId.ts";
-import * as SoundsConstants from "../../sounds/Constants.ts";
-import * as SoundsSoundPlayer from "../../sounds/SoundPlayer.ts";
-import * as UiComponentsUiPanel from "../../ui/components/UiPanel.ts";
-import type * as UiInterfacesIUiButton from "../../ui/interfaces/IUiButton.ts";
-import type * as UiInterfacesIUiContainer from "../../ui/interfaces/IUiContainer.ts";
-import type * as UiInterfacesIUiImage from "../../ui/interfaces/IUiImage.ts";
-import type * as UiInterfacesIUiLabel from "../../ui/interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiScroller from "../../ui/interfaces/IUiScroller.ts";
+import { UndefinedError, TextType } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 
 export type OpenData = {
     content     : string;
     callback    : (forbidReentrance: boolean) => any;
 };
-export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
-    private readonly _imgMask!      : UiInterfacesIUiImage.IUiImage;
+export class Panel extends UiPanel<OpenData> {
+    private readonly _imgMask!      : IUiImage;
 
-    private readonly _group!        : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _labelTitle!   : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _scrContent!   : UiInterfacesIUiScroller.IUiScroller<UiInterfacesIUiContainer.IUiContainer>;
-    private readonly _labelContent! : UiInterfacesIUiLabel.IUiLabel;
-    private readonly _btnClose!     : UiInterfacesIUiButton.IUiButton;
+    private readonly _group!        : IUiContainer;
+    private readonly _labelTitle!   : IUiLabel;
+    private readonly _scrContent!   : IUiScroller<IUiContainer>;
+    private readonly _labelContent! : IUiLabel;
+    private readonly _btnClose!     : IUiButton;
 
-    private readonly _groupForbidReentrance!    : UiInterfacesIUiContainer.IUiContainer;
-    private readonly _imgForbidReentrance!      : UiInterfacesIUiImage.IUiImage;
-    private readonly _labelForbidReentrance!    : UiInterfacesIUiLabel.IUiLabel;
+    private readonly _groupForbidReentrance!    : IUiContainer;
+    private readonly _imgForbidReentrance!      : IUiImage;
+    private readonly _labelForbidReentrance!    : IUiLabel;
 
-    private readonly _btnCancel!    : UiInterfacesIUiButton.IUiButton;
-    private readonly _btnConfirm!   : UiInterfacesIUiButton.IUiButton;
+    private readonly _btnCancel!    : IUiButton;
+    private readonly _btnConfirm!   : IUiButton;
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
@@ -38,7 +38,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
             { ui: this._btnConfirm,             callback: this._onTouchedBtnConfirm, },
         ]);
         this._setNotifyListenerArray([
-            { type: NotificationsTypeId.TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
+            { type: TypeId.LanguageChanged,  callback: this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel();
@@ -48,7 +48,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
         this._updateComponentsForLanguage();
 
         const openData = this.getOpenData();
-        this._labelContent.setText(openData?.content ?? LangConstants.UndefinedError);
+        this._labelContent.setText(openData?.content ?? UndefinedError);
 
         this._scrContent.scrollTop();
     }
@@ -58,7 +58,7 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _onTouchedGroupForbidReentrance(): void {
-        SoundsSoundPlayer.playShortSfx(SoundsConstants.ShortSfxCode.ButtonNeutral01);
+        playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const img = this._imgForbidReentrance;
         img.setIsVisible(!img.getIsVisible());
@@ -72,9 +72,9 @@ export class Panel extends UiComponentsUiPanel.UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setText(LangUtils.getText(LangConstants.TextType.B0026));
-        this._btnCancel.setText(LangUtils.getText(LangConstants.TextType.B0154));
-        this._labelTitle.setText(LangUtils.getText(LangConstants.TextType.B0088));
-        this._labelForbidReentrance.setText(LangUtils.getText(LangConstants.TextType.B0916));
+        this._btnConfirm.setText(getText(TextType.B0026));
+        this._btnCancel.setText(getText(TextType.B0154));
+        this._labelTitle.setText(getText(TextType.B0088));
+        this._labelForbidReentrance.setText(getText(TextType.B0916));
     }
 }

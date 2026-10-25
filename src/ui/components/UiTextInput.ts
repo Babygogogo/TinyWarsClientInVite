@@ -1,22 +1,22 @@
-import * as HelpersCompatibility from "../../helpers/Compatibility.ts";
-import * as HelpersMisc from "../../helpers/Misc.ts";
-import * as HelpersPointerInput from "../../helpers/PointerInput.ts";
-import * as StagesStageManager from "../../stages/StageManager.ts";
-import * as UiComponentsUiContainerBase from "./UiContainerBase.ts";
-import type * as UiInterfacesIUiLabel from "../interfaces/IUiLabel.ts";
-import type * as UiInterfacesIUiTextInput from "../interfaces/IUiTextInput.ts";
-import * as UiTypesUiCommonEventType from "../types/UiCommonEventType.ts";
-import * as UiTypesUiHorizontalAlign from "../types/UiHorizontalAlign.ts";
-import * as UiTypesUiInputEventType from "../types/UiInputEventType.ts";
-import type * as UiTypesUiSkinAttrs from "../types/UiSkinAttrs.ts";
-import * as UiTypesUiVerticalAlign from "../types/UiVerticalAlign.ts";
-import * as UiUtilsUiFactory from "../utils/UiFactory.ts";
-import * as UiUtilsUiHelpers from "../utils/UiHelpers.ts";
-import * as UiUtilsUiSizerHelpers from "../utils/UiSizerHelpers.ts";
-import * as UiUtilsUiSkinHelpers from "../utils/UiSkinHelpers.ts";
-import type * as VendorEgretEgret from "../../vendor/egret/Egret.ts";
+import { isPc } from "../../helpers/Compatibility.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
+import { getStage, getCanvasBoundingClientRect } from "../../stages/StageManager.ts";
+import { UiContainerBase } from "./UiContainerBase.ts";
+import type { IUiLabel } from "../interfaces/IUiLabel.ts";
+import type { IUiTextInput } from "../interfaces/IUiTextInput.ts";
+import { UiCommonEventType } from "../types/UiCommonEventType.ts";
+import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
+import { UiInputEventType } from "../types/UiInputEventType.ts";
+import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
+import { getUiLabelClass } from "../utils/UiFactory.ts";
+import { getWorldAlpha, getWorldVisible } from "../utils/UiHelpers.ts";
+import { checkAndAddAutoSizerInfo, loadSizerOptions } from "../utils/UiSizerHelpers.ts";
+import { getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
+import type { Matrix, TextField } from "../../vendor/egret/Egret.ts";
 
-type UiSkinAttrs            = UiTypesUiSkinAttrs.UiSkinAttrs;
+type UiSkinAttrs            = UiTypesUiSkinAttrs;
 
 interface CanvasBounds {
     top     : number;
@@ -26,7 +26,7 @@ interface CanvasBounds {
 }
 interface PreviousAttrs {
     canvasBounds?   : CanvasBounds;
-    transform?      : VendorEgretEgret.Matrix; // dom related world transform
+    transform?      : Matrix; // dom related world transform
     worldAlpha?     : number;
     isDomVisible?   : boolean;
 }
@@ -37,7 +37,7 @@ const DefaultHeight                     = 30;
 const ApkLandscapeDomHeightMultiplier   = 0.3;
 const ApkPortraitDomHeightMultiplier    = 0.55;
 
-export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase implements UiInterfacesIUiTextInput.IUiTextInput {
+export class UiTextInput extends UiContainerBase implements IUiTextInput {
     private readonly _boundOnDomKeyDown = (e: Event) => {
         const dom = this._getDomInput();
         if (dom) {
@@ -48,7 +48,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         }
 
         // this.emit('keydown', e.keyCode);
-        this.dispatchEventWith(UiTypesUiInputEventType.UiInputEventType.KeyDown, undefined, e);
+        this.dispatchEventWith(UiInputEventType.KeyDown, undefined, e);
     };
     private readonly _boundOnDomInput = () => {
         const maxLength     = this.getMaxLength() ?? Number.MAX_SAFE_INTEGER;
@@ -67,16 +67,16 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
             this._applyDomText(text);
             this._applyDomSelectionRange(this._selectionRange);
         }
-        this.dispatchEventWith(UiTypesUiInputEventType.UiInputEventType.KeyInput, undefined, text);
+        this.dispatchEventWith(UiInputEventType.KeyInput, undefined, text);
     };
     private readonly _boundOnDomKeyUp = (e: Event) => {
-        this.dispatchEventWith(UiTypesUiInputEventType.UiInputEventType.KeyUp, undefined, e);
+        this.dispatchEventWith(UiInputEventType.KeyUp, undefined, e);
     };
     private readonly _boundOnDomFocus = () => {
         window.TEXT_INPUT_CONTAINER.style.pointerEvents = "auto";
         this._setIsFocused(true);
         this._applyLabelVisible(false);
-        this.dispatchEventWith(UiTypesUiInputEventType.UiInputEventType.FocusIn, undefined);
+        this.dispatchEventWith(UiInputEventType.FocusIn, undefined);
     };
     private readonly _boundOnDomBlur = () => {
         window.TEXT_INPUT_CONTAINER.style.pointerEvents = "none";
@@ -85,10 +85,10 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         if (this._applyLabelText(this.getText(), this.getIsDisplayAsPassword())) {
             this._updateInnerWidth();
             this._updateInnerHeight();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
 
-        this.dispatchEventWith(UiTypesUiInputEventType.UiInputEventType.FocusOut, undefined);
+        this.dispatchEventWith(UiInputEventType.FocusOut, undefined);
     };
     private readonly _boundOnBodyPointerDown = (e: Event) => {
         const target = e.target;
@@ -98,7 +98,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
     };
 
     private _domInput?                  : HTMLTextAreaElement | HTMLInputElement;
-    private _labelInput                 = new (UiUtilsUiFactory.getUiLabelClass())();
+    private _labelInput                 = new (getUiLabelClass())();
 
     private _previousAttrs              : PreviousAttrs = {};
     private _restrictRegex?             : RegExp;
@@ -115,15 +115,15 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
 
         this.addChild(this._getLabelInputAsTextField());
 
-        this.setMouseStyle(HelpersPointerInput.MouseStyleType.Text);
+        this.setMouseStyle(MouseStyleType.Text);
         this.setIsTouchEnabled(true);
 
         {
             const agent = this.getEventAgent();
             agent.addAutoEnterFrameListener(this._onEnterFrame, this);
-            agent.addUiCommonEventListener(UiTypesUiCommonEventType.UiCommonEventType.AddedToStage, this._onAddedToStage, this);
-            agent.addUiCommonEventListener(UiTypesUiCommonEventType.UiCommonEventType.RemovedFromStage, this._onRemovedFromStage, this);
-            agent.addPointerEventListener(HelpersPointerInput.PointerEventType.Tap, this._onPointerTap, this);
+            agent.addUiCommonEventListener(UiCommonEventType.AddedToStage, this._onAddedToStage, this);
+            agent.addUiCommonEventListener(UiCommonEventType.RemovedFromStage, this._onRemovedFromStage, this);
+            agent.addPointerEventListener(PointerEventType.Tap, this._onPointerTap, this);
         }
 
         this.setUnscaledManualWidth(DefaultWidth);
@@ -170,7 +170,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         }
 
         {
-            const worldAlpha = UiUtilsUiHelpers.getWorldAlpha(this);
+            const worldAlpha = getWorldAlpha(this);
             if (worldAlpha !== previousAttrs.worldAlpha) {
                 previousAttrs.worldAlpha = worldAlpha;
                 this._applyDomAlpha(worldAlpha);
@@ -182,54 +182,54 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
     }
 
     public override loadSkinAttrs(oldSkinAttrs: UiSkinAttrs | undefined, newSkinAttrs: UiSkinAttrs): void {
-        const width             = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "width");
-        const height            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "height");
-        const x                 = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "x");
-        const y                 = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "y");
-        const alpha             = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "alpha");
-        const visible           = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "visible");
-        const rotation          = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "rotation");
-        const size              = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "size");
-        const bold              = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "bold");
-        const italic            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "italic");
-        const horizontalAlign   = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "horizontalAlign");
-        const verticalAlign     = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "verticalAlign");
-        const stroke            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "stroke");
-        const strokeColor       = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "strokeColor");
-        const text              = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "text");
-        const textColor         = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "textColor");
-        const scaleX            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleX");
-        const scaleY            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleY");
-        const pivotX            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetX");
-        const pivotY            = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetY");
-        const lineSpacing       = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "lineSpacing");
-        const restrict          = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "restrict");
-        const maxChars          = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "maxChars");
-        const displayAsPassword = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "displayAsPassword");
-        const multiline         = UiUtilsUiSkinHelpers.getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "multiline");
+        const width             = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "width");
+        const height            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "height");
+        const x                 = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "x");
+        const y                 = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "y");
+        const alpha             = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "alpha");
+        const visible           = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "visible");
+        const rotation          = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "rotation");
+        const size              = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "size");
+        const bold              = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "bold");
+        const italic            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "italic");
+        const horizontalAlign   = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "horizontalAlign");
+        const verticalAlign     = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "verticalAlign");
+        const stroke            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "stroke");
+        const strokeColor       = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "strokeColor");
+        const text              = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "text");
+        const textColor         = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "textColor");
+        const scaleX            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleX");
+        const scaleY            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "scaleY");
+        const pivotX            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetX");
+        const pivotY            = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "anchorOffsetY");
+        const lineSpacing       = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "lineSpacing");
+        const restrict          = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "restrict");
+        const maxChars          = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "maxChars");
+        const displayAsPassword = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "displayAsPassword");
+        const multiline         = getRevisedAttrValue(oldSkinAttrs, newSkinAttrs, "multiline");
         // const wordWrap          : number | undefined = attrs?.wordWrap;
 
-        (x.needChange)                  && (this.setX(HelpersMisc.getExisted(x.value)));
-        (y.needChange)                  && (this.setY(HelpersMisc.getExisted(y.value)));
-        (scaleX.needChange)             && (this.setScaleX(HelpersMisc.getExisted(scaleX.value)));
-        (scaleY.needChange)             && (this.setScaleY(HelpersMisc.getExisted(scaleY.value)));
-        (pivotX.needChange)             && (this.setAnchorOffsetX(HelpersMisc.getExisted(pivotX.value)));
-        (pivotY.needChange)             && (this.setAnchorOffsetY(HelpersMisc.getExisted(pivotY.value)));
-        (alpha.needChange)              && (this.setAlpha(HelpersMisc.getExisted(alpha.value)));
+        (x.needChange)                  && (this.setX(getExisted(x.value)));
+        (y.needChange)                  && (this.setY(getExisted(y.value)));
+        (scaleX.needChange)             && (this.setScaleX(getExisted(scaleX.value)));
+        (scaleY.needChange)             && (this.setScaleY(getExisted(scaleY.value)));
+        (pivotX.needChange)             && (this.setAnchorOffsetX(getExisted(pivotX.value)));
+        (pivotY.needChange)             && (this.setAnchorOffsetY(getExisted(pivotY.value)));
+        (alpha.needChange)              && (this.setAlpha(getExisted(alpha.value)));
         (visible.needChange)            && (this.setIsVisible(!!visible.value));
-        (rotation.needChange)           && (this.setRotationInDegree(HelpersMisc.getExisted(rotation.value)));
-        (horizontalAlign.needChange)    && (this.setHorizontalAlign(horizontalAlign.value ?? UiTypesUiHorizontalAlign.UiHorizontalAlign.Left));
-        (verticalAlign.needChange)      && (this.setVerticalAlign(verticalAlign.value ?? UiTypesUiVerticalAlign.UiVerticalAlign.Top));
+        (rotation.needChange)           && (this.setRotationInDegree(getExisted(rotation.value)));
+        (horizontalAlign.needChange)    && (this.setHorizontalAlign(horizontalAlign.value ?? UiHorizontalAlign.Left));
+        (verticalAlign.needChange)      && (this.setVerticalAlign(verticalAlign.value ?? UiVerticalAlign.Top));
         (width.needChange)              && (this.setUnscaledManualWidth(width.value));
         (height.needChange)             && (this.setUnscaledManualHeight(height.value));
         (text.needChange)               && (this.setText(text.value ?? ``));
         (italic.needChange)             && (this.setIsItalic(!!italic.value));
         (bold.needChange)               && (this.setIsBold(!!bold.value));
-        (textColor.needChange)          && (this.setTextColor(parseInt(HelpersMisc.getExisted(textColor.value).replaceAll("#", "0x"))));
-        (size.needChange)               && (this.setFontSize(HelpersMisc.getExisted(size.value)));
-        (lineSpacing.needChange)        && (this.setLineSpacing(HelpersMisc.getExisted(lineSpacing.value)));
-        (stroke.needChange)             && (this.setStrokeWidth(HelpersMisc.getExisted(stroke.value)));
-        (strokeColor.needChange)        && (this.setStrokeColor(parseInt(HelpersMisc.getExisted(strokeColor.value).replaceAll("#", "0x"))));
+        (textColor.needChange)          && (this.setTextColor(parseInt(getExisted(textColor.value).replaceAll("#", "0x"))));
+        (size.needChange)               && (this.setFontSize(getExisted(size.value)));
+        (lineSpacing.needChange)        && (this.setLineSpacing(getExisted(lineSpacing.value)));
+        (stroke.needChange)             && (this.setStrokeWidth(getExisted(stroke.value)));
+        (strokeColor.needChange)        && (this.setStrokeColor(parseInt(getExisted(strokeColor.value).replaceAll("#", "0x"))));
         (restrict.needChange)           && (this.setRestrict(restrict.value));
         (maxChars.needChange)           && (this.setMaxLength(maxChars.value));
         (displayAsPassword.needChange)  && (this.setIsDisplayAsPassword(!!displayAsPassword.value));
@@ -237,7 +237,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
 
         // this.arrange();
 
-        UiUtilsUiSizerHelpers.loadSizerOptions(this, newSkinAttrs);
+        loadSizerOptions(this, newSkinAttrs);
     }
 
     public override applySizeFromSizerInfo(width: number | undefined, height: number | undefined): boolean {
@@ -365,7 +365,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         if (this._applyLabelText(this.getText(), asPassword)) {
             this._updateInnerWidth();
             this._updateInnerHeight();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
     }
     public getText(): string {
@@ -386,7 +386,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         if (this._applyLabelText(text, this.getIsDisplayAsPassword())) {
             this._updateInnerWidth();
             this._updateInnerHeight();
-            UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+            checkAndAddAutoSizerInfo(this, true);
         }
     }
     public getDomPlaceholder(): string {
@@ -412,7 +412,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         this._applyLabelFontFamily(fontFamily);
         this._updateInnerWidth();
         this._updateInnerHeight();
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+        checkAndAddAutoSizerInfo(this, true);
     }
     public getFontSize(): number {
         return this._getLabelInput().getFontSize();
@@ -426,7 +426,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         this._applyDomFontSize(this._calculateDomFontSize());
         this._updateInnerWidth();
         this._updateInnerHeight();
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+        checkAndAddAutoSizerInfo(this, true);
     }
     public getTextColor(): number {
         return this._getLabelInput().getTextColor();
@@ -451,7 +451,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         this._applyLabelIsItalic(isItalic);
         this._updateInnerWidth();
         this._updateInnerHeight();
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+        checkAndAddAutoSizerInfo(this, true);
     }
     public getIsBold(): boolean {
         return this._getLabelInput().getIsBold();
@@ -465,7 +465,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         this._applyLabelIsBold(isBold);
         this._updateInnerWidth();
         this._updateInnerHeight();
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+        checkAndAddAutoSizerInfo(this, true);
     }
     public getLineSpacing(): number {
         return this._getLabelInput().getLineSpacing();
@@ -478,7 +478,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         this._applyDomLineSpacing(spacing);
         this._applyLabelLineSpacing(spacing);
         this._updateInnerHeight();
-        UiUtilsUiSizerHelpers.checkAndAddAutoSizerInfo(this, true);
+        checkAndAddAutoSizerInfo(this, true);
     }
     public getStrokeWidth(): number {
         return this._getLabelInput().getStrokeWidth();
@@ -502,10 +502,10 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         this._applyDomStrokeColor(color);
         this._applyLabelStrokeColor(color);
     }
-    public getHorizontalAlign(): UiTypesUiHorizontalAlign.UiHorizontalAlign {
+    public getHorizontalAlign(): UiHorizontalAlign {
         return this._getLabelInput().getHorizontalAlign();
     }
-    public setHorizontalAlign(align: UiTypesUiHorizontalAlign.UiHorizontalAlign): void {
+    public setHorizontalAlign(align: UiHorizontalAlign): void {
         if (this.getHorizontalAlign() === align) {
             return;
         }
@@ -513,14 +513,14 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         this._applyDomHorizontalAlign(align);
         this._applyLabelHorizontalAlign(align);
     }
-    public getVerticalAlign(): UiTypesUiVerticalAlign.UiVerticalAlign {
+    public getVerticalAlign(): UiVerticalAlign {
         return this._getLabelInput().getVerticalAlign();
     }
     /** 只对非输入状态下显示的文字有效
      *
      *  在输入状态下，单行模式的文字永远居中，多行模式的文字永远置顶
      */
-    public setVerticalAlign(align: UiTypesUiVerticalAlign.UiVerticalAlign): void {
+    public setVerticalAlign(align: UiVerticalAlign): void {
         if (this.getVerticalAlign() === align) {
             return;
         }
@@ -551,11 +551,11 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
     private _getDomInput(): HTMLTextAreaElement | HTMLInputElement | undefined {
         return this._domInput;
     }
-    private _getLabelInput(): UiInterfacesIUiLabel.IUiLabel {
+    private _getLabelInput(): IUiLabel {
         return this._labelInput;
     }
-    private _getLabelInputAsTextField(): VendorEgretEgret.TextField {
-        return this._labelInput as unknown as VendorEgretEgret.TextField;
+    private _getLabelInputAsTextField(): TextField {
+        return this._labelInput as unknown as TextField;
     }
 
     // SETUP
@@ -629,10 +629,10 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
     private _applyLabelVisible(visible: boolean): void {
         this._getLabelInput().setIsVisible(visible);
     }
-    private _applyDomTransform(canvasBounds: CanvasBounds, transform: VendorEgretEgret.Matrix): void {
+    private _applyDomTransform(canvasBounds: CanvasBounds, transform: Matrix): void {
         const domStyle = this._getDomInput()?.style;
         if (domStyle) {
-            if (HelpersCompatibility.isPc) {
+            if (isPc) {
                 // domStyle.top        = `${canvasBounds.top}px`;
                 // domStyle.left       = `${canvasBounds.left}px`;
                 // domStyle.transform  = _matrixToCSS(transform);
@@ -640,7 +640,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
                 // TODO: transform会导致PC上鼠标拖选文字的行为变得很奇怪，因此改为不使用它
                 // 缺点是如果输入框存在旋转、skew之类的操作，则会导致dom的位置对不上
                 const point         = this.localToGlobal(0, 0);
-                const stage         = StagesStageManager.getStage();
+                const stage         = getStage();
                 const outerScaleX   = canvasBounds.width / stage.stageWidth;
                 const outerScaleY   = canvasBounds.height / stage.stageHeight;
                 domStyle.left       = `${canvasBounds.left + point.x * outerScaleX}px`;
@@ -657,7 +657,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
                 if (!window.TW_APK_INJECT) {
                     domStyle.top    = `${(canvasHeight - domHeight - borderWidth * 2) / 2}px`;
                 } else {
-                    const stage         = StagesStageManager.getStage();
+                    const stage         = getStage();
                     const multiplier    = (stage.stageWidth > stage.stageHeight) ? ApkLandscapeDomHeightMultiplier : ApkPortraitDomHeightMultiplier;
                     domStyle.top        = `${(canvasHeight * multiplier - domHeight - borderWidth * 2) / 2}px`;
                 }
@@ -794,46 +794,46 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
     private _applyLabelStrokeColor(color: number): void {
         this._getLabelInput().setStrokeColor(color);
     }
-    private _applyDomHorizontalAlign(align: UiTypesUiHorizontalAlign.UiHorizontalAlign): void {
+    private _applyDomHorizontalAlign(align: UiHorizontalAlign): void {
         const domStyle = this._getDomInput()?.style;
         if (domStyle) {
-            if (align === UiTypesUiHorizontalAlign.UiHorizontalAlign.Left) {
+            if (align === UiHorizontalAlign.Left) {
                 domStyle.textAlign = "left";
-            } else if (align === UiTypesUiHorizontalAlign.UiHorizontalAlign.Right) {
+            } else if (align === UiHorizontalAlign.Right) {
                 domStyle.textAlign = "right";
             } else {
                 domStyle.textAlign = "center";
             }
         }
     }
-    private _applyLabelHorizontalAlign(align: UiTypesUiHorizontalAlign.UiHorizontalAlign): void {
+    private _applyLabelHorizontalAlign(align: UiHorizontalAlign): void {
         const label = this._getLabelInput();
         switch (align) {
-            case UiTypesUiHorizontalAlign.UiHorizontalAlign.Left     : label.setHorizontalAlign(UiTypesUiHorizontalAlign.UiHorizontalAlign.Left);         return;
-            case UiTypesUiHorizontalAlign.UiHorizontalAlign.Right    : label.setHorizontalAlign(UiTypesUiHorizontalAlign.UiHorizontalAlign.Right);        return;
-            case UiTypesUiHorizontalAlign.UiHorizontalAlign.Center   : label.setHorizontalAlign(UiTypesUiHorizontalAlign.UiHorizontalAlign.Center);       return;
-            default                         : throw HelpersMisc.newError(`Invalid align: ${align}`);
+            case UiHorizontalAlign.Left     : label.setHorizontalAlign(UiHorizontalAlign.Left);         return;
+            case UiHorizontalAlign.Right    : label.setHorizontalAlign(UiHorizontalAlign.Right);        return;
+            case UiHorizontalAlign.Center   : label.setHorizontalAlign(UiHorizontalAlign.Center);       return;
+            default                         : throw newError(`Invalid align: ${align}`);
         }
     }
-    private _applyDomVerticalAlign(align: UiTypesUiVerticalAlign.UiVerticalAlign): void {
+    private _applyDomVerticalAlign(align: UiVerticalAlign): void {
         const domStyle = this._getDomInput()?.style;
         if (domStyle) {
-            if (align === UiTypesUiVerticalAlign.UiVerticalAlign.Top) {
+            if (align === UiVerticalAlign.Top) {
                 domStyle.verticalAlign = "top";
-            } else if (align === UiTypesUiVerticalAlign.UiVerticalAlign.Bottom) {
+            } else if (align === UiVerticalAlign.Bottom) {
                 domStyle.verticalAlign = "bottom";
             } else {
                 domStyle.verticalAlign = "middle";
             }
         }
     }
-    private _applyLabelVerticalAlign(align: UiTypesUiVerticalAlign.UiVerticalAlign): void {
+    private _applyLabelVerticalAlign(align: UiVerticalAlign): void {
         const label = this._getLabelInput();
         switch (align) {
-            case UiTypesUiVerticalAlign.UiVerticalAlign.Top    : label.setVerticalAlign(UiTypesUiVerticalAlign.UiVerticalAlign.Top);              return;
-            case UiTypesUiVerticalAlign.UiVerticalAlign.Bottom : label.setVerticalAlign(UiTypesUiVerticalAlign.UiVerticalAlign.Bottom);           return;
-            case UiTypesUiVerticalAlign.UiVerticalAlign.Middle : label.setVerticalAlign(UiTypesUiVerticalAlign.UiVerticalAlign.Middle);           return;
-            default                     : throw HelpersMisc.newError(`Invalid align: ${align}`);
+            case UiVerticalAlign.Top    : label.setVerticalAlign(UiVerticalAlign.Top);              return;
+            case UiVerticalAlign.Bottom : label.setVerticalAlign(UiVerticalAlign.Bottom);           return;
+            case UiVerticalAlign.Middle : label.setVerticalAlign(UiVerticalAlign.Middle);           return;
+            default                     : throw newError(`Invalid align: ${align}`);
         }
     }
     private _applyDomMaxLength(maxLength: number | undefined): void {
@@ -853,12 +853,12 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
 
     private _calculateDomVisible(): boolean {
         return (this._getIsFocused())
-            && (UiUtilsUiHelpers.getWorldVisible(this));
+            && (getWorldVisible(this));
     }
-    private _calculateDomRelativeWorldTransform(): VendorEgretEgret.Matrix {
-        const canvasBounds  = StagesStageManager.getCanvasBoundingClientRect();
+    private _calculateDomRelativeWorldTransform(): Matrix {
+        const canvasBounds  = getCanvasBoundingClientRect();
         const matrix        = this._getWorldTransform().clone();
-        const stage         = StagesStageManager.getStage();
+        const stage         = getStage();
         matrix.scale(
             canvasBounds.width / stage.stageWidth,
             canvasBounds.height / stage.stageHeight
@@ -871,15 +871,15 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         return matrix;
     }
     private _calculateDomPlaceholder(): string {
-        return HelpersCompatibility.isPc ? "" : this.getDomPlaceholder();
+        return isPc ? "" : this.getDomPlaceholder();
     }
     private _calculateDomFontSize(): number {
-        return HelpersCompatibility.isPc
+        return isPc
             ? this.getFontSize()
             : 14;
     }
     private _calculateDomTextColor(): number {
-        return HelpersCompatibility.isPc
+        return isPc
             ? this.getTextColor()
             : 0xFFFFFF;
     }
@@ -896,9 +896,9 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         //     ? (this.getUnscaledManualWidth() ?? Math.max(this._getLabelInputAsTextField().width, this.getFontSize() * 10))
         //     : Math.floor(StageManager.getCanvasBoundingClientRect().width * 0.7);
 
-        return HelpersCompatibility.isPc
+        return isPc
             ? (this.getUnscaledManualWidth() ?? DefaultWidth)
-            : Math.floor(StagesStageManager.getCanvasBoundingClientRect().width * 0.7);
+            : Math.floor(getCanvasBoundingClientRect().width * 0.7);
     }
     private _calculateDomHeight(): number {
         // const autoShrinkHeight  = this.getAutoShrinkHeight();
@@ -916,17 +916,17 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
         //         : 30
         //     );
 
-        if (HelpersCompatibility.isPc) {
+        if (isPc) {
             return this.getUnscaledManualHeight() ?? DefaultHeight;
         } else {
             if (!this.getIsMultiline()) {
                 return 30;
             } else {
-                const baseHeight = StagesStageManager.getCanvasBoundingClientRect().height * 0.7;
+                const baseHeight = getCanvasBoundingClientRect().height * 0.7;
                 if (!window.TW_APK_INJECT) {
                     return Math.floor(baseHeight);
                 } else {
-                    const stage = StagesStageManager.getStage();
+                    const stage = getStage();
                     return (stage.stageWidth > stage.stageHeight)
                         ? Math.floor(baseHeight * ApkLandscapeDomHeightMultiplier)
                         : Math.floor(baseHeight * ApkPortraitDomHeightMultiplier);
@@ -936,7 +936,7 @@ export class UiTextInput extends UiComponentsUiContainerBase.UiContainerBase imp
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private _getWorldTransform(): VendorEgretEgret.Matrix {
+    private _getWorldTransform(): Matrix {
         return this._getLabelInputAsTextField().$getConcatenatedMatrix();
     }
 }
@@ -972,11 +972,11 @@ function _getDomText(dom: HTMLTextAreaElement | HTMLInputElement | undefined): s
     return dom?.value ?? "";
 }
 
-function _matrixToCSS(m: VendorEgretEgret.Matrix): string {
+function _matrixToCSS(m: Matrix): string {
     return 'matrix('+[m.a,m.b,m.c,m.d,m.tx,m.ty].join(',')+')';
 }
 function _calculateCanvasBounds(): CanvasBounds {
-    const rect = StagesStageManager.getCanvasBoundingClientRect();
+    const rect = getCanvasBoundingClientRect();
     return {
         left    : rect.left + window.scrollX,
         top     : rect.top + window.scrollY,
@@ -984,7 +984,7 @@ function _calculateCanvasBounds(): CanvasBounds {
         height  : rect.height,
     };
 }
-function _compareMatrices(m1: VendorEgretEgret.Matrix | undefined, m2: VendorEgretEgret.Matrix | undefined): boolean {
+function _compareMatrices(m1: Matrix | undefined, m2: Matrix | undefined): boolean {
     return (m1 != null)
         && (m2 != null)
         && (m1.equals(m2));

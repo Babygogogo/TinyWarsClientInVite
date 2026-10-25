@@ -1,4 +1,4 @@
-import type * as UiInterfacesIUiOpenableComponent from "./IUiOpenableComponent.ts";
-import type * as UiTypesUiRadioButtonData from "../types/UiRadioButtonData.ts";
+import type { IUiOpenableComponent } from "./IUiOpenableComponent.ts";
+import type { UiRadioButtonData } from "../types/UiRadioButtonData.ts";
 
-export type IUiRadioButton = UiInterfacesIUiOpenableComponent.IUiOpenableComponent<UiTypesUiRadioButtonData.UiRadioButtonData>;
+export type IUiRadioButton = IUiOpenableComponent<UiRadioButtonData>;
