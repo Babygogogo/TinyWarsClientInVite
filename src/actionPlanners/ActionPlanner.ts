@@ -82,6 +82,7 @@ import { getSelfUserId, getSelfSettingsIsAutoScrollMap } from "../users/Model.ts
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import type { Event } from "../vendor/egret/Egret.ts";
 import { checkIsUnitOnMapVisibleToTeam, checkIsUnitOnMapVisibleToTeams } from "../visibilities/Utils.ts";
+import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 
 type GridIndex              = AuxiliaryTypesGridIndex;
 type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
@@ -94,6 +95,7 @@ export class ActionPlanner implements IActionPlanner {
     private readonly _view                      = new (getActionPlannerViewClass())();
 
     private _war?                               : IBwWar;
+    private _mapSize?                           : MapSize;
 
     private _stateId                            = StateId.Idle;
     private _prevStateId                        = StateId.Idle;
@@ -130,7 +132,9 @@ export class ActionPlanner implements IActionPlanner {
         { type: TypeId.BwCursorDragEnded,   callback: this._onNotifyBwCursorDragEnded },
     ];
 
-    public init(): void {
+    public init(mapSize: MapSize): void {
+        this._setMapSize(mapSize.clone());
+
         this.getView().init(this);
     }
     public fastInit(): void {
@@ -408,6 +412,13 @@ export class ActionPlanner implements IActionPlanner {
         }
     }
 
+    private _setMapSize(size: MapSize): void {
+        this._mapSize = size;
+    }
+    public getMapSize(): MapSize {
+        return getExisted(this._mapSize);
+    }
+
     public checkIsStateRequesting(): boolean {
         return checkIsRequesting(this.getStateId());
     }
@@ -486,7 +497,7 @@ export class ActionPlanner implements IActionPlanner {
         this._movableArea = MovableArea.create({
             gridIndex       : unit.getGridIndex(),
             maxMoveCost     : unit.getFinalMoveRange(),
-            mapSize         : this.getWar().getTileMap().getMapSize(),
+            mapSize         : this.getMapSize(),
             moveCostGetter  : gridIndex => this._getMoveCost(gridIndex, unit)
         });
     }
@@ -506,7 +517,7 @@ export class ActionPlanner implements IActionPlanner {
         const unitMap               = this.getWar().getUnitMap();
         this._setAttackableArea(AttackableArea.create({
             movableArea         : getExisted(this.getMovableArea()),
-            mapSize             : unitMap.getMapSize(),
+            mapSize             : this.getMapSize(),
             minAttackRange      : focusUnit.getMinAttackRange(),
             maxAttackRange      : focusUnit.getFinalMaxAttackRange(),
             checkCanAttack      : (moveGridIndex): boolean => {
@@ -556,7 +567,7 @@ export class ActionPlanner implements IActionPlanner {
             return destination.getGridsWithinDistance({
                 minDistance : minAttackRange,
                 maxDistance : unit.getFinalMaxAttackRange() ?? 0,
-                mapSize     : this.getWar().getTileMap().getMapSize(),
+                mapSize     : this.getMapSize(),
                 predicate   : (gridIndex) => unit.checkCanAttackTargetAfterMovePath(this.getMovePath().map(v => v.getGridIndex()), gridIndex),
             });
         }
@@ -636,7 +647,7 @@ export class ActionPlanner implements IActionPlanner {
         const tileMap   = war.getTileMap();
         const moveType  = focusUnit.getMoveTypeId();
         const teamIndex = focusUnit.getTeamIndex();
-        return this.getMovePathDestination().getGridIndex().getAdjacentGrids(tileMap.getMapSize())
+        return this.getMovePathDestination().getGridIndex().getAdjacentGrids(this.getMapSize())
             .filter(v => {
                 if (tileMap.getTile(v).getMoveCostByMoveType(moveType) == null) {
                     return false;
@@ -669,7 +680,7 @@ export class ActionPlanner implements IActionPlanner {
         const unitMap       = war.getUnitMap();
         const tileMap       = war.getTileMap();
         const playerIndex   = focusUnit.getPlayerIndex();
-        return this.getMovePathDestination().getGridIndex().getAdjacentGrids(tileMap.getMapSize())
+        return this.getMovePathDestination().getGridIndex().getAdjacentGrids(this.getMapSize())
             .filter(v => {
                 const targetUnit = unitMap.getVisibleUnitOnMap(v);
                 return (!!targetUnit)
@@ -776,7 +787,7 @@ export class ActionPlanner implements IActionPlanner {
     public addTileForPreviewAttackableArea(tile: IBwTile): void {
         this.getTilesForPreviewingAttackableArea().add(tile);
 
-        const mapSize = this.getWar().getTileMap().getMapSize();
+        const mapSize = this.getMapSize();
         this.getAreaForPreviewingAttackableArea().mergeFrom(AttackableArea.createForTile(tile, mapSize), mapSize);
     }
 
@@ -788,7 +799,7 @@ export class ActionPlanner implements IActionPlanner {
         const war                   = unit.getWar();
         const unitMap               = war.getUnitMap();
         const tileMap               = war.getTileMap();
-        const mapSize               = tileMap.getMapSize();
+        const mapSize               = this.getMapSize();
         const isIgnoreEnemy         = this.getIsIgnoreEnemyForPreviewingAttackableArea();
         const isIgnoreAlly          = this.getIsIgnoreAllyForPreviewingAttackableArea();
         const checkIsUnitVisible    = createFuncCheckIsUnitVisible(war.getPlayerManager().getWatcherTeamIndexesForSelf());
@@ -839,7 +850,7 @@ export class ActionPlanner implements IActionPlanner {
         const war                   = this.getWar();
         const unitMap               = war.getUnitMap();
         const tileMap               = war.getTileMap();
-        const mapSize               = tileMap.getMapSize();
+        const mapSize               = this.getMapSize();
         const isIgnoreEnemy         = this.getIsIgnoreEnemyForPreviewingAttackableArea();
         const isIgnoreAlly          = this.getIsIgnoreAllyForPreviewingAttackableArea();
         const checkIsUnitVisible    = createFuncCheckIsUnitVisible(war.getPlayerManager().getWatcherTeamIndexesForSelf());
@@ -947,7 +958,7 @@ export class ActionPlanner implements IActionPlanner {
             this._setAreaForPreviewingMovableArea(MovableArea.create({
                 gridIndex       : movingUnit.getGridIndex(),
                 maxMoveCost     : movingUnit.getFinalMoveRange(),
-                mapSize         : tileMap.getMapSize(),
+                mapSize         : this.getMapSize(),
                 moveCostGetter  : targetGridIndex => {
                     const existingUnit  = unitMap.getUnitOnMap(targetGridIndex);
                     if ((existingUnit == null)                      ||
@@ -995,7 +1006,7 @@ export class ActionPlanner implements IActionPlanner {
         this._areaForPreviewVisible = gridIndex.getGridsWithinDistance({
             minDistance : 0,
             maxDistance : unit.getFinalVisionRange(unit.getVisionInfo(), gridIndex) ?? 0,
-            mapSize     : this.getWar().getTileMap().getMapSize(),
+            mapSize     : this.getMapSize(),
         });
     }
 
@@ -1003,13 +1014,12 @@ export class ActionPlanner implements IActionPlanner {
     // Other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _getMoveCost(targetGridIndex: GridIndex, movingUnit: IBwUnit): Undefinable<number> {
-        const war       = this.getWar();
-        const unitMap   = war.getUnitMap();
-        if (!targetGridIndex.checkIsInsideMap(unitMap.getMapSize())) {
+        const war = this.getWar();
+        if (!targetGridIndex.checkIsInsideMap(this.getMapSize())) {
             return null;
         }
 
-        const existingUnit  = unitMap.getUnitOnMap(targetGridIndex);
+        const existingUnit  = war.getUnitMap().getUnitOnMap(targetGridIndex);
         const teamIndex     = movingUnit.getTeamIndex();
         if ((existingUnit)                                      &&
             (existingUnit.getTeamIndex() !== teamIndex)         &&
@@ -1054,7 +1064,7 @@ export class ActionPlanner implements IActionPlanner {
         const unitMap               = war.getUnitMap();
         const destinations          = new Array<GridIndex>();
         if (tileMap.getTile(loaderEndingGridIndex).getMoveCostByUnit(unitForDrop) != null) {
-            for (const gridIndex of loaderEndingGridIndex.getAdjacentGrids(tileMap.getMapSize())) {
+            for (const gridIndex of loaderEndingGridIndex.getAdjacentGrids(this.getMapSize())) {
                 const existingUnit = unitMap.getVisibleUnitOnMap(gridIndex);
                 if ((tileMap.getTile(gridIndex).getMoveCostByUnit(unitForDrop) != null) &&
                     (chosenDropDestinations.every(g => !g.checkIsEqual(gridIndex)))     &&
@@ -1446,7 +1456,7 @@ function getActionUnitSupply(actionPlanner: IActionPlanner, canDropUnits: boolea
         const playerIndex   = focusUnit.getPlayerIndex();
         const unitMap       = actionPlanner.getWar().getUnitMap();
         if (focusUnit.checkIsAdjacentUnitSupplier()) {
-            for (const gridIndex of actionPlanner.getMovePathDestination().getGridIndex().getAdjacentGrids(unitMap.getMapSize())) {
+            for (const gridIndex of actionPlanner.getMovePathDestination().getGridIndex().getAdjacentGrids(actionPlanner.getMapSize())) {
                 const unit = unitMap.getUnitOnMap(gridIndex);
                 if ((unit) && (unit !== focusUnit) && (unit.getPlayerIndex() === playerIndex) && (unit.checkCanBeSupplied())) {
                     const cb = () => RequestingUnitSupply.getInstance().doApplyOnChooseAction(actionPlanner);

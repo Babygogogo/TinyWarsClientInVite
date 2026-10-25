@@ -86,7 +86,7 @@ export class Field implements IField {
         //     }
         // }
 
-        this.getActionPlanner().init();
+        this.getActionPlanner().init(mapSize);
         this.getCursor().init(mapSize);
         this.getGridVisualEffect().init();
         this.getView().init(this);

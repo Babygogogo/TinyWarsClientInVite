@@ -168,7 +168,7 @@ export class ActionPlannerView implements IActionPlannerView {
         con.removeUiChildren();
         con.setAlpha(ALPHA_FOR_MOVABLE_GRIDS);
 
-        const { width, height } = this._getActionPlanner().getWar().getTileMap().getMapSize().getWH();
+        const { width, height } = this._getActionPlanner().getMapSize().getWH();
         const images            = createEmptyMap<IUiImage>(width, height);
         for (let x = 0; x < width; ++x) {
             for (let y = 0; y < height; ++y) {
@@ -198,7 +198,7 @@ export class ActionPlannerView implements IActionPlannerView {
         con.removeUiChildren();
         con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
-        const { width, height } = this._getActionPlanner().getWar().getTileMap().getMapSize().getWH();
+        const { width, height } = this._getActionPlanner().getMapSize().getWH();
         const images            = createEmptyMap<IUiImage>(width, height);
         for (let x = 0; x < width; ++x) {
             for (let y = 0; y < height; ++y) {
@@ -223,7 +223,7 @@ export class ActionPlannerView implements IActionPlannerView {
         con.removeUiChildren();
         con.setAlpha(ALPHA_FOR_VISIBLE_GRIDS_NORMAL);
 
-        const { width, height } = this._getActionPlanner().getWar().getTileMap().getMapSize().getWH();
+        const { width, height } = this._getActionPlanner().getMapSize().getWH();
         const images            = createEmptyMap<IUiImage>(width, height);
         for (let x = 0; x < width; ++x) {
             for (let y = 0; y < height; ++y) {
@@ -245,7 +245,8 @@ export class ActionPlannerView implements IActionPlannerView {
     // Callbacks.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _onNotifyGridAnimationTick(): void {
-        const war = this._getActionPlanner().getWar();
+        const actionPlanner = this._getActionPlanner();
+        const war           = actionPlanner.getWar();
         if ((war instanceof getRwWarBaseClass()) && (war.getIsBatchExecuteAction())){
             return;
         }
@@ -257,7 +258,7 @@ export class ActionPlannerView implements IActionPlannerView {
         const imgsForMovable        = this._getImgsForMovableGrids();
         const imgsForAttackable     = this._getImgsForAttackableGrids();
         const imgsForVisible        = this._getImgsForVisibleGrids();
-        const { width, height }     = war.getTileMap().getMapSize().getWH();
+        const { width, height }     = actionPlanner.getMapSize().getWH();
         for (let x = 0; x < width; ++x) {
             for (let y = 0; y < height; ++y) {
                 imgsForMovable[x][y].loadSource(sourceForMovable);
@@ -297,7 +298,7 @@ export class ActionPlannerView implements IActionPlannerView {
 
             const movableArea               = getExisted(actionPlanner.getMovableArea());
             const attackableArea            = getExisted(actionPlanner.getAttackableArea());
-            const { width, height }         = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height }         = actionPlanner.getMapSize().getWH();
             const imgsForAttackableGrids    = this._getImgsForAttackableGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
@@ -311,7 +312,7 @@ export class ActionPlannerView implements IActionPlannerView {
 
             const movableArea               = getExisted(actionPlanner.getMovableArea());
             const attackableArea            = getExisted(actionPlanner.getAttackableArea());
-            const { width, height }         = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height }         = actionPlanner.getMapSize().getWH();
             const imgsForAttackableGrids    = this._getImgsForAttackableGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
@@ -323,7 +324,7 @@ export class ActionPlannerView implements IActionPlannerView {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
-            const { width, height }         = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height }         = actionPlanner.getMapSize().getWH();
             const imgsForAttackableGrids    = this._getImgsForAttackableGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
@@ -338,8 +339,7 @@ export class ActionPlannerView implements IActionPlannerView {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
-            const war                       = actionPlanner.getWar();
-            const mapSize                   = war.getTileMap().getMapSize();
+            const mapSize                   = actionPlanner.getMapSize();
             const { width, height }         = mapSize.getWH();
             const imgsForAttackableGrids    = this._getImgsForAttackableGrids();
             for (let x = 0; x < width; ++x) {
@@ -361,7 +361,7 @@ export class ActionPlannerView implements IActionPlannerView {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
-            const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height } = actionPlanner.getMapSize().getWH();
             const imgs              = this._getImgsForAttackableGrids();
             const destination       = actionPlanner.getMovePathDestination().getGridIndex();
             const range             = getExisted(actionPlanner.getFocusUnit()?.getFlareMaxRange(destination));
@@ -374,8 +374,7 @@ export class ActionPlannerView implements IActionPlannerView {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
-            const war                       = actionPlanner.getWar();
-            const mapSize                   = war.getTileMap().getMapSize();
+            const mapSize                   = actionPlanner.getMapSize();
             const { width, height }         = mapSize.getWH();
             const imgsForAttackableGrids    = this._getImgsForAttackableGrids();
             for (let x = 0; x < width; ++x) {
@@ -391,7 +390,7 @@ export class ActionPlannerView implements IActionPlannerView {
             con.setIsVisible(true);
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_SILO);
 
-            const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height } = actionPlanner.getMapSize().getWH();
             const imgs              = this._getImgsForAttackableGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
@@ -407,7 +406,7 @@ export class ActionPlannerView implements IActionPlannerView {
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
             const area              = actionPlanner.getAreaForPreviewingAttackableArea();
-            const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height } = actionPlanner.getMapSize().getWH();
             const imgs              = this._getImgsForAttackableGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
@@ -426,7 +425,7 @@ export class ActionPlannerView implements IActionPlannerView {
             con.setAlpha(ALPHA_FOR_ATTACKABLE_GRIDS_NORMAL);
 
             const area              = actionPlanner.getAreaForPreviewingAttackableArea();
-            const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height } = actionPlanner.getMapSize().getWH();
             const imgs              = this._getImgsForAttackableGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
@@ -454,7 +453,7 @@ export class ActionPlannerView implements IActionPlannerView {
             con.setIsVisible(true);
 
             const movableArea       = getExisted(actionPlanner.getMovableArea());
-            const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height } = actionPlanner.getMapSize().getWH();
             const imgs              = this._getImgsForMovableGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
@@ -466,7 +465,7 @@ export class ActionPlannerView implements IActionPlannerView {
             con.setIsVisible(true);
 
             const movableArea       = getExisted(actionPlanner.getMovableArea());
-            const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height } = actionPlanner.getMapSize().getWH();
             const imgs              = this._getImgsForMovableGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
@@ -486,7 +485,7 @@ export class ActionPlannerView implements IActionPlannerView {
         } else if (state === StateId.ChoosingUnitDropDestination) {
             con.setIsVisible(true);
 
-            const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height } = actionPlanner.getMapSize().getWH();
             const imgs              = this._getImgsForMovableGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
@@ -516,7 +515,7 @@ export class ActionPlannerView implements IActionPlannerView {
             con.setIsVisible(true);
 
             const area              = getExisted(actionPlanner.getAreaForPreviewingMovableArea());
-            const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height } = actionPlanner.getMapSize().getWH();
             const imgs              = this._getImgsForMovableGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {
@@ -558,7 +557,7 @@ export class ActionPlannerView implements IActionPlannerView {
         } else if (state === StateId.ChoosingUnitCrushTarget) {
             con.setIsVisible(true);
 
-            const mapSize           = actionPlanner.getWar().getTileMap().getMapSize();
+            const mapSize           = actionPlanner.getMapSize();
             const { width, height } = mapSize.getWH();
             const imgs              = this._getImgsForVisibleGrids();
             for (let x = 0; x < width; ++x) {
@@ -576,7 +575,7 @@ export class ActionPlannerView implements IActionPlannerView {
         } else if (state === StateId.ChoosingCoActiveSkillTarget) {
             con.setIsVisible(true);
 
-            const mapSize           = actionPlanner.getWar().getTileMap().getMapSize();
+            const mapSize           = actionPlanner.getMapSize();
             const { width, height } = mapSize.getWH();
             const imgs              = this._getImgsForVisibleGrids();
             for (let x = 0; x < width; ++x) {
@@ -599,7 +598,7 @@ export class ActionPlannerView implements IActionPlannerView {
         } else if (state === StateId.ChoosingUnitRepairTarget) {
             con.setIsVisible(true);
 
-            const mapSize           = actionPlanner.getWar().getTileMap().getMapSize();
+            const mapSize           = actionPlanner.getMapSize();
             const { width, height } = mapSize.getWH();
             const imgs              = this._getImgsForVisibleGrids();
             for (let x = 0; x < width; ++x) {
@@ -629,7 +628,7 @@ export class ActionPlannerView implements IActionPlannerView {
         } else if (state === StateId.PreviewingUnitVisibleArea) {
             con.setIsVisible(true);
 
-            const { width, height } = actionPlanner.getWar().getTileMap().getMapSize().getWH();
+            const { width, height } = actionPlanner.getMapSize().getWH();
             const imgs              = this._getImgsForVisibleGrids();
             for (let x = 0; x < width; ++x) {
                 for (let y = 0; y < height; ++y) {

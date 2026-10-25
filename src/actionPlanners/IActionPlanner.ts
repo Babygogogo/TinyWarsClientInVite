@@ -10,6 +10,7 @@ import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwW
 import type { MovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
 import type { ITile } from "../tiles/ITile.ts";
 import type { IUnit } from "../units/IUnit.ts";
+import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 
 type GridIndex          = AuxiliaryTypesGridIndex;
 type MovableArea        = AuxiliaryTypesMovableArea;
@@ -22,7 +23,7 @@ type IBwWar             = BaseWarInterfaceIBwWar;
 type ApStateId          = StateId;
 
 export interface IActionPlanner {
-    init(): void;
+    init(mapSize: MapSize): void;
     fastInit(): void;
 
     startRunning(war: IBwWar): void;
@@ -52,6 +53,8 @@ export interface IActionPlanner {
     updateView(): void;
 
     checkCanControlUnit(unit: IBwUnit): boolean;
+
+    getMapSize(): MapSize;
 
     checkIsStateRequesting(): boolean;
 
