@@ -19,8 +19,8 @@ import {
     getHttpRequest,
     HttpResponseType,
 } from "./EgretCore";
-import { parse } from "./Xml";
 import { type ResourceInfo, type ProcessHost, ResourceManagerError, getVirtualUrl, nameSelector, type MovieClipConfig, getConfig, type ConfigData, type FileSystem } from "./ResCore";
+import { parseXML } from "./WebCore";
 
 export type ResourceSpriteSheet = SpriteSheet & { $resourceInfo: ResourceInfo };
 export type ResourceBitmapFont = BitmapFont & { $resourceInfo: ResourceInfo };
@@ -58,11 +58,15 @@ export function map(type: string, processor: Processor): void {
 }
 
 export function getRelativePath(url: string, file: string): string {
-    if (file.indexOf("://") != -1) { return file; }
+    if (file.indexOf("://") != -1) {
+        return file;
+    }
     url = url.split("\\").join("/");
     const params: RegExpMatchArray | null = url.match(/#.*|\?.*/);
     let paramUrl: string = "";
-    if (params) { paramUrl = params[0]!; }
+    if (params) {
+        paramUrl = params[0]!;
+    }
     const index: number = url.lastIndexOf("/");
     url = index != -1 ? url.substring(0, index + 1) + file : file;
     return url + paramUrl;
@@ -70,10 +74,10 @@ export function getRelativePath(url: string, file: string): string {
 
 export function makeEtc1SeperatedAlphaResourceInfo(resource: ResourceInfo): ResourceInfo {
     return {
-        name: resource.name + "_alpha",
-        url: resource.etc1_alpha_url!,
-        type: "ktx",
-        root: resource.root
+        name : resource.name + "_alpha",
+        url  : resource.etc1_alpha_url!,
+        type : "ktx",
+        root : resource.root
     };
 }
 
@@ -84,8 +88,12 @@ export function getMap(): Record<string, Processor> {
 
 function promisify<T>(loader: DataLoader<T>, resource: ResourceInfo): Promise<T> {
     return new Promise<T>((resolve: (value: T | PromiseLike<T>) => void, reject: (reason: unknown) => void): void => {
-        const onSuccess: () => void = (): void => { const texture: T = (loader.data ? loader.data : loader.response) as T; resolve(texture); };
-        const onError: () => void = (): void => { const e: ResourceManagerError = new ResourceManagerError(1001, resource.url); reject(e); };
+        const onSuccess: () => void = (): void => {
+            const texture: T = (loader.data ? loader.data : loader.response) as T; resolve(texture);
+        };
+        const onError: () => void = (): void => {
+            const e: ResourceManagerError = new ResourceManagerError(1001, resource.url); reject(e);
+        };
         loader.addEventListener(Event.COMPLETE, onSuccess, undefined);
         loader.addEventListener(IOErrorEvent.IO_ERROR, onError, undefined);
     });
@@ -137,20 +145,28 @@ export class ResProcessorHelper {
                     const texture: Texture = new Texture();
                     texture._setBitmapData(bitmapData);
                     const r: ResourceInfo | null = host.resourceConfig.getResource(resource.name);
-                    if (r && r.scale9grid) { applyScale9Grid(texture, r.scale9grid); }
+                    if (r && r.scale9grid) {
+                        applyScale9Grid(texture, r.scale9grid);
+                    }
                     return texture;
                 });
             },
-            onRemoveStart(host: ProcessHost, resource: ResourceInfo): void { const texture: Texture = host.get<Texture>(resource)!; texture.dispose(); }
+            onRemoveStart(host: ProcessHost, resource: ResourceInfo): void {
+                const texture: Texture = host.get<Texture>(resource)!; texture.dispose();
+            }
         };
     }
     public static getKTXTextureProcessor(): Processor<Texture | null> {
         return ResProcessorHelper.KTXTextureProcessor ??= {
             onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<Texture | null> {
                 return host.load<ArrayBuffer>(resource, "bin").then((data: ArrayBuffer): Texture | null => {
-                    if (!data) { console.error("ktx:" + resource.root + resource.url + " is null"); return null; }
+                    if (!data) {
+                        console.error("ktx:" + resource.root + resource.url + " is null"); return null;
+                    }
                     const ktx: KTXContainer = new KTXContainer(data, 1);
-                    if (ktx.isInvalid) { console.error("ktx:" + resource.root + resource.url + " is invalid"); return null; }
+                    if (ktx.isInvalid) {
+                        console.error("ktx:" + resource.root + resource.url + " is invalid"); return null;
+                    }
                     const bitmapData: BitmapData = new BitmapData(data);
                     bitmapData.debugCompressedTextureURL = resource.root + resource.url;
                     bitmapData.format = "ktx";
@@ -158,37 +174,58 @@ export class ResProcessorHelper {
                     const texture: Texture = new Texture();
                     texture._setBitmapData(bitmapData);
                     const r: ResourceInfo | null = host.resourceConfig.getResource(resource.name);
-                    if (r && r.scale9grid) { applyScale9Grid(texture, r.scale9grid); }
+                    if (r && r.scale9grid) {
+                        applyScale9Grid(texture, r.scale9grid);
+                    }
                     host.save(resource, texture);
                     return texture;
-                }, (e: unknown): never => { host.remove(resource); throw e; });
+                }, (e: unknown): never => {
+                    host.remove(resource); throw e;
+                });
             },
-            onRemoveStart(host: ProcessHost, resource: ResourceInfo): void { const texture: Texture | null | undefined = host.get<Texture | null>(resource); if (texture) { texture.dispose(); } }
+            onRemoveStart(host: ProcessHost, resource: ResourceInfo): void {
+                const texture: Texture | null | undefined = host.get<Texture | null>(resource); if (texture) {
+                    texture.dispose();
+                }
+            }
         };
     }
     public static getETC1KTXProcessor(): Processor<Texture | null> {
         return ResProcessorHelper.ETC1KTXProcessor ??= {
             onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<Texture | null> {
                 return host.load<Texture | null>(resource, "ktx").then((colorTex: Texture | null): Texture | null | Promise<Texture> => {
-                    if (!colorTex) { return null; }
+                    if (!colorTex) {
+                        return null;
+                    }
                     if (resource.etc1_alpha_url) {
                         const r: ResourceInfo = makeEtc1SeperatedAlphaResourceInfo(resource);
                         return host.load<Texture>(r, "ktx").then((alphaMaskTex: Texture): Texture => {
-                            if (colorTex && colorTex.$bitmapData && alphaMaskTex.$bitmapData) { colorTex.$bitmapData.etcAlphaMask = alphaMaskTex.$bitmapData; host.save(r, alphaMaskTex); }
-                            else { host.remove(r); }
+                            if (colorTex && colorTex.$bitmapData && alphaMaskTex.$bitmapData) {
+                                colorTex.$bitmapData.etcAlphaMask = alphaMaskTex.$bitmapData; host.save(r, alphaMaskTex);
+                            } else {
+                                host.remove(r);
+                            }
                             return colorTex;
-                        }, (e: unknown): never => { host.remove(r); throw e; });
+                        }, (e: unknown): never => {
+                            host.remove(r); throw e;
+                        });
                     }
                     return colorTex;
-                }, (e: unknown): never => { host.remove(resource); throw e; });
+                }, (e: unknown): never => {
+                    host.remove(resource); throw e;
+                });
             },
             onRemoveStart(host: ProcessHost, resource: ResourceInfo): void {
                 const colorTex: Texture | null | undefined = host.get<Texture | null>(resource);
-                if (colorTex) { colorTex.dispose(); }
+                if (colorTex) {
+                    colorTex.dispose();
+                }
                 if (resource.etc1_alpha_url) {
                     const r: ResourceInfo = makeEtc1SeperatedAlphaResourceInfo(resource);
                     const alphaMaskTex: Texture | undefined = host.get<Texture>(r);
-                    if (alphaMaskTex) { alphaMaskTex.dispose(); }
+                    if (alphaMaskTex) {
+                        alphaMaskTex.dispose();
+                    }
                     host.unload(r);
                 }
             }
@@ -213,19 +250,27 @@ export class ResProcessorHelper {
                 request.open(getVirtualUrl(resource.root + resource.url), "get"); request.send();
                 return promisify<string>(request as DataLoader<string>, resource);
             },
-            onRemoveStart(_host: ProcessHost, _resource: ResourceInfo): boolean { return true; }
+            onRemoveStart(_host: ProcessHost, _resource: ResourceInfo): boolean {
+                return true;
+            }
         };
     }
     public static getJsonProcessor(): Processor {
         return ResProcessorHelper.JsonProcessor ??= {
-            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<unknown> { return host.load<string>(resource, "text").then((text: string): unknown => JSON.parse(text) as unknown); },
+            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<unknown> {
+                return host.load<string>(resource, "text").then((text: string): unknown => JSON.parse(text) as unknown);
+            },
             onRemoveStart(_host: ProcessHost, _resource: ResourceInfo): void { }
         };
     }
     public static getXMLProcessor(): Processor<XML | null> {
         return ResProcessorHelper.XMLProcessor ??= {
-            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<XML | null> { return host.load<string>(resource, "text").then((text: string): XML | null => parse(text)); },
-            onRemoveStart(_host: ProcessHost, _resource: ResourceInfo): boolean { return true; }
+            onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<XML | null> {
+                return host.load<string>(resource, "text").then((text: string): XML | null => parseXML(text));
+            },
+            onRemoveStart(_host: ProcessHost, _resource: ResourceInfo): boolean {
+                return true;
+            }
         };
     }
     public static getCommonJSProcessor(): Processor<Record<string, unknown>> {
@@ -235,7 +280,11 @@ export class ResProcessorHelper {
                     const f: (require: () => void, exports: Record<string, unknown>) => void = new Function("require", "exports", text) as (require: () => void, exports: Record<string, unknown>) => void;
                     const require: () => void = (): void => { };
                     const exports: Record<string, unknown> = {};
-                    try { f(require, exports); } catch (e: unknown) { throw new ResourceManagerError(2003, resource.name, (e as { message: string }).message); }
+                    try {
+                        f(require, exports);
+                    } catch (e: unknown) {
+                        throw new ResourceManagerError(2003, resource.name, (e as { message: string }).message);
+                    }
                     return exports;
                 });
             },
@@ -247,10 +296,16 @@ export class ResProcessorHelper {
             onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<ResourceSpriteSheet | null> {
                 return host.load<SheetConfig>(resource, "json").then((data: SheetConfig): Promise<ResourceSpriteSheet | null> => {
                     let r: ResourceInfo | null = host.resourceConfig.getResource(nameSelector(data.file));
-                    if (!r) { const imageName: string = getRelativePath(resource.url, data.file); r = { name: imageName, url: imageName, type: "image", root: resource.root }; }
+                    if (!r) {
+                        const imageName: string = getRelativePath(resource.url, data.file); r = {
+                            name : imageName, url : imageName, type : "image", root : resource.root
+                        };
+                    }
                     const imageResource: ResourceInfo = r;
                     return host.load<Texture>(imageResource).then((bitmapData: Texture): ResourceSpriteSheet | null => {
-                        if (!bitmapData) { return null; }
+                        if (!bitmapData) {
+                            return null;
+                        }
                         const frames: SheetConfig["frames"] = data.frames;
                         const spriteSheet: ResourceSpriteSheet = new SpriteSheet(bitmapData) as ResourceSpriteSheet;
                         spriteSheet.$resourceInfo = imageResource;
@@ -258,14 +313,20 @@ export class ResProcessorHelper {
                         for (subkey in frames) {
                             const config: BitmapFontGlyph & { scale9grid?: string } = frames[subkey]!;
                             const texture: Texture = spriteSheet.createTexture(subkey, config.x, config.y, config.w, config.h, config.offX, config.offY, config.sourceW, config.sourceH);
-                            if (config.scale9grid) { applyScale9Grid(texture, config.scale9grid); }
+                            if (config.scale9grid) {
+                                applyScale9Grid(texture, config.scale9grid);
+                            }
                         }
                         host.save(imageResource, bitmapData);
                         return spriteSheet;
-                    }, (e: unknown): never => { host.remove(imageResource); throw e; });
+                    }, (e: unknown): never => {
+                        host.remove(imageResource); throw e;
+                    });
                 });
             },
-            getData(host: ProcessHost, resource: ResourceInfo, _key: string, subkey: string): Texture | null | undefined { const data: ResourceSpriteSheet | undefined = host.get<ResourceSpriteSheet>(resource); return data ? data.getTexture(subkey) : null; },
+            getData(host: ProcessHost, resource: ResourceInfo, _key: string, subkey: string): Texture | null | undefined {
+                const data: ResourceSpriteSheet | undefined = host.get<ResourceSpriteSheet>(resource); return data ? data.getTexture(subkey) : null;
+            },
             onRemoveStart(host: ProcessHost, resource: ResourceInfo): void {
                 const sheet: ResourceSpriteSheet = host.get<ResourceSpriteSheet>(resource)!;
                 const r: ResourceInfo = sheet.$resourceInfo;
@@ -278,20 +339,32 @@ export class ResProcessorHelper {
             onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<ResourceBitmapFont> {
                 return host.load<string>(resource, "text").then((data: string): Promise<ResourceBitmapFont> => {
                     let config: FontConfig | string;
-                    try { config = JSON.parse(data) as FontConfig | string; } catch (e: unknown) { config = data; }
+                    try {
+                        config = JSON.parse(data) as FontConfig | string;
+                    } catch (e: unknown) {
+                        config = data;
+                    }
                     const imageName: string = typeof config === "string" ? fontGetTexturePath(resource.url, config) : getRelativePath(resource.url, config.file);
                     let r: ResourceInfo | null = host.resourceConfig.getResource(nameSelector(imageName));
-                    if (!r) { r = { name: imageName, url: imageName, type: "image", root: resource.root }; }
+                    if (!r) {
+                        r = {
+                            name : imageName, url : imageName, type : "image", root : resource.root
+                        };
+                    }
                     const imageResource: ResourceInfo = r;
                     return host.load<Texture>(imageResource).then((texture: Texture): ResourceBitmapFont => {
                         const font: ResourceBitmapFont = new BitmapFont(texture, config) as ResourceBitmapFont;
                         font.$resourceInfo = imageResource;
                         host.save(imageResource, texture);
                         return font;
-                    }, (e: unknown): never => { host.remove(imageResource); throw e; });
+                    }, (e: unknown): never => {
+                        host.remove(imageResource); throw e;
+                    });
                 });
             },
-            onRemoveStart(host: ProcessHost, resource: ResourceInfo): void { const font: ResourceBitmapFont = host.get<ResourceBitmapFont>(resource)!; const r: ResourceInfo = font.$resourceInfo; host.unload(r); }
+            onRemoveStart(host: ProcessHost, resource: ResourceInfo): void {
+                const font: ResourceBitmapFont = host.get<ResourceBitmapFont>(resource)!; const r: ResourceInfo = font.$resourceInfo; host.unload(r);
+            }
         };
     }
     // public static getSoundProcessor(): Processor<egret.Sound> {
@@ -317,7 +390,9 @@ export class ResProcessorHelper {
                     const jsonPath: string = resource.name;
                     const imagePath: string = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
                     const image: ResourceInfo | null = host.resourceConfig.getResource(imagePath);
-                    if (!image) { throw new ResourceManagerError(1001, imagePath); }
+                    if (!image) {
+                        throw new ResourceManagerError(1001, imagePath);
+                    }
                     imageResource = image;
                     return host.load<Texture>(imageResource);
                 }).then((value: Texture): MovieClipDataFactory => {
@@ -333,7 +408,9 @@ export class ResProcessorHelper {
                 const jsonPath: string = resource.name;
                 const imagePath: string = jsonPath.substring(0, jsonPath.lastIndexOf(".")) + ".png";
                 const imageResource: ResourceInfo | null = host.resourceConfig.getResource(imagePath);
-                if (imageResource) { host.unload(imageResource); }
+                if (imageResource) {
+                    host.unload(imageResource);
+                }
             }
         };
     }
@@ -342,13 +419,17 @@ export class ResProcessorHelper {
             onLoadStart(host: ProcessHost, resource: ResourceInfo): Promise<Record<string, unknown>> {
                 return host.load<Record<string, unknown>>(resource, "json").then((data: Record<string, unknown>): Record<string, unknown> => {
                     let key: string;
-                    for (key in data) { getConfig().addSubkey(key, resource.name); }
+                    for (key in data) {
+                        getConfig().addSubkey(key, resource.name);
+                    }
                     return data;
                 });
             },
             getData(host: ProcessHost, resource: ResourceInfo, _key: string, subkey: string): unknown {
                 const data: Record<string, unknown> | undefined = host.get<Record<string, unknown>>(resource);
-                if (data) { return data[subkey]; }
+                if (data) {
+                    return data[subkey];
+                }
                 console.error("missing resource :" + resource.name); return null;
             },
             onRemoveStart(_host: ProcessHost, _resource: ResourceInfo): void { }
@@ -363,11 +444,23 @@ export class ResProcessorHelper {
                     let fileSystem: LegacyFileSystem | null = resConfigData.fileSystem as LegacyFileSystem | null;
                     if (!fileSystem) {
                         fileSystem = {
-                            fsData: {},
-                            getFile(filename: string): ResourceInfo | undefined { return fsData[filename]; },
-                            addFile(data: ResourceInfo): void { if (!data.type) { data.type = ""; } if (root == undefined) { data.root = ""; } fsData[data.name] = data; },
-                            profile(): void { console.log(fsData); },
-                            removeFile(filename: string): void { delete fsData[filename]; }
+                            fsData : {},
+                            getFile(filename: string): ResourceInfo | undefined {
+                                return fsData[filename];
+                            },
+                            addFile(data: ResourceInfo): void {
+                                if (!data.type) {
+                                    data.type = "";
+                                } if (root == undefined) {
+                                    data.root = "";
+                                } fsData[data.name] = data;
+                            },
+                            profile(): void {
+                                console.log(fsData);
+                            },
+                            removeFile(filename: string): void {
+                                delete fsData[filename];
+                            }
                         };
                         resConfigData.fileSystem = fileSystem;
                     }
@@ -383,7 +476,9 @@ export class ResProcessorHelper {
                         fsData[entry.name] = entry;
                         entry.root = root;
                         if (entry.subkeys) {
-                            entry.subkeys.split(",").forEach((subkey: string): void => { alias[subkey] = entry.name + "#" + subkey; alias[entry.name + "." + subkey] = entry.name + "#" + subkey; });
+                            entry.subkeys.split(",").forEach((subkey: string): void => {
+                                alias[subkey] = entry.name + "#" + subkey; alias[entry.name + "." + subkey] = entry.name + "#" + subkey;
+                            });
                         }
                     }
                     host.save(resource, data);
@@ -396,21 +491,21 @@ export class ResProcessorHelper {
 
     public static getMap(): Record<string, Processor<any>> {
         return ResProcessorHelper._map ??= {
-            image: ResProcessorHelper.getImageProcessor(),
-            json: ResProcessorHelper.getJsonProcessor(),
-            text: ResProcessorHelper.getTextProcessor(),
-            xml: ResProcessorHelper.getXMLProcessor(),
-            sheet: ResProcessorHelper.getSheetProcessor(),
-            font: ResProcessorHelper.getFontProcessor(),
-            bin: ResProcessorHelper.getBinaryProcessor(),
-            commonjs: ResProcessorHelper.getCommonJSProcessor(),
+            image                : ResProcessorHelper.getImageProcessor(),
+            json                 : ResProcessorHelper.getJsonProcessor(),
+            text                 : ResProcessorHelper.getTextProcessor(),
+            xml                  : ResProcessorHelper.getXMLProcessor(),
+            sheet                : ResProcessorHelper.getSheetProcessor(),
+            font                 : ResProcessorHelper.getFontProcessor(),
+            bin                  : ResProcessorHelper.getBinaryProcessor(),
+            commonjs             : ResProcessorHelper.getCommonJSProcessor(),
             // sound: ResProcessorHelper.getSoundProcessor(),
-            movieclip: ResProcessorHelper.getMovieClipProcessor(),
-            mergeJson: ResProcessorHelper.getMergeJSONProcessor(),
-            legacyResourceConfig: ResProcessorHelper.getLegacyResourceConfigProcessor(),
-            ktx: ResProcessorHelper.getKTXTextureProcessor(),
-            "etc1.ktx": ResProcessorHelper.getETC1KTXProcessor(),
-            "pvrtc.ktx": ResProcessorHelper.getKTXTextureProcessor()
+            movieclip            : ResProcessorHelper.getMovieClipProcessor(),
+            mergeJson            : ResProcessorHelper.getMergeJSONProcessor(),
+            legacyResourceConfig : ResProcessorHelper.getLegacyResourceConfigProcessor(),
+            ktx                  : ResProcessorHelper.getKTXTextureProcessor(),
+            "etc1.ktx"           : ResProcessorHelper.getETC1KTXProcessor(),
+            "pvrtc.ktx"          : ResProcessorHelper.getKTXTextureProcessor()
         };
     }
 }

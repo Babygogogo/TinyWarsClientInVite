@@ -520,15 +520,15 @@ export function $warn(code: number, ...params: unknown[]): void {
 }
 export function $markCannotUse<TValue>(instance: PrototypeOwner, property: PropertyKey, defaultValue?: TValue): void {
     Object.defineProperty(instance.prototype, property, {
-        get: function (): TValue | undefined {
+        get : function (): TValue | undefined {
             $warn(1009, getQualifiedClassName(instance), property);
             return defaultValue;
         },
-        set: function (_value: TValue): void {
+        set : function (_value: TValue): void {
             $error(1009, getQualifiedClassName(instance), property);
         },
-        enumerable: true,
-        configurable: true
+        enumerable   : true,
+        configurable : true
     });
 }
 export function log(...messages: unknown[]): void {
@@ -571,22 +571,40 @@ export function getImplementation<T = unknown>(interfaceName: string): T | undef
     return ImplMapHelper.implMap[interfaceName] as T | undefined;
 }
 export function registerClass<T extends object>(classDefinition: { prototype: T }, className: string, interfaceNames?: string[]): void {
-    if (!classDefinition) { $error(1003, "classDefinition"); }
-    if (!classDefinition.prototype) { $error(1012, "classDefinition"); }
-    if (className === undefined) { $error(1003, "className"); }
+    if (!classDefinition) {
+        $error(1003, "classDefinition");
+    }
+    if (!classDefinition.prototype) {
+        $error(1012, "classDefinition");
+    }
+    if (className === undefined) {
+        $error(1003, "className");
+    }
     const prototype: T & ReflectionMetadata = classDefinition.prototype as T & ReflectionMetadata;
-    Object.defineProperty(prototype, '__class__', { value: className, enumerable: false, writable: true });
+    Object.defineProperty(prototype, '__class__', {
+        value      : className,
+        enumerable : false,
+        writable   : true
+    });
     let types: string[] = [className];
-    if (interfaceNames) { types = types.concat(interfaceNames); }
+    if (interfaceNames) {
+        types = types.concat(interfaceNames);
+    }
     const superTypes: string[] | undefined = prototype.__types__;
     if (superTypes) {
         const length: number = superTypes.length;
         for (let i: number = 0; i < length; i++) {
             const name: string = superTypes[i]!;
-            if (types.indexOf(name) == -1) { types.push(name); }
+            if (types.indexOf(name) == -1) {
+                types.push(name);
+            }
         }
     }
-    Object.defineProperty(prototype, '__types__', { value: types, enumerable: false, writable: true });
+    Object.defineProperty(prototype, '__types__', {
+        value      : types,
+        enumerable : false,
+        writable   : true
+    });
 }
 export function callLater<TThis, TArgs extends unknown[], TResult>(
     method: (this: TThis, ...args: TArgs) => TResult, thisObject: TThis, ...args: TArgs
@@ -607,16 +625,20 @@ export function superSetter<TThis, TArgs extends unknown[]>(
 ): void {
     const cla: object = currentClass.prototype;
     if (!Object.prototype.hasOwnProperty.call(currentClass, "__sets__")) {
-        Object.defineProperty(currentClass, "__sets__", { value: {} });
+        Object.defineProperty(currentClass, "__sets__", { value : {} });
     }
     const setters: NonNullable<typeof currentClass.__sets__> = currentClass.__sets__!;
     let setter: ((this: TThis, ...values: TArgs) => void) | undefined = setters[type];
-    if (setter) { return setter.apply(thisObj, values); }
+    if (setter) {
+        return setter.apply(thisObj, values);
+    }
     let prototype: object | null = Object.getPrototypeOf(cla) as object | null;
     while (prototype && !Object.prototype.hasOwnProperty.call(prototype, type)) {
         prototype = Object.getPrototypeOf(prototype) as object | null;
     }
-    if (!prototype) { return; }
+    if (!prototype) {
+        return;
+    }
     const descriptor: PropertyDescriptor = Object.getOwnPropertyDescriptor(prototype, type)!;
     setter = descriptor.set as unknown as (this: TThis, ...values: TArgs) => void;
     setters[type] = setter;
@@ -627,32 +649,42 @@ export function superGetter<TResult = unknown, TThis = unknown>(
 ): TResult | undefined {
     const cla: object = currentClass.prototype;
     if (!Object.prototype.hasOwnProperty.call(currentClass, "__gets__")) {
-        Object.defineProperty(currentClass, "__gets__", { value: {} });
+        Object.defineProperty(currentClass, "__gets__", { value : {} });
     }
     const getters: NonNullable<typeof currentClass.__gets__> = currentClass.__gets__!;
     let getter: ((this: TThis) => TResult) | undefined = getters[type];
-    if (getter) { return getter.call(thisObj); }
+    if (getter) {
+        return getter.call(thisObj);
+    }
     let prototype: object | null = Object.getPrototypeOf(cla) as object | null;
     while (prototype && !Object.prototype.hasOwnProperty.call(prototype, type)) {
         prototype = Object.getPrototypeOf(prototype) as object | null;
     }
-    if (!prototype) { return undefined; }
+    if (!prototype) {
+        return undefined;
+    }
     const descriptor: PropertyDescriptor = Object.getOwnPropertyDescriptor(prototype, type)!;
     getter = descriptor.get as (this: TThis) => TResult;
     getters[type] = getter;
     return getter.call(thisObj);
 }
 export function getDefinitionByName<T = unknown>(name: string): T | null {
-    if (!name) { return null; }
+    if (!name) {
+        return null;
+    }
     let definition: unknown = DefinitionHelper.getDefinitionByNameCache[name];
-    if (definition) { return definition as T; }
+    if (definition) {
+        return definition as T;
+    }
     const paths: string[] = name.split(".");
     const length: number = paths.length;
     definition = (globalThis as any).global ?? globalThis;
     for (let i: number = 0; i < length; i++) {
         const path: string = paths[i]!;
         definition = (definition as Record<string, unknown>)[path];
-        if (!definition) { return null; }
+        if (!definition) {
+            return null;
+        }
     }
     DefinitionHelper.getDefinitionByNameCache[name] = definition;
     return definition as T;
@@ -662,22 +694,34 @@ export function cleanCache(): void {
 }
 export function getQualifiedClassName(value: unknown): string {
     const type: string = typeof value;
-    if (!value || (type != "object" && !(value as PrototypeValue).prototype)) { return type; }
+    if (!value || (type != "object" && !(value as PrototypeValue).prototype)) {
+        return type;
+    }
     const prototype: QualifiedPrototype = (value as PrototypeValue).prototype ||
         Object.getPrototypeOf(value) as QualifiedPrototype;
-    if (Object.prototype.hasOwnProperty.call(prototype, "__class__")) { return prototype.__class__!; }
+    if (Object.prototype.hasOwnProperty.call(prototype, "__class__")) {
+        return prototype.__class__!;
+    }
     const constructorString: string = prototype.constructor.toString().trim();
     const index: number = constructorString.indexOf("(");
     const className: string = constructorString.substring(9, index);
-    Object.defineProperty(prototype, "__class__", { value: className, enumerable: false, writable: true });
+    Object.defineProperty(prototype, "__class__", {
+        value      : className,
+        enumerable : false,
+        writable   : true
+    });
     return className;
 }
 export function getQualifiedSuperclassName(value: unknown): string | null {
-    if (!value || (typeof value != "object" && !(value as PrototypeValue).prototype)) { return null; }
+    if (!value || (typeof value != "object" && !(value as PrototypeValue).prototype)) {
+        return null;
+    }
     const prototype: QualifiedPrototype = (value as PrototypeValue).prototype ||
         Object.getPrototypeOf(value) as QualifiedPrototype;
     const superProto: QualifiedPrototype | null = Object.getPrototypeOf(prototype) as QualifiedPrototype | null;
-    if (!superProto) { return null; }
+    if (!superProto) {
+        return null;
+    }
     const superClass: string = getQualifiedClassName(superProto.constructor);
     return superClass || null;
 }
@@ -689,25 +733,39 @@ export function hasDefinition(name: string): boolean {
     return !!definition;
 }
 export function is(instance: unknown, typeName: string): boolean {
-    if (!instance || typeof instance != "object") { return false; }
+    if (!instance || typeof instance != "object") {
+        return false;
+    }
     const prototype: ReflectionMetadata | null = Object.getPrototypeOf(instance) as ReflectionMetadata | null;
     const types: string[] | null | undefined = prototype ? prototype.__types__ : null;
     return !!types && types.indexOf(typeName) !== -1;
 }
 export function startTick(callBack: TickCallback, thisObject: unknown): void {
-    if (!callBack) { $error(1003, "callBack"); }
+    if (!callBack) {
+        $error(1003, "callBack");
+    }
     getTicker().$startTick(callBack, thisObject);
 }
 export function stopTick(callBack: TickCallback, thisObject: unknown): void {
-    if (!callBack) { $error(1003, "callBack"); }
+    if (!callBack) {
+        $error(1003, "callBack");
+    }
     getTicker().$stopTick(callBack, thisObject);
 }
 export function toColorString(value: number): string {
-    if (value < 0) { value = 0; }
-    if (value > 16777215) { value = 16777215; }
+    if (value < 0) {
+        value = 0;
+    }
+    if (value > 16777215) {
+        value = 16777215;
+    }
     let color: string = value.toString(16).toUpperCase();
-    while (color.length > 6) { color = color.slice(1, color.length); }
-    while (color.length < 6) { color = "0" + color; }
+    while (color.length > 6) {
+        color = color.slice(1, color.length);
+    }
+    while (color.length < 6) {
+        color = "0" + color;
+    }
     return "#" + color;
 }
 export function getHttpRequest() {
@@ -791,11 +849,15 @@ export function __reflect(prototype: object, className: string, types?: string[]
 }
 function getGradient(context: CanvasContext, type: GradientTypeValue, colors: number[], alphas: number[], ratios: number[], _matrix: Matrix): CanvasGradient {
     const gradient: CanvasGradient = type == GradientType.LINEAR ? context.createLinearGradient(-1, 0, 1, 0) : context.createRadialGradient(0, 0, 0, 0, 0, 1);
-    for (let i: number = 0; i < colors.length; i++) { gradient.addColorStop(ratios[i]! / 255, getRGBAString(colors[i]!, alphas[i]!)); }
+    for (let i: number = 0; i < colors.length; i++) {
+        gradient.addColorStop(ratios[i]! / 255, getRGBAString(colors[i]!, alphas[i]!));
+    }
     return gradient;
 }
 function setArray(a: PixelBuffer, b: ArrayLike<number>, index: number = 0): void {
-    for (let i: number = 0, l: number = b.length; i < l; i++) { a[i + index] = b[i]!; }
+    for (let i: number = 0, l: number = b.length; i < l; i++) {
+        a[i + index] = b[i]!;
+    }
 }
 function colorFilter(buffer: PixelBuffer, w: number, h: number, matrix: readonly number[]): void {
     const r0: number = matrix[0]!, r1: number = matrix[1]!, r2: number = matrix[2]!, r3: number = matrix[3]!, r4: number = matrix[4]!;
@@ -822,21 +884,30 @@ function blurFilterH(buffer: PixelBuffer, w: number, h: number, blurX: number): 
         let rs: number = 0, gs: number = 0, bs: number = 0, as: number = 0, alpha: number = 0, alpha2: number = 0;
         for (let ptr: number = -blurX * 4, end: number = blurX * 4 + 4; ptr < end; ptr += 4) {
             const key: number = pLineStart + ptr;
-            if (key < pLineStart || key >= pLineStart + lineSize) { continue; }
+            if (key < pLineStart || key >= pLineStart + lineSize) {
+                continue;
+            }
             alpha = buffer[key + 3]!;
             rs += buffer[key]! * alpha; gs += buffer[key + 1]! * alpha; bs += buffer[key + 2]! * alpha; as += alpha;
         }
         for (let ptr: number = pLineStart, end: number = pLineStart + lineSize, linePtr: number = 0, lastPtr: number = ptr - blurX * 4, nextPtr: number = ptr + (blurX + 1) * 4; ptr < end; ptr += 4, linePtr += 4, nextPtr += 4, lastPtr += 4) {
-            if (as === 0) { lineBuffer[linePtr] = lineBuffer[linePtr + 1] = lineBuffer[linePtr + 2] = lineBuffer[linePtr + 3] = 0; }
-            else { lineBuffer[linePtr] = rs / as; lineBuffer[linePtr + 1] = gs / as; lineBuffer[linePtr + 2] = bs / as; lineBuffer[linePtr + 3] = as / windowLength; }
+            if (as === 0) {
+                lineBuffer[linePtr] = lineBuffer[linePtr + 1] = lineBuffer[linePtr + 2] = lineBuffer[linePtr + 3] = 0;
+            } else {
+                lineBuffer[linePtr] = rs / as; lineBuffer[linePtr + 1] = gs / as; lineBuffer[linePtr + 2] = bs / as; lineBuffer[linePtr + 3] = as / windowLength;
+            }
             alpha = buffer[nextPtr + 3]!; alpha2 = buffer[lastPtr + 3]!;
             if (alpha || alpha == 0) {
                 if (alpha2 || alpha2 == 0) {
                     rs += buffer[nextPtr]! * alpha - buffer[lastPtr]! * alpha2;
                     gs += buffer[nextPtr + 1]! * alpha - buffer[lastPtr + 1]! * alpha2;
                     bs += buffer[nextPtr + 2]! * alpha - buffer[lastPtr + 2]! * alpha2; as += alpha - alpha2;
-                } else { rs += buffer[nextPtr]! * alpha; gs += buffer[nextPtr + 1]! * alpha; bs += buffer[nextPtr + 2]! * alpha; as += alpha; }
-            } else if (alpha2 || alpha2 == 0) { rs += -buffer[lastPtr]! * alpha2; gs += -buffer[lastPtr + 1]! * alpha2; bs += -buffer[lastPtr + 2]! * alpha2; as += -alpha2; }
+                } else {
+                    rs += buffer[nextPtr]! * alpha; gs += buffer[nextPtr + 1]! * alpha; bs += buffer[nextPtr + 2]! * alpha; as += alpha;
+                }
+            } else if (alpha2 || alpha2 == 0) {
+                rs += -buffer[lastPtr]! * alpha2; gs += -buffer[lastPtr + 1]! * alpha2; bs += -buffer[lastPtr + 2]! * alpha2; as += -alpha2;
+            }
         }
         if (Use8ClampHelper.getUse8Clamp()) {
             (buffer as Uint8ClampedArray).set(lineBuffer, pLineStart);
@@ -854,21 +925,30 @@ function blurFilterV(buffer: PixelBuffer, w: number, h: number, blurY: number): 
         let rs: number = 0, gs: number = 0, bs: number = 0, as: number = 0, alpha: number = 0, alpha2: number = 0;
         for (let ptr: number = -blurY * stride, end: number = blurY * stride + stride; ptr < end; ptr += stride) {
             const key: number = pColumnStart + ptr;
-            if (key < pColumnStart || key >= pColumnStart + h * stride) { continue; }
+            if (key < pColumnStart || key >= pColumnStart + h * stride) {
+                continue;
+            }
             alpha = buffer[key + 3]!;
             rs += buffer[key]! * alpha; gs += buffer[key + 1]! * alpha; bs += buffer[key + 2]! * alpha; as += alpha;
         }
         for (let ptr: number = pColumnStart, end: number = pColumnStart + h * stride, columnPtr: number = 0, lastPtr: number = pColumnStart - blurY * stride, nextPtr: number = pColumnStart + (blurY + 1) * stride; ptr < end; ptr += stride, columnPtr += 4, nextPtr += stride, lastPtr += stride) {
-            if (as === 0) { columnBuffer[columnPtr] = columnBuffer[columnPtr + 1] = columnBuffer[columnPtr + 2] = columnBuffer[columnPtr + 3] = 0; }
-            else { columnBuffer[columnPtr] = rs / as; columnBuffer[columnPtr + 1] = gs / as; columnBuffer[columnPtr + 2] = bs / as; columnBuffer[columnPtr + 3] = as / windowLength; }
+            if (as === 0) {
+                columnBuffer[columnPtr] = columnBuffer[columnPtr + 1] = columnBuffer[columnPtr + 2] = columnBuffer[columnPtr + 3] = 0;
+            } else {
+                columnBuffer[columnPtr] = rs / as; columnBuffer[columnPtr + 1] = gs / as; columnBuffer[columnPtr + 2] = bs / as; columnBuffer[columnPtr + 3] = as / windowLength;
+            }
             alpha = buffer[nextPtr + 3]!; alpha2 = buffer[lastPtr + 3]!;
             if (alpha || alpha == 0) {
                 if (alpha2 || alpha2 == 0) {
                     rs += buffer[nextPtr]! * alpha - buffer[lastPtr]! * alpha2;
                     gs += buffer[nextPtr + 1]! * alpha - buffer[lastPtr + 1]! * alpha2;
                     bs += buffer[nextPtr + 2]! * alpha - buffer[lastPtr + 2]! * alpha2; as += alpha - alpha2;
-                } else { rs += buffer[nextPtr]! * alpha; gs += buffer[nextPtr + 1]! * alpha; bs += buffer[nextPtr + 2]! * alpha; as += alpha; }
-            } else if (alpha2 || alpha2 == 0) { rs += -buffer[lastPtr]! * alpha2; gs += -buffer[lastPtr + 1]! * alpha2; bs += -buffer[lastPtr + 2]! * alpha2; as += -alpha2; }
+                } else {
+                    rs += buffer[nextPtr]! * alpha; gs += buffer[nextPtr + 1]! * alpha; bs += buffer[nextPtr + 2]! * alpha; as += alpha;
+                }
+            } else if (alpha2 || alpha2 == 0) {
+                rs += -buffer[lastPtr]! * alpha2; gs += -buffer[lastPtr + 1]! * alpha2; bs += -buffer[lastPtr + 2]! * alpha2; as += -alpha2;
+            }
         }
         for (let i: number = x * 4, end: number = i + h * stride, j: number = 0; i < end; i += stride, j += 4) {
             buffer[i] = columnBuffer[j]!; buffer[i + 1] = columnBuffer[j + 1]!; buffer[i + 2] = columnBuffer[j + 2]!; buffer[i + 3] = columnBuffer[j + 3]!;
@@ -909,10 +989,14 @@ function panFilter(buffer: PixelBuffer, w: number, h: number, angle: number, dis
         const newBuffer: Int32Array = new Int32Array(oldBuffer.length);
         for (let oy: number = 0; oy < h; oy++) {
             const ny: number = oy + dy;
-            if (ny < 0 || ny > h) { continue; }
+            if (ny < 0 || ny > h) {
+                continue;
+            }
             for (let ox: number = 0; ox < w; ox++) {
                 const nx: number = ox + dx;
-                if (nx < 0 || nx > w) { continue; }
+                if (nx < 0 || nx > w) {
+                    continue;
+                }
                 newBuffer[ny * w + nx] = oldBuffer[oy * w + ox]!;
             }
         }
@@ -921,10 +1005,14 @@ function panFilter(buffer: PixelBuffer, w: number, h: number, angle: number, dis
         const newBuffer: number[] = new Array<number>(buffer.length);
         for (let oy: number = 0; oy < h; oy++) {
             const ny: number = oy + dy;
-            if (ny < 0 || ny > h) { continue; }
+            if (ny < 0 || ny > h) {
+                continue;
+            }
             for (let ox: number = 0; ox < w; ox++) {
                 const nx: number = ox + dx;
-                if (nx < 0 || nx > w) { continue; }
+                if (nx < 0 || nx > w) {
+                    continue;
+                }
                 newBuffer[(ny * w + nx) * 4] = buffer[(oy * w + ox) * 4]!;
                 newBuffer[(ny * w + nx) * 4 + 1] = buffer[(oy * w + ox) * 4 + 1]!;
                 newBuffer[(ny * w + nx) * 4 + 2] = buffer[(oy * w + ox) * 4 + 2]!;
@@ -935,7 +1023,9 @@ function panFilter(buffer: PixelBuffer, w: number, h: number, angle: number, dis
     }
 }
 function scaleAlphaChannel(buffer: PixelBuffer, value: number): void {
-    for (let ptr: number = 0, end: number = buffer.length; ptr < end; ptr += 4) { buffer[ptr + 3] = buffer[ptr + 3]! * value; }
+    for (let ptr: number = 0, end: number = buffer.length; ptr < end; ptr += 4) {
+        buffer[ptr + 3] = buffer[ptr + 3]! * value;
+    }
 }
 function compositeSourceOver(dst: PixelBuffer, src: PixelBuffer): void {
     for (let ptr: number = 0, end: number = dst.length; ptr < end; ptr += 4) {
@@ -1326,7 +1416,7 @@ class UuidHelper {
             }
         }
         return UuidHelper.uuid.join('');
-    };
+    }
 
 }
 
@@ -1378,10 +1468,10 @@ export class EventDispatcher extends HashObject implements IEventDispatcher {
     public constructor(target: object | null = null) {
         super();
         this.$EventDispatcher = {
-            0: target ? target : this,
-            1: {},
-            2: {},
-            3: 0
+            0 : target ? target : this,
+            1 : {},
+            2 : {},
+            3 : 0
         };
     }
 
@@ -1428,13 +1518,13 @@ export class EventDispatcher extends HashObject implements IEventDispatcher {
             }
         }
         const eventBin: EventBin<TListener> = {
-            type: type,
-            listener: listener,
-            thisObject: thisObject,
-            priority: priority,
-            target: this,
-            useCapture: useCapture,
-            dispatchOnce: !!dispatchOnce
+            type         : type,
+            listener     : listener,
+            thisObject   : thisObject,
+            priority     : priority,
+            target       : this,
+            useCapture   : useCapture,
+            dispatchOnce : !!dispatchOnce
         };
         if (insertIndex !== -1) {
             list.splice(insertIndex, 0, eventBin);
@@ -2539,7 +2629,12 @@ export class DisplayObject extends EventDispatcher {
         minY = Math.min(minY, 0);
         maxX = Math.max(maxX, 0);
         maxY = Math.max(maxY, 0);
-        return { minX: minX, minY: minY, maxX: maxX, maxY: maxY };
+        return {
+            minX : minX,
+            minY : minY,
+            maxX : maxX,
+            maxY : maxY
+        };
     }
 
     public $getConcatenatedMatrixAt(root: DisplayObject, matrix: Matrix): void {
@@ -2912,7 +3007,9 @@ export class Texture extends HashObject {
             }
             const pixels: Uint8Array | Uint8ClampedArray = renderTexture.$renderBuffer!.getPixels(rect.x, rect.y, iWidth, iHeight);
             const imageData: ImageData = new ImageData(iWidth, iHeight);
-            for (let i: number = 0; i < pixels.length; i++) { imageData.data[i] = pixels[i]!; }
+            for (let i: number = 0; i < pixels.length; i++) {
+                imageData.data[i] = pixels[i]!;
+            }
             Texture.sharedContext!.putImageData(imageData, 0, 0);
             if (!this.$renderBuffer) {
                 renderTexture.dispose();
@@ -2940,15 +3037,20 @@ export class Texture extends HashObject {
     public getPixels(x: number, y: number, width: number = 1, height: number = 1): Uint8Array | Uint8ClampedArray | undefined {
         if (Capabilities.renderMode == "webgl") {
             let renderTexture: Texture;
-            if (!this.$renderBuffer) { renderTexture = new RenderTexture(); (renderTexture as RenderTexture).drawToTexture(new Bitmap(this)); }
-            else { renderTexture = this; }
+            if (!this.$renderBuffer) {
+                renderTexture = new RenderTexture(); (renderTexture as RenderTexture).drawToTexture(new Bitmap(this));
+            } else {
+                renderTexture = this;
+            }
             const pixels: Uint8Array | Uint8ClampedArray = renderTexture.$renderBuffer!.getPixels(x, y, width, height);
             return pixels;
         }
         try {
             const result: Uint8ClampedArray = Texture.sharedContext!.getImageData(x, y, width, height).data;
             return result;
-        } catch { $error(1039); }
+        } catch {
+            $error(1039);
+        }
     }
 
     public toDataURL(type: string, rect?: Rectangle | null, encoderOptions?: number): string | null {
@@ -2964,7 +3066,9 @@ export class Texture extends HashObject {
 
     public saveToFile(type: string, filePath: string, rect?: Rectangle | null, encoderOptions?: number): void {
         const base64: string | null = this.toDataURL(type, rect, encoderOptions);
-        if (base64 == null) { return; }
+        if (base64 == null) {
+            return;
+        }
         const href: string = base64.replace(/^data:image[^;]*/, "data:image/octet-stream");
         const aLink: HTMLAnchorElement = document.createElement("a");
         aLink.download = filePath;
@@ -4111,7 +4215,12 @@ export class GlowFilter extends Filter {
         self.$quality = quality;
         self.$inner = inner;
         self.$knockout = knockout;
-        self.$uniforms.color = { x: this.$red / 255, y: this.$green / 255, z: this.$blue / 255, w: 1 };
+        self.$uniforms.color = {
+            x : this.$red / 255,
+            y : this.$green / 255,
+            z : this.$blue / 255,
+            w : 1
+        };
         self.$uniforms.alpha = alpha;
         self.$uniforms.blurX = blurX;
         self.$uniforms.blurY = blurY;
@@ -4966,7 +5075,10 @@ class BlurXFilter extends Filter implements IBlurXFilter {
     public constructor(blurX: number = 4) {
         super();
         this.type = "blurX";
-        this.$uniforms.blur = { x: blurX, y: 0 };
+        this.$uniforms.blur = {
+            x : blurX,
+            y : 0
+        };
         this.onPropertyChange();
     }
 
@@ -4986,7 +5098,10 @@ class BlurYFilter extends Filter implements IBlurYFilter {
     public constructor(blurY: number = 4) {
         super();
         this.type = "blurY";
-        this.$uniforms.blur = { x: 0, y: blurY };
+        this.$uniforms.blur = {
+            x : 0,
+            y : blurY
+        };
         this.onPropertyChange();
     }
 
@@ -5014,7 +5129,12 @@ export class ColorMatrixFilter extends Filter {
             0, 0, 1, 0,
             0, 0, 0, 1
         ];
-        this.$uniforms.colorAdd = { x: 0, y: 0, z: 0, w: 0 };
+        this.$uniforms.colorAdd = {
+            x : 0,
+            y : 0,
+            z : 0,
+            w : 0
+        };
         this.setMatrix(matrix);
         this.onPropertyChange();
     }
@@ -6313,15 +6433,25 @@ export class KTXContainer {
         this.numberOfFaces = header.getUint32(10 * dataSize, littleEndian);
         this.numberOfMipmapLevels = header.getUint32(11 * dataSize, littleEndian);
         this.bytesOfKeyValueData = header.getUint32(12 * dataSize, littleEndian);
-        if (this.glType !== 0) { console.error("only compressed formats currently supported"); return; }
+        if (this.glType !== 0) {
+            console.error("only compressed formats currently supported"); return;
+        }
         this.numberOfMipmapLevels = Math.max(1, this.numberOfMipmapLevels);
-        if (this.pixelHeight === 0 || this.pixelDepth !== 0) { console.error("only 2D textures currently supported"); return; }
-        if (this.numberOfArrayElements !== 0) { console.error("texture arrays not currently supported"); return; }
-        if (this.numberOfFaces !== facesExpected) { console.error("number of faces expected" + facesExpected + ", but found " + this.numberOfFaces); return; }
+        if (this.pixelHeight === 0 || this.pixelDepth !== 0) {
+            console.error("only 2D textures currently supported"); return;
+        }
+        if (this.numberOfArrayElements !== 0) {
+            console.error("texture arrays not currently supported"); return;
+        }
+        if (this.numberOfFaces !== facesExpected) {
+            console.error("number of faces expected" + facesExpected + ", but found " + this.numberOfFaces); return;
+        }
         this.loadType = KTXContainer.COMPRESSED_2D;
     }
     public uploadLevels(bitmapData: BitmapData, loadMipmaps: boolean): void {
-        if (this.loadType === KTXContainer.COMPRESSED_2D) { this._upload2DCompressedLevels(bitmapData, loadMipmaps); }
+        if (this.loadType === KTXContainer.COMPRESSED_2D) {
+            this._upload2DCompressedLevels(bitmapData, loadMipmaps);
+        }
     }
     public _upload2DCompressedLevels(bitmapData: BitmapData, loadMipmaps: boolean): void {
         bitmapData.clearCompressedTextureData();
@@ -6352,7 +6482,9 @@ export class KTXContainer {
             height = Math.max(1, height * 0.5);
         }
         const compressed2d: CompressedTextureData | null | undefined = bitmapData.getCompressed2dTextureData();
-        if (compressed2d) { bitmapData.width = compressed2d.width; bitmapData.height = compressed2d.height; }
+        if (compressed2d) {
+            bitmapData.width = compressed2d.width; bitmapData.height = compressed2d.height;
+        }
     }
 }
 __reflect(KTXContainer.prototype, "egret.KTXContainer");
@@ -6361,7 +6493,11 @@ export class CanvasRenderer {
     private static readonly blendModes: GlobalCompositeOperation[] = ["source-over", "lighter", "destination-out"];
     private static readonly defaultCompositeOp: GlobalCompositeOperation = "source-over";
     private static readonly BLACK_COLOR: string = "#000000";
-    private static readonly CAPS_STYLES: Record<CapsStyleValue, CanvasLineCap> = { none: "butt", square: "square", round: "round" };
+    private static readonly CAPS_STYLES: Record<CapsStyleValue, CanvasLineCap> = {
+        none   : "butt",
+        square : "square",
+        round  : "round"
+    };
     private static readonly renderBufferPool: CanvasRenderBuffer[] = [];
     private static readonly renderBufferPool_Filters: CanvasRenderBuffer[] = [];
 
@@ -6393,9 +6529,13 @@ export class CanvasRenderer {
         let node: RenderNode | null;
         const displayList: DisplayList | null = displayObject.$displayList;
         if (displayList && !isStage) {
-            if (displayObject.$cacheDirty || displayObject.$renderDirty || displayList.$canvasScaleX != runtime.sys.DisplayList.$canvasScaleX || displayList.$canvasScaleY != runtime.sys.DisplayList.$canvasScaleY) { drawCalls += displayList.drawToSurface(); }
+            if (displayObject.$cacheDirty || displayObject.$renderDirty || displayList.$canvasScaleX != runtime.sys.DisplayList.$canvasScaleX || displayList.$canvasScaleY != runtime.sys.DisplayList.$canvasScaleY) {
+                drawCalls += displayList.drawToSurface();
+            }
             node = displayList.$renderNode;
-        } else { node = displayObject.$renderDirty ? displayObject.$getRenderNode() : displayObject.$renderNode; }
+        } else {
+            node = displayObject.$renderDirty ? displayObject.$getRenderNode() : displayObject.$renderNode;
+        }
         displayObject.$cacheDirty = false;
         if (node) {
             drawCalls++;
@@ -6403,7 +6543,9 @@ export class CanvasRenderer {
             this.renderNode(node, context);
             context.$offsetX = context.$offsetY = 0;
         }
-        if (displayList && !isStage) { return drawCalls; }
+        if (displayList && !isStage) {
+            return drawCalls;
+        }
         const children: DisplayObject[] | null = displayObject.$children;
         if (children) {
             const length: number = children.length;
@@ -6416,9 +6558,13 @@ export class CanvasRenderer {
                     offsetX2 = offsetX + child.$x; offsetY2 = offsetY + child.$y;
                     context.save(); context.transform(m.a, m.b, m.c, m.d, offsetX2, offsetY2);
                     offsetX2 = -child.$anchorOffsetX; offsetY2 = -child.$anchorOffsetY;
-                } else { offsetX2 = offsetX + child.$x - child.$anchorOffsetX; offsetY2 = offsetY + child.$y - child.$anchorOffsetY; }
+                } else {
+                    offsetX2 = offsetX + child.$x - child.$anchorOffsetX; offsetY2 = offsetY + child.$y - child.$anchorOffsetY;
+                }
                 let tempAlpha: number | undefined;
-                if (child.$alpha != 1) { tempAlpha = context.globalAlpha; context.globalAlpha *= child.$alpha; }
+                if (child.$alpha != 1) {
+                    tempAlpha = context.globalAlpha; context.globalAlpha *= child.$alpha;
+                }
                 switch (child.$renderMode) {
                     case 1: break;
                     case 2: drawCalls += this.drawWithFilter(child, context, offsetX2, offsetY2); break;
@@ -6426,13 +6572,19 @@ export class CanvasRenderer {
                     case 4: drawCalls += this.drawWithScrollRect(child, context, offsetX2, offsetY2); break;
                     default: drawCalls += this.drawDisplayObject(child, context, offsetX2, offsetY2); break;
                 }
-                if (child.$useTranslate) { context.restore(); } else if (tempAlpha) { context.globalAlpha = tempAlpha; }
+                if (child.$useTranslate) {
+                    context.restore();
+                } else if (tempAlpha) {
+                    context.globalAlpha = tempAlpha;
+                }
             }
         }
         return drawCalls;
     }
     public drawWithFilter(displayObject: DisplayObject, context: CanvasContext, offsetX: number, offsetY: number): number {
-        if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) { return 0; }
+        if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) {
+            return 0;
+        }
         let drawCalls: number = 0;
         const filters: Filter[] = displayObject.$filters!;
         const filtersLen: number = filters.length;
@@ -6448,11 +6600,17 @@ export class CanvasRenderer {
         }
         const displayBuffer: CanvasRenderBuffer = this.createRenderBuffer(displayBoundsWidth - displayBoundsX, displayBoundsHeight - displayBoundsY, true);
         const displayContext: CanvasContext = displayBuffer.context;
-        if (displayObject.$mask) { drawCalls += this.drawWithClip(displayObject, displayContext, -displayBoundsX, -displayBoundsY); }
-        else if (displayObject.$scrollRect || displayObject.$maskRect) { drawCalls += this.drawWithScrollRect(displayObject, displayContext, -displayBoundsX, -displayBoundsY); }
-        else { drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY); }
+        if (displayObject.$mask) {
+            drawCalls += this.drawWithClip(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
+        } else if (displayObject.$scrollRect || displayObject.$maskRect) {
+            drawCalls += this.drawWithScrollRect(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
+        } else {
+            drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
+        }
         if (drawCalls > 0) {
-            if (hasBlendMode) { context.globalCompositeOperation = compositeOp; }
+            if (hasBlendMode) {
+                context.globalCompositeOperation = compositeOp;
+            }
             drawCalls++;
             const imageData: ImageData = displayContext.getImageData(0, 0, displayBuffer.surface.width, displayBuffer.surface.height);
             for (let i: number = 0; i < filtersLen; i++) {
@@ -6467,12 +6625,16 @@ export class CanvasRenderer {
                     const color: RGBA = [glow.$red / 255, glow.$green / 255, glow.$blue / 255, glow.$alpha];
                     if (glow.$inner || glow.$knockout || glow.$hideObject) {
                         dropShadowFilter2(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, color, glow.$blurX, glow.$blurY, glow.$angle ? glow.$angle / 180 * Math.PI : 0, glow.$distance || 0, glow.$strength, glow.$inner ? 1 : 0, glow.$knockout ? 0 : 1, glow.$hideObject ? 1 : 0);
-                    } else { dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, color, glow.$blurX, glow.$blurY, glow.$angle ? glow.$angle / 180 * Math.PI : 0, glow.$distance || 0, glow.$strength); }
+                    } else {
+                        dropShadowFilter(imageData.data, displayBuffer.surface.width, displayBuffer.surface.height, color, glow.$blurX, glow.$blurY, glow.$angle ? glow.$angle / 180 * Math.PI : 0, glow.$distance || 0, glow.$strength);
+                    }
                 }
             }
             displayContext.putImageData(imageData, 0, 0);
             context.drawImage(displayBuffer.surface, offsetX + displayBoundsX, offsetY + displayBoundsY);
-            if (hasBlendMode) { context.globalCompositeOperation = CanvasRenderer.defaultCompositeOp; }
+            if (hasBlendMode) {
+                context.globalCompositeOperation = CanvasRenderer.defaultCompositeOp;
+            }
         }
         CanvasRenderer.renderBufferPool_Filters.push(displayBuffer);
         return drawCalls;
@@ -6485,7 +6647,9 @@ export class CanvasRenderer {
         const mask: DisplayObject | null = displayObject.$mask;
         if (mask) {
             const maskRenderMatrix: Matrix = mask.$getMatrix();
-            if ((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) { return drawCalls; }
+            if ((maskRenderMatrix.a == 0 && maskRenderMatrix.b == 0) || (maskRenderMatrix.c == 0 && maskRenderMatrix.d == 0)) {
+                return drawCalls;
+            }
         }
         if (!mask && (!displayObject.$children || displayObject.$children.length == 0)) {
             if (scrollRect) {
@@ -6517,7 +6681,9 @@ export class CanvasRenderer {
                 maskMatrix.$invertInto(maskMatrix);
                 context.transform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                 Matrix.release(maskMatrix);
-                if (scrollRect) { context.beginPath(); context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height); context.clip(); }
+                if (scrollRect) {
+                    context.beginPath(); context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height); context.clip();
+                }
                 calls += this.drawDisplayObject(displayObject, context, offsetX, offsetY);
                 context.restore(); return calls;
             }
@@ -6532,7 +6698,9 @@ export class CanvasRenderer {
         }
         const displayBuffer: CanvasRenderBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
         const displayContext: CanvasContext = displayBuffer.context;
-        if (!displayContext) { return drawCalls + this.drawDisplayObject(displayObject, context, offsetX, offsetY); }
+        if (!displayContext) {
+            return drawCalls + this.drawDisplayObject(displayObject, context, offsetX, offsetY);
+        }
         drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
         if (mask) {
             const maskRenderNode: RenderNode | null = mask.$getRenderNode();
@@ -6573,8 +6741,12 @@ export class CanvasRenderer {
     }
     public drawWithScrollRect(displayObject: DisplayObject, context: CanvasContext, offsetX: number, offsetY: number): number {
         const scrollRect: Rectangle = (displayObject.$scrollRect || displayObject.$maskRect)!;
-        if (scrollRect.isEmpty()) { return 0; }
-        if (displayObject.$scrollRect) { offsetX -= scrollRect.x; offsetY -= scrollRect.y; }
+        if (scrollRect.isEmpty()) {
+            return 0;
+        }
+        if (displayObject.$scrollRect) {
+            offsetX -= scrollRect.x; offsetY -= scrollRect.y;
+        }
         context.save(); context.beginPath(); context.rect(scrollRect.x + offsetX, scrollRect.y + offsetY, scrollRect.width, scrollRect.height); context.clip();
         const drawCalls: number = this.drawDisplayObject(displayObject, context, offsetX, offsetY);
         context.restore(); return drawCalls;
@@ -6586,10 +6758,14 @@ export class CanvasRenderer {
     }
     public drawDisplayToBuffer(displayObject: DisplayObject, buffer: RenderBuffer, matrix?: Matrix | null): number {
         const context: CanvasContext = (buffer as CanvasRenderBuffer).context;
-        if (matrix) { context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty); }
+        if (matrix) {
+            context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+        }
         const node: RenderNode | null = displayObject.$renderDirty ? displayObject.$getRenderNode() : displayObject.$renderNode;
         let drawCalls: number = 0;
-        if (node) { drawCalls++; this.renderNode(node, context); }
+        if (node) {
+            drawCalls++; this.renderNode(node, context);
+        }
         const children: DisplayObject[] | null = displayObject.$children;
         if (children) {
             for (let i: number = 0; i < children.length; i++) {
@@ -6619,9 +6795,13 @@ export class CanvasRenderer {
     }
     public renderNormalBitmap(node: NormalBitmapNode, context: CanvasContext): number {
         const image: BitmapData | null = node.image;
-        if (!image || !image.source) { return 0; }
+        if (!image || !image.source) {
+            return 0;
+        }
         const source: CanvasImageSource = image.source as CanvasImageSource;
-        if (context.$imageSmoothingEnabled != node.smoothing) { context.imageSmoothingEnabled = context.$imageSmoothingEnabled = node.smoothing; }
+        if (context.$imageSmoothingEnabled != node.smoothing) {
+            context.imageSmoothingEnabled = context.$imageSmoothingEnabled = node.smoothing;
+        }
         if (node.rotated) {
             const sourceX: number = node.sourceX;
             const sourceY: number = node.sourceY;
@@ -6633,12 +6813,16 @@ export class CanvasRenderer {
             const destWidth: number = node.drawH;
             context.save(); context.transform(0, -1, 1, 0, 0, destWidth);
             context.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, offsetX + context.$offsetX, offsetY + context.$offsetY, destWidth, destHeight); context.restore();
-        } else { context.drawImage(source, node.sourceX, node.sourceY, node.sourceW, node.sourceH, node.drawX + context.$offsetX, node.drawY + context.$offsetY, node.drawW, node.drawH); }
+        } else {
+            context.drawImage(source, node.sourceX, node.sourceY, node.sourceW, node.sourceH, node.drawX + context.$offsetX, node.drawY + context.$offsetY, node.drawW, node.drawH);
+        }
         return 1;
     }
     public renderBitmap(node: BitmapNode, context: CanvasContext): number {
         const image: BitmapData | null = node.image;
-        if (!image || !image.source) { return 0; }
+        if (!image || !image.source) {
+            return 0;
+        }
         const source: CanvasImageSource = image.source as CanvasImageSource;
         if (context.$imageSmoothingEnabled != node.smoothing) {
             context.imageSmoothingEnabled = context.$imageSmoothingEnabled = node.smoothing;
@@ -6659,9 +6843,13 @@ export class CanvasRenderer {
             }
             context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
-        if (blendMode) { context.globalCompositeOperation = CanvasRenderer.blendModes[blendMode]!; }
+        if (blendMode) {
+            context.globalCompositeOperation = CanvasRenderer.blendModes[blendMode]!;
+        }
         let originAlpha: number | undefined;
-        if (alpha == alpha) { originAlpha = context.globalAlpha; context.globalAlpha *= alpha; }
+        if (alpha == alpha) {
+            originAlpha = context.globalAlpha; context.globalAlpha *= alpha;
+        }
         let drawCalls: number = 0;
         const filter: ColorMatrixFilter | null = node.filter;
         if (filter && length == 8) {
@@ -6673,11 +6861,15 @@ export class CanvasRenderer {
             const drawY: number = data[5]!;
             let destWidth: number = data[6]!;
             let destHeight: number = data[7]!;
-            if (node.rotated) { sourceWidth = data[3]!; sourceHeight = data[2]!; destWidth = data[7]!; destHeight = data[6]!; }
+            if (node.rotated) {
+                sourceWidth = data[3]!; sourceHeight = data[2]!; destWidth = data[7]!; destHeight = data[6]!;
+            }
             const displayBuffer: CanvasRenderBuffer = this.createRenderBuffer(destWidth, destHeight);
             const displayContext: CanvasContext = displayBuffer.context;
             drawCalls++;
-            if (node.rotated) { context.transform(0, -1, 1, 0, 0, destWidth); }
+            if (node.rotated) {
+                context.transform(0, -1, 1, 0, 0, destWidth);
+            }
             displayContext.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight);
             drawCalls++;
             const imageData: ImageData = displayContext.getImageData(0, 0, destWidth, destHeight);
@@ -6699,7 +6891,9 @@ export class CanvasRenderer {
                     const destWidth: number = data[pos++]!;
                     context.save(); context.transform(0, -1, 1, 0, 0, destWidth);
                     context.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, drawX + context.$offsetX, drawY + context.$offsetY, destWidth, destHeight); context.restore();
-                } else { context.drawImage(source, data[pos++]!, data[pos++]!, data[pos++]!, data[pos++]!, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]!, data[pos++]!); }
+                } else {
+                    context.drawImage(source, data[pos++]!, data[pos++]!, data[pos++]!, data[pos++]!, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]!, data[pos++]!);
+                }
             }
         }
         if (saved) {
@@ -6737,7 +6931,9 @@ export class CanvasRenderer {
             const strokeColor: number = format.strokeColor == null ? node.strokeColor : format.strokeColor;
             const stroke: number = format.stroke == null ? node.stroke : format.stroke;
             context.fillStyle = toColorString(textColor); context.strokeStyle = toColorString(strokeColor);
-            if (stroke) { context.lineWidth = stroke * 2; context.strokeText(text, x + context.$offsetX, y + context.$offsetY); }
+            if (stroke) {
+                context.lineWidth = stroke * 2; context.strokeText(text, x + context.$offsetX, y + context.$offsetY);
+            }
             context.fillText(text, x + context.$offsetX, y + context.$offsetY);
         }
     }
@@ -6811,15 +7007,25 @@ export class CanvasRenderer {
         let offsetY: number | undefined;
         if (m) {
             context.save(); saved = true;
-            if (context.$offsetX != 0 || context.$offsetY != 0) { context.translate(context.$offsetX, context.$offsetY); offsetX = context.$offsetX; offsetY = context.$offsetY; context.$offsetX = context.$offsetY = 0; }
+            if (context.$offsetX != 0 || context.$offsetY != 0) {
+                context.translate(context.$offsetX, context.$offsetY); offsetX = context.$offsetX; offsetY = context.$offsetY; context.$offsetX = context.$offsetY = 0;
+            }
             context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
         let drawCalls: number = 0;
         const children: RenderNode[] = groupNode.drawData;
-        for (let i: number = 0; i < children.length; i++) { drawCalls += this.renderNode(children[i]!, context); }
-        if (saved) { context.restore(); }
-        if (offsetX) { context.$offsetX = offsetX; }
-        if (offsetY) { context.$offsetY = offsetY; }
+        for (let i: number = 0; i < children.length; i++) {
+            drawCalls += this.renderNode(children[i]!, context);
+        }
+        if (saved) {
+            context.restore();
+        }
+        if (offsetX) {
+            context.$offsetX = offsetX;
+        }
+        if (offsetY) {
+            context.$offsetY = offsetY;
+        }
         return drawCalls;
     }
     public createRenderBuffer(width: number, height: number, useForFilters?: boolean): CanvasRenderBuffer {
@@ -6838,10 +7044,14 @@ export class Mesh extends Bitmap {
     public _verticesDirty: boolean = true;
     public _bounds: Rectangle = new Rectangle();
     public declare $renderNode: MeshNode;
-    public constructor(value?: Texture | null) { super(value); this.$renderNode = new runtime.sys.MeshNode(); }
+    public constructor(value?: Texture | null) {
+        super(value); this.$renderNode = new runtime.sys.MeshNode();
+    }
     public override $updateRenderNode(): void {
         const image: BitmapData | null = this.$bitmapData;
-        if (!image) { return; }
+        if (!image) {
+            return;
+        }
         const node: MeshNode = this.$renderNode;
         node.smoothing = this.$smoothing; node.image = image; node.imageWidth = this.$sourceWidth; node.imageHeight = this.$sourceHeight;
         const destW: number = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : this.$textureWidth;
@@ -6854,9 +7064,13 @@ export class Mesh extends Bitmap {
         this._verticesDirty = true; this.$renderDirty = true;
         {
             const p: DisplayObjectContainer | null = this.$parent;
-            if (p && !p.$cacheDirty) { p.$cacheDirty = true; p.$cacheDirtyUp(); }
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true; p.$cacheDirtyUp();
+            }
             const maskedObject: DisplayObject | null = this.$maskedObject;
-            if (maskedObject && !maskedObject.$cacheDirty) { maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp(); }
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp();
+            }
         }
     }
     public override $measureContentBounds(bounds: Rectangle): void {
@@ -6868,13 +7082,23 @@ export class Mesh extends Bitmap {
                 this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
                 for (let i: number = 0, l: number = vertices.length; i < l; i += 2) {
                     const x: number = vertices[i]!, y: number = vertices[i + 1]!;
-                    if (this._bounds.x > x) { this._bounds.x = x; }
-                    if (this._bounds.width < x) { this._bounds.width = x; }
-                    if (this._bounds.y > y) { this._bounds.y = y; }
-                    if (this._bounds.height < y) { this._bounds.height = y; }
+                    if (this._bounds.x > x) {
+                        this._bounds.x = x;
+                    }
+                    if (this._bounds.width < x) {
+                        this._bounds.width = x;
+                    }
+                    if (this._bounds.y > y) {
+                        this._bounds.y = y;
+                    }
+                    if (this._bounds.height < y) {
+                        this._bounds.height = y;
+                    }
                 }
                 this._bounds.width -= this._bounds.x; this._bounds.height -= this._bounds.y;
-            } else { this._bounds.setTo(0, 0, 0, 0); }
+            } else {
+                this._bounds.setTo(0, 0, 0, 0);
+            }
             node.bounds.copyFrom(this._bounds);
         }
         bounds.copyFrom(this._bounds);
@@ -6891,18 +7115,28 @@ export class RenderTexture extends Texture {
         bitmapData.$deleteSource = false; this._setBitmapData(bitmapData);
     }
     public drawToTexture(displayObject: DisplayObject, clipBounds?: Rectangle | null, scale: number = 1): boolean {
-        if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) { return false; }
+        if (clipBounds && (clipBounds.width == 0 || clipBounds.height == 0)) {
+            return false;
+        }
         const bounds: Rectangle = clipBounds || displayObject.$getOriginalBounds();
-        if (bounds.width == 0 || bounds.height == 0) { return false; }
+        if (bounds.width == 0 || bounds.height == 0) {
+            return false;
+        }
         scale /= Texture.$TextureScaleFactor;
         let width: number = (bounds.x + bounds.width) * scale, height: number = (bounds.y + bounds.height) * scale;
-        if (clipBounds) { width = bounds.width * scale; height = bounds.height * scale; }
+        if (clipBounds) {
+            width = bounds.width * scale; height = bounds.height * scale;
+        }
         const renderBuffer: RenderBuffer | null = this.$renderBuffer;
-        if (!renderBuffer) { return false; }
+        if (!renderBuffer) {
+            return false;
+        }
         renderBuffer.resize(width, height); this.$bitmapData!.width = width; this.$bitmapData!.height = height;
         {
             const matrix: Matrix = Matrix.create(); matrix.identity(); matrix.scale(scale, scale);
-            if (clipBounds) { matrix.translate(-clipBounds.x, -clipBounds.y); }
+            if (clipBounds) {
+                matrix.translate(-clipBounds.x, -clipBounds.y);
+            }
             runtime.sys.RenderBuffHelper.systemRenderer!.render(displayObject, renderBuffer, matrix, true);
             Matrix.release(matrix);
         }
@@ -6916,20 +7150,34 @@ export class RenderTexture extends Texture {
         }
         return data;
     }
-    public override dispose(): void { super.dispose(); this.$renderBuffer = null; }
+    public override dispose(): void {
+        super.dispose(); this.$renderBuffer = null;
+    }
 }
 __reflect(RenderTexture.prototype, "egret.RenderTexture");
 
 export class Shape extends DisplayObject {
     public $graphics: Graphics;
-    public constructor() { super(); this.$graphics = new Graphics(); this.$graphics.$setTarget(this); }
-    public get graphics(): Graphics { return this.$graphics; }
-    public override $measureContentBounds(bounds: Rectangle): void { this.$graphics.$measureContentBounds(bounds); }
+    public constructor() {
+        super(); this.$graphics = new Graphics(); this.$graphics.$setTarget(this);
+    }
+    public get graphics(): Graphics {
+        return this.$graphics;
+    }
+    public override $measureContentBounds(bounds: Rectangle): void {
+        this.$graphics.$measureContentBounds(bounds);
+    }
     public override $hitTest(stageX: number, stageY: number): DisplayObject | null {
         let target: DisplayObject | null = super.$hitTest(stageX, stageY);
-        if (target == this) { target = this.$graphics.$hitTest(stageX, stageY); } return target;
+        if (target == this) {
+            target = this.$graphics.$hitTest(stageX, stageY);
+        } return target;
     }
-    public override $onRemoveFromStage(): void { super.$onRemoveFromStage(); if (this.$graphics) { this.$graphics.$onRemoveFromStage(); } }
+    public override $onRemoveFromStage(): void {
+        super.$onRemoveFromStage(); if (this.$graphics) {
+            this.$graphics.$onRemoveFromStage();
+        }
+    }
 }
 __reflect(Shape.prototype, "egret.Shape");
 
@@ -6938,20 +7186,28 @@ export class BitmapFont extends SpriteSheet {
     public charList: Record<string, BitmapFontGlyph | undefined>;
     public constructor(texture: Texture, config: string | BitmapFontConfig | null) {
         super(texture);
-        if (typeof config == "string") { this.charList = this.parseConfig(config); }
-        else if (config && config.hasOwnProperty("frames")) { this.charList = config.frames; }
-        else { this.charList = {}; }
+        if (typeof config == "string") {
+            this.charList = this.parseConfig(config);
+        } else if (config && config.hasOwnProperty("frames")) {
+            this.charList = config.frames;
+        } else {
+            this.charList = {};
+        }
     }
     public override getTexture(name: string): Texture | null {
         let texture: Texture | undefined = this._textureMap[name];
         if (!texture) {
             const c: BitmapFontGlyph | undefined = this.charList[name];
-            if (!c) { return null; }
+            if (!c) {
+                return null;
+            }
             texture = this.createTexture(name, c.x, c.y, c.w, c.h, c.offX, c.offY, c.sourceW, c.sourceH); this._textureMap[name] = texture;
         }
         return texture;
     }
-    public getConfig(name: string, key: keyof BitmapFontGlyph): number | undefined { return this.charList[name] ? this.charList[name]![key] : 0; }
+    public getConfig(name: string, key: keyof BitmapFontGlyph): number | undefined {
+        return this.charList[name] ? this.charList[name]![key] : 0;
+    }
     public _getFirstCharHeight(): number {
         if (this.firstCharHeight == 0) {
             let str: string;
@@ -6959,8 +7215,12 @@ export class BitmapFont extends SpriteSheet {
                 const c: BitmapFontGlyph | undefined = this.charList[str];
                 if (c) {
                     let sourceH: number | undefined = c.sourceH;
-                    if (sourceH === undefined) { const h: number = c.h === undefined ? 0 : c.h; const offY: number = c.offY === undefined ? 0 : c.offY; sourceH = h + offY; }
-                    if (sourceH <= 0) { continue; } this.firstCharHeight = sourceH; break;
+                    if (sourceH === undefined) {
+                        const h: number = c.h === undefined ? 0 : c.h; const offY: number = c.offY === undefined ? 0 : c.offY; sourceH = h + offY;
+                    }
+                    if (sourceH <= 0) {
+                        continue;
+                    } this.firstCharHeight = sourceH; break;
                 }
             }
         }
@@ -6975,8 +7235,13 @@ export class BitmapFont extends SpriteSheet {
             const charText: string = lines[i]!;
             const letter: string = String.fromCharCode(this.getConfigByKey(charText, "id"));
             const c: BitmapFontGlyph = {
-                x: this.getConfigByKey(charText, "x"), y: this.getConfigByKey(charText, "y"), w: this.getConfigByKey(charText, "width"), h: this.getConfigByKey(charText, "height"),
-                offX: this.getConfigByKey(charText, "xoffset"), offY: this.getConfigByKey(charText, "yoffset"), xadvance: this.getConfigByKey(charText, "xadvance")
+                x        : this.getConfigByKey(charText, "x"),
+                y        : this.getConfigByKey(charText, "y"),
+                w        : this.getConfigByKey(charText, "width"),
+                h        : this.getConfigByKey(charText, "height"),
+                offX     : this.getConfigByKey(charText, "xoffset"),
+                offY     : this.getConfigByKey(charText, "yoffset"),
+                xadvance : this.getConfigByKey(charText, "xadvance")
             };
             chars[letter] = c;
         }
@@ -6986,7 +7251,9 @@ export class BitmapFont extends SpriteSheet {
         const itemConfigTextList: string[] = configText.split(" ");
         for (let i: number = 0; i < itemConfigTextList.length; i++) {
             const itemConfigText: string = itemConfigTextList[i]!;
-            if (key == itemConfigText.substring(0, key.length)) { const value: string = itemConfigText.substring(key.length + 1); return parseInt(value); }
+            if (key == itemConfigText.substring(0, key.length)) {
+                const value: string = itemConfigText.substring(key.length + 1); return parseInt(value);
+            }
         }
         return 0;
     }
@@ -7020,55 +7287,109 @@ export class BitmapText extends DisplayObject {
         super();
         this.$renderNode = new runtime.sys.BitmapNode();
     }
-    public get smoothing(): boolean { return this.$smoothing; }
+    public get smoothing(): boolean {
+        return this.$smoothing;
+    }
     public set smoothing(value: boolean) {
-        if (value == this.$smoothing) { return; } this.$smoothing = value;
+        if (value == this.$smoothing) {
+            return;
+        } this.$smoothing = value;
         {
             const p: DisplayObjectContainer | null = this.$parent;
-            if (p && !p.$cacheDirty) { p.$cacheDirty = true; p.$cacheDirtyUp(); }
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true; p.$cacheDirtyUp();
+            }
             const maskedObject: DisplayObject | null = this.$maskedObject;
-            if (maskedObject && !maskedObject.$cacheDirty) { maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp(); }
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp();
+            }
         }
     }
-    public get text(): string { return this.$text; }
-    public set text(value: string) { this.$setText(value); }
+    public get text(): string {
+        return this.$text;
+    }
+    public set text(value: string) {
+        this.$setText(value);
+    }
     public $setText(value: unknown): boolean {
         const text: string = value == null ? "" : String(value);
-        if (text == this.$text) { return false; } this.$text = text; this.$invalidateContentBounds(); return true;
+        if (text == this.$text) {
+            return false;
+        } this.$text = text; this.$invalidateContentBounds(); return true;
     }
-    public override $getWidth(): number { return isNaN(this.$textFieldWidth) ? this.$getContentBounds().width : this.$textFieldWidth; }
+    public override $getWidth(): number {
+        return isNaN(this.$textFieldWidth) ? this.$getContentBounds().width : this.$textFieldWidth;
+    }
     public override $setWidth(value: number): boolean {
-        if (value < 0 || value == this.$textFieldWidth) { return false; } this.$textFieldWidth = value; this.$invalidateContentBounds(); return true;
+        if (value < 0 || value == this.$textFieldWidth) {
+            return false;
+        } this.$textFieldWidth = value; this.$invalidateContentBounds(); return true;
     }
-    public $invalidateContentBounds(): void { this.$renderDirty = true; this.$textLinesChanged = true; this.$updateRenderNode(); }
-    public override $getHeight(): number { return isNaN(this.$textFieldHeight) ? this.$getContentBounds().height : this.$textFieldHeight; }
+    public $invalidateContentBounds(): void {
+        this.$renderDirty = true; this.$textLinesChanged = true; this.$updateRenderNode();
+    }
+    public override $getHeight(): number {
+        return isNaN(this.$textFieldHeight) ? this.$getContentBounds().height : this.$textFieldHeight;
+    }
     public override $setHeight(value: number): boolean {
-        if (value < 0 || value == this.$textFieldHeight) { return false; } this.$textFieldHeight = value; this.$invalidateContentBounds(); return true;
+        if (value < 0 || value == this.$textFieldHeight) {
+            return false;
+        } this.$textFieldHeight = value; this.$invalidateContentBounds(); return true;
     }
-    public get font(): BitmapFont | null { return this.$font; }
-    public set font(value: BitmapFont | null) { this.$setFont(value); }
+    public get font(): BitmapFont | null {
+        return this.$font;
+    }
+    public set font(value: BitmapFont | null) {
+        this.$setFont(value);
+    }
     public $setFont(value: BitmapFont | null): boolean {
-        if (this.$font == value) { return false; } this.$font = value; this.$fontStringChanged = true; this.$invalidateContentBounds(); return true;
+        if (this.$font == value) {
+            return false;
+        } this.$font = value; this.$fontStringChanged = true; this.$invalidateContentBounds(); return true;
     }
-    public get lineSpacing(): number { return this.$lineSpacing; }
-    public set lineSpacing(value: number) { this.$setLineSpacing(value); }
+    public get lineSpacing(): number {
+        return this.$lineSpacing;
+    }
+    public set lineSpacing(value: number) {
+        this.$setLineSpacing(value);
+    }
     public $setLineSpacing(value: number): boolean {
-        if (this.$lineSpacing == value) { return false; } this.$lineSpacing = value; this.$invalidateContentBounds(); return true;
+        if (this.$lineSpacing == value) {
+            return false;
+        } this.$lineSpacing = value; this.$invalidateContentBounds(); return true;
     }
-    public get letterSpacing(): number { return this.$letterSpacing; }
-    public set letterSpacing(value: number) { this.$setLetterSpacing(value); }
+    public get letterSpacing(): number {
+        return this.$letterSpacing;
+    }
+    public set letterSpacing(value: number) {
+        this.$setLetterSpacing(value);
+    }
     public $setLetterSpacing(value: number): boolean {
-        if (this.$letterSpacing == value) { return false; } this.$letterSpacing = value; this.$invalidateContentBounds(); return true;
+        if (this.$letterSpacing == value) {
+            return false;
+        } this.$letterSpacing = value; this.$invalidateContentBounds(); return true;
     }
-    public get textAlign(): string { return this.$textAlign; }
-    public set textAlign(value: string) { this.$setTextAlign(value); }
+    public get textAlign(): string {
+        return this.$textAlign;
+    }
+    public set textAlign(value: string) {
+        this.$setTextAlign(value);
+    }
     public $setTextAlign(value: string): boolean {
-        if (this.$textAlign == value) { return false; } this.$textAlign = value; this.$invalidateContentBounds(); return true;
+        if (this.$textAlign == value) {
+            return false;
+        } this.$textAlign = value; this.$invalidateContentBounds(); return true;
     }
-    public get verticalAlign(): string { return this.$verticalAlign; }
-    public set verticalAlign(value: string) { this.$setVerticalAlign(value); }
+    public get verticalAlign(): string {
+        return this.$verticalAlign;
+    }
+    public set verticalAlign(value: string) {
+        this.$setVerticalAlign(value);
+    }
     public $setVerticalAlign(value: string): boolean {
-        if (this.$verticalAlign == value) { return false; } this.$verticalAlign = value; this.$invalidateContentBounds(); return true;
+        if (this.$verticalAlign == value) {
+            return false;
+        } this.$verticalAlign = value; this.$invalidateContentBounds(); return true;
     }
     public override $updateRenderNode(): void {
         const textLines: string[] = this.$getTextLines();
@@ -7081,7 +7402,9 @@ export class BitmapText extends DisplayObject {
         let node: BitmapNode | undefined;
         {
             node = this.$renderNode;
-            if (bitmapFont.$texture) { node.image = bitmapFont.$texture.$bitmapData; }
+            if (bitmapFont.$texture) {
+                node.image = bitmapFont.$texture.$bitmapData;
+            }
             node.smoothing = this.$smoothing;
         }
         const emptyHeight: number = bitmapFont._getFirstCharHeight(), emptyWidth: number = Math.ceil(emptyHeight * BitmapText.EMPTY_FACTOR);
@@ -7092,19 +7415,30 @@ export class BitmapText extends DisplayObject {
         const lineHeights: number[] = this.$lineHeights;
         for (let i: number = 0; i < length; i++) {
             const lineHeight: number = lineHeights[i]!;
-            if (hasSetHeight && i > 0 && yPos + lineHeight > textFieldHeight) { break; }
+            if (hasSetHeight && i > 0 && yPos + lineHeight > textFieldHeight) {
+                break;
+            }
             const line: string = textLines[i]!;
             const len: number = line.length;
             let xPos: number = this.$textOffsetX;
             if (align != HorizontalAlign.LEFT) {
                 const countWidth: number = textFieldWidth > textWidth ? textFieldWidth : textWidth;
-                if (align == HorizontalAlign.RIGHT) { xPos += countWidth - textLinesWidth[i]!; }
-                else if (align == HorizontalAlign.CENTER) { xPos += Math.floor((countWidth - textLinesWidth[i]!) / 2); }
+                if (align == HorizontalAlign.RIGHT) {
+                    xPos += countWidth - textLinesWidth[i]!;
+                } else if (align == HorizontalAlign.CENTER) {
+                    xPos += Math.floor((countWidth - textLinesWidth[i]!) / 2);
+                }
             }
             for (let j: number = 0; j < len; j++) {
                 const character: string = line.charAt(j);
                 const texture: Texture | null = bitmapFont.getTexture(character);
-                if (!texture) { if (character == " ") { xPos += emptyWidth; } else { $warn(1046, character); } continue; }
+                if (!texture) {
+                    if (character == " ") {
+                        xPos += emptyWidth;
+                    } else {
+                        $warn(1046, character);
+                    } continue;
+                }
                 const bitmapWidth: number = texture.$bitmapWidth, bitmapHeight: number = texture.$bitmapHeight;
                 {
                     node!.imageWidth = texture.$sourceWidth; node!.imageHeight = texture.$sourceHeight;
@@ -7117,19 +7451,31 @@ export class BitmapText extends DisplayObject {
     }
     public override $measureContentBounds(bounds: Rectangle): void {
         const lines: string[] = this.$getTextLines();
-        if (lines.length == 0) { bounds.setEmpty(); } else { bounds.setTo(this.$textOffsetX + this.$textStartX, this.$textOffsetY + this.$textStartY, this.$textWidth - this.$textOffsetX, this.$textHeight - this.$textOffsetY); }
+        if (lines.length == 0) {
+            bounds.setEmpty();
+        } else {
+            bounds.setTo(this.$textOffsetX + this.$textStartX, this.$textOffsetY + this.$textStartY, this.$textWidth - this.$textOffsetX, this.$textHeight - this.$textOffsetY);
+        }
     }
-    public get textWidth(): number { this.$getTextLines(); return this.$textWidth; }
-    public get textHeight(): number { this.$getTextLines(); return this.$textHeight; }
+    public get textWidth(): number {
+        this.$getTextLines(); return this.$textWidth;
+    }
+    public get textHeight(): number {
+        this.$getTextLines(); return this.$textHeight;
+    }
     public $getTextLines(): string[] {
-        if (!this.$textLinesChanged) { return this.textLines; }
+        if (!this.$textLinesChanged) {
+            return this.textLines;
+        }
         const textLines: string[] = [];
         this.textLines = textLines;
         const textLinesWidth: number[] = [];
         this.$textLinesWidth = textLinesWidth; this.$textLinesChanged = false;
         const lineHeights: number[] = [];
         this.$lineHeights = lineHeights;
-        if (!this.$text || !this.$font) { this.$textWidth = 0; this.$textHeight = 0; return textLines; }
+        if (!this.$text || !this.$font) {
+            this.$textWidth = 0; this.$textHeight = 0; return textLines;
+        }
         const lineSpacing: number = this.$lineSpacing, letterSpacing: number = this.$letterSpacing;
         let textWidth: number = 0, textHeight: number = 0;
         const textOffsetX: number = 0, textOffsetY: number = 0;
@@ -7146,21 +7492,34 @@ export class BitmapText extends DisplayObject {
             let len: number = line.length;
             lineHeight = 0; xPos = 0; isFirstChar = true; isLastChar = false;
             for (let j: number = 0; j < len; j++) {
-                if (!isFirstChar) { xPos += letterSpacing; }
+                if (!isFirstChar) {
+                    xPos += letterSpacing;
+                }
                 const character: string = line.charAt(j);
                 let textureWidth: number, textureHeight: number;
                 const texture: Texture | null = bitmapFont.getTexture(character);
                 if (!texture) {
-                    if (character == " ") { textureWidth = emptyWidth; textureHeight = emptyHeight; }
-                    else { $warn(1046, character); if (isFirstChar) { isFirstChar = false; } continue; }
+                    if (character == " ") {
+                        textureWidth = emptyWidth; textureHeight = emptyHeight;
+                    } else {
+                        $warn(1046, character); if (isFirstChar) {
+                            isFirstChar = false;
+                        } continue;
+                    }
                 } else {
                     textureWidth = texture.$getTextureWidth();
                     textureHeight = texture.$getTextureHeight();
                 }
-                if (isFirstChar) { isFirstChar = false; }
-                if (isFirstLine) { isFirstLine = false; }
+                if (isFirstChar) {
+                    isFirstChar = false;
+                }
+                if (isFirstLine) {
+                    isFirstLine = false;
+                }
                 if (hasWidthSet && j > 0 && xPos + textureWidth > textFieldWidth) {
-                    if (!setLineData(line.substring(0, j))) { break; }
+                    if (!setLineData(line.substring(0, j))) {
+                        break;
+                    }
                     line = line.substring(j); len = line.length; j = 0;
                     xPos = j == len - 1 ? textureWidth : bitmapFont.getConfig(character, "xadvance") || textureWidth;
                     lineHeight = textureHeight; continue;
@@ -7168,14 +7527,22 @@ export class BitmapText extends DisplayObject {
                 xPos += j == len - 1 ? textureWidth : bitmapFont.getConfig(character, "xadvance") || textureWidth;
                 lineHeight = Math.max(textureHeight, lineHeight);
             }
-            if (textFieldHeight && i > 0 && textHeight > textFieldHeight) { break; }
+            if (textFieldHeight && i > 0 && textHeight > textFieldHeight) {
+                break;
+            }
             isLastChar = true;
-            if (!setLineData(line)) { break; }
+            if (!setLineData(line)) {
+                break;
+            }
         }
         function setLineData(str: string): boolean {
-            if (textFieldHeight && textLines.length > 0 && textHeight > textFieldHeight) { return false; }
+            if (textFieldHeight && textLines.length > 0 && textHeight > textFieldHeight) {
+                return false;
+            }
             textHeight += lineHeight + lineSpacing;
-            if (!isFirstChar && !isLastChar) { xPos -= letterSpacing; }
+            if (!isFirstChar && !isLastChar) {
+                xPos -= letterSpacing;
+            }
             textLines.push(str); lineHeights.push(lineHeight); textLinesWidth.push(xPos); textWidth = Math.max(xPos, textWidth); return true;
         }
         textHeight -= lineSpacing;
@@ -7183,13 +7550,19 @@ export class BitmapText extends DisplayObject {
         let alignType: string;
         if (textFieldWidth > textWidth) {
             alignType = this.$textAlign;
-            if (alignType == HorizontalAlign.RIGHT) { this.$textStartX = textFieldWidth - textWidth; }
-            else if (alignType == HorizontalAlign.CENTER) { this.$textStartX = Math.floor((textFieldWidth - textWidth) / 2); }
+            if (alignType == HorizontalAlign.RIGHT) {
+                this.$textStartX = textFieldWidth - textWidth;
+            } else if (alignType == HorizontalAlign.CENTER) {
+                this.$textStartX = Math.floor((textFieldWidth - textWidth) / 2);
+            }
         }
         if (textFieldHeight > textHeight) {
             alignType = this.$verticalAlign;
-            if (alignType == VerticalAlign.BOTTOM) { this.$textStartY = textFieldHeight - textHeight; }
-            else if (alignType == VerticalAlign.MIDDLE) { this.$textStartY = Math.floor((textFieldHeight - textHeight) / 2); }
+            if (alignType == VerticalAlign.BOTTOM) {
+                this.$textStartY = textFieldHeight - textHeight;
+            } else if (alignType == VerticalAlign.MIDDLE) {
+                this.$textStartY = Math.floor((textFieldHeight - textHeight) / 2);
+            }
         }
         return textLines;
     }
@@ -7217,52 +7590,112 @@ export class TextField extends DisplayObject {
         this.textNode = textNode;
         this.$renderNode = textNode;
         this.$TextField = {
-            0: TextField.default_size, 1: 0, 2: TextField.default_textColor, 3: NaN, 4: NaN,
-            5: 0, 6: 0, 7: 0, 8: TextField.default_fontFamily, 9: "left", 10: "top",
-            11: "#ffffff", 12: "", 13: "", 14: [], 15: false, 16: false, 17: true,
-            18: false, 19: false, 20: false, 21: 0, 22: 0, 23: 0,
-            24: TextFieldType.DYNAMIC, 25: 0x000000, 26: "#000000", 27: 0,
-            28: -1, 29: 0, 30: false, 31: false, 32: 0x000000, 33: false,
-            34: 0xffffff, 35: null, 36: null, 37: TextFieldInputType.TEXT, 38: false
+            0  : TextField.default_size,
+            1  : 0,
+            2  : TextField.default_textColor,
+            3  : NaN,
+            4  : NaN,
+            5  : 0,
+            6  : 0,
+            7  : 0,
+            8  : TextField.default_fontFamily,
+            9  : "left",
+            10 : "top",
+            11 : "#ffffff",
+            12 : "",
+            13 : "",
+            14 : [],
+            15 : false,
+            16 : false,
+            17 : true,
+            18 : false,
+            19 : false,
+            20 : false,
+            21 : 0,
+            22 : 0,
+            23 : 0,
+            24 : TextFieldType.DYNAMIC,
+            25 : 0x000000,
+            26 : "#000000",
+            27 : 0,
+            28 : -1,
+            29 : 0,
+            30 : false,
+            31 : false,
+            32 : 0x000000,
+            33 : false,
+            34 : 0xffffff,
+            35 : null,
+            36 : null,
+            37 : TextFieldInputType.TEXT,
+            38 : false
         };
     }
-    public isInput(): boolean { return this.$TextField[24] == TextFieldType.INPUT; }
+    public isInput(): boolean {
+        return this.$TextField[24] == TextFieldType.INPUT;
+    }
     public override $setTouchEnabled(value: boolean): void {
         super.$setTouchEnabled(value);
-        if (this.isInput()) { this.$inputEnabled = true; }
+        if (this.isInput()) {
+            this.$inputEnabled = true;
+        }
     }
-    public get fontFamily(): string { return this.$TextField[8]; }
-    public set fontFamily(value: string) { this.$setFontFamily(value); }
+    public get fontFamily(): string {
+        return this.$TextField[8];
+    }
+    public set fontFamily(value: string) {
+        this.$setFontFamily(value);
+    }
     public $setFontFamily(value: string): boolean {
         const values: TextFieldState = this.$TextField;
-        if (values[8] == value) { return false; }
+        if (values[8] == value) {
+            return false;
+        }
         values[8] = value;
         this.invalidateFontString();
         return true;
     }
-    public get size(): number { return this.$TextField[0]; }
-    public set size(value: number) { this.$setSize(value); }
+    public get size(): number {
+        return this.$TextField[0];
+    }
+    public set size(value: number) {
+        this.$setSize(value);
+    }
     public $setSize(value: number): boolean {
         const values: TextFieldState = this.$TextField;
-        if (values[0] == value) { return false; }
+        if (values[0] == value) {
+            return false;
+        }
         values[0] = value;
         this.invalidateFontString();
         return true;
     }
-    public get bold(): boolean { return this.$TextField[15]; }
-    public set bold(value: boolean) { this.$setBold(value); }
+    public get bold(): boolean {
+        return this.$TextField[15];
+    }
+    public set bold(value: boolean) {
+        this.$setBold(value);
+    }
     public $setBold(value: boolean): boolean {
         const values: TextFieldState = this.$TextField;
-        if (value == values[15]) { return false; }
+        if (value == values[15]) {
+            return false;
+        }
         values[15] = value;
         this.invalidateFontString();
         return true;
     }
-    public get italic(): boolean { return this.$TextField[16]; }
-    public set italic(value: boolean) { this.$setItalic(value); }
+    public get italic(): boolean {
+        return this.$TextField[16];
+    }
+    public set italic(value: boolean) {
+        this.$setItalic(value);
+    }
     public $setItalic(value: boolean): boolean {
         const values: TextFieldState = this.$TextField;
-        if (value == values[16]) { return false; }
+        if (value == values[16]) {
+            return false;
+        }
         values[16] = value;
         this.invalidateFontString();
         return true;
@@ -7271,65 +7704,111 @@ export class TextField extends DisplayObject {
         this.$TextField[17] = true;
         this.$invalidateTextField();
     }
-    public get textAlign(): string { return this.$TextField[9]; }
-    public set textAlign(value: string) { this.$setTextAlign(value); }
+    public get textAlign(): string {
+        return this.$TextField[9];
+    }
+    public set textAlign(value: string) {
+        this.$setTextAlign(value);
+    }
     public $setTextAlign(value: string): boolean {
         const values: TextFieldState = this.$TextField;
-        if (values[9] == value) { return false; }
+        if (values[9] == value) {
+            return false;
+        }
         values[9] = value;
         this.$invalidateTextField();
         return true;
     }
-    public get verticalAlign(): string { return this.$TextField[10]; }
-    public set verticalAlign(value: string) { this.$setVerticalAlign(value); }
+    public get verticalAlign(): string {
+        return this.$TextField[10];
+    }
+    public set verticalAlign(value: string) {
+        this.$setVerticalAlign(value);
+    }
     public $setVerticalAlign(value: string): boolean {
         const values: TextFieldState = this.$TextField;
-        if (values[10] == value) { return false; }
+        if (values[10] == value) {
+            return false;
+        }
         values[10] = value;
         this.$invalidateTextField();
         return true;
     }
-    public get lineSpacing(): number { return this.$TextField[1]; }
-    public set lineSpacing(value: number) { this.$setLineSpacing(value); }
+    public get lineSpacing(): number {
+        return this.$TextField[1];
+    }
+    public set lineSpacing(value: number) {
+        this.$setLineSpacing(value);
+    }
     public $setLineSpacing(value: number): boolean {
         const values: TextFieldState = this.$TextField;
-        if (values[1] == value) { return false; }
+        if (values[1] == value) {
+            return false;
+        }
         values[1] = value;
         this.$invalidateTextField();
         return true;
     }
-    public get textColor(): number { return this.$TextField[2]; }
-    public set textColor(value: number) { this.$setTextColor(value); }
+    public get textColor(): number {
+        return this.$TextField[2];
+    }
+    public set textColor(value: number) {
+        this.$setTextColor(value);
+    }
     public $setTextColor(value: number): boolean {
         const values: TextFieldState = this.$TextField;
-        if (values[2] == value) { return false; }
+        if (values[2] == value) {
+            return false;
+        }
         values[2] = value;
-        if (this.inputUtils) { this.inputUtils._setColor(values[2]); }
+        if (this.inputUtils) {
+            this.inputUtils._setColor(values[2]);
+        }
         this.$invalidateTextField();
         return true;
     }
-    public get wordWrap(): boolean { return this.$TextField[19]; }
-    public set wordWrap(value: boolean) { this.$setWordWrap(value); }
+    public get wordWrap(): boolean {
+        return this.$TextField[19];
+    }
+    public set wordWrap(value: boolean) {
+        this.$setWordWrap(value);
+    }
     public $setWordWrap(value: boolean): void {
         const values: TextFieldState = this.$TextField;
-        if (value == values[19] || values[20]) { return; }
+        if (value == values[19] || values[20]) {
+            return;
+        }
         values[19] = value;
         this.$invalidateTextField();
     }
-    public get type(): string { return this.$TextField[24]; }
-    public set type(value: string) { this.$setType(value); }
+    public get type(): string {
+        return this.$TextField[24];
+    }
+    public set type(value: string) {
+        this.$setType(value);
+    }
     public $setType(value: string): boolean {
         const values: TextFieldState = this.$TextField;
-        if (values[24] == value) { return false; }
+        if (values[24] == value) {
+            return false;
+        }
         values[24] = value;
         if (value == TextFieldType.INPUT) {
-            if (isNaN(values[3])) { this.$setWidth(100); }
-            if (isNaN(values[4])) { this.$setHeight(30); }
+            if (isNaN(values[3])) {
+                this.$setWidth(100);
+            }
+            if (isNaN(values[4])) {
+                this.$setHeight(30);
+            }
             this.$setTouchEnabled(true);
-            if (this.inputUtils == null) { this.inputUtils = new InputController(); }
+            if (this.inputUtils == null) {
+                this.inputUtils = new InputController();
+            }
             this.inputUtils.init(this);
             this.$invalidateTextField();
-            if (this.$stage) { this.inputUtils._addStageText(); }
+            if (this.$stage) {
+                this.inputUtils._addStageText();
+            }
         } else {
             if (this.inputUtils) {
                 this.inputUtils._removeStageText();
@@ -7339,73 +7818,115 @@ export class TextField extends DisplayObject {
         }
         return true;
     }
-    public get inputType(): string { return this.$TextField[37]; }
+    public get inputType(): string {
+        return this.$TextField[37];
+    }
     public set inputType(value: string) {
-        if (this.$TextField[37] == value) { return; }
+        if (this.$TextField[37] == value) {
+            return;
+        }
         this.$TextField[37] = value;
     }
-    public get text(): string { return this.$getText(); }
-    public set text(value: string) { this.$setText(value); }
+    public get text(): string {
+        return this.$getText();
+    }
+    public set text(value: string) {
+        this.$setText(value);
+    }
     public $getText(): string {
-        if (this.isInput()) { return this.inputUtils!._getText(); }
+        if (this.isInput()) {
+            return this.inputUtils!._getText();
+        }
         return this.$TextField[13];
     }
     public $setBaseText(value: unknown): boolean {
         const normalized: string = value == null ? "" : String(value);
         this.isFlow = false;
         const values: TextFieldState = this.$TextField;
-        if (values[13] == normalized) { return false; }
+        if (values[13] == normalized) {
+            return false;
+        }
         this.$invalidateTextField();
         values[13] = normalized;
         const text: string = values[20] ? this.changeToPassText(normalized) : normalized;
-        this.setMiddleStyle([{ text: text }]);
+        this.setMiddleStyle([{ text : text }]);
         return true;
     }
     public $setText(value: unknown): boolean {
         const result: boolean = this.$setBaseText(value == null ? "" : value);
-        if (this.inputUtils) { this.inputUtils._setText(this.$TextField[13]); }
+        if (this.inputUtils) {
+            this.inputUtils._setText(this.$TextField[13]);
+        }
         return result;
     }
-    public get displayAsPassword(): boolean { return this.$TextField[20]; }
-    public set displayAsPassword(value: boolean) { this.$setDisplayAsPassword(value); }
+    public get displayAsPassword(): boolean {
+        return this.$TextField[20];
+    }
+    public set displayAsPassword(value: boolean) {
+        this.$setDisplayAsPassword(value);
+    }
     public $setDisplayAsPassword(value: boolean): boolean {
         const values: TextFieldState = this.$TextField;
-        if (values[20] == value) { return false; }
+        if (values[20] == value) {
+            return false;
+        }
         values[20] = value;
         this.$invalidateTextField();
         const text: string = value ? this.changeToPassText(values[13]) : values[13];
-        this.setMiddleStyle([{ text: text }]);
+        this.setMiddleStyle([{ text : text }]);
         return true;
     }
-    public get strokeColor(): number { return this.$TextField[25]; }
-    public set strokeColor(value: number) { this.$setStrokeColor(value); }
+    public get strokeColor(): number {
+        return this.$TextField[25];
+    }
+    public set strokeColor(value: number) {
+        this.$setStrokeColor(value);
+    }
     public $setStrokeColor(value: number): boolean {
         const values: TextFieldState = this.$TextField;
-        if (values[25] == value) { return false; }
+        if (values[25] == value) {
+            return false;
+        }
         this.$invalidateTextField();
         values[25] = value;
         values[26] = toColorString(value);
         return true;
     }
-    public get stroke(): number { return this.$TextField[27]; }
-    public set stroke(value: number) { this.$setStroke(value); }
+    public get stroke(): number {
+        return this.$TextField[27];
+    }
+    public set stroke(value: number) {
+        this.$setStroke(value);
+    }
     public $setStroke(value: number): boolean {
-        if (this.$TextField[27] == value) { return false; }
+        if (this.$TextField[27] == value) {
+            return false;
+        }
         this.$invalidateTextField();
         this.$TextField[27] = value;
         return true;
     }
-    public get maxChars(): number { return this.$TextField[21]; }
-    public set maxChars(value: number) { this.$setMaxChars(value); }
+    public get maxChars(): number {
+        return this.$TextField[21];
+    }
+    public set maxChars(value: number) {
+        this.$setMaxChars(value);
+    }
     public $setMaxChars(value: number): boolean {
-        if (this.$TextField[21] == value) { return false; }
+        if (this.$TextField[21] == value) {
+            return false;
+        }
         this.$TextField[21] = value;
         return true;
     }
-    public get scrollV(): number { return Math.min(Math.max(this.$TextField[28], 1), this.maxScrollV); }
+    public get scrollV(): number {
+        return Math.min(Math.max(this.$TextField[28], 1), this.maxScrollV);
+    }
     public set scrollV(value: number) {
         value = Math.max(value, 1);
-        if (value == this.$TextField[28]) { return; }
+        if (value == this.$TextField[28]) {
+            return;
+        }
         this.$TextField[28] = value;
         this.$invalidateTextField();
     }
@@ -7413,16 +7934,34 @@ export class TextField extends DisplayObject {
         this.$getLinesArr();
         return Math.max(this.$TextField[29] - TextFieldUtils.$getScrollNum(this) + 1, 1);
     }
-    public get selectionBeginIndex(): number { return 0; }
-    public get selectionEndIndex(): number { return 0; }
-    public get caretIndex(): number { return 0; }
-    public $setSelection(_beginIndex: number, _endIndex: number): boolean { return false; }
-    public $getLineHeight(): number { return this.$TextField[1] + this.$TextField[0]; }
-    public get numLines(): number { this.$getLinesArr(); return this.$TextField[29]; }
-    public get multiline(): boolean { return this.$TextField[30]; }
-    public set multiline(value: boolean) { this.$setMultiline(value); }
+    public get selectionBeginIndex(): number {
+        return 0;
+    }
+    public get selectionEndIndex(): number {
+        return 0;
+    }
+    public get caretIndex(): number {
+        return 0;
+    }
+    public $setSelection(_beginIndex: number, _endIndex: number): boolean {
+        return false;
+    }
+    public $getLineHeight(): number {
+        return this.$TextField[1] + this.$TextField[0];
+    }
+    public get numLines(): number {
+        this.$getLinesArr(); return this.$TextField[29];
+    }
+    public get multiline(): boolean {
+        return this.$TextField[30];
+    }
+    public set multiline(value: boolean) {
+        this.$setMultiline(value);
+    }
     public $setMultiline(value: boolean): boolean {
-        if (this.$TextField[30] == value) { return false; }
+        if (this.$TextField[30] == value) {
+            return false;
+        }
         this.$TextField[30] = value;
         this.$invalidateTextField();
         return true;
@@ -7430,54 +7969,81 @@ export class TextField extends DisplayObject {
     public get restrict(): string | null {
         const values: TextFieldState = this.$TextField;
         let str: string | null = null;
-        if (values[35] != null) { str = values[35]; }
+        if (values[35] != null) {
+            str = values[35];
+        }
         if (values[36] != null) {
-            if (str == null) { str = ""; }
+            if (str == null) {
+                str = "";
+            }
             str += "^" + values[36];
         }
         return str;
     }
     public set restrict(value: string | null) {
         const values: TextFieldState = this.$TextField;
-        if (value == null) { values[35] = null; values[36] = null; return; }
+        if (value == null) {
+            values[35] = null; values[36] = null; return;
+        }
         let index: number = -1;
         while (index < value.length) {
             index = value.indexOf("^", index);
-            if (index == 0) { break; }
-            else if (index > 0) {
-                if (value.charAt(index - 1) != "\\") { break; }
+            if (index == 0) {
+                break;
+            } else if (index > 0) {
+                if (value.charAt(index - 1) != "\\") {
+                    break;
+                }
                 index++;
-            } else { break; }
+            } else {
+                break;
+            }
         }
-        if (index == 0) { values[35] = null; values[36] = value.substring(index + 1); }
-        else if (index > 0) { values[35] = value.substring(0, index); values[36] = value.substring(index + 1); }
-        else { values[35] = value; values[36] = null; }
+        if (index == 0) {
+            values[35] = null; values[36] = value.substring(index + 1);
+        } else if (index > 0) {
+            values[35] = value.substring(0, index); values[36] = value.substring(index + 1);
+        } else {
+            values[35] = value; values[36] = null;
+        }
     }
     public override $setWidth(value: number): boolean {
         const values: TextFieldState = this.$TextField;
         if (isNaN(value)) {
-            if (isNaN(values[3])) { return false; }
+            if (isNaN(values[3])) {
+                return false;
+            }
             values[3] = NaN;
         } else {
-            if (values[3] == value) { return false; }
+            if (values[3] == value) {
+                return false;
+            }
             values[3] = value;
         }
         value = +value;
-        if (value < 0) { return false; }
+        if (value < 0) {
+            return false;
+        }
         this.$invalidateTextField();
         return true;
     }
     public override $setHeight(value: number): boolean {
         const values: TextFieldState = this.$TextField;
         if (isNaN(value)) {
-            if (isNaN(values[4])) { return false; }
+            if (isNaN(values[4])) {
+                return false;
+            }
             values[4] = NaN;
         } else {
-            if (values[4] == value) { return false; }
+            if (values[4] == value) {
+                return false;
+            }
             values[4] = value;
         }
         value = +value;
-        if (value < 0) { return false; }
+        if (value < 0) {
+            return false;
+        }
         this.$invalidateTextField();
         return true;
     }
@@ -7489,39 +8055,65 @@ export class TextField extends DisplayObject {
         const values: TextFieldState = this.$TextField;
         return isNaN(values[4]) ? this.$getContentBounds().height : values[4];
     }
-    public get border(): boolean { return this.$TextField[31]; }
-    public set border(value: boolean) { this.$setBorder(value); }
+    public get border(): boolean {
+        return this.$TextField[31];
+    }
+    public set border(value: boolean) {
+        this.$setBorder(value);
+    }
     public $setBorder(value: boolean): void {
         value = !!value;
-        if (this.$TextField[31] == value) { return; }
+        if (this.$TextField[31] == value) {
+            return;
+        }
         this.$TextField[31] = value;
         this.$invalidateTextField();
     }
-    public get borderColor(): number { return this.$TextField[32]; }
-    public set borderColor(value: number) { this.$setBorderColor(value); }
+    public get borderColor(): number {
+        return this.$TextField[32];
+    }
+    public set borderColor(value: number) {
+        this.$setBorderColor(value);
+    }
     public $setBorderColor(value: number): void {
         value = +value || 0;
-        if (this.$TextField[32] == value) { return; }
+        if (this.$TextField[32] == value) {
+            return;
+        }
         this.$TextField[32] = value;
         this.$invalidateTextField();
     }
-    public get background(): boolean { return this.$TextField[33]; }
-    public set background(value: boolean) { this.$setBackground(value); }
+    public get background(): boolean {
+        return this.$TextField[33];
+    }
+    public set background(value: boolean) {
+        this.$setBackground(value);
+    }
     public $setBackground(value: boolean): void {
-        if (this.$TextField[33] == value) { return; }
+        if (this.$TextField[33] == value) {
+            return;
+        }
         this.$TextField[33] = value;
         this.$invalidateTextField();
     }
-    public get backgroundColor(): number { return this.$TextField[34]; }
-    public set backgroundColor(value: number) { this.$setBackgroundColor(value); }
+    public get backgroundColor(): number {
+        return this.$TextField[34];
+    }
+    public set backgroundColor(value: number) {
+        this.$setBackgroundColor(value);
+    }
     public $setBackgroundColor(value: number): void {
-        if (this.$TextField[34] == value) { return; }
+        if (this.$TextField[34] == value) {
+            return;
+        }
         this.$TextField[34] = value;
         this.$invalidateTextField();
     }
     public fillBackground(lines?: (number | undefined)[]): void {
         let graphics: GraphicsNode | null = this.$graphicsNode;
-        if (graphics) { graphics.clear(); }
+        if (graphics) {
+            graphics.clear();
+        }
         const values: TextFieldState = this.$TextField;
         if (values[33] || values[31] || (lines && lines.length > 0)) {
             if (!graphics) {
@@ -7568,12 +8160,16 @@ export class TextField extends DisplayObject {
         }
     }
     public setFocus(): void {
-        if (this.type == TextFieldType.INPUT && this.$stage) { this.inputUtils!.$onFocus(); }
+        if (this.type == TextFieldType.INPUT && this.$stage) {
+ this.inputUtils!.$onFocus();
+        }
     }
     public override $onRemoveFromStage(): void {
         super.$onRemoveFromStage();
         this.removeEvent();
-        if (this.isInput()) { this.inputUtils!._removeStageText(); }
+        if (this.isInput()) {
+ this.inputUtils!._removeStageText();
+        }
         if (this.textNode) {
             this.textNode.clean();
         }
@@ -7581,7 +8177,9 @@ export class TextField extends DisplayObject {
     public override $onAddToStage(stage: Stage, nestLevel: number): void {
         super.$onAddToStage(stage, nestLevel);
         this.addEvent();
-        if (this.isInput()) { this.inputUtils!._addStageText(); }
+        if (this.isInput()) {
+ this.inputUtils!._addStageText();
+        }
     }
     public $invalidateTextField(): void {
         const self: this = this;
@@ -7590,18 +8188,26 @@ export class TextField extends DisplayObject {
         self.$TextField[38] = true;
         {
             const p: DisplayObjectContainer | null = self.$parent;
-            if (p && !p.$cacheDirty) { p.$cacheDirty = true; p.$cacheDirtyUp(); }
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true; p.$cacheDirtyUp();
+            }
             const maskedObject: DisplayObject | null = self.$maskedObject;
-            if (maskedObject && !maskedObject.$cacheDirty) { maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp(); }
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp();
+            }
         }
     }
     public $getRenderBounds(): Rectangle {
         const bounds: Rectangle = this.$getContentBounds();
         const tmpBounds: Rectangle = Rectangle.create();
         tmpBounds.copyFrom(bounds);
-        if (this.$TextField[31]) { tmpBounds.width += 2; tmpBounds.height += 2; }
+        if (this.$TextField[31]) {
+            tmpBounds.width += 2; tmpBounds.height += 2;
+        }
         const strokeDouble: number = this.$TextField[27] * 2;
-        if (strokeDouble > 0) { tmpBounds.width += strokeDouble * 2; tmpBounds.height += strokeDouble * 2; }
+        if (strokeDouble > 0) {
+            tmpBounds.width += strokeDouble * 2; tmpBounds.height += strokeDouble * 2;
+        }
         tmpBounds.x -= strokeDouble + 2;
         tmpBounds.y -= strokeDouble + 2;
         tmpBounds.width = Math.ceil(tmpBounds.width) + 4;
@@ -7621,10 +8227,14 @@ export class TextField extends DisplayObject {
     public override $updateRenderNode(): void {
         if (this.isInput()) {
             this.inputUtils!._updateProperties();
-            if (this.$isTyping) { this.fillBackground(); return; }
+            if (this.$isTyping) {
+                this.fillBackground(); return;
+            }
         } else if (this.$TextField[3] == 0) {
             const graphics: GraphicsNode | null = this.$graphicsNode;
-            if (graphics) { graphics.clear(); }
+            if (graphics) {
+                graphics.clear();
+            }
             return;
         }
         const underLines: (number | undefined)[] = this.drawText();
@@ -7635,23 +8245,30 @@ export class TextField extends DisplayObject {
         node.width = Math.ceil(bounds.width); node.height = Math.ceil(bounds.height);
         Rectangle.release(bounds);
     }
-    public get textFlow(): ITextElement[] { return this.textArr; }
+    public get textFlow(): ITextElement[] {
+        return this.textArr;
+    }
     public set textFlow(textArr: ITextElement[] | null) {
         this.isFlow = true;
         let text: string = "";
-        if (textArr == null) { textArr = []; }
+        if (textArr == null) {
+            textArr = [];
+        }
         for (let i: number = 0; i < textArr.length; i++) {
             const element: ITextElement = textArr[i]!;
             text += element.text;
         }
-        if (this.$TextField[20]) { this.$setBaseText(text); }
-        else {
+        if (this.$TextField[20]) {
+            this.$setBaseText(text);
+        } else {
             this.$TextField[13] = text;
             this.setMiddleStyle(textArr);
         }
     }
     public changeToPassText(text: string): string {
-        if (!this.$TextField[20]) { return text; }
+        if (!this.$TextField[20]) {
+            return text;
+        }
         let passText: string = "";
         for (let i: number = 0, num: number = text.length; i < num; i++) {
             switch (text.charAt(i)) {
@@ -7676,7 +8293,9 @@ export class TextField extends DisplayObject {
         this.$getLinesArr();
         return TextFieldUtils.$getTextHeight(this);
     }
-    public appendText(text: string): void { this.appendElement({ text: text }); }
+    public appendText(text: string): void {
+        this.appendElement({ text : text });
+    }
     public appendElement(element: ITextElement): void {
         const text: string = this.$TextField[13] + element.text;
         if (this.$TextField[20]) {
@@ -7692,7 +8311,9 @@ export class TextField extends DisplayObject {
     }
     public $getLinesArr2(): TextLine[] {
         const values: TextFieldState = this.$TextField;
-        if (!values[18]) { return this.linesArr; }
+        if (!values[18]) {
+            return this.linesArr;
+        }
         values[18] = false;
         const text2Arr: ITextElement[] = this.textArr;
         this.linesArr.length = 0;
@@ -7700,7 +8321,13 @@ export class TextField extends DisplayObject {
         const textFieldWidth: number = values[3];
         if (!isNaN(textFieldWidth) && textFieldWidth == 0) {
             values[29] = 0;
-            return [{ width: 0, height: 0, charNum: 0, elements: [], hasNextLine: false }];
+            return [{
+                width       : 0,
+                height      : 0,
+                charNum     : 0,
+                elements    : [],
+                hasNextLine : false
+            }];
         }
         const linesArr: TextLine[] = this.linesArr;
         let lineW: number = 0;
@@ -7722,27 +8349,50 @@ export class TextField extends DisplayObject {
             const textArr: string[] = text.split(/(?:\r\n|\r|\n)/);
             for (let j: number = 0, textArrLength: number = textArr.length; j < textArrLength; j++) {
                 if (linesArr[lineCount] == null) {
-                    lineElement = { width: 0, height: 0, elements: [], charNum: 0, hasNextLine: false };
+                    lineElement = {
+                        width       : 0,
+                        height      : 0,
+                        elements    : [],
+                        charNum     : 0,
+                        hasNextLine : false
+                    };
                     linesArr[lineCount] = lineElement;
                     lineW = 0; lineH = 0; lineCharNum = 0;
                 }
-                if (values[24] == TextFieldType.INPUT) { lineH = values[0]; }
-                else { lineH = Math.max(lineH, element.style.size || values[0]); }
+                if (values[24] == TextFieldType.INPUT) {
+                    lineH = values[0];
+                } else {
+                    lineH = Math.max(lineH, element.style.size || values[0]);
+                }
                 let isNextLine: boolean = true;
                 if (textArr[j] == "") {
-                    if (j == textArrLength - 1) { isNextLine = false; }
+                    if (j == textArrLength - 1) {
+                        isNextLine = false;
+                    }
                 } else {
                     let w: number = measureTextWidth(textArr[j]!, values, element.style);
                     if (isNaN(textFieldWidth)) {
                         lineW += w;
                         lineCharNum += textArr[j]!.length;
-                        lineElement!.elements.push({ width: w, text: textArr[j]!, style: element.style });
-                        if (j == textArrLength - 1) { isNextLine = false; }
+                        lineElement!.elements.push({
+                            width : w,
+                            text  : textArr[j]!,
+                            style : element.style
+                        });
+                        if (j == textArrLength - 1) {
+                            isNextLine = false;
+                        }
                     } else if (lineW + w <= textFieldWidth) {
-                        lineElement!.elements.push({ width: w, text: textArr[j]!, style: element.style });
+                        lineElement!.elements.push({
+                            width : w,
+                            text  : textArr[j]!,
+                            style : element.style
+                        });
                         lineW += w;
                         lineCharNum += textArr[j]!.length;
-                        if (j == textArrLength - 1) { isNextLine = false; }
+                        if (j == textArrLength - 1) {
+                            isNextLine = false;
+                        }
                     } else {
                         let k: number = 0;
                         let ww: number = 0;
@@ -7760,9 +8410,15 @@ export class TextField extends DisplayObject {
                                     const realWord: string = words[k]! + words[k + 1]!;
                                     codeLen = 2; has4BytesUnicode = true;
                                     w = measureTextWidth(realWord, values, element.style);
-                                } else { w = measureTextWidth(words[k]!, values, element.style); }
-                            } else { w = measureTextWidth(words[k]!, values, element.style); }
-                            if (lineW != 0 && lineW + w > textFieldWidth && lineW + k != 0) { break; }
+                                } else {
+                                    w = measureTextWidth(words[k]!, values, element.style);
+                                }
+                            } else {
+                                w = measureTextWidth(words[k]!, values, element.style);
+                            }
+                            if (lineW != 0 && lineW + w > textFieldWidth && lineW + k != 0) {
+                                break;
+                            }
                             if (ww + w > textFieldWidth) {
                                 const words2: string[] = words[k]!.match(/./g)!;
                                 for (let k2: number = 0, wl2: number = words2.length; k2 < wl2; k2++) {
@@ -7775,27 +8431,51 @@ export class TextField extends DisplayObject {
                                             const realWord: string = words2[k2]! + words2[k2 + 1]!;
                                             codeLen = 2; has4BytesUnicode2 = true;
                                             w = measureTextWidth(realWord, values, element.style);
-                                        } else { w = measureTextWidth(words2[k2]!, values, element.style); }
-                                    } else { w = measureTextWidth(words2[k2]!, values, element.style); }
-                                    if (k2 > 0 && lineW + w > textFieldWidth) { break; }
+                                        } else {
+                                            w = measureTextWidth(words2[k2]!, values, element.style);
+                                        }
+                                    } else {
+                                        w = measureTextWidth(words2[k2]!, values, element.style);
+                                    }
+                                    if (k2 > 0 && lineW + w > textFieldWidth) {
+                                        break;
+                                    }
                                     charNum += codeLen; ww += w; lineW += w; lineCharNum += charNum;
-                                    if (has4BytesUnicode2) { k2++; }
+                                    if (has4BytesUnicode2) {
+                                        k2++;
+                                    }
                                 }
-                            } else { charNum += codeLen; ww += w; lineW += w; lineCharNum += charNum; }
-                            if (has4BytesUnicode) { k++; }
+                            } else {
+                                charNum += codeLen; ww += w; lineW += w; lineCharNum += charNum;
+                            }
+                            if (has4BytesUnicode) {
+                                k++;
+                            }
                         }
                         if (k > 0) {
-                            lineElement!.elements.push({ width: ww, text: word.substring(0, charNum), style: element.style });
+                            lineElement!.elements.push({
+                                width : ww,
+                                text  : word.substring(0, charNum),
+                                style : element.style
+                            });
                             const leftWord: string = word.substring(charNum);
                             let m: number;
                             const lwleng: number = leftWord.length;
-                            for (m = 0; m < lwleng; m++) { if (leftWord.charAt(m) != " ") { break; } }
+                            for (m = 0; m < lwleng; m++) {
+                                if (leftWord.charAt(m) != " ") {
+                                    break;
+                                }
+                            }
                             textArr[j] = leftWord.substring(m);
                         }
-                        if (textArr[j] != "") { j--; isNextLine = false; }
+                        if (textArr[j] != "") {
+                            j--; isNextLine = false;
+                        }
                     }
                 }
-                if (isNextLine) { lineCharNum++; lineElement!.hasNextLine = true; }
+                if (isNextLine) {
+                    lineCharNum++; lineElement!.hasNextLine = true;
+                }
                 if (j < textArr.length - 1) {
                     lineElement!.width = lineW; lineElement!.height = lineH; lineElement!.charNum = lineCharNum;
                     values[5] = Math.max(values[5], lineW); values[6] += lineH;
@@ -7821,7 +8501,9 @@ export class TextField extends DisplayObject {
         node.italic = values[16]; node.size = values[0]; node.stroke = values[27];
         node.strokeColor = values[25]; node.textColor = values[2];
         const lines: TextLine[] | undefined = this.$getLinesArr();
-        if (values[5] == 0) { return []; }
+        if (values[5] == 0) {
+            return [];
+        }
         const maxWidth: number = !isNaN(values[3]) ? values[3] : values[5];
         const textHeight: number = TextFieldUtils.$getTextHeight(this);
         let drawY: number = 0;
@@ -7840,35 +8522,51 @@ export class TextField extends DisplayObject {
             const h: number = line.height;
             drawY += h / 2;
             if (i != startLine) {
-                if (values[24] == TextFieldType.INPUT && !values[30]) { break; }
-                if (!isNaN(textFieldHeight) && drawY > textFieldHeight) { break; }
+                if (values[24] == TextFieldType.INPUT && !values[30]) {
+                    break;
+                }
+                if (!isNaN(textFieldHeight) && drawY > textFieldHeight) {
+                    break;
+                }
             }
             drawX = Math.round((maxWidth - line.width) * hAlign);
             for (let j: number = 0, elementsLength: number = line.elements.length; j < elementsLength; j++) {
                 const element: TextLineElement = line.elements[j]!;
                 const size: number = element.style.size || values[0];
                 node.drawText(drawX, drawY + (h - size) / 2, element.text, element.style);
-                if (element.style.underline) { underLineData.push(drawX, drawY + h / 2, element.width, element.style.textColor); }
+                if (element.style.underline) {
+                    underLineData.push(drawX, drawY + h / 2, element.width, element.style.textColor);
+                }
                 drawX += element.width;
             }
             drawY += h / 2 + values[1];
         }
         return underLineData;
     }
-    public addEvent(): void { this.addEventListener(TouchEvent.TOUCH_TAP, this.onTapHandler, this); }
-    public removeEvent(): void { this.removeEventListener(TouchEvent.TOUCH_TAP, this.onTapHandler, this); }
+    public addEvent(): void {
+        this.addEventListener(TouchEvent.TOUCH_TAP, this.onTapHandler, this);
+    }
+    public removeEvent(): void {
+        this.removeEventListener(TouchEvent.TOUCH_TAP, this.onTapHandler, this);
+    }
     public onTapHandler(event: Event): void {
-        if (this.isInput()) { return; }
+        if (this.isInput()) {
+            return;
+        }
         const e: TouchEvent = event as TouchEvent;
         const ele: TextLineElement | null = TextFieldUtils.$getTextElement(this, e.localX!, e.localY!);
-        if (ele == null) { return; }
+        if (ele == null) {
+            return;
+        }
         const style: ITextStyle = ele.style;
         if (style && style.href) {
             const match: RegExpMatchArray | null = style.href.match(/^event:/);
             if (match) {
                 const type: string = match[0];
                 TextEvent.dispatchTextEvent(this, TextEvent.LINK, style.href.substring(type.length));
-            } else { open(style.href, style.target || "_blank"); }
+            } else {
+                open(style.href, style.target || "_blank");
+            }
         }
     }
 }
@@ -7900,7 +8598,9 @@ export class TextFieldUtils {
             }
             if (!values[30]) {
                 startLine = Math.max(values[28] - 1, 0);
-                if (values[29] > 0) { startLine = Math.min(values[29] - 1, startLine); }
+                if (values[29] > 0) {
+                    startLine = Math.min(values[29] - 1, startLine);
+                }
             }
         }
         return startLine;
@@ -7908,9 +8608,14 @@ export class TextFieldUtils {
     public static $getHalign(textfield: TextField): number {
         const lineArr: TextLine[] = textfield.$getLinesArr2();
         let halign: number = 0;
-        if (textfield.$TextField[9] == HorizontalAlign.CENTER) { halign = 0.5; }
-        else if (textfield.$TextField[9] == HorizontalAlign.RIGHT) { halign = 1; }
-        if (textfield.$TextField[24] == TextFieldType.INPUT && !textfield.$TextField[30] && lineArr.length > 1) { halign = 0; }
+        if (textfield.$TextField[9] == HorizontalAlign.CENTER) {
+            halign = 0.5;
+        } else if (textfield.$TextField[9] == HorizontalAlign.RIGHT) {
+            halign = 1;
+        }
+        if (textfield.$TextField[24] == TextFieldType.INPUT && !textfield.$TextField[30] && lineArr.length > 1) {
+            halign = 0;
+        }
         return halign;
     }
     public static $getTextHeight(textfield: TextField): number {
@@ -7923,8 +8628,11 @@ export class TextFieldUtils {
         const textFieldHeight: number = textfield.$TextField[4];
         if (!isNaN(textFieldHeight) && textHeight < textFieldHeight) {
             let valign: number = 0;
-            if (textfield.$TextField[10] == VerticalAlign.MIDDLE) { valign = 0.5; }
-            else if (textfield.$TextField[10] == VerticalAlign.BOTTOM) { valign = 1; }
+            if (textfield.$TextField[10] == VerticalAlign.MIDDLE) {
+                valign = 0.5;
+            } else if (textfield.$TextField[10] == VerticalAlign.BOTTOM) {
+                valign = 1;
+            }
             return valign;
         }
         return 0;
@@ -7932,12 +8640,16 @@ export class TextFieldUtils {
     public static $getTextElement(textfield: TextField, x: number, y: number): TextLineElement | null {
         const hitTextEle: TextHit | null = TextFieldUtils.$getHit(textfield, x, y);
         const lineArr: TextLine[] = textfield.$getLinesArr2();
-        if (hitTextEle) { return lineArr[hitTextEle.lineIndex]?.elements[hitTextEle.textElementIndex] ?? null; }
+        if (hitTextEle) {
+            return lineArr[hitTextEle.lineIndex]?.elements[hitTextEle.textElementIndex] ?? null;
+        }
         return null;
     }
     public static $getHit(textfield: TextField, x: number, y: number): TextHit | null {
         const lineArr: TextLine[] = textfield.$getLinesArr2();
-        if (textfield.$TextField[3] == 0) { return null; }
+        if (textfield.$TextField[3] == 0) {
+            return null;
+        }
         let line: number = 0;
         const textHeight: number = TextFieldUtils.$getTextHeight(textfield);
         let startY: number = 0;
@@ -7945,30 +8657,48 @@ export class TextFieldUtils {
         if (!isNaN(textFieldHeight) && textFieldHeight > textHeight) {
             const valign: number = TextFieldUtils.$getValign(textfield);
             startY = valign * (textFieldHeight - textHeight);
-            if (startY != 0) { y -= startY; }
+            if (startY != 0) {
+                y -= startY;
+            }
         }
         const startLine: number = TextFieldUtils.$getStartLine(textfield);
         let lineH: number = 0;
         for (let i: number = startLine; i < lineArr.length; i++) {
             const lineEle: TextLine = lineArr[i]!;
             if (lineH + lineEle.height >= y) {
-                if (lineH < y) { line = i + 1; }
+                if (lineH < y) {
+                    line = i + 1;
+                }
                 break;
-            } else { lineH += lineEle.height; }
-            if (lineH + textfield.$TextField[1] > y) { return null; }
+            } else {
+                lineH += lineEle.height;
+            }
+            if (lineH + textfield.$TextField[1] > y) {
+                return null;
+            }
             lineH += textfield.$TextField[1];
         }
-        if (line == 0) { return null; }
+        if (line == 0) {
+            return null;
+        }
         const lineElement: TextLine = lineArr[line - 1]!;
         let textFieldWidth: number = textfield.$TextField[3];
-        if (isNaN(textFieldWidth)) { textFieldWidth = textfield.textWidth; }
+        if (isNaN(textFieldWidth)) {
+            textFieldWidth = textfield.textWidth;
+        }
         const halign: number = TextFieldUtils.$getHalign(textfield);
         x -= halign * (textFieldWidth - lineElement.width);
         let lineW: number = 0;
         for (let i: number = 0; i < lineElement.elements.length; i++) {
             const iwTE: TextLineElement = lineElement.elements[i]!;
-            if (lineW + iwTE.width <= x) { lineW += iwTE.width; }
-            else if (lineW < x) { return { lineIndex: line - 1, textElementIndex: i }; }
+            if (lineW + iwTE.width <= x) {
+                lineW += iwTE.width;
+            } else if (lineW < x) {
+                return {
+                    lineIndex        : line - 1,
+                    textElementIndex : i
+                };
+            }
         }
         return null;
     }
@@ -7980,7 +8710,9 @@ export class TextFieldUtils {
             const lineSpacing: number = textfield.lineSpacing;
             scrollNum = Math.floor(height / (size + lineSpacing));
             const leftH: number = height - (size + lineSpacing) * scrollNum;
-            if (leftH > size / 2) { scrollNum++; }
+            if (leftH > size / 2) {
+                scrollNum++;
+            }
         }
         return scrollNum;
     }
@@ -8019,8 +8751,11 @@ export class Base64Util {
             base64 += Base64Util.chars[((bytes[i + 1]! & 15) << 2) | (bytes[i + 2]! >> 6)];
             base64 += Base64Util.chars[bytes[i + 2]! & 63];
         }
-        if (len % 3 === 2) { base64 = base64.substring(0, base64.length - 1) + '='; }
-        else if (len % 3 === 1) { base64 = base64.substring(0, base64.length - 2) + '=='; }
+        if (len % 3 === 2) {
+            base64 = base64.substring(0, base64.length - 1) + '=';
+        } else if (len % 3 === 1) {
+            base64 = base64.substring(0, base64.length - 2) + '==';
+        }
         return base64;
     }
     public static decode(base64: string): ArrayBuffer {
@@ -8030,7 +8765,9 @@ export class Base64Util {
         let encoded1: number = 0, encoded2: number = 0, encoded3: number = 0, encoded4: number = 0;
         if (base64[base64.length - 1] === '=') {
             bufferLength--;
-            if (base64[base64.length - 2] === '=') { bufferLength--; }
+            if (base64[base64.length - 2] === '=') {
+                bufferLength--;
+            }
         }
         const arraybuffer: ArrayBuffer = new ArrayBuffer(bufferLength);
         const bytes: Uint8Array = new Uint8Array(arraybuffer);
@@ -8160,7 +8897,9 @@ export class NumberUtils {
         return NumberUtils.getEgretCosMap()[value]!;
     }
     public static convertStringToHashCode(str: string): number {
-        if (str.length === 0) { return 0; }
+        if (str.length === 0) {
+            return 0;
+        }
         let hash: number = 0;
         for (let i: number = 0, length: number = str.length; i < length; ++i) {
             const chr: number = str.charCodeAt(i);
@@ -8188,39 +8927,56 @@ export class ByteArray {
     public data: DataView;
     public $endian: number = 1;
     public constructor(buffer?: ArrayBuffer | Uint8Array, bufferExtSize: number = 0) {
-        if (bufferExtSize < 0) { bufferExtSize = 0; }
+        if (bufferExtSize < 0) {
+            bufferExtSize = 0;
+        }
         this.bufferExtSize = bufferExtSize;
         let bytes: Uint8Array;
         let wpos: number = 0;
         if (buffer) {
             let uint8: Uint8Array;
-            if (buffer instanceof Uint8Array) { uint8 = buffer; wpos = buffer.length; }
-            else { wpos = buffer.byteLength; uint8 = new Uint8Array(buffer); }
-            if (bufferExtSize == 0) { bytes = new Uint8Array(wpos); }
-            else {
+            if (buffer instanceof Uint8Array) {
+                uint8 = buffer; wpos = buffer.length;
+            } else {
+                wpos = buffer.byteLength; uint8 = new Uint8Array(buffer);
+            }
+            if (bufferExtSize == 0) {
+                bytes = new Uint8Array(wpos);
+            } else {
                 const multi: number = (wpos / bufferExtSize | 0) + 1;
                 bytes = new Uint8Array(multi * bufferExtSize);
             }
             bytes.set(uint8);
-        } else { bytes = new Uint8Array(bufferExtSize); }
+        } else {
+            bytes = new Uint8Array(bufferExtSize);
+        }
         this.write_position = wpos;
         this._position = 0;
         this._bytes = bytes;
         this.data = new DataView(bytes.buffer);
         this.endian = Endian.BIG_ENDIAN;
     }
-    public get endian(): string { return this.$endian == 0 ? Endian.LITTLE_ENDIAN : Endian.BIG_ENDIAN; }
-    public set endian(value: string) { this.$endian = value == Endian.LITTLE_ENDIAN ? 0 : 1; }
+    public get endian(): string {
+        return this.$endian == 0 ? Endian.LITTLE_ENDIAN : Endian.BIG_ENDIAN;
+    }
+    public set endian(value: string) {
+        this.$endian = value == Endian.LITTLE_ENDIAN ? 0 : 1;
+    }
     public setArrayBuffer(_buffer: ArrayBuffer): void { }
-    public get readAvailable(): number { return this.write_position - this._position; }
-    public get buffer(): ArrayBuffer { return this.data.buffer.slice(0, this.write_position) as ArrayBuffer; }
+    public get readAvailable(): number {
+        return this.write_position - this._position;
+    }
+    public get buffer(): ArrayBuffer {
+        return this.data.buffer.slice(0, this.write_position) as ArrayBuffer;
+    }
     public set buffer(value: ArrayBuffer) {
         const wpos: number = value.byteLength;
         const uint8: Uint8Array = new Uint8Array(value);
         const bufferExtSize: number = this.bufferExtSize;
         let bytes: Uint8Array;
-        if (bufferExtSize == 0) { bytes = new Uint8Array(wpos); }
-        else {
+        if (bufferExtSize == 0) {
+            bytes = new Uint8Array(wpos);
+        } else {
             const multi: number = (wpos / bufferExtSize | 0) + 1;
             bytes = new Uint8Array(multi * bufferExtSize);
         }
@@ -8229,28 +8985,47 @@ export class ByteArray {
         this._bytes = bytes;
         this.data = new DataView(bytes.buffer);
     }
-    public get rawBuffer(): ArrayBuffer { return this.data.buffer as ArrayBuffer; }
-    public get bytes(): Uint8Array { return this._bytes; }
-    public get dataView(): DataView { return this.data; }
-    public set dataView(value: DataView) { this.buffer = value.buffer as ArrayBuffer; }
-    public get bufferOffset(): number { return this.data.byteOffset; }
-    public get position(): number { return this._position; }
+    public get rawBuffer(): ArrayBuffer {
+        return this.data.buffer as ArrayBuffer;
+    }
+    public get bytes(): Uint8Array {
+        return this._bytes;
+    }
+    public get dataView(): DataView {
+        return this.data;
+    }
+    public set dataView(value: DataView) {
+        this.buffer = value.buffer as ArrayBuffer;
+    }
+    public get bufferOffset(): number {
+        return this.data.byteOffset;
+    }
+    public get position(): number {
+        return this._position;
+    }
     public set position(value: number) {
         this._position = value;
-        if (value > this.write_position) { this.write_position = value; }
+        if (value > this.write_position) {
+            this.write_position = value;
+        }
     }
-    public get length(): number { return this.write_position; }
+    public get length(): number {
+        return this.write_position;
+    }
     public set length(value: number) {
         this.write_position = value;
-        if (this.data.byteLength > value) { this._position = value; }
+        if (this.data.byteLength > value) {
+            this._position = value;
+        }
         this._validateBuffer(value);
     }
     public _validateBuffer(value: number): void {
         if (this.data.byteLength < value) {
             const be: number = this.bufferExtSize;
             let tmp: Uint8Array;
-            if (be == 0) { tmp = new Uint8Array(value); }
-            else {
+            if (be == 0) {
+                tmp = new Uint8Array(value);
+            } else {
                 const nLen: number = ((value / be >> 0) + 1) * be;
                 tmp = new Uint8Array(nLen);
             }
@@ -8259,21 +9034,38 @@ export class ByteArray {
             this.data = new DataView(tmp.buffer);
         }
     }
-    public get bytesAvailable(): number { return this.data.byteLength - this._position; }
+    public get bytesAvailable(): number {
+        return this.data.byteLength - this._position;
+    }
     public clear(): void {
         const buffer: ArrayBuffer = new ArrayBuffer(this.bufferExtSize);
         this.data = new DataView(buffer); this._bytes = new Uint8Array(buffer);
         this._position = 0; this.write_position = 0;
     }
-    public readBoolean(): boolean | undefined { if (this.validate(1)) { return !!this._bytes[this.position++]; } }
-    public readByte(): number | undefined { if (this.validate(1)) { return this.data.getInt8(this.position++); } }
+    public readBoolean(): boolean | undefined {
+        if (this.validate(1)) {
+            return !!this._bytes[this.position++];
+        }
+    }
+    public readByte(): number | undefined {
+        if (this.validate(1)) {
+            return this.data.getInt8(this.position++);
+        }
+    }
     public readBytes(bytes: ByteArray | null, offset: number = 0, length: number = 0): void {
-        if (!bytes) { return; }
+        if (!bytes) {
+            return;
+        }
         const pos: number = this._position;
         const available: number = this.write_position - pos;
-        if (available < 0) { $error(1025); return; }
-        if (length == 0) { length = available; }
-        else if (length > available) { $error(1025); return; }
+        if (available < 0) {
+            $error(1025); return;
+        }
+        if (length == 0) {
+            length = available;
+        } else if (length > available) {
+            $error(1025); return;
+        }
         const position: number = bytes._position;
         bytes._position = 0;
         bytes.validateBuffer(offset + length);
@@ -8309,7 +9101,11 @@ export class ByteArray {
             return value;
         }
     }
-    public readUnsignedByte(): number | undefined { if (this.validate(1)) { return this._bytes[this.position++]; } }
+    public readUnsignedByte(): number | undefined {
+        if (this.validate(1)) {
+            return this._bytes[this.position++];
+        }
+    }
     public readUnsignedInt(): number | undefined {
         if (this.validate(4)) {
             const value: number = this.data.getUint32(this._position, this.$endian == 0);
@@ -8326,23 +9122,35 @@ export class ByteArray {
     }
     public readUTF(): string | undefined {
         const length: number | undefined = this.readUnsignedShort();
-        if (length !== undefined && length > 0) { return this.readUTFBytes(length); }
+        if (length !== undefined && length > 0) {
+            return this.readUTFBytes(length);
+        }
         return "";
     }
     public readUTFBytes(length: number): string | undefined {
-        if (!this.validate(length)) { return; }
+        if (!this.validate(length)) {
+            return;
+        }
         const data: DataView = this.data;
         const bytes: Uint8Array = new Uint8Array(data.buffer, data.byteOffset + this._position, length);
         this.position += length;
         return this.decodeUTF8(bytes);
     }
-    public writeBoolean(value: boolean): void { this.validateBuffer(1); this._bytes[this.position++] = +value; }
-    public writeByte(value: number): void { this.validateBuffer(1); this._bytes[this.position++] = value & 0xff; }
+    public writeBoolean(value: boolean): void {
+        this.validateBuffer(1); this._bytes[this.position++] = +value;
+    }
+    public writeByte(value: number): void {
+        this.validateBuffer(1); this._bytes[this.position++] = value & 0xff;
+    }
     public writeBytes(bytes: ByteArray, offset: number = 0, length: number = 0): void {
         let writeLength: number;
-        if (offset < 0 || length < 0) { return; }
-        else if (length == 0) { writeLength = bytes.length - offset; }
-        else { writeLength = Math.min(bytes.length - offset, length); }
+        if (offset < 0 || length < 0) {
+            return;
+        } else if (length == 0) {
+            writeLength = bytes.length - offset;
+        } else {
+            writeLength = Math.min(bytes.length - offset, length);
+        }
         if (writeLength > 0) {
             this.validateBuffer(writeLength);
             this._bytes.set(bytes._bytes.subarray(offset, offset + writeLength), this._position);
@@ -8375,18 +9183,26 @@ export class ByteArray {
         this.position += 2;
         this._writeUint8Array(utf8bytes, false);
     }
-    public writeUTFBytes(value: string): void { this._writeUint8Array(this.encodeUTF8(value)); }
-    public toString(): string { return "[ByteArray] length:" + this.length + ", bytesAvailable:" + this.bytesAvailable; }
+    public writeUTFBytes(value: string): void {
+        this._writeUint8Array(this.encodeUTF8(value));
+    }
+    public toString(): string {
+        return "[ByteArray] length:" + this.length + ", bytesAvailable:" + this.bytesAvailable;
+    }
     public _writeUint8Array(bytes: Uint8Array, validateBuffer: boolean = true): void {
         const pos: number = this._position;
         const npos: number = pos + bytes.length;
-        if (validateBuffer) { this.validateBuffer(npos); }
+        if (validateBuffer) {
+            this.validateBuffer(npos);
+        }
         this.bytes.set(bytes, pos);
         this.position = npos;
     }
     public validate(len: number): true | undefined {
         const bl: number = this._bytes.length;
-        if (bl > 0 && this._position + len <= bl) { return true; }
+        if (bl > 0 && this._position + len <= bl) {
+            return true;
+        }
         $error(1025);
     }
     public validateBuffer(len: number): void {
@@ -8400,13 +9216,19 @@ export class ByteArray {
         const outputBytes: number[] = [];
         while (codePoints.length > pos) {
             const code_point: number = codePoints[pos++]!;
-            if (this.inRange(code_point, 0xD800, 0xDFFF)) { this.encoderError(code_point); }
-            else if (this.inRange(code_point, 0x0000, 0x007f)) { outputBytes.push(code_point); }
-            else {
+            if (this.inRange(code_point, 0xD800, 0xDFFF)) {
+                this.encoderError(code_point);
+            } else if (this.inRange(code_point, 0x0000, 0x007f)) {
+                outputBytes.push(code_point);
+            } else {
                 let count: number = NaN, offset: number = NaN;
-                if (this.inRange(code_point, 0x0080, 0x07FF)) { count = 1; offset = 0xC0; }
-                else if (this.inRange(code_point, 0x0800, 0xFFFF)) { count = 2; offset = 0xE0; }
-                else if (this.inRange(code_point, 0x10000, 0x10FFFF)) { count = 3; offset = 0xF0; }
+                if (this.inRange(code_point, 0x0080, 0x07FF)) {
+                    count = 1; offset = 0xC0;
+                } else if (this.inRange(code_point, 0x0800, 0xFFFF)) {
+                    count = 2; offset = 0xE0;
+                } else if (this.inRange(code_point, 0x10000, 0x10FFFF)) {
+                    count = 3; offset = 0xF0;
+                }
                 outputBytes.push(this.div(code_point, Math.pow(64, count)) + offset);
                 while (count > 0) {
                     const temp: number = this.div(code_point, Math.pow(64, count - 1));
@@ -8429,19 +9251,25 @@ export class ByteArray {
         while (data.length > pos) {
             const byte: number = data[pos++]!;
             if (byte == this.EOF_byte) {
-                if (utf8_bytes_needed != 0) { code_point = this.decoderError(fatal); }
-                else { code_point = this.EOF_code_point; }
+                if (utf8_bytes_needed != 0) {
+                    code_point = this.decoderError(fatal);
+                } else {
+                    code_point = this.EOF_code_point;
+                }
             } else {
                 if (utf8_bytes_needed == 0) {
-                    if (this.inRange(byte, 0x00, 0x7F)) { code_point = byte; }
-                    else {
+                    if (this.inRange(byte, 0x00, 0x7F)) {
+                        code_point = byte;
+                    } else {
                         if (this.inRange(byte, 0xC2, 0xDF)) {
                             utf8_bytes_needed = 1; utf8_lower_boundary = 0x80; utf8_code_point = byte - 0xC0;
                         } else if (this.inRange(byte, 0xE0, 0xEF)) {
                             utf8_bytes_needed = 2; utf8_lower_boundary = 0x800; utf8_code_point = byte - 0xE0;
                         } else if (this.inRange(byte, 0xF0, 0xF4)) {
                             utf8_bytes_needed = 3; utf8_lower_boundary = 0x10000; utf8_code_point = byte - 0xF0;
-                        } else { this.decoderError(fatal); }
+                        } else {
+                            this.decoderError(fatal);
+                        }
                         utf8_code_point *= Math.pow(64, utf8_bytes_needed);
                         code_point = null;
                     }
@@ -8452,19 +9280,25 @@ export class ByteArray {
                 } else {
                     utf8_bytes_seen += 1;
                     utf8_code_point += (byte - 0x80) * Math.pow(64, utf8_bytes_needed - utf8_bytes_seen);
-                    if (utf8_bytes_seen !== utf8_bytes_needed) { code_point = null; }
-                    else {
+                    if (utf8_bytes_seen !== utf8_bytes_needed) {
+                        code_point = null;
+                    } else {
                         const cp: number = utf8_code_point;
                         const lower_boundary: number = utf8_lower_boundary;
                         utf8_code_point = 0; utf8_bytes_needed = 0; utf8_bytes_seen = 0; utf8_lower_boundary = 0;
-                        if (this.inRange(cp, lower_boundary, 0x10FFFF) && !this.inRange(cp, 0xD800, 0xDFFF)) { code_point = cp; }
-                        else { code_point = this.decoderError(fatal, byte); }
+                        if (this.inRange(cp, lower_boundary, 0x10FFFF) && !this.inRange(cp, 0xD800, 0xDFFF)) {
+                            code_point = cp;
+                        } else {
+                            code_point = this.decoderError(fatal, byte);
+                        }
                     }
                 }
             }
             if (code_point !== null && code_point !== this.EOF_code_point) {
                 if (code_point <= 0xFFFF) {
-                    if (code_point > 0) { result += String.fromCharCode(code_point); }
+                    if (code_point > 0) {
+                        result += String.fromCharCode(code_point);
+                    }
                 } else {
                     code_point -= 0x10000;
                     result += String.fromCharCode(0xD800 + ((code_point >> 10) & 0x3ff));
@@ -8474,30 +9308,43 @@ export class ByteArray {
         }
         return result;
     }
-    public encoderError(code_point: number): void { $error(1026, code_point); }
+    public encoderError(code_point: number): void {
+        $error(1026, code_point);
+    }
     public decoderError(fatal: boolean, opt_code_point?: number): number {
-        if (fatal) { $error(1027); }
+        if (fatal) {
+            $error(1027);
+        }
         return opt_code_point || 0xFFFD;
     }
-    public inRange(a: number, min: number, max: number): boolean { return min <= a && a <= max; }
-    public div(n: number, d: number): number { return Math.floor(n / d); }
+    public inRange(a: number, min: number, max: number): boolean {
+        return min <= a && a <= max;
+    }
+    public div(n: number, d: number): number {
+        return Math.floor(n / d);
+    }
     public stringToCodePoints(string: string): number[] {
         const cps: number[] = [];
         let i: number = 0;
         const n: number = string.length;
         while (i < string.length) {
             const c: number = string.charCodeAt(i);
-            if (!this.inRange(c, 0xD800, 0xDFFF)) { cps.push(c); }
-            else if (this.inRange(c, 0xDC00, 0xDFFF)) { cps.push(0xFFFD); }
-            else if (i == n - 1) { cps.push(0xFFFD); }
-            else {
+            if (!this.inRange(c, 0xD800, 0xDFFF)) {
+                cps.push(c);
+            } else if (this.inRange(c, 0xDC00, 0xDFFF)) {
+                cps.push(0xFFFD);
+            } else if (i == n - 1) {
+                cps.push(0xFFFD);
+            } else {
                 const d: number = string.charCodeAt(i + 1);
                 if (this.inRange(d, 0xDC00, 0xDFFF)) {
                     const a: number = c & 0x3FF;
                     const b: number = d & 0x3FF;
                     i += 1;
                     cps.push(0x10000 + (a << 10) + b);
-                } else { cps.push(0xFFFD); }
+                } else {
+                    cps.push(0xFFFD);
+                }
             }
             i += 1;
         }
@@ -8513,38 +9360,61 @@ export class Sprite extends DisplayObjectContainer {
         this.$graphics = new Graphics();
         this.$graphics.$setTarget(this);
     }
-    public get graphics(): Graphics { return this.$graphics; }
+    public get graphics(): Graphics {
+        return this.$graphics;
+    }
     public override $hitTest(stageX: number, stageY: number): DisplayObject | null {
-        if (!this.$visible) { return null; }
+        if (!this.$visible) {
+            return null;
+        }
         const m: Matrix = this.$getInvertedConcatenatedMatrix();
         const localX: number = m.a * stageX + m.c * stageY + m.tx;
         const localY: number = m.b * stageX + m.d * stageY + m.ty;
         const rect: Rectangle | null = this.$scrollRect ? this.$scrollRect : this.$maskRect;
-        if (rect && !rect.contains(localX, localY)) { return null; }
-        if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) { return null; }
+        if (rect && !rect.contains(localX, localY)) {
+            return null;
+        }
+        if (this.$mask && !this.$mask.$hitTest(stageX, stageY)) {
+            return null;
+        }
         const children: DisplayObject[] = this.$children;
         let found: boolean = false;
         let target: DisplayObject | null = null;
         for (let i: number = children.length - 1; i >= 0; i--) {
             const child: DisplayObject = children[i]!;
-            if (child.$maskedObject) { continue; }
+            if (child.$maskedObject) {
+                continue;
+            }
             target = child.$hitTest(stageX, stageY);
             if (target) {
                 found = true;
-                if (target.$touchEnabled) { break; }
-                else { target = null; }
+                if (target.$touchEnabled) {
+                    break;
+                } else {
+                    target = null;
+                }
             }
         }
-        if (target) { return this.$touchChildren ? target : this; }
-        if (found) { return this; }
+        if (target) {
+            return this.$touchChildren ? target : this;
+        }
+        if (found) {
+            return this;
+        }
         target = DisplayObject.prototype.$hitTest.call(this, stageX, stageY);
-        if (target) { target = this.$graphics.$hitTest(stageX, stageY); }
+        if (target) {
+            target = this.$graphics.$hitTest(stageX, stageY);
+        }
         return target;
     }
-    public override $measureContentBounds(bounds: Rectangle): void { this.$graphics.$measureContentBounds(bounds); }
+    public override $measureContentBounds(bounds: Rectangle): void {
+        this.$graphics.$measureContentBounds(bounds);
+    }
     public override $onRemoveFromStage(): void {
         super.$onRemoveFromStage();
-        if (this.$graphics) { this.$graphics.$onRemoveFromStage(); }
+        if (this.$graphics) {
+            this.$graphics.$onRemoveFromStage();
+        }
     }
 }
 __reflect(Sprite.prototype, "egret.Sprite");
@@ -8562,34 +9432,53 @@ export class Timer extends EventDispatcher {
         this.delay = delay;
         this.repeatCount = +repeatCount | 0;
     }
-    public get delay(): number { return this._delay; }
+    public get delay(): number {
+        return this._delay;
+    }
     public set delay(value: number) {
-        if (value < 1) { value = 1; }
-        if (this._delay == value) { return; }
+        if (value < 1) {
+            value = 1;
+        }
+        if (this._delay == value) {
+            return;
+        }
         this._delay = value;
         this.lastCount = this.updateInterval = Math.round(60 * value);
     }
-    public get currentCount(): number { return this._currentCount; }
-    public get running(): boolean { return this._running; }
-    public reset(): void { this.stop(); this._currentCount = 0; }
+    public get currentCount(): number {
+        return this._currentCount;
+    }
+    public get running(): boolean {
+        return this._running;
+    }
+    public reset(): void {
+        this.stop(); this._currentCount = 0;
+    }
     public start(): void {
-        if (this._running) { return; }
+        if (this._running) {
+            return;
+        }
         this.lastCount = this.updateInterval;
         this.lastTimeStamp = getTimer();
         getTicker().$startTick(this.$update as TickCallback, this);
         this._running = true;
     }
     public stop(): void {
-        if (!this._running) { return; }
+        if (!this._running) {
+            return;
+        }
         stopTick(this.$update as TickCallback, this);
         this._running = false;
     }
     public $update(timeStamp: number): boolean {
         const deltaTime: number = timeStamp - this.lastTimeStamp;
-        if (deltaTime >= this._delay) { this.lastCount = this.updateInterval; }
-        else {
+        if (deltaTime >= this._delay) {
+            this.lastCount = this.updateInterval;
+        } else {
             this.lastCount -= 1000;
-            if (this.lastCount > 0) { return false; }
+            if (this.lastCount > 0) {
+                return false;
+            }
             this.lastCount += this.updateInterval;
         }
         this.lastTimeStamp = timeStamp;
@@ -8625,12 +9514,22 @@ export class FrameLabel extends EventDispatcher {
         super();
         this._name = name;
         this._frame = frame | 0;
-        if (end) { this._end = end | 0; }
+        if (end) {
+            this._end = end | 0;
+        }
     }
-    public get name(): string { return this._name; }
-    public get frame(): number { return this._frame; }
-    public get end(): number | undefined { return this._end; }
-    public clone(): FrameLabel { return new FrameLabel(this._name, this._frame, this._end); }
+    public get name(): string {
+        return this._name;
+    }
+    public get frame(): number {
+        return this._frame;
+    }
+    public get end(): number | undefined {
+        return this._end;
+    }
+    public clone(): FrameLabel {
+        return new FrameLabel(this._name, this._frame, this._end);
+    }
 }
 __reflect(FrameLabel.prototype, "egret.FrameLabel");
 
@@ -8651,20 +9550,28 @@ export class MovieClipData extends HashObject {
     }
     public getKeyFrameData(frame: number): MovieClipFrameData {
         let outputFrameData: MovieClipFrameData = this.frames[frame - 1]!;
-        if (outputFrameData.frame) { outputFrameData = this.frames[outputFrameData.frame - 1]!; }
+        if (outputFrameData.frame) {
+            outputFrameData = this.frames[outputFrameData.frame - 1]!;
+        }
         return outputFrameData;
     }
     public getTextureByFrame(frame: number): Texture | null {
         const frameData: MovieClipFrameData = this.getKeyFrameData(frame);
-        if (frameData.res) { return this.getTextureByResName(frameData.res); }
+        if (frameData.res) {
+            return this.getTextureByResName(frameData.res);
+        }
         return null;
     }
     public $getOffsetByFrame(frame: number, point: Point): void {
         const frameData: MovieClipFrameData = this.getKeyFrameData(frame);
-        if (frameData.res) { point.setTo((frameData.x ?? 0) | 0, (frameData.y ?? 0) | 0); }
+        if (frameData.res) {
+            point.setTo((frameData.x ?? 0) | 0, (frameData.y ?? 0) | 0);
+        }
     }
     private getTextureByResName(resName: string): Texture | null {
-        if (this.spriteSheet == null) { return null; }
+        if (this.spriteSheet == null) {
+            return null;
+        }
         let texture: Texture | null | undefined = this.spriteSheet.getTexture(resName);
         if (!texture) {
             const textureData: MovieClipTextureData = this.textureData![resName]!;
@@ -8672,8 +9579,12 @@ export class MovieClipData extends HashObject {
         }
         return texture;
     }
-    public $isDataValid(): boolean { return this.frames.length > 0; }
-    public $isTextureValid(): boolean { return this.textureData != null && this.spriteSheet != null; }
+    public $isDataValid(): boolean {
+        return this.frames.length > 0;
+    }
+    public $isTextureValid(): boolean {
+        return this.textureData != null && this.spriteSheet != null;
+    }
     public $fillMCData(mcData: MovieClipSource): void {
         this.frameRate = mcData.frameRate || 24;
         this.fillFramesData(mcData.frames);
@@ -8690,7 +9601,9 @@ export class MovieClipData extends HashObject {
                 const duration: number = parseInt(String(frameData.duration));
                 if (duration > 1) {
                     const keyFramePosition: number = frames.length;
-                    for (let j: number = 1; j < duration; j++) { frames.push({ frame: keyFramePosition }); }
+                    for (let j: number = 1; j < duration; j++) {
+                        frames.push({ frame : keyFramePosition });
+                    }
                 }
             }
         }
@@ -8714,12 +9627,20 @@ export class MovieClipData extends HashObject {
             }
         }
     }
-    public get mcData(): MovieClipSource | null { return this.$mcData; }
-    public set mcData(value: MovieClipSource | null) { this.setMCData(value); }
+    public get mcData(): MovieClipSource | null {
+        return this.$mcData;
+    }
+    public set mcData(value: MovieClipSource | null) {
+        this.setMCData(value);
+    }
     private setMCData(value: MovieClipSource | null): void {
-        if (this.$mcData == value) { return; }
+        if (this.$mcData == value) {
+            return;
+        }
         this.$mcData = value;
-        if (value) { this.$fillMCData(value); }
+        if (value) {
+            this.$fillMCData(value);
+        }
     }
 }
 __reflect(MovieClipData.prototype, "egret.MovieClipData");
@@ -8735,12 +9656,18 @@ export class MovieClipDataFactory extends EventDispatcher {
         this.$mcDataSet = movieClipDataSet;
         this.setTexture(texture);
     }
-    public clearCache(): void { this.$mcDataCache = {}; }
+    public clearCache(): void {
+        this.$mcDataCache = {};
+    }
     public generateMovieClipData(movieClipName: string = ""): MovieClipData | null {
         if (movieClipName == "" && this.$mcDataSet) {
-            for (movieClipName in this.$mcDataSet.mc) { break; }
+            for (movieClipName in this.$mcDataSet.mc) {
+                break;
+            }
         }
-        if (movieClipName == "") { return null; }
+        if (movieClipName == "") {
+            return null;
+        }
         let output: MovieClipData | null = this.findFromCache(movieClipName, this.$mcDataCache);
         if (!output) {
             output = new MovieClipData();
@@ -8749,7 +9676,9 @@ export class MovieClipDataFactory extends EventDispatcher {
         return output;
     }
     private findFromCache(movieClipName: string, cache: Record<string, MovieClipData>): MovieClipData | null {
-        if (this.enableCache && cache[movieClipName]) { return cache[movieClipName]!; }
+        if (this.enableCache && cache[movieClipName]) {
+            return cache[movieClipName]!;
+        }
         return null;
     }
     private fillData(movieClipName: string, movieClip: MovieClipData, cache: Record<string, MovieClipData>): void {
@@ -8757,15 +9686,27 @@ export class MovieClipDataFactory extends EventDispatcher {
             const mcData: MovieClipSource | undefined = this.$mcDataSet.mc[movieClipName];
             if (mcData) {
                 movieClip.$init(mcData, this.$mcDataSet.res, this.$spriteSheet);
-                if (this.enableCache) { cache[movieClipName] = movieClip; }
+                if (this.enableCache) {
+                    cache[movieClipName] = movieClip;
+                }
             }
         }
     }
-    public get mcDataSet(): MovieClipDataSet | null | undefined { return this.$mcDataSet; }
-    public set mcDataSet(value: MovieClipDataSet | null | undefined) { this.$mcDataSet = value; }
-    public set texture(value: Texture | null | undefined) { this.setTexture(value); }
-    public get spriteSheet(): SpriteSheet | null { return this.$spriteSheet; }
-    private setTexture(value: Texture | null | undefined): void { this.$spriteSheet = value ? new SpriteSheet(value) : null; }
+    public get mcDataSet(): MovieClipDataSet | null | undefined {
+        return this.$mcDataSet;
+    }
+    public set mcDataSet(value: MovieClipDataSet | null | undefined) {
+        this.$mcDataSet = value;
+    }
+    public set texture(value: Texture | null | undefined) {
+        this.setTexture(value);
+    }
+    public get spriteSheet(): SpriteSheet | null {
+        return this.$spriteSheet;
+    }
+    private setTexture(value: Texture | null | undefined): void {
+        this.$spriteSheet = value ? new SpriteSheet(value) : null;
+    }
 }
 __reflect(MovieClipDataFactory.prototype, "egret.MovieClipDataFactory");
 
@@ -8787,13 +9728,23 @@ export class MovieClipEvent extends Event {
 __reflect(MovieClipEvent.prototype, "egret.MovieClipEvent");
 
 export class ScrollEase {
-    public constructor() { $error(1014); }
+    public constructor() {
+        $error(1014);
+    }
     public static get(amount: number): ScrollEaseFunction {
-        if (amount < -1) { amount = -1; }
-        if (amount > 1) { amount = 1; }
+        if (amount < -1) {
+            amount = -1;
+        }
+        if (amount > 1) {
+            amount = 1;
+        }
         return (t: number): number => {
-            if (amount == 0) { return t; }
-            if (amount < 0) { return t * (t * -amount + 1 + amount); }
+            if (amount == 0) {
+                return t;
+            }
+            if (amount < 0) {
+                return t * (t * -amount + 1 + amount);
+            }
             return t * ((2 - t) * amount + (1 - amount));
         };
     }
@@ -8833,14 +9784,20 @@ export class ScrollTween extends EventDispatcher {
         this.initialize(target, props, pluginData);
     }
     public static get(target: object, props: ScrollTweenOptions | null = null, pluginData: ScrollTweenProperties | null = null, override: boolean = false): ScrollTween {
-        if (override) { ScrollTween.removeTweens(target); }
+        if (override) {
+            ScrollTween.removeTweens(target);
+        }
         return new ScrollTween(target, props, pluginData);
     }
     public static removeTweens(target: ScrollTweenTarget): void {
-        if (!target.tween_count) { return; }
+        if (!target.tween_count) {
+            return;
+        }
         const tweens: ScrollTween[] = ScrollTween._tweens;
         for (let i: number = tweens.length - 1; i >= 0; i--) {
-            if (tweens[i]!._target == target) { tweens[i]!.paused = true; tweens.splice(i, 1); }
+            if (tweens[i]!._target == target) {
+ tweens[i]!.paused = true; tweens.splice(i, 1);
+            }
         }
         target.tween_count = 0;
     }
@@ -8850,7 +9807,9 @@ export class ScrollTween extends EventDispatcher {
         const tweens: ScrollTween[] = ScrollTween._tweens.concat();
         for (let i: number = tweens.length - 1; i >= 0; i--) {
             const tween: ScrollTween = tweens[i]!;
-            if ((paused && !tween.ignoreGlobalPause) || tween.paused) { continue; }
+            if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
+                continue;
+            }
             tween.tick(tween._useTicks ? 1 : delta);
         }
         return false;
@@ -8859,7 +9818,9 @@ export class ScrollTween extends EventDispatcher {
         const target: ScrollTweenTarget | null = tween._target;
         const tweens: ScrollTween[] = ScrollTween._tweens;
         if (value) {
-            if (target) { target.tween_count = (target.tween_count ?? 0) > 0 ? target.tween_count! + 1 : 1; }
+            if (target) {
+                target.tween_count = (target.tween_count ?? 0) > 0 ? target.tween_count! + 1 : 1;
+            }
             tweens.push(tween);
             if (!ScrollTween._inited) {
                 ScrollTween._lastTime = getTimer();
@@ -8867,9 +9828,15 @@ export class ScrollTween extends EventDispatcher {
                 ScrollTween._inited = true;
             }
         } else {
-            if (target) { target.tween_count = (target.tween_count ?? NaN) - 1; }
+            if (target) {
+                target.tween_count = (target.tween_count ?? NaN) - 1;
+            }
             let i: number = tweens.length;
-            while (i--) { if (tweens[i] == tween) { tweens.splice(i, 1); return; } }
+            while (i--) {
+                if (tweens[i] == tween) {
+                    tweens.splice(i, 1); return;
+                }
+            }
         }
     }
     public initialize(target: object, props: ScrollTweenOptions | null, pluginData: ScrollTweenProperties | null): void {
@@ -8878,45 +9845,75 @@ export class ScrollTween extends EventDispatcher {
             this._useTicks = props.useTicks;
             this.ignoreGlobalPause = props.ignoreGlobalPause;
             this.loop = props.loop;
-            if (props.onChange) { this.addEventListener("change", props.onChange, props.onChangeObj); }
-            if (props.override) { ScrollTween.removeTweens(target); }
+            if (props.onChange) {
+                this.addEventListener("change", props.onChange, props.onChangeObj);
+            }
+            if (props.override) {
+                ScrollTween.removeTweens(target);
+            }
         }
         this.pluginData = pluginData || {};
         this._curQueueProps = {};
         this._initQueueProps = {};
         this._steps = [];
         this._actions = [];
-        if (props && props.paused) { this.paused = true; } else { ScrollTween._register(this, true); }
-        if (props && props.position != null) { this.setPosition(props.position); }
+        if (props && props.paused) {
+            this.paused = true;
+        } else {
+            ScrollTween._register(this, true);
+        }
+        if (props && props.position != null) {
+            this.setPosition(props.position);
+        }
     }
     public setPosition(value: number, actionsMode: number = 1): boolean {
-        if (value < 0) { value = 0; }
+        if (value < 0) {
+            value = 0;
+        }
         let t: number = value;
         let end: boolean = false;
         if (t >= this.duration) {
-            if (this.loop) { t = t % this.duration; } else { t = this.duration; end = true; }
+            if (this.loop) {
+                t = t % this.duration;
+            } else {
+                t = this.duration; end = true;
+            }
         }
-        if (t == this._prevPos) { return end; }
+        if (t == this._prevPos) {
+            return end;
+        }
         const prevPos: number = this._prevPos;
         this.position = this._prevPos = t;
         this._prevPosition = value;
         if (this._target) {
-            if (end) { this._updateTargetProps(null, 1); }
-            else if (this._steps.length > 0) {
+            if (end) {
+                this._updateTargetProps(null, 1);
+            } else if (this._steps.length > 0) {
                 let i: number = 0;
                 const length: number = this._steps.length;
-                for (; i < length; i++) { if (this._steps[i]!.t > t) { break; } }
+                for (; i < length; i++) {
+                    if (this._steps[i]!.t > t) {
+                        break;
+                    }
+                }
                 const step: ScrollTweenStep = this._steps[i - 1]!;
                 this._updateTargetProps(step, (this._stepPosition = t - step.t) / step.d);
             }
         }
-        if (end) { this.setPaused(true); }
+        if (end) {
+            this.setPaused(true);
+        }
         if (actionsMode != 0 && this._actions.length > 0) {
-            if (this._useTicks) { this._runActions(t, t); }
-            else if (actionsMode == 1 && t < prevPos) {
-                if (prevPos != this.duration) { this._runActions(prevPos, this.duration); }
+            if (this._useTicks) {
+                this._runActions(t, t);
+            } else if (actionsMode == 1 && t < prevPos) {
+                if (prevPos != this.duration) {
+                    this._runActions(prevPos, this.duration);
+                }
                 this._runActions(0, t, true);
-            } else { this._runActions(prevPos, t); }
+            } else {
+                this._runActions(prevPos, t);
+            }
         }
         this.dispatchEventWith("change");
         return end;
@@ -8927,21 +9924,30 @@ export class ScrollTween extends EventDispatcher {
         let i: number = -1;
         let j: number = this._actions.length;
         let k: number = 1;
-        if (startPos > endPos) { sPos = endPos; ePos = startPos; i = j; j = k = -1; }
+        if (startPos > endPos) {
+            sPos = endPos; ePos = startPos; i = j; j = k = -1;
+        }
         while ((i += k) != j) {
             const action: ScrollTweenAction = this._actions[i]!;
             const pos: number = action.t;
-            if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) { action.execute(); }
+            if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
+                action.execute();
+            }
         }
     }
     public _updateTargetProps(step: ScrollTweenStep | null, ratio: number): void {
         let p0: ScrollTweenProperties;
         let p1: ScrollTweenProperties;
-        if (!step && ratio == 1) { this.passive = false; p0 = p1 = this._curQueueProps; }
-        else {
+        if (!step && ratio == 1) {
+            this.passive = false; p0 = p1 = this._curQueueProps;
+        } else {
             this.passive = !!step!.v;
-            if (this.passive) { return; }
-            if (step!.e) { ratio = step!.e(ratio, 0, 1, 1); }
+            if (this.passive) {
+                return;
+            }
+            if (step!.e) {
+                ratio = step!.e(ratio, 0, 1, 1);
+            }
             p0 = step!.p0;
             p1 = step!.p1;
         }
@@ -8949,32 +9955,51 @@ export class ScrollTween extends EventDispatcher {
         for (n in this._initQueueProps) {
             let v0: unknown = p0[n];
             let v1: unknown = p1[n];
-            if (v0 == null) { p0[n] = v0 = this._initQueueProps[n]; }
-            if (v1 == null) { p1[n] = v1 = v0; }
+            if (v0 == null) {
+                p0[n] = v0 = this._initQueueProps[n];
+            }
+            if (v1 == null) {
+                p1[n] = v1 = v0;
+            }
             let v: unknown;
-            if (v0 == v1 || ratio == 0 || ratio == 1 || typeof v0 != "number") { v = ratio == 1 ? v1 : v0; }
-            else { v = v0 + (Number(v1) - v0) * ratio; }
+            if (v0 == v1 || ratio == 0 || ratio == 1 || typeof v0 != "number") {
+                v = ratio == 1 ? v1 : v0;
+            } else {
+                v = v0 + (Number(v1) - v0) * ratio;
+            }
             let ignore: boolean = false;
             const plugins: ScrollTweenPlugin[] | undefined = ScrollTween._plugins[n];
             if (plugins) {
                 for (let i: number = 0; i < plugins.length; i++) {
                     const plugin: ScrollTweenPlugin = plugins[i]!;
                     const v2: unknown = plugin.tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
-                    if (v2 == ScrollTween.IGNORE) { ignore = true; } else { v = v2; }
+                    if (v2 == ScrollTween.IGNORE) {
+                        ignore = true;
+                    } else {
+                        v = v2;
+                    }
                 }
             }
-            if (!ignore) { (this._target as ScrollTweenProperties)[n] = v; }
+            if (!ignore) {
+                (this._target as ScrollTweenProperties)[n] = v;
+            }
         }
     }
-    public setPaused(value: boolean): this { this.paused = value; ScrollTween._register(this, !value); return this; }
+    public setPaused(value: boolean): this {
+        this.paused = value; ScrollTween._register(this, !value); return this;
+    }
     public _cloneProps(props: ScrollTweenProperties): ScrollTweenProperties {
         const output: ScrollTweenProperties = {};
         let n: string;
-        for (n in props) { output[n] = props[n]; }
+        for (n in props) {
+            output[n] = props[n];
+        }
         return output;
     }
     public _addStep(step: ScrollTweenStep): this {
-        if (step.d > 0) { this._steps.push(step); step.t = this.duration; this.duration += step.d; }
+        if (step.d > 0) {
+            this._steps.push(step); step.t = this.duration; this.duration += step.d;
+        }
         return this;
     }
     public _appendQueueProps(props: ScrollTweenProperties): ScrollTweenProperties {
@@ -9000,25 +10025,48 @@ export class ScrollTween extends EventDispatcher {
                 injectProps = injectProps || {};
                 for (let i: number = 0; i < plugins.length; i++) {
                     const plugin: ScrollTweenPlugin = plugins[i]!;
-                    if (plugin.step) { plugin.step(this, n, oldValue, props[n], injectProps); }
+                    if (plugin.step) {
+                        plugin.step(this, n, oldValue, props[n], injectProps);
+                    }
                 }
             }
             this._curQueueProps[n] = props[n];
         }
-        if (injectProps) { this._appendQueueProps(injectProps); }
+        if (injectProps) {
+            this._appendQueueProps(injectProps);
+        }
         return this._curQueueProps;
     }
-    public _addAction(action: ScrollTweenAction): this { action.t = this.duration; this._actions.push(action); return this; }
+    public _addAction(action: ScrollTweenAction): this {
+        action.t = this.duration; this._actions.push(action); return this;
+    }
     public to(props: ScrollTweenProperties, duration: number, ease?: ScrollEaseFunction): this {
-        if (isNaN(duration) || duration < 0) { duration = 0; }
-        return this._addStep({ t: 0, d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props)) });
+        if (isNaN(duration) || duration < 0) {
+            duration = 0;
+        }
+        return this._addStep({
+            t  : 0,
+            d  : duration || 0,
+            p0 : this._cloneProps(this._curQueueProps),
+            e  : ease,
+            p1 : this._cloneProps(this._appendQueueProps(props))
+        });
     }
     public call<TThis, TArgs extends unknown[]>(callback: (this: TThis, ...args: TArgs) => unknown, thisObj?: TThis, params?: TArgs): this {
         const context: TThis = (thisObj ? thisObj : this._target) as TThis;
         const args: TArgs = (params ? params : []) as TArgs;
-        return this._addAction({ t: 0, execute: (): void => { callback.apply(context, args); } });
+        return this._addAction({
+            t       : 0,
+            execute : (): void => {
+                callback.apply(context, args);
+            }
+        });
     }
-    public tick(delta: number): void { if (!this.paused) { this.setPosition(this._prevPosition + delta); } }
+    public tick(delta: number): void {
+        if (!this.paused) {
+            this.setPosition(this._prevPosition + delta);
+        }
+    }
 }
 __reflect(ScrollTween.prototype, "egret.ScrollTween");
 
@@ -9036,63 +10084,105 @@ export class ScrollView extends DisplayObjectContainer {
         super();
         this.touchEnabled = true;
         this._ScrV_Props_ = new ScrollViewProperties();
-        if (content) { this.setContent(content); }
+        if (content) {
+            this.setContent(content);
+        }
     }
-    public get bounces(): boolean { return this._ScrV_Props_._bounces; }
-    public set bounces(value: boolean) { this._ScrV_Props_._bounces = !!value; }
+    public get bounces(): boolean {
+        return this._ScrV_Props_._bounces;
+    }
+    public set bounces(value: boolean) {
+        this._ScrV_Props_._bounces = !!value;
+    }
     public setContent(content: DisplayObject | null): void {
-        if (this._content === content) { return; }
+        if (this._content === content) {
+            return;
+        }
         this.removeContent();
-        if (content) { this._content = content; super.addChild(content); this._addEvents(); }
+        if (content) {
+            this._content = content; super.addChild(content); this._addEvents();
+        }
     }
     public removeContent(): void {
-        if (this._content) { this._removeEvents(); super.removeChildAt(0); }
+        if (this._content) {
+            this._removeEvents(); super.removeChildAt(0);
+        }
         this._content = null;
     }
-    public get verticalScrollPolicy(): ScrollPolicy { return this._ScrV_Props_._verticalScrollPolicy; }
+    public get verticalScrollPolicy(): ScrollPolicy {
+        return this._ScrV_Props_._verticalScrollPolicy;
+    }
     public set verticalScrollPolicy(value: ScrollPolicy) {
-        if (value == this._ScrV_Props_._verticalScrollPolicy) { return; }
+        if (value == this._ScrV_Props_._verticalScrollPolicy) {
+            return;
+        }
         this._ScrV_Props_._verticalScrollPolicy = value;
     }
-    public get horizontalScrollPolicy(): ScrollPolicy { return this._ScrV_Props_._horizontalScrollPolicy; }
+    public get horizontalScrollPolicy(): ScrollPolicy {
+        return this._ScrV_Props_._horizontalScrollPolicy;
+    }
     public set horizontalScrollPolicy(value: ScrollPolicy) {
-        if (value == this._ScrV_Props_._horizontalScrollPolicy) { return; }
+        if (value == this._ScrV_Props_._horizontalScrollPolicy) {
+            return;
+        }
         this._ScrV_Props_._horizontalScrollPolicy = value;
     }
-    public get scrollLeft(): number { return this._ScrV_Props_._scrollLeft; }
+    public get scrollLeft(): number {
+        return this._ScrV_Props_._scrollLeft;
+    }
     public set scrollLeft(value: number) {
-        if (value == this._ScrV_Props_._scrollLeft) { return; }
+        if (value == this._ScrV_Props_._scrollLeft) {
+            return;
+        }
         this._ScrV_Props_._scrollLeft = value;
         this._validatePosition(false, true);
         this._updateContentPosition();
     }
-    public get scrollTop(): number { return this._ScrV_Props_._scrollTop; }
+    public get scrollTop(): number {
+        return this._ScrV_Props_._scrollTop;
+    }
     public set scrollTop(value: number) {
-        if (value == this._ScrV_Props_._scrollTop) { return; }
+        if (value == this._ScrV_Props_._scrollTop) {
+            return;
+        }
         this._ScrV_Props_._scrollTop = value;
         this._validatePosition(true, false);
         this._updateContentPosition();
     }
     public setScrollPosition(top: number, left: number, isOffset: boolean = false): void {
-        if (isOffset && top == 0 && left == 0) { return; }
-        if (!isOffset && this._ScrV_Props_._scrollTop == top && this._ScrV_Props_._scrollLeft == left) { return; }
+        if (isOffset && top == 0 && left == 0) {
+            return;
+        }
+        if (!isOffset && this._ScrV_Props_._scrollTop == top && this._ScrV_Props_._scrollLeft == left) {
+            return;
+        }
         const oldTop: number = this._ScrV_Props_._scrollTop;
         const oldLeft: number = this._ScrV_Props_._scrollLeft;
         if (isOffset) {
             const maxLeft: number = this.getMaxScrollLeft();
             const maxTop: number = this.getMaxScrollTop();
-            if (oldTop <= 0 || oldTop >= maxTop) { top /= 2; }
-            if (oldLeft <= 0 || oldLeft >= maxLeft) { left /= 2; }
+            if (oldTop <= 0 || oldTop >= maxTop) {
+                top /= 2;
+            }
+            if (oldLeft <= 0 || oldLeft >= maxLeft) {
+                left /= 2;
+            }
             let newTop: number = oldTop + top;
             let newLeft: number = oldLeft + left;
             const bounces: boolean = this._ScrV_Props_._bounces;
             if (!bounces) {
-                if (newTop <= 0 || newTop >= maxTop) { newTop = Math.max(0, Math.min(newTop, maxTop)); }
-                if (newLeft <= 0 || newLeft >= maxLeft) { newLeft = Math.max(0, Math.min(newLeft, maxLeft)); }
+                if (newTop <= 0 || newTop >= maxTop) {
+                    newTop = Math.max(0, Math.min(newTop, maxTop));
+                }
+                if (newLeft <= 0 || newLeft >= maxLeft) {
+                    newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+                }
             }
             this._ScrV_Props_._scrollTop = newTop;
             this._ScrV_Props_._scrollLeft = newLeft;
-        } else { this._ScrV_Props_._scrollTop = top; this._ScrV_Props_._scrollLeft = left; }
+        } else {
+            this._ScrV_Props_._scrollTop = top; this._ScrV_Props_._scrollLeft = left;
+        }
         this._validatePosition(true, true);
         this._updateContentPosition();
     }
@@ -9111,12 +10201,16 @@ export class ScrollView extends DisplayObjectContainer {
         }
     }
     public $setWidth(value: number): void {
-        if (this.$explicitWidth == value) { return; }
+        if (this.$explicitWidth == value) {
+            return;
+        }
         super.$setWidth(value);
         this._updateContentPosition();
     }
     public $setHeight(value: number): void {
-        if (this.$explicitHeight == value) { return; }
+        if (this.$explicitHeight == value) {
+            return;
+        }
         super.$setHeight(value);
         this._updateContentPosition();
     }
@@ -9136,8 +10230,12 @@ export class ScrollView extends DisplayObjectContainer {
         return hCanScroll || vCanScroll;
     }
     public __checkScrollPolicy(policy: ScrollPolicy, contentLength: number, viewLength: number): boolean {
-        if (policy == "on") { return true; }
-        if (policy == "off") { return false; }
+        if (policy == "on") {
+            return true;
+        }
+        if (policy == "off") {
+            return false;
+        }
         return contentLength > viewLength;
     }
     public _addEvents(): void {
@@ -9152,12 +10250,18 @@ export class ScrollView extends DisplayObjectContainer {
     }
     public _onTouchBegin(event: Event): void {
         const e: TouchEvent = event as TouchEvent;
-        if (e.$isDefaultPrevented) { return; }
+        if (e.$isDefaultPrevented) {
+            return;
+        }
         const canScroll: boolean = this._checkScrollPolicy();
-        if (!canScroll) { return; }
+        if (!canScroll) {
+            return;
+        }
         this._ScrV_Props_._touchStartPosition.x = e.stageX;
         this._ScrV_Props_._touchStartPosition.y = e.stageY;
-        if (this._ScrV_Props_._isHTweenPlaying || this._ScrV_Props_._isVTweenPlaying) { this._onScrollFinished(); }
+        if (this._ScrV_Props_._isHTweenPlaying || this._ScrV_Props_._isVTweenPlaying) {
+            this._onScrollFinished();
+        }
         this._tempStage = this.stage;
         this._tempStage!.addEventListener(TouchEvent.TOUCH_MOVE, this._onTouchMove, this);
         this._tempStage!.addEventListener(TouchEvent.TOUCH_END, this._onTouchEnd, this);
@@ -9169,12 +10273,16 @@ export class ScrollView extends DisplayObjectContainer {
     public _onTouchBeginCapture(baseEvent: Event): void {
         const event: TouchEvent = baseEvent as TouchEvent;
         let canScroll: boolean = this._checkScrollPolicy();
-        if (!canScroll) { return; }
+        if (!canScroll) {
+            return;
+        }
         let target: DisplayObject = event.target as DisplayObject;
         while (target != this) {
             if ("_checkScrollPolicy" in target && typeof target._checkScrollPolicy === "function") {
                 canScroll = Boolean(target._checkScrollPolicy());
-                if (canScroll) { return; }
+                if (canScroll) {
+                    return;
+                }
             }
             target = target.parent!;
         }
@@ -9190,17 +10298,25 @@ export class ScrollView extends DisplayObjectContainer {
     }
     public _onTouchEndCapture(baseEvent: Event): void {
         const event: TouchEvent = baseEvent as TouchEvent;
-        if (!this.delayTouchBeginEvent) { return; }
+        if (!this.delayTouchBeginEvent) {
+            return;
+        }
         this._onTouchBeginTimer();
         event.stopPropagation();
         const evt: TouchEvent = this.cloneTouchEvent(event);
-        callLater((): void => { if (this.stage) { this.dispatchPropagationEvent(evt); } }, this);
+        callLater((): void => {
+            if (this.stage) {
+                this.dispatchPropagationEvent(evt);
+            }
+        }, this);
     }
     public _onTouchBeginTimer(): void {
         this.touchBeginTimer!.stop();
         const event: TouchEvent = this.delayTouchBeginEvent!;
         this.delayTouchBeginEvent = null;
-        if (this.stage) { this.dispatchPropagationEvent(event); }
+        if (this.stage) {
+            this.dispatchPropagationEvent(event);
+        }
     }
     public dispatchPropagationEvent(event: TouchEvent): void {
         const target: DisplayObject | null = event.$target as DisplayObject | null;
@@ -9208,7 +10324,11 @@ export class ScrollView extends DisplayObjectContainer {
         const length: number = list.length;
         let targetIndex: number = list.length * 0.5;
         let startIndex: number = -1;
-        for (let i: number = 0; i < length; i++) { if (list[i] === this._content) { startIndex = i; break; } }
+        for (let i: number = 0; i < length; i++) {
+            if (list[i] === this._content) {
+                startIndex = i; break;
+            }
+        }
         list.splice(0, startIndex + 1);
         targetIndex -= startIndex + 1;
         this.$dispatchPropagationEvent(event, list, targetIndex);
@@ -9216,15 +10336,21 @@ export class ScrollView extends DisplayObjectContainer {
     }
     public _onTouchMove(baseEvent: Event): void {
         const event: TouchEvent = baseEvent as TouchEvent;
-        if (this._ScrV_Props_._lastTouchPosition.x == event.stageX && this._ScrV_Props_._lastTouchPosition.y == event.stageY) { return; }
+        if (this._ScrV_Props_._lastTouchPosition.x == event.stageX && this._ScrV_Props_._lastTouchPosition.y == event.stageY) {
+            return;
+        }
         if (!this._ScrV_Props_._scrollStarted) {
             const x: number = event.stageX - this._ScrV_Props_._touchStartPosition.x;
             const y: number = event.stageY - this._ScrV_Props_._touchStartPosition.y;
             const distance: number = Math.sqrt(x * x + y * y);
-            if (distance < this.scrollBeginThreshold) { this._logTouchEvent(event); return; }
+            if (distance < this.scrollBeginThreshold) {
+                this._logTouchEvent(event); return;
+            }
         }
         this._ScrV_Props_._scrollStarted = true;
-        if (this.delayTouchBeginEvent) { this.delayTouchBeginEvent = null; this.touchBeginTimer!.stop(); }
+        if (this.delayTouchBeginEvent) {
+            this.delayTouchBeginEvent = null; this.touchBeginTimer!.stop();
+        }
         this.touchChildren = false;
         const offset: ScrollPoint = this._getPointChange(event);
         this.setScrollPosition(offset.y, offset.x, true);
@@ -9254,29 +10380,46 @@ export class ScrollView extends DisplayObjectContainer {
     }
     public _getPointChange(e: TouchEvent): ScrollPoint {
         return {
-            x: this._ScrV_Props_._hCanScroll === false ? 0 : this._ScrV_Props_._lastTouchPosition.x - e.stageX,
-            y: this._ScrV_Props_._vCanScroll === false ? 0 : this._ScrV_Props_._lastTouchPosition.y - e.stageY
+            x : this._ScrV_Props_._hCanScroll === false ? 0 : this._ScrV_Props_._lastTouchPosition.x - e.stageX,
+            y : this._ScrV_Props_._vCanScroll === false ? 0 : this._ScrV_Props_._lastTouchPosition.y - e.stageY
         };
     }
     public _calcVelocitys(e: TouchEvent): void {
         const time: number = getTimer();
-        if (this._ScrV_Props_._lastTouchTime == 0) { this._ScrV_Props_._lastTouchTime = time; return; }
+        if (this._ScrV_Props_._lastTouchTime == 0) {
+            this._ScrV_Props_._lastTouchTime = time; return;
+        }
         const change: ScrollPoint = this._getPointChange(e);
         const timeoffset: number = time - this._ScrV_Props_._lastTouchTime;
         change.x /= timeoffset;
         change.y /= timeoffset;
         this._ScrV_Props_._velocitys.push(change);
-        if (this._ScrV_Props_._velocitys.length > 5) { this._ScrV_Props_._velocitys.shift(); }
+        if (this._ScrV_Props_._velocitys.length > 5) {
+            this._ScrV_Props_._velocitys.shift();
+        }
         this._ScrV_Props_._lastTouchPosition.x = e.stageX;
         this._ScrV_Props_._lastTouchPosition.y = e.stageY;
     }
-    public _getContentWidth(): number { return this._content!.$explicitWidth || this._content!.width; }
-    public _getContentHeight(): number { return this._content!.$explicitHeight || this._content!.height; }
-    public getMaxScrollLeft(): number { const max: number = this._getContentWidth() - this.width; return Math.max(0, max); }
-    public getMaxScrollTop(): number { const max: number = this._getContentHeight() - this.height; return Math.max(0, max); }
+    public _getContentWidth(): number {
+        return this._content!.$explicitWidth || this._content!.width;
+    }
+    public _getContentHeight(): number {
+        return this._content!.$explicitHeight || this._content!.height;
+    }
+    public getMaxScrollLeft(): number {
+        const max: number = this._getContentWidth() - this.width; return Math.max(0, max);
+    }
+    public getMaxScrollTop(): number {
+        const max: number = this._getContentHeight() - this.height; return Math.max(0, max);
+    }
     public _moveAfterTouchEnd(): void {
-        if (this._ScrV_Props_._velocitys.length == 0) { return; }
-        const sum: ScrollPoint = { x: 0, y: 0 };
+        if (this._ScrV_Props_._velocitys.length == 0) {
+            return;
+        }
+        const sum: ScrollPoint = {
+            x : 0,
+            y : 0
+        };
         let totalW: number = 0;
         for (let i: number = 0; i < this._ScrV_Props_._velocitys.length; i++) {
             const v: ScrollPoint = this._ScrV_Props_._velocitys[i]!;
@@ -9286,22 +10429,36 @@ export class ScrollView extends DisplayObjectContainer {
             totalW += w;
         }
         this._ScrV_Props_._velocitys.length = 0;
-        if (this.scrollSpeed <= 0) { this.scrollSpeed = 1; }
+        if (this.scrollSpeed <= 0) {
+            this.scrollSpeed = 1;
+        }
         const x: number = sum.x / totalW * this.scrollSpeed;
         const y: number = sum.y / totalW * this.scrollSpeed;
         const pixelsPerMSX: number = Math.abs(x);
         const pixelsPerMSY: number = Math.abs(y);
         const maxLeft: number = this.getMaxScrollLeft();
         const maxTop: number = this.getMaxScrollTop();
-        const datax: ScrollAnimationData = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._ScrV_Props_._scrollLeft, maxLeft) : { position: this._ScrV_Props_._scrollLeft, duration: 1 };
-        const datay: ScrollAnimationData = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._ScrV_Props_._scrollTop, maxTop) : { position: this._ScrV_Props_._scrollTop, duration: 1 };
+        const datax: ScrollAnimationData = pixelsPerMSX > 0.02 ? this.getAnimationDatas(x, this._ScrV_Props_._scrollLeft, maxLeft) : {
+            position : this._ScrV_Props_._scrollLeft,
+            duration : 1
+        };
+        const datay: ScrollAnimationData = pixelsPerMSY > 0.02 ? this.getAnimationDatas(y, this._ScrV_Props_._scrollTop, maxTop) : {
+            position : this._ScrV_Props_._scrollTop,
+            duration : 1
+        };
         this.setScrollLeft(datax.position, datax.duration);
         this.setScrollTop(datay.position, datay.duration);
     }
     public onTweenFinished(tw: ScrollTween): void {
-        if (tw == this._ScrV_Props_._vScrollTween) { this._ScrV_Props_._isVTweenPlaying = false; }
-        if (tw == this._ScrV_Props_._hScrollTween) { this._ScrV_Props_._isHTweenPlaying = false; }
-        if (!this._ScrV_Props_._isHTweenPlaying && !this._ScrV_Props_._isVTweenPlaying) { this._onScrollFinished(); }
+        if (tw == this._ScrV_Props_._vScrollTween) {
+            this._ScrV_Props_._isVTweenPlaying = false;
+        }
+        if (tw == this._ScrV_Props_._hScrollTween) {
+            this._ScrV_Props_._isHTweenPlaying = false;
+        }
+        if (!this._ScrV_Props_._isHTweenPlaying && !this._ScrV_Props_._isVTweenPlaying) {
+            this._onScrollFinished();
+        }
     }
     public _onScrollStarted(): void { }
     public _onScrollFinished(): void {
@@ -9314,25 +10471,41 @@ export class ScrollView extends DisplayObjectContainer {
     }
     public setScrollTop(scrollTop: number, duration: number = 0): void {
         const finalPosition: number = Math.min(this.getMaxScrollTop(), Math.max(scrollTop, 0));
-        if (duration == 0) { this.scrollTop = finalPosition; return; }
-        if (!this._ScrV_Props_._bounces) { scrollTop = finalPosition; }
-        const vtween: ScrollTween = ScrollTween.get(this).to({ scrollTop: scrollTop }, duration, ScrollEase.quartOut);
-        if (finalPosition != scrollTop) { vtween.to({ scrollTop: finalPosition }, 300, ScrollEase.quintOut); }
+        if (duration == 0) {
+            this.scrollTop = finalPosition; return;
+        }
+        if (!this._ScrV_Props_._bounces) {
+            scrollTop = finalPosition;
+        }
+        const vtween: ScrollTween = ScrollTween.get(this).to({ scrollTop : scrollTop }, duration, ScrollEase.quartOut);
+        if (finalPosition != scrollTop) {
+            vtween.to({ scrollTop : finalPosition }, 300, ScrollEase.quintOut);
+        }
         this._ScrV_Props_._isVTweenPlaying = true;
         this._ScrV_Props_._vScrollTween = vtween;
         vtween.call(this.onTweenFinished, this, [vtween]);
-        if (!this._ScrV_Props_._isHTweenPlaying) { this._onScrollStarted(); }
+        if (!this._ScrV_Props_._isHTweenPlaying) {
+            this._onScrollStarted();
+        }
     }
     public setScrollLeft(scrollLeft: number, duration: number = 0): void {
         const finalPosition: number = Math.min(this.getMaxScrollLeft(), Math.max(scrollLeft, 0));
-        if (duration == 0) { this.scrollLeft = finalPosition; return; }
-        if (!this._ScrV_Props_._bounces) { scrollLeft = finalPosition; }
-        const htween: ScrollTween = ScrollTween.get(this).to({ scrollLeft: scrollLeft }, duration, ScrollEase.quartOut);
-        if (finalPosition != scrollLeft) { htween.to({ scrollLeft: finalPosition }, 300, ScrollEase.quintOut); }
+        if (duration == 0) {
+            this.scrollLeft = finalPosition; return;
+        }
+        if (!this._ScrV_Props_._bounces) {
+            scrollLeft = finalPosition;
+        }
+        const htween: ScrollTween = ScrollTween.get(this).to({ scrollLeft : scrollLeft }, duration, ScrollEase.quartOut);
+        if (finalPosition != scrollLeft) {
+            htween.to({ scrollLeft : finalPosition }, 300, ScrollEase.quintOut);
+        }
         this._ScrV_Props_._isHTweenPlaying = true;
         this._ScrV_Props_._hScrollTween = htween;
         htween.call(this.onTweenFinished, this, [htween]);
-        if (!this._ScrV_Props_._isVTweenPlaying) { this._onScrollStarted(); }
+        if (!this._ScrV_Props_._isVTweenPlaying) {
+            this._onScrollStarted();
+        }
     }
     public getAnimationDatas(pixelsPerMS: number, curPos: number, maxPos: number): ScrollAnimationData {
         const absPixelsPerMS: number = Math.abs(pixelsPerMS);
@@ -9345,12 +10518,20 @@ export class ScrollView extends DisplayObjectContainer {
             posTo = curPos;
             while (Math.abs(pixelsPerMS) != Infinity && Math.abs(pixelsPerMS) > minVelocity) {
                 posTo += pixelsPerMS;
-                if (posTo < 0 || posTo > maxPos) { pixelsPerMS *= friction * extraFricition; }
-                else { pixelsPerMS *= friction; }
+                if (posTo < 0 || posTo > maxPos) {
+                    pixelsPerMS *= friction * extraFricition;
+                } else {
+                    pixelsPerMS *= friction;
+                }
                 duration++;
             }
-        } else { duration = -Math.log(minVelocity / absPixelsPerMS) * 500; }
-        const result: ScrollAnimationData = { position: Math.min(maxPos + 50, Math.max(posTo, -50)), duration: duration };
+        } else {
+            duration = -Math.log(minVelocity / absPixelsPerMS) * 500;
+        }
+        const result: ScrollAnimationData = {
+            position : Math.min(maxPos + 50, Math.max(posTo, -50)),
+            duration : duration
+        };
         return result;
     }
     public cloneTouchEvent(event: TouchEvent): TouchEvent {
@@ -9363,14 +10544,30 @@ export class ScrollView extends DisplayObjectContainer {
         evt.$target = event.target;
         return evt;
     }
-    public throwNotSupportedError(): never { return $error(1023); }
-    public addChild(_child: DisplayObject): never { return this.throwNotSupportedError(); }
-    public addChildAt(_child: DisplayObject, _index: number): never { return this.throwNotSupportedError(); }
-    public removeChild(_child: DisplayObject): never { return this.throwNotSupportedError(); }
-    public removeChildAt(_index: number): never { return this.throwNotSupportedError(); }
-    public setChildIndex(_child: DisplayObject, _index: number): void { this.throwNotSupportedError(); }
-    public swapChildren(_child1: DisplayObject, _child2: DisplayObject): void { this.throwNotSupportedError(); }
-    public swapChildrenAt(_index1: number, _index2: number): void { this.throwNotSupportedError(); }
+    public throwNotSupportedError(): never {
+        return $error(1023);
+    }
+    public addChild(_child: DisplayObject): never {
+        return this.throwNotSupportedError();
+    }
+    public addChildAt(_child: DisplayObject, _index: number): never {
+        return this.throwNotSupportedError();
+    }
+    public removeChild(_child: DisplayObject): never {
+        return this.throwNotSupportedError();
+    }
+    public removeChildAt(_index: number): never {
+        return this.throwNotSupportedError();
+    }
+    public setChildIndex(_child: DisplayObject, _index: number): void {
+        this.throwNotSupportedError();
+    }
+    public swapChildren(_child1: DisplayObject, _child2: DisplayObject): void {
+        this.throwNotSupportedError();
+    }
+    public swapChildrenAt(_index1: number, _index2: number): void {
+        this.throwNotSupportedError();
+    }
 }
 __reflect(ScrollView.prototype, "egret.ScrollView");
 
@@ -9424,9 +10621,13 @@ export class MovieClip extends DisplayObject {
         this.setMovieClipData(movieClipData);
         this.$renderNode = new runtime.sys.NormalBitmapNode();
     }
-    public get smoothing(): boolean { return this.$smoothing; }
+    public get smoothing(): boolean {
+        return this.$smoothing;
+    }
     public set smoothing(value: boolean) {
-        if (value == this.$smoothing) { return; }
+        if (value == this.$smoothing) {
+            return;
+        }
         this.$smoothing = value;
     }
     public $init(): void {
@@ -9454,7 +10655,9 @@ export class MovieClip extends DisplayObject {
         this.$eventPool = [];
     }
     public _initFrame(): void {
-        if (this.$movieClipData!.$isTextureValid()) { this.advanceFrame(); this.constructFrame(); }
+        if (this.$movieClipData!.$isTextureValid()) {
+            this.advanceFrame(); this.constructFrame();
+        }
     }
     public $updateRenderNode(): void {
         const texture: Texture | null = this.$texture;
@@ -9480,20 +10683,30 @@ export class MovieClip extends DisplayObject {
             const w: number = texture.$getTextureWidth();
             const h: number = texture.$getTextureHeight();
             bounds.setTo(x, y, w, h);
-        } else { bounds.setEmpty(); }
+        } else {
+            bounds.setEmpty();
+        }
     }
     public $onAddToStage(stage: Stage, nestLevel: number): void {
         super.$onAddToStage(stage, nestLevel);
-        if (this.$isPlaying && this.$totalFrames > 1) { this.setIsStopped(false); }
+        if (this.$isPlaying && this.$totalFrames > 1) {
+            this.setIsStopped(false);
+        }
     }
-    public $onRemoveFromStage(): void { super.$onRemoveFromStage(); this.setIsStopped(true); }
+    public $onRemoveFromStage(): void {
+        super.$onRemoveFromStage(); this.setIsStopped(true);
+    }
     public getFrameLabelByName(labelName: string, ignoreCase: boolean = false): FrameLabel | null {
-        if (ignoreCase) { labelName = labelName.toLowerCase(); }
+        if (ignoreCase) {
+            labelName = labelName.toLowerCase();
+        }
         const frameLabels: FrameLabel[] | null = this.frameLabels;
         if (frameLabels) {
             for (let i: number = 0; i < frameLabels.length; i++) {
                 const outputFrameLabel: FrameLabel = frameLabels[i]!;
-                if (ignoreCase ? outputFrameLabel.name.toLowerCase() == labelName : outputFrameLabel.name == labelName) { return outputFrameLabel; }
+                if (ignoreCase ? outputFrameLabel.name.toLowerCase() == labelName : outputFrameLabel.name == labelName) {
+                    return outputFrameLabel;
+                }
             }
         }
         return null;
@@ -9516,7 +10729,9 @@ export class MovieClip extends DisplayObject {
         if (frameLabels) {
             for (let i: number = 0; i < frameLabels.length; i++) {
                 const outputFrameLabel: FrameLabel = frameLabels[i]!;
-                if (outputFrameLabel.frame == frame) { return outputFrameLabel; }
+                if (outputFrameLabel.frame == frame) {
+                    return outputFrameLabel;
+                }
             }
         }
         return null;
@@ -9527,7 +10742,9 @@ export class MovieClip extends DisplayObject {
         if (frameLabels) {
             for (let i: number = 0; i < frameLabels.length; i++) {
                 const tempFrameLabel: FrameLabel = frameLabels[i]!;
-                if (tempFrameLabel.frame > frame) { return outputFrameLabel; }
+                if (tempFrameLabel.frame > frame) {
+                    return outputFrameLabel;
+                }
                 outputFrameLabel = tempFrameLabel;
             }
         }
@@ -9538,32 +10755,56 @@ export class MovieClip extends DisplayObject {
         this.passedTime = 0;
         this.$isPlaying = true;
         this.setPlayTimes(playTimes);
-        if (this.$totalFrames > 1 && this.$stage) { this.setIsStopped(false); }
+        if (this.$totalFrames > 1 && this.$stage) {
+            this.setIsStopped(false);
+        }
     }
-    public stop(): void { this.$isPlaying = false; this.setIsStopped(true); }
-    public prevFrame(): void { this.gotoAndStop(this.$currentFrameNum - 1); }
-    public nextFrame(): void { this.gotoAndStop(this.$currentFrameNum + 1); }
+    public stop(): void {
+        this.$isPlaying = false; this.setIsStopped(true);
+    }
+    public prevFrame(): void {
+        this.gotoAndStop(this.$currentFrameNum - 1);
+    }
+    public nextFrame(): void {
+        this.gotoAndStop(this.$currentFrameNum + 1);
+    }
     public gotoAndPlay(frame: number | string, playTimes: number = 0): void {
-        if (arguments.length == 0 || arguments.length > 2) { $error(1022, "MovieClip.gotoAndPlay()"); }
-        if (typeof frame === "string") { this.getFrameStartEnd(frame); }
-        else { this.$frameLabelStart = 0; this.$frameLabelEnd = 0; }
+        if (arguments.length == 0 || arguments.length > 2) {
+            $error(1022, "MovieClip.gotoAndPlay()");
+        }
+        if (typeof frame === "string") {
+            this.getFrameStartEnd(frame);
+        } else {
+            this.$frameLabelStart = 0; this.$frameLabelEnd = 0;
+        }
         this.play(playTimes);
         this.gotoFrame(frame);
     }
     public gotoAndStop(frame: number | string): void {
-        if (arguments.length != 1) { $error(1022, "MovieClip.gotoAndStop()"); }
+        if (arguments.length != 1) {
+            $error(1022, "MovieClip.gotoAndStop()");
+        }
         this.stop();
         this.gotoFrame(frame);
     }
     public gotoFrame(frame: number | string): void {
         let frameNum: number;
-        if (typeof frame === "string") { frameNum = this.getFrameLabelByName(frame)!.frame; }
-        else {
+        if (typeof frame === "string") {
+            frameNum = this.getFrameLabelByName(frame)!.frame;
+        } else {
             frameNum = parseInt(frame + "", 10);
-            if (frameNum != frame) { $error(1022, "Frame Label Not Found"); }
+            if (frameNum != frame) {
+                $error(1022, "Frame Label Not Found");
+            }
         }
-        if (frameNum < 1) { frameNum = 1; } else if (frameNum > this.$totalFrames) { frameNum = this.$totalFrames; }
-        if (frameNum == this.$nextFrameNum) { return; }
+        if (frameNum < 1) {
+            frameNum = 1;
+        } else if (frameNum > this.$totalFrames) {
+            frameNum = this.$totalFrames;
+        }
+        if (frameNum == this.$nextFrameNum) {
+            return;
+        }
         this.$nextFrameNum = frameNum;
         this.advanceFrame();
         this.constructFrame();
@@ -9577,16 +10818,20 @@ export class MovieClip extends DisplayObject {
         const currentTime: number = self.passedTime + advancedTime;
         self.passedTime = currentTime % frameIntervalTime;
         let num: number = currentTime / frameIntervalTime;
-        if (num < 1) { return false; }
+        if (num < 1) {
+            return false;
+        }
         while (num >= 1) {
             num--;
             self.$nextFrameNum++;
             if (self.$nextFrameNum > self.$totalFrames || (self.$frameLabelStart > 0 && self.$nextFrameNum > self.$frameLabelEnd!)) {
-                if (self.playTimes == -1) { self.$eventPool!.push(Event.LOOP_COMPLETE); self.$nextFrameNum = 1; }
-                else {
+                if (self.playTimes == -1) {
+ self.$eventPool!.push(Event.LOOP_COMPLETE); self.$nextFrameNum = 1;
+                } else {
                     self.playTimes--;
-                    if (self.playTimes > 0) { self.$eventPool!.push(Event.LOOP_COMPLETE); self.$nextFrameNum = 1; }
-                    else {
+                    if (self.playTimes > 0) {
+ self.$eventPool!.push(Event.LOOP_COMPLETE); self.$nextFrameNum = 1;
+                    } else {
                         self.$nextFrameNum = self.$totalFrames;
                         self.$eventPool!.push(Event.COMPLETE);
                         self.stop();
@@ -9594,7 +10839,9 @@ export class MovieClip extends DisplayObject {
                     }
                 }
             }
-            if (self.$currentFrameNum == self.$frameLabelEnd) { self.$nextFrameNum = self.$frameLabelStart; }
+            if (self.$currentFrameNum == self.$frameLabelEnd) {
+                self.$nextFrameNum = self.$frameLabelStart;
+            }
             self.advanceFrame();
         }
         self.constructFrame();
@@ -9604,12 +10851,16 @@ export class MovieClip extends DisplayObject {
     public advanceFrame(): void {
         this.$currentFrameNum = this.$nextFrameNum;
         const event: string | undefined = this.frameEvents![this.$nextFrameNum];
-        if (event && event != "") { MovieClipEvent.dispatchMovieClipEvent(this, MovieClipEvent.FRAME_LABEL, event); }
+        if (event && event != "") {
+            MovieClipEvent.dispatchMovieClipEvent(this, MovieClipEvent.FRAME_LABEL, event);
+        }
     }
     public constructFrame(): void {
         const self: this = this;
         const currentFrameNum: number = self.$currentFrameNum;
-        if (self.displayedKeyFrameNum == currentFrameNum) { return; }
+        if (self.displayedKeyFrameNum == currentFrameNum) {
+            return;
+        }
         const texture: Texture | null = self.$movieClipData!.getTextureByFrame(currentFrameNum);
         self.$texture = texture;
         self.$movieClipData!.$getOffsetByFrame(currentFrameNum, self.offsetPoint);
@@ -9617,9 +10868,13 @@ export class MovieClip extends DisplayObject {
         self.$renderDirty = true;
         {
             const p: DisplayObjectContainer | null = self.$parent;
-            if (p && !p.$cacheDirty) { p.$cacheDirty = true; p.$cacheDirtyUp(); }
+            if (p && !p.$cacheDirty) {
+                p.$cacheDirty = true; p.$cacheDirtyUp();
+            }
             const maskedObject: DisplayObject | null = self.$maskedObject;
-            if (maskedObject && !maskedObject.$cacheDirty) { maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp(); }
+            if (maskedObject && !maskedObject.$cacheDirty) {
+                maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp();
+            }
         }
     }
     public $renderFrame(): void {
@@ -9627,9 +10882,13 @@ export class MovieClip extends DisplayObject {
         self.$texture = self.$movieClipData!.getTextureByFrame(self.$currentFrameNum);
         self.$renderDirty = true;
         const p: DisplayObjectContainer | null = self.$parent;
-        if (p && !p.$cacheDirty) { p.$cacheDirty = true; p.$cacheDirtyUp(); }
+        if (p && !p.$cacheDirty) {
+            p.$cacheDirty = true; p.$cacheDirtyUp();
+        }
         const maskedObject: DisplayObject | null = self.$maskedObject;
-        if (maskedObject && !maskedObject.$cacheDirty) { maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp(); }
+        if (maskedObject && !maskedObject.$cacheDirty) {
+            maskedObject.$cacheDirty = true; maskedObject.$cacheDirtyUp();
+        }
     }
     public handlePendingEvent(): void {
         if (this.$eventPool!.length != 0) {
@@ -9640,16 +10899,28 @@ export class MovieClip extends DisplayObject {
             let isLoopComplete: boolean = false;
             for (let i: number = 0; i < length; i++) {
                 const event: string = eventPool.pop()!;
-                if (event == Event.LOOP_COMPLETE) { isLoopComplete = true; }
-                else if (event == Event.COMPLETE) { isComplete = true; }
-                else { this.dispatchEventWith(event); }
+                if (event == Event.LOOP_COMPLETE) {
+                    isLoopComplete = true;
+                } else if (event == Event.COMPLETE) {
+                    isComplete = true;
+                } else {
+                    this.dispatchEventWith(event);
+                }
             }
-            if (isLoopComplete) { this.dispatchEventWith(Event.LOOP_COMPLETE); }
-            if (isComplete) { this.dispatchEventWith(Event.COMPLETE); }
+            if (isLoopComplete) {
+                this.dispatchEventWith(Event.LOOP_COMPLETE);
+            }
+            if (isComplete) {
+                this.dispatchEventWith(Event.COMPLETE);
+            }
         }
     }
-    public get totalFrames(): number { return this.$totalFrames; }
-    public get currentFrame(): number { return this.$currentFrameNum; }
+    public get totalFrames(): number {
+        return this.$totalFrames;
+    }
+    public get currentFrame(): number {
+        return this.$currentFrameNum;
+    }
     public get currentFrameLabel(): string | null {
         const label: FrameLabel | null = this.getFrameLabelByFrame(this.$currentFrameNum);
         return label && label.name;
@@ -9658,26 +10929,45 @@ export class MovieClip extends DisplayObject {
         const label: FrameLabel | null = this.getFrameLabelForFrame(this.$currentFrameNum);
         return label ? label.name : null;
     }
-    public get frameRate(): number { return this.$frameRate; }
+    public get frameRate(): number {
+        return this.$frameRate;
+    }
     public set frameRate(value: number) {
-        if (value == this.$frameRate) { return; }
+        if (value == this.$frameRate) {
+            return;
+        }
         this.$frameRate = value;
         this.frameIntervalTime = 1000 / this.$frameRate;
     }
-    public get isPlaying(): boolean { return this.$isPlaying; }
-    public get movieClipData(): MovieClipData | null | undefined { return this.$movieClipData; }
-    public set movieClipData(value: MovieClipData | null | undefined) { this.setMovieClipData(value); }
+    public get isPlaying(): boolean {
+        return this.$isPlaying;
+    }
+    public get movieClipData(): MovieClipData | null | undefined {
+        return this.$movieClipData;
+    }
+    public set movieClipData(value: MovieClipData | null | undefined) {
+        this.setMovieClipData(value);
+    }
     public setMovieClipData(value: MovieClipData | null | undefined): void {
-        if (this.$movieClipData == value) { return; }
+        if (this.$movieClipData == value) {
+            return;
+        }
         this.$movieClipData = value;
         this.$init();
     }
-    public setPlayTimes(value: number): void { if (value < 0 || value >= 1) { this.playTimes = value < 0 ? -1 : Math.floor(value); } }
+    public setPlayTimes(value: number): void {
+        if (value < 0 || value >= 1) {
+            this.playTimes = value < 0 ? -1 : Math.floor(value);
+        }
+    }
     public setIsStopped(value: boolean): void {
-        if (this.isStopped == value) { return; }
+        if (this.isStopped == value) {
+            return;
+        }
         this.isStopped = value;
-        if (value) { getTicker().$stopTick(this.advanceTime, this); }
-        else {
+        if (value) {
+            getTicker().$stopTick(this.advanceTime, this);
+        } else {
             this.playTimes = this.playTimes == 0 ? 1 : this.playTimes;
             this.lastTime = getTimer();
             getTicker().$startTick(this.advanceTime, this);
@@ -9691,7 +10981,9 @@ export class URLRequest extends HashObject {
     public method: string = URLRequestMethod.GET;
     public url: string | null = "";
     public requestHeaders: URLRequestHeader[] = [];
-    public constructor(url: string | null = null) { super(); this.url = url; }
+    public constructor(url: string | null = null) {
+        super(); this.url = url;
+    }
 }
 __reflect(URLRequest.prototype, "egret.URLRequest");
 
@@ -9717,10 +11009,14 @@ export class URLVariables extends HashObject {
 
     public constructor(source: string | null = null) {
         super();
-        if (source !== null) { this.decode(source); }
+        if (source !== null) {
+            this.decode(source);
+        }
     }
     public decode(source: string): void {
-        if (!this.variables) { this.variables = {}; }
+        if (!this.variables) {
+            this.variables = {};
+        }
         source = source.split("+").join(" ");
         let tokens: RegExpExecArray | null;
         const re: RegExp = /[?&]?([^=]+)=([^&]*)/g;
@@ -9732,25 +11028,38 @@ export class URLVariables extends HashObject {
                 continue;
             }
             const value: URLVariableValue = this.variables[key]!;
-            if (value instanceof Array) { value.push(val); }
-            else { this.variables[key] = [value, val]; }
+            if (value instanceof Array) {
+                value.push(val);
+            } else {
+                this.variables[key] = [value, val];
+            }
         }
     }
     public toString(): string {
-        if (!this.variables) { return ""; }
+        if (!this.variables) {
+            return "";
+        }
         const variables: URLVariableMap = this.variables;
         const stringArray: string[] = [];
         let key: string;
-        for (key in variables) { stringArray.push(this.encodeValue(key, variables[key]!)); }
+        for (key in variables) {
+            stringArray.push(this.encodeValue(key, variables[key]!));
+        }
         return stringArray.join("&");
     }
     private encodeValue(key: string, value: URLVariableValue): string {
-        if (value instanceof Array) { return this.encodeArray(key, value); }
+        if (value instanceof Array) {
+            return this.encodeArray(key, value);
+        }
         return encodeURIComponent(key) + "=" + encodeURIComponent(value);
     }
     private encodeArray(key: string, value: URLVariableScalar[]): string {
-        if (!key) { return ""; }
-        if (value.length == 0) { return encodeURIComponent(key) + "="; }
+        if (!key) {
+            return "";
+        }
+        if (value.length == 0) {
+            return encodeURIComponent(key) + "=";
+        }
         return value.map((v: URLVariableScalar): string => encodeURIComponent(key) + "=" + encodeURIComponent(v)).join("&");
     }
 }
@@ -9777,7 +11086,9 @@ export class MainContext extends EventDispatcher {
     }
 
     private static testDeviceType(): boolean {
-        if (!window.navigator || !navigator) { return true; }
+        if (!window.navigator || !navigator) {
+            return true;
+        }
         const ua: string = navigator.userAgent.toLowerCase();
         return ua.indexOf("mobile") != -1 || ua.indexOf("android") != -1;
     }
@@ -9799,7 +11110,9 @@ export class Recycler<T extends object = object> extends HashObject {
 
     public constructor(autoDisposeTime: number = 300) {
         super();
-        if (autoDisposeTime < 1) { autoDisposeTime = 1; }
+        if (autoDisposeTime < 1) {
+            autoDisposeTime = 1;
+        }
         this.autoDisposeTime = autoDisposeTime;
         this.frameCount = 0;
     }
@@ -9811,19 +11124,27 @@ export class Recycler<T extends object = object> extends HashObject {
     }
     private static onUpdate(_timeStamp: number): boolean {
         const list: RecyclerFrameCheck[] = Recycler._callBackList;
-        for (let i: number = list.length - 1; i >= 0; i--) { list[i]!.$checkFrame(); }
+        for (let i: number = list.length - 1; i >= 0; i--) {
+ list[i]!.$checkFrame();
+        }
         return false;
     }
     public $checkFrame(): void {
         this.frameCount--;
-        if (this.frameCount <= 0) { this.dispose(); }
+        if (this.frameCount <= 0) {
+            this.dispose();
+        }
     }
-    public get length(): number { return this._length; }
+    public get length(): number {
+        return this._length;
+    }
     public push(object: T): void {
         const pool: T[] = this.objectPool;
         if (pool.indexOf(object) == -1) {
             pool.push(object);
-            if ("__recycle" in object && typeof object.__recycle === "function") { object.__recycle(); }
+            if ("__recycle" in object && typeof object.__recycle === "function") {
+                object.__recycle();
+            }
             this._length++;
             if (this.frameCount == 0) {
                 this.frameCount = this.autoDisposeTime;
@@ -9832,16 +11153,22 @@ export class Recycler<T extends object = object> extends HashObject {
         }
     }
     public pop(): T | null {
-        if (this._length == 0) { return null; }
+        if (this._length == 0) {
+            return null;
+        }
         this._length--;
         return this.objectPool.pop()!;
     }
     public dispose(): void {
-        if (this._length > 0) { this.objectPool = []; this._length = 0; }
+        if (this._length > 0) {
+            this.objectPool = []; this._length = 0;
+        }
         this.frameCount = 0;
         const list: RecyclerFrameCheck[] = Recycler._callBackList;
         const index: number = list.indexOf(this);
-        if (index != -1) { list.splice(index, 1); }
+        if (index != -1) {
+            list.splice(index, 1);
+        }
     }
 }
 __reflect(Recycler.prototype, "egret.Recycler");
@@ -9876,7 +11203,11 @@ export class WebSocket extends EventDispatcher {
             this.socket.connectByUrl(url);
         }
     }
-    public close(): void { if (this._connected) { this.socket.close(); } }
+    public close(): void {
+        if (this._connected) {
+            this.socket.close();
+        }
+    }
     private onConnect(): void {
         this._connected = true;
         this._connecting = false;
@@ -9887,20 +11218,27 @@ export class WebSocket extends EventDispatcher {
         this.dispatchEventWith(Event.CLOSE);
     }
     private onError(): void {
-        if (this._connecting) { this._connecting = false; }
+        if (this._connecting) {
+            this._connecting = false;
+        }
         this.dispatchEventWith(IOErrorEvent.IO_ERROR);
     }
     private onSocketData(message: SocketMessage): void {
-        if (typeof message == "string") { this._readMessage += message; }
-        else {
+        if (typeof message == "string") {
+            this._readMessage += message;
+        } else {
             // ���ݺ�˴����¼�����ľ�·�������� Uint8Array ��ԭʼת����Ϊ��
             this._readByte!._writeUint8Array(new Uint8Array(message as ArrayBuffer));
         }
         ProgressEvent.dispatchProgressEvent(this, ProgressEvent.SOCKET_DATA);
     }
     public flush(): void {
-        if (!this._connected) { $warn(3101); return; }
-        if (this._writeMessage) { this.socket.send(this._writeMessage); this._writeMessage = ""; }
+        if (!this._connected) {
+            $warn(3101); return;
+        }
+        if (this._writeMessage) {
+            this.socket.send(this._writeMessage); this._writeMessage = "";
+        }
         if (this._bytesWrite) {
             this.socket.send(this._writeByte!.buffer);
             this._bytesWrite = false;
@@ -9908,11 +11246,15 @@ export class WebSocket extends EventDispatcher {
         }
     }
     public writeUTF(message: string): void {
-        if (!this._connected) { $warn(3101); return; }
+        if (!this._connected) {
+            $warn(3101); return;
+        }
         if (this._type == WebSocket.TYPE_BINARY) {
             this._bytesWrite = true;
             this._writeByte!.writeUTF(message);
-        } else { this._writeMessage += message; }
+        } else {
+            this._writeMessage += message;
+        }
         this.flush();
     }
     public readUTF(): string {
@@ -9921,24 +11263,36 @@ export class WebSocket extends EventDispatcher {
             this._readByte!.position = 0;
             message = this._readByte!.readUTF()!;
             this._readByte!.clear();
-        } else { message = this._readMessage; this._readMessage = ""; }
+        } else {
+            message = this._readMessage; this._readMessage = "";
+        }
         return message;
     }
     public writeBytes(bytes: ByteArray, offset: number = 0, length: number = 0): void {
-        if (!this._connected) { $warn(3101); return; }
-        if (!this._writeByte) { $warn(3102); return; }
+        if (!this._connected) {
+            $warn(3101); return;
+        }
+        if (!this._writeByte) {
+            $warn(3102); return;
+        }
         this._bytesWrite = true;
         this._writeByte.writeBytes(bytes, offset, length);
         this.flush();
     }
     public readBytes(bytes: ByteArray, offset: number = 0, length: number = 0): void {
-        if (!this._readByte) { $warn(3102); return; }
+        if (!this._readByte) {
+            $warn(3102); return;
+        }
         this._readByte.position = 0;
         this._readByte.readBytes(bytes, offset, length);
         this._readByte.clear();
     }
-    public get connected(): boolean { return this._connected; }
-    public get type(): string { return this._type; }
+    public get connected(): boolean {
+        return this._connected;
+    }
+    public get type(): string {
+        return this._type;
+    }
     public set type(value: string) {
         this._type = value;
         if (value == WebSocket.TYPE_BINARY && !this._writeByte) {
@@ -9950,27 +11304,49 @@ export class WebSocket extends EventDispatcher {
 __reflect(WebSocket.prototype, "egret.WebSocket");
 
 export class Ease {
-    public constructor() { $error(1014); }
+    public constructor() {
+        $error(1014);
+    }
     public static get(amount: number): EaseFunction {
-        if (amount < -1) { amount = -1; }
-        if (amount > 1) { amount = 1; }
+        if (amount < -1) {
+            amount = -1;
+        }
+        if (amount > 1) {
+            amount = 1;
+        }
         return (t: number): number => {
-            if (amount == 0) { return t; }
-            if (amount < 0) { return t * (t * -amount + 1 + amount); }
+            if (amount == 0) {
+                return t;
+            }
+            if (amount < 0) {
+                return t * (t * -amount + 1 + amount);
+            }
             return t * ((2 - t) * amount + (1 - amount));
         };
     }
-    public static getPowIn(pow: number): EaseFunction { return (t: number): number => Math.pow(t, pow); }
-    public static getPowOut(pow: number): EaseFunction { return (t: number): number => 1 - Math.pow(1 - t, pow); }
+    public static getPowIn(pow: number): EaseFunction {
+        return (t: number): number => Math.pow(t, pow);
+    }
+    public static getPowOut(pow: number): EaseFunction {
+        return (t: number): number => 1 - Math.pow(1 - t, pow);
+    }
     public static getPowInOut(pow: number): EaseFunction {
         return (t: number): number => {
-            if ((t *= 2) < 1) { return 0.5 * Math.pow(t, pow); }
+            if ((t *= 2) < 1) {
+                return 0.5 * Math.pow(t, pow);
+            }
             return 1 - 0.5 * Math.abs(Math.pow(2 - t, pow));
         };
     }
-    public static sineIn(t: number): number { return 1 - Math.cos(t * Math.PI / 2); }
-    public static sineOut(t: number): number { return Math.sin(t * Math.PI / 2); }
-    public static sineInOut(t: number): number { return -0.5 * (Math.cos(Math.PI * t) - 1); }
+    public static sineIn(t: number): number {
+        return 1 - Math.cos(t * Math.PI / 2);
+    }
+    public static sineOut(t: number): number {
+        return Math.sin(t * Math.PI / 2);
+    }
+    public static sineInOut(t: number): number {
+        return -0.5 * (Math.cos(Math.PI * t) - 1);
+    }
     public static getBackIn(amount: number): EaseFunction {
         return (t: number): number => t * t * ((amount + 1) * t - amount);
     }
@@ -9980,31 +11356,51 @@ export class Ease {
     public static getBackInOut(amount: number): EaseFunction {
         amount *= 1.525;
         return (t: number): number => {
-            if ((t *= 2) < 1) { return 0.5 * (t * t * ((amount + 1) * t - amount)); }
+            if ((t *= 2) < 1) {
+                return 0.5 * (t * t * ((amount + 1) * t - amount));
+            }
             return 0.5 * ((t -= 2) * t * ((amount + 1) * t + amount) + 2);
         };
     }
-    public static circIn(t: number): number { return -(Math.sqrt(1 - t * t) - 1); }
-    public static circOut(t: number): number { return Math.sqrt(1 - --t * t); }
+    public static circIn(t: number): number {
+        return -(Math.sqrt(1 - t * t) - 1);
+    }
+    public static circOut(t: number): number {
+        return Math.sqrt(1 - --t * t);
+    }
     public static circInOut(t: number): number {
-        if ((t *= 2) < 1) { return -0.5 * (Math.sqrt(1 - t * t) - 1); }
+        if ((t *= 2) < 1) {
+            return -0.5 * (Math.sqrt(1 - t * t) - 1);
+        }
         return 0.5 * (Math.sqrt(1 - (t -= 2) * t) + 1);
     }
-    public static bounceIn(t: number): number { return 1 - Ease.bounceOut(1 - t); }
+    public static bounceIn(t: number): number {
+        return 1 - Ease.bounceOut(1 - t);
+    }
     public static bounceOut(t: number): number {
-        if (t < 1 / 2.75) { return 7.5625 * t * t; }
-        if (t < 2 / 2.75) { return 7.5625 * (t -= 1.5 / 2.75) * t + 0.75; }
-        if (t < 2.5 / 2.75) { return 7.5625 * (t -= 2.25 / 2.75) * t + 0.9375; }
+        if (t < 1 / 2.75) {
+            return 7.5625 * t * t;
+        }
+        if (t < 2 / 2.75) {
+            return 7.5625 * (t -= 1.5 / 2.75) * t + 0.75;
+        }
+        if (t < 2.5 / 2.75) {
+            return 7.5625 * (t -= 2.25 / 2.75) * t + 0.9375;
+        }
         return 7.5625 * (t -= 2.625 / 2.75) * t + 0.984375;
     }
     public static bounceInOut(t: number): number {
-        if (t < 0.5) { return Ease.bounceIn(t * 2) * 0.5; }
+        if (t < 0.5) {
+            return Ease.bounceIn(t * 2) * 0.5;
+        }
         return Ease.bounceOut(t * 2 - 1) * 0.5 + 0.5;
     }
     public static getElasticIn(amplitude: number, period: number): EaseFunction {
         const pi2: number = Math.PI * 2;
         return (t: number): number => {
-            if (t == 0 || t == 1) { return t; }
+            if (t == 0 || t == 1) {
+                return t;
+            }
             const s: number = period / pi2 * Math.asin(1 / amplitude);
             return -(amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period));
         };
@@ -10012,7 +11408,9 @@ export class Ease {
     public static getElasticOut(amplitude: number, period: number): EaseFunction {
         const pi2: number = Math.PI * 2;
         return (t: number): number => {
-            if (t == 0 || t == 1) { return t; }
+            if (t == 0 || t == 1) {
+                return t;
+            }
             const s: number = period / pi2 * Math.asin(1 / amplitude);
             return amplitude * Math.pow(2, -10 * t) * Math.sin((t - s) * pi2 / period) + 1;
         };
@@ -10021,7 +11419,9 @@ export class Ease {
         const pi2: number = Math.PI * 2;
         return (t: number): number => {
             const s: number = period / pi2 * Math.asin(1 / amplitude);
-            if ((t *= 2) < 1) { return -0.5 * (amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period)); }
+            if ((t *= 2) < 1) {
+                return -0.5 * (amplitude * Math.pow(2, 10 * (t -= 1)) * Math.sin((t - s) * pi2 / period));
+            }
             return amplitude * Math.pow(2, -10 * (t -= 1)) * Math.sin((t - s) * pi2 / period) * 0.5 + 1;
         };
     }
@@ -10076,29 +11476,43 @@ export class Tween extends EventDispatcher {
         this.initialize(target, props, pluginData);
     }
     public static get(target: object, props?: TweenOptions | null, pluginData: TweenProperties | null = null, override: boolean = false): Tween {
-        if (override) { Tween.removeTweens(target); }
+        if (override) {
+            Tween.removeTweens(target);
+        }
         return new Tween(target, props, pluginData);
     }
     public static removeTweens(target: TweenTarget): void {
-        if (!target.tween_count) { return; }
+        if (!target.tween_count) {
+            return;
+        }
         const tweens: Tween[] = Tween._tweens;
         for (let i: number = tweens.length - 1; i >= 0; i--) {
-            if (tweens[i]!._target == target) { tweens[i]!.paused = true; tweens.splice(i, 1); }
+            if (tweens[i]!._target == target) {
+ tweens[i]!.paused = true; tweens.splice(i, 1);
+            }
         }
         target.tween_count = 0;
     }
     public static pauseTweens(target: TweenTarget): void {
-        if (!target.tween_count) { return; }
+        if (!target.tween_count) {
+            return;
+        }
         const tweens: Tween[] = Tween._tweens;
         for (let i: number = tweens.length - 1; i >= 0; i--) {
-            if (tweens[i]!._target == target) { tweens[i]!.paused = true; }
+            if (tweens[i]!._target == target) {
+ tweens[i]!.paused = true;
+            }
         }
     }
     public static resumeTweens(target: TweenTarget): void {
-        if (!target.tween_count) { return; }
+        if (!target.tween_count) {
+            return;
+        }
         const tweens: Tween[] = Tween._tweens;
         for (let i: number = tweens.length - 1; i >= 0; i--) {
-            if (tweens[i]!._target == target) { tweens[i]!.paused = false; }
+            if (tweens[i]!._target == target) {
+ tweens[i]!.paused = false;
+            }
         }
     }
     public static tick(timeStamp: number, paused: boolean = false): boolean {
@@ -10107,7 +11521,9 @@ export class Tween extends EventDispatcher {
         const tweens: Tween[] = Tween._tweens.concat();
         for (let i: number = tweens.length - 1; i >= 0; i--) {
             const tween: Tween = tweens[i]!;
-            if ((paused && !tween.ignoreGlobalPause) || tween.paused) { continue; }
+            if ((paused && !tween.ignoreGlobalPause) || tween.paused) {
+                continue;
+            }
             tween.$tick(tween._useTicks ? 1 : delta);
         }
         return false;
@@ -10116,7 +11532,9 @@ export class Tween extends EventDispatcher {
         const target: TweenTarget | null = tween._target;
         const tweens: Tween[] = Tween._tweens;
         if (value) {
-            if (target) { target.tween_count = (target.tween_count ?? 0) > 0 ? target.tween_count! + 1 : 1; }
+            if (target) {
+                target.tween_count = (target.tween_count ?? 0) > 0 ? target.tween_count! + 1 : 1;
+            }
             tweens.push(tween);
             if (!Tween._inited) {
                 Tween._lastTime = getTimer();
@@ -10124,9 +11542,15 @@ export class Tween extends EventDispatcher {
                 Tween._inited = true;
             }
         } else {
-            if (target) { target.tween_count = (target.tween_count ?? NaN) - 1; }
+            if (target) {
+                target.tween_count = (target.tween_count ?? NaN) - 1;
+            }
             let i: number = tweens.length;
-            while (i--) { if (tweens[i] == tween) { tweens.splice(i, 1); return; } }
+            while (i--) {
+                if (tweens[i] == tween) {
+                    tweens.splice(i, 1); return;
+                }
+            }
         }
     }
     public static removeAllTweens(): void {
@@ -10144,28 +11568,46 @@ export class Tween extends EventDispatcher {
             this._useTicks = props.useTicks;
             this.ignoreGlobalPause = props.ignoreGlobalPause;
             this.loop = props.loop;
-            if (props.onChange) { this.addEventListener("change", props.onChange, props.onChangeObj); }
-            if (props.override) { Tween.removeTweens(target); }
+            if (props.onChange) {
+                this.addEventListener("change", props.onChange, props.onChangeObj);
+            }
+            if (props.override) {
+                Tween.removeTweens(target);
+            }
         }
         this.pluginData = pluginData || {};
         this._curQueueProps = {};
         this._initQueueProps = {};
         this._steps = [];
-        if (props && props.paused) { this.paused = true; } else { Tween._register(this, true); }
-        if (props && props.position != null) { this.setPosition(props.position, Tween.NONE); }
+        if (props && props.paused) {
+            this.paused = true;
+        } else {
+            Tween._register(this, true);
+        }
+        if (props && props.position != null) {
+            this.setPosition(props.position, Tween.NONE);
+        }
     }
     public setPosition(value: number, actionsMode: number = 1): boolean {
-        if (value < 0) { value = 0; }
+        if (value < 0) {
+            value = 0;
+        }
         let t: number = value;
         let end: boolean = false;
         if (t >= this.duration) {
             if (this.loop) {
                 const newTime: number = t % this.duration;
                 t = t > 0 && newTime === 0 ? this.duration : newTime;
-            } else { t = this.duration; end = true; }
+            } else {
+                t = this.duration; end = true;
+            }
         }
-        if (t == this._prevPos) { return end; }
-        if (end) { this.setPaused(true); }
+        if (t == this._prevPos) {
+            return end;
+        }
+        if (end) {
+            this.setPaused(true);
+        }
         const prevPos: number = this._prevPos;
         this.position = this._prevPos = t;
         this._prevPosition = value;
@@ -10176,18 +11618,25 @@ export class Tween extends EventDispatcher {
                 const step: TweenStep | TweenAction = this._steps[i]!;
                 if (step.type == "step") {
                     stepIndex = i;
-                    if (step.t <= t && step.t + step.d >= t) { break; }
+                    if (step.t <= t && step.t + step.d >= t) {
+                        break;
+                    }
                 }
             }
             for (let i: number = 0; i < l; i++) {
                 const step: TweenStep | TweenAction = this._steps[i]!;
                 if (step.type == "action") {
                     if (actionsMode != 0) {
-                        if (this._useTicks) { this._runAction(step, t, t); }
-                        else if (actionsMode == 1 && t < prevPos) {
-                            if (prevPos != this.duration) { this._runAction(step, prevPos, this.duration); }
+                        if (this._useTicks) {
+                            this._runAction(step, t, t);
+                        } else if (actionsMode == 1 && t < prevPos) {
+                            if (prevPos != this.duration) {
+                                this._runAction(step, prevPos, this.duration);
+                            }
                             this._runAction(step, 0, t, true);
-                        } else { this._runAction(step, prevPos, t); }
+                        } else {
+                            this._runAction(step, prevPos, t);
+                        }
                     }
                 } else if (stepIndex == i) {
                     this._updateTargetProps(step, Math.min((this._stepPosition = t - step.t) / step.d, 1));
@@ -10200,18 +11649,27 @@ export class Tween extends EventDispatcher {
     private _runAction(action: TweenAction, startPos: number, endPos: number, includeStart: boolean = false): void {
         let sPos: number = startPos;
         let ePos: number = endPos;
-        if (startPos > endPos) { sPos = endPos; ePos = startPos; }
+        if (startPos > endPos) {
+            sPos = endPos; ePos = startPos;
+        }
         const pos: number = action.t;
-        if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) { action.execute(); }
+        if (pos == ePos || (pos > sPos && pos < ePos) || (includeStart && pos == startPos)) {
+            action.execute();
+        }
     }
     private _updateTargetProps(step: TweenStep | null, ratio: number): void {
         let p0: TweenProperties;
         let p1: TweenProperties;
-        if (!step && ratio == 1) { this.passive = false; p0 = p1 = this._curQueueProps; }
-        else {
+        if (!step && ratio == 1) {
+            this.passive = false; p0 = p1 = this._curQueueProps;
+        } else {
             this.passive = !!step!.v;
-            if (this.passive) { return; }
-            if (step!.e) { ratio = step!.e(ratio, 0, 1, 1); }
+            if (this.passive) {
+                return;
+            }
+            if (step!.e) {
+                ratio = step!.e(ratio, 0, 1, 1);
+            }
             p0 = step!.p0;
             p1 = step!.p1;
         }
@@ -10219,24 +11677,39 @@ export class Tween extends EventDispatcher {
         for (n in this._initQueueProps) {
             let v0: unknown = p0[n];
             let v1: unknown = p1[n];
-            if (v0 == null) { p0[n] = v0 = this._initQueueProps[n]; }
-            if (v1 == null) { p1[n] = v1 = v0; }
+            if (v0 == null) {
+                p0[n] = v0 = this._initQueueProps[n];
+            }
+            if (v1 == null) {
+                p1[n] = v1 = v0;
+            }
             let v: unknown;
-            if (v0 == v1 || ratio == 0 || ratio == 1 || typeof v0 != "number") { v = ratio == 1 ? v1 : v0; }
-            else { v = v0 + (Number(v1) - v0) * ratio; }
+            if (v0 == v1 || ratio == 0 || ratio == 1 || typeof v0 != "number") {
+                v = ratio == 1 ? v1 : v0;
+            } else {
+                v = v0 + (Number(v1) - v0) * ratio;
+            }
             let ignore: boolean = false;
             const plugins: TweenPlugin[] | undefined = Tween._plugins[n];
             if (plugins) {
                 for (let i: number = 0, l: number = plugins.length; i < l; i++) {
                     const v2: unknown = plugins[i]!.tween(this, n, v, p0, p1, ratio, !!step && p0 == p1, !step);
-                    if (v2 == Tween.IGNORE) { ignore = true; } else { v = v2; }
+                    if (v2 == Tween.IGNORE) {
+                        ignore = true;
+                    } else {
+                        v = v2;
+                    }
                 }
             }
-            if (!ignore) { (this._target as TweenProperties)[n] = v; }
+            if (!ignore) {
+                (this._target as TweenProperties)[n] = v;
+            }
         }
     }
     public setPaused(value: boolean): this {
-        if (this.paused == value) { return this; }
+        if (this.paused == value) {
+            return this;
+        }
         this.paused = value;
         Tween._register(this, !value);
         return this;
@@ -10244,12 +11717,18 @@ export class Tween extends EventDispatcher {
     private _cloneProps(props: TweenProperties): TweenProperties {
         const output: TweenProperties = {};
         let n: string;
-        for (n in props) { output[n] = props[n]; }
+        for (n in props) {
+            output[n] = props[n];
+        }
         return output;
     }
     private _addStep(step: Omit<TweenStep, "type" | "t">): this {
         if (step.d > 0) {
-            this._steps.push({ ...step, type: "step", t: this.duration });
+            this._steps.push({
+                ...step,
+                type : "step",
+                t    : this.duration
+            });
             this.duration += step.d;
         }
         return this;
@@ -10276,30 +11755,54 @@ export class Tween extends EventDispatcher {
                 injectProps = injectProps || {};
                 for (let i: number = 0, l: number = plugins.length; i < l; i++) {
                     const plugin: TweenPlugin = plugins[i]!;
-                    if (plugin.step) { plugin.step(this, n, oldValue, props![n], injectProps); }
+                    if (plugin.step) {
+                        plugin.step(this, n, oldValue, props![n], injectProps);
+                    }
                 }
             }
             this._curQueueProps[n] = props![n];
         }
-        if (injectProps) { this._appendQueueProps(injectProps); }
+        if (injectProps) {
+            this._appendQueueProps(injectProps);
+        }
         return this._curQueueProps;
     }
     private _addAction(execute: () => void): this {
-        this._steps.push({ type: "action", t: this.duration, execute: execute });
+        this._steps.push({
+            type    : "action",
+            t       : this.duration,
+            execute : execute
+        });
         return this;
     }
     private _set(props: TweenProperties | undefined, target: object): void {
         let n: string;
-        for (n in props) { (target as TweenProperties)[n] = props![n]; }
+        for (n in props) {
+            (target as TweenProperties)[n] = props![n];
+        }
     }
     public wait(duration: number, passive?: boolean): this {
-        if (duration == null || duration <= 0) { return this; }
+        if (duration == null || duration <= 0) {
+            return this;
+        }
         const props: TweenProperties = this._cloneProps(this._curQueueProps);
-        return this._addStep({ d: duration, p0: props, p1: props, v: passive });
+        return this._addStep({
+            d  : duration,
+            p0 : props,
+            p1 : props,
+            v  : passive
+        });
     }
     public to(props: TweenProperties | undefined, duration: number = 0, ease?: EaseFunction | null): this {
-        if (isNaN(duration) || duration < 0) { duration = 0; }
-        this._addStep({ d: duration || 0, p0: this._cloneProps(this._curQueueProps), e: ease, p1: this._cloneProps(this._appendQueueProps(props)) });
+        if (isNaN(duration) || duration < 0) {
+            duration = 0;
+        }
+        this._addStep({
+            d  : duration || 0,
+            p0 : this._cloneProps(this._curQueueProps),
+            e  : ease,
+            p1 : this._cloneProps(this._appendQueueProps(props))
+        });
         return this.set(props);
     }
     public call<TThis, TArgs extends unknown[], TResult>(callback: (this: TThis, ...args: TArgs) => TResult, thisObj?: TThis, params?: TArgs): this {
@@ -10311,7 +11814,9 @@ export class Tween extends EventDispatcher {
     public set(props: TweenProperties | undefined, target: object | null = null): this {
         this._appendQueueProps(props);
         const destination: object = target ? target : this._target!;
-        return this._addAction((): void => { this._set(props, destination); });
+        return this._addAction((): void => {
+            this._set(props, destination);
+        });
     }
     public play(tween: Tween | null = null): this {
         const target: Tween = tween || this;
@@ -10322,7 +11827,9 @@ export class Tween extends EventDispatcher {
         return this.call(target.setPaused, target, [true]);
     }
     public $tick(delta: number): void {
-        if (this.paused) { return; }
+        if (this.paused) {
+            return;
+        }
         this.setPosition(this._prevPosition + delta);
     }
 }
@@ -10332,7 +11839,9 @@ export class HtmlTextParser {
     public replaceArr: [RegExp, string][] = [];
     public resutlArr: ITextElement[] = [];
     public declare stackArray: ITextStyle[];
-    public constructor() { this.initReplaceArr(); }
+    public constructor() {
+        this.initReplaceArr();
+    }
     public initReplaceArr(): void {
         this.replaceArr = [[/&lt;/g, "<"], [/&gt;/g, ">"], [/&amp;/g, "&"], [/&quot;/g, "\""], [/&apos;/g, "'"]];
     }
@@ -10350,30 +11859,46 @@ export class HtmlTextParser {
         const length: number = htmltext.length;
         while (firstIdx < length) {
             const starIdx: number = htmltext.indexOf("<", firstIdx);
-            if (starIdx < 0) { this.addToResultArr(htmltext.substring(firstIdx)); firstIdx = length; }
-            else {
+            if (starIdx < 0) {
+                this.addToResultArr(htmltext.substring(firstIdx)); firstIdx = length;
+            } else {
                 this.addToResultArr(htmltext.substring(firstIdx, starIdx));
                 let fontEnd: number = htmltext.indexOf(">", starIdx);
-                if (fontEnd == -1) { $error(1038); fontEnd = starIdx; }
-                else if (htmltext.charAt(starIdx + 1) == "/") { this.stackArray.pop(); }
-                else { this.addToArray(htmltext.substring(starIdx + 1, fontEnd)); }
+                if (fontEnd == -1) {
+                    $error(1038); fontEnd = starIdx;
+                } else if (htmltext.charAt(starIdx + 1) == "/") {
+                    this.stackArray.pop();
+                } else {
+                    this.addToArray(htmltext.substring(starIdx + 1, fontEnd));
+                }
                 firstIdx = fontEnd + 1;
             }
         }
         return this.resutlArr;
     }
-    public parser(htmltext: string): ITextElement[] { return this.parse(htmltext); }
+    public parser(htmltext: string): ITextElement[] {
+        return this.parse(htmltext);
+    }
     public addToResultArr(value: string): void {
-        if (value == "") { return; } value = this.replaceSpecial(value);
-        if (this.stackArray.length > 0) { this.resutlArr.push({ text: value, style: this.stackArray[this.stackArray.length - 1]! }); }
-        else { this.resutlArr.push({ text: value }); }
+        if (value == "") {
+            return;
+        } value = this.replaceSpecial(value);
+        if (this.stackArray.length > 0) {
+            this.resutlArr.push({
+                text  : value,
+                style : this.stackArray[this.stackArray.length - 1]!
+            });
+        } else {
+            this.resutlArr.push({ text : value });
+        }
     }
     public changeStringToObject(str: string): ITextStyle {
         str = str.trim();
         const info: ITextStyle = {};
         let header: RegExpMatchArray | null;
-        if (str.charAt(0) == "i" || str.charAt(0) == "b" || str.charAt(0) == "u") { this.addProperty(info, str, "true"); }
-        else if (header = str.match(/^(font|a)\s/)) {
+        if (str.charAt(0) == "i" || str.charAt(0) == "b" || str.charAt(0) == "u") {
+            this.addProperty(info, str, "true");
+        } else if (header = str.match(/^(font|a)\s/)) {
             str = str.substring(header[0].length).trim();
             let next: number = 0;
             let titles: RegExpMatchArray | null;
@@ -10381,15 +11906,21 @@ export class HtmlTextParser {
                 const title: string = titles[0];
                 let value: string = "";
                 str = str.substring(title.length).trim();
-                if (str.charAt(0) == "\"") { next = str.indexOf("\"", 1); value = str.substring(1, next); next++; }
-                else if (str.charAt(0) == "'") { next = str.indexOf("'", 1); value = str.substring(1, next); next++; }
-                else { value = str.match(/(\S)+/)![0]; next = value.length; }
+                if (str.charAt(0) == "\"") {
+                    next = str.indexOf("\"", 1); value = str.substring(1, next); next++;
+                } else if (str.charAt(0) == "'") {
+                    next = str.indexOf("'", 1); value = str.substring(1, next); next++;
+                } else {
+                    value = str.match(/(\S)+/)![0]; next = value.length;
+                }
                 this.addProperty(info, title.substring(0, title.length - 1).trim(), value.trim()); str = str.substring(next).trim();
             }
         }
         return info;
     }
-    public getHeadReg(): RegExp { return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|u|size|fontfamily|href|target)(\s)*=/; }
+    public getHeadReg(): RegExp {
+        return /^(color|textcolor|strokecolor|stroke|b|bold|i|italic|u|size|fontfamily|href|target)(\s)*=/;
+    }
     public addProperty(info: ITextStyle, head: string, value: string): void {
         switch (head.toLowerCase()) {
             case "color": case "textcolor": value = value.replace(/#/, "0x"); info.textColor = parseInt(value); break;
@@ -10409,10 +11940,14 @@ export class HtmlTextParser {
         if (this.stackArray.length > 0) {
             const lastInfo: ITextStyle = this.stackArray[this.stackArray.length - 1]!;
             const keys: (keyof ITextStyle)[] = Object.keys(lastInfo) as (keyof ITextStyle)[];
-            for (let i: number = 0; i < keys.length; i++) { inheritStyle(keys[i]!); }
+            for (let i: number = 0; i < keys.length; i++) {
+                inheritStyle(keys[i]!);
+            }
             function inheritStyle<K extends keyof ITextStyle>(key: K): void {
                 const value: ITextStyle[K] = lastInfo[key];
-                if (info[key] == null && value !== undefined) { info[key] = value; }
+                if (info[key] == null && value !== undefined) {
+                    info[key] = value;
+                }
             }
         }
         this.stackArray.push(info);
@@ -10432,8 +11967,12 @@ export class InputController extends HashObject {
         this.stageText.$setTextField(this._text);
     }
     public _addStageText(): void {
-        if (this.stageTextAdded) { return; }
-        if (!this._text!.$inputEnabled) { this._text!.$touchEnabled = true; }
+        if (this.stageTextAdded) {
+            return;
+        }
+        if (!this._text!.$inputEnabled) {
+ this._text!.$touchEnabled = true;
+        }
         this.tempStage = this._text!.stage!; this.stageText.$addToStage();
         this.stageText.addEventListener("updateText", this.updateTextHandler, this);
         this._text!.addEventListener(TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
@@ -10441,8 +11980,12 @@ export class InputController extends HashObject {
         this.stageText.addEventListener("focus", this.focusHandler, this); this.stageTextAdded = true;
     }
     public _removeStageText(): void {
-        if (!this.stageTextAdded) { return; }
-        if (!this._text!.$inputEnabled) { this._text!.$touchEnabled = false; }
+        if (!this.stageTextAdded) {
+            return;
+        }
+        if (!this._text!.$inputEnabled) {
+ this._text!.$touchEnabled = false;
+        }
         this.stageText.$removeFromStage();
         this.stageText.removeEventListener("updateText", this.updateTextHandler, this);
         this._text!.removeEventListener(TouchEvent.TOUCH_BEGIN, this.onMouseDownHandler, this);
@@ -10450,13 +11993,21 @@ export class InputController extends HashObject {
         this.stageText.removeEventListener("blur", this.blurHandler, this);
         this.stageText.removeEventListener("focus", this.focusHandler, this); this.stageTextAdded = false;
     }
-    public _getText(): string { return this.stageText.$getText(); }
-    public _setText(value: string): void { this.stageText.$setText(value); }
-    public _setColor(value: number): void { this.stageText.$setColor(value); }
+    public _getText(): string {
+        return this.stageText.$getText();
+    }
+    public _setText(value: string): void {
+        this.stageText.$setText(value);
+    }
+    public _setColor(value: number): void {
+        this.stageText.$setColor(value);
+    }
     public focusHandler(event: Event & { showing?: boolean }): void {
         if (!this._isFocus) {
             this._isFocus = true;
-            if (!event.showing) { this._text!.$setIsTyping(true); }
+            if (!event.showing) {
+ this._text!.$setIsTyping(true);
+            }
             this._text!.dispatchEvent(new FocusEvent(FocusEvent.FOCUS_IN, true));
         }
     }
@@ -10466,30 +12017,56 @@ export class InputController extends HashObject {
             this._text!.$setIsTyping(false); this.stageText.$onBlur(); this._text!.dispatchEvent(new FocusEvent(FocusEvent.FOCUS_OUT, true));
         }
     }
-    public onMouseDownHandler(_event: Event): void { this.$onFocus(); }
+    public onMouseDownHandler(_event: Event): void {
+        this.$onFocus();
+    }
     public $onFocus(): void {
-        if (!this._text!.visible || this._isFocus) { return; }
+        if (!this._text!.visible || this._isFocus) {
+            return;
+        }
         this.tempStage.removeEventListener(TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
-        callLater((): void => { this.tempStage.addEventListener(TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this); }, this);
+        callLater((): void => {
+            this.tempStage.addEventListener(TouchEvent.TOUCH_BEGIN, this.onStageDownHandler, this);
+        }, this);
         this.stageText.$show();
     }
-    public onStageDownHandler(event: Event): void { if (event.$target != this._text) { this.stageText.$hide(); } }
+    public onStageDownHandler(event: Event): void {
+        if (event.$target != this._text) {
+            this.stageText.$hide();
+        }
+    }
     public updateTextHandler(_event: Event): void {
         const values: InputTextFieldState = this._text!.$TextField;
         let textValue: string = this.stageText.$getText();
         let isChanged: boolean = false;
         let reg: RegExp;
         let result: RegExpMatchArray | null;
-        if (values[35] != null) { reg = new RegExp("[" + values[35] + "]", "g"); result = textValue.match(reg); textValue = result ? result.join("") : ""; isChanged = true; }
-        if (values[36] != null) { reg = new RegExp("[^" + values[36] + "]", "g"); result = textValue.match(reg); textValue = result ? result.join("") : ""; isChanged = true; }
-        if (isChanged && this.stageText.$getText() != textValue) { this.stageText.$setText(textValue); }
+        if (values[35] != null) {
+            reg = new RegExp("[" + values[35] + "]", "g"); result = textValue.match(reg); textValue = result ? result.join("") : ""; isChanged = true;
+        }
+        if (values[36] != null) {
+            reg = new RegExp("[^" + values[36] + "]", "g"); result = textValue.match(reg); textValue = result ? result.join("") : ""; isChanged = true;
+        }
+        if (isChanged && this.stageText.$getText() != textValue) {
+            this.stageText.$setText(textValue);
+        }
         this.resetText(); this._text!.dispatchEvent(new Event(Event.CHANGE, true));
     }
-    public resetText(): void { this._text!.$setBaseText(this.stageText.$getText()); }
-    public _hideInput(): void { this.stageText.$removeFromStage(); }
-    public updateInput(): void { if (!this._text!.$visible && this.stageText) { this._hideInput(); } }
+    public resetText(): void {
+ this._text!.$setBaseText(this.stageText.$getText());
+    }
+    public _hideInput(): void {
+        this.stageText.$removeFromStage();
+    }
+    public updateInput(): void {
+        if (!this._text!.$visible && this.stageText) {
+            this._hideInput();
+        }
+    }
     public _updateProperties(): void {
-        if (this._isFocus) { this.stageText.$resetStageText(); this.updateInput(); return; }
+        if (this._isFocus) {
+            this.stageText.$resetStageText(); this.updateInput(); return;
+        }
         this.stageText.$setText(this._text!.$TextField[13]); this.stageText.$resetStageText(); this.updateInput();
     }
 }

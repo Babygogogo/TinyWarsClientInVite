@@ -9,8 +9,7 @@ export function setItem(key: string, value: string): boolean {
     try {
         window.localStorage.setItem(key, value);
         return true;
-    }
-    catch {
+    } catch {
         $warn(1047, key, value);
         return false;
     }

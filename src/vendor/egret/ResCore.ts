@@ -242,10 +242,10 @@ export class ConfigItemHelper {
 
     public static setConfigURL(url: string, root: string): void {
         ConfigItemHelper._configItem = {
-            type: url.indexOf(".json") >= 0 ? "legacyResourceConfig" : "resourceConfig",
-            root: root,
-            url: url,
-            name: url
+            type : url.indexOf(".json") >= 0 ? "legacyResourceConfig" : "resourceConfig",
+            root : root,
+            url  : url,
+            name : url
         };
     }
 
@@ -268,12 +268,12 @@ export class ResourceConfig {
 
         if (!this.config) {
             this.config = {
-                alias: {},
-                groups: {},
-                resourceRoot: configItem.root,
-                mergeSelector: null,
-                fileSystem: null,
-                loadGroup: []
+                alias         : {},
+                groups        : {},
+                resourceRoot  : configItem.root,
+                mergeSelector : null,
+                fileSystem    : null,
+                loadGroup     : []
             };
         }
 
@@ -291,14 +291,22 @@ export class ResourceConfig {
     public getGroupByName(name: string): ResourceInfo[] {
         const group: string[] | undefined = this.config.groups[name];
         const result: ResourceInfo[] = [];
-        if (!group) { return result; }
+        if (!group) {
+            return result;
+        }
         for (let i: number = 0; i < group.length; i++) {
             const paramKey: string = group[i]!;
             const entry: ResourceWithSubkey | null = getConfig().getResourceWithSubkey(paramKey);
-            if (entry == null) { continue; }
+            if (entry == null) {
+                continue;
+            }
             const r: ResourceInfo = entry.r;
-            if (r == null) { throw new ResourceManagerError(2005, entry.key); }
-            if (result.indexOf(r) == -1) { result.push(r); }
+            if (r == null) {
+                throw new ResourceManagerError(2005, entry.key);
+            }
+            if (result.indexOf(r) == -1) {
+                result.push(r);
+            }
         }
         return result;
     }
@@ -306,7 +314,9 @@ export class ResourceConfig {
         const url: string = this.config.alias[url_or_alias] || url_or_alias;
         if (typeSelector) {
             const type: string = typeSelector(url);
-            if (!type) { throw new ResourceManagerError(2004, url); }
+            if (!type) {
+                throw new ResourceManagerError(2004, url);
+            }
             return type;
         }
         console.warn("RES.mapConfig ��δ���� typeSelector");
@@ -316,37 +326,61 @@ export class ResourceConfig {
         key = this.getKeyByAlias(key);
         const index: number = key.indexOf("#");
         let subkey: string = "";
-        if (index >= 0) { subkey = key.substr(index + 1); key = key.substr(0, index); }
+        if (index >= 0) {
+            subkey = key.substr(index + 1); key = key.substr(0, index);
+        }
         const r: ResourceInfo | null = this.getResource(key);
-        return r ? { r: r, key: key, subkey: subkey } : null;
+        return r ? {
+            r : r, key : key, subkey : subkey
+        } : null;
     }
-    public getKeyByAlias(aliasName: string): string { return this.config.alias[aliasName] || aliasName; }
+    public getKeyByAlias(aliasName: string): string {
+        return this.config.alias[aliasName] || aliasName;
+    }
     public getResource(path_or_alias: string): ResourceInfo | null {
         const path: string = this.config.alias[path_or_alias] || path_or_alias;
         return getResourceInfo(path) || null;
     }
     public createGroup(name: string, keys: string[], override: boolean = false): boolean {
-        if ((!override && this.config.groups[name]) || !keys || keys.length == 0) { return false; }
+        if ((!override && this.config.groups[name]) || !keys || keys.length == 0) {
+            return false;
+        }
         let group: string[] = [];
         for (let i: number = 0; i < keys.length; i++) {
             const key: string = keys[i]!;
             const groupInfo: string[] | undefined = this.config.groups[key];
-            if (groupInfo) { group = group.concat(groupInfo); } else { group.push(key); }
+            if (groupInfo) {
+                group = group.concat(groupInfo);
+            } else {
+                group.push(key);
+            }
         }
         this.config.groups[name] = group;
         return true;
     }
-    public addSubkey(subkey: string, name: string): void { this.addAlias(subkey, name + "#" + subkey); }
-    public addAlias(alias: string, key: string): void { this.config.alias[alias] = this.config.alias[key] || key; }
+    public addSubkey(subkey: string, name: string): void {
+        this.addAlias(subkey, name + "#" + subkey);
+    }
+    public addAlias(alias: string, key: string): void {
+        this.config.alias[alias] = this.config.alias[key] || key;
+    }
     public addResourceData(data: ResourceInfo): void {
-        if (hasRes(data.name)) { return; }
-        if (!data.type) { data.type = this.__temp__get__type__via__url(data.url); }
+        if (hasRes(data.name)) {
+            return;
+        }
+        if (!data.type) {
+            data.type = this.__temp__get__type__via__url(data.url);
+        }
         getConfig().config.fileSystem!.addFile(data);
     }
     public removeResourceData(data: ResourceInfo): void {
-        if (!hasRes(data.name)) { return; }
+        if (!hasRes(data.name)) {
+            return;
+        }
         getConfig().config.fileSystem!.removeFile(data.url);
-        if (this.config.alias[data.name]) { delete this.config.alias[data.name]; }
+        if (this.config.alias[data.name]) {
+            delete this.config.alias[data.name];
+        }
     }
 }
 __reflect(ResourceConfig.prototype, "RES.ResourceConfig");
@@ -371,15 +405,21 @@ export class ResourceLoader {
     public pushResItem(resInfo: ResourceInfo): Promise<unknown> {
         const key: string = resInfo.root + resInfo.name;
         const existing: Promise<unknown> | undefined = this.promiseHash[key];
-        if (existing) { return existing; }
+        if (existing) {
+            return existing;
+        }
         this.lazyLoadList.push(resInfo);
         this.itemListPriorityDic[Number.NEGATIVE_INFINITY] = this.lazyLoadList;
         this.updatelistPriority(this.lazyLoadList, Number.NEGATIVE_INFINITY);
         const dispatcher: EventDispatcher = new EventDispatcher();
         this.dispatcherDic[key] = dispatcher;
         const promise: Promise<unknown> = new Promise<unknown>((resolve: (value: unknown) => void, reject: (reason: unknown) => void): void => {
-            dispatcher.addEventListener("complete", (e: Event): void => { resolve(e.data); }, null);
-            dispatcher.addEventListener("error", (e: Event): void => { reject(e.data); }, null);
+            dispatcher.addEventListener("complete", (e: Event): void => {
+                resolve(e.data);
+            }, null);
+            dispatcher.addEventListener("error", (e: Event): void => {
+                reject(e.data);
+            }, null);
         });
         this.promiseHash[key] = promise;
         this.loadNextResource();
@@ -387,11 +427,15 @@ export class ResourceLoader {
     }
     public pushResGroup(list: ResourceInfo[], groupName: string, priority: number, reporter?: PromiseTaskReporter): Promise<unknown> {
         const existing: Promise<unknown> | undefined = this.promiseHash[groupName];
-        if (existing) { return existing; }
+        if (existing) {
+            return existing;
+        }
         const total: number = list.length;
         for (let i: number = 0; i < total; i++) {
             const resInfo: ResourceInfo = list[i]!;
-            if (!resInfo.groupNames) { resInfo.groupNames = []; }
+            if (!resInfo.groupNames) {
+                resInfo.groupNames = [];
+            }
             resInfo.groupNames.push(groupName);
         }
         this.groupTotalDic[groupName] = list.length;
@@ -402,20 +446,27 @@ export class ResourceLoader {
         this.dispatcherDic[groupName] = dispatcher;
         const promise: Promise<unknown> = new Promise<unknown>((resolve: (value: unknown) => void, reject: (reason: unknown) => void): void => {
             dispatcher.addEventListener("complete", resolve, null);
-            dispatcher.addEventListener("error", (e: Event): void => { reject(e.data); }, null);
+            dispatcher.addEventListener("error", (e: Event): void => {
+                reject(e.data);
+            }, null);
         });
         this.promiseHash[groupName] = promise;
         this.loadNextResource();
         return promise;
     }
     public updatelistPriority(list: ResourceInfo[], priority: number): void {
-        if (this.itemListPriorityDic[priority] == undefined) { this.itemListPriorityDic[priority] = []; }
+        if (this.itemListPriorityDic[priority] == undefined) {
+            this.itemListPriorityDic[priority] = [];
+        }
         for (let i: number = 0; i < list.length; i++) {
             const item: ResourceInfo = list[i]!;
-            if (this.itemLoadDic[item.root + item.name] == 1) { continue; }
+            if (this.itemLoadDic[item.root + item.name] == 1) {
+                continue;
+            }
             const oldPriority: number | undefined = this.findPriorityInDic(item);
-            if (oldPriority == undefined) { this.itemListPriorityDic[priority]!.push(item); }
-            else if (oldPriority < priority) {
+            if (oldPriority == undefined) {
+ this.itemListPriorityDic[priority]!.push(item);
+            } else if (oldPriority < priority) {
                 this.itemListPriorityDic[priority]!.push(item);
                 const index: number = this.itemListPriorityDic[oldPriority]!.indexOf(item);
                 this.itemListPriorityDic[oldPriority]!.splice(index, 1);
@@ -425,19 +476,25 @@ export class ResourceLoader {
     public findPriorityInDic(item: ResourceInfo): number | undefined {
         let priority: string;
         for (priority in this.itemListPriorityDic) {
-            if (this.itemListPriorityDic[priority]!.indexOf(item) > -1) { return parseInt(priority); }
+            if (this.itemListPriorityDic[priority]!.indexOf(item) > -1) {
+                return parseInt(priority);
+            }
         }
         return undefined;
     }
     public loadNextResource(): void {
         while (this.loadingCount < this.thread) {
             const isload: boolean = this.loadSingleResource();
-            if (!isload) { break; }
+            if (!isload) {
+                break;
+            }
         }
     }
     public loadSingleResource(): boolean {
         const r: ResourceInfo | undefined = this.getOneResourceInfoInGroup();
-        if (!r) { return false; }
+        if (!r) {
+            return false;
+        }
         this.itemLoadDic[r.root + r.name] = 1;
         this.loadingCount++;
         this.loadResource(r).then((response: unknown): void => {
@@ -453,13 +510,19 @@ export class ResourceLoader {
                 delete r.groupNames;
                 for (let i: number = 0; i < groupNames.length; i++) {
                     const groupName: string = groupNames[i]!;
-                    if (this.setGroupProgress(groupName, r)) { this.loadGroupEnd(groupName); }
+                    if (this.setGroupProgress(groupName, r)) {
+                        this.loadGroupEnd(groupName);
+                    }
                 }
             }
             this.loadNextResource();
         }).catch((error: unknown): void => {
-            if (!error) { throw r.name + " load fail"; }
-            if (!isResourceManagerError(error)) { throw error; }
+            if (!error) {
+                throw r.name + " load fail";
+            }
+            if (!isResourceManagerError(error)) {
+                throw error;
+            }
             delete this.itemLoadDic[r.root + r.name];
             this.loadingCount--;
             delete getHost().state[r.root + r.name];
@@ -468,18 +531,27 @@ export class ResourceLoader {
                 delete this.retryTimesDic[r.name];
                 if (this.promiseHash[r.root + r.name] != null) {
                     const dispatcher: EventDispatcher = this.deleteDispatcher(r.root + r.name);
-                    dispatcher.dispatchEventWith("error", false, { r: r, error: error });
+                    dispatcher.dispatchEventWith("error", false, {
+                        r : r, error : error
+                    });
                 }
                 const groupNames: string[] | undefined = r.groupNames;
                 if (groupNames) {
                     delete r.groupNames;
                     for (let i: number = 0; i < groupNames.length; i++) {
                         const groupName: string = groupNames[i]!;
-                        if (!this.loadItemErrorDic[groupName]) { this.loadItemErrorDic[groupName] = []; }
-                        if (this.loadItemErrorDic[groupName]!.indexOf(r) == -1) { this.loadItemErrorDic[groupName]!.push(r); }
+                        if (!this.loadItemErrorDic[groupName]) {
+                            this.loadItemErrorDic[groupName] = [];
+                        }
+                        if (this.loadItemErrorDic[groupName]!.indexOf(r) == -1) {
+ this.loadItemErrorDic[groupName]!.push(r);
+                        }
                         this.groupErrorDic[groupName] = true;
-                        if (this.setGroupProgress(groupName, r)) { this.loadGroupEnd(groupName, error); }
-                        else { this.errorDic[groupName] = error; }
+                        if (this.setGroupProgress(groupName, r)) {
+                            this.loadGroupEnd(groupName, error);
+                        } else {
+                            this.errorDic[groupName] = error;
+                        }
                     }
                 }
                 this.loadNextResource();
@@ -492,13 +564,21 @@ export class ResourceLoader {
         return true;
     }
     public getOneResourceInfoInGroup(): ResourceInfo | undefined {
-        if (this.failedList.length > 0) { return this.failedList.shift(); }
+        if (this.failedList.length > 0) {
+            return this.failedList.shift();
+        }
         let maxPriority: number = Number.NEGATIVE_INFINITY;
         let p: string;
-        for (p in this.itemListPriorityDic) { maxPriority = Math.max(maxPriority, Number(p)); }
+        for (p in this.itemListPriorityDic) {
+            maxPriority = Math.max(maxPriority, Number(p));
+        }
         const list: ResourceInfo[] | undefined = this.itemListPriorityDic[maxPriority];
-        if (!list) { return undefined; }
-        if (list.length == 0) { delete this.itemListPriorityDic[maxPriority]; return this.getOneResourceInfoInGroup(); }
+        if (!list) {
+            return undefined;
+        }
+        if (list.length == 0) {
+            delete this.itemListPriorityDic[maxPriority]; return this.getOneResourceInfoInGroup();
+        }
         return list.shift();
     }
     public setGroupProgress(groupName: string, r: ResourceInfo): boolean {
@@ -506,7 +586,9 @@ export class ResourceLoader {
         this.numLoadedDic[groupName] = this.numLoadedDic[groupName]! + 1;
         const current: number = this.numLoadedDic[groupName]!;
         const total: number = this.groupTotalDic[groupName]!;
-        if (reporter && reporter.onProgress) { reporter.onProgress(current, total, r); }
+        if (reporter && reporter.onProgress) {
+            reporter.onProgress(current, total, r);
+        }
         return current == total;
     }
     public loadGroupEnd(groupName: string, lastError?: ResourceManagerError): void {
@@ -522,13 +604,19 @@ export class ResourceLoader {
                 delete this.loadItemErrorDic[groupName];
                 const error: ResourceManagerError | undefined = this.errorDic[groupName];
                 delete this.errorDic[groupName];
-                dispatcher.dispatchEventWith("error", false, { itemList: itemList, error: error });
-            } else { dispatcher.dispatchEventWith("complete"); }
+                dispatcher.dispatchEventWith("error", false, {
+                    itemList : itemList, error : error
+                });
+            } else {
+                dispatcher.dispatchEventWith("complete");
+            }
         } else {
             delete this.groupErrorDic[groupName];
             const itemList: ResourceInfo[] | undefined = this.loadItemErrorDic[groupName];
             delete this.loadItemErrorDic[groupName];
-            dispatcher.dispatchEventWith("error", false, { itemList: itemList, lastError: lastError });
+            dispatcher.dispatchEventWith("error", false, {
+                itemList : itemList, lastError : lastError
+            });
         }
     }
     public deleteDispatcher(groupName: string): EventDispatcher {
@@ -541,12 +629,18 @@ export class ResourceLoader {
         if (!p) {
             {
                 const s: number | undefined = getHost().state[r.root + r.name];
-                if (s == 2) { return Promise.resolve(getHost().get(r)); }
-                if (s == 1) { return r.promise!; }
+                if (s == 2) {
+                    return Promise.resolve(getHost().get(r));
+                }
+                if (s == 1) {
+                    return r.promise!;
+                }
             }
             p = runtime.processor.isSupport(r);
         }
-        if (!p) { throw new ResourceManagerError(2001, r.name, r.type); }
+        if (!p) {
+            throw new ResourceManagerError(2001, r.name, r.type);
+        }
         getHost().state[r.root + r.name] = 1;
         const promise: Promise<unknown> = p.onLoadStart(getHost(), r);
         r.promise = promise;
@@ -554,12 +648,16 @@ export class ResourceLoader {
     }
     public unloadResource(r: ResourceInfo): boolean {
         const data: unknown = getHost().get(r);
-        if (!data) { console.warn("�����ͷŲ����ڵ���Դ:", r.name); return false; }
+        if (!data) {
+            console.warn("�����ͷŲ����ڵ���Դ:", r.name); return false;
+        }
         const p: Processor | undefined = runtime.processor.isSupport(r);
         if (p) {
             p.onRemoveStart(getHost(), r);
             getHost().remove(r);
-            if (r.extra == 1) { getConfig().removeResourceData(r); }
+            if (r.extra == 1) {
+                getConfig().removeResourceData(r);
+            }
         }
         return true;
     }
@@ -609,19 +707,25 @@ export class Resource extends EventDispatcher {
         const resources: ResourceInfo[] = getConfig().getGroupByName(name);
         return resources.every((r: ResourceInfo): boolean => getHost().get(r) != null);
     }
-    public getGroupByName(name: string): ResourceInfo[] { return getConfig().getGroupByName(name); }
+    public getGroupByName(name: string): ResourceInfo[] {
+        return getConfig().getGroupByName(name);
+    }
     public loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<void> {
-        const reporterDelegate: PromiseTaskReporter = {
-            onProgress: (current: number, total: number, resItem: ResourceInfo): void => {
-                if (reporter && reporter.onProgress) { reporter.onProgress(current, total, resItem); }
-                ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_PROGRESS, name, resItem, current, total);
+        const reporterDelegate: PromiseTaskReporter = {onProgress : (current: number, total: number, resItem: ResourceInfo): void => {
+            if (reporter && reporter.onProgress) {
+                reporter.onProgress(current, total, resItem);
             }
-        };
+            ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_PROGRESS, name, resItem, current, total);
+        }};
         return this._loadGroup(name, priority, reporterDelegate).then((_data: unknown): void => {
-            if (getConfig().config.loadGroup.indexOf(name) == -1) { getConfig().config.loadGroup.push(name); }
+            if (getConfig().config.loadGroup.indexOf(name) == -1) {
+                getConfig().config.loadGroup.push(name);
+            }
             ResourceEvent.dispatchResourceEvent(this, ResourceEvent.GROUP_COMPLETE, name);
         }, (error: GroupLoadError): Promise<never> => {
-            if (getConfig().config.loadGroup.indexOf(name) == -1) { getConfig().config.loadGroup.push(name); }
+            if (getConfig().config.loadGroup.indexOf(name) == -1) {
+                getConfig().config.loadGroup.push(name);
+            }
             if (error.itemList) {
                 const itemList: ResourceInfo[] = error.itemList;
                 const length: number = itemList.length;
@@ -637,29 +741,45 @@ export class Resource extends EventDispatcher {
     }
     public _loadGroup(name: string, priority: number = 0, reporter?: PromiseTaskReporter): Promise<unknown> {
         const resources: ResourceInfo[] = getConfig().getGroupByName(name);
-        if (resources.length == 0) { return Promise.reject({ error: new ResourceManagerError(2005, name) }); }
+        if (resources.length == 0) {
+            return Promise.reject({ error : new ResourceManagerError(2005, name) });
+        }
         return getQueue().pushResGroup(resources, name, priority, reporter);
     }
-    public createGroup(name: string, keys: string[], override: boolean = false): boolean { return getConfig().createGroup(name, keys, override); }
-    public hasRes(key: string): boolean | null { return getConfig().getResourceWithSubkey(key) != null; }
+    public createGroup(name: string, keys: string[], override: boolean = false): boolean {
+        return getConfig().createGroup(name, keys, override);
+    }
+    public hasRes(key: string): boolean | null {
+        return getConfig().getResourceWithSubkey(key) != null;
+    }
     public getRes<T = unknown>(resKey: string): T | null | undefined {
         const result: ResourceWithSubkey | null = getConfig().getResourceWithSubkey(resKey);
-        if (!result) { return null; }
+        if (!result) {
+            return null;
+        }
         const r: ResourceInfo = result.r;
         const p: Processor | undefined = runtime.processor.isSupport(r);
-        if (p && p.getData && result.subkey) { return p.getData(getHost(), r, result.key, result.subkey) as T; }
+        if (p && p.getData && result.subkey) {
+            return p.getData(getHost(), r, result.key, result.subkey) as T;
+        }
         return getHost().get<T>(r);
     }
     public getResAsync<T = unknown>(key: string, compFunc?: ResourceCallback<T>, thisObject?: unknown): Promise<T> | null {
         const paramKey: string = key;
         const tempResult: ResourceWithSubkey | null = getConfig().getResourceWithSubkey(key);
         if (tempResult == null) {
-            if (compFunc) { compFunc.call(thisObject, null, paramKey); }
+            if (compFunc) {
+                compFunc.call(thisObject, null, paramKey);
+            }
             return Promise.reject(new ResourceManagerError(2006, key));
         }
         const data: T | null | undefined = this.getRes<T>(key);
         if (data) {
-            if (compFunc) { callLater((): void => { compFunc.call(thisObject, data, paramKey); }, this); }
+            if (compFunc) {
+                callLater((): void => {
+                    compFunc.call(thisObject, data, paramKey);
+                }, this);
+            }
             return Promise.resolve(data);
         }
         const r: ResourceInfo = tempResult.r;
@@ -667,34 +787,50 @@ export class Resource extends EventDispatcher {
         return getQueue().pushResItem(r).then((value: unknown): T => {
             getHost().save(r, value);
             const p: Processor | undefined = runtime.processor.isSupport(r);
-            if (p && p.getData && subkey) { value = p.getData(getHost(), r, key, subkey); }
-            if (compFunc) { compFunc.call(thisObject, value as T, paramKey); }
+            if (p && p.getData && subkey) {
+                value = p.getData(getHost(), r, key, subkey);
+            }
+            if (compFunc) {
+                compFunc.call(thisObject, value as T, paramKey);
+            }
             return value as T;
         }, (error: unknown): Promise<never> => {
             getHost().remove(r);
             ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", r);
-            if (compFunc) { compFunc.call(thisObject, null, paramKey); return Promise.reject(null); }
+            if (compFunc) {
+                compFunc.call(thisObject, null, paramKey); return Promise.reject(null);
+            }
             return Promise.reject(error);
         });
     }
     public getResByUrl<T = unknown>(url: string, compFunc?: ResourceCallback<T>, thisObject?: unknown, type: string = ""): Promise<T> | null {
         let r: ResourceInfo | null = getConfig().getResource(url);
         if (!r) {
-            if (!type) { type = getConfig().__temp__get__type__via__url(url); }
-            r = { name: url, url: url, type: type, root: "", extra: 1 };
+            if (!type) {
+                type = getConfig().__temp__get__type__via__url(url);
+            }
+            r = {
+                name : url, url : url, type : type, root : "", extra : 1
+            };
             getConfig().addResourceData(r);
             r = getConfig().getResource(url);
-            if (!r) { throw "never"; }
+            if (!r) {
+                throw "never";
+            }
         }
         const resource: ResourceInfo = r;
         return getQueue().pushResItem(resource).then((value: unknown): T => {
             getHost().save(resource, value);
-            if (compFunc) { compFunc.call(thisObject, value as T, resource.url); }
+            if (compFunc) {
+                compFunc.call(thisObject, value as T, resource.url);
+            }
             return value as T;
         }, (error: unknown): Promise<never> => {
             getHost().remove(resource);
             ResourceEvent.dispatchResourceEvent(this, ResourceEvent.ITEM_LOAD_ERROR, "", resource);
-            if (compFunc) { compFunc.call(thisObject, null, url); return Promise.reject(null); }
+            if (compFunc) {
+                compFunc.call(thisObject, null, url); return Promise.reject(null);
+            }
             return Promise.reject(error);
         });
     }
@@ -702,9 +838,13 @@ export class Resource extends EventDispatcher {
         const group: ResourceInfo[] = getConfig().getGroupByName(name);
         if (group && group.length > 0) {
             const index: number = getConfig().config.loadGroup.indexOf(name);
-            if (index == -1) { return false; }
+            if (index == -1) {
+                return false;
+            }
             if (force || (getConfig().config.loadGroup.length == 1 && getConfig().config.loadGroup[0] == name)) {
-                for (let i: number = 0; i < group.length; i++) { const item: ResourceInfo = group[i]!; getQueue().unloadResource(item); }
+                for (let i: number = 0; i < group.length; i++) {
+                    const item: ResourceInfo = group[i]!; getQueue().unloadResource(item);
+                }
                 getConfig().config.loadGroup.splice(index, 1);
             } else {
                 const removeItemHash: Record<string, number> = {};
@@ -719,20 +859,32 @@ export class Resource extends EventDispatcher {
                 }
                 for (let i: number = 0; i < group.length; i++) {
                     const item: ResourceInfo = group[i]!;
-                    if (removeItemHash[item.name] && removeItemHash[item.name] == 1) { getQueue().unloadResource(item); }
+                    if (removeItemHash[item.name] && removeItemHash[item.name] == 1) {
+                        getQueue().unloadResource(item);
+                    }
                 }
                 getConfig().config.loadGroup.splice(index, 1);
             }
             return true;
         }
         const item: ResourceInfo | null = getConfig().getResource(name);
-        if (item) { return getQueue().unloadResource(item); }
+        if (item) {
+            return getQueue().unloadResource(item);
+        }
         console.warn("���ڴ�" + name + "��Դ������");
         return false;
     }
-    public setMaxLoadingThread(thread: number): void { if (thread < 1) { thread = 1; } getQueue().thread = thread; }
-    public setMaxRetryTimes(retry: number): void { getQueue().maxRetryTimes = Math.max(retry, 0); }
-    public addResourceData(data: ResourceInfo): void { data.root = ""; getConfig().addResourceData(data); }
+    public setMaxLoadingThread(thread: number): void {
+        if (thread < 1) {
+            thread = 1;
+        } getQueue().thread = thread;
+    }
+    public setMaxRetryTimes(retry: number): void {
+        getQueue().maxRetryTimes = Math.max(retry, 0);
+    }
+    public addResourceData(data: ResourceInfo): void {
+        data.root = ""; getConfig().addResourceData(data);
+    }
 }
 __reflect(Resource.prototype, "RES.Resource");
 
@@ -741,11 +893,15 @@ export class ResourceEvent extends Event {
     public itemsTotal: number = 0;
     public groupName: string = "";
     public resItem: ResourceItem | undefined;
-    public constructor(type: string, bubbles: boolean = false, cancelable: boolean = false) { super(type, bubbles, cancelable); }
+    public constructor(type: string, bubbles: boolean = false, cancelable: boolean = false) {
+        super(type, bubbles, cancelable);
+    }
     public static dispatchResourceEvent(target: IEventDispatcher, type: string, groupName: string = "", resItem: ResourceInfo | undefined = undefined, itemsLoaded: number = 0, itemsTotal: number = 0): boolean {
         const event: ResourceEvent = Event.create(ResourceEvent, type);
         event.groupName = groupName;
-        if (resItem) { event.resItem = ResourceItemHelper.convertToResItem(resItem); }
+        if (resItem) {
+            event.resItem = ResourceItemHelper.convertToResItem(resItem);
+        }
         event.itemsLoaded = itemsLoaded; event.itemsTotal = itemsTotal;
         const result: boolean = target.dispatchEvent(event);
         Event.release(event);
@@ -766,29 +922,45 @@ export class NewFileSystem {
     public constructor(data: FileTree) {
         this.data = data;
     }
-    public profile(): void { console.log(this.data); }
+    public profile(): void {
+        console.log(this.data);
+    }
     public addFile(filename: string, type: string = ""): void {
-        if (!type) { type = ""; }
+        if (!type) {
+            type = "";
+        }
         filename = normalize(filename);
         const basefilename: string = basename(filename);
         const folder: string = dirname(filename);
-        if (!this.exists(folder)) { this.mkdir(folder); }
+        if (!this.exists(folder)) {
+            this.mkdir(folder);
+        }
         const d: FileTree = this.resolve(folder) as FileTree;
-        d[basefilename] = { url: filename, type: type };
+        d[basefilename] = {
+            url : filename, type : type
+        };
     }
     public getFile(filename: string): FileEntry | FileTree | undefined {
         const result: FileEntry | FileTree | undefined = this.resolve(filename);
-        if (result) { (result as FileEntry).name = filename; }
+        if (result) {
+            (result as FileEntry).name = filename;
+        }
         return result;
     }
     public resolve(dirpath: string): FileTree | FileEntry | undefined {
-        if (dirpath == "") { return this.data; }
+        if (dirpath == "") {
+            return this.data;
+        }
         dirpath = normalize(dirpath);
         const list: string[] = dirpath.split("/");
         let current: FileTree | FileEntry | undefined = this.data;
         for (let i: number = 0; i < list.length; i++) {
             const f: string = list[i]!;
-            if (current) { current = (current as FileTree)[f]; } else { return current; }
+            if (current) {
+                current = (current as FileTree)[f];
+            } else {
+                return current;
+            }
         }
         return current;
     }
@@ -796,14 +968,24 @@ export class NewFileSystem {
         dirpath = normalize(dirpath);
         const list: string[] = dirpath.split("/");
         let current: FileTree = this.data;
-        for (let i: number = 0; i < list.length; i++) { const f: string = list[i]!; if (!current[f]) { current[f] = {}; } current = current[f] as FileTree; }
+        for (let i: number = 0; i < list.length; i++) {
+            const f: string = list[i]!; if (!current[f]) {
+                current[f] = {};
+            } current = current[f] as FileTree;
+        }
     }
     public exists(dirpath: string): boolean {
-        if (dirpath == "") { return true; }
+        if (dirpath == "") {
+            return true;
+        }
         dirpath = normalize(dirpath);
         const list: string[] = dirpath.split("/");
         let current: FileTree = this.data;
-        for (let i: number = 0; i < list.length; i++) { const f: string = list[i]!; if (!current[f]) { return false; } current = current[f] as FileTree; }
+        for (let i: number = 0; i < list.length; i++) {
+            const f: string = list[i]!; if (!current[f]) {
+                return false;
+            } current = current[f] as FileTree;
+        }
         return true;
     }
 }
@@ -833,11 +1015,11 @@ export class ResourceItemHelper {
         }
 
         return {
-            name: name,
-            url: r.url,
-            type: r.type,
-            data: r,
-            root: r.root
+            name : name,
+            url  : r.url,
+            type : r.type,
+            data : r,
+            root : r.root
         };
     }
 }
@@ -850,14 +1032,14 @@ export class ResourceManagerError extends Error {
         this.message = ResourceManagerError.errorMessage[code].replace("{0}", String(replacer)).replace("{1}", String(replacer2));
     }
     public static errorMessage: Record<ResourceErrorCode, string> = {
-        1001: '文件加载失败:{0}',
-        1002: "ResourceManager 初始化失败：配置文件加载失败",
-        2001: "{0}解析失败,不支持指定解析类型:\'{1}\'，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
-        2002: "Analyzer 相关API 在 ResourceManager 中不再支持，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
-        2003: "{0}解析失败,错误原因:{1}",
-        2004: "无法找到文件类型:{0}",
-        2005: "RES加载了不存在或空的资源组:\"{0}\"",
-        2006: "资源配置文件中无法找到特定的资源:{0}"
+        1001 : '文件加载失败:{0}',
+        1002 : "ResourceManager 初始化失败：配置文件加载失败",
+        2001 : "{0}解析失败,不支持指定解析类型:\'{1}\'，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
+        2002 : "Analyzer 相关API 在 ResourceManager 中不再支持，请编写自定义 Processor ，更多内容请参见 https://github.com/egret-labs/resourcemanager/blob/master/docs/README.md#processor",
+        2003 : "{0}解析失败,错误原因:{1}",
+        2004 : "无法找到文件类型:{0}",
+        2005 : "RES加载了不存在或空的资源组:\"{0}\"",
+        2006 : "资源配置文件中无法找到特定的资源:{0}"
     };
 }
 __reflect(ResourceManagerError.prototype, "RES.ResourceManagerError");
@@ -885,7 +1067,7 @@ export class ResHelper {
     public static getHost(): ProcessHost {
         if (!ResHelper._host) {
             const host: ProcessHost = {
-                state: {},
+                state : {},
                 get resourceConfig(): ResourceConfig {
                     return ResHelper._config;
                 },
