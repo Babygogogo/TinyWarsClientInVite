@@ -39,9 +39,9 @@ import {
     log,
     DisplayObjectContainer
 } from "./EgretCore";
-import type * as web from "./WebCore";
+import type { DrawLabel, WebGLRenderTarget, WebGLRenderContext, PremultipliedTexture, TextureDrawData } from "./WebCore";
 import { runtime } from "./Runtime";
-import * as lifecycle from "./Lifecycle";
+import { LifecycleContext, LifecycleHelper } from "./Lifecycle";
 
 export type RenderContext = CanvasRenderingContext2D | WebGLRenderingContext;
 export type PathCommand = 1 | 2 | 3 | 4;
@@ -68,7 +68,7 @@ export interface TextNode {
     $canvasScaleY: number;
     $textureWidth: number;
     $textureHeight: number;
-    DrawLabel?: web.DrawLabel[];
+    DrawLabel?: DrawLabel[];
 }
 export interface GraphicsNode {
     $canvasScaleX: number;
@@ -77,7 +77,7 @@ export interface GraphicsNode {
     $textureHeight: number;
 }
 export interface RenderBuffer {
-    surface: HTMLCanvasElement | web.WebGLRenderTarget;
+    surface: HTMLCanvasElement | WebGLRenderTarget;
     resize(width: number, height: number, useMaxSize?: boolean): void;
     clear(): void;
     getPixels(x: number, y: number, width?: number, height?: number): Uint8Array | Uint8ClampedArray;
@@ -135,7 +135,7 @@ export function createCanvas(width: number, height: number): HTMLCanvasElement {
     if (!isNaN(width) && !isNaN(height)) { canvas.width = width; canvas.height = height; }
     return canvas;
 }
-export function resizeContext(renderContext: web.WebGLRenderContext | null, width: number, height: number, useMaxSize?: boolean): void {
+export function resizeContext(renderContext: WebGLRenderContext | null, width: number, height: number, useMaxSize?: boolean): void {
     if (!renderContext) { return; }
     const surface: HTMLCanvasElement = renderContext.surface;
     if (useMaxSize) {
@@ -161,9 +161,9 @@ export function getContextWebGL(surface: HTMLCanvasElement): WebGLRenderingConte
 export function getContext2d(surface: HTMLCanvasElement | null): CanvasContext | null {
     return surface ? surface.getContext("2d") as CanvasContext | null : null;
 }
-export function createTexture(renderContext: web.WebGLRenderContext, bitmapData: TexImageSource): EngineWebGLTexture | undefined {
+export function createTexture(renderContext: WebGLRenderContext, bitmapData: TexImageSource): EngineWebGLTexture | undefined {
     const gl: WebGLRenderingContext = renderContext.context;
-    const texture: web.PremultipliedTexture | null = gl.createTexture() as web.PremultipliedTexture | null;
+    const texture: PremultipliedTexture | null = gl.createTexture() as PremultipliedTexture | null;
     if (!texture) { renderContext.contextLost = true; return; }
     texture[DefinitionHelper.glContext] = gl;
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -176,9 +176,9 @@ export function createTexture(renderContext: web.WebGLRenderContext, bitmapData:
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     return texture;
 }
-export function _createTexture(renderContext: web.WebGLRenderContext, width: number, height: number, data: ArrayBufferView | null): EngineWebGLTexture | null {
+export function _createTexture(renderContext: WebGLRenderContext, width: number, height: number, data: ArrayBufferView | null): EngineWebGLTexture | null {
     const gl: WebGLRenderingContext = renderContext.context;
-    const texture: web.PremultipliedTexture | null = gl.createTexture() as web.PremultipliedTexture | null;
+    const texture: PremultipliedTexture | null = gl.createTexture() as PremultipliedTexture | null;
     if (!texture) { renderContext.contextLost = true; return null; }
     texture[DefinitionHelper.glContext] = gl;
     gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -191,7 +191,7 @@ export function _createTexture(renderContext: web.WebGLRenderContext, width: num
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     return texture;
 }
-export function drawTextureElements(renderContext: web.WebGLRenderContext, data: web.TextureDrawData, offset: number): number {
+export function drawTextureElements(renderContext: WebGLRenderContext, data: TextureDrawData, offset: number): number {
     const gl: WebGLRenderingContext = renderContext.context;
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, data.texture);
@@ -850,8 +850,8 @@ export class SystemTicker {
         const length: number = callBackList.length;
         let requestRenderingFlag: boolean = RenderHelper.$requestRenderingFlag;
         const timeStamp: number = getTimer();
-        const contexts: lifecycle.LifecycleContext[] = lifecycle.LifecycleHelper.contexts;
-        for (let i: number = 0; i < contexts.length; i++) { const c: lifecycle.LifecycleContext = contexts[i]!; if (c.onUpdate) { c.onUpdate(); } }
+        const contexts: LifecycleContext[] = LifecycleHelper.contexts;
+        for (let i: number = 0; i < contexts.length; i++) { const c: LifecycleContext = contexts[i]!; if (c.onUpdate) { c.onUpdate(); } }
         if (this.isPaused) { this.lastTimeStamp = timeStamp; return; }
         this.callLaterAsyncs();
         for (let i: number = 0; i < length; i++) { if (callBackList[i]!.call(thisObjectList[i], timeStamp)) { requestRenderingFlag = true; } }

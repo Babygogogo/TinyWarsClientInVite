@@ -1,0 +1,469 @@
+import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarBasicSettingsPageOpenData,
+    Page as CommonViewCommonWarBasicSettingsPage,
+} from "../../common/view/CommonWarBasicSettingsPage.ts";
+import {
+    type OpenData as CommonViewCommonWarMapInfoPageOpenData,
+    Page as CommonViewCommonWarMapInfoPage,
+} from "../../common/view/CommonWarMapInfoPage.ts";
+import { showLang } from "../../FloatText.ts";
+import { BasicSettingsType } from "../../gameConfig/GcWar.ts";
+import { ModeId } from "../../gameModes/Constants.ts";
+import { getDict } from "../../gamePanels/Dict.ts";
+import { openPanel } from "../../gamePanels/Manager.ts";
+import { gotoSinglePlayerWar } from "../../helpers/GameFlow.ts";
+import { getExisted, newError } from "../../helpers/Misc.ts";
+import { TextType, UndefinedError } from "../../lang/Constants.ts";
+import { getText } from "../../lang/Utils.ts";
+import { TypeId } from "../../notifications/TypeId.ts";
+import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateScw/S.ts";
+import type { ScrWarCreator } from "../model/ScrWarCreator.ts";
+import {
+    type OpenData as SingleCustomRoomViewScrCreatePlayerInfoPageOpenData,
+    Page as SingleCustomRoomViewScrCreatePlayerInfoPage,
+} from "./ScrCreatePlayerInfoPage.ts";
+import { checkIsEmpty } from "../../singlePlayerMode/model/SpmModel.ts";
+import { reqSpmCreateScw } from "../../singlePlayerMode/model/SpmProxy.ts";
+import { ShortSfxCode } from "../../sounds/Constants.ts";
+import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { wait } from "../../timer/TimerModel.ts";
+import { Executor } from "../../tween/Executor.ts";
+import { UiPanel } from "../../ui/components/UiPanel.ts";
+import { UiTabItemRenderer } from "../../ui/components/UiTabItemRenderer.ts";
+import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
+import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
+import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
+import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
+import { Event, setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
+import { tickDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
+
+type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
+type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
+type OpenDataForScrCreatePlayerInfoPage         = SingleCustomRoomViewScrCreatePlayerInfoPageOpenData;
+type OpenDataForCommonWarAdvancedSettingsPage   = CommonViewCommonWarAdvancedSettingsPageOpenData;
+
+const CONFIRM_INTERVAL_MS = 5000;
+
+export interface OpenData {
+    warCreator : ScrWarCreator;
+}
+export class Panel extends UiPanel<OpenData> {
+    private readonly _groupNavigator!       : IUiLayout;
+    private readonly _labelSinglePlayer!    : IUiLabel;
+    private readonly _labelCustomMode!      : IUiLabel;
+    private readonly _labelChooseMap!       : IUiLabel;
+    private readonly _labelGameSettings!    : IUiLabel;
+
+    private readonly _groupTab!             : IUiContainer;
+    private readonly _tabSettings!          : IUiTab<DataForTabItemRenderer, void | OpenDataForCommonWarMapInfoPage | OpenDataForCommonWarBasicSettingsPage | OpenDataForScrCreatePlayerInfoPage | OpenDataForCommonWarAdvancedSettingsPage>;
+
+    private readonly _btnBack!              : IUiButton;
+    private readonly _btnConfirm!           : IUiButton;
+
+    private _timeoutIdForBtnConfirm : number | null = null;
+    private _isTabInitialized       = false;
+
+    public updateOnLoadedSkin(): void {
+        this._setUiListenerArray([
+            { ui: this._btnBack,        callback: this._onTouchedBtnBack },
+            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
+        ]);
+        this._setNotifyListenerArray([
+            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
+            { type: TypeId.MsgSpmCreateScw,                 callback: this._onNotifyMsgSpmCreateScw },
+            { type: TypeId.WarCreator_SaveSlotIndexChanged,     callback: this._onNotifyScrCreateWarSaveSlotChanged },
+        ]);
+        this._enableKeyEscapeToClosePanel(() => {
+            playShortSfx(ShortSfxCode.ButtonCancel01);
+            this._onTouchedBtnBack();
+        });
+
+        this._tabSettings.setBarItemRenderer(TabItemRenderer);
+    }
+    protected override async _onOpened(): Promise<void> {
+        await super._onOpened();
+
+        await this._initTabSettings();
+
+        if (this.getOpenData()) {
+            this._updateAllPagesForTabSettings();
+        }
+    }
+    protected override async _doApplyOpenData(): Promise<void> {
+        this._updateComponentsForLanguage();
+        this._updateAllPagesForTabSettings();
+    }
+    protected override async _onClosed(): Promise<void> {
+        this._clearTimeoutForBtnConfirm();
+
+        this._isTabInitialized = false;
+        await this._tabSettings.clear();
+
+        await super._onClosed();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Callbacks.
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    private _onTouchedBtnBack(): void {
+        this.closePanel();
+        openPanel(getDict().ScrCreateMapListPanel, {
+            mapFilter               : null,
+            mapSorter               : null,
+            usePreviousFilter       : true,
+            usePreviousPageIndex    : true,
+        });
+    }
+    private async _onTouchedBtnConfirm(): Promise<void> {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return;
+        }
+
+        if (this._timeoutIdForBtnConfirm != null) {
+            showLang(TextType.A0421);
+            return;
+        }
+
+        const warCreator    = openData.warCreator;
+        const callback      = () => {
+            reqSpmCreateScw(warCreator.generateData());
+            this._resetTimeoutForBtnConfirm();
+        };
+
+        if (await checkIsEmpty(warCreator.getSaveSlotIndex())) {
+            callback();
+        } else {
+            openPanel(getDict().CommonConfirmPanel, {
+                getContent : () => getText(TextType.A0070),
+                callback,
+            });
+        }
+    }
+
+    private _onNotifyLanguageChanged(): void {
+        this._updateComponentsForLanguage();
+    }
+    private _onNotifyMsgSpmCreateScw(e: Event): void {
+        const data = e.data as S;
+        gotoSinglePlayerWar({
+            warData         : getExisted(data.getWarData()),
+            slotExtraData   : getExisted(data.getExtraData()),
+            slotIndex       : getExisted(data.getSlotIndex()),
+        });
+    }
+    private _onNotifyScrCreateWarSaveSlotChanged(): void {
+        this._updateCommonWarBasicSettingsPage();
+    }
+
+    private _resetTimeoutForBtnConfirm(): void {
+        this._clearTimeoutForBtnConfirm();
+        this._timeoutIdForBtnConfirm = setTimeout(() => {
+            this._timeoutIdForBtnConfirm = null;
+        }, this, CONFIRM_INTERVAL_MS);
+    }
+
+    private _clearTimeoutForBtnConfirm(): void {
+        if (this._timeoutIdForBtnConfirm != null) {
+            clearTimeout(this._timeoutIdForBtnConfirm);
+            this._timeoutIdForBtnConfirm = null;
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Functions for the view.
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    private _updateComponentsForLanguage(): void {
+        this._labelSinglePlayer.setLangText(TextType.B0603);
+        this._labelCustomMode.setLangText(TextType.B1372);
+        this._labelChooseMap.setLangText(TextType.B0227);
+        this._labelGameSettings.setLangText(TextType.B0604);
+        this._btnBack.setLangText(TextType.B0146);
+        this._btnConfirm.setLangText(TextType.B0026);
+
+        this._groupNavigator.arrangeItems();
+    }
+
+    private async _initTabSettings(): Promise<void> {
+        this._isTabInitialized = false;
+        await this._tabSettings.bindData([
+            {
+                tabItemData : { name: getText(TextType.B0002) },
+                pageClass   : CommonViewCommonWarBasicSettingsPage,
+                pageData    : null,
+            },
+            {
+                tabItemData : { name: getText(TextType.B0003) },
+                pageClass   : Page,
+                pageData    : null,
+            },
+            {
+                tabItemData : { name: getText(TextType.B0298) },
+                pageClass   : CommonViewCommonWarMapInfoPage,
+                pageData    : null,
+            },
+            {
+                tabItemData : { name: getText(TextType.B0224) },
+                pageClass   : SingleCustomRoomViewScrCreatePlayerInfoPage,
+                pageData    : null,
+            },
+        ]);
+        this._isTabInitialized = true;
+    }
+    private async _updateAllPagesForTabSettings(): Promise<void> {
+        await Promise.all([
+            this._updateCommonWarBasicSettingsPage(),
+            this._updateCommonWarAdvancedSettingsPage(),
+            this._updateCommonWarMapInfoPage(),
+            this._updateScrCreatePlayerInfoPage(),
+        ]);
+    }
+    private async _updateCommonWarBasicSettingsPage(): Promise<void> {
+        if (this._isTabInitialized) {
+            this._tabSettings.updatePageData(0, await this._createDataForCommonWarBasicSettingsPage());
+        }
+    }
+    private _updateCommonWarAdvancedSettingsPage(): void {
+        if (this._isTabInitialized) {
+            this._tabSettings.updatePageData(1, this._createDataForCommonWarAdvancedSettingsPage());
+        }
+    }
+    private async _updateCommonWarMapInfoPage(): Promise<void> {
+        if (this._isTabInitialized) {
+            this._tabSettings.updatePageData(2, await this._createDataForCommonMapInfoPage());
+        }
+    }
+    private _updateScrCreatePlayerInfoPage(): void {
+        if (this._isTabInitialized) {
+            this._tabSettings.updatePageData(3, this._createDataForScrCreatePlayerInfoPage());
+        }
+    }
+
+    private async _createDataForCommonWarBasicSettingsPage(): Promise<OpenDataForCommonWarBasicSettingsPage> {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return null;
+        }
+
+        const warCreator        = openData.warCreator;
+        const instanceWarRule   = warCreator.getInstanceWarRule();
+        const gcData        = warCreator.getGcData();
+        const mapRawData        = warCreator.getMapRawData();
+        const warEventFullData  = mapRawData.getWarEventFullData();
+        const warRuleCommonData = getExisted(instanceWarRule.getWarRuleCommonData());
+        const openDataForPage   : OpenDataForCommonWarBasicSettingsPage = {
+            dataArrayForListSettings: [
+                {
+                    settingsType    : BasicSettingsType.NormalMapId,
+                    currentValue    : mapRawData.getNormalMapId(),
+                    instanceWarRule : instanceWarRule,
+                    gameConfig      : gcData,
+                    warEventFullData: warEventFullData,
+                    callbackOnModify: null,
+                },
+                {
+                    settingsType    : BasicSettingsType.WarRuleTitle,
+                    currentValue    : null,
+                    instanceWarRule : instanceWarRule,
+                    gameConfig      : gcData,
+                    warEventFullData: warEventFullData,
+                    callbackOnModify: async () => {
+                        warCreator.tickTemplateWarRuleId();
+                        this._updateCommonWarBasicSettingsPage();
+                        this._updateCommonWarAdvancedSettingsPage();
+                        this._updateScrCreatePlayerInfoPage();
+                    },
+                },
+                {
+                    settingsType    : BasicSettingsType.HasFog,
+                    currentValue    : null,
+                    instanceWarRule : instanceWarRule,
+                    gameConfig      : gcData,
+                    warEventFullData: warEventFullData,
+                    callbackOnModify: () => {
+                        warRuleCommonData.setHasFogByDefault(!warRuleCommonData.getHasFogByDefault());
+                        instanceWarRule.setTemplateWarRuleId(null);
+                        this._updateCommonWarBasicSettingsPage();
+                    },
+                },
+                {
+                    settingsType    : BasicSettingsType.Weather,
+                    currentValue    : null,
+                    instanceWarRule : instanceWarRule,
+                    gameConfig      : gcData,
+                    warEventFullData: warEventFullData,
+                    callbackOnModify: () => {
+                        tickDefaultWeatherType(warRuleCommonData, gcData);
+                        instanceWarRule.setTemplateWarRuleId(null);
+                        this._updateCommonWarBasicSettingsPage();
+                    },
+                },
+                {
+                    settingsType        : BasicSettingsType.TileTheme,
+                    currentValue        : null,
+                    instanceWarRule     : instanceWarRule,
+                    gameConfig          : gcData,
+                    warEventFullData    : warEventFullData,
+                    callbackOnModify    : newValue => {
+                        if (typeof newValue === "string") {
+                            throw newError(`Invalid newValue: ${newValue}`);
+                        }
+
+                        if (warRuleCommonData.getFixedTileTheme() != newValue) {
+                            warRuleCommonData.setFixedTileTheme(newValue);
+                            instanceWarRule.setTemplateWarRuleId(null);
+                            this._updateCommonWarBasicSettingsPage();
+                        }
+                    },
+                },
+                {
+                    settingsType    : BasicSettingsType.WarEvent,
+                    currentValue    : null,
+                    instanceWarRule : instanceWarRule,
+                    gameConfig      : gcData,
+                    warEventFullData: warEventFullData,
+                    callbackOnModify: null,
+                },
+                {
+                    settingsType    : BasicSettingsType.SpmSaveSlotIndex,
+                    currentValue    : warCreator.getSaveSlotIndex(),
+                    instanceWarRule : instanceWarRule,
+                    gameConfig      : gcData,
+                    warEventFullData: warEventFullData,
+                    callbackOnModify: () => {
+                        openPanel(getDict().CommonChooseSingleSpmSaveSlotPanel, {
+                            currentSlotIndex        : warCreator.getSaveSlotIndex(),
+                            needComment             : false,
+                            needConfirmOverwrite    : true,
+                            callback                : slotIndex => {
+                                warCreator.setSaveSlotIndex(slotIndex);
+                            },
+                        });
+                    },
+                },
+                {
+                    settingsType    : BasicSettingsType.SpmSaveSlotComment,
+                    currentValue    : warCreator.getSlotComment() ?? null,
+                    instanceWarRule : instanceWarRule,
+                    gameConfig      : gcData,
+                    warEventFullData: warEventFullData,
+                    callbackOnModify: (newValue: string | number | null) => {
+                        if (typeof newValue === "number") {
+                            throw newError(`Invalid newValue: ${newValue}`, ClientErrorCode.ScrCreateSettingsPanel_CreateDataForCommonWarBasicSettingsPage_00);
+                        }
+                        warCreator.setSlotComment(newValue);
+                        this._updateCommonWarBasicSettingsPage();
+                    },
+                },
+            ],
+        };
+
+        return openDataForPage;
+    }
+    private _createDataForCommonWarAdvancedSettingsPage(): OpenDataForCommonWarAdvancedSettingsPage {
+        const warCreator = this.getOpenData()?.warCreator;
+        if (warCreator == null) {
+            return null;
+        }
+
+        return {
+            canModify       : true,
+            instanceWarRule : warCreator.getInstanceWarRule(),
+            gameModeId      : ModeId.SingleCustom,
+            gcData          : warCreator.getGcData(),
+        };
+    }
+    private async _createDataForCommonMapInfoPage(): Promise<OpenDataForCommonWarMapInfoPage> {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return null;
+        }
+
+        const warCreator = openData.warCreator;
+        return {
+            mapInfo : {
+                hasFog              : !!warCreator.getInstanceWarRule().getWarRuleCommonData()?.getHasFogByDefault(),
+                gameConfig          : warCreator.getGcData(),
+                mapRawData          : warCreator.getMapRawData(),
+                overridingPlayers   : null,
+            },
+        };
+    }
+    private _createDataForScrCreatePlayerInfoPage(): OpenDataForScrCreatePlayerInfoPage {
+        const openData = this.getOpenData();
+        if (openData == null) {
+            return null;
+        }
+
+        return {
+            warCreator    : openData.warCreator,
+        };
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Opening/closing animations.
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    protected async _showOpenAnimation(): Promise<void> {
+        Executor.reset({
+            obj         : this._groupNavigator,
+            beginProps  : { customAlpha: 0, customY: -20 },
+            endProps    : { customAlpha: 1, customY: 20 },
+        });
+        Executor.reset({
+            obj         : this._btnBack,
+            beginProps  : { customAlpha: 0, customY: -20 },
+            endProps    : { customAlpha: 1, customY: 20 },
+        });
+        Executor.reset({
+            obj         : this._btnConfirm,
+            beginProps  : { customAlpha: 0, customX: -20 },
+            endProps    : { customAlpha: 1, customX: 20 },
+        });
+        Executor.reset({
+            obj         : this._groupTab,
+            beginProps  : { customAlpha: 0, },
+            endProps    : { customAlpha: 1, },
+        });
+
+        await wait();
+    }
+    protected async _showCloseAnimation(): Promise<void> {
+        Executor.reset({
+            obj         : this._groupNavigator,
+            beginProps  : { customAlpha: 1, customY: 20 },
+            endProps    : { customAlpha: 0, customY: -20 },
+        });
+        Executor.reset({
+            obj         : this._btnBack,
+            beginProps  : { customAlpha: 1, customY: 20 },
+            endProps    : { customAlpha: 0, customY: -20 },
+        });
+        Executor.reset({
+            obj         : this._btnConfirm,
+            beginProps  : { customAlpha: 1, customX: 20 },
+            endProps    : { customAlpha: 0, customX: -20 },
+        });
+        Executor.reset({
+            obj         : this._groupTab,
+            beginProps  : { customAlpha: 1, },
+            endProps    : { customAlpha: 0, },
+        });
+
+        await wait();
+    }
+}
+
+interface DataForTabItemRenderer extends UiListItemData {
+    name: string;
+}
+class TabItemRenderer extends UiTabItemRenderer<DataForTabItemRenderer> {
+    private readonly _labelName!    : IUiLabel;
+
+    protected override _doApplyOpenData(): void {
+        this._labelName.setText(this.getOpenData()?.name ?? UndefinedError);
+    }
+}

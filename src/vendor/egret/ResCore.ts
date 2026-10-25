@@ -1,9 +1,19 @@
 
-import type * as processor from "./ProcessorCore";
+import type { Processor } from "./ProcessorCore";
 import { runtime } from "./Runtime";
-import * as egret from "./EgretCore";
-import * as path from "./Path";
-import * as sys from "./SysCore";
+import {
+    type MovieClipSource,
+    warn,
+    type EventListener,
+    __reflect,
+    EventDispatcher,
+    Event,
+    callLater,
+    type IEventDispatcher,
+    Texture,
+} from "./EgretCore";
+import { basename, normalize, dirname } from "./Path";
+import { tr } from "./SysCore";
 
 export type ResourceCallback<T = unknown> = (this: unknown, data: T | null, key: string) => void;
 export type ResourceErrorCode = 1001 | 1002 | 2001 | 2002 | 2003 | 2004 | 2005 | 2006;
@@ -49,7 +59,7 @@ export interface IVersionController {
 export interface ProcessHost {
     state: Record<string, number>;
     readonly resourceConfig: ResourceConfig;
-    load<T = unknown>(resource: ResourceInfo, processor?: string | processor.Processor<T>): Promise<T>;
+    load<T = unknown>(resource: ResourceInfo, processor?: string | Processor<T>): Promise<T>;
     unload(resource: ResourceInfo): boolean;
     save(resource: ResourceInfo, data: unknown): void;
     get<T = unknown>(resource: ResourceInfo): T | undefined;
@@ -61,7 +71,7 @@ export interface GroupLoadError {
     lastError?: ResourceManagerError;
 }
 export interface MovieClipConfig {
-    mc: Record<string, egret.MovieClipSource>;
+    mc: Record<string, MovieClipSource>;
     res: Record<string, { x: number; y: number; w: number; h: number }>;
 }
 export interface ResourceItem {
@@ -96,7 +106,7 @@ export function setConfigURL(url: string, root: string): void {
 }
 
 export function nameSelector(url: string): string {
-    return path.basename(url).split(".").join("_");
+    return basename(url).split(".").join("_");
 }
 
 export function typeSelector(path: string): string {
@@ -118,10 +128,10 @@ export function registerAnalyzer(_type: string, _analyzerClass: abstract new (..
 export function loadConfig(url: string, resourceRoot: string): Promise<void> | null | undefined {
     if (resourceRoot.indexOf("://") >= 0) {
         const temp: string[] = resourceRoot.split("://");
-        resourceRoot = temp[0]! + "://" + path.normalize(temp[1]! + "/");
+        resourceRoot = temp[0]! + "://" + normalize(temp[1]! + "/");
         url = url.replace(resourceRoot, "");
     } else {
-        resourceRoot = path.normalize(resourceRoot + "/");
+        resourceRoot = normalize(resourceRoot + "/");
         url = url.replace(resourceRoot, "");
     }
     setConfigURL(url, resourceRoot);
@@ -160,8 +170,8 @@ export function getResAsync<T = unknown>(key: string, compFunc?: ResourceCallbac
 export function getResByUrl<T = unknown>(url: string, compFunc?: ResourceCallback<T>, thisObject?: unknown, type: string = ""): Promise<T> | null | undefined {
     const instance = Resource.getInstance();
     if (!instance.getHasLoadConfig()) {
-        const message: string = sys.tr(3200);
-        egret.warn(message);
+        const message: string = tr(3200);
+        warn(message);
         return Promise.reject(message);
     }
     return instance.getResByUrl<T>(url, compFunc, thisObject, type);
@@ -179,11 +189,11 @@ export function setMaxRetryTimes(retry: number): void {
     Resource.getInstance().setMaxRetryTimes(retry);
 }
 
-export function addEventListener(type: string, listener: egret.EventListener, thisObject: unknown, useCapture: boolean = false, priority: number = 0): void {
+export function addEventListener(type: string, listener: EventListener, thisObject: unknown, useCapture: boolean = false, priority: number = 0): void {
     Resource.getInstance().addEventListener(type, listener, thisObject, useCapture, priority);
 }
 
-export function removeEventListener(type: string, listener: egret.EventListener, thisObject: unknown, useCapture: boolean = false): void {
+export function removeEventListener(type: string, listener: EventListener, thisObject: unknown, useCapture: boolean = false): void {
     Resource.getInstance().removeEventListener(type, listener, thisObject, useCapture);
 }
 
@@ -339,7 +349,7 @@ export class ResourceConfig {
         if (this.config.alias[data.name]) { delete this.config.alias[data.name]; }
     }
 }
-egret.__reflect(ResourceConfig.prototype, "RES.ResourceConfig");
+__reflect(ResourceConfig.prototype, "RES.ResourceConfig");
 
 export class ResourceLoader {
     public groupTotalDic: Record<string, number> = {};
@@ -348,7 +358,7 @@ export class ResourceLoader {
     public retryTimesDic: Record<string, number> = {};
     public maxRetryTimes: number = 3;
     public reporterDic: Record<string, PromiseTaskReporter | undefined> = {};
-    public dispatcherDic: Record<string, egret.EventDispatcher> = {};
+    public dispatcherDic: Record<string, EventDispatcher> = {};
     public failedList: ResourceInfo[] = [];
     public loadItemErrorDic: Record<string, ResourceInfo[]> = {};
     public errorDic: Record<string, ResourceManagerError> = {};
@@ -365,11 +375,11 @@ export class ResourceLoader {
         this.lazyLoadList.push(resInfo);
         this.itemListPriorityDic[Number.NEGATIVE_INFINITY] = this.lazyLoadList;
         this.updatelistPriority(this.lazyLoadList, Number.NEGATIVE_INFINITY);
-        const dispatcher: egret.EventDispatcher = new egret.EventDispatcher();
+        const dispatcher: EventDispatcher = new EventDispatcher();
         this.dispatcherDic[key] = dispatcher;
         const promise: Promise<unknown> = new Promise<unknown>((resolve: (value: unknown) => void, reject: (reason: unknown) => void): void => {
-            dispatcher.addEventListener("complete", (e: egret.Event): void => { resolve(e.data); }, null);
-            dispatcher.addEventListener("error", (e: egret.Event): void => { reject(e.data); }, null);
+            dispatcher.addEventListener("complete", (e: Event): void => { resolve(e.data); }, null);
+            dispatcher.addEventListener("error", (e: Event): void => { reject(e.data); }, null);
         });
         this.promiseHash[key] = promise;
         this.loadNextResource();
@@ -388,11 +398,11 @@ export class ResourceLoader {
         this.numLoadedDic[groupName] = 0;
         this.updatelistPriority(list, priority);
         this.reporterDic[groupName] = reporter;
-        const dispatcher: egret.EventDispatcher = new egret.EventDispatcher();
+        const dispatcher: EventDispatcher = new EventDispatcher();
         this.dispatcherDic[groupName] = dispatcher;
         const promise: Promise<unknown> = new Promise<unknown>((resolve: (value: unknown) => void, reject: (reason: unknown) => void): void => {
             dispatcher.addEventListener("complete", resolve, null);
-            dispatcher.addEventListener("error", (e: egret.Event): void => { reject(e.data); }, null);
+            dispatcher.addEventListener("error", (e: Event): void => { reject(e.data); }, null);
         });
         this.promiseHash[groupName] = promise;
         this.loadNextResource();
@@ -435,7 +445,7 @@ export class ResourceLoader {
             delete this.itemLoadDic[r.root + r.name];
             getHost().save(r, response);
             if (this.promiseHash[r.root + r.name] != null) {
-                const dispatcher: egret.EventDispatcher = this.deleteDispatcher(r.root + r.name);
+                const dispatcher: EventDispatcher = this.deleteDispatcher(r.root + r.name);
                 dispatcher.dispatchEventWith("complete", false, response);
             }
             const groupNames: string[] | undefined = r.groupNames;
@@ -457,7 +467,7 @@ export class ResourceLoader {
             if (times > this.maxRetryTimes) {
                 delete this.retryTimesDic[r.name];
                 if (this.promiseHash[r.root + r.name] != null) {
-                    const dispatcher: egret.EventDispatcher = this.deleteDispatcher(r.root + r.name);
+                    const dispatcher: EventDispatcher = this.deleteDispatcher(r.root + r.name);
                     dispatcher.dispatchEventWith("error", false, { r: r, error: error });
                 }
                 const groupNames: string[] | undefined = r.groupNames;
@@ -503,7 +513,7 @@ export class ResourceLoader {
         delete this.groupTotalDic[groupName];
         delete this.numLoadedDic[groupName];
         delete this.reporterDic[groupName];
-        const dispatcher: egret.EventDispatcher = this.deleteDispatcher(groupName);
+        const dispatcher: EventDispatcher = this.deleteDispatcher(groupName);
         if (!lastError) {
             const groupError: boolean | undefined = this.groupErrorDic[groupName];
             delete this.groupErrorDic[groupName];
@@ -521,13 +531,13 @@ export class ResourceLoader {
             dispatcher.dispatchEventWith("error", false, { itemList: itemList, lastError: lastError });
         }
     }
-    public deleteDispatcher(groupName: string): egret.EventDispatcher {
+    public deleteDispatcher(groupName: string): EventDispatcher {
         delete this.promiseHash[groupName];
-        const dispatcher: egret.EventDispatcher = this.dispatcherDic[groupName]!;
+        const dispatcher: EventDispatcher = this.dispatcherDic[groupName]!;
         delete this.dispatcherDic[groupName];
         return dispatcher;
     }
-    public loadResource(r: ResourceInfo, p?: processor.Processor): Promise<unknown> {
+    public loadResource(r: ResourceInfo, p?: Processor): Promise<unknown> {
         if (!p) {
             {
                 const s: number | undefined = getHost().state[r.root + r.name];
@@ -545,7 +555,7 @@ export class ResourceLoader {
     public unloadResource(r: ResourceInfo): boolean {
         const data: unknown = getHost().get(r);
         if (!data) { console.warn("�����ͷŲ����ڵ���Դ:", r.name); return false; }
-        const p: processor.Processor | undefined = runtime.processor.isSupport(r);
+        const p: Processor | undefined = runtime.processor.isSupport(r);
         if (p) {
             p.onRemoveStart(getHost(), r);
             getHost().remove(r);
@@ -554,9 +564,9 @@ export class ResourceLoader {
         return true;
     }
 }
-egret.__reflect(ResourceLoader.prototype, "RES.ResourceLoader");
+__reflect(ResourceLoader.prototype, "RES.ResourceLoader");
 
-export class Resource extends egret.EventDispatcher {
+export class Resource extends EventDispatcher {
     public isVcsInit: boolean = false;
     public vcs: IVersionController | undefined;
     public normalLoadConfig: () => Promise<void> = (): Promise<void> => getConfig().init().then(
@@ -636,7 +646,7 @@ export class Resource extends egret.EventDispatcher {
         const result: ResourceWithSubkey | null = getConfig().getResourceWithSubkey(resKey);
         if (!result) { return null; }
         const r: ResourceInfo = result.r;
-        const p: processor.Processor | undefined = runtime.processor.isSupport(r);
+        const p: Processor | undefined = runtime.processor.isSupport(r);
         if (p && p.getData && result.subkey) { return p.getData(getHost(), r, result.key, result.subkey) as T; }
         return getHost().get<T>(r);
     }
@@ -649,14 +659,14 @@ export class Resource extends egret.EventDispatcher {
         }
         const data: T | null | undefined = this.getRes<T>(key);
         if (data) {
-            if (compFunc) { egret.callLater((): void => { compFunc.call(thisObject, data, paramKey); }, this); }
+            if (compFunc) { callLater((): void => { compFunc.call(thisObject, data, paramKey); }, this); }
             return Promise.resolve(data);
         }
         const r: ResourceInfo = tempResult.r;
         const subkey: string = tempResult.subkey;
         return getQueue().pushResItem(r).then((value: unknown): T => {
             getHost().save(r, value);
-            const p: processor.Processor | undefined = runtime.processor.isSupport(r);
+            const p: Processor | undefined = runtime.processor.isSupport(r);
             if (p && p.getData && subkey) { value = p.getData(getHost(), r, key, subkey); }
             if (compFunc) { compFunc.call(thisObject, value as T, paramKey); }
             return value as T;
@@ -724,21 +734,21 @@ export class Resource extends egret.EventDispatcher {
     public setMaxRetryTimes(retry: number): void { getQueue().maxRetryTimes = Math.max(retry, 0); }
     public addResourceData(data: ResourceInfo): void { data.root = ""; getConfig().addResourceData(data); }
 }
-egret.__reflect(Resource.prototype, "RES.Resource");
+__reflect(Resource.prototype, "RES.Resource");
 
-export class ResourceEvent extends egret.Event {
+export class ResourceEvent extends Event {
     public itemsLoaded: number = 0;
     public itemsTotal: number = 0;
     public groupName: string = "";
     public resItem: ResourceItem | undefined;
     public constructor(type: string, bubbles: boolean = false, cancelable: boolean = false) { super(type, bubbles, cancelable); }
-    public static dispatchResourceEvent(target: egret.IEventDispatcher, type: string, groupName: string = "", resItem: ResourceInfo | undefined = undefined, itemsLoaded: number = 0, itemsTotal: number = 0): boolean {
-        const event: ResourceEvent = egret.Event.create(ResourceEvent, type);
+    public static dispatchResourceEvent(target: IEventDispatcher, type: string, groupName: string = "", resItem: ResourceInfo | undefined = undefined, itemsLoaded: number = 0, itemsTotal: number = 0): boolean {
+        const event: ResourceEvent = Event.create(ResourceEvent, type);
         event.groupName = groupName;
         if (resItem) { event.resItem = ResourceItemHelper.convertToResItem(resItem); }
         event.itemsLoaded = itemsLoaded; event.itemsTotal = itemsTotal;
         const result: boolean = target.dispatchEvent(event);
-        egret.Event.release(event);
+        Event.release(event);
         return result;
     }
     public static ITEM_LOAD_ERROR: string = "itemLoadError";
@@ -748,7 +758,7 @@ export class ResourceEvent extends egret.Event {
     public static GROUP_COMPLETE: string = "groupComplete";
     public static GROUP_LOAD_ERROR: string = "groupLoadError";
 }
-egret.__reflect(ResourceEvent.prototype, "RES.ResourceEvent");
+__reflect(ResourceEvent.prototype, "RES.ResourceEvent");
 
 export class NewFileSystem {
     public data: FileTree;
@@ -759,9 +769,9 @@ export class NewFileSystem {
     public profile(): void { console.log(this.data); }
     public addFile(filename: string, type: string = ""): void {
         if (!type) { type = ""; }
-        filename = path.normalize(filename);
-        const basefilename: string = path.basename(filename);
-        const folder: string = path.dirname(filename);
+        filename = normalize(filename);
+        const basefilename: string = basename(filename);
+        const folder: string = dirname(filename);
         if (!this.exists(folder)) { this.mkdir(folder); }
         const d: FileTree = this.resolve(folder) as FileTree;
         d[basefilename] = { url: filename, type: type };
@@ -773,7 +783,7 @@ export class NewFileSystem {
     }
     public resolve(dirpath: string): FileTree | FileEntry | undefined {
         if (dirpath == "") { return this.data; }
-        dirpath = path.normalize(dirpath);
+        dirpath = normalize(dirpath);
         const list: string[] = dirpath.split("/");
         let current: FileTree | FileEntry | undefined = this.data;
         for (let i: number = 0; i < list.length; i++) {
@@ -783,21 +793,21 @@ export class NewFileSystem {
         return current;
     }
     public mkdir(dirpath: string): void {
-        dirpath = path.normalize(dirpath);
+        dirpath = normalize(dirpath);
         const list: string[] = dirpath.split("/");
         let current: FileTree = this.data;
         for (let i: number = 0; i < list.length; i++) { const f: string = list[i]!; if (!current[f]) { current[f] = {}; } current = current[f] as FileTree; }
     }
     public exists(dirpath: string): boolean {
         if (dirpath == "") { return true; }
-        dirpath = path.normalize(dirpath);
+        dirpath = normalize(dirpath);
         const list: string[] = dirpath.split("/");
         let current: FileTree = this.data;
         for (let i: number = 0; i < list.length; i++) { const f: string = list[i]!; if (!current[f]) { return false; } current = current[f] as FileTree; }
         return true;
     }
 }
-egret.__reflect(NewFileSystem.prototype, "RES.NewFileSystem");
+__reflect(NewFileSystem.prototype, "RES.NewFileSystem");
 
 export class ResourceItemHelper {
     public static readonly TYPE_XML: string = "xml";
@@ -850,7 +860,7 @@ export class ResourceManagerError extends Error {
         2006: "资源配置文件中无法找到特定的资源:{0}"
     };
 }
-egret.__reflect(ResourceManagerError.prototype, "RES.ResourceManagerError");
+__reflect(ResourceManagerError.prototype, "RES.ResourceManagerError");
 
 export class ResHelper {
     private static __tempCache: Record<string, unknown> = {};
@@ -865,7 +875,7 @@ export class ResHelper {
         let key: string;
         for (key in ResHelper.__tempCache) {
             const img: unknown = ResHelper.__tempCache[key];
-            if (img instanceof egret.Texture) {
+            if (img instanceof Texture) {
                 totalImageSize += img.$bitmapWidth * img.$bitmapHeight * 4;
             }
         }
@@ -879,8 +889,8 @@ export class ResHelper {
                 get resourceConfig(): ResourceConfig {
                     return ResHelper._config;
                 },
-                load<T = unknown>(r: ResourceInfo, processorName?: string | processor.Processor<T>): Promise<T> {
-                    const p: processor.Processor | undefined = typeof processorName == "string" ? runtime.processor.getMap()[processorName] : processorName;
+                load<T = unknown>(r: ResourceInfo, processorName?: string | Processor<T>): Promise<T> {
+                    const p: Processor | undefined = typeof processorName == "string" ? runtime.processor.getMap()[processorName] : processorName;
                     return ResHelper._queue.loadResource(r, p) as Promise<T>;
                 },
                 unload(r: ResourceInfo): boolean {

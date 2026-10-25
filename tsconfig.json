@@ -14,10 +14,11 @@
     "moduleDetection": "force",
     "noEmit": true,
 
-    /* Linting */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
+    /* Legacy UI skins bind fields by name; retain unused bindings and callback parameters. */
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    /* Vite also compiles the migrated modules' enums and internal namespaces. */
+    "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"]

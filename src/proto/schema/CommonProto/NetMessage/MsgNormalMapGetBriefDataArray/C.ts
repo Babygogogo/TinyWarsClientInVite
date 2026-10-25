@@ -1,0 +1,90 @@
+import protobuf from "protobufjs/minimal.js";
+import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../$runtime.js";
+
+export interface CJson extends $ProtoSchemaJsonBase {
+    normalMapIdArray: number[];
+}
+
+export class C extends $ProtoSchemaBase {
+    private _normalMapIdArray: number[] = [];
+
+    public static fromJson(obj: CJson): C {
+        return new C().loadJson(obj);
+    }
+    public override loadJson(obj: CJson): this {
+        this.setNormalMapIdArray(obj.normalMapIdArray?.concat() ?? []);
+        return this;
+    }
+    public override toJson(obj?: CJson): CJson {
+        obj ??= ({} as CJson);
+
+        {
+            obj.normalMapIdArray = this.getNormalMapIdArray().concat();
+        }
+        return obj;
+    }
+
+    public override toWriter(writer = protobuf.Writer.create()): protobuf.Writer {
+        {
+            const value = this.getNormalMapIdArray();
+            const length = value.length;
+            if (length) {
+                writer.uint32(10).fork();
+                for (let i = 0; i < length; ++i) {
+                    writer.int32(value[i]!);
+                }
+                writer.ldelim();
+            }
+        }
+
+        return writer;
+    }
+
+    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): C {
+        if (!(reader instanceof protobuf.Reader)) {
+            reader = protobuf.Reader.create(reader);
+        }
+
+        const end = length == null ? reader.len : reader.pos + length;
+        const msg = new C();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    {
+                        const arr = msg._normalMapIdArray;
+                        if ((tag & 7) === 2) {
+                            const end2 = reader.uint32() + reader.pos;
+                            while (reader.pos < end2) {
+                                arr.push(reader.int32());
+                            }
+                        } else {
+                            arr.push(reader.int32());
+                        }
+                    }
+                    break;
+
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+
+        return msg;
+    }
+
+    public override clone(): C {
+        return C.decode(this.encode());
+    }
+
+    public override getSchemaName(): "C" {
+        return "C";
+    }
+
+    public getNormalMapIdArray(): number[] {
+        return this._normalMapIdArray;
+    }
+    public setNormalMapIdArray(value: number[]): void {
+        this._normalMapIdArray = value;
+    }
+}

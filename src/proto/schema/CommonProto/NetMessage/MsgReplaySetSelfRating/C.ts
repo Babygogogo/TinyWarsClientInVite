@@ -1,0 +1,108 @@
+import protobuf from "protobufjs/minimal.js";
+import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../$runtime.js";
+
+export interface CJson extends $ProtoSchemaJsonBase {
+    replayId?: number | null | undefined;
+    rating?: number | null | undefined;
+}
+
+export class C extends $ProtoSchemaBase {
+    private _replayId?: number | null | undefined;
+    private _rating?: number | null | undefined;
+
+    public static fromJson(obj: CJson): C {
+        return new C().loadJson(obj);
+    }
+    public override loadJson(obj: CJson): this {
+        this.setReplayId(obj.replayId);
+        this.setRating(obj.rating);
+        return this;
+    }
+    public override toJson(obj?: CJson): CJson {
+        obj ??= ({} as CJson);
+
+        {
+            const value = this.getReplayId();
+            (value != null) && (obj.replayId = value);
+        }
+
+        {
+            const value = this.getRating();
+            (value != null) && (obj.rating = value);
+        }
+        return obj;
+    }
+
+    public override toWriter(writer = protobuf.Writer.create()): protobuf.Writer {
+        {
+            const value = this.getReplayId();
+            if (value != null) {
+                writer.uint32(8).int32(value);
+            }
+        }
+
+        {
+            const value = this.getRating();
+            if (value != null) {
+                writer.uint32(16).int32(value);
+            }
+        }
+
+        return writer;
+    }
+
+    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): C {
+        if (!(reader instanceof protobuf.Reader)) {
+            reader = protobuf.Reader.create(reader);
+        }
+
+        const end = length == null ? reader.len : reader.pos + length;
+        const msg = new C();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    msg.setReplayId(reader.int32());
+                    break;
+
+                case 2:
+                    msg.setRating(reader.int32());
+                    break;
+
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+            }
+        }
+
+        return msg;
+    }
+
+    public override clone(): C {
+        return C.decode(this.encode());
+    }
+
+    public override getSchemaName(): "C" {
+        return "C";
+    }
+
+    public checkHasReplayId(): boolean {
+        return this._replayId != null;
+    }
+    public getReplayId(): number | null | undefined {
+        return this._replayId;
+    }
+    public setReplayId(value: number | null | undefined): void {
+        this._replayId = value;
+    }
+
+    public checkHasRating(): boolean {
+        return this._rating != null;
+    }
+    public getRating(): number | null | undefined {
+        return this._rating;
+    }
+    public setRating(value: number | null | undefined): void {
+        this._rating = value;
+    }
+}

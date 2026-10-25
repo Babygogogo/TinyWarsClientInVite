@@ -1,6 +1,24 @@
 
-import type * as web from "./WebCore";
-import type * as sys from "./SysCore";
+import type { WebHttpRequest, XML as webXML, RunEgretOptions, HTML5WebSocket } from "./WebCore";
+import type {
+    RenderBuffer,
+    SystemTicker,
+    TextNode,
+    CanvasContext,
+    DisplayList,
+    RenderNode,
+    NormalBitmapNode,
+    BitmapNode,
+    MeshNode,
+    Path2D,
+    GraphicsNode,
+    CanvasRenderBuffer,
+    FillPath,
+    GroupNode,
+    GradientFillPath,
+    StrokePath,
+    PathCommand,
+} from "./SysCore";
 import { runtime } from "./Runtime";
 
 window.isNaN = (value: unknown): boolean => {
@@ -14,7 +32,7 @@ export type EventListener = (this: unknown, event: Event) => void;
 export type DisplayRenderMode = 1 | 2 | 3 | 4 | null;
 export type GradientTypeValue = "linear" | "radial";
 export type JointStyleValue = JointStyleConstants[keyof JointStyleConstants];
-export type HttpRequest<TResponse = string | ArrayBuffer | Blob | Document | null> = web.WebHttpRequest<TResponse>;
+export type HttpRequest<TResponse = string | ArrayBuffer | Blob | Document | null> = WebHttpRequest<TResponse>;
 export type URLLoaderFormat = "binary" | "text" | "variables" | "texture" | "sound";
 export type ScrollEaseFunction = (ratio: number, start?: number, change?: number, duration?: number) => number;
 export type ScrollTweenProperties = Record<string, unknown>;
@@ -313,7 +331,7 @@ export interface TweenPlugin {
     tween(tween: Tween, name: string, value: unknown, start: TweenProperties, end: TweenProperties, ratio: number, isWait: boolean, isEnd: boolean): unknown;
 }
 export interface Texture {
-    $renderBuffer?: sys.RenderBuffer | null;
+    $renderBuffer?: RenderBuffer | null;
 }
 export interface EngineWebGLTexture {
     isCanvas?: boolean;
@@ -327,7 +345,7 @@ export interface OrientationEvent {
     gamma: number | null;
     alpha: number | null;
 }
-export interface XML extends web.XML {
+export interface XML extends webXML {
 
 }
 export interface InputTextFieldState {
@@ -704,7 +722,7 @@ export function getStageText() {
 export function getFpsDisplay() {
     return runtime.web.WebFps;
 }
-export function runEgret(options: web.RunEgretOptions) {
+export function runEgret(options: RunEgretOptions) {
     Recycler.$init();
 
     runtime.web.runEgret(options);
@@ -718,7 +736,7 @@ export function getOption(key: string) {
 export function getVideo() {
     return runtime.web.WebVideo;
 }
-export function getTicker(): sys.SystemTicker {
+export function getTicker(): SystemTicker {
     // TODO 原api为 export const ticker = sys.SystemTicker.instance;
     return runtime.sys.SystemTicker.instance;
 }
@@ -738,7 +756,7 @@ export function setTimeout<TThis, TArgs extends unknown[], TResult>(
 export function clearTimeout(key: number): void {
     getTicker().clearTimeout(key);
 }
-export function getFontString(node: sys.TextNode, format: ITextStyle): string {
+export function getFontString(node: TextNode, format: ITextStyle): string {
     const italic: boolean = format.italic == null ? node.italic : format.italic;
     const bold: boolean = format.bold == null ? node.bold : format.bold;
     const size: number = format.size == null ? node.size : format.size;
@@ -771,7 +789,7 @@ export function __reflect(prototype: object, className: string, types?: string[]
     }
     metadata.__types__ = metadata.__types__ ? types.concat(metadata.__types__) : types;
 }
-function getGradient(context: sys.CanvasContext, type: GradientTypeValue, colors: number[], alphas: number[], ratios: number[], _matrix: Matrix): CanvasGradient {
+function getGradient(context: CanvasContext, type: GradientTypeValue, colors: number[], alphas: number[], ratios: number[], _matrix: Matrix): CanvasGradient {
     const gradient: CanvasGradient = type == GradientType.LINEAR ? context.createLinearGradient(-1, 0, 1, 0) : context.createRadialGradient(0, 0, 0, 0, 0, 1);
     for (let i: number = 0; i < colors.length; i++) { gradient.addColorStop(ratios[i]! / 255, getRGBAString(colors[i]!, alphas[i]!)); }
     return gradient;
@@ -1563,7 +1581,7 @@ export class DisplayObject extends EventDispatcher {
     public $anchorOffsetX: number = 0;
     public $anchorOffsetY: number = 0;
     public $visible: boolean = true;
-    public $displayList: sys.DisplayList | null = null;
+    public $displayList: DisplayList | null = null;
     public $cacheAsBitmap: boolean = false;
     public $cacheDirty: boolean = false;
     public $alpha: number = 1;
@@ -1573,8 +1591,8 @@ export class DisplayObject extends EventDispatcher {
     public $maskedObject: DisplayObject | null = null;
     public $mask: DisplayObject | null = null;
     public $maskRect: Rectangle | null = null;
-    public $parentDisplayList: sys.DisplayList | null = null;
-    public $renderNode: sys.RenderNode | null = null;
+    public $parentDisplayList: DisplayList | null = null;
+    public $renderNode: RenderNode | null = null;
     public $renderDirty: boolean = false;
     public $renderMode: DisplayRenderMode = null;
     public _tint: number = 0;
@@ -2104,7 +2122,7 @@ export class DisplayObject extends EventDispatcher {
             return;
         }
         if (value) {
-            const displayList: sys.DisplayList | null = runtime.sys.DisplayList.create(self);
+            const displayList: DisplayList | null = runtime.sys.DisplayList.create(self);
             if (displayList) {
                 self.$displayList = displayList;
                 self.$cacheDirty = true;
@@ -2420,9 +2438,9 @@ export class DisplayObject extends EventDispatcher {
     public $measureContentBounds(_bounds: Rectangle): void {
     }
 
-    public $getRenderNode(): sys.RenderNode | null {
+    public $getRenderNode(): RenderNode | null {
         const self: this = this;
-        let node: sys.RenderNode | null = self.$renderNode;
+        let node: RenderNode | null = self.$renderNode;
         if (!node) {
             return null;
         }
@@ -2597,16 +2615,16 @@ export class DisplayObject extends EventDispatcher {
             const localY: number = m.b * x + m.d * y + m.ty;
             let data: Uint8Array | Uint8ClampedArray;
             {
-                const displayList: sys.DisplayList | null = self.$displayList;
+                const displayList: DisplayList | null = self.$displayList;
                 if (displayList) {
-                    const buffer: sys.RenderBuffer = displayList.renderBuffer;
+                    const buffer: RenderBuffer = displayList.renderBuffer;
                     try {
                         data = buffer.getPixels(localX - displayList.offsetX, localY - displayList.offsetY);
                     } catch (e: unknown) {
                         throw new Error(runtime.sys.tr(1039));
                     }
                 } else {
-                    const buffer: sys.RenderBuffer = runtime.sys.RenderBuffHelper.customHitTestBuffer!;
+                    const buffer: RenderBuffer = runtime.sys.RenderBuffHelper.customHitTestBuffer!;
                     buffer.resize(3, 3);
                     const matrix: Matrix = Matrix.create();
                     matrix.identity();
@@ -3732,7 +3750,7 @@ export class Bitmap extends DisplayObject {
     public $scale9Grid: Rectangle | null = null;
     public $fillMode: string = "scale";
     public _pixelHitTest: boolean = false;
-    public declare $renderNode: sys.NormalBitmapNode | sys.BitmapNode | sys.MeshNode;
+    public declare $renderNode: NormalBitmapNode | BitmapNode | MeshNode;
 
     public constructor(value?: Texture | null) {
         super();
@@ -4023,12 +4041,12 @@ export class Bitmap extends DisplayObject {
                 if (this.$renderNode instanceof runtime.sys.NormalBitmapNode) {
                     this.$renderNode = new runtime.sys.BitmapNode();
                 }
-                runtime.sys.BitmapNode.$updateTextureDataWithScale9Grid(this.$renderNode as sys.BitmapNode, this.$bitmapData, scale9Grid, this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight, this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight, destW, destH, this.$sourceWidth, this.$sourceHeight, this.$smoothing);
+                runtime.sys.BitmapNode.$updateTextureDataWithScale9Grid(this.$renderNode as BitmapNode, this.$bitmapData, scale9Grid, this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight, this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight, destW, destH, this.$sourceWidth, this.$sourceHeight, this.$smoothing);
             } else {
                 if (this.fillMode == BitmapFillMode.REPEAT && this.$renderNode instanceof runtime.sys.NormalBitmapNode) {
                     this.$renderNode = new runtime.sys.BitmapNode();
                 }
-                runtime.sys.BitmapNode.$updateTextureData(this.$renderNode as sys.NormalBitmapNode | sys.BitmapNode, this.$bitmapData, this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight, this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight, destW, destH, this.$sourceWidth, this.$sourceHeight, this.$fillMode, this.$smoothing);
+                runtime.sys.BitmapNode.$updateTextureData(this.$renderNode as NormalBitmapNode | BitmapNode, this.$bitmapData, this.$bitmapX, this.$bitmapY, this.$bitmapWidth, this.$bitmapHeight, this.$offsetX, this.$offsetY, this.$textureWidth, this.$textureHeight, destW, destH, this.$sourceWidth, this.$sourceHeight, this.$fillMode, this.$smoothing);
             }
         }
     }
@@ -5210,8 +5228,8 @@ __reflect(GradientType.prototype, "egret.GradientType");
 export class Graphics extends HashObject {
     public lastX: number = 0;
     public lastY: number = 0;
-    public fillPath: sys.Path2D | null = null;
-    public strokePath: sys.Path2D | null = null;
+    public fillPath: Path2D | null = null;
+    public strokePath: Path2D | null = null;
     public topLeftStrokeWidth: number = 0;
     public bottomRightStrokeWidth: number = 0;
     public minX: number = Infinity;
@@ -5219,7 +5237,7 @@ export class Graphics extends HashObject {
     public maxX: number = -Infinity;
     public maxY: number = -Infinity;
     public includeLastPosition: boolean = true;
-    public $renderNode: sys.GraphicsNode = new runtime.sys.GraphicsNode();
+    public $renderNode: GraphicsNode = new runtime.sys.GraphicsNode();
     public declare $targetDisplay: DisplayObject;
     public declare $targetIsSprite: boolean;
 
@@ -5306,8 +5324,8 @@ export class Graphics extends HashObject {
         y = +y || 0;
         width = +width || 0;
         height = +height || 0;
-        const fillPath: sys.Path2D | null = this.fillPath;
-        const strokePath: sys.Path2D | null = this.strokePath;
+        const fillPath: Path2D | null = this.fillPath;
+        const strokePath: Path2D | null = this.strokePath;
         fillPath && fillPath.drawRect(x, y, width, height);
         strokePath && strokePath.drawRect(x, y, width, height);
         this.extendBoundsByPoint(x + width, y + height);
@@ -5322,8 +5340,8 @@ export class Graphics extends HashObject {
         height = +height || 0;
         ellipseWidth = +ellipseWidth || 0;
         ellipseHeight = +ellipseHeight! || 0;
-        const fillPath: sys.Path2D | null = this.fillPath;
-        const strokePath: sys.Path2D | null = this.strokePath;
+        const fillPath: Path2D | null = this.fillPath;
+        const strokePath: Path2D | null = this.strokePath;
         fillPath && fillPath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
         strokePath && strokePath.drawRoundRect(x, y, width, height, ellipseWidth, ellipseHeight);
         const radiusX: number = (ellipseWidth * 0.5) | 0;
@@ -5341,8 +5359,8 @@ export class Graphics extends HashObject {
         x = +x || 0;
         y = +y || 0;
         radius = +radius || 0;
-        const fillPath: sys.Path2D | null = this.fillPath;
-        const strokePath: sys.Path2D | null = this.strokePath;
+        const fillPath: Path2D | null = this.fillPath;
+        const strokePath: Path2D | null = this.strokePath;
         fillPath && fillPath.drawCircle(x, y, radius);
         strokePath && strokePath.drawCircle(x, y, radius);
         this.extendBoundsByPoint(x - radius - 1, y - radius - 1);
@@ -5356,8 +5374,8 @@ export class Graphics extends HashObject {
         y = +y || 0;
         width = +width || 0;
         height = +height || 0;
-        const fillPath: sys.Path2D | null = this.fillPath;
-        const strokePath: sys.Path2D | null = this.strokePath;
+        const fillPath: Path2D | null = this.fillPath;
+        const strokePath: Path2D | null = this.strokePath;
         fillPath && fillPath.drawEllipse(x, y, width, height);
         strokePath && strokePath.drawEllipse(x, y, width, height);
         this.extendBoundsByPoint(x - 1, y - 1);
@@ -5369,8 +5387,8 @@ export class Graphics extends HashObject {
     public moveTo(x: number, y: number): void {
         x = +x || 0;
         y = +y || 0;
-        const fillPath: sys.Path2D | null = this.fillPath;
-        const strokePath: sys.Path2D | null = this.strokePath;
+        const fillPath: Path2D | null = this.fillPath;
+        const strokePath: Path2D | null = this.strokePath;
         fillPath && fillPath.moveTo(x, y);
         strokePath && strokePath.moveTo(x, y);
         this.includeLastPosition = false;
@@ -5382,8 +5400,8 @@ export class Graphics extends HashObject {
     public lineTo(x: number, y: number): void {
         x = +x || 0;
         y = +y || 0;
-        const fillPath: sys.Path2D | null = this.fillPath;
-        const strokePath: sys.Path2D | null = this.strokePath;
+        const fillPath: Path2D | null = this.fillPath;
+        const strokePath: Path2D | null = this.strokePath;
         fillPath && fillPath.lineTo(x, y);
         strokePath && strokePath.lineTo(x, y);
         this.updatePosition(x, y);
@@ -5395,8 +5413,8 @@ export class Graphics extends HashObject {
         controlY = +controlY || 0;
         anchorX = +anchorX || 0;
         anchorY = +anchorY || 0;
-        const fillPath: sys.Path2D | null = this.fillPath;
-        const strokePath: sys.Path2D | null = this.strokePath;
+        const fillPath: Path2D | null = this.fillPath;
+        const strokePath: Path2D | null = this.strokePath;
         fillPath && fillPath.curveTo(controlX, controlY, anchorX, anchorY);
         strokePath && strokePath.curveTo(controlX, controlY, anchorX, anchorY);
         const lastX: number = this.lastX || 0;
@@ -5419,8 +5437,8 @@ export class Graphics extends HashObject {
         controlY2 = +controlY2 || 0;
         anchorX = +anchorX || 0;
         anchorY = +anchorY || 0;
-        const fillPath: sys.Path2D | null = this.fillPath;
-        const strokePath: sys.Path2D | null = this.strokePath;
+        const fillPath: Path2D | null = this.fillPath;
+        const strokePath: Path2D | null = this.strokePath;
         fillPath && fillPath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
         strokePath && strokePath.cubicCurveTo(controlX1, controlY1, controlX2, controlY2, anchorX, anchorY);
         const lastX: number = this.lastX || 0;
@@ -5448,8 +5466,8 @@ export class Graphics extends HashObject {
         anticlockwise = !!anticlockwise;
         startAngle = clampAngle(startAngle);
         endAngle = clampAngle(endAngle);
-        const fillPath: sys.Path2D | null = this.fillPath;
-        const strokePath: sys.Path2D | null = this.strokePath;
+        const fillPath: Path2D | null = this.fillPath;
+        const strokePath: Path2D | null = this.strokePath;
         if (fillPath) {
             fillPath.$lastX = this.lastX;
             fillPath.$lastY = this.lastY;
@@ -5552,7 +5570,7 @@ export class Graphics extends HashObject {
     }
 
     public updateNodeBounds(): void {
-        const node: sys.GraphicsNode = this.$renderNode;
+        const node: GraphicsNode = this.$renderNode;
         node.x = this.minX;
         node.y = this.minY;
         node.width = Math.ceil(this.maxX - this.minX);
@@ -5582,9 +5600,9 @@ export class Graphics extends HashObject {
         const m: Matrix = target.$getInvertedConcatenatedMatrix();
         const localX: number = m.a * stageX + m.c * stageY + m.tx;
         const localY: number = m.b * stageX + m.d * stageY + m.ty;
-        const buffer: sys.RenderBuffer = runtime.sys.RenderHelper.canvasHitTestBuffer!;
+        const buffer: RenderBuffer = runtime.sys.RenderHelper.canvasHitTestBuffer!;
         buffer.resize(3, 3);
-        const node: sys.GraphicsNode = this.$renderNode;
+        const node: GraphicsNode = this.$renderNode;
         const matrix: Matrix = Matrix.create();
         matrix.identity();
         matrix.translate(1 - localX, 1 - localY);
@@ -6344,15 +6362,15 @@ export class CanvasRenderer {
     private static readonly defaultCompositeOp: GlobalCompositeOperation = "source-over";
     private static readonly BLACK_COLOR: string = "#000000";
     private static readonly CAPS_STYLES: Record<CapsStyleValue, CanvasLineCap> = { none: "butt", square: "square", round: "round" };
-    private static readonly renderBufferPool: sys.CanvasRenderBuffer[] = [];
-    private static readonly renderBufferPool_Filters: sys.CanvasRenderBuffer[] = [];
+    private static readonly renderBufferPool: CanvasRenderBuffer[] = [];
+    private static readonly renderBufferPool_Filters: CanvasRenderBuffer[] = [];
 
     public nestLevel: number = 0;
     public renderingMask: boolean = false;
 
-    public render(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix: Matrix, _forRenderTexture?: boolean): number {
+    public render(displayObject: DisplayObject, buffer: RenderBuffer, matrix: Matrix, _forRenderTexture?: boolean): number {
         this.nestLevel++;
-        const context: sys.CanvasContext = (buffer as sys.CanvasRenderBuffer).context;
+        const context: CanvasContext = (buffer as CanvasRenderBuffer).context;
         context.transform(matrix.a, matrix.b, matrix.c, matrix.d, 0, 0);
         const drawCall: number = this.drawDisplayObject(displayObject, context, matrix.tx, matrix.ty, true);
         const invert: Matrix = Matrix.create();
@@ -6370,10 +6388,10 @@ export class CanvasRenderer {
         }
         return drawCall;
     }
-    public drawDisplayObject(displayObject: DisplayObject, context: sys.CanvasContext, offsetX: number, offsetY: number, isStage?: boolean): number {
+    public drawDisplayObject(displayObject: DisplayObject, context: CanvasContext, offsetX: number, offsetY: number, isStage?: boolean): number {
         let drawCalls: number = 0;
-        let node: sys.RenderNode | null;
-        const displayList: sys.DisplayList | null = displayObject.$displayList;
+        let node: RenderNode | null;
+        const displayList: DisplayList | null = displayObject.$displayList;
         if (displayList && !isStage) {
             if (displayObject.$cacheDirty || displayObject.$renderDirty || displayList.$canvasScaleX != runtime.sys.DisplayList.$canvasScaleX || displayList.$canvasScaleY != runtime.sys.DisplayList.$canvasScaleY) { drawCalls += displayList.drawToSurface(); }
             node = displayList.$renderNode;
@@ -6413,7 +6431,7 @@ export class CanvasRenderer {
         }
         return drawCalls;
     }
-    public drawWithFilter(displayObject: DisplayObject, context: sys.CanvasContext, offsetX: number, offsetY: number): number {
+    public drawWithFilter(displayObject: DisplayObject, context: CanvasContext, offsetX: number, offsetY: number): number {
         if (displayObject.$children && displayObject.$children.length == 0 && (!displayObject.$renderNode || displayObject.$renderNode.$getRenderCount() == 0)) { return 0; }
         let drawCalls: number = 0;
         const filters: Filter[] = displayObject.$filters!;
@@ -6428,8 +6446,8 @@ export class CanvasRenderer {
         if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
             return drawCalls;
         }
-        const displayBuffer: sys.CanvasRenderBuffer = this.createRenderBuffer(displayBoundsWidth - displayBoundsX, displayBoundsHeight - displayBoundsY, true);
-        const displayContext: sys.CanvasContext = displayBuffer.context;
+        const displayBuffer: CanvasRenderBuffer = this.createRenderBuffer(displayBoundsWidth - displayBoundsX, displayBoundsHeight - displayBoundsY, true);
+        const displayContext: CanvasContext = displayBuffer.context;
         if (displayObject.$mask) { drawCalls += this.drawWithClip(displayObject, displayContext, -displayBoundsX, -displayBoundsY); }
         else if (displayObject.$scrollRect || displayObject.$maskRect) { drawCalls += this.drawWithScrollRect(displayObject, displayContext, -displayBoundsX, -displayBoundsY); }
         else { drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY); }
@@ -6459,7 +6477,7 @@ export class CanvasRenderer {
         CanvasRenderer.renderBufferPool_Filters.push(displayBuffer);
         return drawCalls;
     }
-    public drawWithClip(displayObject: DisplayObject, context: sys.CanvasContext, offsetX: number, offsetY: number): number {
+    public drawWithClip(displayObject: DisplayObject, context: CanvasContext, offsetX: number, offsetY: number): number {
         let drawCalls: number = 0;
         const hasBlendMode: boolean = displayObject.$blendMode !== 0;
         const compositeOp: GlobalCompositeOperation = CanvasRenderer.blendModes[displayObject.$blendMode] || CanvasRenderer.defaultCompositeOp;
@@ -6486,8 +6504,8 @@ export class CanvasRenderer {
             return drawCalls;
         }
         if (mask) {
-            const maskRenderNode: sys.RenderNode | null = mask.$getRenderNode();
-            const fill: sys.FillPath | undefined = (maskRenderNode as sys.GraphicsNode | null)?.drawData[0] as sys.FillPath | undefined;
+            const maskRenderNode: RenderNode | null = mask.$getRenderNode();
+            const fill: FillPath | undefined = (maskRenderNode as GraphicsNode | null)?.drawData[0] as FillPath | undefined;
             if ((!mask.$children || mask.$children.length == 0) && maskRenderNode && maskRenderNode.type == 3 && maskRenderNode.drawData.length == 1 && fill?.type == 1 && fill.fillAlpha == 1) {
                 this.renderingMask = true;
                 context.save();
@@ -6512,12 +6530,12 @@ export class CanvasRenderer {
         if (displayBoundsWidth <= 0 || displayBoundsHeight <= 0) {
             return drawCalls;
         }
-        const displayBuffer: sys.CanvasRenderBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
-        const displayContext: sys.CanvasContext = displayBuffer.context;
+        const displayBuffer: CanvasRenderBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
+        const displayContext: CanvasContext = displayBuffer.context;
         if (!displayContext) { return drawCalls + this.drawDisplayObject(displayObject, context, offsetX, offsetY); }
         drawCalls += this.drawDisplayObject(displayObject, displayContext, -displayBoundsX, -displayBoundsY);
         if (mask) {
-            const maskRenderNode: sys.RenderNode | null = mask.$getRenderNode();
+            const maskRenderNode: RenderNode | null = mask.$getRenderNode();
             const maskMatrix: Matrix = Matrix.create();
             maskMatrix.copyFrom(mask.$getConcatenatedMatrix()); mask.$getConcatenatedMatrixAt(displayObject, maskMatrix); maskMatrix.translate(-displayBoundsX, -displayBoundsY);
             if ((maskRenderNode && maskRenderNode.$getRenderCount() == 1) || mask.$displayList) {
@@ -6525,8 +6543,8 @@ export class CanvasRenderer {
                 displayContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                 drawCalls += this.drawDisplayObject(mask, displayContext, 0, 0); displayContext.restore();
             } else {
-                const maskBuffer: sys.CanvasRenderBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
-                const maskContext: sys.CanvasContext = maskBuffer.context;
+                const maskBuffer: CanvasRenderBuffer = this.createRenderBuffer(displayBoundsWidth, displayBoundsHeight);
+                const maskContext: CanvasContext = maskBuffer.context;
                 maskContext.setTransform(maskMatrix.a, maskMatrix.b, maskMatrix.c, maskMatrix.d, maskMatrix.tx, maskMatrix.ty);
                 drawCalls += this.drawDisplayObject(mask, maskContext, 0, 0);
                 displayContext.globalCompositeOperation = "destination-in"; displayContext.drawImage(maskBuffer.surface, 0, 0);
@@ -6553,7 +6571,7 @@ export class CanvasRenderer {
         CanvasRenderer.renderBufferPool.push(displayBuffer);
         return drawCalls;
     }
-    public drawWithScrollRect(displayObject: DisplayObject, context: sys.CanvasContext, offsetX: number, offsetY: number): number {
+    public drawWithScrollRect(displayObject: DisplayObject, context: CanvasContext, offsetX: number, offsetY: number): number {
         const scrollRect: Rectangle = (displayObject.$scrollRect || displayObject.$maskRect)!;
         if (scrollRect.isEmpty()) { return 0; }
         if (displayObject.$scrollRect) { offsetX -= scrollRect.x; offsetY -= scrollRect.y; }
@@ -6561,15 +6579,15 @@ export class CanvasRenderer {
         const drawCalls: number = this.drawDisplayObject(displayObject, context, offsetX, offsetY);
         context.restore(); return drawCalls;
     }
-    public drawNodeToBuffer(node: sys.RenderNode, buffer: sys.RenderBuffer, matrix: Matrix, forHitTest?: boolean): void {
-        const context: sys.CanvasContext = (buffer as sys.CanvasRenderBuffer).context;
+    public drawNodeToBuffer(node: RenderNode, buffer: RenderBuffer, matrix: Matrix, forHitTest?: boolean): void {
+        const context: CanvasContext = (buffer as CanvasRenderBuffer).context;
         context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
         this.renderNode(node, context, forHitTest);
     }
-    public drawDisplayToBuffer(displayObject: DisplayObject, buffer: sys.RenderBuffer, matrix?: Matrix | null): number {
-        const context: sys.CanvasContext = (buffer as sys.CanvasRenderBuffer).context;
+    public drawDisplayToBuffer(displayObject: DisplayObject, buffer: RenderBuffer, matrix?: Matrix | null): number {
+        const context: CanvasContext = (buffer as CanvasRenderBuffer).context;
         if (matrix) { context.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty); }
-        const node: sys.RenderNode | null = displayObject.$renderDirty ? displayObject.$getRenderNode() : displayObject.$renderNode;
+        const node: RenderNode | null = displayObject.$renderDirty ? displayObject.$getRenderNode() : displayObject.$renderNode;
         let drawCalls: number = 0;
         if (node) { drawCalls++; this.renderNode(node, context); }
         const children: DisplayObject[] | null = displayObject.$children;
@@ -6587,19 +6605,19 @@ export class CanvasRenderer {
         }
         return drawCalls;
     }
-    public renderNode(node: sys.RenderNode, context: sys.CanvasContext, forHitTest?: boolean): number {
+    public renderNode(node: RenderNode, context: CanvasContext, forHitTest?: boolean): number {
         // RenderNode.type ��ԭ���������ʱ�б��ֶΣ��������ݲ����ɶ�Ӧ���ඨ�塣
         switch (node.type) {
-            case 1: return this.renderBitmap(node as sys.BitmapNode, context);
-            case 2: this.renderText(node as sys.TextNode, context); return 1;
-            case 3: return this.renderGraphics(node as sys.GraphicsNode, context, forHitTest);
-            case 4: return this.renderGroup(node as sys.GroupNode, context);
-            case 5: return this.renderMesh(node as sys.MeshNode, context);
-            case 6: return this.renderNormalBitmap(node as sys.NormalBitmapNode, context);
+            case 1: return this.renderBitmap(node as BitmapNode, context);
+            case 2: this.renderText(node as TextNode, context); return 1;
+            case 3: return this.renderGraphics(node as GraphicsNode, context, forHitTest);
+            case 4: return this.renderGroup(node as GroupNode, context);
+            case 5: return this.renderMesh(node as MeshNode, context);
+            case 6: return this.renderNormalBitmap(node as NormalBitmapNode, context);
             default: return 0;
         }
     }
-    public renderNormalBitmap(node: sys.NormalBitmapNode, context: sys.CanvasContext): number {
+    public renderNormalBitmap(node: NormalBitmapNode, context: CanvasContext): number {
         const image: BitmapData | null = node.image;
         if (!image || !image.source) { return 0; }
         const source: CanvasImageSource = image.source as CanvasImageSource;
@@ -6618,7 +6636,7 @@ export class CanvasRenderer {
         } else { context.drawImage(source, node.sourceX, node.sourceY, node.sourceW, node.sourceH, node.drawX + context.$offsetX, node.drawY + context.$offsetY, node.drawW, node.drawH); }
         return 1;
     }
-    public renderBitmap(node: sys.BitmapNode, context: sys.CanvasContext): number {
+    public renderBitmap(node: BitmapNode, context: CanvasContext): number {
         const image: BitmapData | null = node.image;
         if (!image || !image.source) { return 0; }
         const source: CanvasImageSource = image.source as CanvasImageSource;
@@ -6656,8 +6674,8 @@ export class CanvasRenderer {
             let destWidth: number = data[6]!;
             let destHeight: number = data[7]!;
             if (node.rotated) { sourceWidth = data[3]!; sourceHeight = data[2]!; destWidth = data[7]!; destHeight = data[6]!; }
-            const displayBuffer: sys.CanvasRenderBuffer = this.createRenderBuffer(destWidth, destHeight);
-            const displayContext: sys.CanvasContext = displayBuffer.context;
+            const displayBuffer: CanvasRenderBuffer = this.createRenderBuffer(destWidth, destHeight);
+            const displayContext: CanvasContext = displayBuffer.context;
             drawCalls++;
             if (node.rotated) { context.transform(0, -1, 1, 0, 0, destWidth); }
             displayContext.drawImage(source, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, destWidth, destHeight);
@@ -6702,10 +6720,10 @@ export class CanvasRenderer {
         }
         return drawCalls;
     }
-    public renderMesh(_node: sys.MeshNode, _context: sys.CanvasContext): number {
+    public renderMesh(_node: MeshNode, _context: CanvasContext): number {
         return 0;
     }
-    public renderText(node: sys.TextNode, context: sys.CanvasContext): void {
+    public renderText(node: TextNode, context: CanvasContext): void {
         context.textAlign = "left"; context.textBaseline = "middle"; context.lineJoin = "round";
         const drawData: (number | string | ITextStyle)[] = node.drawData;
         let pos: number = 0;
@@ -6723,15 +6741,15 @@ export class CanvasRenderer {
             context.fillText(text, x + context.$offsetX, y + context.$offsetY);
         }
     }
-    public renderGraphics(node: sys.GraphicsNode, context: sys.CanvasContext, forHitTest?: boolean): number {
-        const drawData: sys.Path2D[] = node.drawData;
+    public renderGraphics(node: GraphicsNode, context: CanvasContext, forHitTest?: boolean): number {
+        const drawData: Path2D[] = node.drawData;
         const length: number = drawData.length;
         forHitTest = !!forHitTest;
         for (let i: number = 0; i < length; i++) {
-            const path: sys.Path2D = drawData[i]!;
+            const path: Path2D = drawData[i]!;
             switch (path.type) {
                 case 1: {
-                    const fillPath: sys.FillPath = path as sys.FillPath;
+                    const fillPath: FillPath = path as FillPath;
                     context.fillStyle = forHitTest ? CanvasRenderer.BLACK_COLOR : getRGBAString(fillPath.fillColor, fillPath.fillAlpha);
                     this.renderPath(path, context);
                     if (this.renderingMask) {
@@ -6742,14 +6760,14 @@ export class CanvasRenderer {
                     break;
                 }
                 case 2: {
-                    const g: sys.GradientFillPath = path as sys.GradientFillPath;
+                    const g: GradientFillPath = path as GradientFillPath;
                     context.fillStyle = forHitTest ? CanvasRenderer.BLACK_COLOR : getGradient(context, g.gradientType, g.colors, g.alphas, g.ratios, g.matrix);
                     context.save();
                     const m: Matrix = g.matrix;
                     this.renderPath(path, context); context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty); context.fill(); context.restore(); break;
                 }
                 case 3: {
-                    const strokeFill: sys.StrokePath = path as sys.StrokePath;
+                    const strokeFill: StrokePath = path as StrokePath;
                     const lineWidth: number = strokeFill.lineWidth;
                     context.lineWidth = lineWidth;
                     context.strokeStyle = forHitTest ? CanvasRenderer.BLACK_COLOR : getRGBAString(strokeFill.lineColor, strokeFill.lineAlpha);
@@ -6771,13 +6789,13 @@ export class CanvasRenderer {
         }
         return length == 0 ? 0 : 1;
     }
-    public renderPath(path: sys.Path2D, context: sys.CanvasContext): void {
+    public renderPath(path: Path2D, context: CanvasContext): void {
         context.beginPath();
         const data: number[] = path.$data;
-        const commands: sys.PathCommand[] = path.$commands;
+        const commands: PathCommand[] = path.$commands;
         let pos: number = 0;
         for (let commandIndex: number = 0; commandIndex < commands.length; commandIndex++) {
-            const command: sys.PathCommand = commands[commandIndex]!;
+            const command: PathCommand = commands[commandIndex]!;
             switch (command) {
                 case 4: context.bezierCurveTo(data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY); break;
                 case 3: context.quadraticCurveTo(data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY, data[pos++]! + context.$offsetX, data[pos++]! + context.$offsetY); break;
@@ -6786,7 +6804,7 @@ export class CanvasRenderer {
             }
         }
     }
-    public renderGroup(groupNode: sys.GroupNode, context: sys.CanvasContext): number {
+    public renderGroup(groupNode: GroupNode, context: CanvasContext): number {
         const m: Matrix | null = groupNode.matrix;
         let saved: boolean = false;
         let offsetX: number | undefined;
@@ -6797,15 +6815,15 @@ export class CanvasRenderer {
             context.transform(m.a, m.b, m.c, m.d, m.tx, m.ty);
         }
         let drawCalls: number = 0;
-        const children: sys.RenderNode[] = groupNode.drawData;
+        const children: RenderNode[] = groupNode.drawData;
         for (let i: number = 0; i < children.length; i++) { drawCalls += this.renderNode(children[i]!, context); }
         if (saved) { context.restore(); }
         if (offsetX) { context.$offsetX = offsetX; }
         if (offsetY) { context.$offsetY = offsetY; }
         return drawCalls;
     }
-    public createRenderBuffer(width: number, height: number, useForFilters?: boolean): sys.CanvasRenderBuffer {
-        let buffer: sys.CanvasRenderBuffer | undefined = useForFilters ? CanvasRenderer.renderBufferPool_Filters.pop() : CanvasRenderer.renderBufferPool.pop();
+    public createRenderBuffer(width: number, height: number, useForFilters?: boolean): CanvasRenderBuffer {
+        let buffer: CanvasRenderBuffer | undefined = useForFilters ? CanvasRenderer.renderBufferPool_Filters.pop() : CanvasRenderer.renderBufferPool.pop();
         if (buffer) {
             buffer.resize(width, height, true);
         } else {
@@ -6819,12 +6837,12 @@ __reflect(CanvasRenderer.prototype, "egret.CanvasRenderer");
 export class Mesh extends Bitmap {
     public _verticesDirty: boolean = true;
     public _bounds: Rectangle = new Rectangle();
-    public declare $renderNode: sys.MeshNode;
+    public declare $renderNode: MeshNode;
     public constructor(value?: Texture | null) { super(value); this.$renderNode = new runtime.sys.MeshNode(); }
     public override $updateRenderNode(): void {
         const image: BitmapData | null = this.$bitmapData;
         if (!image) { return; }
-        const node: sys.MeshNode = this.$renderNode;
+        const node: MeshNode = this.$renderNode;
         node.smoothing = this.$smoothing; node.image = image; node.imageWidth = this.$sourceWidth; node.imageHeight = this.$sourceHeight;
         const destW: number = !isNaN(this.$explicitBitmapWidth) ? this.$explicitBitmapWidth : this.$textureWidth;
         const destH: number = !isNaN(this.$explicitBitmapHeight) ? this.$explicitBitmapHeight : this.$textureHeight;
@@ -6844,7 +6862,7 @@ export class Mesh extends Bitmap {
     public override $measureContentBounds(bounds: Rectangle): void {
         if (this._verticesDirty) {
             this._verticesDirty = false;
-            const node: sys.MeshNode = this.$renderNode;
+            const node: MeshNode = this.$renderNode;
             const vertices: number[] = node.vertices;
             if (vertices.length) {
                 this._bounds.setTo(Number.MAX_VALUE, Number.MAX_VALUE, -Number.MAX_VALUE, -Number.MAX_VALUE);
@@ -6865,7 +6883,7 @@ export class Mesh extends Bitmap {
 __reflect(Mesh.prototype, "egret.Mesh");
 
 export class RenderTexture extends Texture {
-    public $renderBuffer: sys.RenderBuffer | null;
+    public $renderBuffer: RenderBuffer | null;
     public constructor() {
         super();
         this.$renderBuffer = new runtime.sys.RenderBuffHelper.RenderBuffer!();
@@ -6879,7 +6897,7 @@ export class RenderTexture extends Texture {
         scale /= Texture.$TextureScaleFactor;
         let width: number = (bounds.x + bounds.width) * scale, height: number = (bounds.y + bounds.height) * scale;
         if (clipBounds) { width = bounds.width * scale; height = bounds.height * scale; }
-        const renderBuffer: sys.RenderBuffer | null = this.$renderBuffer;
+        const renderBuffer: RenderBuffer | null = this.$renderBuffer;
         if (!renderBuffer) { return false; }
         renderBuffer.resize(width, height); this.$bitmapData!.width = width; this.$bitmapData!.height = height;
         {
@@ -6997,7 +7015,7 @@ export class BitmapText extends DisplayObject {
     public textLines: string[] = [];
     public $lineHeights: number[] = [];
     public declare $textLinesWidth: number[];
-    public declare $renderNode: sys.BitmapNode;
+    public declare $renderNode: BitmapNode;
     public constructor() {
         super();
         this.$renderNode = new runtime.sys.BitmapNode();
@@ -7060,7 +7078,7 @@ export class BitmapText extends DisplayObject {
         }
         const textLinesWidth: number[] = this.$textLinesWidth;
         const bitmapFont: BitmapFont = this.$font!;
-        let node: sys.BitmapNode | undefined;
+        let node: BitmapNode | undefined;
         {
             node = this.$renderNode;
             if (bitmapFont.$texture) { node.image = bitmapFont.$texture.$bitmapData; }
@@ -7184,17 +7202,17 @@ export class TextField extends DisplayObject {
     public static default_textColor: number = 0xffffff;
     public $inputEnabled: boolean = false;
     public inputUtils: InputController | null = null;
-    public $graphicsNode: sys.GraphicsNode | null = null;
+    public $graphicsNode: GraphicsNode | null = null;
     public isFlow: boolean = false;
     public textArr: ITextElement[] = [];
     public linesArr: TextLine[] = [];
     public $isTyping: boolean = false;
-    public textNode: sys.TextNode;
+    public textNode: TextNode;
     public $TextField: TextFieldState;
 
     public constructor() {
         super();
-        const textNode: sys.TextNode = new runtime.sys.TextNode();
+        const textNode: TextNode = new runtime.sys.TextNode();
         textNode.fontFamily = TextField.default_fontFamily;
         this.textNode = textNode;
         this.$renderNode = textNode;
@@ -7502,22 +7520,22 @@ export class TextField extends DisplayObject {
         this.$invalidateTextField();
     }
     public fillBackground(lines?: (number | undefined)[]): void {
-        let graphics: sys.GraphicsNode | null = this.$graphicsNode;
+        let graphics: GraphicsNode | null = this.$graphicsNode;
         if (graphics) { graphics.clear(); }
         const values: TextFieldState = this.$TextField;
         if (values[33] || values[31] || (lines && lines.length > 0)) {
             if (!graphics) {
                 graphics = this.$graphicsNode = new runtime.sys.GraphicsNode();
                 {
-                    const groupNode: sys.GroupNode = new runtime.sys.GroupNode();
+                    const groupNode: GroupNode = new runtime.sys.GroupNode();
                     groupNode.addNode(graphics);
                     groupNode.addNode(this.textNode);
                     this.$renderNode = groupNode;
                 }
             }
-            let strokePath: sys.StrokePath | undefined;
+            let strokePath: StrokePath | undefined;
             if (values[33]) {
-                const fillPath: sys.FillPath = graphics.beginFill(values[34]);
+                const fillPath: FillPath = graphics.beginFill(values[34]);
                 fillPath.drawRect(0, 0, this.$getWidth(), this.$getHeight());
             }
             if (values[31]) {
@@ -7605,14 +7623,14 @@ export class TextField extends DisplayObject {
             this.inputUtils!._updateProperties();
             if (this.$isTyping) { this.fillBackground(); return; }
         } else if (this.$TextField[3] == 0) {
-            const graphics: sys.GraphicsNode | null = this.$graphicsNode;
+            const graphics: GraphicsNode | null = this.$graphicsNode;
             if (graphics) { graphics.clear(); }
             return;
         }
         const underLines: (number | undefined)[] = this.drawText();
         this.fillBackground(underLines);
         const bounds: Rectangle = this.$getRenderBounds();
-        const node: sys.TextNode = this.textNode;
+        const node: TextNode = this.textNode;
         node.x = bounds.x; node.y = bounds.y;
         node.width = Math.ceil(bounds.width); node.height = Math.ceil(bounds.height);
         Rectangle.release(bounds);
@@ -7797,7 +7815,7 @@ export class TextField extends DisplayObject {
         this.$invalidateTextField();
     }
     public drawText(): (number | undefined)[] {
-        const node: sys.TextNode = this.textNode;
+        const node: TextNode = this.textNode;
         const values: TextFieldState = this.$TextField;
         node.bold = values[15]; node.fontFamily = values[8] || TextField.default_fontFamily;
         node.italic = values[16]; node.size = values[0]; node.stroke = values[27];
@@ -9451,7 +9469,7 @@ export class MovieClip extends DisplayObject {
             const destH: number = Math.round(texture.$getScaleBitmapHeight());
             const sourceWidth: number = texture.$sourceWidth;
             const sourceHeight: number = texture.$sourceHeight;
-            runtime.sys.BitmapNode.$updateTextureData(this.$renderNode as sys.NormalBitmapNode, texture.$bitmapData, texture.$bitmapX, texture.$bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, BitmapFillMode.SCALE, this.$smoothing);
+            runtime.sys.BitmapNode.$updateTextureData(this.$renderNode as NormalBitmapNode, texture.$bitmapData, texture.$bitmapX, texture.$bitmapY, bitmapWidth, bitmapHeight, offsetX, offsetY, textureWidth, textureHeight, destW, destH, sourceWidth, sourceHeight, BitmapFillMode.SCALE, this.$smoothing);
         }
     }
     public $measureContentBounds(bounds: Rectangle): void {
@@ -9839,7 +9857,7 @@ export class WebSocket extends EventDispatcher {
     private _type: string = WebSocket.TYPE_STRING;
     private _readByte: ByteArray | undefined;
     private _writeByte: ByteArray | undefined;
-    private socket: web.HTML5WebSocket;
+    private socket: HTML5WebSocket;
 
     public constructor(_host: string = "", _port: number = 0) {
         super();
