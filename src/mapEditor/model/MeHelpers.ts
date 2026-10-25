@@ -4,16 +4,14 @@ import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { ForcedFogCode } from "../../fogMaps/Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
-import { getLatestGameConfig, getLatestConfigVersion } from "../../gameConfig/GcModel.ts";
+import { GcData } from "../../gameConfig/GcData.ts";
+import { Common } from "../../maps/Constants.ts";
+import { getLatestConfigVersion, getLatestGameConfig } from "../../gameConfig/GcModel.ts";
 import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
-import { SymmetryTypeId, DirectionId } from "../../geometries/Constants.ts";
+import { DirectionId, SymmetryTypeId } from "../../geometries/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import type { IMeWar } from "../interface/IMeWar.ts";
-import type { AsymmetricalCounters } from "./MeTypes.ts";
-import { createDefaultPlayerRuleList, createDefaultPlayerRule } from "../../playerRules/Utils.ts";
-import { PlayerIndex, AliveStateId } from "../../players/Constants.ts";
+import { createDefaultPlayerRule, createDefaultPlayerRuleList } from "../../playerRules/Utils.ts";
+import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { GridIndex as ProtoSchemaCommonProtoStructureGridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
@@ -26,19 +24,21 @@ import type {
 } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import { ObjectTypeId, BaseTypeId, DecorationTypeId } from "../../tiles/constants/Common.ts";
+import { BaseTypeId, DecorationTypeId, ObjectTypeId } from "../../tiles/constants/Common.ts";
 import type { ITile } from "../../tiles/ITile.ts";
 import type { ITileMap } from "../../tiles/ITileMap.ts";
 import { createDefault } from "../../tiles/utils/Serialization.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import { TurnIndex, PhaseCode } from "../../turns/Constants.ts";
+import { PhaseCode, TurnIndex } from "../../turns/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import type { IUnitMap } from "../../units/IUnitMap.ts";
 import { getSelfNickname, getSelfUserId } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-import { Common } from "../../warOperations/Constants.ts";
+import { Common as WarOperationConstants } from "../../warOperations/Constants.ts";
 import { create } from "../../warRules/utils/Instance.ts";
 import { createDefault as WarRulesUtilsTemplateCreateDefault } from "../../warRules/utils/Template.ts";
+import type { IMeWar } from "../interface/IMeWar.ts";
+import type { AsymmetricalCounters } from "./MeTypes.ts";
 
 type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
 type IBwUnit                = IUnit;
@@ -106,14 +106,14 @@ const TileBeachAutoShapeIdArray = [
 ];
 const TileSeaAutoShapeIdArray = [
     //  0       1
-        0,      4,      // 0 0  0
-        3,      10,     // 0 0  1
-        1,      8,      // 0 1  0
-        6,      13,     // 0 1  1
-        2,      9,      // 1 0  0
-        7,      14,     // 1 0  1
-        5,      12,     // 1 1  0
-        11,     15,     // 1 1  1
+    0,      4,      // 0 0  0
+    3,      10,     // 0 0  1
+    1,      8,      // 0 1  0
+    6,      13,     // 0 1  1
+    2,      9,      // 1 0  0
+    7,      14,     // 1 0  1
+    5,      12,     // 1 1  0
+    11,     15,     // 1 1  1
 ];
 const TileRoadAutoShapeIdArray = [
 //  0   1
@@ -179,20 +179,20 @@ export async function createDefaultMapRawData(slotIndex: number, gameConfig: GcD
     const mapWidth  = 20;
     const mapHeight = 15;
     return MapRawData.fromJson({
-        designerName            : getSelfNickname(),
-        designerUserId          : getSelfUserId(),
-        mapWidth                : mapWidth,
-        mapHeight               : mapHeight,
-        playersCountUnneutral   : 2,
-        modifiedTime            : getServerTimestamp(),
-        tileDataArray           : createDefaultTileDataArray(mapWidth, mapHeight, gameConfig.getDefaultTileBaseType(), gameConfig).map(v => v.toJson()),
-        unitDataArray           : [],
-        warEventFullData        : new WarEventFullData().toJson(),
-        tileCustomNameArray     : [],
-        unitCustomNameArray     : [],
-        mapNameArray            : [],
-        templateWarRuleArray    : [],
-        mapSimpleDialogueArray  : [],
+        designerName           : getSelfNickname(),
+        designerUserId         : getSelfUserId(),
+        mapWidth               : mapWidth,
+        mapHeight              : mapHeight,
+        playersCountUnneutral  : 2,
+        modifiedTime           : getServerTimestamp(),
+        tileDataArray          : createDefaultTileDataArray(mapWidth, mapHeight, GcData.getDefaultTileBaseType(), gameConfig).map(v => v.toJson()),
+        unitDataArray          : [],
+        warEventFullData       : new WarEventFullData().toJson(),
+        tileCustomNameArray    : [],
+        unitCustomNameArray    : [],
+        mapNameArray           : [],
+        templateWarRuleArray   : [],
+        mapSimpleDialogueArray : [],
     });
 }
 export function createDefaultTileDataArray(mapWidth: number, mapHeight: number, tileBaseType: number, gcData: GcData): SerialTile[] {
@@ -200,10 +200,10 @@ export function createDefaultTileDataArray(mapWidth: number, mapHeight: number, 
     for (let x = 0; x < mapWidth; ++x) {
         for (let y = 0; y < mapHeight; ++y) {
             dataList.push(createDefault({
-                tileBaseTypeId      : tileBaseType,
-                tileObjectTypeId    : ObjectTypeId.Empty,
-                gridIndex           : { x, y },
-                gcData              : gcData,
+                tileBaseTypeId   : tileBaseType,
+                tileObjectTypeId : ObjectTypeId.Empty,
+                gridIndex        : { x, y },
+                gcData           : gcData,
             }));
         }
     }
@@ -216,42 +216,42 @@ export async function createISerialWar(rawMapRawData: MapRawData): Promise<Seria
     const templateWarRuleArray  = mapRawData.getTemplateWarRuleArray();
     const unitDataArray         = mapRawData.getUnitDataArray();
     const instanceWarRule       = create({
-        templateWarRule             : createRevisedTemplateWarRuleForMeWar(templateWarRuleArray ? templateWarRuleArray[0] : null, await getLatestGameConfig()),
-        warEventFullData            : mapRawData.getWarEventFullData(),
-        allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-        taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+        templateWarRule           : createRevisedTemplateWarRuleForMeWar(templateWarRuleArray ? templateWarRuleArray[0] : null, await getLatestGameConfig()),
+        warEventFullData          : mapRawData.getWarEventFullData(),
+        allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+        taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
     });
     instanceWarRule.setWarEventFullData(mapRawData.getWarEventFullData());
 
     return SerialWar.fromJson({
-        settingsForCommon       : {
-            configVersion       : await getLatestConfigVersion(),
-            instanceWarRule     : instanceWarRule.toJson(),
-            turnsLimit          : TurnIndex.DefaultLimit,
-            warOperationsLimit  : Common.DefaultLimit,
+        settingsForCommon : {
+            configVersion      : await getLatestConfigVersion(),
+            instanceWarRule    : instanceWarRule.toJson(),
+            turnsLimit         : TurnIndex.DefaultLimit,
+            warOperationsLimit : WarOperationConstants.DefaultLimit,
         },
-        isEnded                 : false,
-        drawVoteManager         : {
-            agreedPlayerIndexArray  : [],
+        isEnded         : false,
+        drawVoteManager : {
+            agreedPlayerIndexArray : [],
         },
-        warEventManager         : {
-            calledCountList                 : [],
-            customCounterArray              : [],
-            ongoingPersistentActionIdArray  : [],
+        warEventManager : {
+            calledCountList                : [],
+            customCounterArray             : [],
+            ongoingPersistentActionIdArray : [],
         },
-        playerManager           : createSerialPlayerManager().toJson(),
-        turnManager             : {
-            turnIndex       : TurnIndex.FirstIndex,
-            turnPhaseCode   : PhaseCode.WaitBeginTurn,
-            playerIndex     : PlayerIndex.Neutral,
-            enterTurnTime   : 0,
+        playerManager : createSerialPlayerManager().toJson(),
+        turnManager   : {
+            turnIndex     : TurnIndex.FirstIndex,
+            turnPhaseCode : PhaseCode.WaitBeginTurn,
+            playerIndex   : PlayerIndex.Neutral,
+            enterTurnTime : 0,
         },
-        field                   : {
-            fogMap  : {
-                forceFogCode            : ForcedFogCode.None,
-                forceExpirePlayerIndex  : null,
-                forceExpireTurnIndex    : null,
-                mapsFromPath            : [],
+        field : {
+            fogMap : {
+                forceFogCode           : ForcedFogCode.None,
+                forceExpirePlayerIndex : null,
+                forceExpireTurnIndex   : null,
+                mapsFromPath           : [],
             },
             tileMap : {
                 tiles               : mapRawData.getTileDataArray().map(v => v.toJson()),
@@ -336,22 +336,22 @@ export function clearMap({ mapRawData, newWidth, newHeight, gameConfig }: {
     gameConfig  : GcData;
 }): MapRawData {
     return MapRawData.fromJson({
-        normalMapId             : mapRawData.getNormalMapId(),
-        designerName            : mapRawData.getDesignerName(),
-        designerUserId          : mapRawData.getDesignerUserId(),
-        mapNameArray            : mapRawData.getMapNameArray().map(v => v.toJson()),
-        mapWidth                : newWidth,
-        mapHeight               : newHeight,
-        playersCountUnneutral   : mapRawData.getPlayersCountUnneutral(),
-        warEventFullData        : mapRawData.getWarEventFullData()?.toJson(),
-        campaignMapData         : mapRawData.getCampaignMapData()?.toJson(),
-        modifiedTime            : getServerTimestamp(),
-        tileDataArray           : createDefaultTileDataArray(newWidth, newHeight, gameConfig.getDefaultTileBaseType(), gameConfig).map(v => v.toJson()),
-        unitDataArray           : [],
-        templateWarRuleArray    : mapRawData.getTemplateWarRuleArray().map(v => v.toJson()),
-        tileCustomNameArray     : mapRawData.getTileCustomNameArray().map(v => v.toJson()),
-        unitCustomNameArray     : mapRawData.getUnitCustomNameArray().map(v => v.toJson()),
-        mapSimpleDialogueArray  : [],
+        normalMapId            : mapRawData.getNormalMapId(),
+        designerName           : mapRawData.getDesignerName(),
+        designerUserId         : mapRawData.getDesignerUserId(),
+        mapNameArray           : mapRawData.getMapNameArray().map(v => v.toJson()),
+        mapWidth               : newWidth,
+        mapHeight              : newHeight,
+        playersCountUnneutral  : mapRawData.getPlayersCountUnneutral(),
+        warEventFullData       : mapRawData.getWarEventFullData()?.toJson(),
+        campaignMapData        : mapRawData.getCampaignMapData()?.toJson(),
+        modifiedTime           : getServerTimestamp(),
+        tileDataArray          : createDefaultTileDataArray(newWidth, newHeight, GcData.getDefaultTileBaseType(), gameConfig).map(v => v.toJson()),
+        unitDataArray          : [],
+        templateWarRuleArray   : mapRawData.getTemplateWarRuleArray().map(v => v.toJson()),
+        tileCustomNameArray    : mapRawData.getTileCustomNameArray().map(v => v.toJson()),
+        unitCustomNameArray    : mapRawData.getUnitCustomNameArray().map(v => v.toJson()),
+        mapSimpleDialogueArray : [],
     });
 }
 export function resizeMap({ mapRawData, newWidth, newHeight, gameConfig }: {
@@ -361,25 +361,27 @@ export function resizeMap({ mapRawData, newWidth, newHeight, gameConfig }: {
     gameConfig  : GcData;
 }): MapRawData {
     return MapRawData.fromJson({
-        normalMapId             : mapRawData.getNormalMapId(),
-        designerName            : mapRawData.getDesignerName(),
-        designerUserId          : mapRawData.getDesignerUserId(),
-        mapNameArray            : mapRawData.getMapNameArray().map(v => v.toJson()),
-        mapWidth                : newWidth,
-        mapHeight               : newHeight,
-        playersCountUnneutral   : mapRawData.getPlayersCountUnneutral(),
-        warEventFullData        : mapRawData.getWarEventFullData()?.toJson(),
-        templateWarRuleArray    : mapRawData.getTemplateWarRuleArray().map(v => v.toJson()),
-        campaignMapData         : mapRawData.getCampaignMapData()?.toJson(),
-        mapSimpleDialogueArray  : mapRawData.getMapSimpleDialogueArray().map(v => v.toJson()),
-        taskObjectiveFullData   : mapRawData.getTaskObjectiveFullData()?.toJson(),
-        mapExtraText            : mapRawData.getMapExtraText()?.toJson(),
-        mapTagIdFlags           : mapRawData.getMapTagIdFlags(),
-        modifiedTime            : getServerTimestamp(),
-        tileDataArray           : getNewTileDataListForResize({ mapRawData, newWidth, newHeight, gameConfig }).map(v => v.toJson()),
-        unitDataArray           : getNewUnitDataListForResize(mapRawData, newWidth, newHeight).map(v => v.toJson()),
-        tileCustomNameArray     : mapRawData.getTileCustomNameArray().map(v => v.toJson()),
-        unitCustomNameArray     : mapRawData.getUnitCustomNameArray().map(v => v.toJson()),
+        normalMapId            : mapRawData.getNormalMapId(),
+        designerName           : mapRawData.getDesignerName(),
+        designerUserId         : mapRawData.getDesignerUserId(),
+        mapNameArray           : mapRawData.getMapNameArray().map(v => v.toJson()),
+        mapWidth               : newWidth,
+        mapHeight              : newHeight,
+        playersCountUnneutral  : mapRawData.getPlayersCountUnneutral(),
+        warEventFullData       : mapRawData.getWarEventFullData()?.toJson(),
+        templateWarRuleArray   : mapRawData.getTemplateWarRuleArray().map(v => v.toJson()),
+        campaignMapData        : mapRawData.getCampaignMapData()?.toJson(),
+        mapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray().map(v => v.toJson()),
+        taskObjectiveFullData  : mapRawData.getTaskObjectiveFullData()?.toJson(),
+        mapExtraText           : mapRawData.getMapExtraText()?.toJson(),
+        mapTagIdFlags          : mapRawData.getMapTagIdFlags(),
+        modifiedTime           : getServerTimestamp(),
+        tileDataArray          : getNewTileDataListForResize({
+            mapRawData, newWidth, newHeight, gameConfig
+        }).map(v => v.toJson()),
+        unitDataArray       : getNewUnitDataListForResize(mapRawData, newWidth, newHeight).map(v => v.toJson()),
+        tileCustomNameArray : mapRawData.getTileCustomNameArray().map(v => v.toJson()),
+        unitCustomNameArray : mapRawData.getUnitCustomNameArray().map(v => v.toJson()),
     });
 }
 function getNewTileDataListForResize({ mapRawData, newWidth, newHeight, gameConfig }: {
@@ -398,15 +400,15 @@ function getNewTileDataListForResize({ mapRawData, newWidth, newHeight, gameConf
 
     const oldWidth      = getExisted(mapRawData.getMapWidth());
     const oldHeight     = getExisted(mapRawData.getMapHeight());
-    const tileBaseType  = gameConfig.getDefaultTileBaseType();
+    const tileBaseType  = GcData.getDefaultTileBaseType();
     for (let x = 0; x < newWidth; ++x) {
         for (let y = 0; y < newHeight; ++y) {
             if ((x >= oldWidth) || (y >= oldHeight)) {
                 tileList.push(createDefault({
-                    tileBaseTypeId      : tileBaseType,
-                    tileObjectTypeId    : ObjectTypeId.Empty,
-                    gridIndex           : {x, y},
-                    gcData              : gameConfig,
+                    tileBaseTypeId   : tileBaseType,
+                    tileObjectTypeId : ObjectTypeId.Empty,
+                    gridIndex        : {x, y},
+                    gcData           : gameConfig,
                 }));
             }
         }
@@ -426,7 +428,7 @@ function getNewUnitDataListForResize(mapRawData: MapRawData, newWidth: number, n
     const allUnitsDict  = new Map<number, { unit: SerialUnit, newUnitId: number }>();
     let nextUnitId      = 0;
     for (const unit of unitDataArray) {
-        allUnitsDict.set(unit.getUnitId() ?? 0, { unit, newUnitId: nextUnitId } );
+        allUnitsDict.set(unit.getUnitId() ?? 0, { unit, newUnitId : nextUnitId } );
         ++nextUnitId;
     }
     for (const [, value] of allUnitsDict) {
@@ -450,25 +452,27 @@ export function addOffset({ mapRawData, offsetX, offsetY, gameConfig }: {
     gameConfig  : GcData;
 }): MapRawData {
     return MapRawData.fromJson({
-        normalMapId             : mapRawData.getNormalMapId(),
-        designerName            : mapRawData.getDesignerName(),
-        designerUserId          : mapRawData.getDesignerUserId(),
-        mapNameArray            : mapRawData.getMapNameArray().map(v => v.toJson()),
-        mapWidth                : mapRawData.getMapWidth(),
-        mapHeight               : mapRawData.getMapHeight(),
-        playersCountUnneutral   : mapRawData.getPlayersCountUnneutral(),
-        campaignMapData         : mapRawData.getCampaignMapData()?.toJson(),
-        modifiedTime            : getServerTimestamp(),
-        tileDataArray           : getNewTileDataListForOffset({ mapRawData, offsetX, offsetY, gameConfig }).map(v => v.toJson()),
-        unitDataArray           : getNewUnitDataListForOffset(mapRawData, offsetX, offsetY).map(v => v.toJson()),
-        templateWarRuleArray    : mapRawData.getTemplateWarRuleArray().map(v => v.toJson()),
-        warEventFullData        : mapRawData.getWarEventFullData()?.toJson(),
-        mapSimpleDialogueArray  : mapRawData.getMapSimpleDialogueArray().map(v => v.toJson()),
-        taskObjectiveFullData   : mapRawData.getTaskObjectiveFullData()?.toJson(),
-        mapExtraText            : mapRawData.getMapExtraText()?.toJson(),
-        mapTagIdFlags           : mapRawData.getMapTagIdFlags(),
-        tileCustomNameArray     : mapRawData.getTileCustomNameArray().map(v => v.toJson()),
-        unitCustomNameArray     : mapRawData.getUnitCustomNameArray().map(v => v.toJson()),
+        normalMapId           : mapRawData.getNormalMapId(),
+        designerName          : mapRawData.getDesignerName(),
+        designerUserId        : mapRawData.getDesignerUserId(),
+        mapNameArray          : mapRawData.getMapNameArray().map(v => v.toJson()),
+        mapWidth              : mapRawData.getMapWidth(),
+        mapHeight             : mapRawData.getMapHeight(),
+        playersCountUnneutral : mapRawData.getPlayersCountUnneutral(),
+        campaignMapData       : mapRawData.getCampaignMapData()?.toJson(),
+        modifiedTime          : getServerTimestamp(),
+        tileDataArray         : getNewTileDataListForOffset({
+            mapRawData, offsetX, offsetY, gameConfig
+        }).map(v => v.toJson()),
+        unitDataArray          : getNewUnitDataListForOffset(mapRawData, offsetX, offsetY).map(v => v.toJson()),
+        templateWarRuleArray   : mapRawData.getTemplateWarRuleArray().map(v => v.toJson()),
+        warEventFullData       : mapRawData.getWarEventFullData()?.toJson(),
+        mapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray().map(v => v.toJson()),
+        taskObjectiveFullData  : mapRawData.getTaskObjectiveFullData()?.toJson(),
+        mapExtraText           : mapRawData.getMapExtraText()?.toJson(),
+        mapTagIdFlags          : mapRawData.getMapTagIdFlags(),
+        tileCustomNameArray    : mapRawData.getTileCustomNameArray().map(v => v.toJson()),
+        unitCustomNameArray    : mapRawData.getUnitCustomNameArray().map(v => v.toJson()),
     });
 }
 function getNewTileDataListForOffset({ mapRawData, offsetX, offsetY, gameConfig }: {
@@ -486,12 +490,12 @@ function getNewTileDataListForOffset({ mapRawData, offsetX, offsetY, gameConfig 
         const newY      = gridIndex.getY() + offsetY;
         if ((newX >= 0) && (newX < width) && (newY >= 0) && (newY < height)) {
             const newData = tileData.clone();
-            newData.setGridIndex(ProtoSchemaCommonProtoStructureGridIndex.fromJson({ x: newX, y: newY }));
+            newData.setGridIndex(ProtoSchemaCommonProtoStructureGridIndex.fromJson({ x : newX, y : newY }));
             tileDataList.push(newData);
         }
     }
 
-    const tileBaseType = gameConfig.getDefaultTileBaseType();
+    const tileBaseType = GcData.getDefaultTileBaseType();
     for (let x = 0; x < width; ++x) {
         for (let y = 0; y < height; ++y) {
             if (((offsetX > 0) && (x < offsetX))            ||
@@ -500,10 +504,10 @@ function getNewTileDataListForOffset({ mapRawData, offsetX, offsetY, gameConfig 
                 ((offsetY < 0) && (y >= height + offsetY))
             ) {
                 tileDataList.push(createDefault({
-                    tileBaseTypeId      : tileBaseType,
-                    tileObjectTypeId    : ObjectTypeId.Empty,
-                    gridIndex           : {x, y},
-                    gcData              : gameConfig,
+                    tileBaseTypeId   : tileBaseType,
+                    tileObjectTypeId : ObjectTypeId.Empty,
+                    gridIndex        : {x, y},
+                    gcData           : gameConfig,
                 }));
             }
         }
@@ -521,7 +525,7 @@ function getNewUnitDataListForOffset(mapRawData: MapRawData, offsetX: number, of
         const newY      = gridIndex.getY() + offsetY;
         if ((newX >= 0) && (newX < width) && (newY >= 0) && (newY < height)) {
             const newData = unitData.clone();
-            newData.setGridIndex(ProtoSchemaCommonProtoStructureGridIndex.fromJson({ x: newX, y: newY }));
+            newData.setGridIndex(ProtoSchemaCommonProtoStructureGridIndex.fromJson({ x : newX, y : newY }));
             unitDataArray.push(newData);
         }
     }
@@ -529,7 +533,7 @@ function getNewUnitDataListForOffset(mapRawData: MapRawData, offsetX: number, of
     const allUnitsDict  = new Map<number, { unit: SerialUnit, newUnitId: number }>();
     let nextUnitId      = 0;
     for (const unit of unitDataArray) {
-        allUnitsDict.set(unit.getUnitId() ?? 0, { unit, newUnitId: nextUnitId } );
+        allUnitsDict.set(unit.getUnitId() ?? 0, { unit, newUnitId : nextUnitId } );
         ++nextUnitId;
     }
     for (const [, value] of allUnitsDict) {
@@ -550,7 +554,7 @@ export function reviseAllUnitIds(unitMap: IBwUnitMap): void {
     const allUnits  = new Map<number, { unit: IBwUnit, newUnitId: number }>();
     let nextUnitId  = 0;
     for (const unit of unitMap.getAllUnits()) {
-        allUnits.set(unit.getUnitId(), { unit, newUnitId: nextUnitId } );
+        allUnits.set(unit.getUnitId(), { unit, newUnitId : nextUnitId } );
         ++nextUnitId;
     }
     for (const [, value] of allUnits) {
@@ -603,11 +607,11 @@ export function getAsymmetricalCounters(war: IMeWar): AsymmetricalCounters {
 
     const totalGrids = width * height;
     return {
-        LeftToRight         : totalGrids - countLeftRight,
-        UpToDown            : totalGrids - countUpDown,
-        Rotation            : totalGrids - countRotational,
-        UpLeftToDownRight   : isSquare ? totalGrids - countUpLeftDownRight : null,
-        UpRightToDownLeft   : isSquare ? totalGrids - countUpRightDownLeft : null,
+        LeftToRight       : totalGrids - countLeftRight,
+        UpToDown          : totalGrids - countUpDown,
+        Rotation          : totalGrids - countRotational,
+        UpLeftToDownRight : isSquare ? totalGrids - countUpLeftDownRight : null,
+        UpRightToDownLeft : isSquare ? totalGrids - countUpRightDownLeft : null,
     };
 }
 export function getSymmetricalGridIndex(gridIndex: GridIndex, symmetryType: SymmetryTypeId, mapSize: MapSize): GridIndex | null {
@@ -653,26 +657,25 @@ function checkIsSymmetrical(tile1: IBwTile, tile2: IBwTile, symmetryType: Symmet
     const baseType          = tile1.getBaseType();
     const objectType        = tile1.getObjectType();
     const decorationType    = tile1.getDecorationType();
-    const gameConfig        = tile1.getGameConfig();
     return (baseType === tile2.getBaseType())
-        && (gameConfig.getSymmetricalTileObjectType(objectType, symmetryType) === tile2.getObjectType())
+        && (GcData.getSymmetricalTileObjectType(objectType, symmetryType) === tile2.getObjectType())
         && (decorationType == tile2.getDecorationType())
-        && (gameConfig.checkIsTileBaseSymmetrical({
+        && (GcData.checkIsTileBaseSymmetrical({
             baseType,
-            shapeId1    : tile1.getBaseShapeId(),
-            shapeId2    : tile2.getBaseShapeId(),
+            shapeId1 : tile1.getBaseShapeId(),
+            shapeId2 : tile2.getBaseShapeId(),
             symmetryType,
         }))
-        && (gameConfig.checkIsTileObjectSymmetrical({
+        && (GcData.checkIsTileObjectSymmetrical({
             objectType,
-            shapeId1    : tile1.getObjectShapeId(),
-            shapeId2    : tile2.getObjectShapeId(),
+            shapeId1 : tile1.getObjectShapeId(),
+            shapeId2 : tile2.getObjectShapeId(),
             symmetryType,
         }))
-        && (gameConfig.checkIsTileDecorationSymmetrical({
-            tileDecorationType: decorationType,
-            shapeId1    : tile1.getDecorationShapeId(),
-            shapeId2    : tile2.getDecorationShapeId(),
+        && (GcData.checkIsTileDecorationSymmetrical({
+            tileDecorationType : decorationType,
+            shapeId1           : tile1.getDecorationShapeId(),
+            shapeId2           : tile2.getDecorationShapeId(),
             symmetryType,
         }));
 }
@@ -843,99 +846,99 @@ export function getAutoTileDecorationTypeAndShapeId(tileMap: IBwTileMap, gridInd
         }
 
         return {
-            decorationType   : DecorationTypeId.Shore,
-            shapeId         : TileDecorationAutoShapeIdArray[index],
+            decorationType : DecorationTypeId.Shore,
+            shapeId        : TileDecorationAutoShapeIdArray[index],
         };
 
     } else if (baseType === BaseTypeId.Beach) {
         const shapeId = tile.getBaseShapeId();
         if ((shapeId === 0) || (shapeId === 4) || (shapeId === 8) || (shapeId === 12)) {
             if (!checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(0, 1)))) {
-                return { decorationType: DecorationTypeId.Shore, shapeId: 25 };
+                return { decorationType : DecorationTypeId.Shore, shapeId : 25 };
             } else {
                 const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, 1)));
                 const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, 1)));
                 if (isSea1) {
                     return isSea2
-                        ? { decorationType: 0,                                           shapeId: 0 }
-                        : { decorationType: DecorationTypeId.Shore,    shapeId: 1 };
+                        ? { decorationType : 0,                                           shapeId : 0 }
+                        : { decorationType : DecorationTypeId.Shore,    shapeId : 1 };
                 } else {
                     return isSea2
-                        ? { decorationType: DecorationTypeId.Shore,    shapeId: 4 }
-                        : { decorationType: DecorationTypeId.Shore,    shapeId: 5 };
+                        ? { decorationType : DecorationTypeId.Shore,    shapeId : 4 }
+                        : { decorationType : DecorationTypeId.Shore,    shapeId : 5 };
                 }
             }
 
         } else if ((shapeId === 1) || (shapeId === 5) || (shapeId === 9) || (shapeId === 13)) {
             if (!checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(0, -1)))) {
-                return { decorationType: DecorationTypeId.Shore, shapeId: 34 };
+                return { decorationType : DecorationTypeId.Shore, shapeId : 34 };
             } else {
                 const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, -1)));
                 const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, -1)));
                 if (isSea1) {
                     return isSea2
-                        ? { decorationType: 0,                                           shapeId: 0 }
-                        : { decorationType: DecorationTypeId.Shore,    shapeId: 2 };
+                        ? { decorationType : 0,                                           shapeId : 0 }
+                        : { decorationType : DecorationTypeId.Shore,    shapeId : 2 };
                 } else {
                     return isSea2
-                        ? { decorationType: DecorationTypeId.Shore,    shapeId: 8 }
-                        : { decorationType: DecorationTypeId.Shore,    shapeId: 10 };
+                        ? { decorationType : DecorationTypeId.Shore,    shapeId : 8 }
+                        : { decorationType : DecorationTypeId.Shore,    shapeId : 10 };
                 }
             }
 
         } else if ((shapeId === 2) || (shapeId === 6) || (shapeId === 10) || (shapeId === 14)) {
             if (!checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, 0)))) {
-                return { decorationType: DecorationTypeId.Shore, shapeId: 16 };
+                return { decorationType : DecorationTypeId.Shore, shapeId : 16 };
             } else {
                 const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, -1)));
                 const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, 1)));
                 if (isSea1) {
                     return isSea2
-                        ? { decorationType: 0,                                           shapeId: 0 }
-                        : { decorationType: DecorationTypeId.Shore,    shapeId: 1 };
+                        ? { decorationType : 0,                                           shapeId : 0 }
+                        : { decorationType : DecorationTypeId.Shore,    shapeId : 1 };
                 } else {
                     return isSea2
-                        ? { decorationType: DecorationTypeId.Shore,    shapeId: 2 }
-                        : { decorationType: DecorationTypeId.Shore,    shapeId: 3 };
+                        ? { decorationType : DecorationTypeId.Shore,    shapeId : 2 }
+                        : { decorationType : DecorationTypeId.Shore,    shapeId : 3 };
                 }
             }
 
         } else if ((shapeId === 3) || (shapeId === 7) || (shapeId === 11) || (shapeId === 15)) {
             if (!checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, 0)))) {
-                return { decorationType: DecorationTypeId.Shore, shapeId: 20 };
+                return { decorationType : DecorationTypeId.Shore, shapeId : 20 };
             } else {
                 const isSea1 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, -1)));
                 const isSea2 = checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, 1)));
                 if (isSea1) {
                     return isSea2
-                        ? { decorationType: 0,                                           shapeId: 0 }
-                        : { decorationType: DecorationTypeId.Shore,    shapeId: 4 };
+                        ? { decorationType : 0,                                           shapeId : 0 }
+                        : { decorationType : DecorationTypeId.Shore,    shapeId : 4 };
                 } else {
                     return isSea2
-                        ? { decorationType: DecorationTypeId.Shore,    shapeId: 8 }
-                        : { decorationType: DecorationTypeId.Shore,    shapeId: 12 };
+                        ? { decorationType : DecorationTypeId.Shore,    shapeId : 8 }
+                        : { decorationType : DecorationTypeId.Shore,    shapeId : 12 };
                 }
             }
 
         } else if ((shapeId === 16) || (shapeId === 20) || (shapeId === 24) || (shapeId === 28)) {
             return (checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, 1))))
-                ? { decorationType: 0,                                           shapeId: 0 }
-                : { decorationType: DecorationTypeId.Shore,    shapeId: 1 };
+                ? { decorationType : 0,                                           shapeId : 0 }
+                : { decorationType : DecorationTypeId.Shore,    shapeId : 1 };
 
         } else if ((shapeId === 17) || (shapeId === 21) || (shapeId === 25) || (shapeId === 29)) {
             return (checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, 1))))
-                ? { decorationType: 0,                                           shapeId: 0 }
-                : { decorationType: DecorationTypeId.Shore,    shapeId: 4 };
+                ? { decorationType : 0,                                           shapeId : 0 }
+                : { decorationType : DecorationTypeId.Shore,    shapeId : 4 };
 
         } else if ((shapeId === 18) || (shapeId === 22) || (shapeId === 26) || (shapeId === 30)) {
             return (checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(-1, -1))))
-                ? { decorationType: 0,                                           shapeId: 0 }
-                : { decorationType: DecorationTypeId.Shore,    shapeId: 8 };
+                ? { decorationType : 0,                                           shapeId : 0 }
+                : { decorationType : DecorationTypeId.Shore,    shapeId : 8 };
 
         } else if ((shapeId === 19) || (shapeId === 23) || (shapeId === 27) || (shapeId === 31)) {
             return (checkIsSeaOrBeachOrEmpty(tileMap, GridIndex.add(gridIndex, new GridIndex(1, -1))))
-                ? { decorationType: 0,                                           shapeId: 0 }
-                : { decorationType: DecorationTypeId.Shore,    shapeId: 2 };
+                ? { decorationType : 0,                                           shapeId : 0 }
+                : { decorationType : DecorationTypeId.Shore,    shapeId : 2 };
 
         } else if (shapeId === 37) {
             const mapSize   = tileMap.getMapSize();
@@ -960,21 +963,21 @@ export function getAutoTileDecorationTypeAndShapeId(tileMap: IBwTileMap, gridInd
             }
 
             return {
-                decorationType   : DecorationTypeId.Shore,
-                shapeId         : TileDecorationAutoShapeIdArray[index],
+                decorationType : DecorationTypeId.Shore,
+                shapeId        : TileDecorationAutoShapeIdArray[index],
             };
 
         } else {
             return {
-                decorationType   : 0,
-                shapeId         : 0,
+                decorationType : 0,
+                shapeId        : 0,
             };
         }
     }
 
     return {
-        decorationType   : 0,
-        shapeId         : 0,
+        decorationType : 0,
+        shapeId        : 0,
     };
 }
 function checkIsSeaOrBeachOrEmpty(tileMap: IBwTileMap, gridIndex: GridIndex): boolean {
@@ -988,18 +991,18 @@ function checkIsSeaOrBeachOrEmpty(tileMap: IBwTileMap, gridIndex: GridIndex): bo
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function getCriticalErrorCodeForMapRawData(mapRawData: MapRawData): Promise<ClientErrorCode> {
-    if (mapRawData.encode().byteLength > Constants.MaxFileSize) {
+    if (mapRawData.encode().byteLength > Common.MaxFileSize) {
         return ClientErrorCode.MeUtility_GetSevereErrorCodeForMapRawData_00;
     }
 
     const war = new (getMeWarClass())();
     try {
         await war.initWithMapRawData({
-            mapRawData                  : mapRawData,
-            slotIndex                   : 0,
-            gameConfig                  : await getLatestGameConfig(),
-            srcNormalMapIdForAddEvent   : null,
-            gridMarkData                : null,
+            mapRawData                : mapRawData,
+            slotIndex                 : 0,
+            gameConfig                : await getLatestGameConfig(),
+            srcNormalMapIdForAddEvent : null,
+            gridMarkData              : null,
         });
         war.startRunning()
             .startRunningView()

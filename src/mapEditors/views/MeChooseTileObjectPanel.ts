@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfig/GcData.ts";
 import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -186,7 +186,7 @@ export class Panel extends UiPanel<OpenData> {
             if (playerIndex !== PlayerIndex.Neutral) {
                 await this._resetListPlayerIndex(playerIndex);
             } else {
-                await this._resetListPlayerIndex(recentData.gameConfig.getTileObjectCfg(tileObjectData.objectType)?.isNeutralOnly ? null : playerIndex);
+                await this._resetListPlayerIndex(GcData.getTileObjectCfg(tileObjectData.objectType)?.isNeutralOnly ? null : playerIndex);
             }
         }
 
@@ -228,7 +228,7 @@ export class Panel extends UiPanel<OpenData> {
         const playerIndex   = selectedData.playerIndex;
         const gameConfig    = await getLatestGameConfig();
         const dataArray     : DataForTileObjectRenderer[] = [];
-        for (const cfg of gameConfig.getAllTileObjectCfgArray()) {
+        for (const cfg of GcData.getAllTileObjectCfgArray()) {
             if ((cfg.tileObjectTypeId === ObjectTypeId.Headquarters) &&
                 (playerIndex === PlayerIndex.Neutral)
             ) {

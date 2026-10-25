@@ -2,7 +2,7 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
 import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getLatestGameConfig, getGameConfig } from "../../gameConfig/GcModel.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -127,8 +127,8 @@ export class UiMapInfo extends UiOpenableComponent<UiMapInfoData> implements IUi
 
         const normalMapId = getNormalMapId(openData);
         if (normalMapId != null) {
-            const minValue = Constants.MinRating;
-            const maxValue = Constants.MaxRating;
+            const minValue = Common.MinRating;
+            const maxValue = Common.MaxRating;
             openPanel(getDict().CommonInputIntegerPanel, {
                 getTitle           : () => getText(TextType.B0363),
                 currentValue    : getMapRating(normalMapId) || 0,

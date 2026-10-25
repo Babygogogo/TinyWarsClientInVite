@@ -1,3 +1,4 @@
+import { GcData } from "../../../gameConfig/GcData.ts";
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { destroyUnitOnMap } from "../../../destructions/Utils.ts";
@@ -338,7 +339,7 @@ function evalActBaseType(action: WeaSetTileTypeExpr, tile: ITile): number {
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             const newBaseType = Math.floor(epResult.num);
-            return (tile.getGameConfig().checkIsUsableTileBaseType(newBaseType)) ? newBaseType : defaultValue;
+            return (GcData.checkIsUsableTileBaseType(newBaseType)) ? newBaseType : defaultValue;
         } else {
             return defaultValue;
         }
@@ -347,9 +348,8 @@ function evalActBaseType(action: WeaSetTileTypeExpr, tile: ITile): number {
     }
 }
 function evalActBaseShapeId(action: WeaSetTileTypeExpr, tile: ITile, newBaseType: number): number {
-    const gameConfig        = tile.getGameConfig();
     const oldBaseShapeId    = tile.getBaseShapeId();
-    const defaultValue      = gameConfig.checkIsValidTileBaseShapeId(newBaseType, oldBaseShapeId) ? oldBaseShapeId : 0;
+    const defaultValue      = GcData.checkIsValidTileBaseShapeId(newBaseType, oldBaseShapeId) ? oldBaseShapeId : 0;
     const act               = action.getActBaseShapeId();
     if (!act) {
         return defaultValue;
@@ -359,7 +359,7 @@ function evalActBaseShapeId(action: WeaSetTileTypeExpr, tile: ITile, newBaseType
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             const newBaseShapeId = Math.floor(epResult.num);
-            return (newBaseShapeId < 0) || (gameConfig.checkIsValidTileBaseShapeId(newBaseType, newBaseShapeId))
+            return (newBaseShapeId < 0) || (GcData.checkIsValidTileBaseShapeId(newBaseType, newBaseShapeId))
                 ? newBaseShapeId
                 : defaultValue;
         } else {
@@ -380,7 +380,7 @@ function evalActObjectType(action: WeaSetTileTypeExpr, tile: ITile): number {
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             const newObjectType = Math.floor(epResult.num);
-            return (tile.getGameConfig().checkIsValidTileObjectType(newObjectType)) ? newObjectType : defaultValue;
+            return (GcData.checkIsValidTileObjectType(newObjectType)) ? newObjectType : defaultValue;
         } else {
             return defaultValue;
         }
@@ -389,9 +389,8 @@ function evalActObjectType(action: WeaSetTileTypeExpr, tile: ITile): number {
     }
 }
 function evalActObjectShapeId(action: WeaSetTileTypeExpr, tile: ITile, newObjectType: number): number {
-    const gameConfig        = tile.getGameConfig();
     const oldObjectShapeId    = tile.getObjectShapeId();
-    const defaultValue      = gameConfig.checkIsValidTileObjectShapeId(newObjectType, oldObjectShapeId) ? oldObjectShapeId : 0;
+    const defaultValue      = GcData.checkIsValidTileObjectShapeId(newObjectType, oldObjectShapeId) ? oldObjectShapeId : 0;
     const act               = action.getActObjectShapeId();
     if (!act) {
         return defaultValue;
@@ -401,7 +400,7 @@ function evalActObjectShapeId(action: WeaSetTileTypeExpr, tile: ITile, newObject
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             const newObjectShapeId = Math.floor(epResult.num);
-            return (newObjectShapeId < 0) || (gameConfig.checkIsValidTileObjectShapeId(newObjectType, newObjectShapeId))
+            return (newObjectShapeId < 0) || (GcData.checkIsValidTileObjectShapeId(newObjectType, newObjectShapeId))
                 ? newObjectShapeId
                 : defaultValue;
         } else {
@@ -422,7 +421,7 @@ function evalActDecorationType(action: WeaSetTileTypeExpr, tile: ITile): number 
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             const newDecorationType = Math.floor(epResult.num);
-            return (tile.getGameConfig().checkIsValidTileDecorationType(newDecorationType)) ? newDecorationType : defaultValue;
+            return (GcData.checkIsValidTileDecorationType(newDecorationType)) ? newDecorationType : defaultValue;
         } else {
             return defaultValue;
         }
@@ -431,9 +430,8 @@ function evalActDecorationType(action: WeaSetTileTypeExpr, tile: ITile): number 
     }
 }
 function evalActDecorationShapeId(action: WeaSetTileTypeExpr, tile: ITile, newDecorationType: number): number {
-    const gameConfig        = tile.getGameConfig();
     const oldDecorationShapeId    = tile.getDecorationShapeId();
-    const defaultValue      = gameConfig.checkIsValidTileDecorationShapeId(newDecorationType, oldDecorationShapeId) ? oldDecorationShapeId : 0;
+    const defaultValue      = GcData.checkIsValidTileDecorationShapeId(newDecorationType, oldDecorationShapeId) ? oldDecorationShapeId : 0;
     const act               = action.getActDecorationShapeId();
     if (!act) {
         return defaultValue;
@@ -443,7 +441,7 @@ function evalActDecorationShapeId(action: WeaSetTileTypeExpr, tile: ITile, newDe
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             const newDecorationShapeId = Math.floor(epResult.num);
-            return (newDecorationShapeId < 0) || (gameConfig.checkIsValidTileDecorationShapeId(newDecorationType, newDecorationShapeId))
+            return (newDecorationShapeId < 0) || (GcData.checkIsValidTileDecorationShapeId(newDecorationType, newDecorationShapeId))
                 ? newDecorationShapeId
                 : defaultValue;
         } else {
@@ -590,7 +588,7 @@ function createNewTileData(action: WeaSetTileTypeExpr, tile: ITile): NewTileData
         objectShapeId       : Math.max(0, newObjectShapeId),
         decorationType      : newDecorationType,
         decorationShapeId   : Math.max(0, newDecorationShapeId),
-        playerIndex         : gameConfig.getTileObjectCfg(newObjectType)?.isNeutralOnly
+        playerIndex         : GcData.getTileObjectCfg(newObjectType)?.isNeutralOnly
             ? PlayerIndex.Neutral
             : tile.getPlayerIndex(),
 

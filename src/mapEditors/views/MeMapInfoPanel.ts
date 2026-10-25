@@ -1,7 +1,7 @@
 import { getCampaignInfo } from "../../campaigns/mains/Provider.ts";
 import { reqCmSetCampaignMapName, reqCmSetCampaignMapExtraText } from "../../campaigns/managements/Gateway.ts";
 import { show, showLang } from "../../FloatText.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
@@ -216,7 +216,7 @@ export class Panel extends UiPanel<OpenData> {
         } else {
             openPanel(getDict().CommonInputShortLangTextPanel, {
                 currentTextArray    : mapNameArray,
-                maxTextLength       : Constants.MaxNameLength,
+                maxTextLength       : Common.MaxNameLength,
                 callback            : async newMapNameArray => {
                     war.setMapNameArray(newMapNameArray);
                     dispatch(TypeId.MeMapNameChanged);
@@ -257,7 +257,7 @@ export class Panel extends UiPanel<OpenData> {
             });
         } else {
             openPanel(getDict().CommonInputLanguageTextPanel, {
-                maxLength           : Constants.MaxDescLength,
+                maxLength           : Common.MaxDescLength,
                 currentTextArray    : mapDescArray,
                 isMultiline         : true,
                 getTitle            : () => getText(TextType.B0893),
@@ -526,7 +526,7 @@ export class Panel extends UiPanel<OpenData> {
                 title           : getText(TextType.B0163),
                 tips            : null,
                 currentValue    : war.getMapDesignerName(),
-                maxChars        : Constants.MaxDesignerLength,
+                maxChars        : Common.MaxDesignerLength,
                 charRestrict    : null,
                 callback        : (panel) => {
                     war.setMapDesignerName(panel.getInputText());

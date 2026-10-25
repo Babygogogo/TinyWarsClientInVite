@@ -34,12 +34,14 @@ export default defineConfig([
                 "align"       : "colon"
             }],
             "object-property-newline" : [ "error", {
-                "allowAllPropertiesOnSameLine" : false
+                "allowAllPropertiesOnSameLine" : true
             }],
             "object-curly-newline" : [ "error", {
                 "ObjectExpression" : {
-                    "minProperties" : 1
-                }
+                    "multiline"     : true,
+                    "minProperties" : 3,
+                    "consistent"    : true,
+                },
             }],
             'max-statements-per-line' : ['error', {
                 'max' : 1

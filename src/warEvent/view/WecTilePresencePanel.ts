@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
@@ -230,7 +230,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle        : () => getText(TextType.B0778),
             currentValue    : oldCon?.getValue(),
             minValue        : 0,
-            maxValue        : Constants.MaxGridsCount,
+            maxValue        : Common.MaxGridsCount,
             callback        : unitsCount => {
                 if (unitsCount == null) {
                     condition.setConTileComparator(null);

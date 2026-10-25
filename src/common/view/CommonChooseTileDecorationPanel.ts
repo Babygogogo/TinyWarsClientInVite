@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfig/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getTileDecorationName } from "../../lang/Utils.ts";
@@ -100,7 +100,7 @@ export class Panel extends UiPanel<OpenData> {
         const decorationType    = this._listType.getFirstSelectedData()?.decorationType;
         const dataList          : DataForTileDecorationRenderer[] = [];
         if (decorationType != null) {
-            const cfg = getExisted(gameConfig.getTileDecorationCfg(decorationType));
+            const cfg = getExisted(GcData.getTileDecorationCfg(decorationType));
             for (let shapeId = 0; shapeId < cfg.shapesCount; ++shapeId) {
                 dataList.push({
                     panel                       : this,
@@ -125,7 +125,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const dataArray: DataForTypeRenderer[] = [];
-        for (const cfg of gameConfig.getAllTileDecorationCfgArray()) {
+        for (const cfg of GcData.getAllTileDecorationCfgArray()) {
             dataArray.push({
                 decorationType  : cfg.tileDecorationTypeId,
                 gameConfig      : gameConfig,

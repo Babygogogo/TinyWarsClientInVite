@@ -1,5 +1,5 @@
 import { show } from "../../FloatText.ts";
-import { DrawerMode } from "../../gameConfig/GcMapEditor.ts";
+import { DrawerMode } from "../Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";

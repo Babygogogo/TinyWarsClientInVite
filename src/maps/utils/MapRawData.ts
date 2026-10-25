@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { getErrorCode as DialoguesUtilsMapSmallDialogueGetErrorCode } from "../../dialogues/utils/MapSmallDialogue.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../Constants.ts";
 import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
 import { getTwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -157,7 +157,7 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
 function getErrorCodeForMapDesigner(mapDesigner: Undefinable<string>): ClientErrorCode {
     if ((mapDesigner == null)                                       ||
         (mapDesigner.length <= 0)                                   ||
-        (mapDesigner.length > Constants.MaxDesignerLength)
+        (mapDesigner.length > Common.MaxDesignerLength)
     ) {
         return ClientErrorCode.MeHelpers_GetErrorCodeForMapDesigner_00;
     } else {
@@ -167,7 +167,7 @@ function getErrorCodeForMapDesigner(mapDesigner: Undefinable<string>): ClientErr
 function getErrorCodeForMapNameArray(mapNameList: Undefinable<LanguageText[]>): ClientErrorCode {
     if (!checkIsValidLanguageTextArray({
         list            : mapNameList ?? [],
-        maxTextLength   : Constants.MaxNameLength,
+        maxTextLength   : Common.MaxNameLength,
         minTextLength   : 1,
         minTextCount    : 1,
     })) {
@@ -187,7 +187,7 @@ function getErrorCodeForMapExtraText(mapExtraText: Undefinable<MapExtraText>): C
             list            : mapDescription,
             minTextCount    : 1,
             minTextLength   : 1,
-            maxTextLength   : Constants.MaxDescLength,
+            maxTextLength   : Common.MaxDescLength,
         }))
     ) {
         return ClientErrorCode.MeHelpers_GetErrorCodeForMapExtraText_00;

@@ -3,8 +3,8 @@ import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { show, showLang } from "../../FloatText.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
-import { DrawerMode } from "../../gameConfig/GcMapEditor.ts";
+import { Common } from "../../maps/Constants.ts";
+import { DrawerMode } from "../Constants.ts";
 import { getUnitViewClass, getUnitClass, getTileViewClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -568,7 +568,7 @@ export class Panel extends UiPanel<OpenData> {
             currentValue    : ``,
             canBeEmpty      : true,
             isMultiLine     : true,
-            maxChars        : Constants.MaxReviewCommentLength,
+            maxChars        : Common.MaxReviewCommentLength,
             charRestrict    : null,
             callback        : panel => {
                 const war       = this._getWar();
@@ -599,7 +599,7 @@ export class Panel extends UiPanel<OpenData> {
             currentValue    : ``,
             canBeEmpty      : true,
             isMultiLine     : true,
-            maxChars        : Constants.MaxReviewCommentLength,
+            maxChars        : Common.MaxReviewCommentLength,
             charRestrict    : null,
             callback        : panel => {
                 const war = this._getWar();

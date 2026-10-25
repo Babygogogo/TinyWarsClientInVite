@@ -7,9 +7,9 @@ import { SkillTypeId } from "../coSkills/Constants.ts";
 import { SmallDialogueSideId } from "../dialogues/Constants.ts";
 import { ContextType, ResultType } from "../expressionParsers/Enums.ts";
 import { ForcedFogCode } from "../fogMaps/Constants.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
-import { ReviewStatus, SortType } from "../gameConfig/GcMap.ts";
-import { DrawerMode } from "../gameConfig/GcMapEditor.ts";
+import { GcData } from "../gameConfig/GcData.ts";
+import { ReviewStatus, SortType } from "../maps/Constants.ts";
+import { DrawerMode } from "../mapEditors/Constants.ts";
 import { BasicSettingsType } from "../gameConfig/GcWar.ts";
 import { ModeId } from "../gameModes/Constants.ts";
 import { TypeName } from "../gameVersions/Constants.ts";
@@ -252,13 +252,13 @@ export function getTileName(tileType: TileTypeId, gameConfig: GcData, languageTy
 }
 
 export function getTileObjectName(tileObjectType: number, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
-    const textId    = gameConfig.getTileObjectCfg(tileObjectType)?.nameTextId;
+    const textId    = GcData.getTileObjectCfg(tileObjectType)?.nameTextId;
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
 }
 
 export function getTileDecorationName(tileDecorationType: number, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
-    const textId    = gameConfig.getTileDecorationCfg(tileDecorationType)?.nameTextId;
+    const textId    = GcData.getTileDecorationCfg(tileDecorationType)?.nameTextId;
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
 }

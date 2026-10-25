@@ -35,13 +35,13 @@ import type { WeatherCfg as ProtoSchemaCommonProtoConfigWeatherCfg } from "../pr
 import {
     BaseCfgDict,
     BaseSymmetryCfgDict,
-    ObjectCfgDict,
-    ObjectSymmetryCfgDict,
+    CategoryId,
     DecorationCfgDict,
     DecorationSymmetryCfgDict,
-    CategoryId,
+    ObjectCfgDict,
+    ObjectSymmetryCfgDict,
 } from "../tiles/constants/Common.ts";
-import type { TileBaseCfg, TileObjectCfg, TileDecorationCfg } from "../tiles/Types.ts";
+import type { TileBaseCfg, TileDecorationCfg, TileObjectCfg } from "../tiles/Types.ts";
 import { CategoryId as UnitsConstantsCategoryId, WeaponTypeId } from "../units/Constants.ts";
 import type { WarTypeId } from "../warTypes/Constants.ts";
 import { checkIsAtw, checkIsMrw } from "../warTypes/Utils.ts";
@@ -204,16 +204,16 @@ export class GcData {
             .map(v => v[0]);
     }
 
-    public getTileBaseCfg(tileBaseType: number): TileBaseCfg | null {
+    public static getTileBaseCfg(tileBaseType: number): TileBaseCfg | null {
         return BaseCfgDict.get(tileBaseType) ?? null;
     }
-    public checkIsUsableTileBaseType(tileBaseType: number): boolean {
+    public static checkIsUsableTileBaseType(tileBaseType: number): boolean {
         return !!BaseCfgDict.get(tileBaseType)?.isEnabled;
     }
-    public getAllEnabledTileBaseCfgArray(): TileBaseCfg[] {
+    public static getAllEnabledTileBaseCfgArray(): TileBaseCfg[] {
         return [...BaseCfgDict].filter(v => v[1].isEnabled).map(v => v[1]).sort((v1, v2) => v1.tileBaseTypeId - v2.tileBaseTypeId);
     }
-    public getDefaultTileBaseType(): number {
+    public static getDefaultTileBaseType(): number {
         for (const [tileBaseType, cfg] of BaseCfgDict) {
             if (cfg.isDefault) {
                 return tileBaseType;
@@ -221,97 +221,97 @@ export class GcData {
         }
         throw newError(`No default tile base type.`);
     }
-    public checkIsValidTileBaseShapeId(tileBaseType: number, shapeId: Undefinable<number>): boolean {
-        const cfg = this.getTileBaseCfg(tileBaseType);
+    public static checkIsValidTileBaseShapeId(tileBaseType: number, shapeId: Undefinable<number>): boolean {
+        const cfg = GcData.getTileBaseCfg(tileBaseType);
         return (!!cfg?.isEnabled)
             && ((shapeId == null) || ((shapeId >= 0) && (shapeId < cfg.shapesCount)));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getSymmetricalTileBaseShapeId(tileBaseType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
+    public static getSymmetricalTileBaseShapeId(tileBaseType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
         const shapeIdList = BaseSymmetryCfgDict.get(tileBaseType)?.get(shapeId)?.symmetryShapeIds;
         return shapeIdList ? shapeIdList[symmetryType] : null;
     }
-    public checkIsTileBaseSymmetrical({ baseType, shapeId1, shapeId2, symmetryType }: {
+    public static checkIsTileBaseSymmetrical({ baseType, shapeId1, shapeId2, symmetryType }: {
         baseType    : number;
         shapeId1    : number;
         shapeId2    : number;
         symmetryType: SymmetryTypeId;
     }): boolean {
-        return this.getSymmetricalTileBaseShapeId(baseType, shapeId1, symmetryType) === (shapeId2 || 0);
+        return GcData.getSymmetricalTileBaseShapeId(baseType, shapeId1, symmetryType) === (shapeId2 || 0);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getTileObjectCfg(tileObjectType: number): TileObjectCfg | null {
+    public static getTileObjectCfg(tileObjectType: number): TileObjectCfg | null {
         return ObjectCfgDict.get(tileObjectType) ?? null;
     }
-    public checkIsValidTileObjectType(tileObjectType: number): boolean {
+    public static checkIsValidTileObjectType(tileObjectType: number): boolean {
         return ObjectCfgDict.has(tileObjectType);
     }
-    public getAllTileObjectCfgArray(): TileObjectCfg[] {
+    public static getAllTileObjectCfgArray(): TileObjectCfg[] {
         return [...ObjectCfgDict]
             .sort((v1, v2) => v1[1].sortWeight - v2[1].sortWeight)
             .map(v => v[1]);
     }
-    public checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType }: {
+    public static checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType }: {
         playerIndex     : number;
         tileObjectType  : number;
     }): boolean {
-        const cfg = this.getTileObjectCfg(tileObjectType);
+        const cfg = GcData.getTileObjectCfg(tileObjectType);
         return (cfg != null)
             && (playerIndex >= PlayerIndex.Neutral)
             && (playerIndex <= PlayerIndex.Max)
             && ((!cfg.isNeutralOnly) || (playerIndex === PlayerIndex.Neutral));
     }
-    public checkIsValidTileObjectShapeId(tileObjectType: number, shapeId: Undefinable<number>): boolean {
-        const shapesCount = this.getTileObjectCfg(tileObjectType)?.shapesCount;
+    public static checkIsValidTileObjectShapeId(tileObjectType: number, shapeId: Undefinable<number>): boolean {
+        const shapesCount = GcData.getTileObjectCfg(tileObjectType)?.shapesCount;
         return (shapesCount != null)
             && ((shapeId == null) || ((shapeId >= 0) && (shapeId < shapesCount)));
     }
-    public getSymmetricalTileObjectType(tileObjectType: number, symmetryType: SymmetryTypeId): number {
-        return getExisted(this.getTileObjectCfg(tileObjectType)?.symmetryTypes)[symmetryType];
+    public static getSymmetricalTileObjectType(tileObjectType: number, symmetryType: SymmetryTypeId): number {
+        return getExisted(GcData.getTileObjectCfg(tileObjectType)?.symmetryTypes)[symmetryType];
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getSymmetricalTileObjectShapeId(tileObjectType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
+    public static getSymmetricalTileObjectShapeId(tileObjectType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
         const shapeIdArray = ObjectSymmetryCfgDict.get(tileObjectType)?.get(shapeId)?.symmetryShapeIds;
         return shapeIdArray ? shapeIdArray[symmetryType] : null;
     }
-    public checkIsTileObjectSymmetrical({ objectType, shapeId1, shapeId2, symmetryType }: {
+    public static checkIsTileObjectSymmetrical({ objectType, shapeId1, shapeId2, symmetryType }: {
         objectType      : number;
         shapeId1        : number;
         shapeId2        : number;
         symmetryType    : SymmetryTypeId;
     }): boolean {
-        return this.getSymmetricalTileObjectShapeId(objectType, shapeId1, symmetryType) === (shapeId2 || 0);
+        return GcData.getSymmetricalTileObjectShapeId(objectType, shapeId1, symmetryType) === (shapeId2 || 0);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getTileDecorationCfg(tileDecorationType: number): TileDecorationCfg | null {
+    public static getTileDecorationCfg(tileDecorationType: number): TileDecorationCfg | null {
         return DecorationCfgDict.get(tileDecorationType) ?? null;
     }
-    public checkIsValidTileDecorationType(tileDecorationType: number): boolean {
+    public static checkIsValidTileDecorationType(tileDecorationType: number): boolean {
         return DecorationCfgDict.has(tileDecorationType);
     }
-    public getAllTileDecorationCfgArray(): TileDecorationCfg[] {
+    public static getAllTileDecorationCfgArray(): TileDecorationCfg[] {
         return [...DecorationCfgDict].sort((v1, v2) => v1[0] - v2[0]).map(v => v[1]);
     }
-    public checkIsValidTileDecorationShapeId(tileDecorationType: Undefinable<number>, shapeId: Undefinable<number>): boolean {
+    public static checkIsValidTileDecorationShapeId(tileDecorationType: Undefinable<number>, shapeId: Undefinable<number>): boolean {
         if (tileDecorationType == null) {
             return shapeId == null;
         }
 
-        const cfg = this.getTileDecorationCfg(tileDecorationType);
+        const cfg = GcData.getTileDecorationCfg(tileDecorationType);
         return (cfg != null)
             && ((shapeId == null) || ((shapeId >= 0) && (shapeId < cfg.shapesCount)));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public getSymmetricalTileDecorationShapeId(tileDecorationType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
+    public static getSymmetricalTileDecorationShapeId(tileDecorationType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
         const shapeIdArray = DecorationSymmetryCfgDict.get(tileDecorationType)?.get(shapeId)?.symmetryShapeIds;
         return shapeIdArray ? shapeIdArray[symmetryType] : null;
     }
-    public checkIsTileDecorationSymmetrical({ tileDecorationType, shapeId1, shapeId2, symmetryType }: {
+    public static checkIsTileDecorationSymmetrical({ tileDecorationType, shapeId1, shapeId2, symmetryType }: {
         tileDecorationType  : number | null;
         shapeId1            : Undefinable<number>;
         shapeId2            : Undefinable<number>;
@@ -326,7 +326,7 @@ export class GcData {
         } else if (shapeId2 == null) {
             return shapeId1 == null;
         } else {
-            return this.getSymmetricalTileDecorationShapeId(tileDecorationType, shapeId1, symmetryType) === shapeId2;
+            return GcData.getSymmetricalTileDecorationShapeId(tileDecorationType, shapeId1, symmetryType) === shapeId2;
         }
     }
 
@@ -659,8 +659,8 @@ function _destructTileCategoryCfg(data: TileCategoryCfg[], tileTemplateCfgs: Til
             (getExisted(dst.get(categoryId)).getTileTypeIds()).length = 0;
         } else {
             dst.set(categoryId, TileCategoryCfg.fromJson({
-                tileCategoryId  : categoryId,
-                tileTypeIds     : [],
+                tileCategoryId : categoryId,
+                tileTypeIds    : [],
             }));
         }
     }
@@ -672,8 +672,8 @@ function _destructTileCategoryCfg(data: TileCategoryCfg[], tileTemplateCfgs: Til
             getExisted(dst.get(categoryId)).setTileTypeIds(allTileTypeIds);
         } else {
             dst.set(categoryId, TileCategoryCfg.fromJson({
-                tileCategoryId  : categoryId,
-                tileTypeIds     : allTileTypeIds,
+                tileCategoryId : categoryId,
+                tileTypeIds    : allTileTypeIds,
             }));
         }
     }
@@ -692,8 +692,8 @@ function _destructUnitCategoryCfg(data: UnitCategoryCfg[], unitTemplateCfgs: Uni
             (getExisted(dst.get(categoryId)).getUnitTypeIds()).length = 0;
         } else {
             dst.set(categoryId, UnitCategoryCfg.fromJson({
-                unitCategoryId  : categoryId,
-                unitTypeIds     : [],
+                unitCategoryId : categoryId,
+                unitTypeIds    : [],
             }));
         }
     }
@@ -705,8 +705,8 @@ function _destructUnitCategoryCfg(data: UnitCategoryCfg[], unitTemplateCfgs: Uni
             getExisted(dst.get(categoryType)).setUnitTypeIds(allUnitTypeArray);
         } else {
             dst.set(categoryType, UnitCategoryCfg.fromJson({
-                unitCategoryId  : categoryType,
-                unitTypeIds     : allUnitTypeArray,
+                unitCategoryId : categoryType,
+                unitTypeIds    : allUnitTypeArray,
             }));
         }
     }
@@ -835,8 +835,8 @@ function _destructWeatherCategoryCfg(data: WeatherCategoryCfg[], weatherCfgs: We
             getExisted(dst.get(categoryId)).getWeatherTypeIds().length = 0;
         } else {
             dst.set(categoryId, WeatherCategoryCfg.fromJson({
-                weatherCategoryId   : categoryId,
-                weatherTypeIds      : [],
+                weatherCategoryId : categoryId,
+                weatherTypeIds    : [],
             }));
         }
     }
@@ -848,8 +848,8 @@ function _destructWeatherCategoryCfg(data: WeatherCategoryCfg[], weatherCfgs: We
             getExisted(dst.get(categoryId)).setWeatherTypeIds(allWeatherTypeIds);
         } else {
             dst.set(categoryId, WeatherCategoryCfg.fromJson({
-                weatherCategoryId   : categoryId,
-                weatherTypeIds      : allWeatherTypeIds,
+                weatherCategoryId : categoryId,
+                weatherTypeIds    : allWeatherTypeIds,
             }));
         }
     }

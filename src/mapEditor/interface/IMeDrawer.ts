@@ -1,4 +1,4 @@
-import type { DrawerMode } from "../../gameConfig/GcMapEditor.ts";
+import type { DrawerMode } from "../../mapEditors/Constants.ts";
 import type { SymmetryTypeId } from "../../geometries/Constants.ts";
 import type { IMeWar } from "./IMeWar.ts";
 import type {

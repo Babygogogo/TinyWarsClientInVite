@@ -1,5 +1,5 @@
 import { showLang } from "../../FloatText.ts";
-import { ReviewStatus } from "../../gameConfig/GcMap.ts";
+import { ReviewStatus } from "../../maps/Constants.ts";
 import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel, openPanel } from "../../gamePanels/Manager.ts";

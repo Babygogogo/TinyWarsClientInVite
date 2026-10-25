@@ -1,5 +1,5 @@
 import type { GcData } from "../../gameConfig/GcData.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../Constants.ts";
 import { LanguageType } from "../../lang/Constants.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -19,7 +19,7 @@ export function convertAwbwMap(text: string, gcData: GcData): MapRawData | undef
 
     const mapWidth = awbwIdMap[0].length;
     if ((mapWidth <= 0) ||
-        (mapWidth * mapHeight > Constants.MaxGridsCount)
+        (mapWidth * mapHeight > Common.MaxGridsCount)
     ) {
         return undefined;
     }

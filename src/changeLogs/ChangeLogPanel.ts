@@ -1,23 +1,23 @@
-import { getAllMessageList } from "../model/ChangeLogModel.ts";
-import { reqChangeLogGetMessageList, reqChangeLogAddMessage, reqChangeLogModifyMessage } from "../model/ChangeLogProxy.ts";
-import { show } from "../../FloatText.ts";
-import { ChangeLogConstants } from "../../gameConfig/GcMisc.ts";
-import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel } from "../../gamePanels/Manager.ts";
-import { getNumText } from "../../helpers/Text.ts";
-import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTimestampShortText, getLanguageText } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
-import type { ChangeLogMessage } from "../../proto/schema/CommonProto/ChangeLog/ChangeLogMessage.ts";
-import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
-import { UiPanel } from "../../ui/components/UiPanel.ts";
-import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
-import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
-import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
-import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
-import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
-import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { checkCanSelfEditChangeLog } from "../../users/Model.ts";
+import { show } from "../FloatText.ts";
+import { Constants } from "./Constants.ts";
+import { getDict } from "../gamePanels/Dict.ts";
+import { openPanel } from "../gamePanels/Manager.ts";
+import { getNumText } from "../helpers/Text.ts";
+import { TextType, UndefinedError } from "../lang/Constants.ts";
+import { getLanguageText, getText, getTimestampShortText } from "../lang/Utils.ts";
+import { TypeId } from "../notifications/TypeId.ts";
+import type { ChangeLogMessage } from "../proto/schema/CommonProto/ChangeLog/ChangeLogMessage.ts";
+import { UiListItemRenderer } from "../ui/components/UiListItemRenderer.ts";
+import { UiPanel } from "../ui/components/UiPanel.ts";
+import type { IUiButton } from "../ui/interfaces/IUiButton.ts";
+import type { IUiContainer } from "../ui/interfaces/IUiContainer.ts";
+import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
+import type { IUiLabel } from "../ui/interfaces/IUiLabel.ts";
+import type { IUiScrollList } from "../ui/interfaces/IUiScrollList.ts";
+import type { UiListItemData } from "../ui/types/UiListItemData.ts";
+import { checkCanSelfEditChangeLog } from "../users/Model.ts";
+import { reqChangeLogAddMessage, reqChangeLogGetMessageList, reqChangeLogModifyMessage } from "./Gateway.ts";
+import { getAllMessageList } from "./Provider.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {
@@ -32,14 +32,14 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,            callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgChangeLogGetMessageList, callback: this._onMsgChangeLogGetMessageList },
-            { type: TypeId.MsgChangeLogAddMessage,     callback: this._onMsgChangeLogAddMessage },
-            { type: TypeId.MsgChangeLogModifyMessage,  callback: this._onMsgChangeLogModifyMessage },
+            { type : TypeId.LanguageChanged,            callback : this._onNotifyLanguageChanged },
+            { type : TypeId.MsgChangeLogGetMessageList, callback : this._onMsgChangeLogGetMessageList },
+            { type : TypeId.MsgChangeLogAddMessage,     callback : this._onMsgChangeLogAddMessage },
+            { type : TypeId.MsgChangeLogModifyMessage,  callback : this._onMsgChangeLogModifyMessage },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnAddMessage,  callback: this._onTouchedBtnAddMessage },
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnAddMessage,  callback : this._onTouchedBtnAddMessage },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled(true);
         this._setIsCloseOnTouchedMask();
@@ -78,11 +78,11 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnAddMessage(): void {
         openPanel(getDict().CommonInputLanguageTextPanel, {
-            getTitle            : () => getText(TextType.B0457),
-            currentTextArray    : null,
-            isMultiline         : true,
-            maxLength           : ChangeLogConstants.TextMaxLength,
-            callback            : textArray => {
+            getTitle         : () => getText(TextType.B0457),
+            currentTextArray : null,
+            isMultiline      : true,
+            maxLength        : Constants.TextMaxLength,
+            callback         : textArray => {
                 reqChangeLogAddMessage(textArray);
             },
         });
@@ -101,7 +101,7 @@ export class Panel extends UiPanel<OpenData> {
         this._btnAddMessage.setText(getText(TextType.B0454));
     }
     private async _updateListMessageAndLabelNoMessage(): Promise<void> {
-        const dataArray: DataForMessageRenderer[] = getAllMessageList()?.map(v => ({ data: v })) ?? [];
+        const dataArray: DataForMessageRenderer[] = getAllMessageList()?.map(v => ({ data : v })) ?? [];
         this._labelNoMessage.setIsVisible(!dataArray.length);
         await this._listMessage.bindData(dataArray);
     }
@@ -122,7 +122,7 @@ class MessageRenderer extends UiListItemRenderer<DataForMessageRenderer> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnModify,  callback: this._onTouchedBtnModify },
+            { ui : this._btnModify,  callback : this._onTouchedBtnModify },
         ]);
     }
 
@@ -156,11 +156,11 @@ class MessageRenderer extends UiListItemRenderer<DataForMessageRenderer> {
         const messageId = data?.getMessageId();
         if (messageId != null) {
             openPanel(getDict().CommonInputLanguageTextPanel, {
-                getTitle            : () => `${getText(TextType.B0317)} #${messageId}`,
-                currentTextArray    : data?.getTextList() ?? null,
-                maxLength           : ChangeLogConstants.TextMaxLength,
-                isMultiline         : true,
-                callback            : textArray => {
+                getTitle         : () => `${getText(TextType.B0317)} #${messageId}`,
+                currentTextArray : data?.getTextList() ?? null,
+                maxLength        : Constants.TextMaxLength,
+                isMultiline      : true,
+                callback         : textArray => {
                     reqChangeLogModifyMessage(messageId, textArray);
                 },
             });

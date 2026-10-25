@@ -172,7 +172,7 @@ import {
 import {
     type OpenData as ChangeLogViewChangeLogPanelOpenData,
     Panel as ChangeLogViewChangeLogPanel,
-} from "../changeLog/view/ChangeLogPanel.ts";
+} from "../changeLogs/ChangeLogPanel.ts";
 import { type OpenData as ChatViewChatCommandPanelOpenData, Panel as ChatViewChatCommandPanel } from "../chat/view/ChatCommandPanel.ts";
 import { type OpenData as ChatViewChatPanelOpenData, Panel as ChatViewChatPanel } from "../chat/view/ChatPanel.ts";
 import {
@@ -469,7 +469,6 @@ import {
     type OpenData as CoopCustomRoomViewCcrRoomInfoPanelOpenData,
     Panel as CoopCustomRoomViewCcrRoomInfoPanel,
 } from "../coopCustomRoom/view/CcrRoomInfoPanel.ts";
-import type { PanelConfig } from "./Types.ts";
 import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
 import {
     type OpenData as GmViewGmSetUserFullPrivilegePanelOpenData,
@@ -1306,6 +1305,7 @@ import {
     type OpenData as WatchWarViewWwSearchWarPanelOpenData,
     Panel as WatchWarViewWwSearchWarPanel,
 } from "../watchWar/view/WwSearchWarPanel.ts";
+import type { PanelConfig } from "./Types.ts";
 
 type DictType = {
     ActionPlannerPanel                                      : PanelConfig<OpenData>;
@@ -1686,65 +1686,65 @@ export function getDict(): DictType {
     if (_dict == null) {
         _dict = {
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            ActionPlannerPanel: {
-                cls         : Panel,
-                skinName    : `actionPlanners/ActionPlannerPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            ActionPlannerPanel : {
+                cls      : Panel,
+                skinName : `actionPlanners/ActionPlannerPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            AtGlobalSettingsPanel: {
-                cls         : AutoTourneysMainsViewsAtGlobalSettingsPanel,
-                skinName    : `autoTourneys/mains/views/AtGlobalSettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            AtGlobalSettingsPanel : {
+                cls      : AutoTourneysMainsViewsAtGlobalSettingsPanel,
+                skinName : `autoTourneys/mains/views/AtGlobalSettingsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            AtRegisterPanel: {
-                cls         : AutoTourneysMainsViewsAtRegisterPanel,
-                skinName    : `autoTourneys/mains/views/AtRegisterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            AtRegisterPanel : {
+                cls      : AutoTourneysMainsViewsAtRegisterPanel,
+                skinName : `autoTourneys/mains/views/AtRegisterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            AtSetInitialBracketsPanel: {
-                cls         : AutoTourneysMainsViewsAtSetInitialBracketsPanel,
-                skinName    : `autoTourneys/mains/views/AtSetInitialBracketsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            AtSetInitialBracketsPanel : {
+                cls      : AutoTourneysMainsViewsAtSetInitialBracketsPanel,
+                skinName : `autoTourneys/mains/views/AtSetInitialBracketsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            AtSetMapPoolPanel: {
-                cls         : AutoTourneysMainsViewsAtSetMapPoolPanel,
-                skinName    : `autoTourneys/mains/views/AtSetMapPoolPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            AtSetMapPoolPanel : {
+                cls      : AutoTourneysMainsViewsAtSetMapPoolPanel,
+                skinName : `autoTourneys/mains/views/AtSetMapPoolPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            AtTourneyInfoPanel: {
-                cls         : AutoTourneysMainsViewsAtTourneyInfoPanel,
-                skinName    : `autoTourneys/mains/views/AtTourneyInfoPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            AtTourneyInfoPanel : {
+                cls      : AutoTourneysMainsViewsAtTourneyInfoPanel,
+                skinName : `autoTourneys/mains/views/AtTourneyInfoPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            AtTourneySettingsPanel: {
-                cls         : AutoTourneysMainsViewsAtTourneySettingsPanel,
-                skinName    : `autoTourneys/mains/views/AtTourneySettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            AtTourneySettingsPanel : {
+                cls      : AutoTourneysMainsViewsAtTourneySettingsPanel,
+                skinName : `autoTourneys/mains/views/AtTourneySettingsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            AtrMainMenuPanel: {
+            AtrMainMenuPanel : {
                 cls         : AutoTourneysRoomsViewsAtrMainMenuPanel,
                 skinName    : `autoTourneys/rooms/views/AtrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            AtrPreviewMapListPanel: {
+            AtrPreviewMapListPanel : {
                 cls         : AutoTourneysRoomsViewsAtrPreviewMapListPanel,
                 skinName    : `autoTourneys/rooms/views/AtrPreviewMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            AtrRoomInfoPanel: {
+            AtrRoomInfoPanel : {
                 cls         : AutoTourneysRoomsViewsAtrRoomInfoPanel,
                 skinName    : `autoTourneys/rooms/views/AtrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
@@ -1752,7 +1752,7 @@ export function getDict(): DictType {
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            BwBackgroundPanel: {
+            BwBackgroundPanel : {
                 cls         : BaseWarViewBwBackgroundPanel,
                 skinName    : `baseWar/BwBackgroundPanel.exml`,
                 layer       : DisplayLayerId.Bottom,
@@ -1760,151 +1760,151 @@ export function getDict(): DictType {
                 needCache   : true,
             },
 
-            BwBeginTurnPanel: {
-                cls         : BaseWarViewBwBeginTurnPanel,
-                skinName    : `baseWar/BwBeginTurnPanel.exml`,
-                layer       : DisplayLayerId.Notify0,
-                needCache   : true,
+            BwBeginTurnPanel : {
+                cls       : BaseWarViewBwBeginTurnPanel,
+                skinName  : `baseWar/BwBeginTurnPanel.exml`,
+                layer     : DisplayLayerId.Notify0,
+                needCache : true,
             },
 
-            BwCaptureProgressPanel: {
-                cls         : BaseWarViewBwCaptureProgressPanel,
-                skinName    : `baseWar/BwCaptureProgressPanel.exml`,
-                layer       : DisplayLayerId.Notify0,
-                needCache   : true,
+            BwCaptureProgressPanel : {
+                cls       : BaseWarViewBwCaptureProgressPanel,
+                skinName  : `baseWar/BwCaptureProgressPanel.exml`,
+                layer     : DisplayLayerId.Notify0,
+                needCache : true,
             },
 
-            BwCustomCounterListPanel: {
-                cls         : BaseWarViewBwCustomCounterListPanel,
-                skinName    : `baseWar/BwCustomCounterListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BwCustomCounterListPanel : {
+                cls      : BaseWarViewBwCustomCounterListPanel,
+                skinName : `baseWar/BwCustomCounterListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            BwDamagePreviewPanel: {
-                cls         : BaseWarViewBwDamagePreviewPanel,
-                skinName    : `baseWar/BwDamagePreviewPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            BwDamagePreviewPanel : {
+                cls       : BaseWarViewBwDamagePreviewPanel,
+                skinName  : `baseWar/BwDamagePreviewPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            BwBigDialoguePanel: {
-                cls         : BaseWarViewBwBigDialoguePanel,
-                skinName    : `baseWar/BwBigDialoguePanel.exml`,
-                layer       : DisplayLayerId.Hud1,
+            BwBigDialoguePanel : {
+                cls      : BaseWarViewBwBigDialoguePanel,
+                skinName : `baseWar/BwBigDialoguePanel.exml`,
+                layer    : DisplayLayerId.Hud1,
             },
 
-            BwMapSimpleDialogueListPanel: {
-                cls         : BaseWarViewBwMapSimpleDialogueListPanel,
-                skinName    : `baseWar/BwMapSimpleDialogueListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BwMapSimpleDialogueListPanel : {
+                cls      : BaseWarViewBwMapSimpleDialogueListPanel,
+                skinName : `baseWar/BwMapSimpleDialogueListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            BwMapSimpleDialoguePanel: {
-                cls         : BaseWarViewBwMapSimpleDialoguePanel,
-                skinName    : `baseWar/BwMapSimpleDialoguePanel.exml`,
-                layer       : DisplayLayerId.Hud1,
+            BwMapSimpleDialoguePanel : {
+                cls      : BaseWarViewBwMapSimpleDialoguePanel,
+                skinName : `baseWar/BwMapSimpleDialoguePanel.exml`,
+                layer    : DisplayLayerId.Hud1,
             },
 
-            BwMarkGridPanel: {
-                cls         : BaseWarViewBwMarkGridPanel,
-                skinName    : `baseWar/BwMarkGridPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BwMarkGridPanel : {
+                cls      : BaseWarViewBwMarkGridPanel,
+                skinName : `baseWar/BwMarkGridPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            BwProduceUnitPanel: {
-                cls         : BaseWarViewBwProduceUnitPanel,
-                skinName    : `baseWar/BwProduceUnitPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            BwProduceUnitPanel : {
+                cls       : BaseWarViewBwProduceUnitPanel,
+                skinName  : `baseWar/BwProduceUnitPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            BwTaskObjectivePanel: {
-                cls         : BaseWarViewBwTaskObjectivePanel,
-                skinName    : `baseWar/BwTaskObjectivePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BwTaskObjectivePanel : {
+                cls      : BaseWarViewBwTaskObjectivePanel,
+                skinName : `baseWar/BwTaskObjectivePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            BwTileBriefPanel: {
-                cls         : BaseWarViewBwTileBriefPanel,
-                skinName    : `baseWar/BwTileBriefPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            BwTileBriefPanel : {
+                cls       : BaseWarViewBwTileBriefPanel,
+                skinName  : `baseWar/BwTileBriefPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            BwTileBuffListPanel: {
-                cls         : BaseWarViewBwTileBuffListPanel,
-                skinName    : `baseWar/BwTileBuffListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BwTileBuffListPanel : {
+                cls      : BaseWarViewBwTileBuffListPanel,
+                skinName : `baseWar/BwTileBuffListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            BwTileDetailPanel: {
-                cls         : BaseWarViewBwTileDetailPanel,
-                skinName    : `baseWar/BwTileDetailPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            BwTileDetailPanel : {
+                cls       : BaseWarViewBwTileDetailPanel,
+                skinName  : `baseWar/BwTileDetailPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            BwTileStatisticsPanel: {
-                cls         : BaseWarViewBwTileStatisticsPanel,
-                skinName    : `baseWar/BwTileStatisticsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BwTileStatisticsPanel : {
+                cls      : BaseWarViewBwTileStatisticsPanel,
+                skinName : `baseWar/BwTileStatisticsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            BwUnitActionsPanel: {
-                cls         : BaseWarViewBwUnitActionsPanel,
-                skinName    : `baseWar/BwUnitActionsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            BwUnitActionsPanel : {
+                cls       : BaseWarViewBwUnitActionsPanel,
+                skinName  : `baseWar/BwUnitActionsPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            BwUnitBriefPanel: {
-                cls         : BaseWarViewBwUnitBriefPanel,
-                skinName    : `baseWar/BwUnitBriefPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            BwUnitBriefPanel : {
+                cls       : BaseWarViewBwUnitBriefPanel,
+                skinName  : `baseWar/BwUnitBriefPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            BwUnitBuffListPanel: {
-                cls         : BaseWarViewBwUnitBuffListPanel,
-                skinName    : `baseWar/BwUnitBuffListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BwUnitBuffListPanel : {
+                cls      : BaseWarViewBwUnitBuffListPanel,
+                skinName : `baseWar/BwUnitBuffListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            BwUnitDetailPanel: {
-                cls         : BaseWarViewBwUnitDetailPanel,
-                skinName    : `baseWar/BwUnitDetailPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            BwUnitDetailPanel : {
+                cls       : BaseWarViewBwUnitDetailPanel,
+                skinName  : `baseWar/BwUnitDetailPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            BwUnitListPanel: {
-                cls         : BaseWarViewBwUnitListPanel,
-                skinName    : `baseWar/BwUnitListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            BwUnitListPanel : {
+                cls       : BaseWarViewBwUnitListPanel,
+                skinName  : `baseWar/BwUnitListPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            BwUnitStatisticsPanel: {
-                cls         : BaseWarViewBwUnitStatisticsPanel,
-                skinName    : `baseWar/BwUnitStatisticsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            BwUnitStatisticsPanel : {
+                cls       : BaseWarViewBwUnitStatisticsPanel,
+                skinName  : `baseWar/BwUnitStatisticsPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            BwWarExtraInfoPanel: {
-                cls         : BaseWarViewBwWarExtraInfoPanel,
-                skinName    : `baseWar/BwWarExtraInfoPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BwWarExtraInfoPanel : {
+                cls      : BaseWarViewBwWarExtraInfoPanel,
+                skinName : `baseWar/BwWarExtraInfoPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            BwWarInfoPanel: {
-                cls         : BaseWarViewBwWarInfoPanel,
-                skinName    : `baseWar/BwWarInfoPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            BwWarInfoPanel : {
+                cls       : BaseWarViewBwWarInfoPanel,
+                skinName  : `baseWar/BwWarInfoPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            BwWarPanel: {
+            BwWarPanel : {
                 cls         : BaseWarViewBwWarPanel,
                 skinName    : `baseWar/BwWarPanel.exml`,
                 layer       : DisplayLayerId.Scene,
@@ -1912,81 +1912,81 @@ export function getDict(): DictType {
                 needCache   : true,
             },
 
-            BwSmallDialoguePanel: {
-                cls         : BaseWarViewBwSmallDialoguePanel,
-                skinName    : `baseWar/BwSmallDialoguePanel.exml`,
-                layer       : DisplayLayerId.Hud1,
+            BwSmallDialoguePanel : {
+                cls      : BaseWarViewBwSmallDialoguePanel,
+                skinName : `baseWar/BwSmallDialoguePanel.exml`,
+                layer    : DisplayLayerId.Hud1,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            BroadcastAddMessagePanel: {
-                cls         : BroadcastsViewsBroadcastAddMessagePanel,
-                skinName    : `broadcasts/views/BroadcastAddMessagePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BroadcastAddMessagePanel : {
+                cls      : BroadcastsViewsBroadcastAddMessagePanel,
+                skinName : `broadcasts/views/BroadcastAddMessagePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            BroadcastMessageListPanel: {
-                cls         : BroadcastsViewsBroadcastMessageListPanel,
-                skinName    : `broadcasts/views/BroadcastMessageListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BroadcastMessageListPanel : {
+                cls      : BroadcastsViewsBroadcastMessageListPanel,
+                skinName : `broadcasts/views/BroadcastMessageListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            BroadcastPanel: {
-                cls         : BroadcastsViewsBroadcastPanel,
-                skinName    : `broadcasts/views/BroadcastPanel.exml`,
-                layer       : DisplayLayerId.Notify0,
-                needCache   : true,
-            },
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////////
-            CampaignCreateCampaignsPanel: {
-                cls         : CampaignsViewsCampaignCreateCampaignsPanel,
-                skinName    : `campaigns/views/CampaignCreateCampaignsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
-            },
-
-            CampaignCreateMapsPanel: {
-                cls         : CampaignsViewsCampaignCreateMapsPanel,
-                skinName    : `campaigns/views/CampaignCreateMapsPanel.exml`,
-                layer       : DisplayLayerId.Scene,
-            },
-
-            CampaignCreateQuickSettingsPanel: {
-                cls         : CampaignsViewsCampaignCreateQuickSettingsPanel,
-                skinName    : `campaigns/views/CampaignCreateQuickSettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            BroadcastPanel : {
+                cls       : BroadcastsViewsBroadcastPanel,
+                skinName  : `broadcasts/views/BroadcastPanel.exml`,
+                layer     : DisplayLayerId.Notify0,
+                needCache : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            ChangeLogPanel: {
-                cls         : ChangeLogViewChangeLogPanel,
-                skinName    : `changeLog/ChangeLogPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            CampaignCreateCampaignsPanel : {
+                cls      : CampaignsViewsCampaignCreateCampaignsPanel,
+                skinName : `campaigns/views/CampaignCreateCampaignsPanel.exml`,
+                layer    : DisplayLayerId.Scene,
+            },
+
+            CampaignCreateMapsPanel : {
+                cls      : CampaignsViewsCampaignCreateMapsPanel,
+                skinName : `campaigns/views/CampaignCreateMapsPanel.exml`,
+                layer    : DisplayLayerId.Scene,
+            },
+
+            CampaignCreateQuickSettingsPanel : {
+                cls      : CampaignsViewsCampaignCreateQuickSettingsPanel,
+                skinName : `campaigns/views/CampaignCreateQuickSettingsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            CcrCreateMapListPanel: {
+            ChangeLogPanel : {
+                cls      : ChangeLogViewChangeLogPanel,
+                skinName : `changeLogs/ChangeLogPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            CcrCreateMapListPanel : {
                 cls         : CoopCustomRoomViewCcrCreateMapListPanel,
                 skinName    : `coopCustomRoom/CcrCreateMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            CcrCreateSettingsPanel: {
+            CcrCreateSettingsPanel : {
                 cls         : CoopCustomRoomViewCcrCreateSettingsPanel,
                 skinName    : `coopCustomRoom/CcrCreateSettingsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            CcrMainMenuPanel: {
+            CcrMainMenuPanel : {
                 cls         : CoopCustomRoomViewCcrMainMenuPanel,
                 skinName    : `coopCustomRoom/CcrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            CcrRoomInfoPanel: {
+            CcrRoomInfoPanel : {
                 cls         : CoopCustomRoomViewCcrRoomInfoPanel,
                 skinName    : `coopCustomRoom/CcrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
@@ -1994,524 +1994,524 @@ export function getDict(): DictType {
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            ChatCommandPanel: {
-                cls         : ChatViewChatCommandPanel,
-                skinName    : `chats/ChatCommandPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : false,
+            ChatCommandPanel : {
+                cls       : ChatViewChatCommandPanel,
+                skinName  : `chats/ChatCommandPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : false,
             },
-            ChatPanel: {
-                cls         : ChatViewChatPanel,
-                skinName    : `chats/ChatPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
-            },
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////////
-            CmCampaignCommandsPanel: {
-                cls         : CampaignsManagementsViewsCmCampaignCommandsPanel,
-                skinName    : `campaigns/managements/views/CmCampaignCommandsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CmCampaignDesignersPanel: {
-                cls         : CampaignsManagementsViewsCmCampaignDesignersPanel,
-                skinName    : `campaigns/managements/views/CmCampaignDesignersPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CmCampaignListPanel: {
-                cls         : CampaignsManagementsViewsCmCampaignListPanel,
-                skinName    : `campaigns/managements/views/CmCampaignListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CmCampaignMapsPanel: {
-                cls         : CampaignsManagementsViewsCmCampaignMapsPanel,
-                skinName    : `campaigns/managements/views/CmCampaignMapsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            ChatPanel : {
+                cls       : ChatViewChatPanel,
+                skinName  : `chats/ChatPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            CommonAlertPanel: {
-                cls         : CommonViewCommonAlertPanel,
-                skinName    : `common/CommonAlertPanel.exml`,
-                layer       : DisplayLayerId.Notify0,
+            CmCampaignCommandsPanel : {
+                cls      : CampaignsManagementsViewsCmCampaignCommandsPanel,
+                skinName : `campaigns/managements/views/CmCampaignCommandsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            CommonApiPanel: {
-                cls         : CommonViewCommonApiPanel,
-                skinName    : `common/CommonApiPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            CmCampaignDesignersPanel : {
+                cls      : CampaignsManagementsViewsCmCampaignDesignersPanel,
+                skinName : `campaigns/managements/views/CmCampaignDesignersPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            CommonBlockPanel: {
-                cls         : CommonViewCommonBlockPanel,
-                skinName    : `common/CommonBlockPanel.exml`,
-                layer       : DisplayLayerId.Notify0,
+            CmCampaignListPanel : {
+                cls      : CampaignsManagementsViewsCmCampaignListPanel,
+                skinName : `campaigns/managements/views/CmCampaignListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            CommonChangeVersionPanel: {
-                cls         : CommonViewCommonChangeVersionPanel,
-                skinName    : `common/CommonChangeVersionPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseCoAndColorPanel: {
-                cls         : CommonViewCommonChooseCoAndColorPanel,
-                skinName    : `common/CommonChooseCoAndColorPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseGridIndexPanel: {
-                cls         : CommonViewCommonChooseGridIndexPanel,
-                skinName    : `common/CommonChooseGridIndexPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseMapSorterPanel: {
-                cls         : CommonViewCommonChooseMapSorterPanel,
-                skinName    : `common/CommonChooseMapSorterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseMultiCoCategoryIdPanel: {
-                cls         : CommonViewCommonChooseMultiCoCategoryIdPanel,
-                skinName    : `common/CommonChooseMultiCoCategoryIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseMultiCoIdPanel: {
-                cls         : CommonViewCommonChooseMultiCoIdPanel,
-                skinName    : `common/CommonChooseMultiCoIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseMultiIntegerPanel: {
-                cls         : CommonViewCommonChooseMultiIntegerPanel,
-                skinName    : `common/CommonChooseMultiIntegerPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseMultiNumberPanel: {
-                cls         : CommonViewCommonChooseMultiNumberPanel,
-                skinName    : `common/CommonChooseMultiNumberPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseMultiTileTypePanel: {
-                cls         : CommonViewCommonChooseMultiTileTypePanel,
-                skinName    : `common/CommonChooseMultiTileTypePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseMultiUnitTypePanel: {
-                cls         : CommonViewCommonChooseMultiUnitTypePanel,
-                skinName    : `common/CommonChooseMultiUnitTypePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseOverridingSkinIdPanel: {
-                cls         : CommonViewCommonChooseOverridingSkinIdPanel,
-                skinName    : `common/CommonChooseOverridingSkinIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSfxPanel: {
-                cls         : CommonViewCommonChooseSfxPanel,
-                skinName    : `common/CommonChooseSfxPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSingleCoCategoryIdPanel: {
-                cls         : CommonViewCommonChooseSingleCoCategoryIdPanel,
-                skinName    : `common/CommonChooseSingleCoCategoryIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSingleCoIdPanel: {
-                cls         : CommonViewCommonChooseSingleCoIdPanel,
-                skinName    : `common/CommonChooseSingleCoIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSingleGridMarkPanel: {
-                cls         : CommonViewCommonChooseSingleGridMarkPanel,
-                skinName    : `common/CommonChooseSingleGridMarkPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSingleMapEditorSlotPanel: {
-                cls         : CommonViewCommonChooseSingleMapEditorSlotPanel,
-                skinName    : `common/CommonChooseSingleMapEditorSlotPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSingleNormalMapIdPanel: {
-                cls         : CommonViewCommonChooseSingleNormalMapIdPanel,
-                skinName    : `common/CommonChooseSingleNormalMapIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSingleNumberPanel: {
-                cls         : CommonViewCommonChooseSingleNumberPanel,
-                skinName    : `common/CommonChooseSingleNumberPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSingleSkinIdPanel: {
-                cls         : CommonViewCommonChooseSingleSkinIdPanel,
-                skinName    : `common/CommonChooseSingleSkinIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSingleSpmSaveSlotPanel: {
-                cls         : CommonViewCommonChooseSingleSpmSaveSlotPanel,
-                skinName    : `common/CommonChooseSingleSpmSaveSlotPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSingleTileTypePanel: {
-                cls         : CommonViewCommonChooseSingleTileTypePanel,
-                skinName    : `common/CommonChooseSingleTileTypePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseSingleUnitTypePanel: {
-                cls         : CommonViewCommonChooseSingleUnitTypePanel,
-                skinName    : `common/CommonChooseSingleUnitTypePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseTileBasePanel: {
-                cls         : CommonViewCommonChooseTileBasePanel,
-                skinName    : `common/CommonChooseTileBasePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseTileDecorationPanel: {
-                cls         : CommonViewCommonChooseTileDecorationPanel,
-                skinName    : `common/CommonChooseTileDecorationPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseTileInfoPanel: {
-                cls         : CommonViewCommonChooseTileInfoPanel,
-                skinName    : `common/CommonChooseTileInfoPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseTileObjectPanel: {
-                cls         : CommonViewCommonChooseTileObjectPanel,
-                skinName    : `common/CommonChooseTileObjectPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseTileTypePanel: {
-                cls         : CommonViewCommonChooseTileTypePanel,
-                skinName    : `common/CommonChooseTileTypePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseUnitAndPlayerIndexPanel: {
-                cls         : CommonViewCommonChooseUnitAndPlayerIndexPanel,
-                skinName    : `common/CommonChooseUnitAndPlayerIndexPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseUnitAttrPanel: {
-                cls         : CommonViewCommonChooseUnitAttrPanel,
-                skinName    : `common/CommonChooseUnitAttrPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonChooseUnitTagPanel: {
-                cls         : CommonViewCommonChooseUnitTagPanel,
-                skinName    : `common/CommonChooseUnitTagPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonCoInfoPanel: {
-                cls         : CommonViewCommonCoInfoPanel,
-                skinName    : `common/CommonCoInfoPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonCoListPanel: {
-                cls         : CommonViewCommonCoListPanel,
-                skinName    : `common/CommonCoListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonCoStatisticsFilterPanel: {
-                cls         : CommonViewCommonCoStatisticsFilterPanel,
-                skinName    : `common/CommonCoStatisticsFilterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonCoStatisticsPanel: {
-                cls         : CommonViewCommonCoStatisticsPanel,
-                skinName    : `common/CommonCoStatisticsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonConfirmPanel: {
-                cls         : CommonViewCommonConfirmPanel,
-                skinName    : `common/CommonConfirmPanel.exml`,
-                layer       : DisplayLayerId.Notify0,
-            },
-
-            CommonDamageCalculatorPanel: {
-                cls         : CommonViewCommonDamageCalculatorPanel,
-                skinName    : `common/CommonDamageCalculatorPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
-            },
-
-            CommonDamageChartPanel: {
-                cls         : CommonViewCommonDamageChartPanel,
-                skinName    : `common/CommonDamageChartPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
-            },
-
-            CommonDeletePlayerPanel: {
-                cls         : CommonViewCommonDeletePlayerPanel,
-                skinName    : `common/CommonDeletePlayerPanel.exml`,
-                layer       : DisplayLayerId.Notify0,
-            },
-
-            CommonDoubleSliderPanel: {
-                cls         : CommonViewCommonDoubleSliderPanel,
-                skinName    : `common/CommonDoubleSliderPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonErrorPanel: {
-                cls         : CommonViewCommonErrorPanel,
-                skinName    : `common/CommonErrorPanel.exml`,
-                layer       : DisplayLayerId.Top,
-            },
-
-            CommonExpressionTypeIdPanel: {
-                cls         : CommonViewCommonExpressionTypeIdPanel,
-                skinName    : `common/CommonExpressionTypeIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonGameChartPanel: {
-                cls         : CommonViewCommonGameChartPanel,
-                skinName    : `common/CommonGameChartPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonHelpPanel: {
-                cls         : CommonViewCommonHelpPanel,
-                skinName    : `common/CommonHelpPanel.exml`,
-                layer       : DisplayLayerId.Notify0,
-            },
-
-            CommonInputDurationPanel: {
-                cls         : CommonViewCommonInputDurationPanel,
-                skinName    : `common/CommonInputDurationPanel.exml`,
-                layer       : DisplayLayerId.Hud1,
-            },
-
-            CommonInputExpressionPanel: {
-                cls         : CommonViewCommonInputExpressionPanel,
-                skinName    : `common/CommonInputExpressionPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonInputIntegerPanel: {
-                cls         : CommonViewCommonInputIntegerPanel,
-                skinName    : `common/CommonInputIntegerPanel.exml`,
-                layer       : DisplayLayerId.Hud1,
-            },
-
-            CommonInputLanguageTextPanel: {
-                cls         : CommonViewCommonInputLanguageTextPanel,
-                skinName    : `common/CommonInputLanguageTextPanel.exml`,
-                layer       : DisplayLayerId.Hud1,
-            },
-
-            CommonInputNullableIntegerPanel: {
-                cls         : CommonViewCommonInputNullableIntegerPanel,
-                skinName    : `common/CommonInputNullableIntegerPanel.exml`,
-                layer       : DisplayLayerId.Hud1,
-            },
-
-            CommonInputPanel: {
-                cls         : CommonViewCommonInputPanel,
-                skinName    : `common/CommonInputPanel.exml`,
-                layer       : DisplayLayerId.Hud1,
-            },
-
-            CommonInputShortLangTextPanel: {
-                cls         : CommonViewCommonInputShortLangTextPanel,
-                skinName    : `common/CommonInputShortLangTextPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonMapFilterPanel: {
-                cls         : CommonViewCommonMapFilterPanel,
-                skinName    : `common/CommonMapFilterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonMapWarStatisticsPanel: {
-                cls         : CommonViewCommonMapWarStatisticsPanel,
-                skinName    : `common/CommonMapWarStatisticsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonRoomFilterPanel: {
-                cls         : CommonViewCommonRoomFilterPanel,
-                skinName    : `common/CommonRoomFilterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonSearchMultiUserPanel: {
-                cls         : CommonViewCommonSearchMultiUserPanel,
-                skinName    : `common/CommonSearchMultiUserPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonSearchSingleUserPanel: {
-                cls         : CommonViewCommonSearchSingleUserPanel,
-                skinName    : `common/CommonSearchSingleUserPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonServerStatusPanel: {
-                cls         : CommonViewCommonServerStatusPanel,
-                skinName    : `common/CommonServerStatusPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonShowCoCategoryIdPanel: {
-                cls         : CommonViewCommonShowCoCategoryIdPanel,
-                skinName    : `common/CommonShowCoCategoryIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonShowCoIdPanel: {
-                cls         : CommonViewCommonShowCoIdPanel,
-                skinName    : `common/CommonShowCoIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonShowGameModePanel: {
-                cls         : CommonViewCommonShowGameModePanel,
-                skinName    : `common/CommonShowGameModePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonShowLangTextPanel: {
-                cls         : CommonViewCommonShowLangTextPanel,
-                skinName    : `common/CommonShowLangTextPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonShowMapPanel: {
-                cls         : CommonViewCommonShowMapPanel,
-                skinName    : `common/CommonShowMapPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonShowMapTagIdPanel: {
-                cls         : CommonViewCommonShowMapTagIdPanel,
-                skinName    : `common/CommonShowMapTagIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonShowPlayerListPanel: {
-                cls         : CommonViewCommonShowPlayerListPanel,
-                skinName    : `common/CommonShowPlayerListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonShowSelectedCoCategoryIdPanel: {
-                cls         : CommonViewCommonShowSelectedCoCategoryIdPanel,
-                skinName    : `common/CommonShowSelectedCoCategoryIdPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonShowUnitTypePanel: {
-                cls         : CommonViewCommonShowUnitTypePanel,
-                skinName    : `common/CommonShowUnitTypePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            CommonTileChartPanel: {
-                cls         : CommonViewCommonTileChartPanel,
-                skinName    : `common/CommonTileChartPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
-            },
-
-            CommonTutorialPanel: {
-                cls         : CommonViewCommonTutorialPanel,
-                skinName    : `common/CommonTutorialPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
-            },
-
-            CommonWarEventListPanel: {
-                cls         : CommonViewCommonWarEventListPanel,
-                skinName    : `common/CommonWarEventListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            CmCampaignMapsPanel : {
+                cls      : CampaignsManagementsViewsCmCampaignMapsPanel,
+                skinName : `campaigns/managements/views/CmCampaignMapsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            GmSetUserFullPrivilegePanel: {
-                cls         : GmViewGmSetUserFullPrivilegePanel,
-                skinName    : `gm/GmSetUserFullPrivilegePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            CommonAlertPanel : {
+                cls      : CommonViewCommonAlertPanel,
+                skinName : `common/CommonAlertPanel.exml`,
+                layer    : DisplayLayerId.Notify0,
+            },
+
+            CommonApiPanel : {
+                cls      : CommonViewCommonApiPanel,
+                skinName : `common/CommonApiPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonBlockPanel : {
+                cls      : CommonViewCommonBlockPanel,
+                skinName : `common/CommonBlockPanel.exml`,
+                layer    : DisplayLayerId.Notify0,
+            },
+
+            CommonChangeVersionPanel : {
+                cls      : CommonViewCommonChangeVersionPanel,
+                skinName : `common/CommonChangeVersionPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseCoAndColorPanel : {
+                cls      : CommonViewCommonChooseCoAndColorPanel,
+                skinName : `common/CommonChooseCoAndColorPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseGridIndexPanel : {
+                cls      : CommonViewCommonChooseGridIndexPanel,
+                skinName : `common/CommonChooseGridIndexPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseMapSorterPanel : {
+                cls      : CommonViewCommonChooseMapSorterPanel,
+                skinName : `common/CommonChooseMapSorterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseMultiCoCategoryIdPanel : {
+                cls      : CommonViewCommonChooseMultiCoCategoryIdPanel,
+                skinName : `common/CommonChooseMultiCoCategoryIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseMultiCoIdPanel : {
+                cls      : CommonViewCommonChooseMultiCoIdPanel,
+                skinName : `common/CommonChooseMultiCoIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseMultiIntegerPanel : {
+                cls      : CommonViewCommonChooseMultiIntegerPanel,
+                skinName : `common/CommonChooseMultiIntegerPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseMultiNumberPanel : {
+                cls      : CommonViewCommonChooseMultiNumberPanel,
+                skinName : `common/CommonChooseMultiNumberPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseMultiTileTypePanel : {
+                cls      : CommonViewCommonChooseMultiTileTypePanel,
+                skinName : `common/CommonChooseMultiTileTypePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseMultiUnitTypePanel : {
+                cls      : CommonViewCommonChooseMultiUnitTypePanel,
+                skinName : `common/CommonChooseMultiUnitTypePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseOverridingSkinIdPanel : {
+                cls      : CommonViewCommonChooseOverridingSkinIdPanel,
+                skinName : `common/CommonChooseOverridingSkinIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSfxPanel : {
+                cls      : CommonViewCommonChooseSfxPanel,
+                skinName : `common/CommonChooseSfxPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSingleCoCategoryIdPanel : {
+                cls      : CommonViewCommonChooseSingleCoCategoryIdPanel,
+                skinName : `common/CommonChooseSingleCoCategoryIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSingleCoIdPanel : {
+                cls      : CommonViewCommonChooseSingleCoIdPanel,
+                skinName : `common/CommonChooseSingleCoIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSingleGridMarkPanel : {
+                cls      : CommonViewCommonChooseSingleGridMarkPanel,
+                skinName : `common/CommonChooseSingleGridMarkPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSingleMapEditorSlotPanel : {
+                cls      : CommonViewCommonChooseSingleMapEditorSlotPanel,
+                skinName : `common/CommonChooseSingleMapEditorSlotPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSingleNormalMapIdPanel : {
+                cls      : CommonViewCommonChooseSingleNormalMapIdPanel,
+                skinName : `common/CommonChooseSingleNormalMapIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSingleNumberPanel : {
+                cls      : CommonViewCommonChooseSingleNumberPanel,
+                skinName : `common/CommonChooseSingleNumberPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSingleSkinIdPanel : {
+                cls      : CommonViewCommonChooseSingleSkinIdPanel,
+                skinName : `common/CommonChooseSingleSkinIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSingleSpmSaveSlotPanel : {
+                cls      : CommonViewCommonChooseSingleSpmSaveSlotPanel,
+                skinName : `common/CommonChooseSingleSpmSaveSlotPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSingleTileTypePanel : {
+                cls      : CommonViewCommonChooseSingleTileTypePanel,
+                skinName : `common/CommonChooseSingleTileTypePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseSingleUnitTypePanel : {
+                cls      : CommonViewCommonChooseSingleUnitTypePanel,
+                skinName : `common/CommonChooseSingleUnitTypePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseTileBasePanel : {
+                cls      : CommonViewCommonChooseTileBasePanel,
+                skinName : `common/CommonChooseTileBasePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseTileDecorationPanel : {
+                cls      : CommonViewCommonChooseTileDecorationPanel,
+                skinName : `common/CommonChooseTileDecorationPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseTileInfoPanel : {
+                cls      : CommonViewCommonChooseTileInfoPanel,
+                skinName : `common/CommonChooseTileInfoPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseTileObjectPanel : {
+                cls      : CommonViewCommonChooseTileObjectPanel,
+                skinName : `common/CommonChooseTileObjectPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseTileTypePanel : {
+                cls      : CommonViewCommonChooseTileTypePanel,
+                skinName : `common/CommonChooseTileTypePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseUnitAndPlayerIndexPanel : {
+                cls      : CommonViewCommonChooseUnitAndPlayerIndexPanel,
+                skinName : `common/CommonChooseUnitAndPlayerIndexPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseUnitAttrPanel : {
+                cls      : CommonViewCommonChooseUnitAttrPanel,
+                skinName : `common/CommonChooseUnitAttrPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonChooseUnitTagPanel : {
+                cls      : CommonViewCommonChooseUnitTagPanel,
+                skinName : `common/CommonChooseUnitTagPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonCoInfoPanel : {
+                cls      : CommonViewCommonCoInfoPanel,
+                skinName : `common/CommonCoInfoPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonCoListPanel : {
+                cls      : CommonViewCommonCoListPanel,
+                skinName : `common/CommonCoListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonCoStatisticsFilterPanel : {
+                cls      : CommonViewCommonCoStatisticsFilterPanel,
+                skinName : `common/CommonCoStatisticsFilterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonCoStatisticsPanel : {
+                cls      : CommonViewCommonCoStatisticsPanel,
+                skinName : `common/CommonCoStatisticsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonConfirmPanel : {
+                cls      : CommonViewCommonConfirmPanel,
+                skinName : `common/CommonConfirmPanel.exml`,
+                layer    : DisplayLayerId.Notify0,
+            },
+
+            CommonDamageCalculatorPanel : {
+                cls       : CommonViewCommonDamageCalculatorPanel,
+                skinName  : `common/CommonDamageCalculatorPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
+            },
+
+            CommonDamageChartPanel : {
+                cls       : CommonViewCommonDamageChartPanel,
+                skinName  : `common/CommonDamageChartPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
+            },
+
+            CommonDeletePlayerPanel : {
+                cls      : CommonViewCommonDeletePlayerPanel,
+                skinName : `common/CommonDeletePlayerPanel.exml`,
+                layer    : DisplayLayerId.Notify0,
+            },
+
+            CommonDoubleSliderPanel : {
+                cls      : CommonViewCommonDoubleSliderPanel,
+                skinName : `common/CommonDoubleSliderPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonErrorPanel : {
+                cls      : CommonViewCommonErrorPanel,
+                skinName : `common/CommonErrorPanel.exml`,
+                layer    : DisplayLayerId.Top,
+            },
+
+            CommonExpressionTypeIdPanel : {
+                cls      : CommonViewCommonExpressionTypeIdPanel,
+                skinName : `common/CommonExpressionTypeIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonGameChartPanel : {
+                cls      : CommonViewCommonGameChartPanel,
+                skinName : `common/CommonGameChartPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonHelpPanel : {
+                cls      : CommonViewCommonHelpPanel,
+                skinName : `common/CommonHelpPanel.exml`,
+                layer    : DisplayLayerId.Notify0,
+            },
+
+            CommonInputDurationPanel : {
+                cls      : CommonViewCommonInputDurationPanel,
+                skinName : `common/CommonInputDurationPanel.exml`,
+                layer    : DisplayLayerId.Hud1,
+            },
+
+            CommonInputExpressionPanel : {
+                cls      : CommonViewCommonInputExpressionPanel,
+                skinName : `common/CommonInputExpressionPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonInputIntegerPanel : {
+                cls      : CommonViewCommonInputIntegerPanel,
+                skinName : `common/CommonInputIntegerPanel.exml`,
+                layer    : DisplayLayerId.Hud1,
+            },
+
+            CommonInputLanguageTextPanel : {
+                cls      : CommonViewCommonInputLanguageTextPanel,
+                skinName : `common/CommonInputLanguageTextPanel.exml`,
+                layer    : DisplayLayerId.Hud1,
+            },
+
+            CommonInputNullableIntegerPanel : {
+                cls      : CommonViewCommonInputNullableIntegerPanel,
+                skinName : `common/CommonInputNullableIntegerPanel.exml`,
+                layer    : DisplayLayerId.Hud1,
+            },
+
+            CommonInputPanel : {
+                cls      : CommonViewCommonInputPanel,
+                skinName : `common/CommonInputPanel.exml`,
+                layer    : DisplayLayerId.Hud1,
+            },
+
+            CommonInputShortLangTextPanel : {
+                cls      : CommonViewCommonInputShortLangTextPanel,
+                skinName : `common/CommonInputShortLangTextPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonMapFilterPanel : {
+                cls      : CommonViewCommonMapFilterPanel,
+                skinName : `common/CommonMapFilterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonMapWarStatisticsPanel : {
+                cls      : CommonViewCommonMapWarStatisticsPanel,
+                skinName : `common/CommonMapWarStatisticsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonRoomFilterPanel : {
+                cls      : CommonViewCommonRoomFilterPanel,
+                skinName : `common/CommonRoomFilterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonSearchMultiUserPanel : {
+                cls      : CommonViewCommonSearchMultiUserPanel,
+                skinName : `common/CommonSearchMultiUserPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonSearchSingleUserPanel : {
+                cls      : CommonViewCommonSearchSingleUserPanel,
+                skinName : `common/CommonSearchSingleUserPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonServerStatusPanel : {
+                cls      : CommonViewCommonServerStatusPanel,
+                skinName : `common/CommonServerStatusPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonShowCoCategoryIdPanel : {
+                cls      : CommonViewCommonShowCoCategoryIdPanel,
+                skinName : `common/CommonShowCoCategoryIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonShowCoIdPanel : {
+                cls      : CommonViewCommonShowCoIdPanel,
+                skinName : `common/CommonShowCoIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonShowGameModePanel : {
+                cls      : CommonViewCommonShowGameModePanel,
+                skinName : `common/CommonShowGameModePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonShowLangTextPanel : {
+                cls      : CommonViewCommonShowLangTextPanel,
+                skinName : `common/CommonShowLangTextPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonShowMapPanel : {
+                cls      : CommonViewCommonShowMapPanel,
+                skinName : `common/CommonShowMapPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonShowMapTagIdPanel : {
+                cls      : CommonViewCommonShowMapTagIdPanel,
+                skinName : `common/CommonShowMapTagIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonShowPlayerListPanel : {
+                cls      : CommonViewCommonShowPlayerListPanel,
+                skinName : `common/CommonShowPlayerListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonShowSelectedCoCategoryIdPanel : {
+                cls      : CommonViewCommonShowSelectedCoCategoryIdPanel,
+                skinName : `common/CommonShowSelectedCoCategoryIdPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonShowUnitTypePanel : {
+                cls      : CommonViewCommonShowUnitTypePanel,
+                skinName : `common/CommonShowUnitTypePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            CommonTileChartPanel : {
+                cls       : CommonViewCommonTileChartPanel,
+                skinName  : `common/CommonTileChartPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
+            },
+
+            CommonTutorialPanel : {
+                cls       : CommonViewCommonTutorialPanel,
+                skinName  : `common/CommonTutorialPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
+            },
+
+            CommonWarEventListPanel : {
+                cls      : CommonViewCommonWarEventListPanel,
+                skinName : `common/CommonWarEventListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            HrwTopPanel: {
-                cls         : HalfwayReplayWarViewHrwTopPanel,
-                skinName    : `halfwayReplayWar/HrwTopPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-            },
-
-            HrwWarMenuPanel: {
-                cls         : HalfwayReplayWarViewHrwWarMenuPanel,
-                skinName    : `halfwayReplayWar/HrwWarMenuPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            GmSetUserFullPrivilegePanel : {
+                cls      : GmViewGmSetUserFullPrivilegePanel,
+                skinName : `gm/GmSetUserFullPrivilegePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            LbMrwListPanel: {
-                cls         : LeaderboardViewLbMrwListPanel,
-                skinName    : `leaderboard/LbMrwListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            HrwTopPanel : {
+                cls      : HalfwayReplayWarViewHrwTopPanel,
+                skinName : `halfwayReplayWar/HrwTopPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            LbSpmOverallListPanel: {
-                cls         : LeaderboardViewLbSpmOverallListPanel,
-                skinName    : `leaderboard/LbSpmOverallListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            HrwWarMenuPanel : {
+                cls      : HalfwayReplayWarViewHrwWarMenuPanel,
+                skinName : `halfwayReplayWar/HrwWarMenuPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            LobbyBackgroundPanel: {
-                cls         : LobbyViewLobbyBackgroundPanel,
-                skinName    : `lobby/LobbyBackgroundPanel.exml`,
-                layer       : DisplayLayerId.Bottom,
-                needCache   : true,
+            LbMrwListPanel : {
+                cls      : LeaderboardViewLbMrwListPanel,
+                skinName : `leaderboard/LbMrwListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            LobbyBottomPanel: {
-                cls         : LobbyViewLobbyBottomPanel,
-                skinName    : `lobby/LobbyBottomPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            LbSpmOverallListPanel : {
+                cls      : LeaderboardViewLbSpmOverallListPanel,
+                skinName : `leaderboard/LbSpmOverallListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            LobbyPanel: {
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            LobbyBackgroundPanel : {
+                cls       : LobbyViewLobbyBackgroundPanel,
+                skinName  : `lobby/LobbyBackgroundPanel.exml`,
+                layer     : DisplayLayerId.Bottom,
+                needCache : true,
+            },
+
+            LobbyBottomPanel : {
+                cls       : LobbyViewLobbyBottomPanel,
+                skinName  : `lobby/LobbyBottomPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
+            },
+
+            LobbyPanel : {
                 cls         : LobbyViewLobbyPanel,
                 skinName    : `lobby/LobbyPanel.exml`,
                 layer       : DisplayLayerId.Scene,
@@ -2519,56 +2519,56 @@ export function getDict(): DictType {
                 needCache   : true,
             },
 
-            LobbyStartPanel: {
-                cls         : LobbyViewLobbyStartPanel,
-                skinName    : `lobby/LobbyStartPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            LobbyStartPanel : {
+                cls      : LobbyViewLobbyStartPanel,
+                skinName : `lobby/LobbyStartPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            LobbyTopPanel: {
-                cls         : LobbyViewLobbyTopPanel,
-                skinName    : `lobby/LobbyTopPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            LobbyTopPanel : {
+                cls       : LobbyViewLobbyTopPanel,
+                skinName  : `lobby/LobbyTopPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            LobbyTopRightPanel: {
-                cls         : LobbyViewLobbyTopRightPanel,
-                skinName    : `lobby/LobbyTopRightPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
-            },
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////////
-            MailPanel: {
-                cls         : MailViewMailPanel,
-                skinName    : `mail/MailPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            LobbyTopRightPanel : {
+                cls       : LobbyViewLobbyTopRightPanel,
+                skinName  : `lobby/LobbyTopRightPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            McrCreateMapListPanel: {
+            MailPanel : {
+                cls      : MailViewMailPanel,
+                skinName : `mail/MailPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
+            },
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////
+            McrCreateMapListPanel : {
                 cls         : MultiCustomRoomViewMcrCreateMapListPanel,
                 skinName    : `multiCustomRoom/McrCreateMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            McrCreateSettingsPanel: {
+            McrCreateSettingsPanel : {
                 cls         : MultiCustomRoomViewMcrCreateSettingsPanel,
                 skinName    : `multiCustomRoom/McrCreateSettingsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            McrMainMenuPanel: {
+            McrMainMenuPanel : {
                 cls         : MultiCustomRoomViewMcrMainMenuPanel,
                 skinName    : `multiCustomRoom/McrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            McrRoomInfoPanel: {
+            McrRoomInfoPanel : {
                 cls         : MultiCustomRoomViewMcrRoomInfoPanel,
                 skinName    : `multiCustomRoom/McrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
@@ -2576,225 +2576,225 @@ export function getDict(): DictType {
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            MeAutoAdjustPanel: {
-                cls         : MapEditorsViewsMeAutoAdjustPanel,
-                skinName    : `mapEditors/views/MeAutoAdjustPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeAutoAdjustPanel : {
+                cls      : MapEditorsViewsMeAutoAdjustPanel,
+                skinName : `mapEditors/views/MeAutoAdjustPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeChooseLocationPanel: {
-                cls         : MapEditorsViewsMeChooseLocationPanel,
-                skinName    : `mapEditors/views/MeChooseLocationPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeChooseLocationPanel : {
+                cls      : MapEditorsViewsMeChooseLocationPanel,
+                skinName : `mapEditors/views/MeChooseLocationPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeChooseTileBasePanel: {
-                cls         : MapEditorsViewsMeChooseTileBasePanel,
-                skinName    : `mapEditors/views/MeChooseTileBasePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            MeChooseTileBasePanel : {
+                cls       : MapEditorsViewsMeChooseTileBasePanel,
+                skinName  : `mapEditors/views/MeChooseTileBasePanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            MeChooseTileDecorationPanel: {
-                cls         : MapEditorsViewsMeChooseTileDecorationPanel,
-                skinName    : `mapEditors/views/MeChooseTileDecorationPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            MeChooseTileDecorationPanel : {
+                cls       : MapEditorsViewsMeChooseTileDecorationPanel,
+                skinName  : `mapEditors/views/MeChooseTileDecorationPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            MeChooseTileObjectPanel: {
-                cls         : MapEditorsViewsMeChooseTileObjectPanel,
-                skinName    : `mapEditors/views/MeChooseTileObjectPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            MeChooseTileObjectPanel : {
+                cls       : MapEditorsViewsMeChooseTileObjectPanel,
+                skinName  : `mapEditors/views/MeChooseTileObjectPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            MeChooseUnitPanel: {
-                cls         : MapEditorsViewsMeChooseUnitPanel,
-                skinName    : `mapEditors/views/MeChooseUnitPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            MeChooseUnitPanel : {
+                cls       : MapEditorsViewsMeChooseUnitPanel,
+                skinName  : `mapEditors/views/MeChooseUnitPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            MeClearPanel: {
-                cls         : MapEditorsViewsMeClearPanel,
-                skinName    : `mapEditors/views/MeClearPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeClearPanel : {
+                cls      : MapEditorsViewsMeClearPanel,
+                skinName : `mapEditors/views/MeClearPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeImportContentPanel: {
-                cls         : MapEditorsViewsMeImportContentPanel,
-                skinName    : `mapEditors/views/MeImportContentPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeImportContentPanel : {
+                cls      : MapEditorsViewsMeImportContentPanel,
+                skinName : `mapEditors/views/MeImportContentPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeImportExportPanel: {
-                cls         : MapEditorsViewsMeImportExportPanel,
-                skinName    : `mapEditors/views/MeImportExportPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeImportExportPanel : {
+                cls      : MapEditorsViewsMeImportExportPanel,
+                skinName : `mapEditors/views/MeImportExportPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeMapInfoPanel: {
-                cls         : MapEditorsViewsMeMapInfoPanel,
-                skinName    : `mapEditors/views/MeMapInfoPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeMapInfoPanel : {
+                cls      : MapEditorsViewsMeMapInfoPanel,
+                skinName : `mapEditors/views/MeMapInfoPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeMapSimpleDialogueMainPanel: {
-                cls         : MapEditorsViewsMeMapSimpleDialogueMainPanel,
-                skinName    : `mapEditors/views/MeMapSimpleDialogueMainPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeMapSimpleDialogueMainPanel : {
+                cls      : MapEditorsViewsMeMapSimpleDialogueMainPanel,
+                skinName : `mapEditors/views/MeMapSimpleDialogueMainPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeMapSimpleDialogueUtilPanel: {
-                cls         : MapEditorsViewsMeMapSimpleDialogueUtilPanel,
-                skinName    : `mapEditors/views/MeMapSimpleDialogueUtilPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeMapSimpleDialogueUtilPanel : {
+                cls      : MapEditorsViewsMeMapSimpleDialogueUtilPanel,
+                skinName : `mapEditors/views/MeMapSimpleDialogueUtilPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeResizePanel: {
-                cls         : MapEditorsViewsMeResizePanel,
-                skinName    : `mapEditors/views/MeResizePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeResizePanel : {
+                cls      : MapEditorsViewsMeResizePanel,
+                skinName : `mapEditors/views/MeResizePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeSaveCampaignMapPanel: {
-                cls         : MapEditorsViewsMeSaveCampaignMapPanel,
-                skinName    : `mapEditors/views/MeSaveCampaignMapPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeSaveCampaignMapPanel : {
+                cls      : MapEditorsViewsMeSaveCampaignMapPanel,
+                skinName : `mapEditors/views/MeSaveCampaignMapPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeSaveNormalMapPanel: {
-                cls         : MapEditorsViewsMeSaveNormalMapPanel,
-                skinName    : `mapEditors/views/MeSaveNormalMapPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeSaveNormalMapPanel : {
+                cls      : MapEditorsViewsMeSaveNormalMapPanel,
+                skinName : `mapEditors/views/MeSaveNormalMapPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeSetTileCustomNamePanel: {
-                cls         : MapEditorsViewsMeSetTileCustomNamePanel,
-                skinName    : `mapEditors/views/MeSetTileCustomNamePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeSetTileCustomNamePanel : {
+                cls      : MapEditorsViewsMeSetTileCustomNamePanel,
+                skinName : `mapEditors/views/MeSetTileCustomNamePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeSetUnitCustomNamePanel: {
-                cls         : MapEditorsViewsMeSetUnitCustomNamePanel,
-                skinName    : `mapEditors/views/MeSetUnitCustomNamePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeSetUnitCustomNamePanel : {
+                cls      : MapEditorsViewsMeSetUnitCustomNamePanel,
+                skinName : `mapEditors/views/MeSetUnitCustomNamePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeSymmetricalPlayerIndexPanel: {
-                cls         : MapEditorsViewsMeSymmetricalPlayerIndexPanel,
-                skinName    : `mapEditors/views/MeSymmetricalPlayerIndexPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeSymmetricalPlayerIndexPanel : {
+                cls      : MapEditorsViewsMeSymmetricalPlayerIndexPanel,
+                skinName : `mapEditors/views/MeSymmetricalPlayerIndexPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeSymmetryPanel: {
-                cls         : MapEditorsViewsMeSymmetryPanel,
-                skinName    : `mapEditors/views/MeSymmetryPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeSymmetryPanel : {
+                cls      : MapEditorsViewsMeSymmetryPanel,
+                skinName : `mapEditors/views/MeSymmetryPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeSymmetryFillTilePanel: {
-                cls         : MapEditorsViewsMeSymmetryFillTilePanel,
-                skinName    : `mapEditors/views/MeSymmetryFillTilePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeSymmetryFillTilePanel : {
+                cls      : MapEditorsViewsMeSymmetryFillTilePanel,
+                skinName : `mapEditors/views/MeSymmetryFillTilePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeTaskObjectivePanel: {
-                cls         : MapEditorsViewsMeTaskObjectivePanel,
-                skinName    : `mapEditors/views/MeTaskObjectivePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeTaskObjectivePanel : {
+                cls      : MapEditorsViewsMeTaskObjectivePanel,
+                skinName : `mapEditors/views/MeTaskObjectivePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeTaskObjectiveListPanel: {
-                cls         : MapEditorsViewsMeTaskObjectiveListPanel,
-                skinName    : `mapEditors/views/MeTaskObjectiveListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeTaskObjectiveListPanel : {
+                cls      : MapEditorsViewsMeTaskObjectiveListPanel,
+                skinName : `mapEditors/views/MeTaskObjectiveListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeTileCustomNameListPanel: {
-                cls         : MapEditorsViewsMeTileCustomNameListPanel,
-                skinName    : `mapEditors/views/MeTileCustomNameListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeTileCustomNameListPanel : {
+                cls      : MapEditorsViewsMeTileCustomNameListPanel,
+                skinName : `mapEditors/views/MeTileCustomNameListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeTileUnitInfoPanel: {
-                cls         : MapEditorsViewsMeTileUnitInfoPanel,
-                skinName    : `mapEditors/views/MeTileUnitInfoPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeTileUnitInfoPanel : {
+                cls      : MapEditorsViewsMeTileUnitInfoPanel,
+                skinName : `mapEditors/views/MeTileUnitInfoPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeTopPanel: {
-                cls         : MapEditorsViewsMeTopPanel,
-                skinName    : `mapEditors/views/MeTopPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeTopPanel : {
+                cls      : MapEditorsViewsMeTopPanel,
+                skinName : `mapEditors/views/MeTopPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeUnitCustomNameListPanel: {
-                cls         : MapEditorsViewsMeUnitCustomNameListPanel,
-                skinName    : `mapEditors/views/MeUnitCustomNameListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeUnitCustomNameListPanel : {
+                cls      : MapEditorsViewsMeUnitCustomNameListPanel,
+                skinName : `mapEditors/views/MeUnitCustomNameListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeVisibilityPanel: {
-                cls         : MapEditorsViewsMeVisibilityPanel,
-                skinName    : `mapEditors/views/MeVisibilityPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeVisibilityPanel : {
+                cls      : MapEditorsViewsMeVisibilityPanel,
+                skinName : `mapEditors/views/MeVisibilityPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeWarMenuPanel: {
-                cls         : MapEditorsViewsMeWarMenuPanel,
-                skinName    : `mapEditors/views/MeWarMenuPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeWarMenuPanel : {
+                cls      : MapEditorsViewsMeWarMenuPanel,
+                skinName : `mapEditors/views/MeWarMenuPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeWarRulePanel: {
-                cls         : MapEditorsViewsMeWarRulePanel,
-                skinName    : `mapEditors/views/MeWarRulePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            MeWarRulePanel : {
+                cls       : MapEditorsViewsMeWarRulePanel,
+                skinName  : `mapEditors/views/MeWarRulePanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            MeWarRuleMapSimpleDialoguePanel: {
-                cls         : MapEditorsViewsMeWarRuleMapSimpleDialoguePanel,
-                skinName    : `mapEditors/views/MeWarRuleMapSimpleDialoguePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeWarRuleMapSimpleDialoguePanel : {
+                cls      : MapEditorsViewsMeWarRuleMapSimpleDialoguePanel,
+                skinName : `mapEditors/views/MeWarRuleMapSimpleDialoguePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeWarRulePlayerRulePanel: {
-                cls         : MapEditorsViewsMeWarRulePlayerRulePanel,
-                skinName    : `mapEditors/views/MeWarRulePlayerRulePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeWarRulePlayerRulePanel : {
+                cls      : MapEditorsViewsMeWarRulePlayerRulePanel,
+                skinName : `mapEditors/views/MeWarRulePlayerRulePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeWarRuleTaskObjectivePanel: {
-                cls         : MapEditorsViewsMeWarRuleTaskObjectivePanel,
-                skinName    : `mapEditors/views/MeWarRuleTaskObjectivePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeWarRuleTaskObjectivePanel : {
+                cls      : MapEditorsViewsMeWarRuleTaskObjectivePanel,
+                skinName : `mapEditors/views/MeWarRuleTaskObjectivePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MeWarRuleWarEventPanel: {
-                cls         : MapEditorsViewsMeWarRuleWarEventPanel,
-                skinName    : `mapEditors/views/MeWarRuleWarEventPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MeWarRuleWarEventPanel : {
+                cls      : MapEditorsViewsMeWarRuleWarEventPanel,
+                skinName : `mapEditors/views/MeWarRuleWarEventPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            MfrCreateSettingsPanel: {
+            MfrCreateSettingsPanel : {
                 cls         : MultiFreeRoomViewMfrCreateSettingsPanel,
                 skinName    : `multiFreeRoom/MfrCreateSettingsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            MfrMainMenuPanel: {
+            MfrMainMenuPanel : {
                 cls         : MultiFreeRoomViewMfrMainMenuPanel,
                 skinName    : `multiFreeRoom/MfrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            MfrRoomInfoPanel: {
+            MfrRoomInfoPanel : {
                 cls         : MultiFreeRoomViewMfrRoomInfoPanel,
                 skinName    : `multiFreeRoom/MfrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
@@ -2802,152 +2802,152 @@ export function getDict(): DictType {
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            MmCommandPanel: {
-                cls         : MapManagementViewMmCommandPanel,
-                skinName    : `mapManagement/MmCommandPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmCommandPanel : {
+                cls      : MapManagementViewMmCommandPanel,
+                skinName : `mapManagement/MmCommandPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmMainMenuPanel: {
-                cls         : MapManagementViewMmMainMenuPanel,
-                skinName    : `mapManagement/MmMainMenuPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmMainMenuPanel : {
+                cls      : MapManagementViewMmMainMenuPanel,
+                skinName : `mapManagement/MmMainMenuPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmMapTagListPanel: {
-                cls         : MapManagementViewMmMapTagListPanel,
-                skinName    : `mapManagement/MmMapTagListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmMapTagListPanel : {
+                cls      : MapManagementViewMmMapTagListPanel,
+                skinName : `mapManagement/MmMapTagListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmModifyWarRulePanel: {
-                cls         : MapManagementViewMmModifyWarRulePanel,
-                skinName    : `mapManagement/MmModifyWarRulePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmModifyWarRulePanel : {
+                cls      : MapManagementViewMmModifyWarRulePanel,
+                skinName : `mapManagement/MmModifyWarRulePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmReviewListPanel: {
-                cls         : MapManagementViewMmReviewListPanel,
-                skinName    : `mapManagement/MmReviewListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmReviewListPanel : {
+                cls      : MapManagementViewMmReviewListPanel,
+                skinName : `mapManagement/MmReviewListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmWarRuleMapSimpleDialoguePanel: {
-                cls         : MapManagementViewMmWarRuleMapSimpleDialoguePanel,
-                skinName    : `mapManagement/MmWarRuleMapSimpleDialoguePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmWarRuleMapSimpleDialoguePanel : {
+                cls      : MapManagementViewMmWarRuleMapSimpleDialoguePanel,
+                skinName : `mapManagement/MmWarRuleMapSimpleDialoguePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmWarRulePanel: {
-                cls         : MapManagementViewMmWarRulePanel,
-                skinName    : `mapManagement/MmWarRulePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmWarRulePanel : {
+                cls      : MapManagementViewMmWarRulePanel,
+                skinName : `mapManagement/MmWarRulePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmWarRulePlayerRulePanel: {
-                cls         : MapManagementViewMmWarRulePlayerRulePanel,
-                skinName    : `mapManagement/MmWarRulePlayerRulePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmWarRulePlayerRulePanel : {
+                cls      : MapManagementViewMmWarRulePlayerRulePanel,
+                skinName : `mapManagement/MmWarRulePlayerRulePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmWarRuleTaskObjectivePanel: {
-                cls         : MapManagementViewMmWarRuleTaskObjectivePanel,
-                skinName    : `mapManagement/MmWarRuleTaskObjectivePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmWarRuleTaskObjectivePanel : {
+                cls      : MapManagementViewMmWarRuleTaskObjectivePanel,
+                skinName : `mapManagement/MmWarRuleTaskObjectivePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmWarRuleWarEventPanel: {
-                cls         : MapManagementViewMmWarRuleWarEventPanel,
-                skinName    : `mapManagement/MmWarRuleWarEventPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmWarRuleWarEventPanel : {
+                cls      : MapManagementViewMmWarRuleWarEventPanel,
+                skinName : `mapManagement/MmWarRuleWarEventPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            MmrBanMapPanel: {
-                cls         : MultiMatchRoomViewMmrBanMapPanel,
-                skinName    : `multiMatchRoom/MmrBanMapPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmrBanMapPanel : {
+                cls      : MultiMatchRoomViewMmrBanMapPanel,
+                skinName : `multiMatchRoom/MmrBanMapPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmrMainMenuPanel: {
+            MmrMainMenuPanel : {
                 cls         : MultiMatchRoomViewMmrMainMenuPanel,
                 skinName    : `multiMatchRoom/MmrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            MmrPreviewMapListPanel: {
+            MmrPreviewMapListPanel : {
                 cls         : MultiMatchRoomViewMmrPreviewMapListPanel,
                 skinName    : `multiMatchRoom/MmrPreviewMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            MmrRoomInfoPanel: {
+            MmrRoomInfoPanel : {
                 cls         : MultiMatchRoomViewMmrRoomInfoPanel,
                 skinName    : `multiMatchRoom/MmrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            MmrSetMaxConcurrentCountPanel: {
-                cls         : MultiMatchRoomViewMmrSetMaxConcurrentCountPanel,
-                skinName    : `multiMatchRoom/MmrSetMaxConcurrentCountPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmrSetMaxConcurrentCountPanel : {
+                cls      : MultiMatchRoomViewMmrSetMaxConcurrentCountPanel,
+                skinName : `multiMatchRoom/MmrSetMaxConcurrentCountPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MmrSetTimerPanel: {
-                cls         : MultiMatchRoomViewMmrSetTimerPanel,
-                skinName    : `multiMatchRoom/MmrSetTimerPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MmrSetTimerPanel : {
+                cls      : MultiMatchRoomViewMmrSetTimerPanel,
+                skinName : `multiMatchRoom/MmrSetTimerPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            MpwMyWarListPanel: {
+            MpwMyWarListPanel : {
                 cls         : MultiPlayerWarViewMpwMyWarListPanel,
                 skinName    : `multiPlayerWar/MpwMyWarListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            MpwSpectatePanel: {
-                cls         : MultiPlayerWarViewMpwSpectatePanel,
-                skinName    : `multiPlayerWar/MpwSpectatePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MpwSpectatePanel : {
+                cls      : MultiPlayerWarViewMpwSpectatePanel,
+                skinName : `multiPlayerWar/MpwSpectatePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MpwSidePanel: {
-                cls         : MultiPlayerWarViewMpwSidePanel,
-                skinName    : `multiPlayerWar/MpwSidePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MpwSidePanel : {
+                cls      : MultiPlayerWarViewMpwSidePanel,
+                skinName : `multiPlayerWar/MpwSidePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MpwTopPanel: {
-                cls         : MultiPlayerWarViewMpwTopPanel,
-                skinName    : `multiPlayerWar/MpwTopPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MpwTopPanel : {
+                cls      : MultiPlayerWarViewMpwTopPanel,
+                skinName : `multiPlayerWar/MpwTopPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MpwWarAdvancedMenuPanel: {
-                cls         : MultiPlayerWarViewMpwWarAdvancedMenuPanel,
-                skinName    : `multiPlayerWar/MpwWarAdvancedMenuPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MpwWarAdvancedMenuPanel : {
+                cls      : MultiPlayerWarViewMpwWarAdvancedMenuPanel,
+                skinName : `multiPlayerWar/MpwWarAdvancedMenuPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MpwWarMenuPanel: {
-                cls         : MultiPlayerWarViewMpwWarMenuPanel,
-                skinName    : `multiPlayerWar/MpwWarMenuPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MpwWarMenuPanel : {
+                cls      : MultiPlayerWarViewMpwWarMenuPanel,
+                skinName : `multiPlayerWar/MpwWarMenuPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            MrrBanMapPanel: {
-                cls         : MultiRankRoomViewMrrBanMapPanel,
-                skinName    : `multiRankRoom/MrrBanMapPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MrrBanMapPanel : {
+                cls      : MultiRankRoomViewMrrBanMapPanel,
+                skinName : `multiRankRoom/MrrBanMapPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MrrMainMenuPanel: {
+            MrrMainMenuPanel : {
                 cls         : MultiRankRoomViewMrrMainMenuPanel,
                 skinName    : `multiRankRoom/MrrMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
@@ -2955,93 +2955,93 @@ export function getDict(): DictType {
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            MpwJoinRoomListPanel: {
+            MpwJoinRoomListPanel : {
                 cls         : MultiPlayerWarViewMpwJoinRoomListPanel,
                 skinName    : `multiPlayerWar/MpwJoinRoomListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            MpwMyRoomListPanel: {
+            MpwMyRoomListPanel : {
                 cls         : MultiPlayerWarViewMpwMyRoomListPanel,
                 skinName    : `multiPlayerWar/MpwMyRoomListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            MrrPreviewMapListPanel: {
+            MrrPreviewMapListPanel : {
                 cls         : MultiRankRoomViewMrrPreviewMapListPanel,
                 skinName    : `multiRankRoom/MrrPreviewMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            MrrRoomInfoPanel: {
+            MrrRoomInfoPanel : {
                 cls         : MultiRankRoomViewMrrRoomInfoPanel,
                 skinName    : `multiRankRoom/MrrRoomInfoPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            MrrSetMaxConcurrentCountPanel: {
-                cls         : MultiRankRoomViewMrrSetMaxConcurrentCountPanel,
-                skinName    : `multiRankRoom/MrrSetMaxConcurrentCountPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MrrSetMaxConcurrentCountPanel : {
+                cls      : MultiRankRoomViewMrrSetMaxConcurrentCountPanel,
+                skinName : `multiRankRoom/MrrSetMaxConcurrentCountPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            MrrSetTimerPanel: {
-                cls         : MultiRankRoomViewMrrSetTimerPanel,
-                skinName    : `multiRankRoom/MrrSetTimerPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            MrrSetTimerPanel : {
+                cls      : MultiRankRoomViewMrrSetTimerPanel,
+                skinName : `multiRankRoom/MrrSetTimerPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            RwPauseTimePanel: {
-                cls         : ReplayWarViewRwPauseTimePanel,
-                skinName    : `replayWar/RwPauseTimePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            RwPauseTimePanel : {
+                cls      : ReplayWarViewRwPauseTimePanel,
+                skinName : `replayWar/RwPauseTimePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            RwReplayListPanel: {
+            RwReplayListPanel : {
                 cls         : ReplayWarViewRwReplayListPanel,
                 skinName    : `replayWar/RwReplayListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            RwReplayProgressPanel: {
-                cls         : ReplayWarViewRwReplayProgressPanel,
-                skinName    : `replayWar/RwReplayProgressPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            RwReplayProgressPanel : {
+                cls      : ReplayWarViewRwReplayProgressPanel,
+                skinName : `replayWar/RwReplayProgressPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            RwSearchReplayPanel: {
-                cls         : ReplayWarViewRwSearchReplayPanel,
-                skinName    : `replayWar/RwSearchReplayPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            RwSearchReplayPanel : {
+                cls      : ReplayWarViewRwSearchReplayPanel,
+                skinName : `replayWar/RwSearchReplayPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            RwTopPanel: {
-                cls         : ReplayWarViewRwTopPanel,
-                skinName    : `replayWar/RwTopPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            RwTopPanel : {
+                cls      : ReplayWarViewRwTopPanel,
+                skinName : `replayWar/RwTopPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            RwWarMenuPanel: {
-                cls         : ReplayWarViewRwWarMenuPanel,
-                skinName    : `replayWar/RwWarMenuPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            RwWarMenuPanel : {
+                cls      : ReplayWarViewRwWarMenuPanel,
+                skinName : `replayWar/RwWarMenuPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            ScrCreateMapListPanel: {
+            ScrCreateMapListPanel : {
                 cls         : SingleCustomRoomViewScrCreateMapListPanel,
                 skinName    : `singleCustomRoom/ScrCreateMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            ScrCreateSettingsPanel: {
+            ScrCreateSettingsPanel : {
                 cls         : SingleCustomRoomViewScrCreateSettingsPanel,
                 skinName    : `singleCustomRoom/ScrCreateSettingsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
@@ -3049,79 +3049,79 @@ export function getDict(): DictType {
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            SoundsChooseSingleBgmPanel: {
-                cls         : SoundsPanelsChooseSingleBgmPanel,
-                skinName    : `sounds/panels/ChooseSingleBgmPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            SoundsChooseSingleBgmPanel : {
+                cls      : SoundsPanelsChooseSingleBgmPanel,
+                skinName : `sounds/panels/ChooseSingleBgmPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            SoundsSettingsPanel: {
-                cls         : SoundsPanelsSettingsPanel,
-                skinName    : `sounds/panels/SettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            SoundsSettingsPanel : {
+                cls      : SoundsPanelsSettingsPanel,
+                skinName : `sounds/panels/SettingsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            SpmMainMenuPanel: {
+            SpmMainMenuPanel : {
                 cls         : SinglePlayerModeViewSpmMainMenuPanel,
                 skinName    : `singlePlayerMode/SpmMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            SpmWarListPanel: {
+            SpmWarListPanel : {
                 cls         : SinglePlayerModeViewSpmWarListPanel,
                 skinName    : `singlePlayerMode/SpmWarListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            SpmMyWarRoomRecordPanel: {
-                cls         : SinglePlayerModeViewSpmMyWarRoomRecordPanel,
-                skinName    : `singlePlayerMode/SpmMyWarRoomRecordPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            SpmMyWarRoomRecordPanel : {
+                cls      : SinglePlayerModeViewSpmMyWarRoomRecordPanel,
+                skinName : `singlePlayerMode/SpmMyWarRoomRecordPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            SpwSidePanel: {
-                cls         : SinglePlayerWarViewSpwSidePanel,
-                skinName    : `singlePlayerWar/SpwSidePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            SpwSidePanel : {
+                cls      : SinglePlayerWarViewSpwSidePanel,
+                skinName : `singlePlayerWar/SpwSidePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            SpwTopPanel: {
-                cls         : SinglePlayerWarViewSpwTopPanel,
-                skinName    : `singlePlayerWar/SpwTopPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            SpwTopPanel : {
+                cls      : SinglePlayerWarViewSpwTopPanel,
+                skinName : `singlePlayerWar/SpwTopPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            SpwWarAdvancedMenuPanel: {
-                cls         : SinglePlayerWarViewSpwWarAdvancedMenuPanel,
-                skinName    : `singlePlayerWar/SpwWarAdvancedMenuPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            SpwWarAdvancedMenuPanel : {
+                cls      : SinglePlayerWarViewSpwWarAdvancedMenuPanel,
+                skinName : `singlePlayerWar/SpwWarAdvancedMenuPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            SpwWarMenuPanel: {
-                cls         : SinglePlayerWarViewSpwWarMenuPanel,
-                skinName    : `singlePlayerWar/SpwWarMenuPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            SpwWarMenuPanel : {
+                cls      : SinglePlayerWarViewSpwWarMenuPanel,
+                skinName : `singlePlayerWar/SpwWarMenuPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            SrrCreateMapListPanel: {
+            SrrCreateMapListPanel : {
                 cls         : SingleRankRoomViewSrrCreateMapListPanel,
                 skinName    : `singleRankRoom/SrrCreateMapListPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            SrrCreateQuickSettingsPanel: {
-                cls         : SingleRankRoomViewSrrCreateQuickSettingsPanel,
-                skinName    : `singleRankRoom/SrrCreateQuickSettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            SrrCreateQuickSettingsPanel : {
+                cls      : SingleRankRoomViewSrrCreateQuickSettingsPanel,
+                skinName : `singleRankRoom/SrrCreateQuickSettingsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            SrrCreateSettingsPanel: {
+            SrrCreateSettingsPanel : {
                 cls         : SingleRankRoomViewSrrCreateSettingsPanel,
                 skinName    : `singleRankRoom/SrrCreateSettingsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
@@ -3129,705 +3129,705 @@ export function getDict(): DictType {
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            UserGameManagementPanel: {
-                cls         : UsersViewsUserGameManagementPanel,
-                skinName    : `users/UserGameManagementPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserGameManagementPanel : {
+                cls      : UsersViewsUserGameManagementPanel,
+                skinName : `users/UserGameManagementPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserGraphicSettingsPanel: {
-                cls         : UsersViewsUserGraphicSettingsPanel,
-                skinName    : `users/UserGraphicSettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserGraphicSettingsPanel : {
+                cls      : UsersViewsUserGraphicSettingsPanel,
+                skinName : `users/UserGraphicSettingsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserLoginBackgroundPanel: {
+            UserLoginBackgroundPanel : {
                 cls         : UsersViewsUserLoginBackgroundPanel,
                 skinName    : `users/UserLoginBackgroundPanel.exml`,
                 layer       : DisplayLayerId.Bottom,
                 isExclusive : true,
             },
 
-            UserLoginPanel: {
-                cls         : UsersViewsUserLoginPanel,
-                skinName    : `users/UserLoginPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserLoginPanel : {
+                cls      : UsersViewsUserLoginPanel,
+                skinName : `users/UserLoginPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserMedalPanel: {
-                cls         : UsersViewsUserMedalPanel,
-                skinName    : `users/UserMedalPanel.exml`,
-                layer       : DisplayLayerId.Hud1,
+            UserMedalPanel : {
+                cls      : UsersViewsUserMedalPanel,
+                skinName : `users/UserMedalPanel.exml`,
+                layer    : DisplayLayerId.Hud1,
             },
 
-            UserMiscSettingsPanel: {
-                cls         : UsersViewsUserMiscSettingsPanel,
-                skinName    : `users/UserMiscSettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserMiscSettingsPanel : {
+                cls      : UsersViewsUserMiscSettingsPanel,
+                skinName : `users/UserMiscSettingsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserMpwStatisticsPanel: {
-                cls         : UsersViewsUserMpwStatisticsPanel,
-                skinName    : `users/UserMpwStatisticsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserMpwStatisticsPanel : {
+                cls      : UsersViewsUserMpwStatisticsPanel,
+                skinName : `users/UserMpwStatisticsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserOnlineUsersPanel: {
-                cls         : UsersViewsUserOnlineUsersPanel,
-                skinName    : `users/UserOnlineUsersPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            UserOnlineUsersPanel : {
+                cls       : UsersViewsUserOnlineUsersPanel,
+                skinName  : `users/UserOnlineUsersPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            UserPanel: {
-                cls         : UsersViewsUserPanel,
-                skinName    : `users/UserPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            UserPanel : {
+                cls       : UsersViewsUserPanel,
+                skinName  : `users/UserPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            UserProfileSettingsPanel: {
-                cls         : UsersViewsUserProfileSettingsPanel,
-                skinName    : `users/UserProfileSettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserProfileSettingsPanel : {
+                cls      : UsersViewsUserProfileSettingsPanel,
+                skinName : `users/UserProfileSettingsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserRegisterPanel: {
-                cls         : UsersViewsUserRegisterPanel,
-                skinName    : `users/UserRegisterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserRegisterPanel : {
+                cls      : UsersViewsUserRegisterPanel,
+                skinName : `users/UserRegisterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserSceneBgmSettingsPanel: {
-                cls         : UsersViewsUserSceneBgmSettingsPanel,
-                skinName    : `users/UserSceneBgmSettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserSceneBgmSettingsPanel : {
+                cls      : UsersViewsUserSceneBgmSettingsPanel,
+                skinName : `users/UserSceneBgmSettingsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserSetAvatarPanel: {
-                cls         : UsersViewsUserSetAvatarPanel,
-                skinName    : `users/UserSetAvatarPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserSetAvatarPanel : {
+                cls      : UsersViewsUserSetAvatarPanel,
+                skinName : `users/UserSetAvatarPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserSetCoBgmSettingsPanel: {
-                cls         : UsersViewsUserSetCoBgmSettingsPanel,
-                skinName    : `users/UserSetCoBgmSettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserSetCoBgmSettingsPanel : {
+                cls      : UsersViewsUserSetCoBgmSettingsPanel,
+                skinName : `users/UserSetCoBgmSettingsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserSetDiscordInfoPanel: {
-                cls         : UsersViewsUserSetDiscordInfoPanel,
-                skinName    : `users/UserSetDiscordInfoPanel.exml`,
-                layer       : DisplayLayerId.Hud1,
+            UserSetDiscordInfoPanel : {
+                cls      : UsersViewsUserSetDiscordInfoPanel,
+                skinName : `users/UserSetDiscordInfoPanel.exml`,
+                layer    : DisplayLayerId.Hud1,
             },
 
-            UserSetEmailPanel: {
-                cls         : UsersViewsUserSetEmailPanel,
-                skinName    : `users/UserSetEmailPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserSetEmailPanel : {
+                cls      : UsersViewsUserSetEmailPanel,
+                skinName : `users/UserSetEmailPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserSetPasswordPanel: {
-                cls         : UsersViewsUserSetPasswordPanel,
-                skinName    : `users/UserSetPasswordPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserSetPasswordPanel : {
+                cls      : UsersViewsUserSetPasswordPanel,
+                skinName : `users/UserSetPasswordPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserSetPasswordWithEmailPanel: {
-                cls         : UsersViewsUserSetPasswordWithEmailPanel,
-                skinName    : `users/UserSetPasswordWithEmailPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserSetPasswordWithEmailPanel : {
+                cls      : UsersViewsUserSetPasswordWithEmailPanel,
+                skinName : `users/UserSetPasswordWithEmailPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserSetRelationPanel: {
-                cls         : UsersViewsUserSetRelationPanel,
-                skinName    : `users/UserSetRelationPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserSetRelationPanel : {
+                cls      : UsersViewsUserSetRelationPanel,
+                skinName : `users/UserSetRelationPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserSetOpacityPanel: {
-                cls         : UsersViewsUserSetOpacityPanel,
-                skinName    : `users/UserSetOpacityPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserSetOpacityPanel : {
+                cls      : UsersViewsUserSetOpacityPanel,
+                skinName : `users/UserSetOpacityPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserSetStageScalePanel: {
-                cls         : UsersViewsUserSetStageScalePanel,
-                skinName    : `users/UserSetStageScalePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserSetStageScalePanel : {
+                cls      : UsersViewsUserSetStageScalePanel,
+                skinName : `users/UserSetStageScalePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            UserSettingsPanel: {
-                cls         : UsersViewsUserSettingsPanel,
-                skinName    : `users/UserSettingsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
-                needCache   : true,
+            UserSettingsPanel : {
+                cls       : UsersViewsUserSettingsPanel,
+                skinName  : `users/UserSettingsPanel.exml`,
+                layer     : DisplayLayerId.Hud0,
+                needCache : true,
             },
 
-            UserWarHistoryPanel: {
-                cls         : UsersViewsUserWarHistoryPanel,
-                skinName    : `users/UserWarHistoryPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            UserWarHistoryPanel : {
+                cls      : UsersViewsUserWarHistoryPanel,
+                skinName : `users/UserWarHistoryPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            WeaAddTileBuffExprPanel: {
-                cls         : WarEventViewWeaAddTileBuffExprPanel,
-                skinName    : `warEvent/WeaAddTileBuffExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaAddTileBuffExprPanel : {
+                cls      : WarEventViewWeaAddTileBuffExprPanel,
+                skinName : `warEvent/WeaAddTileBuffExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaAddTileBuffSimplePanel: {
-                cls         : WarEventViewWeaAddTileBuffSimplePanel,
-                skinName    : `warEvent/WeaAddTileBuffSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaAddTileBuffSimplePanel : {
+                cls      : WarEventViewWeaAddTileBuffSimplePanel,
+                skinName : `warEvent/WeaAddTileBuffSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaAddUnitBuffSimplePanel: {
-                cls         : WarEventViewWeaAddUnitBuffSimplePanel,
-                skinName    : `warEvent/WeaAddUnitBuffSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaAddUnitBuffSimplePanel : {
+                cls      : WarEventViewWeaAddUnitBuffSimplePanel,
+                skinName : `warEvent/WeaAddUnitBuffSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaAddUnitOnMapSimplePanel: {
-                cls         : WarEventViewWeaAddUnitOnMapSimplePanel,
-                skinName    : `warEvent/WeaAddUnitOnMapSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaAddUnitOnMapSimplePanel : {
+                cls      : WarEventViewWeaAddUnitOnMapSimplePanel,
+                skinName : `warEvent/WeaAddUnitOnMapSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaDeleteTileBuffExprPanel: {
-                cls         : WarEventViewWeaDeleteTileBuffExprPanel,
-                skinName    : `warEvent/WeaDeleteTileBuffExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaDeleteTileBuffExprPanel : {
+                cls      : WarEventViewWeaDeleteTileBuffExprPanel,
+                skinName : `warEvent/WeaDeleteTileBuffExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaDeleteTileBuffSimplePanel: {
-                cls         : WarEventViewWeaDeleteTileBuffSimplePanel,
-                skinName    : `warEvent/WeaDeleteTileBuffSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaDeleteTileBuffSimplePanel : {
+                cls      : WarEventViewWeaDeleteTileBuffSimplePanel,
+                skinName : `warEvent/WeaDeleteTileBuffSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaDeleteUnitBuffSimplePanel: {
-                cls         : WarEventViewWeaDeleteUnitBuffSimplePanel,
-                skinName    : `warEvent/WeaDeleteUnitBuffSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaDeleteUnitBuffSimplePanel : {
+                cls      : WarEventViewWeaDeleteUnitBuffSimplePanel,
+                skinName : `warEvent/WeaDeleteUnitBuffSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaDestroyUnitExprPanel: {
-                cls         : WarEventViewWeaDestroyUnitExprPanel,
-                skinName    : `warEvent/WeaDestroyUnitExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaDestroyUnitExprPanel : {
+                cls      : WarEventViewWeaDestroyUnitExprPanel,
+                skinName : `warEvent/WeaDestroyUnitExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaDestroyUnitSimplePanel: {
-                cls         : WarEventViewWeaDestroyUnitSimplePanel,
-                skinName    : `warEvent/WeaDestroyUnitSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaDestroyUnitSimplePanel : {
+                cls      : WarEventViewWeaDestroyUnitSimplePanel,
+                skinName : `warEvent/WeaDestroyUnitSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaBigDialogueSimplePanel: {
-                cls         : WarEventViewWeaBigDialogueSimplePanel,
-                skinName    : `warEvent/WeaBigDialogueSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaBigDialogueSimplePanel : {
+                cls      : WarEventViewWeaBigDialogueSimplePanel,
+                skinName : `warEvent/WeaBigDialogueSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaFillUnitOnMapExprPanel: {
-                cls         : WarEventViewWeaFillUnitOnMapExprPanel,
-                skinName    : `warEvent/WeaFillUnitOnMapExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaFillUnitOnMapExprPanel : {
+                cls      : WarEventViewWeaFillUnitOnMapExprPanel,
+                skinName : `warEvent/WeaFillUnitOnMapExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaFillUnitOnMapSimplePanel: {
-                cls         : WarEventViewWeaFillUnitOnMapSimplePanel,
-                skinName    : `warEvent/WeaFillUnitOnMapSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaFillUnitOnMapSimplePanel : {
+                cls      : WarEventViewWeaFillUnitOnMapSimplePanel,
+                skinName : `warEvent/WeaFillUnitOnMapSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaFillUnitLoadedExprPanel: {
-                cls         : WarEventViewWeaFillUnitLoadedExprPanel,
-                skinName    : `warEvent/WeaFillUnitLoadedExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaFillUnitLoadedExprPanel : {
+                cls      : WarEventViewWeaFillUnitLoadedExprPanel,
+                skinName : `warEvent/WeaFillUnitLoadedExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaFillUnitLoadedSimplePanel: {
-                cls         : WarEventViewWeaFillUnitLoadedSimplePanel,
-                skinName    : `warEvent/WeaFillUnitLoadedSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaFillUnitLoadedSimplePanel : {
+                cls      : WarEventViewWeaFillUnitLoadedSimplePanel,
+                skinName : `warEvent/WeaFillUnitLoadedSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaModifyTileBuffExprPanel: {
-                cls         : WarEventViewWeaModifyTileBuffExprPanel,
-                skinName    : `warEvent/WeaModifyTileBuffExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaModifyTileBuffExprPanel : {
+                cls      : WarEventViewWeaModifyTileBuffExprPanel,
+                skinName : `warEvent/WeaModifyTileBuffExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaModifyTileBuffSimplePanel: {
-                cls         : WarEventViewWeaModifyTileBuffSimplePanel,
-                skinName    : `warEvent/WeaModifyTileBuffSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaModifyTileBuffSimplePanel : {
+                cls      : WarEventViewWeaModifyTileBuffSimplePanel,
+                skinName : `warEvent/WeaModifyTileBuffSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaModifyUnitBuffSimplePanel: {
-                cls         : WarEventViewWeaModifyUnitBuffSimplePanel,
-                skinName    : `warEvent/WeaModifyUnitBuffSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaModifyUnitBuffSimplePanel : {
+                cls      : WarEventViewWeaModifyUnitBuffSimplePanel,
+                skinName : `warEvent/WeaModifyUnitBuffSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaPersistentPlayBgmPanel: {
-                cls         : WarEventViewWeaPersistentPlayBgmPanel,
-                skinName    : `warEvent/WeaPersistentPlayBgmPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaPersistentPlayBgmPanel : {
+                cls      : WarEventViewWeaPersistentPlayBgmPanel,
+                skinName : `warEvent/WeaPersistentPlayBgmPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaPlayBgmPanel: {
-                cls         : WarEventViewWeaPlayBgmPanel,
-                skinName    : `warEvent/WeaPlayBgmPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaPlayBgmPanel : {
+                cls      : WarEventViewWeaPlayBgmPanel,
+                skinName : `warEvent/WeaPlayBgmPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaPlaySfxPanel: {
-                cls         : WarEventViewWeaPlaySfxPanel,
-                skinName    : `warEvent/WeaPlaySfxPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaPlaySfxPanel : {
+                cls      : WarEventViewWeaPlaySfxPanel,
+                skinName : `warEvent/WeaPlaySfxPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaPersistentModifyPlayerAttributePanel: {
-                cls         : WarEventViewWeaPersistentModifyPlayerAttributePanel,
-                skinName    : `warEvent/WeaPersistentModifyPlayerAttributePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaPersistentModifyPlayerAttributePanel : {
+                cls      : WarEventViewWeaPersistentModifyPlayerAttributePanel,
+                skinName : `warEvent/WeaPersistentModifyPlayerAttributePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaPersistentModifyUnitAttributePanel: {
-                cls         : WarEventViewWeaPersistentModifyUnitAttributePanel,
-                skinName    : `warEvent/WeaPersistentModifyUnitAttributePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaPersistentModifyUnitAttributePanel : {
+                cls      : WarEventViewWeaPersistentModifyUnitAttributePanel,
+                skinName : `warEvent/WeaPersistentModifyUnitAttributePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaPersistentShowTextPanel: {
-                cls         : WarEventViewWeaPersistentShowTextPanel,
-                skinName    : `warEvent/WeaPersistentShowTextPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaPersistentShowTextPanel : {
+                cls      : WarEventViewWeaPersistentShowTextPanel,
+                skinName : `warEvent/WeaPersistentShowTextPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetCustomCannonStateExprPanel: {
-                cls         : WarEventViewWeaSetCustomCannonStateExprPanel,
-                skinName    : `warEvent/WeaSetCustomCannonStateExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetCustomCannonStateExprPanel : {
+                cls      : WarEventViewWeaSetCustomCannonStateExprPanel,
+                skinName : `warEvent/WeaSetCustomCannonStateExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetCustomCannonStateSimplePanel: {
-                cls         : WarEventViewWeaSetCustomCannonStateSimplePanel,
-                skinName    : `warEvent/WeaSetCustomCannonStateSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetCustomCannonStateSimplePanel : {
+                cls      : WarEventViewWeaSetCustomCannonStateSimplePanel,
+                skinName : `warEvent/WeaSetCustomCannonStateSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetCustomCountersPanel: {
-                cls         : WarEventViewWeaSetCustomCountersPanel,
-                skinName    : `warEvent/WeaSetCustomCountersPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetCustomCountersPanel : {
+                cls      : WarEventViewWeaSetCustomCountersPanel,
+                skinName : `warEvent/WeaSetCustomCountersPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetCustomBuildingStateExprPanel: {
-                cls         : WarEventViewWeaSetCustomBuildingStateExprPanel,
-                skinName    : `warEvent/WeaSetCustomBuildingStateExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetCustomBuildingStateExprPanel : {
+                cls      : WarEventViewWeaSetCustomBuildingStateExprPanel,
+                skinName : `warEvent/WeaSetCustomBuildingStateExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetCustomBuildingStateSimplePanel: {
-                cls         : WarEventViewWeaSetCustomBuildingStateSimplePanel,
-                skinName    : `warEvent/WeaSetCustomBuildingStateSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetCustomBuildingStateSimplePanel : {
+                cls      : WarEventViewWeaSetCustomBuildingStateSimplePanel,
+                skinName : `warEvent/WeaSetCustomBuildingStateSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetCustomCrystalStateExprPanel: {
-                cls         : WarEventViewWeaSetCustomCrystalStateExprPanel,
-                skinName    : `warEvent/WeaSetCustomCrystalStateExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetCustomCrystalStateExprPanel : {
+                cls      : WarEventViewWeaSetCustomCrystalStateExprPanel,
+                skinName : `warEvent/WeaSetCustomCrystalStateExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetCustomCrystalStateSimplePanel: {
-                cls         : WarEventViewWeaSetCustomCrystalStateSimplePanel,
-                skinName    : `warEvent/WeaSetCustomCrystalStateSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetCustomCrystalStateSimplePanel : {
+                cls      : WarEventViewWeaSetCustomCrystalStateSimplePanel,
+                skinName : `warEvent/WeaSetCustomCrystalStateSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetCustomLaserTurretStateExprPanel: {
-                cls         : WarEventViewWeaSetCustomLaserTurretStateExprPanel,
-                skinName    : `warEvent/WeaSetCustomLaserTurretStateExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetCustomLaserTurretStateExprPanel : {
+                cls      : WarEventViewWeaSetCustomLaserTurretStateExprPanel,
+                skinName : `warEvent/WeaSetCustomLaserTurretStateExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetCustomLaserTurretStateSimplePanel: {
-                cls         : WarEventViewWeaSetCustomLaserTurretStateSimplePanel,
-                skinName    : `warEvent/WeaSetCustomLaserTurretStateSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetCustomLaserTurretStateSimplePanel : {
+                cls      : WarEventViewWeaSetCustomLaserTurretStateSimplePanel,
+                skinName : `warEvent/WeaSetCustomLaserTurretStateSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetForceFogCodeExprPanel: {
-                cls         : WarEventViewWeaSetForceFogCodeExprPanel,
-                skinName    : `warEvent/WeaSetForceFogCodeExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetForceFogCodeExprPanel : {
+                cls      : WarEventViewWeaSetForceFogCodeExprPanel,
+                skinName : `warEvent/WeaSetForceFogCodeExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetForceFogCodeSimplePanel: {
-                cls         : WarEventViewWeaSetForceFogCodeSimplePanel,
-                skinName    : `warEvent/WeaSetForceFogCodeSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetForceFogCodeSimplePanel : {
+                cls      : WarEventViewWeaSetForceFogCodeSimplePanel,
+                skinName : `warEvent/WeaSetForceFogCodeSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetPlayerStateExprPanel: {
-                cls         : WarEventViewWeaSetPlayerStateExprPanel,
-                skinName    : `warEvent/WeaSetPlayerStateExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetPlayerStateExprPanel : {
+                cls      : WarEventViewWeaSetPlayerStateExprPanel,
+                skinName : `warEvent/WeaSetPlayerStateExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetPlayerStateSimplePanel: {
-                cls         : WarEventViewWeaSetPlayerStateSimplePanel,
-                skinName    : `warEvent/WeaSetPlayerStateSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetPlayerStateSimplePanel : {
+                cls      : WarEventViewWeaSetPlayerStateSimplePanel,
+                skinName : `warEvent/WeaSetPlayerStateSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetTaskObjectiveStatePanel: {
-                cls         : WarEventViewWeaSetTaskObjectiveStatePanel,
-                skinName    : `warEvent/WeaSetTaskObjectiveStatePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetTaskObjectiveStatePanel : {
+                cls      : WarEventViewWeaSetTaskObjectiveStatePanel,
+                skinName : `warEvent/WeaSetTaskObjectiveStatePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetTileStateExprPanel: {
-                cls         : WarEventViewWeaSetTileStateExprPanel,
-                skinName    : `warEvent/WeaSetTileStateExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetTileStateExprPanel : {
+                cls      : WarEventViewWeaSetTileStateExprPanel,
+                skinName : `warEvent/WeaSetTileStateExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetTileStateSimplePanel: {
-                cls         : WarEventViewWeaSetTileStateSimplePanel,
-                skinName    : `warEvent/WeaSetTileStateSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetTileStateSimplePanel : {
+                cls      : WarEventViewWeaSetTileStateSimplePanel,
+                skinName : `warEvent/WeaSetTileStateSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetTileTypeExprPanel: {
-                cls         : WarEventViewWeaSetTileTypeExprPanel,
-                skinName    : `warEvent/WeaSetTileTypeExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetTileTypeExprPanel : {
+                cls      : WarEventViewWeaSetTileTypeExprPanel,
+                skinName : `warEvent/WeaSetTileTypeExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetTileTypeSimplePanel: {
-                cls         : WarEventViewWeaSetTileTypeSimplePanel,
-                skinName    : `warEvent/WeaSetTileTypeSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetTileTypeSimplePanel : {
+                cls      : WarEventViewWeaSetTileTypeSimplePanel,
+                skinName : `warEvent/WeaSetTileTypeSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetUnitMovePathVisibilityPanel: {
-                cls         : WarEventViewWeaSetUnitMovePathVisibilityPanel,
-                skinName    : `warEvent/WeaSetUnitMovePathVisibilityPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetUnitMovePathVisibilityPanel : {
+                cls      : WarEventViewWeaSetUnitMovePathVisibilityPanel,
+                skinName : `warEvent/WeaSetUnitMovePathVisibilityPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetUnitOwnershipExprPanel: {
-                cls         : WarEventViewWeaSetUnitOwnershipExprPanel,
-                skinName    : `warEvent/WeaSetUnitOwnershipExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetUnitOwnershipExprPanel : {
+                cls      : WarEventViewWeaSetUnitOwnershipExprPanel,
+                skinName : `warEvent/WeaSetUnitOwnershipExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetUnitOwnershipSimplePanel: {
-                cls         : WarEventViewWeaSetUnitOwnershipSimplePanel,
-                skinName    : `warEvent/WeaSetUnitOwnershipSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetUnitOwnershipSimplePanel : {
+                cls      : WarEventViewWeaSetUnitOwnershipSimplePanel,
+                skinName : `warEvent/WeaSetUnitOwnershipSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetUnitPositionExprPanel: {
-                cls         : WarEventViewWeaSetUnitPositionExprPanel,
-                skinName    : `warEvent/WeaSetUnitPositionExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetUnitPositionExprPanel : {
+                cls      : WarEventViewWeaSetUnitPositionExprPanel,
+                skinName : `warEvent/WeaSetUnitPositionExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetUnitPositionSimplePanel: {
-                cls         : WarEventViewWeaSetUnitPositionSimplePanel,
-                skinName    : `warEvent/WeaSetUnitPositionSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetUnitPositionSimplePanel : {
+                cls      : WarEventViewWeaSetUnitPositionSimplePanel,
+                skinName : `warEvent/WeaSetUnitPositionSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetUnitStateExprPanel: {
-                cls         : WarEventViewWeaSetUnitStateExprPanel,
-                skinName    : `warEvent/WeaSetUnitStateExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetUnitStateExprPanel : {
+                cls      : WarEventViewWeaSetUnitStateExprPanel,
+                skinName : `warEvent/WeaSetUnitStateExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetUnitStateSimplePanel: {
-                cls         : WarEventViewWeaSetUnitStateSimplePanel,
-                skinName    : `warEvent/WeaSetUnitStateSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetUnitStateSimplePanel : {
+                cls      : WarEventViewWeaSetUnitStateSimplePanel,
+                skinName : `warEvent/WeaSetUnitStateSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetUnitTypeExprPanel: {
-                cls         : WarEventViewWeaSetUnitTypeExprPanel,
-                skinName    : `warEvent/WeaSetUnitTypeExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetUnitTypeExprPanel : {
+                cls      : WarEventViewWeaSetUnitTypeExprPanel,
+                skinName : `warEvent/WeaSetUnitTypeExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetUnitTypeSimplePanel: {
-                cls         : WarEventViewWeaSetUnitTypeSimplePanel,
-                skinName    : `warEvent/WeaSetUnitTypeSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetUnitTypeSimplePanel : {
+                cls      : WarEventViewWeaSetUnitTypeSimplePanel,
+                skinName : `warEvent/WeaSetUnitTypeSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetViewpointExprPanel: {
-                cls         : WarEventViewWeaSetViewpointExprPanel,
-                skinName    : `warEvent/WeaSetViewpointExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetViewpointExprPanel : {
+                cls      : WarEventViewWeaSetViewpointExprPanel,
+                skinName : `warEvent/WeaSetViewpointExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetViewpointSimplePanel: {
-                cls         : WarEventViewWeaSetViewpointSimplePanel,
-                skinName    : `warEvent/WeaSetViewpointSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetViewpointSimplePanel : {
+                cls      : WarEventViewWeaSetViewpointSimplePanel,
+                skinName : `warEvent/WeaSetViewpointSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetWeatherExprPanel: {
-                cls         : WarEventViewWeaSetWeatherExprPanel,
-                skinName    : `warEvent/WeaSetWeatherExprPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetWeatherExprPanel : {
+                cls      : WarEventViewWeaSetWeatherExprPanel,
+                skinName : `warEvent/WeaSetWeatherExprPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSetWeatherSimplePanel: {
-                cls         : WarEventViewWeaSetWeatherSimplePanel,
-                skinName    : `warEvent/WeaSetWeatherSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSetWeatherSimplePanel : {
+                cls      : WarEventViewWeaSetWeatherSimplePanel,
+                skinName : `warEvent/WeaSetWeatherSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaSmallDialogueSimplePanel: {
-                cls         : WarEventViewWeaSmallDialogueSimplePanel,
-                skinName    : `warEvent/WeaSmallDialogueSimplePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaSmallDialogueSimplePanel : {
+                cls      : WarEventViewWeaSmallDialogueSimplePanel,
+                skinName : `warEvent/WeaSmallDialogueSimplePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeaStopPersistentActionPanel: {
-                cls         : WarEventViewWeaStopPersistentActionPanel,
-                skinName    : `warEvent/WeaStopPersistentActionPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeaStopPersistentActionPanel : {
+                cls      : WarEventViewWeaStopPersistentActionPanel,
+                skinName : `warEvent/WeaStopPersistentActionPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeActionReplacePanel: {
-                cls         : WarEventViewWeActionReplacePanel,
-                skinName    : `warEvent/WeActionReplacePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeActionReplacePanel : {
+                cls      : WarEventViewWeActionReplacePanel,
+                skinName : `warEvent/WeActionReplacePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeActionTypeListPanel: {
-                cls         : WarEventViewWeActionTypeListPanel,
-                skinName    : `warEvent/WeActionTypeListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeActionTypeListPanel : {
+                cls      : WarEventViewWeActionTypeListPanel,
+                skinName : `warEvent/WeActionTypeListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeCommandPanel: {
-                cls         : WarEventViewWeCommandPanel,
-                skinName    : `warEvent/WeCommandPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeCommandPanel : {
+                cls      : WarEventViewWeCommandPanel,
+                skinName : `warEvent/WeCommandPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WecPlayerPresencePanel: {
-                cls         : WarEventViewWecPlayerPresencePanel,
-                skinName    : `warEvent/WecPlayerPresencePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WecPlayerPresencePanel : {
+                cls      : WarEventViewWecPlayerPresencePanel,
+                skinName : `warEvent/WecPlayerPresencePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WecTurnAndPlayerPanel: {
-                cls         : WarEventViewWecTurnAndPlayerPanel,
-                skinName    : `warEvent/WecTurnAndPlayerPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WecTurnAndPlayerPanel : {
+                cls      : WarEventViewWecTurnAndPlayerPanel,
+                skinName : `warEvent/WecTurnAndPlayerPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WecEventCalledCountPanel: {
-                cls         : WarEventViewWecEventCalledCountPanel,
-                skinName    : `warEvent/WecEventCalledCountPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WecEventCalledCountPanel : {
+                cls      : WarEventViewWecEventCalledCountPanel,
+                skinName : `warEvent/WecEventCalledCountPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WecExpressionPanel: {
-                cls         : WarEventViewWecExpressionPanel,
-                skinName    : `warEvent/WecExpressionPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WecExpressionPanel : {
+                cls      : WarEventViewWecExpressionPanel,
+                skinName : `warEvent/WecExpressionPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WecTilePresencePanel: {
-                cls         : WarEventViewWecTilePresencePanel,
-                skinName    : `warEvent/WecTilePresencePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WecTilePresencePanel : {
+                cls      : WarEventViewWecTilePresencePanel,
+                skinName : `warEvent/WecTilePresencePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WecUnitPresencePanel: {
-                cls         : WarEventViewWecUnitPresencePanel,
-                skinName    : `warEvent/WecUnitPresencePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WecUnitPresencePanel : {
+                cls      : WarEventViewWecUnitPresencePanel,
+                skinName : `warEvent/WecUnitPresencePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WecWeatherAndFogPanel: {
-                cls         : WarEventViewWecWeatherAndFogPanel,
-                skinName    : `warEvent/WecWeatherAndFogPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WecWeatherAndFogPanel : {
+                cls      : WarEventViewWecWeatherAndFogPanel,
+                skinName : `warEvent/WecWeatherAndFogPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeConditionModifyPanel60: {
-                cls         : WarEventViewWeConditionModifyPanel60Panel,
-                skinName    : `warEvent/WeConditionModifyPanel60.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeConditionModifyPanel60 : {
+                cls      : WarEventViewWeConditionModifyPanel60Panel,
+                skinName : `warEvent/WeConditionModifyPanel60.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WecOngoingPersistentActionPanel: {
-                cls         : WarEventViewWecOngoingPersistentActionPanel,
-                skinName    : `warEvent/WecOngoingPersistentActionPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WecOngoingPersistentActionPanel : {
+                cls      : WarEventViewWecOngoingPersistentActionPanel,
+                skinName : `warEvent/WecOngoingPersistentActionPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WecManualActionStatisticsPanel: {
-                cls         : WarEventViewWecManualActionStatisticsPanel,
-                skinName    : `warEvent/WecManualActionStatisticsPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WecManualActionStatisticsPanel : {
+                cls      : WarEventViewWecManualActionStatisticsPanel,
+                skinName : `warEvent/WecManualActionStatisticsPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeConditionReplacePanel: {
-                cls         : WarEventViewWeConditionReplacePanel,
-                skinName    : `warEvent/WeConditionReplacePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeConditionReplacePanel : {
+                cls      : WarEventViewWeConditionReplacePanel,
+                skinName : `warEvent/WeConditionReplacePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeConditionTypeListPanel: {
-                cls         : WarEventViewWeConditionTypeListPanel,
-                skinName    : `warEvent/WeConditionTypeListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeConditionTypeListPanel : {
+                cls      : WarEventViewWeConditionTypeListPanel,
+                skinName : `warEvent/WeConditionTypeListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeCustomCounterNameListPanel: {
-                cls         : WarEventViewWeCustomCounterNameListPanel,
-                skinName    : `warEvent/WeCustomCounterNameListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeCustomCounterNameListPanel : {
+                cls      : WarEventViewWeCustomCounterNameListPanel,
+                skinName : `warEvent/WeCustomCounterNameListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeBigDialogueBackgroundPanel: {
-                cls         : WarEventViewWeBigDialogueBackgroundPanel,
-                skinName    : `warEvent/WeBigDialogueBackgroundPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeBigDialogueBackgroundPanel : {
+                cls      : WarEventViewWeBigDialogueBackgroundPanel,
+                skinName : `warEvent/WeBigDialogueBackgroundPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeEventNameListPanel: {
-                cls         : WarEventViewWeEventNameListPanel,
-                skinName    : `warEvent/WeEventNameListPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeEventNameListPanel : {
+                cls      : WarEventViewWeEventNameListPanel,
+                skinName : `warEvent/WeEventNameListPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeMainPanel: {
-                cls         : WarEventViewWeMainPanel,
-                skinName    : `warEvent/WeMainPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeMainPanel : {
+                cls      : WarEventViewWeMainPanel,
+                skinName : `warEvent/WeMainPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeNodeReplacePanel: {
-                cls         : WarEventViewWeNodeReplacePanel,
-                skinName    : `warEvent/WeNodeReplacePanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeNodeReplacePanel : {
+                cls      : WarEventViewWeNodeReplacePanel,
+                skinName : `warEvent/WeNodeReplacePanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WePlayerFilterPanel: {
-                cls         : WarEventViewWePlayerFilterPanel,
-                skinName    : `warEvent/WePlayerFilterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WePlayerFilterPanel : {
+                cls      : WarEventViewWePlayerFilterPanel,
+                skinName : `warEvent/WePlayerFilterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WePositionFilterPanel: {
-                cls         : WarEventViewWePositionFilterPanel,
-                skinName    : `warEvent/WePositionFilterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WePositionFilterPanel : {
+                cls      : WarEventViewWePositionFilterPanel,
+                skinName : `warEvent/WePositionFilterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeTileBuffFilterPanel: {
-                cls         : WarEventViewWeTileBuffFilterPanel,
-                skinName    : `warEvent/WeTileBuffFilterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeTileBuffFilterPanel : {
+                cls      : WarEventViewWeTileBuffFilterPanel,
+                skinName : `warEvent/WeTileBuffFilterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeTileCustomCannonPanel: {
-                cls         : WarEventViewWeTileCustomCannonPanel,
-                skinName    : `warEvent/WeTileCustomCannonPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeTileCustomCannonPanel : {
+                cls      : WarEventViewWeTileCustomCannonPanel,
+                skinName : `warEvent/WeTileCustomCannonPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeTileCustomCrystalPanel: {
-                cls         : WarEventViewWeTileCustomCrystalPanel,
-                skinName    : `warEvent/WeTileCustomCrystalPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeTileCustomCrystalPanel : {
+                cls      : WarEventViewWeTileCustomCrystalPanel,
+                skinName : `warEvent/WeTileCustomCrystalPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeTileCustomLaserTurretPanel: {
-                cls         : WarEventViewWeTileCustomLaserTurretPanel,
-                skinName    : `warEvent/WeTileCustomLaserTurretPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeTileCustomLaserTurretPanel : {
+                cls      : WarEventViewWeTileCustomLaserTurretPanel,
+                skinName : `warEvent/WeTileCustomLaserTurretPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeTileFilterPanel: {
-                cls         : WarEventViewWeTileFilterPanel,
-                skinName    : `warEvent/WeTileFilterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeTileFilterPanel : {
+                cls      : WarEventViewWeTileFilterPanel,
+                skinName : `warEvent/WeTileFilterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeUnitBuffFilterPanel: {
-                cls         : WarEventViewWeUnitBuffFilterPanel,
-                skinName    : `warEvent/WeUnitBuffFilterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeUnitBuffFilterPanel : {
+                cls      : WarEventViewWeUnitBuffFilterPanel,
+                skinName : `warEvent/WeUnitBuffFilterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WeUnitFilterPanel: {
-                cls         : WarEventViewWeUnitFilterPanel,
-                skinName    : `warEvent/WeUnitFilterPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WeUnitFilterPanel : {
+                cls      : WarEventViewWeUnitFilterPanel,
+                skinName : `warEvent/WeUnitFilterPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
-            WwDeleteWatcherWarsPanel: {
+            WwDeleteWatcherWarsPanel : {
                 cls         : WatchWarViewWwDeleteWatcherWarsPanel,
                 skinName    : `watchWar/WwDeleteWatcherWarsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            WwHandleRequestWarsPanel: {
+            WwHandleRequestWarsPanel : {
                 cls         : WatchWarViewWwHandleRequestWarsPanel,
                 skinName    : `watchWar/WwHandleRequestWarsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            WwMainMenuPanel: {
+            WwMainMenuPanel : {
                 cls         : WatchWarViewWwMainMenuPanel,
                 skinName    : `watchWar/WwMainMenuPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            WwMakeRequestDetailPanel: {
-                cls         : WatchWarViewWwMakeRequestDetailPanel,
-                skinName    : `watchWar/WwMakeRequestDetailPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WwMakeRequestDetailPanel : {
+                cls      : WatchWarViewWwMakeRequestDetailPanel,
+                skinName : `watchWar/WwMakeRequestDetailPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
 
-            WwMakeRequestWarsPanel: {
+            WwMakeRequestWarsPanel : {
                 cls         : WatchWarViewWwMakeRequestWarsPanel,
                 skinName    : `watchWar/WwMakeRequestWarsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            WwOngoingWarsPanel: {
+            WwOngoingWarsPanel : {
                 cls         : WatchWarViewWwOngoingWarsPanel,
                 skinName    : `watchWar/WwOngoingWarsPanel.exml`,
                 layer       : DisplayLayerId.Scene,
                 isExclusive : true,
             },
 
-            WwSearchWarPanel: {
-                cls         : WatchWarViewWwSearchWarPanel,
-                skinName    : `watchWar/WwSearchWarPanel.exml`,
-                layer       : DisplayLayerId.Hud0,
+            WwSearchWarPanel : {
+                cls      : WatchWarViewWwSearchWarPanel,
+                skinName : `watchWar/WwSearchWarPanel.exml`,
+                layer    : DisplayLayerId.Hud0,
             },
         };
 

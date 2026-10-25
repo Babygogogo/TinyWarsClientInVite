@@ -1,10 +1,11 @@
+import { GcData } from "../../gameConfig/GcData.ts";
 import type {
     DecodedMapEditorData as AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData,
     Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
 } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { ReviewStatus } from "../../gameConfig/GcMap.ts";
-import { SlotConstants } from "../../gameConfig/GcMapEditor.ts";
+import { ReviewStatus } from "../../maps/Constants.ts";
+import { SlotConstants } from "../../mapEditors/Constants.ts";
 import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
 import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -346,7 +347,7 @@ async function handleDeprecatedData(encodedMapRawData: Undefinable<Uint8Array>):
         ]);
         mapRawData.setTileDataArray(
             mapRawData.getTileDataArray() ??
-            createDefaultTileDataArray(mapWidth, mapHeight, gameConfig.getDefaultTileBaseType(), gameConfig)
+            createDefaultTileDataArray(mapWidth, mapHeight, GcData.getDefaultTileBaseType(), gameConfig)
         );
         mapRawData.setWarEventFullData(mapRawData.getWarEventFullData() ?? new WarEventFullData());
     }

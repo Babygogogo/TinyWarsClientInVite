@@ -1,5 +1,5 @@
 import { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
@@ -255,7 +255,7 @@ export class Panel extends UiPanel<OpenData> {
         const filter            = this._mapFilter;
         const oldMaxMapWidth    = filter.maxMapWidth;
         const minValue          = 1;
-        const maxValue          = Constants.MaxGridsCount;
+        const maxValue          = Common.MaxGridsCount;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
             getTitle           : () => getText(TextType.B1389),
             currentValue    : filter.minMapWidth,
@@ -297,7 +297,7 @@ export class Panel extends UiPanel<OpenData> {
         const filter            = this._mapFilter;
         const oldMaxMapHeight   = filter.maxMapHeight;
         const minValue          = 1;
-        const maxValue          = Constants.MaxGridsCount;
+        const maxValue          = Common.MaxGridsCount;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
             getTitle           : () => getText(TextType.B1391),
             currentValue    : filter.minMapHeight,

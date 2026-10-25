@@ -12,7 +12,7 @@ import {
 import { getDamageMultiplierForDefenseBonus } from "../../damageCalculators/Utils.ts";
 import { show } from "../../FloatText.ts";
 import { getDefaultSkinId, getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfig/GcData.ts";
 import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
@@ -266,7 +266,7 @@ export class Panel extends UiPanel<OpenData> {
             unitHp                  : Hp.MaxHp,
             unitWeaponType          : WeaponTypeId.Primary,
             unitPromotion           : 0,
-            tileType                : getExisted(gameConfig.getTileType(gameConfig.getDefaultTileBaseType(), ObjectTypeId.Empty)),
+            tileType                : getExisted(gameConfig.getTileType(GcData.getDefaultTileBaseType(), ObjectTypeId.Empty)),
             tileCustomBuildingData  : null,
             towersCount             : 0,
             offenseBonus            : 0,
@@ -929,7 +929,7 @@ function createUnitViewData(war: AuxiliaryTypesAuxiliaryTypesUndefinable<IBwWar>
 function createTileViewData(war: AuxiliaryTypesAuxiliaryTypesUndefinable<IBwWar>, tileType: number, playerIndex: number, gameConfig: GcData): UiTileViewData {
     const objectType    = getExisted(gameConfig.getTileObjectTypeByTileType(tileType));
     const baseType      = getExisted(gameConfig.getTileBaseTypeByTileType(tileType));
-    if (gameConfig.checkIsValidPlayerIndexForTileObject({
+    if (GcData.checkIsValidPlayerIndexForTileObject({
         playerIndex     : playerIndex,
         tileObjectType  : objectType
     })) {

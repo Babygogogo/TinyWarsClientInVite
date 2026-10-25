@@ -1,6 +1,6 @@
 import type { Undefinable } from "./AuxiliaryTypes.ts";
 import { GridIndex } from "./GridIndex.ts";
-import { Constants } from "../gameConfig/GcMap.ts";
+import { Common } from "../maps/Constants.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { GridIndex as ProtoSchemaCommonProtoStructureGridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
@@ -91,7 +91,7 @@ export class MapSize {
         const { width, height } = this.getWH();
         return (width > 0)
             && (height > 0)
-            && (width * height <= Constants.MaxGridsCount);
+            && (width * height <= Common.MaxGridsCount);
     }
 
     public checkIsValidGridIndexSubset(gridIndexArray: ProtoSchemaCommonProtoStructureGridIndex[]): boolean {

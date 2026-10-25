@@ -1,5 +1,5 @@
 import type { MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { SortType } from "../../gameConfig/GcMap.ts";
+import { SortType } from "../../maps/Constants.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getMapSortTypeName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

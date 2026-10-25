@@ -1,3 +1,4 @@
+import { GcData } from "../../gameConfig/GcData.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
@@ -536,9 +537,9 @@ function autoFillTile(war: IMeWar, dstGridIndex: GridIndex, symmetryType: Symmet
         gridIndex               : dstGridIndex.toProto().toJson(),
         groupedLocationIdArray  : dstTile.getGroupedLocationIdArray(),
         baseType                : baseType,
-        baseShapeId             : gameConfig.getSymmetricalTileBaseShapeId(baseType, srcTile.getBaseShapeId(), symmetryType) ?? 0,
-        objectType              : gameConfig.getSymmetricalTileObjectType(objectType, symmetryType),
-        objectShapeId           : gameConfig.getSymmetricalTileObjectShapeId(objectType, srcTile.getObjectShapeId(), symmetryType) ?? 0,
+        baseShapeId             : GcData.getSymmetricalTileBaseShapeId(baseType, srcTile.getBaseShapeId(), symmetryType) ?? 0,
+        objectType              : GcData.getSymmetricalTileObjectType(objectType, symmetryType),
+        objectShapeId           : GcData.getSymmetricalTileObjectShapeId(objectType, srcTile.getObjectShapeId(), symmetryType) ?? 0,
         isHighlighted           : dstTile.getIsHighlighted(),
         unfixedBuffArray        : dstTile.getUnfixedBuffList()?.map(v => v.toJson()),
         customNameId            : dstTile.getCustomNameId() ?? null,
@@ -549,7 +550,7 @@ function autoFillTile(war: IMeWar, dstGridIndex: GridIndex, symmetryType: Symmet
 
         decorationType          : decorationType,
         decorationShapeId       : ((decorationType != null) && (decorationShapeId != null))
-            ? gameConfig.getSymmetricalTileDecorationShapeId(decorationType, decorationShapeId, symmetryType) ?? 0
+            ? GcData.getSymmetricalTileDecorationShapeId(decorationType, decorationShapeId, symmetryType) ?? 0
             : decorationShapeId,
 
         currentBuildPoint       : srcTile.getCurrentBuildPoint(),

@@ -1,7 +1,7 @@
 import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
-import { SortType } from "../../gameConfig/GcMap.ts";
+import { SortType } from "../../maps/Constants.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getLanguageText } from "../../lang/Utils.ts";
 import { StoreNormalMapBriefData, StoreNormalMapRawData } from "../../localData/Storage.ts";

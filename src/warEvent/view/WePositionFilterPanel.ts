@@ -3,7 +3,7 @@ import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { PositionFilter } from "../../auxiliaryTypes/PositionFilter.ts";
 import { checkIsEmpty, getErrorTip, getDesc } from "../../deprecatedPositionFilter/Utils.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
@@ -227,7 +227,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputNullableIntegerPanel, {
             getTitle        : () => getText(TextType.B1062),
             minValue        : 0,
-            maxValue        : Constants.MaxGridsCount,
+            maxValue        : Common.MaxGridsCount,
             currentValue    : oldCon == null ? null : oldCon.getValue(),
             callback        : value => {
                 if (value == null) {
@@ -268,7 +268,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputNullableIntegerPanel, {
             getTitle        : () => getText(TextType.B1063),
             minValue        : 0,
-            maxValue        : Constants.MaxGridsCount,
+            maxValue        : Common.MaxGridsCount,
             currentValue    : oldCon?.getValue(),
             callback        : value => {
                 if (value == null) {

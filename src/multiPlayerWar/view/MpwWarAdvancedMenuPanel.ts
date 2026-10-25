@@ -3,7 +3,7 @@ import { RequestingPlayerDeleteUnit } from "../../actionPlanners/states/Requesti
 import { RequestingPlayerSurrender } from "../../actionPlanners/states/RequestingPlayerSurrender.ts";
 import { RequestingPlayerVoteForDraw } from "../../actionPlanners/states/RequestingPlayerVoteForDraw.ts";
 import { show, showLang } from "../../FloatText.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getTwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -209,8 +209,8 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const normalMapId   = getExisted(war.getNormalMapId());
-        const minValue      = Constants.MinRating;
-        const maxValue      = Constants.MaxRating;
+        const minValue      = Common.MinRating;
+        const maxValue      = Common.MaxRating;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.B0363),
             currentValue    : getMapRating(normalMapId) || 0,

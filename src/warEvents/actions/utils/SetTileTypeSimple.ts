@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import { GcData } from "../../../gameConfig/GcData.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText } from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
@@ -179,7 +179,7 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: MapSize, player
                 return getFormattedText(TextType.F0091, getText(TextType.TileBase));
             }
 
-            const cfg = gameConfig.getTileBaseCfg(actTileBaseType);
+            const cfg = GcData.getTileBaseCfg(actTileBaseType);
             if (cfg == null) {
                 return getFormattedText(TextType.F0091, getText(TextType.TileBase));
             }
@@ -206,7 +206,7 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: MapSize, player
                     return getFormattedText(TextType.F0091, getText(TextType.TileDecoration));
                 }
 
-                const cfg = gameConfig.getTileDecorationCfg(actTileDecorationType);
+                const cfg = GcData.getTileDecorationCfg(actTileDecorationType);
                 if (cfg == null) {
                     return getFormattedText(TextType.F0091, getText(TextType.TileDecoration));
                 }
@@ -234,7 +234,7 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: MapSize, player
                     return getFormattedText(TextType.F0091, getText(TextType.TileObject));
                 }
 
-                const cfg = gameConfig.getTileObjectCfg(actTileObjectType);
+                const cfg = GcData.getTileObjectCfg(actTileObjectType);
                 if (cfg == null) {
                     return getFormattedText(TextType.F0091, getText(TextType.TileObject));
                 }
@@ -308,7 +308,7 @@ export async function applyWithoutExtraData(data: WeaSetTileTypeSimple, isFastEx
                     ? (data.getActTileObjectType() ?? 0)
                     : tile.getObjectType()
                 );
-            const newTileObjectCfg = gameConfig.getTileObjectCfg(newTileObjectType);
+            const newTileObjectCfg = GcData.getTileObjectCfg(newTileObjectType);
             if (newTileObjectCfg == null) {
                 continue;
             }

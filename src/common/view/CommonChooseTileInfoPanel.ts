@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfig/GcData.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType } from "../../lang/Constants.ts";
@@ -159,7 +159,7 @@ export class Panel extends UiPanel<OpenData> {
         const gameConfig        = openData.gameConfig;
         const tileInfo          = this._tileInfo;
         const tileObjectType    = tileInfo.tileObjectType;
-        const tileObjectCfg     = tileObjectType == null ? null : gameConfig.getTileObjectCfg(tileObjectType);
+        const tileObjectCfg     = tileObjectType == null ? null : GcData.getTileObjectCfg(tileObjectType);
         openPanel(getDict().CommonChooseTileObjectPanel, {
             currentPlayerIndex  : ((tileObjectCfg == null) || (tileObjectCfg.isNeutralOnly)) ? undefined : tileInfo.tilePlayerIndex,
             gameConfig          : gameConfig,

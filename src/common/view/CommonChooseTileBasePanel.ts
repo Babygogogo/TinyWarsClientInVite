@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfig/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getTileBaseName } from "../../lang/Utils.ts";
@@ -100,7 +100,7 @@ export class Panel extends UiPanel<OpenData> {
         const baseType      = this._listType.getFirstSelectedData()?.baseType;
         const dataList      : DataForTileBaseRenderer[] = [];
         if (baseType != null) {
-            const cfg = getExisted(gameConfig.getTileBaseCfg(baseType));
+            const cfg = getExisted(GcData.getTileBaseCfg(baseType));
             for (let shapeId = 0; shapeId < cfg.shapesCount; ++shapeId) {
                 dataList.push({
                     panel               : this,
@@ -124,7 +124,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const dataArray: DataForTypeRenderer[] = [];
-        for (const cfg of gameConfig.getAllEnabledTileBaseCfgArray()) {
+        for (const cfg of GcData.getAllEnabledTileBaseCfgArray()) {
             dataArray.push({
                 baseType        : cfg.tileBaseTypeId,
                 gameConfig      : gameConfig,

@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfig/GcData.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import {
@@ -170,7 +170,7 @@ export class Panel extends UiPanel<OpenData> {
         } else if (category === Category.TileType) {
             return getTextForCategoryData(gameConfig.getAllTileTypeArraySortedByWeight().map(v => ({ typeId: v, typeName: getTileName(v, gameConfig) ?? UndefinedError })), sortType);
         } else if (category === Category.TileBaseType) {
-            return getTextForCategoryData(gameConfig.getAllEnabledTileBaseCfgArray().map(v => {
+            return getTextForCategoryData(GcData.getAllEnabledTileBaseCfgArray().map(v => {
                 const tileBaseType = v.tileBaseTypeId;
                 return {
                     typeId      : tileBaseType,
@@ -178,7 +178,7 @@ export class Panel extends UiPanel<OpenData> {
                 };
             }), sortType);
         } else if (category === Category.TileObjectType) {
-            return getTextForCategoryData(gameConfig.getAllTileObjectCfgArray().map(v => {
+            return getTextForCategoryData(GcData.getAllTileObjectCfgArray().map(v => {
                 const typeId = v.tileObjectTypeId;
                 return {
                     typeId      : typeId,
@@ -186,7 +186,7 @@ export class Panel extends UiPanel<OpenData> {
                 };
             }), sortType);
         } else if (category === Category.TileDecorationType) {
-            return getTextForCategoryData(gameConfig.getAllTileDecorationCfgArray().map(v => {
+            return getTextForCategoryData(GcData.getAllTileDecorationCfgArray().map(v => {
                 const tileDecorationType = v.tileDecorationTypeId;
                 return {
                     typeId      : tileDecorationType,

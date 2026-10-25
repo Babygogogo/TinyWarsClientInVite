@@ -3,7 +3,7 @@ import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { ReplayFilter } from "../../auxiliaryTypes/ReplayFilter.ts";
 import { showLang } from "../../FloatText.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
 import { checkAndCreateSimulation, checkAndCreateMultiFreeWar, gotoRwReplayListPanel, gotoMapEditorWar } from "../../helpers/GameFlow.ts";
@@ -199,8 +199,8 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const minValue = Constants.MinRating;
-        const maxValue = Constants.MaxRating;
+        const minValue = Common.MinRating;
+        const maxValue = Common.MaxRating;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle        : () => getText(TextType.B0363),
             currentValue    : getMapRating(normalMapId) || 0,

@@ -2,7 +2,7 @@ import type { MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
 import { CcrRoomCreator } from "../model/CcrRoomCreator.ts";
 import { showLang } from "../../FloatText.ts";
-import { SortType } from "../../gameConfig/GcMap.ts";
+import { SortType } from "../../maps/Constants.ts";
 import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";

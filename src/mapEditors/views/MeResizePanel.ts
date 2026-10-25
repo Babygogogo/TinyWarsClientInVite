@@ -1,7 +1,7 @@
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { show } from "../../FloatText.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -76,7 +76,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         openPanel(getDict().CommonHelpPanel, {
-            getContent: () => getFormattedText(TextType.F0023, Constants.MaxGridsCount),
+            getContent: () => getFormattedText(TextType.F0023, Common.MaxGridsCount),
         });
     }
 
@@ -119,7 +119,7 @@ export class Panel extends UiPanel<OpenData> {
         const { width, height } = war.getTileMap().getMapSize().getWH();
         const newWidth          = width + deltaLeft + deltaRight;
         const newHeight         = height + deltaTop + deltaBottom;
-        if ((newWidth <= 0) || (newHeight <= 0) || (newWidth * newHeight > Constants.MaxGridsCount)) {
+        if ((newWidth <= 0) || (newHeight <= 0) || (newWidth * newHeight > Common.MaxGridsCount)) {
             show(getText(TextType.A0265));
             return;
         }
@@ -166,8 +166,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnDeltaTop(): void {
-        const minValue      = -Constants.MaxGridsCount;
-        const maxValue      = Constants.MaxGridsCount;
+        const minValue      = -Common.MaxGridsCount;
+        const maxValue      = Common.MaxGridsCount;
         const currentValue  = this._deltaTop;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.B0857),
@@ -183,8 +183,8 @@ export class Panel extends UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnDeltaBottom(): void {
-        const minValue      = -Constants.MaxGridsCount;
-        const maxValue      = Constants.MaxGridsCount;
+        const minValue      = -Common.MaxGridsCount;
+        const maxValue      = Common.MaxGridsCount;
         const currentValue  = this._deltaBottom;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.B0858),
@@ -200,8 +200,8 @@ export class Panel extends UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnDeltaLeft(): void {
-        const minValue      = -Constants.MaxGridsCount;
-        const maxValue      = Constants.MaxGridsCount;
+        const minValue      = -Common.MaxGridsCount;
+        const maxValue      = Common.MaxGridsCount;
         const currentValue  = this._deltaLeft;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.B0859),
@@ -217,8 +217,8 @@ export class Panel extends UiPanel<OpenData> {
         });
     }
     private _onTouchedBtnDeltaRight(): void {
-        const minValue      = -Constants.MaxGridsCount;
-        const maxValue      = Constants.MaxGridsCount;
+        const minValue      = -Common.MaxGridsCount;
+        const maxValue      = Common.MaxGridsCount;
         const currentValue  = this._deltaRight;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.B0860),
@@ -278,7 +278,7 @@ export class Panel extends UiPanel<OpenData> {
         labelNewHeight.setText("" + newHeight);
         labelNewHeight.setTextColor(newHeight > 0 ? 0xffffff : 0xff0000);
         labelNewGrids.setText(`` + newGrids);
-        labelNewGrids.setTextColor(((newGrids > 0) && (newGrids <= Constants.MaxGridsCount)) ? 0xffffff : 0xff0000);
+        labelNewGrids.setTextColor(((newGrids > 0) && (newGrids <= Common.MaxGridsCount)) ? 0xffffff : 0xff0000);
         this._updateBtnDeltaTop();
         this._updateBtnDeltaBottom();
         this._updateBtnDeltaLeft();

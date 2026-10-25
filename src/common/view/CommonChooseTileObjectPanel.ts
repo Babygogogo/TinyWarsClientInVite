@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfig/GcData.ts";
 import { TextureVersionId } from "../../graphics/Constants.ts";
 import { getSkinButtonBackground } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -139,7 +139,7 @@ export class Panel extends UiPanel<OpenData> {
         const skinId        = selectedData.skinId ?? 0;
         const gameConfig    = openData.gameConfig;
         const dataArray     : DataForTileObjectRenderer[] = [];
-        for (const cfg of gameConfig.getAllTileObjectCfgArray()) {
+        for (const cfg of GcData.getAllTileObjectCfgArray()) {
             if ((cfg.tileObjectTypeId === ObjectTypeId.Headquarters)     &&
                 (playerIndex === PlayerIndex.Neutral)   &&
                 (!openData.showNeutralHeadquarters)

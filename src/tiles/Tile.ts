@@ -8,8 +8,8 @@ import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwW
 import { checkIsEffective } from "../coSkills/utils/persistent/SelfTileEnabledForUnitProduction.ts";
 import { getTotalMultiplier } from "../coSkills/utils/persistent/SelfTileIncome.ts";
 import { getRawOverridingSkinId } from "../forceSkins/Utils.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
-import { Constants } from "../gameConfig/GcMap.ts";
+import { GcData } from "../gameConfig/GcData.ts";
+import { Common } from "../maps/Constants.ts";
 import { getTileViewClass, getRwWarClass } from "../gameHelpers/GhFactory.ts";
 import { deleteElementFromList } from "../helpers/Collection.ts";
 import { getExisted, newError, createLazyFunc } from "../helpers/Misc.ts";
@@ -154,7 +154,7 @@ export class Tile implements ITile {
         const gridY     = gridIndex.getY();
         if ((gridX < 0)                                                 ||
             (gridY < 0)                                                 ||
-            ((gridX + 1) * (gridY + 1) > Constants.MaxGridsCount)
+            ((gridX + 1) * (gridY + 1) > Common.MaxGridsCount)
         ) {
             throw newError(`Invalid gridX and/or gridY: ${gridX}, ${gridY}`, ClientErrorCode.BwTile_Deserialize_01);
         }
@@ -162,23 +162,23 @@ export class Tile implements ITile {
         const objectType    = data.getObjectType();
         const baseType      = data.getBaseType();
         const playerIndex   = data.getPlayerIndex();
-        if (!gameConfig.checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType: objectType })) {
+        if (!GcData.checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType: objectType })) {
             throw newError(`Invalid playerIndex: ${playerIndex}`, ClientErrorCode.BwTile_Deserialize_04);
         }
 
         const baseShapeId = data.getBaseShapeId();
-        if (!gameConfig.checkIsValidTileBaseShapeId(baseType, baseShapeId)) {
+        if (!GcData.checkIsValidTileBaseShapeId(baseType, baseShapeId)) {
             throw newError(`Invalid baseShapeId: ${baseShapeId}`, ClientErrorCode.BwTile_Deserialize_12);
         }
 
         const objectShapeId = data.getObjectShapeId();
-        if (!gameConfig.checkIsValidTileObjectShapeId(objectType, objectShapeId)) {
+        if (!GcData.checkIsValidTileObjectShapeId(objectType, objectShapeId)) {
             throw newError(`Invalid objectShapeId: ${objectShapeId}`, ClientErrorCode.BwTile_Deserialize_13);
         }
 
         const decorationType    = data.getDecorationType();
         const decorationShapeId = data.getDecorationShapeId();
-        if (!gameConfig.checkIsValidTileDecorationShapeId(decorationType, decorationShapeId)) {
+        if (!GcData.checkIsValidTileDecorationShapeId(decorationType, decorationShapeId)) {
             throw newError(`Invalid decorationType/shapeId: ${decorationType}, ${decorationShapeId}`, ClientErrorCode.BwTile_Deserialize_14);
         }
 
@@ -750,7 +750,7 @@ export class Tile implements ITile {
         playerIndex     : number;
     }): void {
         const gameConfig = this.getGameConfig();
-        if (!gameConfig.checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType: objectType })) {
+        if (!GcData.checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType: objectType })) {
             throw newError(`Invalid playerIndex: ${playerIndex}, baseType: ${baseType}, objectType: ${objectType}`);
         }
 
@@ -797,7 +797,7 @@ export class Tile implements ITile {
             baseType                : baseType,
             baseShapeId             : this.getBaseShapeId(),
             objectType              : objectType,
-            objectShapeId           : getNewObjectShapeIdOnObjectDestroyed(this.getObjectType(), this.getObjectShapeId(), gameConfig),
+            objectShapeId           : getNewObjectShapeIdOnObjectDestroyed(this.getObjectType(), this.getObjectShapeId()),
             decorationType          : this.getDecorationType(),
             decorationShapeId       : this.getDecorationShapeId(),
             groupedLocationIdArray  : this.getGroupedLocationIdArray(),
@@ -1467,8 +1467,8 @@ export class Tile implements ITile {
     }
 }
 
-function getNewObjectShapeIdOnObjectDestroyed(oldType: number, oldShapeId: number, gameConfig: GcData): number {
-    const shapeIdArray = getExisted(gameConfig.getTileObjectCfg(oldType)?.shapeIdsAfterDestruction);
+function getNewObjectShapeIdOnObjectDestroyed(oldType: number, oldShapeId: number): number {
+    const shapeIdArray = getExisted(GcData.getTileObjectCfg(oldType)?.shapeIdsAfterDestruction);
     for (let i = 1; i < shapeIdArray.length; i += 2) {
         if (shapeIdArray[i] === oldShapeId) {
             return shapeIdArray[i + 1];

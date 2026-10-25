@@ -1,11 +1,11 @@
 import { ReplayFilter } from "../../auxiliaryTypes/ReplayFilter.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getGameModeName, getGameModeHelpText, getTextForYesOrNo } from "../../lang/Utils.ts";
+import { getGameModeHelpText, getGameModeName, getText, getTextForYesOrNo } from "../../lang/Utils.ts";
 import { getEnabledNormalMapIdSet, getMapNameInCurrentLanguage } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -16,7 +16,7 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import { getSelfUserId, getUserNickname } from "../../users/Model.ts";
-import { Common } from "../../warOperations/Constants.ts";
+import { Common as WarOperationConstants } from "../../warOperations/Constants.ts";
 
 export interface OpenData {
     replayFilter    : ReplayFilter | null;
@@ -109,58 +109,58 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnHelp,                    callback: this._onTouchedBtnHelp },
-            { ui: this._btnReset,                   callback: this._onTouchedBtnReset },
-            { ui: this._btnSearch,                  callback: this._onTouchedBtnSearch },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnHelp,                    callback : this._onTouchedBtnHelp },
+            { ui : this._btnReset,                   callback : this._onTouchedBtnReset },
+            { ui : this._btnSearch,                  callback : this._onTouchedBtnSearch },
 
-            { ui: this._btnReplayId,                callback: this._onTouchedBtnReplayId },
-            { ui: this._btnDeleteReplayId,          callback: this._onTouchedBtnDeleteReplayId },
+            { ui : this._btnReplayId,                callback : this._onTouchedBtnReplayId },
+            { ui : this._btnDeleteReplayId,          callback : this._onTouchedBtnDeleteReplayId },
 
-            { ui: this._btnMapName,                 callback: this._onTouchedBtnMapName },
-            { ui: this._btnDeleteMapName,           callback: this._onTouchedBtnDeleteMapName },
+            { ui : this._btnMapName,                 callback : this._onTouchedBtnMapName },
+            { ui : this._btnDeleteMapName,           callback : this._onTouchedBtnDeleteMapName },
 
-            { ui: this._btnPlayerSelf,              callback: this._onTouchedBtnPlayerSelf },
-            { ui: this._btnPlayerName,              callback: this._onTouchedBtnPlayerName },
-            { ui: this._btnDeletePlayerName,        callback: this._onTouchedBtnDeletePlayerName },
+            { ui : this._btnPlayerSelf,              callback : this._onTouchedBtnPlayerSelf },
+            { ui : this._btnPlayerName,              callback : this._onTouchedBtnPlayerName },
+            { ui : this._btnDeletePlayerName,        callback : this._onTouchedBtnDeletePlayerName },
 
-            { ui: this._btnCoName,                  callback: this._onTouchedBtnCoName },
-            { ui: this._btnDeleteCoName,            callback: this._onTouchedBtnDeleteCoName },
+            { ui : this._btnCoName,                  callback : this._onTouchedBtnCoName },
+            { ui : this._btnDeleteCoName,            callback : this._onTouchedBtnDeleteCoName },
 
-            { ui: this._btnMinGlobalRating,         callback: this._onTouchedBtnMinGlobalRating },
-            { ui: this._btnDeleteMinGlobalRating,   callback: this._onTouchedBtnDeleteMinGlobalRating },
+            { ui : this._btnMinGlobalRating,         callback : this._onTouchedBtnMinGlobalRating },
+            { ui : this._btnDeleteMinGlobalRating,   callback : this._onTouchedBtnDeleteMinGlobalRating },
 
-            { ui: this._btnHasFog,                  callback: this._onTouchedBtnHasFog },
-            { ui: this._btnDeleteHasFog,            callback: this._onTouchedBtnDeleteHasFog },
+            { ui : this._btnHasFog,                  callback : this._onTouchedBtnHasFog },
+            { ui : this._btnDeleteHasFog,            callback : this._onTouchedBtnDeleteHasFog },
 
-            { ui: this._btnIsRanked,                callback: this._onTouchedBtnIsRanked },
-            { ui: this._btnDeleteIsRanked,          callback: this._onTouchedBtnDeleteIsRanked },
+            { ui : this._btnIsRanked,                callback : this._onTouchedBtnIsRanked },
+            { ui : this._btnDeleteIsRanked,          callback : this._onTouchedBtnDeleteIsRanked },
 
-            { ui: this._btnIsFavorite,              callback: this._onTouchedBtnIsFavorite },
-            { ui: this._btnDeleteIsFavorite,        callback: this._onTouchedBtnDeleteIsFavorite },
+            { ui : this._btnIsFavorite,              callback : this._onTouchedBtnIsFavorite },
+            { ui : this._btnDeleteIsFavorite,        callback : this._onTouchedBtnDeleteIsFavorite },
 
-            { ui: this._btnMapWidth,                callback: this._onTouchedBtnMapWidth },
-            { ui: this._btnDeleteMapWidth,          callback: this._onTouchedBtnDeleteMapWidth },
+            { ui : this._btnMapWidth,                callback : this._onTouchedBtnMapWidth },
+            { ui : this._btnDeleteMapWidth,          callback : this._onTouchedBtnDeleteMapWidth },
 
-            { ui: this._btnMapHeight,               callback: this._onTouchedBtnMapHeight },
-            { ui: this._btnDeleteMapHeight,         callback: this._onTouchedBtnDeleteMapHeight },
+            { ui : this._btnMapHeight,               callback : this._onTouchedBtnMapHeight },
+            { ui : this._btnDeleteMapHeight,         callback : this._onTouchedBtnDeleteMapHeight },
 
-            { ui: this._btnPlayersCount,            callback: this._onTouchedBtnPlayersCount },
-            { ui: this._btnDeletePlayersCount,      callback: this._onTouchedBtnDeletePlayersCount },
+            { ui : this._btnPlayersCount,            callback : this._onTouchedBtnPlayersCount },
+            { ui : this._btnDeletePlayersCount,      callback : this._onTouchedBtnDeletePlayersCount },
 
-            { ui: this._btnRankScore,               callback: this._onTouchedBtnRankScore },
-            { ui: this._btnDeleteRankScore,         callback: this._onTouchedBtnDeleteRankScore },
+            { ui : this._btnRankScore,               callback : this._onTouchedBtnRankScore },
+            { ui : this._btnDeleteRankScore,         callback : this._onTouchedBtnDeleteRankScore },
 
-            { ui: this._btnTurnsCount,              callback: this._onTouchedBtnTurnsCount },
-            { ui: this._btnDeleteTurnsCount,        callback: this._onTouchedBtnDeleteTurnsCount },
+            { ui : this._btnTurnsCount,              callback : this._onTouchedBtnTurnsCount },
+            { ui : this._btnDeleteTurnsCount,        callback : this._onTouchedBtnDeleteTurnsCount },
 
-            { ui: this._btnActionsCount,            callback: this._onTouchedBtnActionsCount },
-            { ui: this._btnDeleteActionsCount,      callback: this._onTouchedBtnDeleteActionsCount },
+            { ui : this._btnActionsCount,            callback : this._onTouchedBtnActionsCount },
+            { ui : this._btnDeleteActionsCount,      callback : this._onTouchedBtnDeleteActionsCount },
 
             // { ui: this._btnMinMyRating,         callback: this._onTouchedBtnMinMyRating },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         // this._setIsCloseOnTouchedMask();
@@ -187,9 +187,9 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnSearch(): void {
         openPanel(getDict().RwReplayListPanel, {
-            filter                  : this._replayFilter,
-            usePreviousFilter       : false,
-            usePreviousPageIndex    : false,
+            filter               : this._replayFilter,
+            usePreviousFilter    : false,
+            usePreviousPageIndex : false,
         });
         this.closePanel();
     }
@@ -198,12 +198,12 @@ export class Panel extends UiPanel<OpenData> {
         const filter        = this._replayFilter;
         const ratingArray   = filter.globalRatingRange ?? [];
         openPanel(getDict().CommonDoubleSliderPanel, {
-            getTitleText        : () => getText(TextType.B0364),
-            minNumber           : 0,
-            maxNumber           : 10,
-            currentLowerNumber  : ratingArray[0] ?? 0,
-            currentUpperNumber  : ratingArray[1] ?? 10,
-            callback        : (lowerNumber, upperNumber)  => {
+            getTitleText       : () => getText(TextType.B0364),
+            minNumber          : 0,
+            maxNumber          : 10,
+            currentLowerNumber : ratingArray[0] ?? 0,
+            currentUpperNumber : ratingArray[1] ?? 10,
+            callback           : (lowerNumber, upperNumber)  => {
                 filter.globalRatingRange = [lowerNumber, upperNumber];
                 this._updateLabelMinGlobalRating();
             }
@@ -217,11 +217,11 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnMinMyRating(): void {
         const filter = this._replayFilter;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0082),
-            minValue        : 0,
-            maxValue        : 10,
-            currentValue    : filter.minMyRating ?? 0,
-            callback        : minMyRating => {
+            getTitle     : () => getText(TextType.B0082),
+            minValue     : 0,
+            maxValue     : 10,
+            currentValue : filter.minMyRating ?? 0,
+            callback     : minMyRating => {
                 filter.minMyRating = minMyRating;
                 this._updateLabelMinMyRating();
             }
@@ -231,11 +231,11 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnReplayId(): void {
         const filter = this._replayFilter;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0235),
-            minValue        : 1,
-            maxValue        : 99999999,
-            currentValue    : filter.replayId ?? 0,
-            callback        : replayId => {
+            getTitle     : () => getText(TextType.B0235),
+            minValue     : 1,
+            maxValue     : 99999999,
+            currentValue : filter.replayId ?? 0,
+            callback     : replayId => {
                 filter.replayId = replayId;
                 this._updateLabelReplayId();
             }
@@ -269,7 +269,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnIsRanked(): void {
         const filter = this._replayFilter;
         openPanel(getDict().CommonChooseSingleNumberPanel, {
-            availableNumberArray    : [
+            availableNumberArray : [
                 ModeId.AutoTourney,
                 ModeId.Coop,
                 ModeId.Free,
@@ -277,11 +277,11 @@ export class Panel extends UiPanel<OpenData> {
                 ModeId.UnrankedMatch,
                 ModeId.Versus,
             ],
-            currentNumber       : filter.gameMode ?? null,
-            getTitleText        : () => getText(TextType.B1013),
-            getNumberMainText   : gameMode => getGameModeName(gameMode) ?? UndefinedError,
-            getNumberHelpText   : gameMode => getGameModeHelpText(gameMode),
-            callbackOnConfirm   : gameMode => {
+            currentNumber     : filter.gameMode ?? null,
+            getTitleText      : () => getText(TextType.B1013),
+            getNumberMainText : gameMode => getGameModeName(gameMode) ?? UndefinedError,
+            getNumberHelpText : gameMode => getGameModeHelpText(gameMode),
+            callbackOnConfirm : gameMode => {
                 filter.gameMode = gameMode;
                 this._updateLabelIsRanked();
             }
@@ -301,8 +301,8 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnPlayerName(): void {
         const filter = this._replayFilter;
         openPanel(getDict().CommonSearchSingleUserPanel, {
-            getTitleText        : null,
-            callbackOnConfirm   : userId => {
+            getTitleText      : null,
+            callbackOnConfirm : userId => {
                 filter.userId = userId;
                 this._updateLabelPlayerName();
             },
@@ -316,9 +316,9 @@ export class Panel extends UiPanel<OpenData> {
     private async _onTouchedBtnMapName(): Promise<void> {
         const filter = this._replayFilter;
         openPanel(getDict().CommonChooseSingleNormalMapIdPanel, {
-            availableNormalMapIdArray   : [...await getEnabledNormalMapIdSet()],
-            getTitleText                : () => getText(TextType.B0227),
-            callback                    : normalMapId => {
+            availableNormalMapIdArray : [...await getEnabledNormalMapIdSet()],
+            getTitleText              : () => getText(TextType.B0227),
+            callback                  : normalMapId => {
                 filter.normalMapId = normalMapId;
                 this._updateLabelMapName();
             },
@@ -333,11 +333,11 @@ export class Panel extends UiPanel<OpenData> {
         const gameConfig    = await getLatestGameConfig();
         const filter        = this._replayFilter;
         openPanel(getDict().CommonChooseSingleCoCategoryIdPanel, {
-            gameConfig                      : gameConfig,
-            availableCoCategoryIdArray      : gameConfig.getAllEnabledCoCategoryIdArray(),
-            currentCoCategoryId             : filter.coCategoryId ?? null,
-            isBan                           : false,
-            callbackOnConfirm               : coCategoryId => {
+            gameConfig                 : gameConfig,
+            availableCoCategoryIdArray : gameConfig.getAllEnabledCoCategoryIdArray(),
+            currentCoCategoryId        : filter.coCategoryId ?? null,
+            isBan                      : false,
+            callbackOnConfirm          : coCategoryId => {
                 filter.coCategoryId = coCategoryId;
                 this._updateLabelCoName();
             },
@@ -352,13 +352,13 @@ export class Panel extends UiPanel<OpenData> {
         const filter            = this._replayFilter;
         const oldMaxMapWidth    = filter.maxMapWidth;
         const minValue          = 1;
-        const maxValue          = Constants.MaxGridsCount;
+        const maxValue          = Common.MaxGridsCount;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B1389),
-            currentValue    : filter.minMapWidth,
-            minValue        : minValue,
-            maxValue        : oldMaxMapWidth ?? maxValue,
-            callback        : newMinMapWidth => {
+            getTitle     : () => getText(TextType.B1389),
+            currentValue : filter.minMapWidth,
+            minValue     : minValue,
+            maxValue     : oldMaxMapWidth ?? maxValue,
+            callback     : newMinMapWidth => {
                 if (newMinMapWidth == null) {
                     delete filter.minMapWidth;
                 } else {
@@ -367,11 +367,11 @@ export class Panel extends UiPanel<OpenData> {
                 this._updateLabelMapWidth();
 
                 openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle           : () => getText(TextType.B1390),
-                    currentValue    : oldMaxMapWidth,
-                    minValue        : newMinMapWidth ?? minValue,
-                    maxValue        : maxValue,
-                    callback        : newMaxMapWidth => {
+                    getTitle     : () => getText(TextType.B1390),
+                    currentValue : oldMaxMapWidth,
+                    minValue     : newMinMapWidth ?? minValue,
+                    maxValue     : maxValue,
+                    callback     : newMaxMapWidth => {
                         if (newMaxMapWidth == null) {
                             delete filter.maxMapWidth;
                         } else {
@@ -394,13 +394,13 @@ export class Panel extends UiPanel<OpenData> {
         const filter            = this._replayFilter;
         const oldMaxMapHeight   = filter.maxMapHeight;
         const minValue          = 1;
-        const maxValue          = Constants.MaxGridsCount;
+        const maxValue          = Common.MaxGridsCount;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B1391),
-            currentValue    : filter.minMapHeight,
-            minValue        : minValue,
-            maxValue        : oldMaxMapHeight ?? maxValue,
-            callback        : newMinMapHeight => {
+            getTitle     : () => getText(TextType.B1391),
+            currentValue : filter.minMapHeight,
+            minValue     : minValue,
+            maxValue     : oldMaxMapHeight ?? maxValue,
+            callback     : newMinMapHeight => {
                 if (newMinMapHeight == null) {
                     delete filter.minMapHeight;
                 } else {
@@ -409,11 +409,11 @@ export class Panel extends UiPanel<OpenData> {
                 this._updateLabelMapHeight();
 
                 openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle           : () => getText(TextType.B1392),
-                    currentValue    : oldMaxMapHeight,
-                    minValue        : newMinMapHeight ?? minValue,
-                    maxValue        : maxValue,
-                    callback        : newMaxMapHeight => {
+                    getTitle     : () => getText(TextType.B1392),
+                    currentValue : oldMaxMapHeight,
+                    minValue     : newMinMapHeight ?? minValue,
+                    maxValue     : maxValue,
+                    callback     : newMaxMapHeight => {
                         if (newMaxMapHeight == null) {
                             delete filter.maxMapHeight;
                         } else {
@@ -435,12 +435,12 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnPlayersCount(): void {
         const filter = this._replayFilter;
         openPanel(getDict().CommonDoubleSliderPanel, {
-            getTitleText        : () => getText(TextType.B0364),
-            minNumber           : 2,
-            maxNumber           : PlayerIndex.Max,
-            currentLowerNumber  : filter.minPlayersCountUnneutral ?? 2,
-            currentUpperNumber  : filter.maxPlayersCountUnneutral ?? PlayerIndex.Max,
-            callback            : (lowerNumber, upperNumber)  => {
+            getTitleText       : () => getText(TextType.B0364),
+            minNumber          : 2,
+            maxNumber          : PlayerIndex.Max,
+            currentLowerNumber : filter.minPlayersCountUnneutral ?? 2,
+            currentUpperNumber : filter.maxPlayersCountUnneutral ?? PlayerIndex.Max,
+            callback           : (lowerNumber, upperNumber)  => {
                 filter.minPlayersCountUnneutral = lowerNumber;
                 filter.maxPlayersCountUnneutral = upperNumber;
                 this._updateLabelPlayersCount();
@@ -460,11 +460,11 @@ export class Panel extends UiPanel<OpenData> {
         const minValue          = 0;
         const maxValue          = 9999;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0687),
-            currentValue    : filter.minRankScore,
-            minValue        : minValue,
-            maxValue        : oldMaxRankScore ?? maxValue,
-            callback        : newMinRankScore => {
+            getTitle     : () => getText(TextType.B0687),
+            currentValue : filter.minRankScore,
+            minValue     : minValue,
+            maxValue     : oldMaxRankScore ?? maxValue,
+            callback     : newMinRankScore => {
                 if (newMinRankScore == null) {
                     delete filter.minRankScore;
                 } else {
@@ -473,11 +473,11 @@ export class Panel extends UiPanel<OpenData> {
                 this._updateLabelRankScore();
 
                 openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle           : () => getText(TextType.B0863),
-                    currentValue    : oldMaxRankScore,
-                    minValue        : newMinRankScore ?? minValue,
-                    maxValue        : maxValue,
-                    callback        : newMaxRankScore => {
+                    getTitle     : () => getText(TextType.B0863),
+                    currentValue : oldMaxRankScore,
+                    minValue     : newMinRankScore ?? minValue,
+                    maxValue     : maxValue,
+                    callback     : newMaxRankScore => {
                         if (newMaxRankScore == null) {
                             delete filter.maxRankScore;
                         } else {
@@ -502,11 +502,11 @@ export class Panel extends UiPanel<OpenData> {
         const minValue          = TurnIndex.FirstIndex;
         const maxValue          = TurnIndex.MaxLimit;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B0611),
-            currentValue    : filter.minTurnsCount,
-            minValue        : minValue,
-            maxValue        : oldMaxTurnsCount ?? maxValue,
-            callback        : newMinTurnsCount => {
+            getTitle     : () => getText(TextType.B0611),
+            currentValue : filter.minTurnsCount,
+            minValue     : minValue,
+            maxValue     : oldMaxTurnsCount ?? maxValue,
+            callback     : newMinTurnsCount => {
                 if (newMinTurnsCount == null) {
                     delete filter.minTurnsCount;
                 } else {
@@ -515,11 +515,11 @@ export class Panel extends UiPanel<OpenData> {
                 this._updateLabelTurnsCount();
 
                 openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle           : () => getText(TextType.B0621),
-                    currentValue    : oldMaxTurnsCount,
-                    minValue        : newMinTurnsCount ?? minValue,
-                    maxValue        : maxValue,
-                    callback        : newMaxTurnsCount => {
+                    getTitle     : () => getText(TextType.B0621),
+                    currentValue : oldMaxTurnsCount,
+                    minValue     : newMinTurnsCount ?? minValue,
+                    maxValue     : maxValue,
+                    callback     : newMaxTurnsCount => {
                         if (newMaxTurnsCount == null) {
                             delete filter.maxTurnsCount;
                         } else {
@@ -542,13 +542,13 @@ export class Panel extends UiPanel<OpenData> {
         const filter                = this._replayFilter;
         const oldMaxActionsCount    = filter.maxWarOperationsCount;
         const minValue              = 1;
-        const maxValue              = Common.MaxLimit;
+        const maxValue              = WarOperationConstants.MaxLimit;
         openPanel(getDict().CommonInputNullableIntegerPanel, {
-            getTitle           : () => getText(TextType.B1395),
-            currentValue    : filter.minWarOperationsCount,
-            minValue        : minValue,
-            maxValue        : oldMaxActionsCount ?? maxValue,
-            callback        : newMinActionsCount => {
+            getTitle     : () => getText(TextType.B1395),
+            currentValue : filter.minWarOperationsCount,
+            minValue     : minValue,
+            maxValue     : oldMaxActionsCount ?? maxValue,
+            callback     : newMinActionsCount => {
                 if (newMinActionsCount == null) {
                     delete filter.minWarOperationsCount;
                 } else {
@@ -557,11 +557,11 @@ export class Panel extends UiPanel<OpenData> {
                 this._updateLabelActionsCount();
 
                 openPanel(getDict().CommonInputNullableIntegerPanel, {
-                    getTitle           : () => getText(TextType.B1396),
-                    currentValue    : oldMaxActionsCount,
-                    minValue        : newMinActionsCount ?? minValue,
-                    maxValue        : maxValue,
-                    callback        : newMaxActionsCount => {
+                    getTitle     : () => getText(TextType.B1396),
+                    currentValue : oldMaxActionsCount,
+                    minValue     : newMinActionsCount ?? minValue,
+                    maxValue     : maxValue,
+                    callback     : newMaxActionsCount => {
                         if (newMaxActionsCount == null) {
                             delete filter.maxWarOperationsCount;
                         } else {

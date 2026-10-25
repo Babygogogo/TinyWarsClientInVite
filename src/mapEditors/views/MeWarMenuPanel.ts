@@ -1,5 +1,5 @@
 import { show } from "../../FloatText.ts";
-import { AutoSaveConstants } from "../../gameConfig/GcMapEditor.ts";
+import { AutoSaveConstants } from "../Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { gotoLobby, gotoMyWarListPanel } from "../../helpers/GameFlow.ts";

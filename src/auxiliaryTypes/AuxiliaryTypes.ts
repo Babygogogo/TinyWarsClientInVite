@@ -1,4 +1,4 @@
-import type { SortType } from "../gameConfig/GcMap.ts";
+import type { SortType } from "../maps/Constants.ts";
 import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { GridMarkData as ProtoSchemaCommonProtoStructureGridMarkData } from "../proto/schema/CommonProto/Structure/GridMarkData.ts";

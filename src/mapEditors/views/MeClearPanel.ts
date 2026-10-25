@@ -1,5 +1,5 @@
 import { show } from "../../FloatText.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -77,7 +77,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnHelp(): void {
         openPanel(getDict().CommonHelpPanel, {
-            getContent : () => `${getText(TextType.A0117)}\n\n${getFormattedText(TextType.F0023, Constants.MaxGridsCount)}`,
+            getContent : () => `${getText(TextType.A0117)}\n\n${getFormattedText(TextType.F0023, Common.MaxGridsCount)}`,
         });
     }
 
@@ -85,7 +85,7 @@ export class Panel extends UiPanel<OpenData> {
         const width         = getExisted(this._newWidth);
         const height        = getExisted(this._newHeight);
         const gridsCount    = width * height;
-        if ((!gridsCount) || (gridsCount <= 0) || (width <= 0) || (height <= 0) || (gridsCount > Constants.MaxGridsCount)) {
+        if ((!gridsCount) || (gridsCount <= 0) || (width <= 0) || (height <= 0) || (gridsCount > Common.MaxGridsCount)) {
             show(getText(TextType.A0087));
             return;
         }
@@ -121,7 +121,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.B0034),
             minValue        : 1,
-            maxValue        : Math.floor(Constants.MaxGridsCount / (this._newHeight || 1)),
+            maxValue        : Math.floor(Common.MaxGridsCount / (this._newHeight || 1)),
             currentValue    : this._newWidth,
             callback        : newWidth => {
                 this._newWidth = newWidth;
@@ -135,7 +135,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.B0035),
             minValue        : 1,
-            maxValue        : Math.floor(Constants.MaxGridsCount / (this._newWidth || 1)),
+            maxValue        : Math.floor(Common.MaxGridsCount / (this._newWidth || 1)),
             currentValue    : this._newHeight,
             callback        : newHeight => {
                 this._newHeight = newHeight;
@@ -167,6 +167,6 @@ export class Panel extends UiPanel<OpenData> {
         const grids     = this._newWidth * this._newHeight;
         const label     = this._labelNewGrids;
         label.setText(`${grids}`);
-        label.setTextColor((grids > 0) && (grids <= Constants.MaxGridsCount) ? 0xFFFFFF : 0xFFFF00);
+        label.setTextColor((grids > 0) && (grids <= Common.MaxGridsCount) ? 0xFFFFFF : 0xFFFF00);
     }
 }

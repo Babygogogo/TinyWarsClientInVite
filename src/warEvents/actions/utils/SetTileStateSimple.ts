@@ -2,7 +2,7 @@ import { checkIsValid as ArrayModifiersUtilsCheckIsValid, getResultValue } from 
 import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import { GcData } from "../../../gameConfig/GcData.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText } from "../../../lang/Utils.ts";
 import { AllLocationIdSet } from "../../../locations/Constants.ts";
@@ -388,7 +388,7 @@ function evalActPlayerIndex(action: WeaSetTileStateSimple, tile: ITile): number 
     }
 
     const newValue = MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue);
-    if ((tile.getWar().getPlayerManager().checkHasPlayer(newValue)) && (tile.getGameConfig().checkIsValidPlayerIndexForTileObject({ playerIndex: newValue, tileObjectType: tile.getObjectType() }))) {
+    if ((tile.getWar().getPlayerManager().checkHasPlayer(newValue)) && (GcData.checkIsValidPlayerIndexForTileObject({ playerIndex: newValue, tileObjectType: tile.getObjectType() }))) {
         return newValue;
     } else {
         return defaultValue;

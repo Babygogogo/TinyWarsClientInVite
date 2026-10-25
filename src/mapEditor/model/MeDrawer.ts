@@ -1,8 +1,8 @@
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { destroyUnitOnMap } from "../../destructions/Utils.ts";
 import { show, showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { DrawerMode } from "../../gameConfig/GcMapEditor.ts";
+import { GcData } from "../../gameConfig/GcData.ts";
+import { DrawerMode } from "../../mapEditors/Constants.ts";
 import { getUnitClass } from "../../gameHelpers/GhFactory.ts";
 import { SymmetryTypeId } from "../../geometries/Constants.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
@@ -617,7 +617,7 @@ export class MeDrawer implements IMeDrawer {
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile          = tileMap.getTile(symGridIndex);
                 const objectType    = tile.getObjectType();
-                const baseShapeId2  = gameConfig.getSymmetricalTileBaseShapeId(baseType, baseShapeId, symmetryType) ?? 0;
+                const baseShapeId2  = GcData.getSymmetricalTileBaseShapeId(baseType, baseShapeId, symmetryType) ?? 0;
                 if (tile.getTileTypeId() === gameConfig.getTileType(baseType, objectType)) {
                     tile.setBaseType(baseType);
                     tile.setBaseShapeId(baseShapeId2);
@@ -669,7 +669,6 @@ export class MeDrawer implements IMeDrawer {
     private _handleDrawTileDecoration(gridIndex: GridIndex): void {
         const war                   = this._getWar();
         const tileMap               = war.getTileMap();
-        const gameConfig            = war.getGcData();
         const targetDecorationData  = getExisted(this.getDrawTargetTileDecorationData());
         const decorationType        = targetDecorationData.decorationType;
         const decorationShapeId     = targetDecorationData.shapeId;
@@ -702,7 +701,7 @@ export class MeDrawer implements IMeDrawer {
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile = tileMap.getTile(symGridIndex);
                 tile.setDecorationType(decorationType);
-                tile.setDecorationShapeId(gameConfig.getSymmetricalTileDecorationShapeId(decorationType, decorationShapeId, symmetryType) ?? 0);
+                tile.setDecorationShapeId(GcData.getSymmetricalTileDecorationShapeId(decorationType, decorationShapeId, symmetryType) ?? 0);
                 tile.startRunning(war);
                 tile.flushDataToView();
 
@@ -790,13 +789,13 @@ export class MeDrawer implements IMeDrawer {
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile          = tileMap.getTile(symGridIndex);
                 const baseType      = tile.getBaseType();
-                const objectType2   = gameConfig.getSymmetricalTileObjectType(objectType, symmetryType);
+                const objectType2   = GcData.getSymmetricalTileObjectType(objectType, symmetryType);
                 const tileType      = getExisted(gameConfig.getTileType(baseType, objectType2));
                 if ((!!gameConfig.getTileTemplateCfg(tileType)?.getMaxHp()) && (unitMap.getUnitOnMap(symGridIndex))) {
                     return;
                 }
 
-                const objectShapeId2    = gameConfig.getSymmetricalTileObjectShapeId(objectType, objectShapeId, symmetryType);
+                const objectShapeId2    = GcData.getSymmetricalTileObjectShapeId(objectType, objectShapeId, symmetryType);
                 const playerIndex2      = this.getIsSymmetricalPlayerIndexEnabled() ? this.getSymmetricalPlayerIndex(playerIndex) : playerIndex;
                 if (tileType === tile.getTileTypeId()) {
                     tile.setPlayerIndex(playerIndex2);
@@ -972,7 +971,7 @@ export class MeDrawer implements IMeDrawer {
             const symGridIndex = getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const newBaseType   = srcBaseType;
-                const newObjectType = gameConfig.getSymmetricalTileObjectType(srcObjectType, symmetryType);
+                const newObjectType = GcData.getSymmetricalTileObjectType(srcObjectType, symmetryType);
                 const newTileType   = getExisted(gameConfig.getTileType(newBaseType, newObjectType));
                 if ((!!gameConfig.getTileTemplateCfg(newTileType)?.getMaxHp()) && (unitMap.getUnitOnMap(symGridIndex))) {
                     return;
@@ -981,10 +980,10 @@ export class MeDrawer implements IMeDrawer {
                 const newTileData = srcTileData.clone();
                 newTileData.setGridIndex(symGridIndex.toProto());
                 newTileData.setBaseType(newBaseType);
-                newTileData.setBaseShapeId(gameConfig.getSymmetricalTileBaseShapeId(srcBaseType, newTileData.getBaseShapeId() ?? 0, symmetryType));
+                newTileData.setBaseShapeId(GcData.getSymmetricalTileBaseShapeId(srcBaseType, newTileData.getBaseShapeId() ?? 0, symmetryType));
                 newTileData.setObjectType(newObjectType);
-                newTileData.setObjectShapeId(gameConfig.getSymmetricalTileObjectShapeId(srcObjectType, newTileData.getObjectShapeId() ?? 0, symmetryType));
-                newTileData.setDecorationShapeId(gameConfig.getSymmetricalTileDecorationShapeId(newTileData.getDecorationType() ?? 0, newTileData.getDecorationShapeId() ?? 0, symmetryType));
+                newTileData.setObjectShapeId(GcData.getSymmetricalTileObjectShapeId(srcObjectType, newTileData.getObjectShapeId() ?? 0, symmetryType));
+                newTileData.setDecorationShapeId(GcData.getSymmetricalTileDecorationShapeId(newTileData.getDecorationType() ?? 0, newTileData.getDecorationShapeId() ?? 0, symmetryType));
                 if (newTileType != gameConfig.getTileType(srcBaseType, srcObjectType)) {
                     newTileData.setCustomBuildingData(null);
                     newTileData.setCustomCannonData(null);

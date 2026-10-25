@@ -1,3 +1,4 @@
+import { GcData } from "../../../gameConfig/GcData.ts";
 import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
@@ -256,7 +257,7 @@ function evalActPlayerIndex(action: WeaSetTileStateExpr, tile: ITile): number {
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             const newValue = Math.floor(epResult.num);
-            return (tile.getWar().getPlayerManager().checkHasPlayer(newValue)) && (tile.getGameConfig().checkIsValidPlayerIndexForTileObject({ playerIndex: newValue, tileObjectType: tile.getObjectType() }))
+            return (tile.getWar().getPlayerManager().checkHasPlayer(newValue)) && (GcData.checkIsValidPlayerIndexForTileObject({ playerIndex: newValue, tileObjectType: tile.getObjectType() }))
                 ? newValue
                 : defaultValue;
         } else {

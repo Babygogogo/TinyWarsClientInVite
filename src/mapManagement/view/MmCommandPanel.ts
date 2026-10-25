@@ -1,5 +1,5 @@
 import { show, showLang } from "../../FloatText.ts";
-import { Constants } from "../../gameConfig/GcMap.ts";
+import { Common } from "../../maps/Constants.ts";
 import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
@@ -298,7 +298,7 @@ export class Panel extends UiPanel<OpenData> {
 
         openPanel(getDict().CommonInputShortLangTextPanel, {
             getTitleText        : () => getText(TextType.B0708),
-            maxTextLength       : Constants.MaxNameLength,
+            maxTextLength       : Common.MaxNameLength,
             currentTextArray    : (await getBriefData(normalMapId))?.getMapNameArray() ?? [],
             callback            : mapNameArray => reqMmSetMapName(normalMapId, mapNameArray),
         });

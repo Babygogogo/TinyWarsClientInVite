@@ -1,5 +1,5 @@
 import type { IBwWar } from "../interface/IBwWar.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfig/GcData.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -139,7 +139,7 @@ export class Panel extends UiPanel<OpenData> {
                 continue;
             }
 
-            const tileObjectCfg = gameConfig.getTileObjectCfg(tileObjectType);
+            const tileObjectCfg = GcData.getTileObjectCfg(tileObjectType);
             if ((tileObjectCfg == null) || (tileObjectCfg.isNeutralOnly)) {
                 continue;
             }
