@@ -10,12 +10,8 @@ import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaSetTileTypeSimple } from "../../proto/schema/CommonProto/WarEvent/WeaSetTileTypeSimple.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -27,9 +23,6 @@ import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 import { ComparatorId, AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
 import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
 import { getErrorTipForAction, getDetailDescForAction } from "../../warEvents/actions/utils/Common.ts";
-
-type WarEventFullData               = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventAction                 = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
     war         : IMeWar;

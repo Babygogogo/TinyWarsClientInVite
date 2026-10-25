@@ -7,12 +7,8 @@ import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
 import { TaskObjectiveState } from "../../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
-import type {
-    WeaSetTaskObjectiveState as ProtoSchemaCommonProtoWarEventWeaSetTaskObjectiveState,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetTaskObjectiveState.ts";
+import type { WeaSetTaskObjectiveState } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTaskObjectiveState.ts";
 import { ExpressionInfoDict } from "../constants/SetTaskObjectiveState.ts";
-
-type WeaSetTaskObjectiveState   = ProtoSchemaCommonProtoWarEventWeaSetTaskObjectiveState;
 
 export function checkIsValid(action: Undefinable<WeaSetTaskObjectiveState>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

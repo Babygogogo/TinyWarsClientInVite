@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CategoryId } from "../../cos/Constants.ts";
 import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
@@ -29,19 +29,13 @@ import {
     DefenseModifier,
     Luck,
 } from "../../playerRules/Constants.ts";
-import type {
-    InstanceWarRule as ProtoSchemaCommonProtoWarRuleInstanceWarRule,
-} from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import type { PlayerRule as ProtoSchemaCommonProtoWarRulePlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
+import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
+import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
 import type { WarRuleCommonData } from "../../proto/schema/CommonProto/WarRule/WarRuleCommonData.ts";
 import { UiListItemRenderer } from "./UiListItemRenderer.ts";
 import type { IUiLabel } from "../interfaces/IUiLabel.ts";
 import type { UiListItemData } from "../types/UiListItemData.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
-
-type InstanceWarRule        = ProtoSchemaCommonProtoWarRuleInstanceWarRule;
-type PlayerRule             = ProtoSchemaCommonProtoWarRulePlayerRule;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export interface DataForUiPlayerRuleRenderer extends UiListItemData {
     canModify               : boolean;

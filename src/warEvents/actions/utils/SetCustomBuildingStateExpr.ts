@@ -8,19 +8,14 @@ import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { MaxInt32 } from "../../../numbers/Constants.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
-import type {
-    WeaSetCustomBuildingStateExpr as ProtoSchemaCommonProtoWarEventWeaSetCustomBuildingStateExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomBuildingStateExpr.ts";
+import type { WeaSetCustomBuildingStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomBuildingStateExpr.ts";
 import { TileCustomBuildingData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 import { Building } from "../../../tiles/constants/CustomLimits.ts";
 import { Building as TilesConstantsDefaultCustomTileDataBuilding } from "../../../tiles/constants/DefaultCustomTileData.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { getMaxBuildPoint, getMaxCapturePoint, getMaxHp } from "../../../tiles/utils/Common.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
 import { ExpressionInfoDict } from "../constants/SetCustomBuildingStateExpr.ts";
-
-type WeaSetCustomBuildingStateExpr  = ProtoSchemaCommonProtoWarEventWeaSetCustomBuildingStateExpr;
-type ITile                          = TilesITile;
 
 export function checkIsValid(action: Undefinable<WeaSetCustomBuildingStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

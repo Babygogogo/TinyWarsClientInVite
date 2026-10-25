@@ -3,7 +3,7 @@ import { GcData } from "../../gameConfig/GcData.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
-import type { ITile as TilesITile } from "../../tiles/ITile.ts";
+import type { ITile } from "../../tiles/ITile.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -15,8 +15,6 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 import { checkAndAddAutoSizerInfo } from "../../ui/utils/UiSizerHelpers.ts";
 import { getAllTilesVisibleToTeams } from "../../visibilities/Utils.ts";
-
-type ITile          = TilesITile;
 
 export interface OpenData {
     war             : IBwWar;

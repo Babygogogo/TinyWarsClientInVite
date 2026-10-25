@@ -1,4 +1,4 @@
-import type { Point as AuxiliaryTypesAuxiliaryTypesPoint, TouchPoints } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Point, TouchPoints } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getPointDistance } from "../../geometries/Utils.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { PointerEventType, MouseStyleType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
@@ -13,8 +13,6 @@ import { getUiContainerClass } from "../utils/UiFactory.ts";
 import type { DisplayObject, Point as VendorEgretEgretPoint, Event } from "../../vendor/egret/Egret.ts";
 
 const MAX_CONTENT_SCALE = 6;
-
-type Point = AuxiliaryTypesAuxiliaryTypesPoint;
 
 export class UiZoomableComponent extends UiContainerBase implements IUiZoomableComponent {
     private readonly _contentsContainer = new (getUiContainerClass())();

@@ -5,12 +5,8 @@ import { getText, getWarEventConditionTypeName } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    WarEventCondition as ProtoSchemaCommonProtoWarEventWarEventCondition,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -21,9 +17,6 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { AvailableConditionTypeIdArray, ConditionTypeId } from "../../warEvents/conditions/Constants.ts";
 import { resetCondition, openConditionModifyPanel } from "../../warEvents/conditions/utils/Common.ts";
-
-type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventCondition          = ProtoSchemaCommonProtoWarEventWarEventCondition;
 
 export interface OpenData {
     war         : IMeWar;
@@ -99,7 +92,7 @@ export class Panel extends UiPanel<OpenData> {
 
 interface DataForTypeRenderer extends UiListItemData {
     war             : IMeWar;
-    fullData        : ProtoSchemaCommonProtoWarEventWarEventFullData;
+    fullData        : WarEventFullData;
     newConditionType: ConditionTypeId;
     condition       : WarEventCondition;
 }

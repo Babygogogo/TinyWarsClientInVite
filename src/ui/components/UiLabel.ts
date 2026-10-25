@@ -4,13 +4,11 @@ import { getText } from "../../lang/Utils.ts";
 import { UiContainerBase } from "./UiContainerBase.ts";
 import type { IUiLabel } from "../interfaces/IUiLabel.ts";
 import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
-import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
 import { loadSizerOptions, checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
 import { getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
 import { TextField, HorizontalAlign, VerticalAlign } from "../../vendor/egret/Egret.ts";
-
-type UiSkinAttrs            = UiTypesUiSkinAttrs;
 
 // const textField = new egret.TextField();
 // textField.text;

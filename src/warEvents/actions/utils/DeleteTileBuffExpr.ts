@@ -6,16 +6,10 @@ import { Parser } from "../../../expressionParsers/Parser.ts";
 import { Num } from "../../../expressionParsers/results/Num.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
-import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type {
-    WeaDeleteTileBuffExpr as ProtoSchemaCommonProtoWarEventWeaDeleteTileBuffExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaDeleteTileBuffExpr.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { WeaDeleteTileBuffExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaDeleteTileBuffExpr.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { ExpressionInfoDict } from "../constants/DeleteTileBuffExpr.ts";
-
-type TileBuff               = ProtoSchemaCommonProtoStructureTileBuff;
-type WeaDeleteTileBuffExpr  = ProtoSchemaCommonProtoWarEventWeaDeleteTileBuffExpr;
-type ITile                  = TilesITile;
 
 export function checkIsValid(action: Undefinable<WeaDeleteTileBuffExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

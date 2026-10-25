@@ -1,9 +1,7 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { ResultType } from "../Enums.ts";
 import { Base } from "./Base.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
-
-type IUnit = UnitsIUnit;
+import type { IUnit } from "../../units/IUnit.ts";
 
 export class NullableUnit extends Base {
     public readonly unit: IUnit | null;

@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { reqCommonGetCoStatistics } from "./CommonProxy.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
@@ -14,7 +14,6 @@ import type { DataForMrwPlayerRank } from "../../proto/schema/CommonProto/Struct
 import type { AnimationTypeId } from "../../units/Constants.ts";
 import { setInterval, clearInterval, startTick, stopTick } from "../../vendor/egret/Egret.ts";
 
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 type CoStatistics           = S;
 
 type FrameCfg       = {

@@ -8,7 +8,7 @@ import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText, getTileObjectName } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
-import type { DataForDrawTileObject as MapEditorModelMeTypesDataForDrawTileObject } from "../../mapEditor/model/MeTypes.ts";
+import type { DataForDrawTileObject } from "../../mapEditor/model/MeTypes.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -26,8 +26,6 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
-
-type DataForDrawTileObject  = MapEditorModelMeTypesDataForDrawTileObject;
 
 const MAX_RECENT_COUNT = 10;
 

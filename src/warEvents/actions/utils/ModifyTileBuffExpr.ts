@@ -9,15 +9,10 @@ import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText, getText } from "../../../lang/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
 import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type {
-    WeaModifyTileBuffExpr as ProtoSchemaCommonProtoWarEventWeaModifyTileBuffExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaModifyTileBuffExpr.ts";
+import type { WeaModifyTileBuffExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaModifyTileBuffExpr.ts";
 import { create, checkIsValid as TileBuffsUtilsCommonCheckIsValid, checkIsSame } from "../../../tileBuffs/utils/Common.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { ExpressionInfoDict } from "../constants/ModifyTileBuffExpr.ts";
-
-type WeaModifyTileBuffExpr  = ProtoSchemaCommonProtoWarEventWeaModifyTileBuffExpr;
-type ITile                  = TilesITile;
 
 export function checkIsValid(action: Undefinable<WeaModifyTileBuffExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

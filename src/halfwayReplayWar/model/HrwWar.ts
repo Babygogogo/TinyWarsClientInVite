@@ -1,14 +1,12 @@
 import type { ReplayCheckpointData } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { removeUnitOnMap } from "../../destructions/Utils.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import type { IHrwWar } from "../interface/IHrwWar.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { RwWarBase } from "../../replayWar/model/RwWarBase.ts";
 import { TeamIndex } from "../../teams/Constants.ts";
 import { getAllUnitsOnMapVisibleToTeams, getAllTilesVisibleToTeams } from "../../visibilities/Utils.ts";
-
-type GcData                 = GameConfigGcData;
 
 export class HrwWar extends RwWarBase implements IHrwWar {
     public init(warData: SerialWar, gameConfig: GcData): void {

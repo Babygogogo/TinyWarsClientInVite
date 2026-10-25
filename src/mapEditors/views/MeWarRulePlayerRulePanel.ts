@@ -6,10 +6,8 @@ import { getText, getTextForYesOrNo, getPlayerRuleHelpText, getPlayerRuleName } 
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { RuleTypeId } from "../../playerRules/Constants.ts";
-import type { PlayerRule as ProtoSchemaCommonProtoWarRulePlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
-import type {
-    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
-} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -21,9 +19,6 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiList } from "../../ui/interfaces/IUiList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-
-type TemplateWarRule        = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
-type PlayerRule             = ProtoSchemaCommonProtoWarRulePlayerRule;
 
 export interface OpenData {
     war                     : IMeWar;

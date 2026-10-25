@@ -1,5 +1,5 @@
 import { PhaseId } from "../autoTourneys/Constants.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { TimerTypeId } from "../bootTimers/Constants.ts";
 import { PublicChannelId } from "../chat/Constants.ts";
 import { EnergyTypeId } from "../cos/Constants.ts";
@@ -24,7 +24,7 @@ import { getMedalCfg } from "../medals/Utils.ts";
 import { MultiPlayerRoomType } from "../multiPlayerRooms/Constants.ts";
 import { RuleTypeId } from "../playerRules/Constants.ts";
 import { AliveStateId } from "../players/Constants.ts";
-import type { LanguageText as ProtoSchemaCommonProtoStructureLanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
+import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
 import { getBgmSfxCfg } from "../sounds/Utils.ts";
 import { BuffTypeId } from "../tileBuffs/Constants.ts";
 import { ObjectTypeId, ThemeTypeId, TileTypeId } from "../tiles/constants/Common.ts";
@@ -42,9 +42,6 @@ import {
 } from "../warEvents/actions/constants/Common.ts";
 import { ConditionTypeId } from "../warEvents/conditions/Constants.ts";
 import { WarTypeId } from "../warTypes/Constants.ts";
-
-type LanguageText                   = ProtoSchemaCommonProtoStructureLanguageText;
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 let _languageType = LanguageType.Chinese;
 export function init(): void {
@@ -1047,7 +1044,7 @@ export function getBootTimerDesc(params: number[]): string | null {
     }
 }
 
-export function getComparatorName(comparator: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): string | null {
+export function getComparatorName(comparator: Undefinable<number>): string | null {
     switch (comparator) {
         case ComparatorId.EqualTo          : return getText(TextType.B0767);
         case ComparatorId.NotEqualTo       : return getText(TextType.B0768);
@@ -1058,7 +1055,7 @@ export function getComparatorName(comparator: AuxiliaryTypesAuxiliaryTypesUndefi
         default                                 : return null;
     }
 }
-export function getSetRelationName(relation: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): string {
+export function getSetRelationName(relation: Undefinable<number>): string {
     switch (relation) {
         case SetRelationId.EqualTo          : return getText(TextType.B1409);
         case SetRelationId.NotEqualTo       : return getText(TextType.B1410);

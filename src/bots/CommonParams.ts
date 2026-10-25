@@ -1,7 +1,7 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { ScoreAndAction } from "./Types.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { PlayerIndex } from "../players/Constants.ts";
@@ -14,10 +14,7 @@ import { getAllUnitsOnMapVisibleToTeams } from "../visibilities/Utils.ts";
 
 type IBwUnit            = IUnit;
 type IBwTile            = ITile;
-type IBwWar             = BaseWarInterfaceIBwWar;
 type GrScoreAndAction   = ScoreAndAction;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
 interface UnitsInfo {
     value           : number;
     allCountOnMap   : number;

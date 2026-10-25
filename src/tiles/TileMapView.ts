@@ -1,5 +1,5 @@
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { getFinalSkinId } from "../forceSkins/Utils.ts";
 import { getRwWarClass, getRwWarBaseClass, getMpwWarClass, getMeWarClass, getSpwWarClass } from "../gameHelpers/GhFactory.ts";
 import { getCurrentTextureResolutionConfig } from "../graphics/Utils.ts";
@@ -19,9 +19,7 @@ import { addEventListeners, removeEventListeners } from "../notifications/Dispat
 import { TypeId } from "../notifications/TypeId.ts";
 import type { Listener } from "../notifications/Types.ts";
 import { PlayerIndex } from "../players/Constants.ts";
-import type {
-    GridIdAndMarkTypeId as ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId,
-} from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
+import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
 import type { ITileMap } from "./ITileMap.ts";
 import type { ITileMapView } from "./ITileMapView.ts";
 import type { ITileView } from "./ITileView.ts";
@@ -32,9 +30,6 @@ import { getUiContainerClass, getUiImageClass } from "../ui/utils/UiFactory.ts";
 import { getSelfSettingsIsShowGridBorder, getSelfSettingsOpacitySettings } from "../users/Model.ts";
 import type { DisplayObject, Event } from "../vendor/egret/Egret.ts";
 import { checkIsUnitOnMapVisibleToTeams } from "../visibilities/Utils.ts";
-
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type GridIdAndMarkTypeId    = ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId;
 
 const getGridWidth  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);

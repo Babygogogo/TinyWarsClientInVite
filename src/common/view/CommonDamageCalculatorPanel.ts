@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { DamageCalculatorPlayerData } from "../../auxiliaryTypes/DamageCalculatorPlayerData.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
@@ -24,9 +24,7 @@ import { getText, getTextForYesOrNo, getWeatherName, getCoSkillTypeName } from "
 import { TypeId } from "../../notifications/TypeId.ts";
 import { Luck, DefenseModifier } from "../../playerRules/Constants.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
-import type {
-    TileCustomBuildingData as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData,
-} from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { ObjectTypeId, TileTypeId } from "../../tiles/constants/Common.ts";
@@ -44,9 +42,6 @@ import { Hp, WeaponTypeId } from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { getNormalizedHp } from "../../units/utils/Common.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
-
-type TileCustomBuildingData         = ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData;
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 type CalculatorData = {
     gameConfig      : GcData;
@@ -411,7 +406,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnUnitView2(): void {
         this._handleTouchedConUnitView(this.getOpenData()?.war, this._getCalculatorData().defenderData, 2);
     }
-    private _handleTouchedConUnitView(war: AuxiliaryTypesAuxiliaryTypesUndefinable<IBwWar>, playerData: DamageCalculatorPlayerData, playerIndex: number): void {
+    private _handleTouchedConUnitView(war: Undefinable<IBwWar>, playerData: DamageCalculatorPlayerData, playerIndex: number): void {
         const gameConfig = this._getCalculatorData().gameConfig;
         openPanel(getDict().CommonChooseSingleUnitTypePanel, {
             gameConfig          : gameConfig,
@@ -912,7 +907,7 @@ function getNextUnitWeaponType(gameConfig: GcData, unitType: number, weaponType:
         return null;
     }
 }
-function createUnitViewData(war: AuxiliaryTypesAuxiliaryTypesUndefinable<IBwWar>, unitType: number, playerIndex: number, gameConfig: GcData): UiUnitViewData {
+function createUnitViewData(war: Undefinable<IBwWar>, unitType: number, playerIndex: number, gameConfig: GcData): UiUnitViewData {
     return new UiUnitViewData({
         gameConfig          : gameConfig,
         skinId              : war?.getPlayer(playerIndex).getUnitAndTileSkinId() ?? getDefaultSkinId(playerIndex),
@@ -926,7 +921,7 @@ function createUnitViewData(war: AuxiliaryTypesAuxiliaryTypesUndefinable<IBwWar>
         }),
     });
 }
-function createTileViewData(war: AuxiliaryTypesAuxiliaryTypesUndefinable<IBwWar>, tileType: number, playerIndex: number, gameConfig: GcData): UiTileViewData {
+function createTileViewData(war: Undefinable<IBwWar>, tileType: number, playerIndex: number, gameConfig: GcData): UiTileViewData {
     const objectType    = getExisted(gameConfig.getTileObjectTypeByTileType(tileType));
     const baseType      = getExisted(gameConfig.getTileBaseTypeByTileType(tileType));
     if (GcData.checkIsValidPlayerIndexForTileObject({
@@ -1035,7 +1030,7 @@ function getCfgDamage({ gameConfig, attackerUnitType, defenderUnitType, weaponTy
     attackerUnitType    : number;
     defenderUnitType    : number;
     weaponType          : Undefinable<WeaponTypeId>;
-}): AuxiliaryTypesAuxiliaryTypesUndefinable<number> {
+}): Undefinable<number> {
     if (weaponType == null) {
         return null;
     }

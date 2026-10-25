@@ -1,4 +1,4 @@
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import type { GridIndexJson } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import {
@@ -7,8 +7,6 @@ import {
 } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 
 type SerialTileJson     = ProtoSchemaCommonProtoWarSerializationSerialTileSerialTileJson;
-type GcData             = GameConfigGcData;
-
 export function fillNonTrivialDefaultValues(tileData: SerialTile, gcData: GcData): void {
     const cfg = gcData.getTileTemplateCfgByBaseTypeAndObjectType(tileData.getBaseType(), tileData.getObjectType());
     if (!cfg) {

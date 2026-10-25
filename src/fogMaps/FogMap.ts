@@ -2,7 +2,7 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { ForcedFogCode } from "./Constants.ts";
 import type { IFogMap } from "./IFogMap.ts";
 import { VisibilityTypeId } from "../gameConfig/GcWar.ts";
@@ -21,8 +21,6 @@ import {
     getVisibilityArrayWithMapFromPath,
 } from "../visibilities/Utils.ts";
 import { FogType } from "../weathers/Constants.ts";
-
-type IBwWar                     = BaseWarInterfaceIBwWar;
 
 export class FogMap implements IFogMap {
     private _forceFogCode?              : ForcedFogCode;

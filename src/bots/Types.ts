@@ -1,6 +1,4 @@
-import type { WoContainer as ProtoSchemaCommonProtoWarOperationWoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-
-type WoContainer        = ProtoSchemaCommonProtoWarOperationWoContainer;
+import type { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 
 export interface ScoreAndAction {
     score   : number;

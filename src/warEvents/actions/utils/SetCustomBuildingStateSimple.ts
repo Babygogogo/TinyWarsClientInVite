@@ -1,5 +1,5 @@
 import { checkIsValid as ArrayModifiersUtilsCheckIsValid, getResultValue } from "../../../arrayModifiers/Utils.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
@@ -10,17 +10,13 @@ import {
     getResultValue as MultiplierAndOffsetsUtilsGetResultValue,
 } from "../../../multiplierAndOffsets/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type {
-    WeaSetCustomBuildingStateSimple as ProtoSchemaCommonProtoWarEventWeaSetCustomBuildingStateSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomBuildingStateSimple.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { WeaSetCustomBuildingStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomBuildingStateSimple.ts";
 import { TileCustomBuildingData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 import { Building } from "../../../tiles/constants/CustomLimits.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { getMaxBuildPoint, getMaxCapturePoint, getMaxHp } from "../../../tiles/utils/Common.ts";
 import {
     getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
@@ -35,17 +31,11 @@ import {
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
 } from "../../../valueAndComparators/Utils.ts";
 
-type PlayerFilter                       = ProtoSchemaCommonProtoStructurePlayerFilter;
-type WeaSetCustomBuildingStateSimple    = ProtoSchemaCommonProtoWarEventWeaSetCustomBuildingStateSimple;
-type Undefinable<T>                     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IPlayer                            = PlayersIPlayer;
-type ITile                              = TilesITile;
-
-export function checkIsValid(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetCustomBuildingStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetCustomBuildingStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetCustomBuildingStateSimple>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetCustomBuildingStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -154,7 +144,7 @@ export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSe
         actTextArray.join(`, `),
     );
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetCustomBuildingStateSimple>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetCustomBuildingStateSimple>): string | null {
     if (!data) {
         return null;
     }

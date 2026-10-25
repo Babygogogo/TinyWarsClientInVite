@@ -1,4 +1,4 @@
-import type { IActionPlanner as ActionPlannersIActionPlanner } from "../../actionPlanners/IActionPlanner.ts";
+import type { IActionPlanner } from "../../actionPlanners/IActionPlanner.ts";
 import { Idle } from "../../actionPlanners/states/Idle.ts";
 import { RequestingPlayerProduceUnit } from "../../actionPlanners/states/RequestingPlayerProduceUnit.ts";
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
@@ -32,12 +32,9 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { Hp } from "../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 import { getNormalizedHp } from "../../units/utils/Common.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
-
-type IActionPlanner     = ActionPlannersIActionPlanner;
-type IUnit              = UnitsIUnit;
 
 const COLUMNS = 4;
 

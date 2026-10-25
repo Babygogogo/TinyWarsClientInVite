@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import { GridIndexAndWeight } from "../../../auxiliaryTypes/GridIndexAndWeight.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
@@ -13,24 +13,18 @@ import { getFormattedText } from "../../../lang/Utils.ts";
 import { MinId, MaxId } from "../../../locations/Constants.ts";
 import { encode } from "../../../locations/Utils.ts";
 import { getValueInRange, getValueInInt32 } from "../../../numbers/Utils.ts";
-import type {
-    WeaSetUnitStateExpr as ProtoSchemaCommonProtoWarEventWeaSetUnitStateExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitStateExpr.ts";
+import type { WeaSetUnitStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitStateExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import { TagId } from "../../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import { checkIsValidActionStateId, checkIsValidAiModeId, getEncodedTagId } from "../../../units/utils/Common.ts";
 import { checkIsValidCustomNameId } from "../../../units/utils/CustomName.ts";
 import { create } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { ExpressionInfoDict } from "../constants/SetUnitStateExpr.ts";
 
-type WeaSetUnitStateExpr    = ProtoSchemaCommonProtoWarEventWeaSetUnitStateExpr;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IUnit                  = UnitsIUnit;
-
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetUnitStateExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: Undefinable<WeaSetUnitStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
@@ -218,14 +212,14 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypesUndefinable<Wea
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetUnitStateExpr>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetUnitStateExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     return getFormattedText(TextType.F0053, data.getConUnitFilter() ?? UndefinedError);
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetUnitStateExpr>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetUnitStateExpr>): string | null {
     if (data == null) {
         return null;
     }

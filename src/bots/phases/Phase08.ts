@@ -1,15 +1,12 @@
 import type { CommonParams } from "../CommonParams.ts";
 import type { ScoreAndAction } from "../Types.ts";
 import { getBestScoreAndActionForCandidateUnit, getBetterScoreAndAction, candidateUnitSorter } from "../Utils.ts";
-import type {
-    WoContainer as ProtoSchemaCommonProtoWarOperationWoContainer,
-} from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import { ActionStateId } from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 
 type IBwUnit            = IUnit;
-type WoContainer        = ProtoSchemaCommonProtoWarOperationWoContainer;
 type GrScoreAndAction   = ScoreAndAction;
 
 const _CANDIDATE_UNITS_PER_ROUND    = 10;

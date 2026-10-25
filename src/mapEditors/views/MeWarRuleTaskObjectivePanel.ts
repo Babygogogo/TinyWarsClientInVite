@@ -8,9 +8,7 @@ import { getFormattedText, getText, getLanguageText } from "../../lang/Utils.ts"
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
-} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -20,8 +18,6 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-
-type TemplateWarRule    = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
 
 export interface OpenData {
     war                     : IMeWar;

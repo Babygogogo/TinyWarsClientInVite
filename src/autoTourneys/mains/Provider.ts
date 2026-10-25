@@ -8,7 +8,7 @@ import {
     reqAtGetFullBracketInfo,
     reqAtGetUserArray,
 } from "./Gateway.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { getIsAutoTourneyNotified, setIsAutoTourneyNotified } from "../../localData/Storage.ts";
 import type { FullBracketInfo } from "../../proto/schema/CommonProto/AutoTourney/FullBracketInfo.ts";
@@ -26,8 +26,6 @@ import type {
     S as ProtoSchemaCommonProtoNetMessageMsgAtSetBootTimerS,
 } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetBootTimer/S.ts";
 import type { S as ProtoSchemaCommonProtoNetMessageMsgAtSetNameS } from "../../proto/schema/CommonProto/NetMessage/MsgAtSetName/S.ts";
-
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 type GlobalSettings = {
     isEnabled               : boolean;

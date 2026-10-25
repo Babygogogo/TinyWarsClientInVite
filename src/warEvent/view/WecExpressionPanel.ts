@@ -9,12 +9,8 @@ import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    WarEventCondition as ProtoSchemaCommonProtoWarEventWarEventCondition,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WecExpression } from "../../proto/schema/CommonProto/WarEvent/WecExpression.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -26,9 +22,6 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import { getErrorTipForCondition, getBriefDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
-
-type WarEventFullData   = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventCondition  = ProtoSchemaCommonProtoWarEventWarEventCondition;
 
 const ExpressionInfo: EpExpressionInfo = {
     contextType     : ContextType.War,

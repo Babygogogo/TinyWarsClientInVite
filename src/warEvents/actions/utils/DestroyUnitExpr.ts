@@ -9,17 +9,11 @@ import { Num } from "../../../expressionParsers/results/Num.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { checkIsValidAliveStateId } from "../../../players/utils/Common.ts";
-import type {
-    WeaDestroyUnitExpr as ProtoSchemaCommonProtoWarEventWeaDestroyUnitExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaDestroyUnitExpr.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { WeaDestroyUnitExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaDestroyUnitExpr.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import { ExpressionInfoDict } from "../constants/DestroyUnitExpr.ts";
-
-type WeaDestroyUnitExpr = ProtoSchemaCommonProtoWarEventWeaDestroyUnitExpr;
-type IPlayer            = PlayersIPlayer;
-type IUnit              = UnitsIUnit;
 
 export function checkIsValid(action: Undefinable<WeaDestroyUnitExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

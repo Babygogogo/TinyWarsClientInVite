@@ -7,9 +7,7 @@ import { TextType } from "../../lang/Constants.ts";
 import { getCurrentLanguageType, getSecondaryLanguageType, getText, checkIsValidLanguageTextArray } from "../../lang/Utils.ts";
 import { createDefaultPlayerRuleList, getErrorCodeForPlayerRuleList } from "../../playerRules/Utils.ts";
 import type { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
-import type {
-    TaskObjectiveFullData as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData,
-} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
+import type { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
@@ -22,8 +20,6 @@ import { getErrorCode as WarRulesUtilsCommonDataGetErrorCode } from "./CommonDat
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
 type TemplateWarRuleSchema      = TemplateWarRule;
-type TaskObjectiveFullData      = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData;
-
 export function create({ templateWarRule, warEventFullData, allMapSimpleDialogueArray, taskObjectiveFullData }: {
     templateWarRule             : TemplateWarRuleSchema;
     warEventFullData            : Undefinable<WarEventFullData>;

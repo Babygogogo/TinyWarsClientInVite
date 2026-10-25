@@ -1,17 +1,14 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { DefaultParams, TimerTypeId, Incremental } from "../bootTimers/Constants.ts";
 import { CoId } from "../cos/Constants.ts";
 import { SkinId } from "../forceSkins/Constants.ts";
-import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { PlayerIndex } from "../players/Constants.ts";
 import type { InstanceWarRule } from "../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import type { SettingsForCommon } from "../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
-
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type GcData             = GameConfigGcData;
 
 const REGULAR_TIME_LIMITS = [
     60 * 60 * 24 * 1,   // 1 day

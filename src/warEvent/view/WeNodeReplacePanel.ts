@@ -9,9 +9,7 @@ import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ConditionNodeAndActions } from "../../proto/schema/CommonProto/WarEvent/ConditionNodeAndActions.ts";
 import { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -23,8 +21,6 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { createAndReplaceRootNodeInEvent } from "../../warEvents/conditionNodes/Utils.ts";
 import { getNode, getEvent } from "../../warEvents/fullDatas/Utils.ts";
-
-type WarEventFullData   = ProtoSchemaCommonProtoWarEventWarEventFullData;
 
 export interface OpenData {
     eventId         : number;

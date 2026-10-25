@@ -2,17 +2,13 @@ import { getExisted } from "../../helpers/Misc.ts";
 import { UiContainerBase } from "./UiContainerBase.ts";
 import type { IUiLayoutBase } from "../interfaces/IUiLayoutBase.ts";
 import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
-import type { UiLayoutOptions as UiTypesUiLayoutOptions } from "../types/UiLayoutOptions.ts";
+import type { UiLayoutOptions } from "../types/UiLayoutOptions.ts";
 import { UiLayoutOrientation } from "../types/UiLayoutOrientation.ts";
-import type { UiPadding as UiTypesUiPadding } from "../types/UiPadding.ts";
-import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import type { UiPadding } from "../types/UiPadding.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
 import { loadSizerOptions } from "../utils/UiSizerHelpers.ts";
 import { getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
-
-type UiLayoutOptions        = UiTypesUiLayoutOptions;
-type UiPadding              = UiTypesUiPadding;
-type UiSkinAttrs            = UiTypesUiSkinAttrs;
 
 export abstract class UiLayoutBase extends UiContainerBase implements IUiLayoutBase {
     private _options: UiLayoutOptions = {};

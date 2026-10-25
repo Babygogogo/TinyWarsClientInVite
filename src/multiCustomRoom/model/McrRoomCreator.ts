@@ -1,10 +1,10 @@
 import { pickRandomCo } from "../../cos/Utils.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { RoomCreatorBase } from "../../multiPlayerRooms/RoomCreatorBase.ts";
 import { getFinalMcwHumanCoIdSet } from "../../playerRules/Utils.ts";
-import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { C } from "../../proto/schema/CommonProto/NetMessage/MsgMcrCreateRoom/C.ts";
 import { SettingsForCommon } from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
 import { SettingsForMcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMcw.ts";
@@ -12,9 +12,6 @@ import { TurnIndex } from "../../turns/Constants.ts";
 import { Common } from "../../warOperations/Constants.ts";
 import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
 import { createDefault, create } from "../../warRules/utils/Instance.ts";
-
-type GcData                 = GameConfigGcData;
-type MapRawData             = ProtoSchemaCommonProtoMapMapRawData;
 
 export class McrRoomCreator extends RoomCreatorBase {
     private readonly _mapRawData        : MapRawData;

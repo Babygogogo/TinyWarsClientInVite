@@ -1,18 +1,13 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type {
-    WoPlayerEndTurn as ProtoSchemaCommonProtoWarOperationWoPlayerEndTurn,
-} from "../../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
+import type { WoPlayerEndTurn } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
 import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
 import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
 import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
-
-type IBwWar             = BaseWarInterfaceIBwWar;
-type WoPlayerEndTurn    = ProtoSchemaCommonProtoWarOperationWoPlayerEndTurn;
 
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;

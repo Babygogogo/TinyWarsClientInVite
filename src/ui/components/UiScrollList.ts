@@ -3,13 +3,11 @@ import { TaskQueue } from "../../auxiliaryTypes/TaskQueue.ts";
 import { newError, getExisted } from "../../helpers/Misc.ts";
 import { UiScrollerBase } from "./UiScrollerBase.ts";
 import type { IUiList } from "../interfaces/IUiList.ts";
-import type { IUiListItemRenderer as UiInterfacesIUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
+import type { IUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
 import type { IUiScrollList } from "../interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../types/UiListItemData.ts";
 import { getUiListClass } from "../utils/UiFactory.ts";
 import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
-
-type IUiListItemRenderer<T extends UiListItemData> = UiInterfacesIUiListItemRenderer<T>;
 
 export class UiScrollList<DataForRenderer extends UiListItemData>
     extends     UiScrollerBase

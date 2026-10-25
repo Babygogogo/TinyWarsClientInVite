@@ -1,6 +1,6 @@
 import type { IActionPlannerView } from "../actionPlanners/IActionPlannerView.ts";
-import type { IBwCursorView as BaseWarInterfaceIBwCursorView } from "../baseWar/interface/IBwCursorView.ts";
-import type { IBwGridVisualEffectView as BaseWarInterfaceIBwGridVisualEffectView } from "../baseWar/interface/IBwGridVisualEffectView.ts";
+import type { IBwCursorView } from "../baseWar/interface/IBwCursorView.ts";
+import type { IBwGridVisualEffectView } from "../baseWar/interface/IBwGridVisualEffectView.ts";
 import type { IField } from "./IField.ts";
 import type { IFieldView } from "./IFieldView.ts";
 import { getExisted } from "../helpers/Misc.ts";
@@ -10,9 +10,6 @@ import type { IUnitMapView } from "../units/IUnitMapView.ts";
 
 type IBwTileMapView             = ITileMapView;
 type IBwUnitMapView             = IUnitMapView;
-type IBwCursorView              = BaseWarInterfaceIBwCursorView;
-type IBwGridVisualEffectView    = BaseWarInterfaceIBwGridVisualEffectView;
-
 export class FieldView extends UiContainer implements IFieldView {
     private _field?                 : IField;
 

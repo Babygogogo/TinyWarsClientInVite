@@ -1,7 +1,7 @@
 import type {
-    DecodedSpmWarSaveSlotData as AuxiliaryTypesAuxiliaryTypesDecodedSpmWarSaveSlotData,
-    DecodedMapEditorData as AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData,
-    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+    DecodedSpmWarSaveSlotData,
+    DecodedMapEditorData,
+    Undefinable,
 } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
     setValue as HelpersCookiesSetValue,
@@ -30,10 +30,6 @@ import { SpmWarSaveSlotFullData } from "../proto/schema/CommonProto/SinglePlayer
 import { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { Scale } from "../stages/Constants.ts";
 import { setItem, getItem } from "../vendor/egret/LocalStorage.ts";
-
-type DecodedSpmWarSaveSlotData          = AuxiliaryTypesAuxiliaryTypesDecodedSpmWarSaveSlotData;
-type DecodedMapEditorData               = AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData;
-type Undefinable<T>                     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 const KEY_PREFIX                                = KeyPrefix;
 const KEY_ACCOUNT                               = KEY_PREFIX + "Account";
@@ -643,7 +639,7 @@ export function getMpwOverridingSkinIdArray(warId: number): number[] | undefined
     const str = getString(`${KEY_MPW_OVERRIDING_SKIN_ID_ARRAY}${warId}`);
     return !str ? undefined : str.split(`,`).map(v => parseInt(v));
 }
-export function setMpwOverridingSkinIdArray(warId: number, skinIdArray: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>): void {
+export function setMpwOverridingSkinIdArray(warId: number, skinIdArray: Undefinable<number[]>): void {
     setValue(`${KEY_MPW_OVERRIDING_SKIN_ID_ARRAY}${warId}`, skinIdArray?.join(`,`) ?? ``);
 }
 
@@ -651,7 +647,7 @@ export function getRwOverridingSkinIdArray(replayId: number): number[] | undefin
     const str = getString(`${KEY_RW_OVERRIDING_SKIN_ID_ARRAY}${replayId}`);
     return !str ? undefined : str.split(`,`).map(v => parseInt(v));
 }
-export function setRwOverridingSkinIdArray(replayId: number, skinIdArray: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>): void {
+export function setRwOverridingSkinIdArray(replayId: number, skinIdArray: Undefinable<number[]>): void {
     setValue(`${KEY_RW_OVERRIDING_SKIN_ID_ARRAY}${replayId}`, skinIdArray?.join(`,`) ?? ``);
 }
 

@@ -12,12 +12,8 @@ import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
 import { extendVariableInfoDict, extendFunctionInfoDict } from "../Utils.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import type {
-    WoContainer as ProtoSchemaCommonProtoWarOperationWoContainer,
-} from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { OperationTypeId } from "../../warOperations/Constants.ts";
-
-type WoContainer            = ProtoSchemaCommonProtoWarOperationWoContainer;
 
 export class WarOperation extends Base {
     private static readonly VnId                        = "id";

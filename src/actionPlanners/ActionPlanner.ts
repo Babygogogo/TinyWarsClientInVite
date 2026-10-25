@@ -45,12 +45,12 @@ import { RequestingUnitUseCoActiveSkill } from "./states/RequestingUnitUseCoActi
 import { RequestingUnitWait } from "./states/RequestingUnitWait.ts";
 import type { ChosenUnitForDrop } from "./Types.ts";
 import { AttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import { MovableArea } from "../auxiliaryTypes/MovableArea.ts";
 import { MovePathNode } from "../auxiliaryTypes/MovePathNode.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { DataForUnitAction as BaseWarModelBwTypesDataForUnitAction } from "../baseWar/model/BwTypes.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { DataForUnitAction } from "../baseWar/model/BwTypes.ts";
 import type { OpenData } from "../baseWar/view/BwUnitActionsPanel.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
@@ -84,13 +84,8 @@ import type { Event } from "../vendor/egret/Egret.ts";
 import { checkIsUnitOnMapVisibleToTeam, checkIsUnitOnMapVisibleToTeams } from "../visibilities/Utils.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 
-type GridIndex              = AuxiliaryTypesGridIndex;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type DataForUnitAction      = BaseWarModelBwTypesDataForUnitAction;
 type IBwTile                = ITile;
 type IBwUnit                = IUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-
 export class ActionPlanner implements IActionPlanner {
     private readonly _view                      = new (getActionPlannerViewClass())();
 

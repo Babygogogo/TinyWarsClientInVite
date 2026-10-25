@@ -1,7 +1,7 @@
 import { GcData } from "../../gameConfig/GcData.ts";
 import type {
-    DecodedMapEditorData as AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData,
-    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+    DecodedMapEditorData,
+    Undefinable,
 } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { ReviewStatus } from "../../maps/Constants.ts";
@@ -30,15 +30,11 @@ import type {
 import type {
     S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS,
 } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
-import type { GridMarkData as ProtoSchemaCommonProtoStructureGridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
+import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import { getSelfUserId, getIsSelfMapCommittee, getSelfNickname } from "../../users/Model.ts";
-
-type DecodedMapEditorData   = AuxiliaryTypesAuxiliaryTypesDecodedMapEditorData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type GridMarkData           = ProtoSchemaCommonProtoStructureGridMarkData;
 
 const _allDataTimestampsAccessor    = new CachedDataAccessor<null, Map<number, number | null>>({
     reqData : () => reqMeGetAllMapDataTimestamps(),

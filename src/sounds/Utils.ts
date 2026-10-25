@@ -1,7 +1,5 @@
 import { BgmSfxCfgDict } from "./Constants.ts";
-import type { BgmSfxCfg as SoundsTypesBgmSfxCfg } from "./Types.ts";
-
-type BgmSfxCfg = SoundsTypesBgmSfxCfg;
+import type { BgmSfxCfg } from "./Types.ts";
 
 let _allBgmCodeArray    : number[] | undefined;
 let _allSfxCodeArray    : number[] | undefined;

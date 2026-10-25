@@ -6,7 +6,7 @@ import { getText, getUnitBuffName, getUnitBuffDesc, getUnitBuffExtraParamDesc } 
 import type { BwUnitBuffChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { UnitBuff as ProtoSchemaCommonProtoStructureUnitBuff } from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
+import type { UnitBuff } from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -19,10 +19,7 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { AllBuffTypeIdArray } from "../../unitBuffs/Constants.ts";
 import { create, getIsExtraParamSupported } from "../../unitBuffs/utils/Common.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
-
-type UnitBuff           = ProtoSchemaCommonProtoStructureUnitBuff;
-type IUnit              = UnitsIUnit;
+import type { IUnit } from "../../units/IUnit.ts";
 
 export interface OpenData {
     unit        : IUnit;

@@ -1,7 +1,5 @@
-import type { DataForTileView as BaseWarModelBwTypesDataForTileView } from "../baseWar/model/BwTypes.ts";
+import type { DataForTileView } from "../baseWar/model/BwTypes.ts";
 import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
-
-type DataForTileView = BaseWarModelBwTypesDataForTileView;
 
 export interface ITileView {
     setData(data: DataForTileView): void;

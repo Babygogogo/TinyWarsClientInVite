@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { Common, BigDialogueSideId } from "../../dialogues/Constants.ts";
 import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
@@ -23,12 +23,8 @@ import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaBigDialogueSimple } from "../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple.ts";
 import { DataForAside } from "../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForAside.ts";
 import { DataForCoDialogue } from "../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForCoDialogue.ts";
@@ -50,10 +46,6 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { getErrorTipForWeaDialogueData } from "../../warEvents/actions/utils/BigDialogueSimple.ts";
 import { getErrorTipForAction } from "../../warEvents/actions/utils/Common.ts";
-
-type WarEventFullData               = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventAction                 = ProtoSchemaCommonProtoWarEventWarEventAction;
-type IBwWar                         = BaseWarInterfaceIBwWar;
 
 export interface OpenData {
     war         : IMeWar;

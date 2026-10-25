@@ -1,17 +1,13 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../gameConfig/GcData.ts";
 import { getUnitMapViewClass, getUnitClass } from "../gameHelpers/GhFactory.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
 import { newError, getExisted } from "../helpers/Misc.ts";
-import type {
-    UnitCustomName as ProtoSchemaCommonProtoStructureUnitCustomName,
-} from "../proto/schema/CommonProto/Structure/UnitCustomName.ts";
-import type {
-    SerialUnit as ProtoSchemaCommonProtoWarSerializationSerialUnit,
-} from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
+import type { UnitCustomName } from "../proto/schema/CommonProto/Structure/UnitCustomName.ts";
+import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { SerialUnitMap } from "../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
 import type { IUnit } from "./IUnit.ts";
 import type { IUnitMap } from "./IUnitMap.ts";
@@ -19,10 +15,6 @@ import type { IUnitMapView } from "./IUnitMapView.ts";
 import { getErrorCodeForUnitCustomNameArray } from "./utils/CustomName.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { getAllUnitsOnMapVisibleToTeams, checkIsUnitOnMapVisibleToTeam } from "../visibilities/Utils.ts";
-
-type SerialUnit         = ProtoSchemaCommonProtoWarSerializationSerialUnit;
-type UnitCustomName     = ProtoSchemaCommonProtoStructureUnitCustomName;
-type IBwWar             = BaseWarInterfaceIBwWar;
 
 export class UnitMap implements IUnitMap {
     private _war?                   : IBwWar;

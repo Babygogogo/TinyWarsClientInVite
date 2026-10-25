@@ -1,10 +1,8 @@
-import type { Point as AuxiliaryTypesAuxiliaryTypesPoint, TouchPoints } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Point, TouchPoints } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MouseStyleType } from "../../helpers/PointerInput.ts";
 import type { IUiComponent } from "./IUiComponent.ts";
 import type { IUiContainerBase } from "./IUiContainerBase.ts";
 import type { Point as VendorEgretEgretPoint } from "../../vendor/egret/Egret.ts";
-
-type Point = AuxiliaryTypesAuxiliaryTypesPoint;
 
 export interface IUiZoomableComponent extends IUiContainerBase {
     setMouseWheelListenerEnabled(enabled: boolean): void;

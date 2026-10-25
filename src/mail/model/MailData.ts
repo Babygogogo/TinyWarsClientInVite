@@ -1,8 +1,6 @@
 import { getExisted } from "../../helpers/Misc.ts";
 import { MailContainer } from "../../proto/schema/CommonProto/Mail/MailContainer.ts";
-import type { MailFullData as ProtoSchemaCommonProtoMailMailFullData } from "../../proto/schema/CommonProto/Mail/MailFullData.ts";
-
-type MailFullData       = ProtoSchemaCommonProtoMailMailFullData;
+import type { MailFullData } from "../../proto/schema/CommonProto/Mail/MailFullData.ts";
 
 export class MailData {
     private _mailId             : number;

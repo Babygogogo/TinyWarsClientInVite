@@ -4,12 +4,8 @@ import type { GcData } from "../../../gameConfig/GcData.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getWeatherName, getFormattedText, getText } from "../../../lang/Utils.ts";
-import type {
-    WeaSetWeatherSimple as ProtoSchemaCommonProtoWarEventWeaSetWeatherSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherSimple.ts";
+import type { WeaSetWeatherSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherSimple.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-
-type WeaSetWeatherSimple    = ProtoSchemaCommonProtoWarEventWeaSetWeatherSimple;
 
 export function checkIsValid(action: Undefinable<WeaSetWeatherSimple>, gameConfig: GcData): boolean {
     if (action == null) {

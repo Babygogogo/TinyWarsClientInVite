@@ -1,12 +1,8 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { UndefinedError } from "../lang/Constants.ts";
 import { getComparatorName } from "../lang/Utils.ts";
-import type {
-    ValueAndComparator as ProtoSchemaCommonProtoStructureValueAndComparator,
-} from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
+import type { ValueAndComparator } from "../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
 import { AllComparatorIdArray, ComparatorId } from "./Constants.ts";
-
-type ValueAndComparator     = ProtoSchemaCommonProtoStructureValueAndComparator;
 
 export function getDesc(data: ValueAndComparator, valueName: string): string {
     const value         = data.getValue();

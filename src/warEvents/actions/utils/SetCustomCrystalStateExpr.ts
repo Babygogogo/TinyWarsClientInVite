@@ -6,18 +6,13 @@ import { Num } from "../../../expressionParsers/results/Num.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
-import type {
-    WeaSetCustomCrystalStateExpr as ProtoSchemaCommonProtoWarEventWeaSetCustomCrystalStateExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCrystalStateExpr.ts";
+import type { WeaSetCustomCrystalStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCrystalStateExpr.ts";
 import { TileCustomCrystalData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
 import { TileTypeId } from "../../../tiles/constants/Common.ts";
 import { Crystal } from "../../../tiles/constants/CustomLimits.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
 import { ExpressionInfoDict } from "../constants/SetCustomCrystalStateExpr.ts";
-
-type WeaSetCustomCrystalStateExpr   = ProtoSchemaCommonProtoWarEventWeaSetCustomCrystalStateExpr;
-type ITile                          = TilesITile;
 
 export function checkIsValid(action: Undefinable<WeaSetCustomCrystalStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

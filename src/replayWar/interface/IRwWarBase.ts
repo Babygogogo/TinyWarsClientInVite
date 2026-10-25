@@ -1,5 +1,5 @@
 import type {
-    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+    Undefinable,
     ReplayCheckpointData,
     ReplayCheckpointInfo,
 } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
@@ -18,8 +18,6 @@ import type { SettingsForMrw } from "../../proto/schema/CommonProto/WarSettings/
 import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
 import type { SettingsForSfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSfw.ts";
 import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
-
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export interface IRwWarBase extends IBwWar {
     serializeForCheckpoint(): ReplayCheckpointData;

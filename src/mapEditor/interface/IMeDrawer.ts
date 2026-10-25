@@ -9,16 +9,11 @@ import type {
     DataForAddTileToLocation,
     DataForDeleteTileFromLocation,
 } from "../model/MeTypes.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 
 type MapEditorDrawerMode    = DrawerMode;
 type SymmetryType           = SymmetryTypeId;
-type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
-type IUnit                  = UnitsIUnit;
-
 export interface IMeDrawer {
     init(): IMeDrawer;
 

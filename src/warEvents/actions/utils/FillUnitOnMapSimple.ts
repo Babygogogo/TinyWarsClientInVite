@@ -10,17 +10,13 @@ import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getUnitName, getFormattedText } from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
-import type {
-    WeaFillUnitOnMapSimple as ProtoSchemaCommonProtoWarEventWeaFillUnitOnMapSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitOnMapSimple.ts";
+import type { WeaFillUnitOnMapSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitOnMapSimple.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import type { ITileMap } from "../../../tiles/ITileMap.ts";
 import { checkIsValid as TilesUtilsFilterCheckIsValid, checkIsEmpty, checkIsMeet } from "../../../tiles/utils/Filter.ts";
 import type { IUnitMap } from "../../../units/IUnitMap.ts";
 import { getErrorCodeForUnitDataIgnoringUnitId } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
-
-type WeaFillUnitOnMapSimple = ProtoSchemaCommonProtoWarEventWeaFillUnitOnMapSimple;
 
 export function checkIsValid(action: Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     if (action == null) {

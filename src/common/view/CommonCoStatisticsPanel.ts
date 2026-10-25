@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { CoStatisticsFilter as AuxiliaryTypesCoStatisticsFilter } from "../../auxiliaryTypes/CoStatisticsFilter.ts";
+import type { CoStatisticsFilter } from "../../auxiliaryTypes/CoStatisticsFilter.ts";
 import { getCoStatistics } from "../model/CommonModel.ts";
 import { DisplayCategoryArray, ForceArray } from "../../cos/Constants.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
@@ -26,8 +26,6 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 import { checkIsMrw, checkHasFog } from "../../warTypes/Utils.ts";
-
-type CoStatisticsFilter = AuxiliaryTypesCoStatisticsFilter;
 
 interface CoData {
     rankedBan           : number;

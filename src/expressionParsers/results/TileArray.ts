@@ -1,9 +1,7 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { ResultType } from "../Enums.ts";
 import { Base } from "./Base.ts";
-import type { ITile as TilesITile } from "../../tiles/ITile.ts";
-
-type ITile = TilesITile;
+import type { ITile } from "../../tiles/ITile.ts";
 
 export class TileArray extends Base {
     public readonly array: ITile[];

@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { reqCmGetAllCampaignIdArray, reqCmGetDesigningCampaignIdArray } from "./Gateway.ts";
 import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgCmCreateCampaign/S.ts";
@@ -8,8 +8,6 @@ import type {
 import type {
     S as ProtoSchemaCommonProtoNetMessageMsgCmGetDesigningCampaignIdArrayS,
 } from "../../proto/schema/CommonProto/NetMessage/MsgCmGetDesigningCampaignIdArray/S.ts";
-
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 const _allCampaignIdArrayAccessor = new CachedDataAccessor<null, number[]>({
     reqData : () => reqCmGetAllCampaignIdArray(),

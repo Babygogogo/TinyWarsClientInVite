@@ -7,14 +7,9 @@ import { Num } from "../../../expressionParsers/results/Num.ts";
 import { getMpwWarClass } from "../../../gameHelpers/GhFactory.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText, getText, getTextForYesOrNo } from "../../../lang/Utils.ts";
-import type {
-    WeaPersistentModifyUnitAttribute as ProtoSchemaCommonProtoWarEventWeaPersistentModifyUnitAttribute,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentModifyUnitAttribute.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { WeaPersistentModifyUnitAttribute } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentModifyUnitAttribute.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import { ExpressionInfoDict } from "../constants/PersistentModifyUnitAttribute.ts";
-
-type WeaPersistentModifyUnitAttribute   = ProtoSchemaCommonProtoWarEventWeaPersistentModifyUnitAttribute;
-type IUnit                              = UnitsIUnit;
 
 export function checkIsValid(action: Undefinable<WeaPersistentModifyUnitAttribute>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

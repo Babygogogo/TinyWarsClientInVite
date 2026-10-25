@@ -1,4 +1,4 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { show } from "../../../FloatText.ts";
 import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
@@ -6,17 +6,12 @@ import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type {
-    WoPlayerVoteForDraw as ProtoSchemaCommonProtoWarOperationWoPlayerVoteForDraw,
-} from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
+import type { WoPlayerVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerVoteForDraw.ts";
 import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
 import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
 import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { handleCommonExtraData } from "./Common.ts";
-
-type WoPlayerVoteForDraw    = ProtoSchemaCommonProtoWarOperationWoPlayerVoteForDraw;
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;

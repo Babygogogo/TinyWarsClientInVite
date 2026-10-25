@@ -1,17 +1,11 @@
-import type { TouchPoints as AuxiliaryTypesAuxiliaryTypesTouchPoints, Point } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { TouchPoints, Point } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { IBwCursor } from "../baseWar/interface/IBwCursor.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { RuleTypeId } from "../playerRules/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../players/IPlayer.ts";
-import type { ITile as TilesITile } from "../tiles/ITile.ts";
+import type { IPlayer } from "../players/IPlayer.ts";
+import type { ITile } from "../tiles/ITile.ts";
 import type { IUnit } from "../units/IUnit.ts";
-
-type GridIndex      = AuxiliaryTypesGridIndex;
-type TouchPoints    = AuxiliaryTypesAuxiliaryTypesTouchPoints;
-type IBwWar         = BaseWarInterfaceIBwWar;
-type IPlayer        = PlayersIPlayer;
-type ITile          = TilesITile;
 
 export type McwPlayerIndexInTurnChanged                         = number;
 export type BwPlayerFundChanged                                 = IPlayer;

@@ -1,5 +1,5 @@
 import { showLang } from "../../FloatText.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -18,7 +18,7 @@ import {
 } from "../../lang/Utils.ts";
 import { reqMmAddWarRule } from "../../normalMap/model/NormalMapProxy.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -32,9 +32,6 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import { getIsSelfMapCommittee } from "../../users/Model.ts";
 import { Constants } from "../../warRules/Constants.ts";
 import { tickDefaultWeatherType, getDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
-
-type GcData             = GameConfigGcData;
-type MapRawData         = ProtoSchemaCommonProtoMapMapRawData;
 
 export interface OpenData {
     gcData          : GcData;

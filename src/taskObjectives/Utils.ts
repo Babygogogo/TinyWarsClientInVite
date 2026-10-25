@@ -3,18 +3,11 @@ import { Parser } from "../expressionParsers/Parser.ts";
 import { TaskObjectives } from "../gameConfig/GcWar.ts";
 import { TextType, UndefinedError } from "../lang/Constants.ts";
 import { checkIsValidLanguageTextArray, getFormattedText, getText, getTextForYesOrNo } from "../lang/Utils.ts";
-import type {
-    TaskObjective as ProtoSchemaCommonProtoTaskObjectivesTaskObjective,
-} from "../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
+import type { TaskObjective } from "../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
-import type {
-    TaskObjectiveState as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState,
-} from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
+import type { TaskObjectiveState } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 import { ExpressionInfoDict } from "./Constants.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-
-type TaskObjective              = ProtoSchemaCommonProtoTaskObjectivesTaskObjective;
-type TaskObjectiveState         = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState;
 
 export function checkIsValid(data: TaskObjective, customCounterNameSet: Set<string>): boolean {
     return getErrorCode(data, customCounterNameSet) === ClientErrorCode.NoError;

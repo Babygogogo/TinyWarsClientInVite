@@ -8,16 +8,12 @@ import { UndefinedError, TextType } from "../../../lang/Constants.ts";
 import { checkIsValidLanguageTextArray, getFormattedText, getText } from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
 import { checkIsValidPlayerIndex } from "../../../players/utils/Common.ts";
-import type {
-    WeaBigDialogueSimple as ProtoSchemaCommonProtoWarEventWeaBigDialogueSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple.ts";
+import type { WeaBigDialogueSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple.ts";
 import type { DataForAside } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForAside.ts";
 import type { DataForCoDialogue } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForCoDialogue.ts";
 import type { DataForDialogue } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForDialogue.ts";
 import type { DataForMisc } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForMisc.ts";
 import { checkIsBgm, checkIsSfx } from "../../../sounds/Utils.ts";
-
-type WeaBigDialogueSimple           = ProtoSchemaCommonProtoWarEventWeaBigDialogueSimple;
 
 export function checkIsValid(action: Undefinable<WeaBigDialogueSimple>, playersCountUnneutral: number, gameConfig: GcData): boolean {
     if (action == null) {

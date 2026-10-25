@@ -10,12 +10,8 @@ import { getText, getComparatorName } from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ValueAndComparator } from "../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
-import type {
-    WarEventCondition as ProtoSchemaCommonProtoWarEventWarEventCondition,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WecPlayerPresence } from "../../proto/schema/CommonProto/WarEvent/WecPlayerPresence.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -26,9 +22,6 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { ComparatorId, AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
 import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
 import { getErrorTipForCondition, getDetailedDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
-
-type WarEventFullData               = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventCondition              = ProtoSchemaCommonProtoWarEventWarEventCondition;
 
 export interface OpenData {
     war         : IBwWar;

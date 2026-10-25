@@ -23,11 +23,9 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { checkIsUnitOnMapVisibleToTeams } from "../../visibilities/Utils.ts";
-
-type IUnit                  = UnitsIUnit;
 
 const _CELL_WIDTH   = 70;
 

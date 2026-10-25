@@ -1,16 +1,13 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { newError, getExisted } from "../../../helpers/Misc.ts";
 import type { MovePath as ProtoSchemaCommonProtoStructureMovePath } from "../../../proto/schema/CommonProto/Structure/MovePath.ts";
 import { PhaseCode } from "../../../turns/Constants.ts";
 import { ActionStateId } from "../../../units/Constants.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { checkIsUnitOnMapVisibleToTeam } from "../../../visibilities/Utils.ts";
-
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export function getRevisedPath({ war, rawPath, launchUnitId, requesterUserId }: {
     war             : IBwWar;

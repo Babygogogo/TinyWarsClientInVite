@@ -5,19 +5,16 @@ import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { UiLayoutBase } from "./UiLayoutBase.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiList } from "../interfaces/IUiList.ts";
-import type { IUiListItemRenderer as UiInterfacesIUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
+import type { IUiListItemRenderer } from "../interfaces/IUiListItemRenderer.ts";
 import { UiCommonEventType } from "../types/UiCommonEventType.ts";
 import type { UiListItemData } from "../types/UiListItemData.ts";
-import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiSkinState } from "../types/UiSkinState.ts";
 import { getUiListItemRendererClass } from "../utils/UiFactory.ts";
 import { arrangeItems } from "../utils/UiLayoutHelpers.ts";
 import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
 import { getRevisedAttrValue, loadSkin, loadSkinStateRecursively } from "../utils/UiSkinHelpers.ts";
 import type { DisplayObject, Event } from "../../vendor/egret/Egret.ts";
-
-type UiSkinAttrs                                            = UiTypesUiSkinAttrs;
-type IUiListItemRenderer<T extends UiListItemData>    = UiInterfacesIUiListItemRenderer<T>;
 
 export class UiList<DataForRenderer extends UiListItemData>
     extends UiLayoutBase

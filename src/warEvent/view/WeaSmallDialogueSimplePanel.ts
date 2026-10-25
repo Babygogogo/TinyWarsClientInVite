@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { Common, SmallDialogueSideId } from "../../dialogues/Constants.ts";
 import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
@@ -20,12 +20,8 @@ import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaSmallDialogueSimple } from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple.ts";
 import { DataForAside } from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple/DataForAside.ts";
 import { DataForCoDialogue } from "../../proto/schema/CommonProto/WarEvent/WeaSmallDialogueSimple/DataForCoDialogue.ts";
@@ -42,10 +38,6 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getDefaultSimpleCoDialogueData, getErrorTipForAction } from "../../warEvents/actions/utils/Common.ts";
 import { getErrorTipForWeaSimpleDialogueData } from "../../warEvents/actions/utils/SmallDialogueSimple.ts";
-
-type IBwWar                             = BaseWarInterfaceIBwWar;
-type WarEventFullData                   = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventAction                     = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
     war         : IMeWar;

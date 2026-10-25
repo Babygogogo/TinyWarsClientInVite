@@ -5,7 +5,7 @@ import { TimerTypeId, DefaultParams } from "../../bootTimers/Constants.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { ForcedFogCode } from "../../fogMaps/Constants.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getLatestConfigVersion } from "../../gameConfig/GcModel.ts";
 import { getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
 import { newError, getExisted } from "../../helpers/Misc.ts";
@@ -31,8 +31,6 @@ import { Common } from "../../warOperations/Constants.ts";
 import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
 import { create } from "../../warRules/utils/Instance.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
-
-type GcData                 = GameConfigGcData;
 
 export class TwWar extends BwWar implements ITwWar {
     private readonly _warEventManager       = new (getBwWarEventManagerClass())();

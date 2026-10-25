@@ -2,7 +2,7 @@ import { StateId } from "../Constants.ts";
 import type { IActionPlanner } from "../IActionPlanner.ts";
 import { Idle } from "./Idle.ts";
 import type { IState } from "./IState.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import {
     getHrwWarClass,
@@ -15,8 +15,6 @@ import {
 import { newError, getExisted } from "../../helpers/Misc.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-
-type GridIndex          = AuxiliaryTypesGridIndex;
 
 export class ChoosingCoActiveSkillTarget implements IState {
     private static readonly _instance = new ChoosingCoActiveSkillTarget();

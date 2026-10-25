@@ -1,8 +1,8 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
 import { BwWar } from "../../baseWar/model/BwWar.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getMeDrawerClass, getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
 import { pickRandomElement } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -11,17 +11,13 @@ import type { IMeWar } from "../interface/IMeWar.ts";
 import { createISerialWar, createRevisedTemplateWarRuleArrayForMeWar, reviseAllUnitIds } from "./MeHelpers.ts";
 import { getFinalSfwHumanCoIdSet } from "../../playerRules/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
-import type { CampaignMapData as ProtoSchemaCommonProtoMapCampaignMapData } from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";
+import type { CampaignMapData } from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
 import { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import type { LanguageText as ProtoSchemaCommonProtoStructureLanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type {
-    TaskObjectiveFullData as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData,
-} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
-import type {
-    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
-} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
+import type { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
@@ -29,13 +25,6 @@ import { getSelfUserId } from "../../users/Model.ts";
 import { getDefaultSimpleCoDialogueData } from "../../warEvents/actions/utils/Common.ts";
 import { createDefault } from "../../warRules/utils/Template.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
-
-type GcData                     = GameConfigGcData;
-type TemplateWarRule            = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
-type CampaignMapData            = ProtoSchemaCommonProtoMapCampaignMapData;
-type LanguageText               = ProtoSchemaCommonProtoStructureLanguageText;
-type TaskObjectiveFullData      = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData;
-type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export class MeWar extends BwWar implements IMeWar {
     private readonly _drawer                = new (getMeDrawerClass())();

@@ -1,11 +1,8 @@
-import type { PointerEventType as HelpersPointerInputPointerEventType } from "../../helpers/PointerInput.ts";
+import type { PointerEventType } from "../../helpers/PointerInput.ts";
 import type { IUiEventAgent } from "../interfaces/IUiEventAgent.ts";
 import { UiCommonEventType } from "../types/UiCommonEventType.ts";
-import type { UiInputEventType as UiTypesUiInputEventType } from "../types/UiInputEventType.ts";
+import type { UiInputEventType } from "../types/UiInputEventType.ts";
 import type { Event, DisplayObject } from "../../vendor/egret/Egret.ts";
-
-type UiInputEventType       = UiTypesUiInputEventType;
-type PointerEventType       = HelpersPointerInputPointerEventType;
 
 type EnterFrameListener = {
     callback    : (e: Event) => void;

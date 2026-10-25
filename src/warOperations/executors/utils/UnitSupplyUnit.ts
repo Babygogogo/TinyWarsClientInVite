@@ -1,14 +1,12 @@
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type {
-    WoUnitSupplyUnit as ProtoSchemaCommonProtoWarOperationWoUnitSupplyUnit,
-} from "../../../proto/schema/CommonProto/WarOperation/WoUnitSupplyUnit.ts";
+import type { WoUnitSupplyUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSupplyUnit.ts";
 import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
 import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
 import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
@@ -17,10 +15,7 @@ import type { IUnit } from "../../../units/IUnit.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
 
-type WoUnitSupplyUnit   = ProtoSchemaCommonProtoWarOperationWoUnitSupplyUnit;
 type IBwUnit            = IUnit;
-type IBwWar             = BaseWarInterfaceIBwWar;
-
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;
 let _rwWarBaseClass : new () => IRwWarBase;

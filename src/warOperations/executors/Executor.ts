@@ -1,13 +1,11 @@
 import { ExecutingAction } from "../../actionPlanners/states/ExecutingAction.ts";
 import { Idle } from "../../actionPlanners/states/Idle.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { getSpwWarClass, getRwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    WoContainer as ProtoSchemaCommonProtoWarOperationWoContainer,
-} from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { execute } from "./utils/PlayerDeleteUnit.ts";
 import { execute as WarOperationsExecutorsUtilsPlayerEndTurnExecute } from "./utils/PlayerEndTurn.ts";
@@ -42,9 +40,6 @@ import { execute as WarOperationsExecutorsUtilsUnitSurfaceExecute } from "./util
 import { execute as WarOperationsExecutorsUtilsUnitUseCoSkillExecute } from "./utils/UnitUseCoSkill.ts";
 import { execute as WarOperationsExecutorsUtilsUnitWaitExecute } from "./utils/UnitWait.ts";
 import { fastExeUnknownAction } from "./utils/Unknown.ts";
-
-type WoContainer        = ProtoSchemaCommonProtoWarOperationWoContainer;
-type IBwWar             = BaseWarInterfaceIBwWar;
 
 export async function checkAndExecute(war: IBwWar, action: WoContainer, isFast: boolean): Promise<void> {
     if (!war.getIsRunning()) {

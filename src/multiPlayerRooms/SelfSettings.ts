@@ -1,6 +1,6 @@
 import { CoId } from "../cos/Constants.ts";
 import { SkinId } from "../forceSkins/Constants.ts";
-import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
 import { newError, getExisted } from "../helpers/Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
@@ -12,7 +12,6 @@ import type { DataForPlayerBanCo } from "../proto/schema/CommonProto/Structure/D
 import { getSelfUserId } from "../users/Model.ts";
 import { getPlayerRule } from "../warRules/utils/CommonData.ts";
 
-type GcData             = GameConfigGcData;
 type RoomInfo           = AtrRoomInfo | MmrRoomInfo | MrrRoomInfo;
 
 export class SelfSettings {

@@ -1,7 +1,7 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { PositionFilter as AuxiliaryTypesPositionFilter } from "../auxiliaryTypes/PositionFilter.ts";
+import type { PositionFilter } from "../auxiliaryTypes/PositionFilter.ts";
 import { getNonNullElements } from "../helpers/Collection.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { TextType } from "../lang/Constants.ts";
@@ -14,8 +14,6 @@ import {
     checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
 } from "../valueAndComparators/Utils.ts";
-
-type PositionFilter                 = AuxiliaryTypesPositionFilter;
 
 export function checkIsValid(data: PositionFilter, mapSize: MapSize): boolean {
     if (!checkIsValidLocationIdSubset(data.getConLocationIdArray())) {

@@ -10,9 +10,7 @@ import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getTileName, getSecondaryLanguageType, getUnitCategoryName, getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
-import type {
-    TileTemplateCfg as ProtoSchemaCommonProtoConfigTileTemplateCfg,
-} from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
+import type { TileTemplateCfg } from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { InfoTypeId } from "../../tiles/constants/Common.ts";
@@ -40,8 +38,6 @@ import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
 import { getUiTileViewClass, getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
 import { WeaponTypeId, CategoryId } from "../../units/Constants.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
-
-type TileTemplateCfg            = ProtoSchemaCommonProtoConfigTileTemplateCfg;
 
 export interface OpenData {
     gameConfig   : GcData;

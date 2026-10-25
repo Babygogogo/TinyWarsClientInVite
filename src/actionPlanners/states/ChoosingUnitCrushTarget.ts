@@ -1,13 +1,11 @@
 import { StateId } from "../Constants.ts";
 import type { IActionPlanner } from "../IActionPlanner.ts";
 import type { IState } from "./IState.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { getHrwWarClass, getRwWarClass, getMeWarClass, getTwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-
-type GridIndex      = AuxiliaryTypesGridIndex;
 
 export class ChoosingUnitCrushTarget implements IState {
     private static readonly _instance = new ChoosingUnitCrushTarget();

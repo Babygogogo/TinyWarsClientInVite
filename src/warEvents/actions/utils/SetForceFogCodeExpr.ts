@@ -8,12 +8,8 @@ import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { MaxInt32 } from "../../../numbers/Constants.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
-import type {
-    WeaSetForceFogCodeExpr as ProtoSchemaCommonProtoWarEventWeaSetForceFogCodeExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeExpr.ts";
+import type { WeaSetForceFogCodeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeExpr.ts";
 import { ExpressionInfoDict } from "../constants/SetForceFogCodeExpr.ts";
-
-type WeaSetForceFogCodeExpr = ProtoSchemaCommonProtoWarEventWeaSetForceFogCodeExpr;
 
 export function checkIsValid(action: Undefinable<WeaSetForceFogCodeExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

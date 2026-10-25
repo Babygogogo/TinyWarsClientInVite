@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, UserOnlineState } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, UserOnlineState } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GcData } from "../gameConfig/GcData.ts";
 import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
 import { TextureVersionId } from "../graphics/Constants.ts";
@@ -8,12 +8,9 @@ import { PlayerIndex } from "../players/Constants.ts";
 import { BaseCfgDict, DecorationCfgDict, ObjectCfgDict } from "../tiles/constants/Common.ts";
 import { getServerTimestamp } from "../timer/TimerModel.ts";
 import type { BuffTypeId } from "../unitBuffs/Constants.ts";
-import type { CornerStateIconTypeId as UnitsConstantsCornerStateIconTypeId, AnimationTypeId } from "../units/Constants.ts";
+import type { CornerStateIconTypeId, AnimationTypeId } from "../units/Constants.ts";
 
-type CornerStateIconTypeId          = UnitsConstantsCornerStateIconTypeId;
 type UnitBuffTypeId                 = BuffTypeId;
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
 export function getCoBust(gcData: GcData, coId: number): string | null {
     const imgNumber = gcData.getCoBasicCfg(coId)?.getImage();
     return (imgNumber != null) ? `coBust${getNumText(imgNumber, 4)}` : null;

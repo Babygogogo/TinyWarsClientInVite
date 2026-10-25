@@ -1,15 +1,9 @@
 import type { IUiContainerBase } from "./IUiContainerBase.ts";
-import type { UiHorizontalAlign as UiTypesUiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
-import type { UiLayoutOptions as UiTypesUiLayoutOptions } from "../types/UiLayoutOptions.ts";
-import type { UiLayoutOrientation as UiTypesUiLayoutOrientation } from "../types/UiLayoutOrientation.ts";
-import type { UiPadding as UiTypesUiPadding } from "../types/UiPadding.ts";
-import type { UiVerticalAlign as UiTypesUiVerticalAlign } from "../types/UiVerticalAlign.ts";
-
-type UiLayoutOrientation    = UiTypesUiLayoutOrientation;
-type UiHorizontalAlign      = UiTypesUiHorizontalAlign;
-type UiVerticalAlign        = UiTypesUiVerticalAlign;
-type UiLayoutOptions        = UiTypesUiLayoutOptions;
-type UiPadding              = UiTypesUiPadding;
+import type { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
+import type { UiLayoutOptions } from "../types/UiLayoutOptions.ts";
+import type { UiLayoutOrientation } from "../types/UiLayoutOrientation.ts";
+import type { UiPadding } from "../types/UiPadding.ts";
+import type { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
 
 export interface IUiLayoutBase extends IUiContainerBase {
     setOptions(options: UiLayoutOptions, needArrange?: boolean): void;

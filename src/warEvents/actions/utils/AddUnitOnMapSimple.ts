@@ -9,9 +9,7 @@ import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getUnitName, getFormattedText, getText } from "../../../lang/Utils.ts";
 import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
-import type {
-    WeaAddUnitOnMapSimple as ProtoSchemaCommonProtoWarEventWeaAddUnitOnMapSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple.ts";
+import type { WeaAddUnitOnMapSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple.ts";
 import type { DataForAddUnit } from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple/DataForAddUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import type { ITileMap } from "../../../tiles/ITileMap.ts";
@@ -19,8 +17,6 @@ import type { IUnitMap } from "../../../units/IUnitMap.ts";
 import { getErrorCodeForUnitDataIgnoringUnitId } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { Common } from "../constants/AddUnitOnMapSimple.ts";
-
-type WeaAddUnitOnMapSimple  = ProtoSchemaCommonProtoWarEventWeaAddUnitOnMapSimple;
 
 export function getBriefDesc(data: Undefinable<WeaAddUnitOnMapSimple>, gameConfig: GcData): string | null {
     if (!data) {

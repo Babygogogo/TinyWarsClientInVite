@@ -5,14 +5,10 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText, getText } from "../../../lang/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type {
-    WeaSetViewpointSimple as ProtoSchemaCommonProtoWarEventWeaSetViewpointSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointSimple.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { WeaSetViewpointSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointSimple.ts";
 import {
     getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
     checkIsValid as TilesUtilsFilterCheckIsValid,
@@ -26,10 +22,6 @@ import {
 } from "../../../valueAndComparators/Utils.ts";
 import { Common } from "../constants/SetViewpointSimple.ts";
 import { doApply } from "./SetViewpointExpr.ts";
-
-type PlayerFilter                   = ProtoSchemaCommonProtoStructurePlayerFilter;
-type WeaSetViewpointSimple          = ProtoSchemaCommonProtoWarEventWeaSetViewpointSimple;
-type IPlayer                        = PlayersIPlayer;
 
 export function checkIsValid(data: Undefinable<WeaSetViewpointSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);

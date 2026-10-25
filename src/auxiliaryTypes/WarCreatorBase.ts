@@ -1,21 +1,14 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "./AuxiliaryTypes.ts";
-import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import type { Undefinable } from "./AuxiliaryTypes.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
-import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
-import type {
-    DataForPlayerInRoom as ProtoSchemaCommonProtoStructureDataForPlayerInRoom,
-} from "../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
+import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { DataForPlayerInRoom } from "../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
 import type { InstanceWarRule } from "../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import { SettingsForCommon } from "../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
 import { TurnIndex } from "../turns/Constants.ts";
 import { Common } from "../warOperations/Constants.ts";
-
-type DataForPlayerInRoom    = ProtoSchemaCommonProtoStructureDataForPlayerInRoom;
-type GcData                 = GameConfigGcData;
-type MapRawData             = ProtoSchemaCommonProtoMapMapRawData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export class WarCreatorBase {
     private readonly _gcData            : GcData;

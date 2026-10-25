@@ -1,19 +1,15 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText, getText } from "../../../lang/Utils.ts";
 import { MaxInt32 } from "../../../numbers/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type {
-    WeaDeleteTileBuffSimple as ProtoSchemaCommonProtoWarEventWeaDeleteTileBuffSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaDeleteTileBuffSimple.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { WeaDeleteTileBuffSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaDeleteTileBuffSimple.ts";
 import {
     getDescForEmbed as TileBuffsUtilsFilterGetDescForEmbed,
     checkIsValid as TileBuffsUtilsFilterCheckIsValid,
@@ -31,12 +27,6 @@ import {
     checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
 } from "../../../valueAndComparators/Utils.ts";
-
-type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type PlayerFilter               = ProtoSchemaCommonProtoStructurePlayerFilter;
-type TileBuff                   = ProtoSchemaCommonProtoStructureTileBuff;
-type WeaDeleteTileBuffSimple    = ProtoSchemaCommonProtoWarEventWeaDeleteTileBuffSimple;
-type IPlayer                    = PlayersIPlayer;
 
 export function checkIsValid(
     data                    : Undefinable<WeaDeleteTileBuffSimple>,

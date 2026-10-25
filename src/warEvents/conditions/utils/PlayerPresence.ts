@@ -10,9 +10,7 @@ import {
     checkIsValid as PlayersUtilsFilterCheckIsValid,
     checkIsMeet as PlayersUtilsFilterCheckIsMeet,
 } from "../../../players/utils/Filter.ts";
-import type {
-    WecPlayerPresence as ProtoSchemaCommonProtoWarEventWecPlayerPresence,
-} from "../../../proto/schema/CommonProto/WarEvent/WecPlayerPresence.ts";
+import type { WecPlayerPresence } from "../../../proto/schema/CommonProto/WarEvent/WecPlayerPresence.ts";
 import { checkIsValid as TilesUtilsFilterCheckIsValid, checkIsMeet as TilesUtilsFilterCheckIsMeet } from "../../../tiles/utils/Filter.ts";
 import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
 import {
@@ -20,8 +18,6 @@ import {
     checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
 } from "../../../valueAndComparators/Utils.ts";
-
-type WecPlayerPresence              = ProtoSchemaCommonProtoWarEventWecPlayerPresence;
 
 export function getBriefDesc(data: Undefinable<WecPlayerPresence>): string | null {
     if (data == null) {

@@ -1,14 +1,11 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { newError } from "../../../helpers/Misc.ts";
 import { AliveStateId } from "../../../players/Constants.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { WoPlayerEndTurn } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
 import { PhaseCode } from "../../../turns/Constants.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function revise(war: IBwWar, rawAction: WoPlayerEndTurn, requesterUserId: Undefinable<number>): WoContainer {

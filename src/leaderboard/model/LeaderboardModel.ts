@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { newError, getExisted } from "../../helpers/Misc.ts";
 import { reqLbSpmOverallGetTopDataArray, reqLbSpmOverallGetRankInfo, reqLbMrwGetRankIndex } from "./LeaderboardProxy.ts";
@@ -11,8 +11,6 @@ import type {
     S as ProtoSchemaCommonProtoNetMessageMsgLbSpmOverallGetTopDataArrayS,
 } from "../../proto/schema/CommonProto/NetMessage/MsgLbSpmOverallGetTopDataArray/S.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
-
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 type SpmOverallRankInfo = {
     rankIndex   : number | null;

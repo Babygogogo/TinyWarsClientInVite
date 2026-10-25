@@ -8,15 +8,13 @@ import type { IUiTextInput } from "../interfaces/IUiTextInput.ts";
 import { UiCommonEventType } from "../types/UiCommonEventType.ts";
 import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
 import { UiInputEventType } from "../types/UiInputEventType.ts";
-import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
 import { getUiLabelClass } from "../utils/UiFactory.ts";
 import { getWorldAlpha, getWorldVisible } from "../utils/UiHelpers.ts";
 import { checkAndAddAutoSizerInfo, loadSizerOptions } from "../utils/UiSizerHelpers.ts";
 import { getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
 import type { Matrix, TextField } from "../../vendor/egret/Egret.ts";
-
-type UiSkinAttrs            = UiTypesUiSkinAttrs;
 
 interface CanvasBounds {
     top     : number;

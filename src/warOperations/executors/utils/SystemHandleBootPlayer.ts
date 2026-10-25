@@ -1,4 +1,4 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { show } from "../../../FloatText.ts";
 import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
@@ -7,17 +7,12 @@ import { getFormattedText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
 import { AliveStateId } from "../../../players/Constants.ts";
-import type {
-    WoSystemHandleBootPlayer as ProtoSchemaCommonProtoWarOperationWoSystemHandleBootPlayer,
-} from "../../../proto/schema/CommonProto/WarOperation/WoSystemHandleBootPlayer.ts";
+import type { WoSystemHandleBootPlayer } from "../../../proto/schema/CommonProto/WarOperation/WoSystemHandleBootPlayer.ts";
 import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
 import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
 import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { handleCommonExtraData } from "./Common.ts";
-
-type WoSystemHandleBootPlayer   = ProtoSchemaCommonProtoWarOperationWoSystemHandleBootPlayer;
-type IBwWar                     = BaseWarInterfaceIBwWar;
 
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;

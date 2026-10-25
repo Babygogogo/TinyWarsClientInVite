@@ -6,13 +6,9 @@ import { getNonNullElements } from "../../../helpers/Collection.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText, getText, getComparatorName } from "../../../lang/Utils.ts";
-import type {
-    WecCustomCounter as ProtoSchemaCommonProtoWarEventWecCustomCounter,
-} from "../../../proto/schema/CommonProto/WarEvent/WecCustomCounter.ts";
+import type { WecCustomCounter } from "../../../proto/schema/CommonProto/WarEvent/WecCustomCounter.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { checkIsValidValueComparatorId, checkIsMeet1 } from "../../../valueAndComparators/Utils.ts";
-
-type WecCustomCounter           = ProtoSchemaCommonProtoWarEventWecCustomCounter;
 
 export function getBriefDesc(data: Undefinable<WecCustomCounter>): string | null {
     if (data == null) {

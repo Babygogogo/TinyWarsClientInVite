@@ -1,15 +1,13 @@
 import type { SortType } from "../maps/Constants.ts";
 import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import type { GridMarkData as ProtoSchemaCommonProtoStructureGridMarkData } from "../proto/schema/CommonProto/Structure/GridMarkData.ts";
+import type { GridMarkData } from "../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import type { InstanceWarRule } from "../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import type { TemplateWarRule } from "../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import type { DisplayObject, Event } from "../vendor/egret/Egret.ts";
-
-type GridMarkData           = ProtoSchemaCommonProtoStructureGridMarkData;
 
 export interface UiListener {
     ui          : DisplayObject,

@@ -8,12 +8,8 @@ import { getText, getTextForYesOrNo } from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { MaxInt32, MinInt32 } from "../../numbers/Constants.ts";
-import type {
-    TaskObjective as ProtoSchemaCommonProtoTaskObjectivesTaskObjective,
-} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
-import type {
-    TaskObjectiveFullData as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData,
-} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
+import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
+import type { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -26,9 +22,6 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
-
-type TaskObjectiveFullData  = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData;
-type TaskObjective          = ProtoSchemaCommonProtoTaskObjectivesTaskObjective;
 
 export interface OpenData {
     fullData                : TaskObjectiveFullData;

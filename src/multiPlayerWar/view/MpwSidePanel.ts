@@ -3,7 +3,7 @@ import { ChoosingCoActiveSkillTarget } from "../../actionPlanners/states/Choosin
 import { Idle } from "../../actionPlanners/states/Idle.ts";
 import { RequestingPlayerEndTurn } from "../../actionPlanners/states/RequestingPlayerEndTurn.ts";
 import { RequestingPlayerUseCoActiveSkill } from "../../actionPlanners/states/RequestingPlayerUseCoActiveSkill.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { EnergyTypeId } from "../../cos/Constants.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { getPowerSkillTargetsCount } from "../../coSkills/utils/Common.ts";
@@ -16,12 +16,8 @@ import { getText, getFormattedText, getLanguageText } from "../../lang/Utils.ts"
 import type { IMpwWar } from "../interface/IMpwWar.ts";
 import { checkIsRedForAllMyWars } from "../model/MpwModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    TaskObjective as ProtoSchemaCommonProtoTaskObjectivesTaskObjective,
-} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
-import type {
-    TaskObjectiveState as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState,
-} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
+import type { TaskObjective } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
+import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playCoBgmWithWar, playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
@@ -39,10 +35,6 @@ import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 import { ActionStateId, DisplayLayerId } from "../../units/Constants.ts";
 import { getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
 import { getWatchIncomingInfo } from "../../watchWar/model/WwModel.ts";
-
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type TaskObjective          = ProtoSchemaCommonProtoTaskObjectivesTaskObjective;
-type TaskObjectiveState     = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState;
 
 let _showTaskObjective = false;
 

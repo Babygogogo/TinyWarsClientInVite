@@ -17,10 +17,8 @@ import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { MaxId, MinId } from "../../locations/Constants.ts";
 import { encode } from "../../locations/Utils.ts";
-import type { ITile as TilesITile } from "../../tiles/ITile.ts";
+import type { ITile } from "../../tiles/ITile.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type ITile                  = TilesITile;
 
 export class Tile extends Base {
     private static readonly VnX                     = "x";

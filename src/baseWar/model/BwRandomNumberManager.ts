@@ -3,12 +3,10 @@ import type { IBwRandomNumberManager } from "../interface/IBwRandomNumberManager
 import { newError, getExisted, getDefined } from "../../helpers/Misc.ts";
 import { type IGenerator, Generator } from "../../helpers/SeedRandom.ts";
 import type {
-    SeedRandomStateJson as ProtoSchemaCommonProtoStructureSeedRandomStateSeedRandomStateJson,
+    SeedRandomStateJson,
     SeedRandomState,
 } from "../../proto/schema/CommonProto/Structure/SeedRandomState.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type SeedRandomStateJson    = ProtoSchemaCommonProtoStructureSeedRandomStateSeedRandomStateJson;
 
 export class BwRandomNumberManager implements IBwRandomNumberManager {
     private _isNeedSeedRandom?          : boolean;

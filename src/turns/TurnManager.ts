@@ -1,4 +1,4 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { newError, getExisted } from "../helpers/Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
@@ -13,11 +13,8 @@ import {
     endPhaseStandby as TurnsPhaseHandlersWithoutExtraDataEndPhaseStandby,
     endPhaseMain as TurnsPhaseHandlersWithoutExtraDataEndPhaseMain,
 } from "./phaseHandlers/WithoutExtraData.ts";
-import type { TurnAndPlayerIndex as TurnsTypesTurnAndPlayerIndex } from "./Types.ts";
+import type { TurnAndPlayerIndex } from "./Types.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-
-type IBwWar                         = BaseWarInterfaceIBwWar;
-type TurnAndPlayerIndex             = TurnsTypesTurnAndPlayerIndex;
 
 export class TurnManager implements ITurnManager {
     private _turnIndex?             : number;

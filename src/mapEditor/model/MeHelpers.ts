@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, CustomError } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, CustomError } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { CoId } from "../../cos/Constants.ts";
@@ -19,9 +19,7 @@ import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRu
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 import { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { BaseTypeId, DecorationTypeId, ObjectTypeId } from "../../tiles/constants/Common.ts";
@@ -40,13 +38,10 @@ import { createDefault as WarRulesUtilsTemplateCreateDefault } from "../../warRu
 import type { IMeWar } from "../interface/IMeWar.ts";
 import type { AsymmetricalCounters } from "./MeTypes.ts";
 
-type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
 type IBwUnit                = IUnit;
 type IBwTile                = ITile;
 type IBwUnitMap             = IUnitMap;
 type IBwTileMap             = ITileMap;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
 const TileDecorationAutoShapeIdArray = [
 //  000     001     010     011     100     101     110     111
     0,      1,      25,     25,     4,      5,      25,     25,     // 000 0 0

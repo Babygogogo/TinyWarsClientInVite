@@ -1,20 +1,12 @@
 import { DefaultParams } from "../../bootTimers/Constants.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
 import type { IMrwWar } from "../interface/IMrwWar.ts";
-import type {
-    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForMrw as ProtoSchemaCommonProtoWarSettingsSettingsForMrw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForMrw.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SettingsForMrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMrw.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar;
-type SettingsForMrw     = ProtoSchemaCommonProtoWarSettingsSettingsForMrw;
-type GcData             = GameConfigGcData;
 
 export class MrwWar extends MpwWar implements IMrwWar {
     private _settingsForMrw?    : SettingsForMrw;

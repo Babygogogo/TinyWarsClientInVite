@@ -1,10 +1,8 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IUiList } from "./IUiList.ts";
-import type { IUiListItemRenderer as UiInterfacesIUiListItemRenderer } from "./IUiListItemRenderer.ts";
+import type { IUiListItemRenderer } from "./IUiListItemRenderer.ts";
 import type { IUiScrollerBase } from "./IUiScrollerBase.ts";
 import type { UiListItemData } from "../types/UiListItemData.ts";
-
-type IUiListItemRenderer<T extends UiListItemData> = UiInterfacesIUiListItemRenderer<T>;
 
 export interface IUiScrollList<DataForRenderer extends UiListItemData> extends IUiScrollerBase {
     initViewport(viewport: IUiList<DataForRenderer>): void;

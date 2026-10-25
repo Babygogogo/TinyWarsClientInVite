@@ -8,37 +8,26 @@ import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText, getText } from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { checkIsValidPlayerIndex } from "../../../players/utils/Common.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type { TileFilter as ProtoSchemaCommonProtoStructureTileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
-import type {
-    WeaSetUnitOwnershipSimple as ProtoSchemaCommonProtoWarEventWeaSetUnitOwnershipSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitOwnershipSimple.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
+import type { WeaSetUnitOwnershipSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitOwnershipSimple.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import {
     getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
     checkIsValid as TilesUtilsFilterCheckIsValid,
     checkIsMeet as TilesUtilsFilterCheckIsMeet,
 } from "../../../tiles/utils/Filter.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import {
     getDescForEmbed as UnitsUtilsFilterGetDescForEmbed,
     checkIsValid as UnitsUtilsFilterCheckIsValid,
     checkIsMeet as UnitsUtilsFilterCheckIsMeet,
 } from "../../../units/utils/Filter.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
-
-type PlayerFilter               = ProtoSchemaCommonProtoStructurePlayerFilter;
-type TileFilter                 = ProtoSchemaCommonProtoStructureTileFilter;
-type WeaSetUnitOwnershipSimple  = ProtoSchemaCommonProtoWarEventWeaSetUnitOwnershipSimple;
-type IPlayer                    = PlayersIPlayer;
-type IUnit                      = UnitsIUnit;
-type ITile                      = TilesITile;
 
 export function checkIsValid(data: Undefinable<WeaSetUnitOwnershipSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);

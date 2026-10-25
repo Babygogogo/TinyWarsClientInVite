@@ -21,10 +21,8 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ActionTypeId } from "../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
-
-type IUnit              = UnitsIUnit;
 
 const getGridWidth      = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight     = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);

@@ -23,11 +23,9 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ActionStateId } from "../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
 import { getAllUnitsOnMapVisibleToTeams } from "../../visibilities/Utils.ts";
-
-type IUnit                  = UnitsIUnit;
 
 export interface OpenData {
     war                     : IBwWar;

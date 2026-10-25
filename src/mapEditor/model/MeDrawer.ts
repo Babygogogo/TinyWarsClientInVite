@@ -34,22 +34,14 @@ import { addEventListeners, removeEventListeners, dispatch } from "../../notific
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { Listener } from "../../notifications/Types.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
-import type {
-    SerialField as ProtoSchemaCommonProtoWarSerializationSerialField,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialField.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { SerialField } from "../../proto/schema/CommonProto/WarSerialization/SerialField.ts";
+import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import { TileTypeId, BaseTypeId, ObjectTypeId } from "../../tiles/constants/Common.ts";
 import type { ITile } from "../../tiles/ITile.ts";
 import { create, fillNonTrivialDefaultValues } from "../../tiles/utils/Serialization.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
-
-type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
-type SerialField            = ProtoSchemaCommonProtoWarSerializationSerialField;
-type IUnit                  = UnitsIUnit;
 
 const MaxCheckpointCount            = 1000;
 const SymmetricalPlayerIndexArray   = [0, 2, 1, 4, 3, 6, 5, 8, 7];

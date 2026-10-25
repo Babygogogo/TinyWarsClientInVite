@@ -1,11 +1,7 @@
 import type { Undefinable } from "./AuxiliaryTypes.ts";
 import type { SkillTypeId } from "../coSkills/Constants.ts";
-import type {
-    TileCustomBuildingData as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData,
-} from "../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import type { TileCustomBuildingData } from "../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 import type { WeaponTypeId } from "../units/Constants.ts";
-
-type TileCustomBuildingData = ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData;
 
 export class DamageCalculatorPlayerData {
     public coId                    = 0;

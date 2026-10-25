@@ -1,19 +1,13 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { checkIsValidId, checkIsValidName } from "../../customCounters/Utils.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import type { WarEvent as ProtoSchemaCommonProtoWarEventWarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventCondition as ProtoSchemaCommonProtoWarEventWarEventCondition,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import type {
-    WarEventConditionNode as ProtoSchemaCommonProtoWarEventWarEventConditionNode,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
+import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import type { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { MaxCounts } from "../actions/constants/Common.ts";
@@ -23,12 +17,6 @@ import { MaxCountPerMap } from "../conditions/Constants.ts";
 import { checkIsValidWarEventCondition } from "../conditions/utils/Common.ts";
 import { ConditionNode, Event } from "../Constants.ts";
 import { checkIsValidWarEvent } from "../events/Utils.ts";
-
-type WarEvent               = ProtoSchemaCommonProtoWarEventWarEvent;
-type WarEventAction         = ProtoSchemaCommonProtoWarEventWarEventAction;
-type WarEventCondition      = ProtoSchemaCommonProtoWarEventWarEventCondition;
-type WarEventConditionNode  = ProtoSchemaCommonProtoWarEventWarEventConditionNode;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export function getEvent(fullData: WarEventFullData, eventId: number): Undefinable<WarEvent> {
     return fullData.getEventArray().find(v => v.getEventId() === eventId);

@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { DefaultParams, TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
@@ -29,7 +29,6 @@ import { getPlayersCountUnneutral, getPlayerRule } from "../../warRules/utils/Co
 import { getNormalMapIdForMpwWarSettings } from "../../warSettings/utils/MpwWarSettings.ts";
 import { reqWatchContinueWar, reqMpwWatchGetIncomingInfo, reqMpwWatchGetOutgoingInfo } from "./WwProxy.ts";
 
-type Undefinable<T>                             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
 type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
 type OpenDataForCommonWarAdvancedSettingsPage   = OpenData;

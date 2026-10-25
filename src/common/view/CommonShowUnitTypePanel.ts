@@ -1,6 +1,6 @@
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
@@ -21,8 +21,6 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
 import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
-
-type GcData             = GameConfigGcData;
 
 export interface OpenData {
     gameConfig              : GcData;

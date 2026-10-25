@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { Common } from "../../maps/Constants.ts";
 import { getLatestGameConfig, getGameConfig } from "../../gameConfig/GcModel.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
@@ -37,8 +37,6 @@ import type { UiMapInfoData } from "../types/UiMapInfoData.ts";
 import { getUiTileViewClass } from "../utils/UiFactory.ts";
 import { getMapRating } from "../../users/Model.ts";
 import { reqUserSetMapRating } from "../../users/Proxy.ts";
-
-type GcData         = GameConfigGcData;
 
 export class UiMapInfo extends UiOpenableComponent<UiMapInfoData> implements IUiMapInfo {
     // private readonly _groupTile!                : UiGroup;

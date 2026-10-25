@@ -1,25 +1,19 @@
 import type { StateId } from "./Constants.ts";
 import type { IActionPlannerView } from "./IActionPlannerView.ts";
 import type { ChosenUnitForDrop } from "./Types.ts";
-import type { AttackableArea as AuxiliaryTypesAttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { MovableArea as AuxiliaryTypesMovableArea } from "../auxiliaryTypes/MovableArea.ts";
-import type { MovePathNode as AuxiliaryTypesMovePathNode } from "../auxiliaryTypes/MovePathNode.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { AttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { MovableArea } from "../auxiliaryTypes/MovableArea.ts";
+import type { MovePathNode } from "../auxiliaryTypes/MovePathNode.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { MovePath } from "../proto/schema/CommonProto/Structure/MovePath.ts";
 import type { ITile } from "../tiles/ITile.ts";
 import type { IUnit } from "../units/IUnit.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 
-type GridIndex          = AuxiliaryTypesGridIndex;
-type MovableArea        = AuxiliaryTypesMovableArea;
-type MovePathNode       = AuxiliaryTypesMovePathNode;
-type AttackableArea     = AuxiliaryTypesAttackableArea;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 type IBwTile            = ITile;
 type IBwUnit            = IUnit;
-type IBwWar             = BaseWarInterfaceIBwWar;
 type ApStateId          = StateId;
 
 export interface IActionPlanner {

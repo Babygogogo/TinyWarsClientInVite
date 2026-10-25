@@ -4,22 +4,16 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText, getText, getComparatorName } from "../../../lang/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import {
     getDescForEmbed,
     checkIsValid as PlayersUtilsFilterCheckIsValid,
     checkIsMeet as PlayersUtilsFilterCheckIsMeet,
 } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type { UnitFilter as ProtoSchemaCommonProtoStructureUnitFilter } from "../../../proto/schema/CommonProto/Structure/UnitFilter.ts";
-import type {
-    ValueAndComparator as ProtoSchemaCommonProtoStructureValueAndComparator,
-} from "../../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
-import type {
-    WecTilePresence as ProtoSchemaCommonProtoWarEventWecTilePresence,
-} from "../../../proto/schema/CommonProto/WarEvent/WecTilePresence.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { UnitFilter } from "../../../proto/schema/CommonProto/Structure/UnitFilter.ts";
+import type { ValueAndComparator } from "../../../proto/schema/CommonProto/Structure/ValueAndComparator.ts";
+import type { WecTilePresence } from "../../../proto/schema/CommonProto/WarEvent/WecTilePresence.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import {
     getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
@@ -32,12 +26,6 @@ import {
     checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
 } from "../../../valueAndComparators/Utils.ts";
-
-type WecTilePresence                = ProtoSchemaCommonProtoWarEventWecTilePresence;
-type PlayerFilter                   = ProtoSchemaCommonProtoStructurePlayerFilter;
-type UnitFilter                     = ProtoSchemaCommonProtoStructureUnitFilter;
-type ValueAndComparator             = ProtoSchemaCommonProtoStructureValueAndComparator;
-type IPlayer                        = PlayersIPlayer;
 
 export function getBriefDesc(data: Undefinable<WecTilePresence>): string | null {
     if (data == null) {

@@ -1,16 +1,8 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
-import type {
-    TileTemplateCfg as ProtoSchemaCommonProtoConfigTileTemplateCfg,
-} from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type {
-    TileCustomBuildingData as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData,
-} from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import type { TileTemplateCfg } from "../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
+import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 import { CustomName, AllThemeTypeIdArray } from "../constants/Common.ts";
-
-type TileTemplateCfg        = ProtoSchemaCommonProtoConfigTileTemplateCfg;
-type TileCustomBuildingData = ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export function getMaxCapturePoint(templateCfg: TileTemplateCfg, customBuildingData: Undefinable<TileCustomBuildingData>): Undefinable<number> {
     return templateCfg.getIsCustomizableBuilding()

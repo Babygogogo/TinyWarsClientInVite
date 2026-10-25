@@ -1,5 +1,5 @@
 import { checkIsValid as ArrayModifiersUtilsCheckIsValid, getResultValue } from "../../../arrayModifiers/Utils.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { GcData } from "../../../gameConfig/GcData.ts";
@@ -11,15 +11,11 @@ import {
     checkIsValid as MultiplierAndOffsetsUtilsCheckIsValid,
     getResultValue as MultiplierAndOffsetsUtilsGetResultValue,
 } from "../../../multiplierAndOffsets/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type {
-    WeaSetTileStateSimple as ProtoSchemaCommonProtoWarEventWeaSetTileStateSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileStateSimple.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { WeaSetTileStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileStateSimple.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { checkIsValidCustomNameId } from "../../../tiles/utils/Common.ts";
 import {
     getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
@@ -34,17 +30,11 @@ import {
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
 } from "../../../valueAndComparators/Utils.ts";
 
-type PlayerFilter                       = ProtoSchemaCommonProtoStructurePlayerFilter;
-type WeaSetTileStateSimple              = ProtoSchemaCommonProtoWarEventWeaSetTileStateSimple;
-type Undefinable<T>                     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IPlayer                            = PlayersIPlayer;
-type ITile                              = TilesITile;
-
-export function checkIsValid(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetTileStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetTileStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetTileStateSimple>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetTileStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -103,7 +93,7 @@ export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSe
         actTextArray.join(`, `),
     );
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetTileStateSimple>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetTileStateSimple>): string | null {
     if (!data) {
         return null;
     }

@@ -7,12 +7,8 @@ import { UndefinedError, TextType } from "../../lang/Constants.ts";
 import { getFormattedText, getText, getComparatorName } from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    WarEventCondition as ProtoSchemaCommonProtoWarEventWarEventCondition,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WecOngoingPersistentActionPresence } from "../../proto/schema/CommonProto/WarEvent/WecOngoingPersistentActionPresence.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -25,9 +21,6 @@ import { MaxCounts } from "../../warEvents/actions/constants/Common.ts";
 import { checkIsPersistentAction, getBriefDescForAction } from "../../warEvents/actions/utils/Common.ts";
 import { getErrorTipForCondition, getDetailedDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
 import { getAction } from "../../warEvents/fullDatas/Utils.ts";
-
-type WarEventFullData   = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventCondition  = ProtoSchemaCommonProtoWarEventWarEventCondition;
 
 export interface OpenData {
     war         : IBwWar;

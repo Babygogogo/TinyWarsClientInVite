@@ -10,12 +10,8 @@ import { getMpwWarClass } from "../../../gameHelpers/GhFactory.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText, getText, getTextForYesOrNo } from "../../../lang/Utils.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
-import type {
-    WeaPersistentModifyPlayerAttribute as ProtoSchemaCommonProtoWarEventWeaPersistentModifyPlayerAttribute,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentModifyPlayerAttribute.ts";
+import type { WeaPersistentModifyPlayerAttribute } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentModifyPlayerAttribute.ts";
 import { ExpressionInfoDict } from "../constants/PersistentModifyPlayerAttribute.ts";
-
-type WeaPersistentModifyPlayerAttribute = ProtoSchemaCommonProtoWarEventWeaPersistentModifyPlayerAttribute;
 
 export function checkIsValid(action: Undefinable<WeaPersistentModifyPlayerAttribute>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

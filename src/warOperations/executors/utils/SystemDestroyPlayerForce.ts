@@ -1,4 +1,4 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { destroyPlayerForce } from "../../../destructions/Utils.ts";
 import {
     getHrwWarClass,
@@ -14,17 +14,12 @@ import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type {
-    WoSystemDestroyPlayerForce as ProtoSchemaCommonProtoWarOperationWoSystemDestroyPlayerForce,
-} from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
+import type { WoSystemDestroyPlayerForce } from "../../../proto/schema/CommonProto/WarOperation/WoSystemDestroyPlayerForce.ts";
 import type { IRwWar } from "../../../replayWar/interface/IRwWar.ts";
 import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
 import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { handleCommonExtraData } from "./Common.ts";
-
-type WoSystemDestroyPlayerForce = ProtoSchemaCommonProtoWarOperationWoSystemDestroyPlayerForce;
-type IBwWar                     = BaseWarInterfaceIBwWar;
 
 let _hrwWarClass    : new () => IHrwWar;
 let _meWarClass     : new () => IMeWar;

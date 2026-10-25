@@ -2,12 +2,8 @@ import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { checkIsValidLanguageTextArray, getLanguageText, getFormattedText, getText } from "../../../lang/Utils.ts";
-import type {
-    WeaPersistentShowText as ProtoSchemaCommonProtoWarEventWeaPersistentShowText,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentShowText.ts";
+import type { WeaPersistentShowText } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentShowText.ts";
 import { Common } from "../constants/PersistentShowText.ts";
-
-type WeaPersistentShowText  = ProtoSchemaCommonProtoWarEventWeaPersistentShowText;
 
 export function checkIsValid(action: Undefinable<WeaPersistentShowText>): boolean {
     if (action == null) {

@@ -9,16 +9,11 @@ import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
-import type {
-    WeaSetUnitOwnershipExpr as ProtoSchemaCommonProtoWarEventWeaSetUnitOwnershipExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitOwnershipExpr.ts";
+import type { WeaSetUnitOwnershipExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitOwnershipExpr.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { ExpressionInfoDict } from "../constants/SetUnitOwnershipExpr.ts";
-
-type WeaSetUnitOwnershipExpr    = ProtoSchemaCommonProtoWarEventWeaSetUnitOwnershipExpr;
-type IUnit                      = UnitsIUnit;
 
 export function checkIsValid(action: Undefinable<WeaSetUnitOwnershipExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

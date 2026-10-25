@@ -4,14 +4,10 @@ import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForSrw as ProtoSchemaCommonProtoWarSettingsSettingsForSrw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
+import type { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForSrw.ts";
 import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
 import type { ISrwWar } from "../interface/ISrwWar.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type SettingsForSrw     = ProtoSchemaCommonProtoWarSettingsSettingsForSrw;
 
 export class SrwWar extends SpwWar implements ISrwWar {
     private _settingsForSrw?    : SettingsForSrw;

@@ -1,5 +1,5 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { getBwWeatherManagerViewClass } from "../gameHelpers/GhFactory.ts";
 import { getExisted, getDefined } from "../helpers/Misc.ts";
 import { TextType } from "../lang/Constants.ts";
@@ -11,8 +11,6 @@ import { SerialWeatherManager } from "../proto/schema/CommonProto/WarSerializati
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import type { IManager } from "./IManager.ts";
 import type { IView } from "./IView.ts";
-
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 export class Manager implements IManager {
     private _forceWeatherType?      : number | null;

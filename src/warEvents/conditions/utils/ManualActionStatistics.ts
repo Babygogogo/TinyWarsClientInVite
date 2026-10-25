@@ -4,12 +4,8 @@ import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText, getComparatorName, getText } from "../../../lang/Utils.ts";
 import { checkIsValidPlayerIndexSubset } from "../../../players/utils/Common.ts";
-import type {
-    WecManualActionStatistics as ProtoSchemaCommonProtoWarEventWecManualActionStatistics,
-} from "../../../proto/schema/CommonProto/WarEvent/WecManualActionStatistics.ts";
+import type { WecManualActionStatistics } from "../../../proto/schema/CommonProto/WarEvent/WecManualActionStatistics.ts";
 import { checkIsValid as ValueAndComparatorsUtilsCheckIsValid, checkIsMeet1 } from "../../../valueAndComparators/Utils.ts";
-
-type WecManualActionStatistics      = ProtoSchemaCommonProtoWarEventWecManualActionStatistics;
 
 export function getBriefDesc(data: Undefinable<WecManualActionStatistics>): string | null {
     if (data == null) {

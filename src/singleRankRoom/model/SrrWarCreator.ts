@@ -1,14 +1,14 @@
 import { WarCreatorBase } from "../../auxiliaryTypes/WarCreatorBase.ts";
 import { pickRandomCo } from "../../cos/Utils.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import type { WarCreator_PlayerInfoChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getFinalSrwHumanCoIdSet } from "../../playerRules/Utils.ts";
-import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { C } from "../../proto/schema/CommonProto/NetMessage/MsgSpmCreateSrw/C.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import { DataForPlayerInRoom } from "../../proto/schema/CommonProto/Structure/DataForPlayerInRoom.ts";
@@ -16,9 +16,6 @@ import { SettingsForSrw } from "../../proto/schema/CommonProto/WarSettings/Setti
 import { getSelfUserId } from "../../users/Model.ts";
 import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
 import { create } from "../../warRules/utils/Instance.ts";
-
-type GcData                 = GameConfigGcData;
-type MapRawData             = ProtoSchemaCommonProtoMapMapRawData;
 
 export class SrrWarCreator extends WarCreatorBase {
     private readonly _settingsForSrw = new SettingsForSrw();

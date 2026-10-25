@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { TimerTypeId, Incremental } from "../../bootTimers/Constants.ts";
 import { show } from "../../FloatText.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
@@ -36,8 +36,6 @@ import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 import { Common } from "../../warOperations/Constants.ts";
 import { getDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
-
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export type OpenData = {
     dataArrayForListSettings    : DataForSettingsRenderer[];

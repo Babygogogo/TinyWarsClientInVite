@@ -1,8 +1,8 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { DropDestination } from "../../../auxiliaryTypes/DropDestination.ts";
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { newError, getExisted } from "../../../helpers/Misc.ts";
 import { AliveStateId } from "../../../players/Constants.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -11,9 +11,6 @@ import { PhaseCode } from "../../../turns/Constants.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { checkIsUnitOnMapVisibleToTeam } from "../../../visibilities/Utils.ts";
 import { getRevisedPath, checkIsPathDestinationOccupiedByOtherVisibleUnit } from "./Common.ts";
-
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export function revise(war: IBwWar, rawAction: WoUnitDropUnit, requesterUserId: Undefinable<number>): WoContainer {
     if (war.getTurnPhaseCode() !== PhaseCode.Main) {

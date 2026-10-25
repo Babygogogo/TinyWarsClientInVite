@@ -6,32 +6,26 @@ import type { SymmetryTypeId } from "../geometries/Constants.ts";
 import { getExisted, newError } from "../helpers/Misc.ts";
 import { LanguageType } from "../lang/Constants.ts";
 import { PlayerIndex } from "../players/Constants.ts";
-import type {
-    BuildableTileCfg as ProtoSchemaCommonProtoConfigBuildableTileCfg,
-} from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
-import type { CoBasicCfg as ProtoSchemaCommonProtoConfigCoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
-import type { CoCategoryCfg as ProtoSchemaCommonProtoConfigCoCategoryCfg } from "../proto/schema/CommonProto/Config/CoCategoryCfg.ts";
-import type { CoSkillCfg as ProtoSchemaCommonProtoConfigCoSkillCfg } from "../proto/schema/CommonProto/Config/CoSkillCfg.ts";
-import type { CoSkillDescCfg as ProtoSchemaCommonProtoConfigCoSkillDescCfg } from "../proto/schema/CommonProto/Config/CoSkillDescCfg.ts";
-import type { DamageChartCfg as ProtoSchemaCommonProtoConfigDamageChartCfg } from "../proto/schema/CommonProto/Config/DamageChartCfg.ts";
-import type { FullConfig as ProtoSchemaCommonProtoConfigFullConfig } from "../proto/schema/CommonProto/Config/FullConfig.ts";
-import type { MoveCostCfg as ProtoSchemaCommonProtoConfigMoveCostCfg } from "../proto/schema/CommonProto/Config/MoveCostCfg.ts";
-import type { MoveTypeCfg as ProtoSchemaCommonProtoConfigMoveTypeCfg } from "../proto/schema/CommonProto/Config/MoveTypeCfg.ts";
-import type { SystemCfg as ProtoSchemaCommonProtoConfigSystemCfg } from "../proto/schema/CommonProto/Config/SystemCfg.ts";
-import type { TextCfg as ProtoSchemaCommonProtoConfigTextCfg } from "../proto/schema/CommonProto/Config/TextCfg.ts";
+import type { BuildableTileCfg } from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
+import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
+import type { CoCategoryCfg } from "../proto/schema/CommonProto/Config/CoCategoryCfg.ts";
+import type { CoSkillCfg } from "../proto/schema/CommonProto/Config/CoSkillCfg.ts";
+import type { CoSkillDescCfg } from "../proto/schema/CommonProto/Config/CoSkillDescCfg.ts";
+import type { DamageChartCfg } from "../proto/schema/CommonProto/Config/DamageChartCfg.ts";
+import type { FullConfig } from "../proto/schema/CommonProto/Config/FullConfig.ts";
+import type { MoveCostCfg } from "../proto/schema/CommonProto/Config/MoveCostCfg.ts";
+import type { MoveTypeCfg } from "../proto/schema/CommonProto/Config/MoveTypeCfg.ts";
+import type { SystemCfg } from "../proto/schema/CommonProto/Config/SystemCfg.ts";
+import type { TextCfg } from "../proto/schema/CommonProto/Config/TextCfg.ts";
 import { TileCategoryCfg } from "../proto/schema/CommonProto/Config/TileCategoryCfg.ts";
-import type { TileTemplateCfg as ProtoSchemaCommonProtoConfigTileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type {
-    TileTypeMappingCfg as ProtoSchemaCommonProtoConfigTileTypeMappingCfg,
-} from "../proto/schema/CommonProto/Config/TileTypeMappingCfg.ts";
+import type { TileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
+import type { TileTypeMappingCfg } from "../proto/schema/CommonProto/Config/TileTypeMappingCfg.ts";
 import { UnitCategoryCfg } from "../proto/schema/CommonProto/Config/UnitCategoryCfg.ts";
-import type {
-    UnitPromotionCfg as ProtoSchemaCommonProtoConfigUnitPromotionCfg,
-} from "../proto/schema/CommonProto/Config/UnitPromotionCfg.ts";
-import type { UnitTemplateCfg as ProtoSchemaCommonProtoConfigUnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
-import type { VisionBonusCfg as ProtoSchemaCommonProtoConfigVisionBonusCfg } from "../proto/schema/CommonProto/Config/VisionBonusCfg.ts";
+import type { UnitPromotionCfg } from "../proto/schema/CommonProto/Config/UnitPromotionCfg.ts";
+import type { UnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
+import type { VisionBonusCfg } from "../proto/schema/CommonProto/Config/VisionBonusCfg.ts";
 import { WeatherCategoryCfg } from "../proto/schema/CommonProto/Config/WeatherCategoryCfg.ts";
-import type { WeatherCfg as ProtoSchemaCommonProtoConfigWeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
+import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
 import {
     BaseCfgDict,
     BaseSymmetryCfgDict,
@@ -46,24 +40,6 @@ import { CategoryId as UnitsConstantsCategoryId, WeaponTypeId } from "../units/C
 import type { WarTypeId } from "../warTypes/Constants.ts";
 import { checkIsAtw, checkIsMrw } from "../warTypes/Utils.ts";
 import { CategoryId as WeathersConstantsCategoryId } from "../weathers/Constants.ts";
-
-type UnitTemplateCfg        = ProtoSchemaCommonProtoConfigUnitTemplateCfg;
-type TileTemplateCfg        = ProtoSchemaCommonProtoConfigTileTemplateCfg;
-type TileTypeMappingCfg     = ProtoSchemaCommonProtoConfigTileTypeMappingCfg;
-type DamageChartCfg         = ProtoSchemaCommonProtoConfigDamageChartCfg;
-type BuildableTileCfg       = ProtoSchemaCommonProtoConfigBuildableTileCfg;
-type VisionBonusCfg         = ProtoSchemaCommonProtoConfigVisionBonusCfg;
-type CoBasicCfg             = ProtoSchemaCommonProtoConfigCoBasicCfg;
-type SystemCfg              = ProtoSchemaCommonProtoConfigSystemCfg;
-type MoveCostCfg            = ProtoSchemaCommonProtoConfigMoveCostCfg;
-type UnitPromotionCfg       = ProtoSchemaCommonProtoConfigUnitPromotionCfg;
-type CoCategoryCfg          = ProtoSchemaCommonProtoConfigCoCategoryCfg;
-type CoSkillCfg             = ProtoSchemaCommonProtoConfigCoSkillCfg;
-type CoSkillDescCfg         = ProtoSchemaCommonProtoConfigCoSkillDescCfg;
-type WeatherCfg             = ProtoSchemaCommonProtoConfigWeatherCfg;
-type MoveTypeCfg            = ProtoSchemaCommonProtoConfigMoveTypeCfg;
-type TextCfg                = ProtoSchemaCommonProtoConfigTextCfg;
-type FullConfig             = ProtoSchemaCommonProtoConfigFullConfig;
 
 export class GcData {
     private readonly _version                       : string;

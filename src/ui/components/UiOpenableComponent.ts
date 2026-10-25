@@ -7,12 +7,10 @@ import { addEventListeners, removeEventListeners } from "../../notifications/Dis
 import type { Listener } from "../../notifications/Types.ts";
 import { UiContainer } from "./UiContainer.ts";
 import type { IUiOpenableComponent } from "../interfaces/IUiOpenableComponent.ts";
-import type { UiInputEventListener as UiTypesUiInputEventListener } from "../types/UiInputEventListener.ts";
-import type { UiPointerEventListener as UiTypesUiPointerEventListener } from "../types/UiPointerEventListener.ts";
+import type { UiInputEventListener } from "../types/UiInputEventListener.ts";
+import type { UiPointerEventListener } from "../types/UiPointerEventListener.ts";
 import { getUiTextInputClass, getUiPromptedInputClass } from "../utils/UiFactory.ts";
 
-type UiPointerEventListener = UiTypesUiPointerEventListener;
-type UiInputEventListener   = UiTypesUiInputEventListener;
 interface KeyboardListener {
     callback    : KeyCallback;
     thisObject  : unknown;

@@ -1,8 +1,6 @@
 import { TextType } from "../lang/Constants.ts";
 import { getText, getFormattedText } from "../lang/Utils.ts";
-import type { ArrayModifier as ProtoSchemaCommonProtoStructureArrayModifier } from "../proto/schema/CommonProto/Structure/ArrayModifier.ts";
-
-type ArrayModifier  = ProtoSchemaCommonProtoStructureArrayModifier;
+import type { ArrayModifier } from "../proto/schema/CommonProto/Structure/ArrayModifier.ts";
 
 export function checkIsValid(data: ArrayModifier, allowedValueSet: Set<number>): boolean {
     return getErrorTip(data, allowedValueSet) == null;

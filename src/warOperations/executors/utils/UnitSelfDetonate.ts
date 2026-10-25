@@ -1,11 +1,9 @@
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { destroyUnitOnMap } from "../../../destructions/Utils.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
-import type {
-    WoUnitSelfDetonate as ProtoSchemaCommonProtoWarOperationWoUnitSelfDetonate,
-} from "../../../proto/schema/CommonProto/WarOperation/WoUnitSelfDetonate.ts";
+import type { WoUnitSelfDetonate } from "../../../proto/schema/CommonProto/WarOperation/WoUnitSelfDetonate.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import { ActionStateId, Hp } from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
@@ -13,10 +11,7 @@ import { getNormalizedHp } from "../../../units/utils/Common.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
 
-type WoUnitSelfDetonate     = ProtoSchemaCommonProtoWarOperationWoUnitSelfDetonate;
 type IBwUnit                = IUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function execute(war: IBwWar, action: WoUnitSelfDetonate, isFast: boolean): Promise<void> {
     if (isFast) {

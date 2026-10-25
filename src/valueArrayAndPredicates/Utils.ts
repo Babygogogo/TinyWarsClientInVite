@@ -1,11 +1,7 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { TextType, UndefinedError } from "../lang/Constants.ts";
 import { getFormattedText } from "../lang/Utils.ts";
-import type {
-    ValueArrayAndPredicate as ProtoSchemaCommonProtoStructureValueArrayAndPredicate,
-} from "../proto/schema/CommonProto/Structure/ValueArrayAndPredicate.ts";
-
-type ValueArrayAndPredicate = ProtoSchemaCommonProtoStructureValueArrayAndPredicate;
+import type { ValueArrayAndPredicate } from "../proto/schema/CommonProto/Structure/ValueArrayAndPredicate.ts";
 
 export function getDesc(data: ValueArrayAndPredicate, valueName: string, getValueText: (v: number) => Undefinable<string>): string {
     return getFormattedText(

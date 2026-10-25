@@ -1,8 +1,4 @@
-import type {
-    RuleAvailability as ProtoSchemaCommonProtoWarRuleRuleAvailability,
-} from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
-
-type RuleAvailability = ProtoSchemaCommonProtoWarRuleRuleAvailability;
+import type { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
 
 export function checkIsValid(availability: RuleAvailability): boolean {
     // const {

@@ -7,17 +7,11 @@ import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText, getText } from "../../../lang/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
-import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type {
-    WeaAddTileBuffExpr as ProtoSchemaCommonProtoWarEventWeaAddTileBuffExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaAddTileBuffExpr.ts";
+import type { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { WeaAddTileBuffExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaAddTileBuffExpr.ts";
 import { create, checkIsValid as TileBuffsUtilsCommonCheckIsValid } from "../../../tileBuffs/utils/Common.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { ExpressionInfoDict } from "../constants/AddTileBuffExpr.ts";
-
-type TileBuff           = ProtoSchemaCommonProtoStructureTileBuff;
-type WeaAddTileBuffExpr = ProtoSchemaCommonProtoWarEventWeaAddTileBuffExpr;
-type ITile              = TilesITile;
 
 export function checkIsValid(action: Undefinable<WeaAddTileBuffExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

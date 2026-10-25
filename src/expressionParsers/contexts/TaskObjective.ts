@@ -12,13 +12,9 @@ import { TextType } from "../../lang/Constants.ts";
 import type {
     TaskObjective as ProtoSchemaCommonProtoTaskObjectivesTaskObjective,
 } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
-import type {
-    TaskObjectiveState as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState,
-} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
+import type { TaskObjectiveState } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveState.ts";
 
 type TaskObjectiveProto = ProtoSchemaCommonProtoTaskObjectivesTaskObjective;
-type TaskObjectiveState = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveState;
-
 export class TaskObjective extends Base {
     private static readonly VnId                        = "id";
     private static readonly VnMain                      = "main";

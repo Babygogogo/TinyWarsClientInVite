@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { MovableArea } from "../../auxiliaryTypes/MovableArea.ts";
 import type { CommonParams } from "../CommonParams.ts";
@@ -24,8 +24,6 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 type IBwUnit            = IUnit;
 type GrScoreAndAction   = ScoreAndAction;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
 interface ProduceUnitInfo {
     gridIndex           : GridIndex;
     unitTypeArray       : number[];

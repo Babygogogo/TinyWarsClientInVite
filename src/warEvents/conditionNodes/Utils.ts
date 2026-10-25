@@ -5,20 +5,13 @@ import { checkIsValidLanguageTextArray, getFormattedText, getText } from "../../
 import { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
 import { ConditionNodeAndActions } from "../../proto/schema/CommonProto/WarEvent/ConditionNodeAndActions.ts";
 import { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
-import type {
-    WarEventCondition as ProtoSchemaCommonProtoWarEventWarEventCondition,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
+import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
 import { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { MaxCounts } from "../actions/constants/Common.ts";
 import { cloneCondition } from "../conditions/utils/Common.ts";
 import { Event, ConditionNode } from "../Constants.ts";
 import { getNode, getEvent } from "../fullDatas/Utils.ts";
-
-type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventCondition          = ProtoSchemaCommonProtoWarEventWarEventCondition;
 
 export function checkIsValidWarEventConditionNode({ conditionNode, conditionDict, nodeDict }: {    // DONE
     conditionNode   : WarEventConditionNode;

@@ -4,15 +4,11 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText, getText, getTileBuffName } from "../../../lang/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type {
-    WeaAddTileBuffSimple as ProtoSchemaCommonProtoWarEventWeaAddTileBuffSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaAddTileBuffSimple.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { WeaAddTileBuffSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaAddTileBuffSimple.ts";
 import {
     checkIsValidTypeId,
     checkIsValidModificationEndTurnIndex,
@@ -34,11 +30,6 @@ import {
     checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
 } from "../../../valueAndComparators/Utils.ts";
-
-type TileBuff                   = ProtoSchemaCommonProtoStructureTileBuff;
-type PlayerFilter               = ProtoSchemaCommonProtoStructurePlayerFilter;
-type WeaAddTileBuffSimple       = ProtoSchemaCommonProtoWarEventWeaAddTileBuffSimple;
-type IPlayer                    = PlayersIPlayer;
 
 export function checkIsValid(
     data                    : Undefinable<WeaAddTileBuffSimple>,

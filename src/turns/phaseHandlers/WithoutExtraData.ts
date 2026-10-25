@@ -1,6 +1,6 @@
 import { AttackableArea } from "../../auxiliaryTypes/AttackableArea.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { TimerTypeId, Incremental } from "../../bootTimers/Constants.ts";
 import { AutoRecoveryTimingId, SkillTypeId } from "../../coSkills/Constants.ts";
 import { destroyUnitLoaded, destroyUnitOnMap } from "../../destructions/Utils.ts";
@@ -24,8 +24,6 @@ import { getAllUnitsOnMapVisibleToTeams, getObserverTeamIndexListForUnitOnMap } 
 
 type IBwTile                = ITile;
 type IBwUnit                = IUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-
 export async function endPhaseStandby(turnManager: ITurnManager, isFastExecute: boolean): Promise<void> {
     const phaseCode = turnManager.getPhaseCode();
     if (phaseCode !== PhaseCode.WaitBeginTurn) {

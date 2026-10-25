@@ -1,13 +1,8 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
-import type {
-    WoSystemVoteForDraw as ProtoSchemaCommonProtoWarOperationWoSystemVoteForDraw,
-} from "../../../proto/schema/CommonProto/WarOperation/WoSystemVoteForDraw.ts";
+import type { WoSystemVoteForDraw } from "../../../proto/schema/CommonProto/WarOperation/WoSystemVoteForDraw.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { handleCommonExtraData } from "./Common.ts";
-
-type WoSystemVoteForDraw    = ProtoSchemaCommonProtoWarOperationWoSystemVoteForDraw;
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function execute(war: IBwWar, action: WoSystemVoteForDraw, isFast: boolean): Promise<void> {

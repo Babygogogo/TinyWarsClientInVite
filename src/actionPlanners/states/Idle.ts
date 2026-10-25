@@ -1,7 +1,7 @@
 import { StateId } from "../Constants.ts";
 import type { IActionPlanner } from "../IActionPlanner.ts";
 import type { IState } from "./IState.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import {
     getHrwWarClass,
     getMeWarClass,
@@ -16,8 +16,6 @@ import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { PhaseCode } from "../../turns/Constants.ts";
 import { ActionStateId } from "../../units/Constants.ts";
-
-type GridIndex              = AuxiliaryTypesGridIndex;
 
 export class Idle implements IState {
     private static readonly _instance = new Idle();

@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { show } from "../FloatText.ts";
@@ -24,14 +24,11 @@ import { addEventListeners, dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { Listener } from "../notifications/Types.ts";
 import { ShortSfxCode, BgmSfxCode, SoundTypeId } from "./Constants.ts";
-import type { BgmSfxCfg as SoundsTypesBgmSfxCfg } from "./Types.ts";
+import type { BgmSfxCfg } from "./Types.ts";
 import { getBgmSfxCfg } from "./Utils.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { Capabilities, clearTimeout, setTimeout } from "../vendor/egret/Egret.ts";
 import { getResByUrl, ResourceItemHelper } from "../vendor/egret/Res.ts";
-
-type BgmSfxCfg          = SoundsTypesBgmSfxCfg;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export const DEFAULT_MUTE   = false;
 export const DEFAULT_VOLUME = 1;

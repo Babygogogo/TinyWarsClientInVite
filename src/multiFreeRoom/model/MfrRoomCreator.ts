@@ -1,16 +1,11 @@
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { RoomCreatorBase } from "../../multiPlayerRooms/RoomCreatorBase.ts";
 import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
 import { C } from "../../proto/schema/CommonProto/NetMessage/MsgMfrCreateRoom/C.ts";
 import type { C as ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomC } from "../../proto/schema/CommonProto/NetMessage/MsgMfrJoinRoom/C.ts";
-import type {
-    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
-
-type GcData                 = GameConfigGcData;
-type SerialWar              = ProtoSchemaCommonProtoWarSerializationSerialWar;
 
 export type DataForJoinRoom = ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomC;
 

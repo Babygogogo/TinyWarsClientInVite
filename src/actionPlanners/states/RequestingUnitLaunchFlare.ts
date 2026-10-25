@@ -1,14 +1,12 @@
 import { StateId } from "../Constants.ts";
 import type { IActionPlanner } from "../IActionPlanner.ts";
 import type { IState } from "./IState.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { getMpwWarClass, getSpwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { reqMpwExecuteWarOperation } from "../../multiPlayerWar/model/MpwProxy.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { reqUnitLaunchFlare } from "../../singlePlayerWar/model/SpwLocalProxy.ts";
-
-type GridIndex      = AuxiliaryTypesGridIndex;
 
 export class RequestingUnitLaunchFlare implements IState {
     private static readonly _instance = new RequestingUnitLaunchFlare();

@@ -22,12 +22,8 @@ import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { WeightedGridIndex } from "../../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { DataForAddUnit } from "../../proto/schema/CommonProto/WarEvent/WeaAddUnitOnMapSimple/DataForAddUnit.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -43,9 +39,6 @@ import { AiModeId, AllTagIdArray, ActionStateId, CustomName, UnitTypeId } from "
 import { getTagIdList, getEncodedTagId, checkIsValidActionStateId, checkIsValidEncodedTagId } from "../../units/utils/Common.ts";
 import { fillNonTrivialDefaultValues, createDefault } from "../../units/utils/Serialization.ts";
 import { Common } from "../../warEvents/actions/constants/AddUnitOnMapSimple.ts";
-
-type WarEventFullData   = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventAction     = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
     war         : IMeWar;

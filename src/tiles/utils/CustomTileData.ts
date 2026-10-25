@@ -1,18 +1,10 @@
 import type { GcData } from "../../gameConfig/GcData.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getFormattedText, getText } from "../../lang/Utils.ts";
-import type {
-    TileCustomBuildingData as ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData,
-} from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
-import type {
-    TileCustomCannonData as ProtoSchemaCommonProtoWarSerializationTileCustomCannonData,
-} from "../../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
-import type {
-    TileCustomCrystalData as ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData,
-} from "../../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
-import type {
-    TileCustomLaserTurretData as ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData,
-} from "../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
+import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
+import type { TileCustomCannonData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
+import type { TileCustomCrystalData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
+import type { TileCustomLaserTurretData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
 import {
     Building as TilesUtilsCustomLimitsBuilding,
     Cannon as TilesUtilsCustomLimitsCannon,
@@ -22,8 +14,6 @@ import {
 
 export namespace Building {
     
-    type TileCustomBuildingData = ProtoSchemaCommonProtoWarSerializationTileCustomBuildingData;
-
     export function checkIsValid(data: TileCustomBuildingData, config: GcData): boolean {
         return Building.getErrorTip(data, config) == null;
     }
@@ -133,8 +123,6 @@ export namespace Building {
 
 export namespace Cannon {
     
-    type TileCustomCannonData   = ProtoSchemaCommonProtoWarSerializationTileCustomCannonData;
-
     export function checkIsValid(data: TileCustomCannonData): boolean {
         return Cannon.getErrorTip(data) == null;
     }
@@ -202,8 +190,6 @@ export namespace Cannon {
 
 export namespace Crystal {
     
-    type TileCustomCrystalData  = ProtoSchemaCommonProtoWarSerializationTileCustomCrystalData;
-
     export function checkIsValid(data: TileCustomCrystalData): boolean {
         return Crystal.getErrorTip(data) == null;
     }
@@ -261,8 +247,6 @@ export namespace Crystal {
 
 export namespace LaserTurret {
     
-    type TileCustomLaserTurretData  = ProtoSchemaCommonProtoWarSerializationTileCustomLaserTurretData;
-
     export function checkIsValid(data: TileCustomLaserTurretData): boolean {
         return LaserTurret.getErrorTip(data) == null;
     }

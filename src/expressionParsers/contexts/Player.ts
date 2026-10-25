@@ -10,10 +10,8 @@ import { extendVariableInfoDict, extendFunctionInfoDict, getErrorTextForParamete
 import { newError, getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getValueInInt32 } from "../../numbers/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../players/IPlayer.ts";
+import type { IPlayer } from "../../players/IPlayer.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type IPlayer        = PlayersIPlayer;
 
 export class Player extends Base {
     private static readonly VnPlayerIndex       = "playerIndex";

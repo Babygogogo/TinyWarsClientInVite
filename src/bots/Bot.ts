@@ -1,11 +1,8 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { doGetNextOperation } from "./Utils.ts";
 import { newError } from "../helpers/Misc.ts";
-import type { WoContainer as ProtoSchemaCommonProtoWarOperationWoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-
-type WoContainer    = ProtoSchemaCommonProtoWarOperationWoContainer;
-type IBwWar         = BaseWarInterfaceIBwWar;
 
 const _calculatingWars = new Set<IBwWar>();
 

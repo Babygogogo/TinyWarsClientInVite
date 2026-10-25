@@ -1,9 +1,5 @@
 import type { IMpwWar } from "../../multiPlayerWar/interface/IMpwWar.ts";
-import type {
-    SettingsForMfw as ProtoSchemaCommonProtoWarSettingsSettingsForMfw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
-
-type SettingsForMfw = ProtoSchemaCommonProtoWarSettingsSettingsForMfw;
+import type { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
 
 export interface IMfwWar extends IMpwWar {
     getCanCheat(): boolean;

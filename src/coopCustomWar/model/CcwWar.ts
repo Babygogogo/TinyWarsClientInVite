@@ -1,18 +1,10 @@
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
-import type {
-    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForCcw as ProtoSchemaCommonProtoWarSettingsSettingsForCcw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SettingsForCcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type SerialWar          = ProtoSchemaCommonProtoWarSerializationSerialWar;
-type SettingsForCcw     = ProtoSchemaCommonProtoWarSettingsSettingsForCcw;
-type GcData             = GameConfigGcData;
 
 export class CcwWar extends MpwWar {
     private _settingsForCcw?: SettingsForCcw;

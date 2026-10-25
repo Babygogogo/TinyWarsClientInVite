@@ -18,9 +18,7 @@ import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
-import type {
-    SerialPlayer as ProtoSchemaCommonProtoWarSerializationSerialPlayer,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
+import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { wait, getServerTimestamp } from "../../timer/TimerModel.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -36,8 +34,6 @@ import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
 import { getMapRating } from "../../users/Model.ts";
 import { reqUserSetMapRating } from "../../users/Proxy.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
-
-type SerialPlayer           = ProtoSchemaCommonProtoWarSerializationSerialPlayer;
 
 export interface OpenData {
     warInfo?    : {

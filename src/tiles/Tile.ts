@@ -1,10 +1,10 @@
 import type {
-    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+    Undefinable,
     CustomError,
     RepairHpAndCost,
 } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { checkIsEffective } from "../coSkills/utils/persistent/SelfTileEnabledForUnitProduction.ts";
 import { getTotalMultiplier } from "../coSkills/utils/persistent/SelfTileIncome.ts";
 import { getRawOverridingSkinId } from "../forceSkins/Utils.ts";
@@ -20,16 +20,14 @@ import type { BwTileHasLocationIdSet, BwTileIsHighlightChanged, BwTileBuffChange
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { PlayerIndex } from "../players/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../players/IPlayer.ts";
+import type { IPlayer } from "../players/IPlayer.ts";
 import type {
     SelfTileEnabledForUnitProduction,
 } from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
 import type { MoveCostCfg } from "../proto/schema/CommonProto/Config/MoveCostCfg.ts";
-import type { TileTemplateCfg as ProtoSchemaCommonProtoConfigTileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { TileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
+import type { TileBuff } from "../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { TileCustomBuildingData } from "../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 import type { TileCustomCannonData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
 import type { TileCustomCrystalData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
@@ -74,18 +72,10 @@ import {
 import { Crystal as TilesUtilsCustomTileDataCrystal, Cannon, LaserTurret, Building } from "./utils/CustomTileData.ts";
 import { create } from "./utils/Serialization.ts";
 import { Hp, CategoryId } from "../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../units/IUnit.ts";
+import type { IUnit } from "../units/IUnit.ts";
 import { getNormalizedHp } from "../units/utils/Common.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { checkIsTileVisibleToTeams } from "../visibilities/Utils.ts";
-
-type SerialTile                     = ProtoSchemaCommonProtoWarSerializationSerialTile;
-type TileBuff                       = ProtoSchemaCommonProtoStructureTileBuff;
-type TileTemplateCfg                = ProtoSchemaCommonProtoConfigTileTemplateCfg;
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IPlayer                        = PlayersIPlayer;
-type IUnit                          = UnitsIUnit;
-type IBwWar                         = BaseWarInterfaceIBwWar;
 
 export class Tile implements ITile {
     private _gameConfig?                : GcData;
@@ -1173,7 +1163,7 @@ export class Tile implements ITile {
         }
     }
 
-    public getCustomName(languageType = getCurrentLanguageType()): AuxiliaryTypesAuxiliaryTypesUndefinable<string> {
+    public getCustomName(languageType = getCurrentLanguageType()): Undefinable<string> {
         const nameId = this.getCustomNameId();
         return getLanguageText({
             textArray       : this.getWar().getTileMap().getTileCustomNameArray()?.find(v => (v.getNameId() ?? 0) === nameId)?.getNameTextArray(),
@@ -1185,7 +1175,7 @@ export class Tile implements ITile {
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for map weapon.
     ////////////////////////////////////////////////////////////////////////////////
-    public getMapWeaponType(): AuxiliaryTypesAuxiliaryTypesUndefinable<number> {
+    public getMapWeaponType(): Undefinable<number> {
         return this.getTemplateCfg().getMapWeaponTypeId();
     }
     public checkIsMapWeapon(): boolean {

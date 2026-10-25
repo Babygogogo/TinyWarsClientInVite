@@ -3,13 +3,9 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getComparatorName, getFormattedText, getTurnPhaseName } from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
-import type {
-    WecTurnAndPlayer as ProtoSchemaCommonProtoWarEventWecTurnAndPlayer,
-} from "../../../proto/schema/CommonProto/WarEvent/WecTurnAndPlayer.ts";
+import type { WecTurnAndPlayer } from "../../../proto/schema/CommonProto/WarEvent/WecTurnAndPlayer.ts";
 import { checkIsValidTurnPhaseCode } from "../../../turns/Utils.ts";
 import { checkIsValidValueComparatorId, checkIsMeet1 } from "../../../valueAndComparators/Utils.ts";
-
-type WecTurnAndPlayer           = ProtoSchemaCommonProtoWarEventWecTurnAndPlayer;
 
 export function getBriefDesc(data: Undefinable<WecTurnAndPlayer>): string | null {
     if (data == null) {

@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { getGameConfig } from "../../gameConfig/GcModel.ts";
 import { getHrwWarClass } from "../../gameHelpers/GhFactory.ts";
@@ -49,8 +49,6 @@ import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { SerialWeatherManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type Undefinable<T>                     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 let _war    : Undefinable<IHrwWar>;
 
@@ -475,8 +473,8 @@ function mergeUnitWait(actionArray: WoUnitWait[]): WoUnitWait | null {
 }
 
 function mergeCommonExtraData(dataArray: CommonExtraDataForWarOperation[]): CommonExtraDataForWarOperation {
-    let nextUnitId                                  : AuxiliaryTypesAuxiliaryTypesUndefinable<number>;
-    let weatherManager                              : AuxiliaryTypesAuxiliaryTypesUndefinable<SerialWeatherManager>;
+    let nextUnitId                                  : Undefinable<number>;
+    let weatherManager                              : Undefinable<SerialWeatherManager>;
     const destroyedUnitIdArray                      : number[] = [];
     const customCounterArray                        : CustomCounter[] = [];
     const hiddenUnitIdArray                         : number[] = [];
@@ -520,14 +518,14 @@ function mergeCommonExtraData(dataArray: CommonExtraDataForWarOperation[]): Comm
         taskObjectiveStateArray                 : [],
     });
 }
-function mergeDestroyedUnitIdArray(src: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>, dst: number[]): void {
+function mergeDestroyedUnitIdArray(src: Undefinable<number[]>, dst: number[]): void {
     for (const id of src ?? []) {
         if (dst.indexOf(id) < 0) {
             dst.push(id);
         }
     }
 }
-function mergeCustomCounterArray(src: AuxiliaryTypesAuxiliaryTypesUndefinable<CustomCounter[]>, dst: CustomCounter[]): void {
+function mergeCustomCounterArray(src: Undefinable<CustomCounter[]>, dst: CustomCounter[]): void {
     for (const srcData of src ?? []) {
         const id            = srcData.getCustomCounterId() ?? 0;
         const existingData  = dst.find(v => (v.getCustomCounterId() ?? 0) === id);
@@ -538,14 +536,14 @@ function mergeCustomCounterArray(src: AuxiliaryTypesAuxiliaryTypesUndefinable<Cu
         }
     }
 }
-function mergeHiddenUnitIdArray(src: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>, dst: number[]): void {
+function mergeHiddenUnitIdArray(src: Undefinable<number[]>, dst: number[]): void {
     for (const id of src ?? []) {
         if (dst.indexOf(id) < 0) {
             dst.push(id);
         }
     }
 }
-function mergeTileArrayAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinable<SerialTile[]>, dst: SerialTile[]): void {
+function mergeTileArrayAfterAction(src: Undefinable<SerialTile[]>, dst: SerialTile[]): void {
     for (const tileData of src ?? []) {
         const gridIndex = getExisted(GridIndex.convertGridIndex(tileData.getGridIndex()), ClientErrorCode.HrwModel_MergeTileArrayAfterAction_00);
         if (!dst.find(v => GridIndex.convertGridIndex(v.getGridIndex())?.checkIsEqual(gridIndex))) {
@@ -553,14 +551,14 @@ function mergeTileArrayAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinable<
         }
     }
 }
-function mergeUnitArrayAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinable<SerialUnit[]>, dst: SerialUnit[]): void {
+function mergeUnitArrayAfterAction(src: Undefinable<SerialUnit[]>, dst: SerialUnit[]): void {
     for (const unitData of src ?? []) {
         if (!dst.find(v => v.getUnitId() === unitData.getUnitId())) {
             dst.push(unitData);
         }
     }
 }
-function mergePlayerArrayAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinable<SerialPlayer[]>, dst: SerialPlayer[]): void {
+function mergePlayerArrayAfterAction(src: Undefinable<SerialPlayer[]>, dst: SerialPlayer[]): void {
     for (const playerData of src ?? []) {
         const existingPlayerData = dst.find(v => v.getPlayerIndex() == playerData.getPlayerIndex());
         if (!existingPlayerData) {
@@ -572,14 +570,14 @@ function mergePlayerArrayAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinabl
         }
     }
 }
-function mergeVisibilityArrayFromPathsAfterAction(src: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>, dst: number[]): void {
+function mergeVisibilityArrayFromPathsAfterAction(src: Undefinable<number[]>, dst: number[]): void {
     for (const id of src ?? []) {
         if (dst.indexOf(id) < 0) {
             dst.push(id);
         }
     }
 }
-function mergeUnitMovePathVisibilityAfterWarEvent(src: AuxiliaryTypesAuxiliaryTypesUndefinable<number[]>, dst: Set<number>): void {
+function mergeUnitMovePathVisibilityAfterWarEvent(src: Undefinable<number[]>, dst: Set<number>): void {
     for (const id of src ?? []) {
         dst.add(id);
     }

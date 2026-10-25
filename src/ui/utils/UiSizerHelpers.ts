@@ -4,23 +4,18 @@ import { getValueInRange } from "../../numbers/Utils.ts";
 import { getStage } from "../../stages/StageManager.ts";
 import { addTickCallback } from "../../timer/TimerModel.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
-import type { IUiSizerInfo as UiInterfacesIUiSizerInfo } from "../interfaces/IUiSizerInfo.ts";
+import type { IUiSizerInfo } from "../interfaces/IUiSizerInfo.ts";
 import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
-import type { UiSizerDimensionOptions as UiTypesUiSizerDimensionOptions } from "../types/UiSizerDimensionOptions.ts";
-import type { UiSizerHorizontalAlignOptions as UiTypesUiSizerHorizontalAlignOptions } from "../types/UiSizerHorizontalAlignOptions.ts";
+import type { UiSizerDimensionOptions } from "../types/UiSizerDimensionOptions.ts";
+import type { UiSizerHorizontalAlignOptions } from "../types/UiSizerHorizontalAlignOptions.ts";
 import type { UiSizerOptions } from "../types/UiSizerOptions.ts";
-import type { UiSizerVerticalAlignOptions as UiTypesUiSizerVerticalAlignOptions } from "../types/UiSizerVerticalAlignOptions.ts";
+import type { UiSizerVerticalAlignOptions } from "../types/UiSizerVerticalAlignOptions.ts";
 import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
 import { getUiContainerClass } from "./UiFactory.ts";
 import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
 
-type UiSizerDimensionOptions        = UiTypesUiSizerDimensionOptions;
-type UiSizerHorizontalAlignOptions  = UiTypesUiSizerHorizontalAlignOptions;
-type UiSizerVerticalAlignOptions    = UiTypesUiSizerVerticalAlignOptions;
 type IUiSizer                       = IUiComponent;
-type IUiSizerInfo                   = UiInterfacesIUiSizerInfo;
-
 export function init(): void {
     addTickCallback(applyAutoSizerInfoDict, -1);
 }

@@ -1,18 +1,13 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { SkillTypeId } from "../../../coSkills/Constants.ts";
 import { generate } from "../../../coSkills/utils/DataGeneratorForUseCoSkill.ts";
 import { executeInstantSkill } from "../../../coSkills/utils/Executor.ts";
 import { createRange } from "../../../helpers/Collection.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { PlayerIndex, AliveStateId } from "../../../players/Constants.ts";
-import type {
-    WoPlayerUseCoSkill as ProtoSchemaCommonProtoWarOperationWoPlayerUseCoSkill,
-} from "../../../proto/schema/CommonProto/WarOperation/WoPlayerUseCoSkill.ts";
+import type { WoPlayerUseCoSkill } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerUseCoSkill.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { handleCommonExtraData } from "./Common.ts";
-
-type WoPlayerUseCoSkill     = ProtoSchemaCommonProtoWarOperationWoPlayerUseCoSkill;
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function execute(war: IBwWar, action: WoPlayerUseCoSkill, isFast: boolean): Promise<void> {

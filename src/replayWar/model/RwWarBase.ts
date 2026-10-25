@@ -1,5 +1,5 @@
 import type {
-    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+    Undefinable,
     ReplayCheckpointData,
     ReplayCheckpointInfo,
 } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
@@ -36,8 +36,6 @@ import { getSelfSettingsCoBgmCodeArray } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { setTimeout } from "../../vendor/egret/Egret.ts";
 import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
-
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 type TurnIndexAndPlayerIndex = {
     turnIndex   : number;

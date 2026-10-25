@@ -1,5 +1,5 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../gameConfig/GcData.ts";
 import {
     getPlayerClass,
@@ -20,8 +20,6 @@ import { SerialPlayerManager } from "../proto/schema/CommonProto/WarSerializatio
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { getSelfUserId } from "../users/Model.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 export class PlayerManager implements IPlayerManager {
     private _players                    = new Map<number, IPlayer>();

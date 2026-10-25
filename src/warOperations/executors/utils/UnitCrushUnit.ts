@@ -1,17 +1,12 @@
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { destroyUnitOnMap } from "../../../destructions/Utils.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { AliveStateId } from "../../../players/Constants.ts";
-import type {
-    WoUnitCrushUnit as ProtoSchemaCommonProtoWarOperationWoUnitCrushUnit,
-} from "../../../proto/schema/CommonProto/WarOperation/WoUnitCrushUnit.ts";
+import type { WoUnitCrushUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitCrushUnit.ts";
 import { ActionStateId } from "../../../units/Constants.ts";
 import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
-
-type WoUnitCrushUnit        = ProtoSchemaCommonProtoWarOperationWoUnitCrushUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function execute(war: IBwWar, action: WoUnitCrushUnit, isFast: boolean): Promise<void> {

@@ -1,13 +1,8 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { show } from "../../../FloatText.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
-import type {
-    WoSystemCallWarEvent as ProtoSchemaCommonProtoWarOperationWoSystemCallWarEvent,
-} from "../../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
-
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type WoSystemCallWarEvent   = ProtoSchemaCommonProtoWarOperationWoSystemCallWarEvent;
+import type { WoSystemCallWarEvent } from "../../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
 
 // let _meWarClass     : new () => MapEditor.IMeWar;
 // let _mpwWarClass    : new () => MultiPlayerWar.IMpwWar;

@@ -1,9 +1,7 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { ResultType } from "../Enums.ts";
 import { Base } from "./Base.ts";
-import type { IPlayer as PlayersIPlayer } from "../../players/IPlayer.ts";
-
-type IPlayer = PlayersIPlayer;
+import type { IPlayer } from "../../players/IPlayer.ts";
 
 export class PlayerArray extends Base {
     public readonly array: IPlayer[];

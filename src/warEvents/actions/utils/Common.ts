@@ -11,9 +11,7 @@ import { checkIsValidLanguageTextArray, getText, getCurrentLanguageType } from "
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
 import { WarEventAction } from "../../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventFullData } from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { WeaAddTileBuffExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaAddTileBuffExpr.ts";
 import { WeaAddTileBuffSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaAddTileBuffSimple.ts";
 import { WeaAddUnitBuffSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaAddUnitBuffSimple.ts";
@@ -418,8 +416,6 @@ import {
 } from "./StopPersistentAction.ts";
 import { Event } from "../../Constants.ts";
 import { getEvent } from "../../fullDatas/Utils.ts";
-
-type WarEventFullData       = ProtoSchemaCommonProtoWarEventWarEventFullData;
 
 export function checkIsValidWarEventActionId(actionId: number): boolean {
     return (actionId > 0) && (actionId <= MaxCounts.PerMap);

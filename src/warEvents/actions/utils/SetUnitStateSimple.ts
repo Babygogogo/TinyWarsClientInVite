@@ -1,5 +1,5 @@
 import { checkIsValid as ArrayModifiersUtilsCheckIsValid, getResultValue } from "../../../arrayModifiers/Utils.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
@@ -13,25 +13,21 @@ import {
     getResultValue as MultiplierAndOffsetsUtilsGetResultValue,
 } from "../../../multiplierAndOffsets/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type { TileFilter as ProtoSchemaCommonProtoStructureTileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
-import type {
-    WeaSetUnitStateSimple as ProtoSchemaCommonProtoWarEventWeaSetUnitStateSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitStateSimple.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
+import type { WeaSetUnitStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitStateSimple.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import {
     getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
     checkIsValid as TilesUtilsFilterCheckIsValid,
     checkIsMeet as TilesUtilsFilterCheckIsMeet,
 } from "../../../tiles/utils/Filter.ts";
 import { AllTagIdArray } from "../../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import { checkIsValidActionStateId, checkIsValidAiModeId, getEncodedTagId, getTagIdList } from "../../../units/utils/Common.ts";
 import { checkIsValidCustomNameId } from "../../../units/utils/CustomName.ts";
 import {
@@ -42,19 +38,11 @@ import {
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { checkIsValid as WeightedGridIndexesUtilsCheckIsValid } from "../../../weightedGridIndexes/Utils.ts";
 
-type PlayerFilter                       = ProtoSchemaCommonProtoStructurePlayerFilter;
-type TileFilter                         = ProtoSchemaCommonProtoStructureTileFilter;
-type WeaSetUnitStateSimple              = ProtoSchemaCommonProtoWarEventWeaSetUnitStateSimple;
-type Undefinable<T>                     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IPlayer                            = PlayersIPlayer;
-type IUnit                              = UnitsIUnit;
-type ITile                              = TilesITile;
-
-export function checkIsValid(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetUnitStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetUnitStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetUnitStateSimple>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetUnitStateSimple>): string | null {
     if (!data) {
         return null;
     }
@@ -161,7 +149,7 @@ export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSe
         actTextArray.join(`, `),
     );
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetUnitStateSimple>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetUnitStateSimple>): string | null {
     if (!data) {
         return null;
     }

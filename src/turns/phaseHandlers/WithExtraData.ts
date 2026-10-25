@@ -1,6 +1,6 @@
 import { AttackableArea } from "../../auxiliaryTypes/AttackableArea.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { AutoRecoveryTimingId } from "../../coSkills/Constants.ts";
 import { newError, getExisted } from "../../helpers/Misc.ts";
 import type { WoPlayerEndTurn } from "../../proto/schema/CommonProto/WarOperation/WoPlayerEndTurn.ts";
@@ -14,8 +14,6 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { handleCommonExtraData } from "../../warOperations/executors/utils/Common.ts";
 
 type IBwTile                = ITile;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-
 export async function endPhaseStandby(turnManager: ITurnManager, action: WoSystemBeginTurn, isFastExecute: boolean): Promise<void> {
     const phaseCode = turnManager.getPhaseCode();
     if (phaseCode !== PhaseCode.WaitBeginTurn) {

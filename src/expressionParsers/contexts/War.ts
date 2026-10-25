@@ -34,12 +34,9 @@ import { TextType } from "../../lang/Constants.ts";
 import { getFormattedText } from "../../lang/Utils.ts";
 import { MaxInt32 } from "../../numbers/Constants.ts";
 import { getValueInRange, getValueInInt32 } from "../../numbers/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../players/IPlayer.ts";
-import type { ITile as TilesITile } from "../../tiles/ITile.ts";
+import type { IPlayer } from "../../players/IPlayer.ts";
+import type { ITile } from "../../tiles/ITile.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type IPlayer                    = PlayersIPlayer;
-type ITile                      = TilesITile;
 
 export class War extends Base {
     private static readonly VnTurn                      = "turn";

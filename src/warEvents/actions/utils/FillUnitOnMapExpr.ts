@@ -18,15 +18,13 @@ import { PlayerIndex } from "../../../players/Constants.ts";
 import type { WeaFillUnitOnMapExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitOnMapExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { ActionStateId, AiModeId, TagId } from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import { checkIsValidActionStateId, checkIsValidAiModeId, getEncodedTagId } from "../../../units/utils/Common.ts";
 import { create } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { ExpressionInfoDict } from "../constants/FillUnitOnMapExpr.ts";
-
-type ITile                  = TilesITile;
 
 export function checkIsValid(action: Undefinable<WeaFillUnitOnMapExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

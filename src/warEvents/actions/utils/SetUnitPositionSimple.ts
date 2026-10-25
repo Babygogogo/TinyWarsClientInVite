@@ -5,34 +5,23 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText } from "../../../lang/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type { TileFilter as ProtoSchemaCommonProtoStructureTileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
-import type {
-    WeaSetUnitPositionSimple as ProtoSchemaCommonProtoWarEventWeaSetUnitPositionSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitPositionSimple.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
+import type { WeaSetUnitPositionSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitPositionSimple.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import {
     getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
     checkIsValid as TilesUtilsFilterCheckIsValid,
     checkIsMeet as TilesUtilsFilterCheckIsMeet,
 } from "../../../tiles/utils/Filter.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import {
     getDescForEmbed as UnitsUtilsFilterGetDescForEmbed,
     checkIsValid as UnitsUtilsFilterCheckIsValid,
     checkIsMeet as UnitsUtilsFilterCheckIsMeet,
 } from "../../../units/utils/Filter.ts";
-
-type PlayerFilter               = ProtoSchemaCommonProtoStructurePlayerFilter;
-type TileFilter                 = ProtoSchemaCommonProtoStructureTileFilter;
-type WeaSetUnitPositionSimple   = ProtoSchemaCommonProtoWarEventWeaSetUnitPositionSimple;
-type IPlayer                    = PlayersIPlayer;
-type IUnit                      = UnitsIUnit;
-type ITile                      = TilesITile;
 
 export function checkIsValid(data: Undefinable<WeaSetUnitPositionSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);

@@ -27,10 +27,8 @@ import type {
 import type {
     S as ProtoSchemaCommonProtoNetMessageMsgMeSubmitNormalMapS,
 } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
-import type { GridMarkData as ProtoSchemaCommonProtoStructureGridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
+import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
-
-type GridMarkData       = ProtoSchemaCommonProtoStructureGridMarkData;
 
 export function init(): void {
     addListeners([

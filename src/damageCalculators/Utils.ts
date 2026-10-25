@@ -1,7 +1,7 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { BattleInfo } from "../auxiliaryTypes/BattleInfo.ts";
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { CoId, EnergyTypeId } from "../cos/Constants.ts";
 import { getTotalOffset } from "../coSkills/utils/instantMisc/SelfFundAfterBattle.ts";
 import {
@@ -9,7 +9,7 @@ import {
 } from "../coSkills/utils/instantMisc/SelfUnitPromotionAfterBattle.ts";
 import { destroyUnitOnMapForWarDamageCalculator } from "../destructions/Utils.ts";
 import type { GcData } from "../gameConfig/GcData.ts";
-import { DamageFormulaTypeId } from "../gameConfig/GcWar.ts";
+import { DamageFormulaTypeId } from "./Constants.ts";
 import { newError, getExisted } from "../helpers/Misc.ts";
 import { encodeTeamIndex } from "../helpers/Team.ts";
 import { MaxInt32 } from "../numbers/Constants.ts";
@@ -29,7 +29,6 @@ import { getObserverTeamIndexListForUnitOnMap } from "../visibilities/Utils.ts";
 type IBwUnit                = IUnit;
 type IBwPlayer              = IPlayer;
 type IBwUnitMap             = IUnitMap;
-type IBwWar                 = BaseWarInterfaceIBwWar;
 type IBwTile                = ITile;
 
 function checkIsInAttackRange({ gridIndex1, gridIndex2, minAttackRange1, maxAttackRange1 }: {

@@ -1,9 +1,6 @@
-import type { Rectangle as AuxiliaryTypesAuxiliaryTypesRectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { UiAabbParams as UiTypesUiAabbParams } from "../types/UiAabbParams.ts";
+import type { Rectangle } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { UiAabbParams } from "../types/UiAabbParams.ts";
 import { getAabbToParent } from "./UiHelpers.ts";
-
-type UiAabbParams   = UiTypesUiAabbParams;
-type Rectangle      = AuxiliaryTypesAuxiliaryTypesRectangle;
 
 export class UiAabbCache {
     private _params?    : UiAabbParams;

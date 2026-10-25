@@ -7,7 +7,7 @@ import { getText, getTileBaseName } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { getAutoTileBaseShapeId, getAutoTileDecorationTypeAndShapeId } from "../../mapEditor/model/MeHelpers.ts";
 import { getWar } from "../../mapEditor/model/MeModel.ts";
-import type { DataForDrawTileBase as MapEditorModelMeTypesDataForDrawTileBase } from "../../mapEditor/model/MeTypes.ts";
+import type { DataForDrawTileBase } from "../../mapEditor/model/MeTypes.ts";
 import type { BwTileChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -26,8 +26,6 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
-
-type DataForDrawTileBase    = MapEditorModelMeTypesDataForDrawTileBase;
 
 const MAX_RECENT_COUNT = 8;
 

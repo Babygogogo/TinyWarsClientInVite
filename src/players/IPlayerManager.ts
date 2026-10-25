@@ -1,15 +1,9 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
 import type { IPlayer } from "./IPlayer.ts";
-import type {
-    SerialPlayerManager as ProtoSchemaCommonProtoWarSerializationSerialPlayerManager,
-} from "../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
+import type { SerialPlayerManager } from "../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-
-type SerialPlayerManager    = ProtoSchemaCommonProtoWarSerializationSerialPlayerManager;
-type GcData                 = GameConfigGcData;
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 export interface IPlayerManager {
     getWatcherTeamIndexesForSelf(): Set<number>;

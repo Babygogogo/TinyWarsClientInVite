@@ -11,18 +11,13 @@ import { getText, getFormattedText } from "../../../lang/Utils.ts";
 import { checkIsValid as MultiplierAndOffsetsUtilsCheckIsValid, getResultValue } from "../../../multiplierAndOffsets/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
 import { Fund } from "../../../players/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { checkIsValidAliveStateId } from "../../../players/utils/Common.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    WeaSetPlayerStateSimple as ProtoSchemaCommonProtoWarEventWeaSetPlayerStateSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetPlayerStateSimple.ts";
+import type { WeaSetPlayerStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetPlayerStateSimple.ts";
 import { checkIsValid as TilesUtilsFilterCheckIsValid, checkIsMeet as TilesUtilsFilterCheckIsMeet } from "../../../tiles/utils/Filter.ts";
 import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
 import { getDesc, checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet } from "../../../valueAndComparators/Utils.ts";
-
-type WeaSetPlayerStateSimple            = ProtoSchemaCommonProtoWarEventWeaSetPlayerStateSimple;
-type IPlayer                            = PlayersIPlayer;
 
 export function checkIsValid(data: Undefinable<WeaSetPlayerStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);

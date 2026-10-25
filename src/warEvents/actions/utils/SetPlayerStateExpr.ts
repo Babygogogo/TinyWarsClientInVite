@@ -10,15 +10,10 @@ import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInRange, getValueInInt32 } from "../../../numbers/Utils.ts";
 import { Fund } from "../../../players/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { checkIsValidAliveStateId } from "../../../players/utils/Common.ts";
-import type {
-    WeaSetPlayerStateExpr as ProtoSchemaCommonProtoWarEventWeaSetPlayerStateExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetPlayerStateExpr.ts";
+import type { WeaSetPlayerStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetPlayerStateExpr.ts";
 import { ExpressionInfoDict } from "../constants/SetPlayerStateExpr.ts";
-
-type WeaSetPlayerStateExpr  = ProtoSchemaCommonProtoWarEventWeaSetPlayerStateExpr;
-type IPlayer                = PlayersIPlayer;
 
 export function checkIsValid(action: Undefinable<WeaSetPlayerStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

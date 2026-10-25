@@ -1,13 +1,11 @@
 import type { ReplayCheckpointData } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { RwWarBase } from "./RwWarBase.ts";
 import { TeamIndex } from "../../teams/Constants.ts";
 import { getAllUnitsOnMapVisibleToTeams, getAllTilesVisibleToTeam } from "../../visibilities/Utils.ts";
-
-type GcData             = GameConfigGcData;
 
 export class RwWar extends RwWarBase {
     private _replayId?              : number;

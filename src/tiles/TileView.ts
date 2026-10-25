@@ -1,4 +1,4 @@
-import type { DataForTileView as BaseWarModelBwTypesDataForTileView } from "../baseWar/model/BwTypes.ts";
+import type { DataForTileView } from "../baseWar/model/BwTypes.ts";
 import {
     getCachedTileBuffImageSource,
     getTileAnimationTickCount,
@@ -15,8 +15,6 @@ import type { ITileView } from "./ITileView.ts";
 import type { IUiImage } from "../ui/interfaces/IUiImage.ts";
 import { getUiImageClass } from "../ui/utils/UiFactory.ts";
 import { getSelfSettingsTextureVersion } from "../users/Model.ts";
-
-type DataForTileView = BaseWarModelBwTypesDataForTileView;
 
 const getGridWidth  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);

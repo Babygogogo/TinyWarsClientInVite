@@ -3,11 +3,7 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText, getWeatherName } from "../../../lang/Utils.ts";
-import type {
-    WecWeatherAndFog as ProtoSchemaCommonProtoWarEventWecWeatherAndFog,
-} from "../../../proto/schema/CommonProto/WarEvent/WecWeatherAndFog.ts";
-
-type WecWeatherAndFog   = ProtoSchemaCommonProtoWarEventWecWeatherAndFog;
+import type { WecWeatherAndFog } from "../../../proto/schema/CommonProto/WarEvent/WecWeatherAndFog.ts";
 
 export function getBriefDesc(data: Undefinable<WecWeatherAndFog>): string | null {
     if (data == null) {

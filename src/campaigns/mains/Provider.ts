@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import {
     reqCampaignGetCampaignInfo,
@@ -76,8 +76,6 @@ import { getSelfUserId } from "../../users/Model.ts";
 
 type LbCampaignSingleData       = SingleData;
 type LbCampaignMapSingleData    = ProtoSchemaCommonProtoLeaderboardLbCampaignMapSingleData;
-type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
 const _campaignInfoAccessor = new CachedDataAccessor<number, CampaignInfo>({
     reqData : (campaignId: number) => reqCampaignGetCampaignInfo(campaignId),
 });

@@ -4,7 +4,7 @@ import { MouseStyleType, getMouseExpectedStyleType, setMouseExpectedStyleType } 
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiContainerBase } from "../interfaces/IUiContainerBase.ts";
 import type { IUiEventAgent } from "../interfaces/IUiEventAgent.ts";
-import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiAabbCache } from "../utils/UiAabbCache.ts";
 import { UiEventAgent } from "../utils/UiEventAgent.ts";
 import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
@@ -12,8 +12,6 @@ import { UiSizerInfo } from "../utils/UiSizerInfo.ts";
 import { commonLoadSkinAttrsForSizer } from "../utils/UiSkinHelpers.ts";
 import { UiSkinInfo } from "../utils/UiSkinInfo.ts";
 import { DisplayObjectContainer, DisplayObject, Rectangle as VendorEgretEgretRectangle } from "../../vendor/egret/Egret.ts";
-
-type UiSkinAttrs = UiTypesUiSkinAttrs;
 
 // const con = new egret.DisplayObjectContainer();
 // con.touchChildren;

@@ -15,13 +15,9 @@ import { TypeId } from "../../notifications/TypeId.ts";
 import { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
 import { ConditionNodeAndActions } from "../../proto/schema/CommonProto/WarEvent/ConditionNodeAndActions.ts";
 import { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
@@ -54,9 +50,6 @@ import {
     getErrorTipForEventCallCountTotal,
 } from "../../warEvents/events/Utils.ts";
 import { getNode, getEvent, getCondition, getAction } from "../../warEvents/fullDatas/Utils.ts";
-
-type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventAction             = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
     war                 : IMeWar;
@@ -1326,7 +1319,7 @@ function checkIsInterchangeable(action1: WarEventAction, action2: WarEventAction
         && (interchangeableType === getInterchangeableTypeId(action2));
 }
 
-function checkCanNegate(openData: OpenData, fullData: ProtoSchemaCommonProtoWarEventWarEventFullData): boolean {
+function checkCanNegate(openData: OpenData, fullData: WarEventFullData): boolean {
     const nodeId = openData.nodeId;
     if (openData.parentNodeId != null) {
         if ((openData.conditionId != null) || (nodeId != null)) {

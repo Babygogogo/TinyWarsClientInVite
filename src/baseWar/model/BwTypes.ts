@@ -2,9 +2,7 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { ActionTypeId } from "../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
-
-type IUnit              = UnitsIUnit;
+import type { IUnit } from "../../units/IUnit.ts";
 
 export interface DamagePreviewSettings {
     isEnabled   : boolean;

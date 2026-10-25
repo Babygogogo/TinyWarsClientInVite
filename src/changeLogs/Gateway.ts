@@ -10,11 +10,9 @@ import type {
 import type {
     S as ProtoSchemaCommonProtoNetMessageMsgChangeLogModifyMessageS,
 } from "../proto/schema/CommonProto/NetMessage/MsgChangeLogModifyMessage/S.ts";
-import type { LanguageText as ProtoSchemaCommonProtoStructureLanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
+import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
 import type { Event } from "../vendor/egret/Egret.ts";
 import { setAllMessageList } from "./Provider.ts";
-
-type LanguageText       = ProtoSchemaCommonProtoStructureLanguageText;
 
 export function init(): void {
     addListeners([

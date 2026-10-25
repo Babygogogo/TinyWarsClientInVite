@@ -2,15 +2,13 @@ import { StateId } from "../Constants.ts";
 import type { IActionPlanner } from "../IActionPlanner.ts";
 import { Idle } from "./Idle.ts";
 import type { IState } from "./IState.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { ActionStateId } from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { getSelfSettingsIsSetPathMode } from "../../users/Model.ts";
-
-type GridIndex              = AuxiliaryTypesGridIndex;
 
 export class ChoosingUnitMovePath implements IState {
     private static readonly _instance = new ChoosingUnitMovePath();

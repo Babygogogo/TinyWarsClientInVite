@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { GridIndexJson } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
@@ -17,8 +17,6 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { toGridIndexAndWeight } from "../../weightedGridIndexes/Utils.ts";
 
 type SerialUnitJson     = ProtoSchemaCommonProtoWarSerializationSerialUnitSerialUnitJson;
-type GcData             = GameConfigGcData;
-
 export function createNewUnitDataForChangeType(unit: IUnit, newUnitTypeId: number): SerialUnit {
     const unitTemplateCfg       = getExisted(unit.getGcData().getUnitTemplateCfg(newUnitTypeId));
     const maxBuildMaterial      = unitTemplateCfg.getMaxBuildMaterial() ?? 0;
@@ -65,7 +63,7 @@ export function createNewUnitDataForChangeType(unit: IUnit, newUnitTypeId: numbe
 
 export function getErrorCodeForUnitDataIgnoringUnitId({ unitData, mapSize, playersCountUnneutral, gameConfig }: {
     unitData                : SerialUnit;
-    gameConfig              : GameConfigGcData;
+    gameConfig              : GcData;
     mapSize                 : Undefinable<MapSize>;
     playersCountUnneutral   : Undefinable<number>;
 }): ClientErrorCode {

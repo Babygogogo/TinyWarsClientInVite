@@ -4,8 +4,8 @@ import { getSkin } from "../../ResManager.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import { UiCommonEventType } from "../types/UiCommonEventType.ts";
 import { UiComponentType } from "../types/UiComponentType.ts";
-import type { UiSkin as UiTypesUiSkin } from "../types/UiSkin.ts";
-import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import type { UiSkin } from "../types/UiSkin.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiSkinState } from "../types/UiSkinState.ts";
 import {
     getUiContainerClass,
@@ -30,8 +30,6 @@ import {
 } from "./UiFactory.ts";
 import { loadSizerOptions } from "./UiSizerHelpers.ts";
 
-type UiSkinAttrs        = UiTypesUiSkinAttrs;
-type UiSkin             = UiTypesUiSkin;
 type IUiSkinLoader      = IUiComponent;
 
 const UiSkinDefaultAttrs: UiSkinAttrs = {

@@ -6,18 +6,13 @@ import { Num } from "../../../expressionParsers/results/Num.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
-import type {
-    WeaSetCustomLaserTurretStateExpr as ProtoSchemaCommonProtoWarEventWeaSetCustomLaserTurretStateExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomLaserTurretStateExpr.ts";
+import type { WeaSetCustomLaserTurretStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomLaserTurretStateExpr.ts";
 import { TileCustomLaserTurretData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
 import { TileTypeId } from "../../../tiles/constants/Common.ts";
 import { LaserTurret } from "../../../tiles/constants/CustomLimits.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
 import { ExpressionInfoDict } from "../constants/SetCustomLaserTurretStateExpr.ts";
-
-type WeaSetCustomLaserTurretStateExpr   = ProtoSchemaCommonProtoWarEventWeaSetCustomLaserTurretStateExpr;
-type ITile                              = TilesITile;
 
 export function checkIsValid(action: Undefinable<WeaSetCustomLaserTurretStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

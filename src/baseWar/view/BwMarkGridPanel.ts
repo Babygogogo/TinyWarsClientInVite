@@ -1,4 +1,4 @@
-import type { PositionFilter as AuxiliaryTypesPositionFilter } from "../../auxiliaryTypes/PositionFilter.ts";
+import type { PositionFilter } from "../../auxiliaryTypes/PositionFilter.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import { getIsTransparentTouchLayerTouched, setIsTransparentTouchLayerTouched } from "../../common/model/CommonModel.ts";
 import { checkIsMeet } from "../../deprecatedPositionFilter/Utils.ts";
@@ -22,8 +22,8 @@ import type { GridMarkListChanged, HiddenGridMarkTypeIdListChanged } from "../..
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId as NotificationsTypeId } from "../../notifications/TypeId.ts";
 import { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import type { TileFilter as ProtoSchemaCommonProtoStructureTileFilter } from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
-import type { UnitFilter as ProtoSchemaCommonProtoStructureUnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFilter.ts";
+import type { TileFilter } from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
+import type { UnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFilter.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { checkIsMeet as TilesUtilsFilterCheckIsMeet, checkIsMeetAsOutOfVision } from "../../tiles/utils/Filter.ts";
@@ -39,10 +39,6 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../units/utils/Filter.ts";
 import { getAllTilesVisibleToTeam, getAllUnitsOnMapVisibleToTeams } from "../../visibilities/Utils.ts";
-
-type PositionFilter     = AuxiliaryTypesPositionFilter;
-type UnitFilter         = ProtoSchemaCommonProtoStructureUnitFilter;
-type TileFilter         = ProtoSchemaCommonProtoStructureTileFilter;
 
 let _selectedMarkTypeId     = TypeId.MinMarkTypeId;
 

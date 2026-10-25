@@ -2,7 +2,7 @@ import { AttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import { MovableArea } from "../auxiliaryTypes/MovableArea.ts";
 import type { MovePathNode } from "../auxiliaryTypes/MovePathNode.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { getScoreAndActionUnitAttack } from "./actions/UnitAttack.ts";
 import { getScoreAndActionUnitBeLoaded } from "./actions/UnitBeLoaded.ts";
 import { getScoreAndActionUnitBoardedByCo } from "./actions/UnitBoardedByCo.ts";
@@ -33,8 +33,8 @@ import type { GcData } from "../gameConfig/GcData.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
 import { getExisted, newError } from "../helpers/Misc.ts";
 import { PlayerIndex } from "../players/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../players/IPlayer.ts";
-import type { WoContainer as ProtoSchemaCommonProtoWarOperationWoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { IPlayer } from "../players/IPlayer.ts";
+import type { WoContainer } from "../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { TeamIndex } from "../teams/Constants.ts";
 import { checkAndCallLater } from "../timer/TimerModel.ts";
 import { ActionStateId, WeaponTypeId, Hp, AiModeId, LoadedStateId } from "../units/Constants.ts";
@@ -44,11 +44,7 @@ import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { getDiscoveredUnitsByPath } from "../visibilities/Utils.ts";
 
 type IBwUnit                = IUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type WoContainer            = ProtoSchemaCommonProtoWarOperationWoContainer;
 type GrScoreAndAction       = ScoreAndAction;
-type IPlayer                = PlayersIPlayer;
-
 interface AttackInfo {
     baseDamage          : number | null | undefined;
     normalizedHp        : number;

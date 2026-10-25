@@ -1,13 +1,11 @@
 import { newError } from "../../helpers/Misc.ts";
 import { UiScrollerBase } from "./UiScrollerBase.ts";
-import type { IUiComponent as UiInterfacesIUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiContainer } from "../interfaces/IUiContainer.ts";
 import type { IUiLayout } from "../interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../interfaces/IUiScroller.ts";
 import { getUiLayoutClass, getUiContainerClass } from "../utils/UiFactory.ts";
 import type { DisplayObjectContainer } from "../../vendor/egret/Egret.ts";
-
-type IUiComponent = UiInterfacesIUiComponent;
 
 export class UiScroller<T extends IUiContainer | IUiLayout>
     extends     UiScrollerBase
@@ -31,7 +29,7 @@ export class UiScroller<T extends IUiContainer | IUiLayout>
         this._viewport = viewport;
         this.addChild(viewport as unknown as DisplayObjectContainer);
     }
-    protected _getViewport(): UiInterfacesIUiComponent | undefined {
+    protected _getViewport(): IUiComponent | undefined {
         return this._viewport;
     }
 

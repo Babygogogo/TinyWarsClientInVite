@@ -11,9 +11,7 @@ import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getUnitName, getSecondaryLanguageType, getText, getMoveTypeName, getUnitCategoryName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
-import type {
-    UnitTemplateCfg as ProtoSchemaCommonProtoConfigUnitTemplateCfg,
-} from "../../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
+import type { UnitTemplateCfg } from "../../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { ThemeTypeId } from "../../tiles/constants/Common.ts";
@@ -31,8 +29,6 @@ import { getUiUnitViewClass, getUiTileViewClass } from "../../ui/utils/UiFactory
 import { WeaponTypeId } from "../../units/Constants.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 import { getSelfSettingsTextureVersion } from "../../users/Model.ts";
-
-type UnitTemplateCfg    = ProtoSchemaCommonProtoConfigUnitTemplateCfg;
 
 // eslint-disable-next-line no-shadow
 const enum UnitInfoType {

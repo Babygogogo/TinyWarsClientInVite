@@ -3,10 +3,8 @@ import { UiContainer } from "./UiContainer.ts";
 import type { IUiLabel } from "../interfaces/IUiLabel.ts";
 import type { IUiPromptedInput } from "../interfaces/IUiPromptedInput.ts";
 import type { IUiTextInput } from "../interfaces/IUiTextInput.ts";
-import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { commonLoadSkinAttrsForSizer, getRevisedAttrValue } from "../utils/UiSkinHelpers.ts";
-
-type UiSkinAttrs = UiTypesUiSkinAttrs;
 
 export class UiPromptedInput extends UiContainer implements IUiPromptedInput {
     private readonly _textInput?    : IUiTextInput;

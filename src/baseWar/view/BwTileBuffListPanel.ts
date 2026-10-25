@@ -7,12 +7,12 @@ import { getText, getTileBuffName, getTileBuffDesc, getTileBuffExtraParamDesc } 
 import type { BwTileBuffChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { TileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { AllBuffTypeIdArray } from "../../tileBuffs/Constants.ts";
 import { checkIsValidTypeId, create, checkIsExtraParamSupported } from "../../tileBuffs/utils/Common.ts";
-import type { ITile as TilesITile } from "../../tiles/ITile.ts";
+import type { ITile } from "../../tiles/ITile.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -21,9 +21,6 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-
-type TileBuff           = ProtoSchemaCommonProtoStructureTileBuff;
-type ITile              = TilesITile;
 
 export interface OpenData {
     tile        : ITile;

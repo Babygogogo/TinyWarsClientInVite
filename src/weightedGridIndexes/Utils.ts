@@ -3,12 +3,8 @@ import { GridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import { TextType } from "../lang/Constants.ts";
 import { getFormattedText, getText } from "../lang/Utils.ts";
-import type {
-    WeightedGridIndex as ProtoSchemaCommonProtoStructureWeightedGridIndex,
-} from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
+import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 import { AiDestination } from "../units/Constants.ts";
-
-type WeightedGridIndex      = ProtoSchemaCommonProtoStructureWeightedGridIndex;
 
 export function checkIsValid(data: WeightedGridIndex, mapSize: MapSize): boolean {
     return getErrorTip(data, mapSize) == null;

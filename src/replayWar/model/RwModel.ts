@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { getGameConfig } from "../../gameConfig/GcModel.ts";
 import { getRwWarClass } from "../../gameHelpers/GhFactory.ts";
@@ -39,8 +39,6 @@ import {
     reqReplayGetData,
     reqReplayGetReplayInfoArray,
 } from "./RwProxy.ts";
-
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 let _war                : Undefinable<IRwWar>;
 

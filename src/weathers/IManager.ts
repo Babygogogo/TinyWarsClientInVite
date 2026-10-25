@@ -1,12 +1,8 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
-import type {
-    SerialWeatherManager as ProtoSchemaCommonProtoWarSerializationSerialWeatherManager,
-} from "../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
+import type { SerialWeatherManager } from "../proto/schema/CommonProto/WarSerialization/SerialWeatherManager.ts";
 import type { IView } from "./IView.ts";
-
-type SerialWeatherManager = ProtoSchemaCommonProtoWarSerializationSerialWeatherManager;
 
 export interface IManager {
     init(data: Undefinable<SerialWeatherManager>): void;

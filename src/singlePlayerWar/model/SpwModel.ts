@@ -12,13 +12,9 @@ import { getText, getFormattedText } from "../../lang/Utils.ts";
 import { warn } from "../../Logger.ts";
 import { getOngoingWarData } from "../../multiPlayerWar/model/MpwModel.ts";
 import { AliveStateId } from "../../players/Constants.ts";
-import type {
-    SpmWarSaveSlotExtraData as ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData,
-} from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
+import type { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type {
-    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { reqSpmValidateSrw } from "../../singlePlayerMode/model/SpmProxy.ts";
 import type { ISpwWar } from "../interface/ISpwWar.ts";
 import { getSelfUserId, getSelfCawHighScoreInfo } from "../../users/Model.ts";
@@ -26,9 +22,6 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
 import { revise } from "../../warOperations/revisers/Reviser.ts";
 import { getNextSystemOrBotOperation } from "../../warOperations/Utils.ts";
-
-type SerialWar                  = ProtoSchemaCommonProtoWarSerializationSerialWar;
-type SpmWarSaveSlotExtraData    = ProtoSchemaCommonProtoSinglePlayerModeSpmWarSaveSlotExtraData;
 
 let _war: ISpwWar | null = null;
 

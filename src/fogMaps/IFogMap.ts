@@ -1,22 +1,15 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { MapSize as AuxiliaryTypesMapSize } from "../auxiliaryTypes/MapSize.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { ForcedFogCode } from "./Constants.ts";
 import type { VisibilityTypeId } from "../gameConfig/GcWar.ts";
-import type {
-    SerialFogMap as ProtoSchemaCommonProtoWarSerializationSerialFogMap,
-} from "../proto/schema/CommonProto/WarSerialization/SerialFogMap.ts";
+import type { SerialFogMap } from "../proto/schema/CommonProto/WarSerialization/SerialFogMap.ts";
 import type { IUnit } from "../units/IUnit.ts";
 
-type GridIndex      = AuxiliaryTypesGridIndex;
-type MapSize        = AuxiliaryTypesMapSize;
 type VisibilityType = VisibilityTypeId;
 type ForceFogCode   = ForcedFogCode;
-type SerialFogMap   = ProtoSchemaCommonProtoWarSerializationSerialFogMap;
-type Undefinable<T> = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
 export interface IFogMap {
     startRunning(war: IBwWar): void;
 

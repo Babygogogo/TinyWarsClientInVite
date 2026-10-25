@@ -1,4 +1,4 @@
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { NeutralPlayerRule } from "../../playerRules/Constants.ts";
 import { checkIsSame as PlayerRulesUtilsCheckIsSame } from "../../playerRules/Utils.ts";
@@ -10,8 +10,6 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 type PlayerRuleSchema           = PlayerRule;
 type WarRuleCommonDataSchema    = WarRuleCommonData;
-type GcData                     = GameConfigGcData;
-
 export function getPlayerRule(data: WarRuleCommonDataSchema, playerIndex: number): PlayerRuleSchema {
     if (playerIndex === PlayerIndex.Neutral) {
         return NeutralPlayerRule;

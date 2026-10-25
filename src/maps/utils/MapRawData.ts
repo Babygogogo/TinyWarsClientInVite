@@ -11,9 +11,7 @@ import type { MapExtraText } from "../../proto/schema/CommonProto/Map/MapExtraTe
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type {
-    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
-} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { getErrorCodeForFullData } from "../../taskObjectives/Utils.ts";
 import { getErrorCodeForTileCustomNameArray } from "../../tiles/utils/CustomName.ts";
@@ -24,8 +22,6 @@ import { getAllWarEventIdArray, getErrorCodeForWarEventFullData } from "../../wa
 import { getErrorCodeForTemplateWarRuleArray } from "../../warRules/utils/Template.ts";
 
 type MapRawDataSchema   = MapRawData;
-type TemplateWarRule    = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
-
 /** 此函数允许 WarRuleAvailability 全空 */
 export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowRedundantMapSimpleDialogues }: {
     mapRawData                          : MapRawDataSchema;

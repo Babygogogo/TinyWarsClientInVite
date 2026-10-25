@@ -8,12 +8,10 @@ import { UiContainer } from "./UiContainer.ts";
 import type { IUiButton } from "../interfaces/IUiButton.ts";
 import type { IUiImage } from "../interfaces/IUiImage.ts";
 import type { IUiLabel } from "../interfaces/IUiLabel.ts";
-import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiSkinState } from "../types/UiSkinState.ts";
 import { changeColor } from "../utils/UiHelpers.ts";
 import { getRevisedAttrValue, commonLoadSkinAttrsForSizer, loadSkinStateRecursively } from "../utils/UiSkinHelpers.ts";
-
-type UiSkinAttrs    = UiTypesUiSkinAttrs;
 
 export class UiButton extends UiContainer implements IUiButton {
     private readonly _labelDisplay? : IUiLabel;

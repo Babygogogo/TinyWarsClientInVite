@@ -20,17 +20,11 @@ import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { addEventListeners, removeEventListeners } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { Listener } from "../../notifications/Types.ts";
-import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type {
-    SerialPlayer as ProtoSchemaCommonProtoWarSerializationSerialPlayer,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
+import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-import type {
-    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { ThemeTypeId } from "../../tiles/constants/Common.ts";
 import { UiContainer } from "../../ui/components/UiContainer.ts";
 import { UiContainerBase } from "../../ui/components/UiContainerBase.ts";
@@ -44,11 +38,6 @@ import { DisplayLayerId } from "../../units/Constants.ts";
 import { getSelfSettingsIsShowGridBorder, getSelfSettingsTextureVersion } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import type { DisplayObject } from "../../vendor/egret/Egret.ts";
-
-type MapRawData             = ProtoSchemaCommonProtoMapMapRawData;
-type SerialWar              = ProtoSchemaCommonProtoWarSerializationSerialWar;
-type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
-type SerialPlayer           = ProtoSchemaCommonProtoWarSerializationSerialPlayer;
 
 const getGridWidth  = createLazyFunc(() => getCurrentTextureResolutionConfig().gridWidth);
 const getGridHeight = createLazyFunc(() => getCurrentTextureResolutionConfig().gridHeight);

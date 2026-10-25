@@ -1,33 +1,24 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../gameConfig/GcData.ts";
 import type { LanguageType } from "../lang/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../players/IPlayer.ts";
+import type { IPlayer } from "../players/IPlayer.ts";
 import type {
     SelfTileEnabledForUnitProduction,
 } from "../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileEnabledForUnitProduction.ts";
 import type { TileTemplateCfg } from "../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { TileBuff } from "../proto/schema/CommonProto/Structure/TileBuff.ts";
+import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { TileCustomBuildingData } from "../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
 import type { TileCustomCannonData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
 import type { TileCustomCrystalData } from "../proto/schema/CommonProto/WarSerialization/TileCustomCrystalData.ts";
 import type { TileCustomLaserTurretData } from "../proto/schema/CommonProto/WarSerialization/TileCustomLaserTurretData.ts";
 import type { ITileView } from "./ITileView.ts";
-import type { IUnit as UnitsIUnit } from "../units/IUnit.ts";
+import type { IUnit } from "../units/IUnit.ts";
 import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
-type TileBuff               = ProtoSchemaCommonProtoStructureTileBuff;
 type GameConfiguration      = GcData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IPlayer                = PlayersIPlayer;
-type IUnit                  = UnitsIUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-
 export interface ITile {
     init(data: SerialTile, gameConfig: GameConfiguration): void;
     fastInit(data: SerialTile, gameConfig: GameConfiguration): void;
@@ -257,12 +248,12 @@ export interface ITile {
     getCustomNameId(): Undefinable<number>;
     setCustomNameId(nameId: Undefinable<number>): void;
 
-    getCustomName(languageType?: LanguageType): AuxiliaryTypesAuxiliaryTypesUndefinable<string>;
+    getCustomName(languageType?: LanguageType): Undefinable<string>;
 
     ////////////////////////////////////////////////////////////////////////////////
     // Functions for map weapon.
     ////////////////////////////////////////////////////////////////////////////////
-    getMapWeaponType(): AuxiliaryTypesAuxiliaryTypesUndefinable<number>;
+    getMapWeaponType(): Undefinable<number>;
     checkIsMapWeapon(): boolean;
     checkIsCustomMapWeapon(): boolean;
 

@@ -12,15 +12,10 @@ import { Tile as ExpressionParsersResultsTile } from "../../../expressionParsers
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { MaxInt32 } from "../../../numbers/Constants.ts";
-import type {
-    WeaSetUnitPositionExpr as ProtoSchemaCommonProtoWarEventWeaSetUnitPositionExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitPositionExpr.ts";
+import type { WeaSetUnitPositionExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitPositionExpr.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import { ExpressionInfoDict } from "../constants/SetUnitPositionExpr.ts";
-
-type WeaSetUnitPositionExpr = ProtoSchemaCommonProtoWarEventWeaSetUnitPositionExpr;
-type IUnit                  = UnitsIUnit;
 
 export function checkIsValid(action: Undefinable<WeaSetUnitPositionExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

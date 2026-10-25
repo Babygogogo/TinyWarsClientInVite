@@ -1,10 +1,8 @@
 import { UiContainerBase } from "./UiContainerBase.ts";
-import type { IUiComponent as UiInterfacesIUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiContainer } from "../interfaces/IUiContainer.ts";
 import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
 import type { DisplayObject } from "../../vendor/egret/Egret.ts";
-
-type IUiComponent = UiInterfacesIUiComponent;
 
 export class UiContainer extends UiContainerBase implements IUiContainer {
     public getUiChildAt(index: number): IUiComponent | undefined {

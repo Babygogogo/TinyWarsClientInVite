@@ -8,9 +8,7 @@ import { newError, getExisted } from "../../helpers/Misc.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
-import type {
-    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
-} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import type { WarRuleCommonData } from "../../proto/schema/CommonProto/WarRule/WarRuleCommonData.ts";
 import { SettingsForCommon } from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
 import { TurnIndex } from "../../turns/Constants.ts";
@@ -21,8 +19,6 @@ import { checkIsValidWarOperationsLimit } from "../../warOperations/Utils.ts";
 import { getDefaultWeatherType, getPlayerRule } from "../../warRules/utils/CommonData.ts";
 import { getErrorCode, create } from "../../warRules/utils/Instance.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
-
-type TemplateWarRule        = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
 
 export class BwCommonSettingManager implements IBwCommonSettingManager {
     private _war?               : IBwWar;

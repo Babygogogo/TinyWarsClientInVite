@@ -53,15 +53,13 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
 import { getUiUnitViewClass, getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 import { CustomName, ActionStateId, AiModeId, WeaponTypeId } from "../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 import { getEncodedTagId } from "../../units/utils/Common.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 import { getSelfUserId, getSelfSettingsTextureVersion } from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 import { checkCanCheatInWar } from "../../warTypes/Utils.ts";
-
-type IUnit                  = UnitsIUnit;
 
 // eslint-disable-next-line no-shadow
 const enum UnitInfoType {

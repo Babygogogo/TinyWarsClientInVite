@@ -4,12 +4,8 @@ import { checkIsValidForcedFogCode } from "../../../fogMaps/Utils.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { UndefinedError, TextType } from "../../../lang/Constants.ts";
 import { getForceFogCodeName, getFormattedText, getText } from "../../../lang/Utils.ts";
-import type {
-    WeaSetForceFogCodeSimple as ProtoSchemaCommonProtoWarEventWeaSetForceFogCodeSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeSimple.ts";
+import type { WeaSetForceFogCodeSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeSimple.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-
-type WeaSetForceFogCodeSimple   = ProtoSchemaCommonProtoWarEventWeaSetForceFogCodeSimple;
 
 export function checkIsValid(action: Undefinable<WeaSetForceFogCodeSimple>): boolean {
     if (action == null) {

@@ -1,35 +1,26 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { GridIndexAndWeight as AuxiliaryTypesGridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts";
+import type { Undefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { GridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts";
 import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { SkillTypeId } from "../coSkills/Constants.ts";
 import type { GcData } from "../gameConfig/GcData.ts";
 import type { LanguageType } from "../lang/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../players/IPlayer.ts";
+import type { IPlayer } from "../players/IPlayer.ts";
 import type { BuildableTileCfg } from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
 import type { UnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
-import type { UnitBuff as ProtoSchemaCommonProtoStructureUnitBuff } from "../proto/schema/CommonProto/Structure/UnitBuff.ts";
+import type { UnitBuff } from "../proto/schema/CommonProto/Structure/UnitBuff.ts";
 import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
-import type {
-    SerialUnit as ProtoSchemaCommonProtoWarSerializationSerialUnit,
-} from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
+import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import type { ITile } from "../tiles/ITile.ts";
 import type { ActionStateId, AiModeId, WeaponTypeId } from "./Constants.ts";
 import type { IUnitView } from "./IUnitView.ts";
 
-type GridIndex          = AuxiliaryTypesGridIndex;
-type GridIndexAndWeight = AuxiliaryTypesGridIndexAndWeight;
 type UnitActionState    = ActionStateId;
 type UnitAiMode         = AiModeId;
 type UnitWeaponType     = WeaponTypeId;
 type CoSkillType        = SkillTypeId;
 type GameConfiguration  = GcData;
-type UnitBuff           = ProtoSchemaCommonProtoStructureUnitBuff;
-type SerialUnit         = ProtoSchemaCommonProtoWarSerializationSerialUnit;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IPlayer            = PlayersIPlayer;
-type IBwWar             = BaseWarInterfaceIBwWar;
 type IBwTile            = ITile;
 
 export interface IUnit {
@@ -436,5 +427,5 @@ export interface IUnit {
     getCustomNameId(): Undefinable<number>;
     setCustomNameId(nameId: Undefinable<number>): void;
 
-    getCustomName(languageType?: LanguageType): AuxiliaryTypesAuxiliaryTypesUndefinable<string>;
+    getCustomName(languageType?: LanguageType): Undefinable<string>;
 }

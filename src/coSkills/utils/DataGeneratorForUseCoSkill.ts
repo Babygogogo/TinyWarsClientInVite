@@ -1,6 +1,6 @@
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { FixedAreaDamageTargetTypeId } from "../Constants.ts";
 import { pickRandomElement, createEmptyMap } from "../../helpers/Collection.ts";
 import { newError, getExisted } from "../../helpers/Misc.ts";
@@ -13,8 +13,6 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 type IBwPlayer                      = IPlayer;
 type IBwUnitMap                     = IUnitMap;
-type IBwWar                         = BaseWarInterfaceIBwWar;
-
 interface DamageMaps {
     hpMap               : number[][];
     fundMap             : number[][];

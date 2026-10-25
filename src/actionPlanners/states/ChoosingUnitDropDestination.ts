@@ -1,7 +1,7 @@
 import { StateId } from "../Constants.ts";
 import type { IActionPlanner } from "../IActionPlanner.ts";
 import type { IState } from "./IState.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import {
     getHrwWarClass,
     getMeWarClass,
@@ -14,8 +14,6 @@ import { getExisted, newError } from "../../helpers/Misc.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import type { IUnit } from "../../units/IUnit.ts";
-
-type GridIndex      = AuxiliaryTypesGridIndex;
 
 export class ChoosingUnitDropDestination implements IState {
     private static readonly _instance = new ChoosingUnitDropDestination();

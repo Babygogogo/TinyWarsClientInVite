@@ -1,15 +1,13 @@
-import type { PanelConfig as GamePanelsTypesPanelConfig } from "./Types.ts";
+import type { PanelConfig } from "./Types.ts";
 import type { DisplayLayerId } from "../graphics/Constants.ts";
 import { getExisted, newError } from "../helpers/Misc.ts";
 import { warn } from "../Logger.ts";
 import { getSkin } from "../ResManager.ts";
 import { getLayer } from "../stages/StageManager.ts";
-import type { IUiPanel as UiInterfacesIUiPanel } from "../ui/interfaces/IUiPanel.ts";
+import type { IUiPanel } from "../ui/interfaces/IUiPanel.ts";
 import { loadSkin } from "../ui/utils/UiSkinHelpers.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type PanelConfig<T>     = GamePanelsTypesPanelConfig<T>;
-type IUiPanel<T>        = UiInterfacesIUiPanel<T>;
 const _IS_CACHE_ENABLED = true;
 const _runningPanelDict = new Map<PanelConfig<any>, IUiPanel<any>>();
 const _cachedPanelDict  = new Map<PanelConfig<any>, IUiPanel<any>>();

@@ -19,7 +19,7 @@ import {
 } from "../../lang/Utils.ts";
 import { checkIsValidLocationIdSubset } from "../../locations/Utils.ts";
 import { checkIsValidPlayerIndexSubset } from "../../players/utils/Common.ts";
-import type { UnitFilter as ProtoSchemaCommonProtoStructureUnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFilter.ts";
+import type { UnitFilter } from "../../proto/schema/CommonProto/Structure/UnitFilter.ts";
 import { checkIsValidTeamIndexSubset } from "../../teams/Utils.ts";
 import { checkIsValidTypeIdSubset } from "../../unitBuffs/utils/Common.ts";
 import type { IUnit } from "../IUnit.ts";
@@ -39,8 +39,6 @@ import {
     getDesc as ValueSetAndRelationsUtilsGetDesc,
     checkIsValid as ValueSetAndRelationsUtilsCheckIsValid,
 } from "../../valueSetAndRelations/Utils.ts";
-
-type UnitFilter                         = ProtoSchemaCommonProtoStructureUnitFilter;
 
 export function checkIsValid(data: UnitFilter, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GcData): boolean {
     return getErrorTip(data, playersCountUnneutral, mapSize, gameConfig) == null;

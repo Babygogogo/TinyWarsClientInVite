@@ -42,7 +42,7 @@ import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { CustomName, InfoTypeId } from "../../tiles/constants/Common.ts";
 import { Building, Common, Crystal, Cannon, LaserTurret } from "../../tiles/constants/CustomLimits.ts";
 import { TypeId as TilesConstantsMapWeaponTypeId } from "../../tiles/constants/MapWeapon.ts";
-import type { ITile as TilesITile } from "../../tiles/ITile.ts";
+import type { ITile } from "../../tiles/ITile.ts";
 import { create } from "../../tiles/utils/Serialization.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -59,8 +59,6 @@ import { WeaponTypeId, CategoryId } from "../../units/Constants.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { checkCanCheatInWar } from "../../warTypes/Utils.ts";
-
-type ITile                      = TilesITile;
 
 let _selectedMarkTypeId         = TypeId.MinMarkTypeId;
 

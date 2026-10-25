@@ -2,12 +2,9 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "./IBwWar.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
 import type { Info } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonGetUnitStatistics/Info.ts";
-import type {
-    SerialWarStatisticsManager as ProtoSchemaCommonProtoWarSerializationSerialWarStatisticsManager,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWarStatisticsManager.ts";
+import type { SerialWarStatisticsManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarStatisticsManager.ts";
 import type { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
-type SerialWarStatisticsManager = ProtoSchemaCommonProtoWarSerializationSerialWarStatisticsManager;
 type UnitStatistics             = WsUnitStatistics;
 
 export interface IBwWarStatisticsManager {

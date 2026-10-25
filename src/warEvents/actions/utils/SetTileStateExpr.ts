@@ -1,5 +1,5 @@
 import { GcData } from "../../../gameConfig/GcData.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
 import { Parser } from "../../../expressionParsers/Parser.ts";
@@ -10,23 +10,14 @@ import { getFormattedText } from "../../../lang/Utils.ts";
 import { MinId, MaxId } from "../../../locations/Constants.ts";
 import { encode } from "../../../locations/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
-import type {
-    WeaSetTileStateExpr as ProtoSchemaCommonProtoWarEventWeaSetTileStateExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileStateExpr.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { WeaSetTileStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileStateExpr.ts";
+import type { SerialTile } from "../../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { checkIsValidCustomNameId } from "../../../tiles/utils/Common.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
 import { ExpressionInfoDict } from "../constants/SetTileStateExpr.ts";
 
-type WeaSetTileStateExpr    = ProtoSchemaCommonProtoWarEventWeaSetTileStateExpr;
-type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type ITile                  = TilesITile;
-
-export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetTileStateExpr>, customCounterNameSet: Set<string>): boolean {
+export function checkIsValid(action: Undefinable<WeaSetTileStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {
         return false;
     }
@@ -114,14 +105,14 @@ export function checkIsValid(action: AuxiliaryTypesAuxiliaryTypesUndefinable<Wea
     return true;
 }
 
-export function getBriefDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetTileStateExpr>): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetTileStateExpr>): string | null {
     if (data == null) {
         return null;
     }
 
     return getFormattedText(TextType.F0056, data.getConTileFilter() ?? UndefinedError);
 }
-export function getDetailDesc(data: AuxiliaryTypesAuxiliaryTypesUndefinable<WeaSetTileStateExpr>): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetTileStateExpr>): string | null {
     if (data == null) {
         return null;
     }

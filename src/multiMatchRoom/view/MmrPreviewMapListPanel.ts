@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { DefaultParams, TimerTypeId } from "../../bootTimers/Constants.ts";
 import { type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData, Page } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import {
@@ -40,8 +40,6 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { Common } from "../../warOperations/Constants.ts";
 import { create } from "../../warRules/utils/Instance.ts";
-
-type Undefinable<T>                                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export interface OpenData {
     hasFog: boolean;

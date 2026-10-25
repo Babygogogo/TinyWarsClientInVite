@@ -1,8 +1,6 @@
 import { ResultType } from "../Enums.ts";
 import { Base } from "./Base.ts";
-import type { ITurnManager as TurnsITurnManager } from "../../turns/ITurnManager.ts";
-
-type ITurnManager = TurnsITurnManager;
+import type { ITurnManager } from "../../turns/ITurnManager.ts";
 
 export class TurnManager extends Base {
     public readonly turnManager: ITurnManager;

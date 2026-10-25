@@ -1,16 +1,11 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
 import { reqBroadcastGetMessageData } from "./Gateway.ts";
 import { getNonNullElements } from "../helpers/Collection.ts";
 import { getExisted } from "../helpers/Misc.ts";
-import type {
-    BroadcastMessage as ProtoSchemaCommonProtoBroadcastBroadcastMessage,
-} from "../proto/schema/CommonProto/Broadcast/BroadcastMessage.ts";
+import type { BroadcastMessage } from "../proto/schema/CommonProto/Broadcast/BroadcastMessage.ts";
 import type { S } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
 import { getServerTimestamp } from "../timer/TimerModel.ts";
-
-type BroadcastMessage   = ProtoSchemaCommonProtoBroadcastBroadcastMessage;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 const _allMessageIdArray    : number[] = [];
 const _messageDataAccessor  = new CachedDataAccessor<number, BroadcastMessage>({

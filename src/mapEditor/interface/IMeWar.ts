@@ -1,34 +1,16 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
 import type { IMeDrawer } from "./IMeDrawer.ts";
-import type { CampaignMapData as ProtoSchemaCommonProtoMapCampaignMapData } from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";
-import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type {
-    MapSimpleDialogue as ProtoSchemaCommonProtoMapMapSimpleDialogue,
-} from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
-import type { GridMarkData as ProtoSchemaCommonProtoStructureGridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import type { LanguageText as ProtoSchemaCommonProtoStructureLanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
-import type {
-    TaskObjectiveFullData as ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData,
-} from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
-import type {
-    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
-} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
-import type {
-    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-
-type SerialWar              = ProtoSchemaCommonProtoWarSerializationSerialWar;
-type TemplateWarRule        = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
-type MapRawData             = ProtoSchemaCommonProtoMapMapRawData;
-type MapSimpleDialogue      = ProtoSchemaCommonProtoMapMapSimpleDialogue;
-type CampaignMapData        = ProtoSchemaCommonProtoMapCampaignMapData;
-type LanguageText           = ProtoSchemaCommonProtoStructureLanguageText;
-type TaskObjectiveFullData  = ProtoSchemaCommonProtoTaskObjectivesTaskObjectiveFullData;
-type GridMarkData           = ProtoSchemaCommonProtoStructureGridMarkData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
+import type { CampaignMapData } from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";
+import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { MapSimpleDialogue } from "../../proto/schema/CommonProto/Map/MapSimpleDialogue.ts";
+import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
+import type { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
+import type { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
 export interface IMeWar extends IBwWar {
     init(data: SerialWar, gameConfig: GcData): void;

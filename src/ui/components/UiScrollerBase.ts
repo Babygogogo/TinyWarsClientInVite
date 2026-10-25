@@ -5,12 +5,10 @@ import { UiContainerBase } from "./UiContainerBase.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiScrollerBase } from "../interfaces/IUiScrollerBase.ts";
 import { UiOrientation } from "../types/UiOrientation.ts";
-import type { UiScrollerOptions as UiTypesUiScrollerOptions } from "../types/UiScrollerOptions.ts";
+import type { UiScrollerOptions } from "../types/UiScrollerOptions.ts";
 import { getUiLayoutBaseClass } from "../utils/UiFactory.ts";
 import { UiTrackPad } from "../utils/UiTrackPad.ts";
 import { Rectangle, Point, Event } from "../../vendor/egret/Egret.ts";
-
-type UiScrollerOptions  = UiTypesUiScrollerOptions;
 
 export abstract class UiScrollerBase extends UiContainerBase implements IUiScrollerBase {
     private readonly _borderMask    = new Rectangle();

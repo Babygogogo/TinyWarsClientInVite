@@ -3,11 +3,7 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText, getText } from "../../../lang/Utils.ts";
 import type { WarEventFullData } from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type {
-    WeaStopPersistentAction as ProtoSchemaCommonProtoWarEventWeaStopPersistentAction,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaStopPersistentAction.ts";
-
-type WeaStopPersistentAction    = ProtoSchemaCommonProtoWarEventWeaStopPersistentAction;
+import type { WeaStopPersistentAction } from "../../../proto/schema/CommonProto/WarEvent/WeaStopPersistentAction.ts";
 
 export function checkIsValid(action: Undefinable<WeaStopPersistentAction>): boolean {
     if (action == null) {

@@ -1,8 +1,6 @@
 import type { TypeId } from "./TypeId.ts";
-import type { Listener as NotificationsTypesListener } from "./Types.ts";
+import type { Listener } from "./Types.ts";
 import { EventDispatcher, Event } from "../vendor/egret/Egret.ts";
-
-type Listener = NotificationsTypesListener;
 
 const _DISPATCHER = new EventDispatcher();
 

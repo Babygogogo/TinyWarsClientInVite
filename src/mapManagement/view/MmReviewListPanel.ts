@@ -10,7 +10,7 @@ import { getText, getLanguageText } from "../../lang/Utils.ts";
 import { getMmReviewingMaps } from "../../normalMap/model/NormalMapModel.ts";
 import { reqMmAddIgnoredReviewingMap } from "../../normalMap/model/NormalMapProxy.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type { MapEditorData as ProtoSchemaCommonProtoMapMapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
+import type { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
 import { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -27,7 +27,6 @@ import type { IUiZoomableMap } from "../../ui/interfaces/IUiZoomableMap.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
-type MapEditorData      = ProtoSchemaCommonProtoMapMapEditorData;
 type MapRawData         = ProtoSchemaCommonProtoMapMapRawData;
 
 export type OpenData = void;

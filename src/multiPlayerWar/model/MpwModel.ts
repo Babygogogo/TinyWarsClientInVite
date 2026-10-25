@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { TimerTypeId, DefaultParams } from "../../bootTimers/Constants.ts";
 import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
@@ -49,12 +49,8 @@ import { addEventListeners, dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { Listener } from "../../notifications/Types.ts";
 import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
-import type {
-    MpwWarProgressInfo as ProtoSchemaCommonProtoMultiPlayerWarMpwWarProgressInfo,
-} from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarProgressInfo.ts";
-import type {
-    MpwWarSettings as ProtoSchemaCommonProtoMultiPlayerWarMpwWarSettings,
-} from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarSettings.ts";
+import type { MpwWarProgressInfo } from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarProgressInfo.ts";
+import type { MpwWarSettings } from "../../proto/schema/CommonProto/MultiPlayerWar/MpwWarSettings.ts";
 import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMpwCommonBroadcastGameStart/S.ts";
 import type {
     S as ProtoSchemaCommonProtoNetMessageMsgMpwCommonContinueWarS,
@@ -95,56 +91,22 @@ import type {
 import type {
     S as ProtoSchemaCommonProtoNetMessageMsgMpwWatchGetOutgoingInfoS,
 } from "../../proto/schema/CommonProto/NetMessage/MsgMpwWatchGetOutgoingInfo/S.ts";
-import type {
-    WoContainer as ProtoSchemaCommonProtoWarOperationWoContainer,
-} from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type {
-    InstanceWarRule as ProtoSchemaCommonProtoWarRuleInstanceWarRule,
-} from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
-import type {
-    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForAtw as ProtoSchemaCommonProtoWarSettingsSettingsForAtw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
-import type {
-    SettingsForCcw as ProtoSchemaCommonProtoWarSettingsSettingsForCcw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
-import type {
-    SettingsForCommon as ProtoSchemaCommonProtoWarSettingsSettingsForCommon,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
-import type {
-    SettingsForMcw as ProtoSchemaCommonProtoWarSettingsSettingsForMcw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForMcw.ts";
-import type {
-    SettingsForMfw as ProtoSchemaCommonProtoWarSettingsSettingsForMfw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
-import type {
-    SettingsForMmw as ProtoSchemaCommonProtoWarSettingsSettingsForMmw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForMmw.ts";
-import type {
-    SettingsForMrw as ProtoSchemaCommonProtoWarSettingsSettingsForMrw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForMrw.ts";
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
+import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/SettingsForAtw.ts";
+import type { SettingsForCcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCcw.ts";
+import type { SettingsForCommon } from "../../proto/schema/CommonProto/WarSettings/SettingsForCommon.ts";
+import type { SettingsForMcw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMcw.ts";
+import type { SettingsForMfw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMfw.ts";
+import type { SettingsForMmw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMmw.ts";
+import type { SettingsForMrw } from "../../proto/schema/CommonProto/WarSettings/SettingsForMrw.ts";
 import { getSelfUserId, getUserNickname } from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
 import { getPlayerRule, getPlayersCountUnneutral } from "../../warRules/utils/CommonData.ts";
 import { getWarTypeByMpwWarSettings } from "../../warSettings/utils/MpwWarSettings.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
-
-type Undefinable<T>                             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type WoContainer                                = ProtoSchemaCommonProtoWarOperationWoContainer;
-type InstanceWarRule                            = ProtoSchemaCommonProtoWarRuleInstanceWarRule;
-type SerialWar                                  = ProtoSchemaCommonProtoWarSerializationSerialWar;
-type MpwWarSettings                             = ProtoSchemaCommonProtoMultiPlayerWarMpwWarSettings;
-type MpwWarProgressInfo                         = ProtoSchemaCommonProtoMultiPlayerWarMpwWarProgressInfo;
-type SettingsForCommon                          = ProtoSchemaCommonProtoWarSettingsSettingsForCommon;
-type SettingsForMcw                             = ProtoSchemaCommonProtoWarSettingsSettingsForMcw;
-type SettingsForCcw                             = ProtoSchemaCommonProtoWarSettingsSettingsForCcw;
-type SettingsForMrw                             = ProtoSchemaCommonProtoWarSettingsSettingsForMrw;
-type SettingsForMmw                             = ProtoSchemaCommonProtoWarSettingsSettingsForMmw;
-type SettingsForAtw                             = ProtoSchemaCommonProtoWarSettingsSettingsForAtw;
-type SettingsForMfw                             = ProtoSchemaCommonProtoWarSettingsSettingsForMfw;
 
 const _NOTIFY_LISTENERS     : Listener[] = [
     { type: TypeId.MsgMpwWatchGetIncomingInfo,      callback: _onNotifyMsgMpwWatchGetIncomingInfo },
@@ -496,7 +458,7 @@ export function updateOnFailedMsgMpwCommonGetWarSettings(data: ProtoSchemaCommon
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function createDataForCommonWarBasicSettingsPage(warId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
+export async function createDataForCommonWarBasicSettingsPage(warId: Undefinable<number>): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
     const warInfo = warId == null ? null : await getWarSettings(warId);
     if (warInfo == null) {
         return null;
@@ -1211,7 +1173,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
     return openData;
 }
 
-export async function createDataForCommonWarAdvancedSettingsPage(warId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): Promise<OpenData> {
+export async function createDataForCommonWarAdvancedSettingsPage(warId: Undefinable<number>): Promise<OpenData> {
     const mpwWarSettings = warId == null ? null : await getWarSettings(warId);
     if (mpwWarSettings == null) {
         return null;
@@ -1226,7 +1188,7 @@ export async function createDataForCommonWarAdvancedSettingsPage(warId: Auxiliar
     };
 }
 
-export async function createDataForCommonWarPlayerInfoPage(warId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
+export async function createDataForCommonWarPlayerInfoPage(warId: Undefinable<number>): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
     const warSettings = warId == null ? null : await getWarSettings(warId);
     if (warSettings == null) {
         return null;

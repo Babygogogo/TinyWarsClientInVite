@@ -9,12 +9,8 @@ import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaFillUnitOnMapExpr } from "../../proto/schema/CommonProto/WarEvent/WeaFillUnitOnMapExpr.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -27,9 +23,6 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import { ExpressionInfoDict } from "../../warEvents/actions/constants/FillUnitOnMapExpr.ts";
 import { getErrorTipForAction, getBriefDescForAction } from "../../warEvents/actions/utils/Common.ts";
-
-type WarEventFullData           = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventAction             = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
     war         : IMeWar;

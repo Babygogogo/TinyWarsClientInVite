@@ -8,12 +8,8 @@ import { Num } from "../../../expressionParsers/results/Num.ts";
 import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
-import type {
-    WeaSetCustomCounters as ProtoSchemaCommonProtoWarEventWeaSetCustomCounters,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCounters.ts";
+import type { WeaSetCustomCounters } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCounters.ts";
 import { ExpressionInfoDict } from "../constants/SetCustomCounters.ts";
-
-type WeaSetCustomCounters   = ProtoSchemaCommonProtoWarEventWeaSetCustomCounters;
 
 export function checkIsValid(action: Undefinable<WeaSetCustomCounters>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

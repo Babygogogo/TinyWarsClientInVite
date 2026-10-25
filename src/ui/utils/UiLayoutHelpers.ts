@@ -1,11 +1,8 @@
-import type { IUiComponent as UiInterfacesIUiComponent } from "../interfaces/IUiComponent.ts";
-import type { IUiLayoutBase as UiInterfacesIUiLayoutBase } from "../interfaces/IUiLayoutBase.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiLayoutBase } from "../interfaces/IUiLayoutBase.ts";
 import { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
 import { UiLayoutOrientation } from "../types/UiLayoutOrientation.ts";
 import { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
-
-type IUiComponent           = UiInterfacesIUiComponent;
-type IUiLayoutBase          = UiInterfacesIUiLayoutBase;
 
 interface RowInfo {
     maxHeight   : number;

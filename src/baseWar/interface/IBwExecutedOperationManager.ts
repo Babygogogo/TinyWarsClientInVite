@@ -1,13 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type {
-    WoContainer as ProtoSchemaCommonProtoWarOperationWoContainer,
-} from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
-import type {
-    SerialExecutedOperationManager as ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
-
-type WoContainer                    = ProtoSchemaCommonProtoWarOperationWoContainer;
-type SerialExecutedOperationManager = ProtoSchemaCommonProtoWarSerializationSerialExecutedOperationManager;
+import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
+import type { SerialExecutedOperationManager } from "../../proto/schema/CommonProto/WarSerialization/SerialExecutedOperationManager.ts";
 
 export interface IBwExecutedOperationManager {
     init({ isNeedExecutedOperations, data }: {

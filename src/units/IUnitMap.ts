@@ -1,24 +1,14 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { MapSize as AuxiliaryTypesMapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../gameConfig/GcData.ts";
-import type {
-    UnitCustomName as ProtoSchemaCommonProtoStructureUnitCustomName,
-} from "../proto/schema/CommonProto/Structure/UnitCustomName.ts";
-import type {
-    SerialUnitMap as ProtoSchemaCommonProtoWarSerializationSerialUnitMap,
-} from "../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
+import type { UnitCustomName } from "../proto/schema/CommonProto/Structure/UnitCustomName.ts";
+import type { SerialUnitMap } from "../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
 import type { IUnit } from "./IUnit.ts";
 import type { IUnitMapView } from "./IUnitMapView.ts";
 
-type GridIndex              = AuxiliaryTypesGridIndex;
-type MapSize                = AuxiliaryTypesMapSize;
 type GameConfiguration      = GcData;
-type SerialUnitMap          = ProtoSchemaCommonProtoWarSerializationSerialUnitMap;
-type UnitCustomName         = ProtoSchemaCommonProtoStructureUnitCustomName;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-
 export interface IUnitMap {
     init({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialUnitMap>;
@@ -78,7 +68,7 @@ export interface IUnitMap {
 
     setUnitOnMap(unit: IUnit): void;
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
-    removeUnitOnMap(gridIndex: AuxiliaryTypesGridIndex, removeView: boolean): IUnit | null;
+    removeUnitOnMap(gridIndex: GridIndex, removeView: boolean): IUnit | null;
 
     /** 返回被移除的unit；若不再需要该unit，则必须手动调用stopRunning */
     removeUnitLoaded(unitId: number): IUnit;

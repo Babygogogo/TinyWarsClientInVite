@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import type { RoomFilter } from "../../auxiliaryTypes/RoomFilter.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
@@ -37,8 +37,6 @@ import type {
 import { getSelfUserId } from "../../users/Model.ts";
 import { checkIsDummy } from "../../users/Utils.ts";
 import { getPlayersCountUnneutral, getPlayerRule } from "../../warRules/utils/CommonData.ts";
-
-type Undefinable<T>                             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 const _roomStaticInfoAccessor = new CachedDataAccessor<number, MfrRoomStaticInfo>({
     reqData : (roomId: number) => reqMfrGetRoomStaticInfo(roomId),
@@ -85,7 +83,7 @@ export function setJoinedRoomIdArray(roomIdArray: Undefinable<number[]>): void {
     _joinedRoomIdArrayAccessor.setData(null, roomIdArray);
 }
 
-export async function getJoinableRoomIdSetWithFilter(filter: AuxiliaryTypesAuxiliaryTypesUndefinable<RoomFilter>): Promise<Set<number>> {
+export async function getJoinableRoomIdSetWithFilter(filter: Undefinable<RoomFilter>): Promise<Set<number>> {
     const selfUserId = getSelfUserId();
     if (selfUserId == null) {
         return new Set();
@@ -96,7 +94,7 @@ export async function getJoinableRoomIdSetWithFilter(filter: AuxiliaryTypesAuxil
         ? new Set(unjoinedRoomIdArray)
         : getFilteredRoomIdSet(unjoinedRoomIdArray, filter);
 }
-export async function getJoinedRoomIdSetWithFilter(filter: AuxiliaryTypesAuxiliaryTypesUndefinable<RoomFilter>): Promise<Set<number>> {
+export async function getJoinedRoomIdSetWithFilter(filter: Undefinable<RoomFilter>): Promise<Set<number>> {
     const selfUserId = getSelfUserId();
     if (selfUserId == null) {
         return new Set();
@@ -204,7 +202,7 @@ export function updateOnFailedMsgMfrGetRoomPlayerInfo(data: S): void {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export async function createDataForCommonWarPlayerInfoPage(roomId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
+export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<number>): Promise<CommonViewCommonWarPlayerInfoPageOpenData> {
     if (roomId == null) {
         return null;
     }
@@ -300,7 +298,7 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: AuxiliaryType
     };
 }
 
-export async function createDataForCommonWarBasicSettingsPage(roomId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>, showPassword: boolean): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
+export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinable<number>, showPassword: boolean): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
     if (roomId == null) {
         return null;
     }
@@ -429,7 +427,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: AuxiliaryT
     return openData;
 }
 
-export async function createDataForCommonWarAdvancedSettingsPage(roomId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): Promise<OpenData> {
+export async function createDataForCommonWarAdvancedSettingsPage(roomId: Undefinable<number>): Promise<OpenData> {
     if (roomId == null) {
         return null;
     }

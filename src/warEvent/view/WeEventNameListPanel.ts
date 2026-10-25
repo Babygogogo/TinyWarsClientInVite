@@ -11,12 +11,8 @@ import { getText, getFormattedText, getLanguageText } from "../../lang/Utils.ts"
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import type {
-    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
-} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -28,9 +24,6 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import type { Panel as WarEventViewWeMainPanel } from "./WeMainPanel.ts";
 import { cloneEvent } from "../../warEvents/events/Utils.ts";
 import { checkAndDeleteUnusedComponents } from "../../warEvents/fullDatas/Utils.ts";
-
-type TemplateWarRule    = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
-type WarEventFullData   = ProtoSchemaCommonProtoWarEventWarEventFullData;
 
 export interface OpenData {
     war                     : IMeWar;

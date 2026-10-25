@@ -4,13 +4,9 @@ import type { GcData } from "../../../gameConfig/GcData.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getText, getBgmSfxName } from "../../../lang/Utils.ts";
-import type {
-    WeaPersistentPlayBgm as ProtoSchemaCommonProtoWarEventWeaPersistentPlayBgm,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentPlayBgm.ts";
+import type { WeaPersistentPlayBgm } from "../../../proto/schema/CommonProto/WarEvent/WeaPersistentPlayBgm.ts";
 import { playBgm } from "../../../sounds/SoundPlayer.ts";
 import { checkIsBgm } from "../../../sounds/Utils.ts";
-
-type WeaPersistentPlayBgm   = ProtoSchemaCommonProtoWarEventWeaPersistentPlayBgm;
 
 export function checkIsValid(action: Undefinable<WeaPersistentPlayBgm>): boolean {
     if (action == null) {

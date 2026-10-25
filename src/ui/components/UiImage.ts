@@ -5,8 +5,8 @@ import { getExisted, newError } from "../../helpers/Misc.ts";
 import { MouseStyleType, getMouseExpectedStyleType, setMouseExpectedStyleType } from "../../helpers/PointerInput.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiEventAgent } from "../interfaces/IUiEventAgent.ts";
-import type { IUiImage as UiInterfacesIUiImage } from "../interfaces/IUiImage.ts";
-import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import type { IUiImage } from "../interfaces/IUiImage.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 import { UiAabbCache } from "../utils/UiAabbCache.ts";
 import { UiEventAgent } from "../utils/UiEventAgent.ts";
 import { loadSizerOptions, checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
@@ -23,9 +23,6 @@ import {
     DisplayObject,
 } from "../../vendor/egret/Egret.ts";
 import { hasRes, getResByUrl, ResourceItemHelper, getRes, getResAsync } from "../../vendor/egret/Res.ts";
-
-type UiSkinAttrs    = UiTypesUiSkinAttrs;
-type IUiImage       = UiInterfacesIUiImage;
 
 // const obj = new egret.DisplayObject;
 // obj.x;

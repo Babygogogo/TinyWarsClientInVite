@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
@@ -6,15 +6,11 @@ import { newError } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText, getUnitBuffName } from "../../../lang/Utils.ts";
 import { MaxInt32 } from "../../../numbers/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import { UnitBuff } from "../../../proto/schema/CommonProto/Structure/UnitBuff.ts";
-import type {
-    WeaModifyUnitBuffSimple as ProtoSchemaCommonProtoWarEventWeaModifyUnitBuffSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaModifyUnitBuffSimple.ts";
+import type { WeaModifyUnitBuffSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaModifyUnitBuffSimple.ts";
 import {
     getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
     checkIsValid as TilesUtilsFilterCheckIsValid,
@@ -40,11 +36,6 @@ import {
 } from "../../../units/utils/Filter.ts";
 import { BuffEndTimeModificationMode } from "../constants/Common.ts";
 import { checkIsValidBuffEndTimeModificationMode } from "./Common.ts";
-
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type PlayerFilter                   = ProtoSchemaCommonProtoStructurePlayerFilter;
-type WeaModifyUnitBuffSimple        = ProtoSchemaCommonProtoWarEventWeaModifyUnitBuffSimple;
-type IPlayer                        = PlayersIPlayer;
 
 export function checkIsValid(
     data                    : Undefinable<WeaModifyUnitBuffSimple>,

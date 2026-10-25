@@ -1,6 +1,6 @@
 import type { BattleInfo } from "../../../auxiliaryTypes/BattleInfo.ts";
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getTotalOffset } from "../../../coSkills/utils/instantMisc/SelfUnitHpAfterWait.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
 import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
@@ -8,27 +8,21 @@ import { getExisted, newError, createLazyFunc } from "../../../helpers/Misc.ts";
 import { getValidFund } from "../../../players/utils/Common.ts";
 import type { CommonExtraDataForWarOperation } from "../../../proto/schema/CommonProto/Structure/CommonExtraDataForWarOperation.ts";
 import { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type {
-    SerialUnit as ProtoSchemaCommonProtoWarSerializationSerialUnit,
-} from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
+import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { ShortSfxCode } from "../../../sounds/Constants.ts";
 import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
 import { TeamIndex } from "../../../teams/Constants.ts";
 import { BuffTypeId } from "../../../tileBuffs/Constants.ts";
 import { Hp } from "../../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-type SerialUnit         = ProtoSchemaCommonProtoWarSerializationSerialUnit;
-type IUnit              = UnitsIUnit;
-type IBwUnit            = UnitsIUnit;
-type IBwWar             = BaseWarInterfaceIBwWar;
-
+type IBwUnit            = IUnit;
 /**
  * @return the war view is vibrated or not
  */
 export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isUnitJoinUnit = false }: {
-    war                 : BaseWarInterfaceIBwWar;
+    war                 : IBwWar;
     commonExtraData     : CommonExtraDataForWarOperation;
     isFastExecute       : boolean;
     isUnitJoinUnit?     : boolean;

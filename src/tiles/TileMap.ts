@@ -1,7 +1,7 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../gameConfig/GcData.ts";
 import { getTileMapViewClass, getTileClass } from "../gameHelpers/GhFactory.ts";
 import { createEmptyMap, createRange } from "../helpers/Collection.ts";
@@ -11,12 +11,8 @@ import { encode } from "../locations/Utils.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { PlayerIndex } from "../players/Constants.ts";
-import type {
-    TileCustomName as ProtoSchemaCommonProtoStructureTileCustomName,
-} from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { TileCustomName } from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
+import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
 import { TileTypeId } from "./constants/Common.ts";
 import type { ITile } from "./ITile.ts";
@@ -25,10 +21,6 @@ import type { ITileMapView } from "./ITileMapView.ts";
 import { getErrorCodeForTileCustomNameArray } from "./utils/CustomName.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { getAllTilesVisibleToTeams } from "../visibilities/Utils.ts";
-
-type SerialTile             = ProtoSchemaCommonProtoWarSerializationSerialTile;
-type TileCustomName         = ProtoSchemaCommonProtoStructureTileCustomName;
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 export class TileMap implements ITileMap {
     private _map?                           : ITile[][];

@@ -20,23 +20,14 @@ import {
 } from "../../../mapEditor/model/MeHelpers.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
 import type { TileTemplateCfg } from "../../../proto/schema/CommonProto/Config/TileTemplateCfg.ts";
-import type {
-    WeaSetTileTypeExpr as ProtoSchemaCommonProtoWarEventWeaSetTileTypeExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileTypeExpr.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { WeaSetTileTypeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileTypeExpr.ts";
+import type { SerialTile } from "../../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import { TileTypeId, ObjectTypeId } from "../../../tiles/constants/Common.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import type { ITileMap } from "../../../tiles/ITileMap.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import { ExpressionInfoDict } from "../constants/SetTileTypeExpr.ts";
-
-type SerialTile         = ProtoSchemaCommonProtoWarSerializationSerialTile;
-type WeaSetTileTypeExpr = ProtoSchemaCommonProtoWarEventWeaSetTileTypeExpr;
-type IUnit              = UnitsIUnit;
-type ITile              = TilesITile;
 
 type NewTileData = {
     serialTile              : SerialTile | null;

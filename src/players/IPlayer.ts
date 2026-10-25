@@ -1,28 +1,18 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { EnergyTypeId } from "../cos/Constants.ts";
 import type { SkillTypeId } from "../coSkills/Constants.ts";
 import type { GcData } from "../gameConfig/GcData.ts";
 import type { AliveStateId } from "./Constants.ts";
 import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
-import type {
-    GridIdAndMarkTypeId as ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId,
-} from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
-import type {
-    SerialPlayer as ProtoSchemaCommonProtoWarSerializationSerialPlayer,
-} from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
+import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
+import type { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 
-type GridIndex              = AuxiliaryTypesGridIndex;
 type PlayerAliveState       = AliveStateId;
 type CoSkillType            = SkillTypeId;
 type CoEnergyType           = EnergyTypeId;
 type GameConfiguration      = GcData;
-type SerialPlayer           = ProtoSchemaCommonProtoWarSerializationSerialPlayer;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type GridIdAndMarkTypeId    = ProtoSchemaCommonProtoStructureGridIdAndMarkTypeId;
-
 export interface IPlayer {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     init(data: SerialPlayer, gameConfig: GameConfiguration): void;

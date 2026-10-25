@@ -1,6 +1,6 @@
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getMeWarClass, getMpwWarClass, getRwWarBaseClass, getSpwWarClass, getTwWarClass } from "../../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
@@ -10,9 +10,7 @@ import { getText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
-import type {
-    WoUnitBuildTile as ProtoSchemaCommonProtoWarOperationWoUnitBuildTile,
-} from "../../../proto/schema/CommonProto/WarOperation/WoUnitBuildTile.ts";
+import type { WoUnitBuildTile } from "../../../proto/schema/CommonProto/WarOperation/WoUnitBuildTile.ts";
 import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
 import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
 import type { ITwWar } from "../../../testWar/interface/ITwWar.ts";
@@ -20,9 +18,6 @@ import { ActionStateId } from "../../../units/Constants.ts";
 import { getSelfUserId } from "../../../users/Model.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
-
-type WoUnitBuildTile    = ProtoSchemaCommonProtoWarOperationWoUnitBuildTile;
-type IBwWar             = BaseWarInterfaceIBwWar;
 
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;

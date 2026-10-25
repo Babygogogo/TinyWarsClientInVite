@@ -4,20 +4,16 @@ import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText, getText, getComparatorName } from "../../../lang/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import {
     getDescForEmbed,
     checkIsValid as PlayersUtilsFilterCheckIsValid,
     checkIsMeet as PlayersUtilsFilterCheckIsMeet,
 } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type { TileFilter as ProtoSchemaCommonProtoStructureTileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
-import type {
-    WecUnitPresence as ProtoSchemaCommonProtoWarEventWecUnitPresence,
-} from "../../../proto/schema/CommonProto/WarEvent/WecUnitPresence.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
+import type { WecUnitPresence } from "../../../proto/schema/CommonProto/WarEvent/WecUnitPresence.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import {
     getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
     checkIsValid as TilesUtilsFilterCheckIsValid,
@@ -32,12 +28,6 @@ import {
     checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
 } from "../../../valueAndComparators/Utils.ts";
-
-type WecUnitPresence                = ProtoSchemaCommonProtoWarEventWecUnitPresence;
-type PlayerFilter                   = ProtoSchemaCommonProtoStructurePlayerFilter;
-type TileFilter                     = ProtoSchemaCommonProtoStructureTileFilter;
-type IPlayer                        = PlayersIPlayer;
-type ITile                          = TilesITile;
 
 export function getBriefDesc(data: Undefinable<WecUnitPresence>): string | null {
     if (data == null) {

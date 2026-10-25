@@ -4,12 +4,8 @@ import type { IBwWar } from "../interface/IBwWar.ts";
 import { newError, getExisted } from "../../helpers/Misc.ts";
 import { checkIsValidPlayerIndexSubset } from "../../players/utils/Common.ts";
 import type { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
-import type {
-    SerialPlayerManager as ProtoSchemaCommonProtoWarSerializationSerialPlayerManager,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
+import type { SerialPlayerManager } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type SerialPlayerManager        = ProtoSchemaCommonProtoWarSerializationSerialPlayerManager;
 
 export class BwDrawVoteManager implements IBwDrawVoteManager {
     private _remainingVotes     : Undefinable<number>;

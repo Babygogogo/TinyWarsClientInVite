@@ -1,8 +1,6 @@
 import { AllSkillTypeIdArray, SkillTypeId } from "../Constants.ts";
 import { newError } from "../../helpers/Misc.ts";
-import type { CoBasicCfg as ProtoSchemaCommonProtoConfigCoBasicCfg } from "../../proto/schema/CommonProto/Config/CoBasicCfg.ts";
-
-type CoBasicCfg         = ProtoSchemaCommonProtoConfigCoBasicCfg;
+import type { CoBasicCfg } from "../../proto/schema/CommonProto/Config/CoBasicCfg.ts";
 
 export function checkIsValidSkillTypeId(skillTypeId: number): boolean {
     return AllSkillTypeIdArray.includes(skillTypeId);

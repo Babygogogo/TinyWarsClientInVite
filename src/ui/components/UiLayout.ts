@@ -1,11 +1,9 @@
 import { UiLayoutBase } from "./UiLayoutBase.ts";
-import type { IUiComponent as UiInterfacesIUiComponent } from "../interfaces/IUiComponent.ts";
+import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiLayout } from "../interfaces/IUiLayout.ts";
 import { arrangeItems } from "../utils/UiLayoutHelpers.ts";
 import { checkAndAddAutoSizerInfo } from "../utils/UiSizerHelpers.ts";
 import type { DisplayObject } from "../../vendor/egret/Egret.ts";
-
-type IUiComponent = UiInterfacesIUiComponent;
 
 export class UiLayout extends UiLayoutBase implements IUiLayout {
     public getItemAt(index: number): IUiComponent | undefined {

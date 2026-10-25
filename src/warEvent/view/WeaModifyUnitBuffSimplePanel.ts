@@ -7,12 +7,8 @@ import { getText, getUnitBuffName, getUnitBuffDesc, getBuffEndTimeModificationMo
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WeaModifyUnitBuffSimple } from "../../proto/schema/CommonProto/WarEvent/WeaModifyUnitBuffSimple.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -23,9 +19,6 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { AllBuffTypeIdArray, EndTimeModification } from "../../unitBuffs/Constants.ts";
 import { BuffEndTimeModificationMode, AllBuffEndTimeModificationModeArray } from "../../warEvents/actions/constants/Common.ts";
 import { getErrorTipForAction, getDetailDescForAction } from "../../warEvents/actions/utils/Common.ts";
-
-type WarEventFullData               = ProtoSchemaCommonProtoWarEventWarEventFullData;
-type WarEventAction                 = ProtoSchemaCommonProtoWarEventWarEventAction;
 
 export interface OpenData {
     war         : IMeWar;

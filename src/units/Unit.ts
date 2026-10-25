@@ -1,10 +1,10 @@
 import { AttackableArea } from "../auxiliaryTypes/AttackableArea.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { GridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts";
 import { MovableArea } from "../auxiliaryTypes/MovableArea.ts";
 import { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { CoId, EnergyTypeId } from "../cos/Constants.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
@@ -36,14 +36,12 @@ import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { MaxInt32 } from "../numbers/Constants.ts";
 import { getValueInRange, getValueInInt32 } from "../numbers/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../players/IPlayer.ts";
-import type {
-    BuildableTileCfg as ProtoSchemaCommonProtoConfigBuildableTileCfg,
-} from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
+import type { IPlayer } from "../players/IPlayer.ts";
+import type { BuildableTileCfg } from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
 import type { DamageChartCfg } from "../proto/schema/CommonProto/Config/DamageChartCfg.ts";
-import type { UnitTemplateCfg as ProtoSchemaCommonProtoConfigUnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
+import type { UnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
 import type { VisionBonusCfg } from "../proto/schema/CommonProto/Config/VisionBonusCfg.ts";
-import type { UnitBuff as ProtoSchemaCommonProtoStructureUnitBuff } from "../proto/schema/CommonProto/Structure/UnitBuff.ts";
+import type { UnitBuff } from "../proto/schema/CommonProto/Structure/UnitBuff.ts";
 import type { WeightedGridIndex } from "../proto/schema/CommonProto/Structure/WeightedGridIndex.ts";
 import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import type { ITile } from "../tiles/ITile.ts";
@@ -68,12 +66,6 @@ import { getErrorCodeForUnitDataIgnoringUnitId, create } from "./utils/Serializa
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { toGridIndexAndWeight } from "../weightedGridIndexes/Utils.ts";
 
-type UnitBuff               = ProtoSchemaCommonProtoStructureUnitBuff;
-type BuildableTileCfg       = ProtoSchemaCommonProtoConfigBuildableTileCfg;
-type UnitTemplateCfg        = ProtoSchemaCommonProtoConfigUnitTemplateCfg;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IPlayer                = PlayersIPlayer;
-type IBwWar                 = BaseWarInterfaceIBwWar;
 type IBwTile                = ITile;
 
 export class Unit implements IUnit {
@@ -2310,7 +2302,7 @@ export class Unit implements IUnit {
         }
     }
 
-    public getCustomName(languageType = getCurrentLanguageType()): AuxiliaryTypesAuxiliaryTypesUndefinable<string> {
+    public getCustomName(languageType = getCurrentLanguageType()): Undefinable<string> {
         const nameId = this.getCustomNameId();
         return getLanguageText({
             textArray       : this.getWar().getUnitMap().getUnitCustomNameArray()?.find(v => (v.getNameId() ?? 0) === nameId)?.getNameTextArray(),

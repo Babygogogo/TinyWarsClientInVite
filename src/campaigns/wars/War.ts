@@ -1,20 +1,15 @@
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { IWar } from "./IWar.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { SinglePlayerWar } from "../../gameConfig/GcWar.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForCaw as ProtoSchemaCommonProtoWarSettingsSettingsForCaw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForCaw.ts";
+import type { SettingsForCaw } from "../../proto/schema/CommonProto/WarSettings/SettingsForCaw.ts";
 import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type GcData             = GameConfigGcData;
-type SettingsForCaw     = ProtoSchemaCommonProtoWarSettingsSettingsForCaw;
 
 export class War extends SpwWar implements IWar {
     private _settingsForCaw?    : SettingsForCaw;

@@ -1,20 +1,13 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "./IBwWar.ts";
 import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WoSystemCallWarEvent } from "../../proto/schema/CommonProto/WarOperation/WoSystemCallWarEvent.ts";
-import type {
-    SerialWarEventManager as ProtoSchemaCommonProtoWarSerializationSerialWarEventManager,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
-import type { WarEventIdAndDataIndex as WarEventsTypesWarEventIdAndDataIndex } from "../../warEvents/Types.ts";
-
-type GridIndex              = AuxiliaryTypesGridIndex;
-type SerialWarEventManager  = ProtoSchemaCommonProtoWarSerializationSerialWarEventManager;
-type IUnit                  = UnitsIUnit;
-type WarEventIdAndDataIndex = WarEventsTypesWarEventIdAndDataIndex;
+import type { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
+import type { IUnit } from "../../units/IUnit.ts";
+import type { WarEventIdAndDataIndex } from "../../warEvents/Types.ts";
 
 export interface IBwWarEventManager {
     init(data: Undefinable<SerialWarEventManager>, warEventFullData: Undefinable<WarEventFullData>): void;

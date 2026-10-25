@@ -13,13 +13,9 @@ import { TileArray } from "../../../expressionParsers/results/TileArray.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
-import type {
-    WeaSetViewpointExpr as ProtoSchemaCommonProtoWarEventWeaSetViewpointExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointExpr.ts";
+import type { WeaSetViewpointExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetViewpointExpr.ts";
 import { setTimeout } from "../../../vendor/egret/Egret.ts";
 import { ExpressionInfoDict } from "../constants/SetViewpointExpr.ts";
-
-type WeaSetViewpointExpr    = ProtoSchemaCommonProtoWarEventWeaSetViewpointExpr;
 
 export function checkIsValid(action: Undefinable<WeaSetViewpointExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

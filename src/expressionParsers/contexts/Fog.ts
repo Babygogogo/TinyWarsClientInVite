@@ -7,13 +7,11 @@ import { Num } from "../results/Num.ts";
 import { War as ExpressionParsersResultsWar } from "../results/War.ts";
 import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
 import { extendVariableInfoDict, extendFunctionInfoDict, getErrorTextForParameterCount, getErrorTextForParameterType } from "../Utils.ts";
-import type { IFogMap as FogMapsIFogMap } from "../../fogMaps/IFogMap.ts";
+import type { IFogMap } from "../../fogMaps/IFogMap.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getValueInInt32 } from "../../numbers/Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type IFogMap        = FogMapsIFogMap;
 
 export class Fog extends Base {
     private static readonly VnWar           = "war";

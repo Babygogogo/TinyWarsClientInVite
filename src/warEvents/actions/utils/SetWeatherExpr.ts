@@ -8,13 +8,9 @@ import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { MaxInt32 } from "../../../numbers/Constants.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
-import type {
-    WeaSetWeatherExpr as ProtoSchemaCommonProtoWarEventWeaSetWeatherExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherExpr.ts";
+import type { WeaSetWeatherExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherExpr.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { ExpressionInfoDict } from "../constants/SetWeatherExpr.ts";
-
-type WeaSetWeatherExpr  = ProtoSchemaCommonProtoWarEventWeaSetWeatherExpr;
 
 export function checkIsValid(action: Undefinable<WeaSetWeatherExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

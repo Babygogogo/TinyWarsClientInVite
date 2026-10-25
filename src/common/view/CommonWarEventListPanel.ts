@@ -9,9 +9,7 @@ import { getText, getLanguageText, getTextForYesOrNo, getWarEventConditionNodeDe
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
 import type { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -24,8 +22,6 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getDetailDescForAction, getBriefDescForAction } from "../../warEvents/actions/utils/Common.ts";
 import { getDetailedDescForCondition, getBriefDescForCondition } from "../../warEvents/conditions/utils/Common.ts";
 import { DescType } from "../../warEvents/Constants.ts";
-
-type WarEventFullData       = ProtoSchemaCommonProtoWarEventWarEventFullData;
 
 let _isShowDetail           = false;
 

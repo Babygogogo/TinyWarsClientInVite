@@ -10,11 +10,9 @@ import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
 import { extendVariableInfoDict, extendFunctionInfoDict } from "../Utils.ts";
 import { TextType } from "../../lang/Constants.ts";
 import type { TileBuff as ProtoSchemaCommonProtoStructureTileBuff } from "../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type { ITile as TilesITile } from "../../tiles/ITile.ts";
+import type { ITile } from "../../tiles/ITile.ts";
 
 type TileBuffProto      = ProtoSchemaCommonProtoStructureTileBuff;
-type ITile              = TilesITile;
-
 export class TileBuff extends Base {
     private static readonly VnType                      = "type";
     private static readonly VnExpiringPlayerIndex       = "expiringPlayerIndex";

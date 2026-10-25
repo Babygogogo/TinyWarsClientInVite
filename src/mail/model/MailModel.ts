@@ -1,9 +1,7 @@
 import { getExisted } from "../../helpers/Misc.ts";
 import { MailData } from "./MailData.ts";
-import type { MailFullData as ProtoSchemaCommonProtoMailMailFullData } from "../../proto/schema/CommonProto/Mail/MailFullData.ts";
+import type { MailFullData } from "../../proto/schema/CommonProto/Mail/MailFullData.ts";
 import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMailSetIsNew/S.ts";
-
-type MailFullData       = ProtoSchemaCommonProtoMailMailFullData;
 
 const _mailArray: MailData[] = [];
 

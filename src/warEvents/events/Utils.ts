@@ -8,25 +8,15 @@ import {
     getSecondaryLanguageType,
 } from "../../lang/Utils.ts";
 import { WarEvent as ProtoSchemaCommonProtoWarEventWarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
-import type {
-    WarEventAction as ProtoSchemaCommonProtoWarEventWarEventAction,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
-import type {
-    WarEventConditionNode as ProtoSchemaCommonProtoWarEventWarEventConditionNode,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
+import type { WarEventConditionNode } from "../../proto/schema/CommonProto/WarEvent/WarEventConditionNode.ts";
+import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { MaxCounts } from "../actions/constants/Common.ts";
 import { cloneAction } from "../actions/utils/Common.ts";
 import { cloneNode } from "../conditionNodes/Utils.ts";
 import { Event, ConditionNode } from "../Constants.ts";
 
-type WarEventFullData       = ProtoSchemaCommonProtoWarEventWarEventFullData;
 type WarEvent               = ProtoSchemaCommonProtoWarEventWarEvent;
-type WarEventAction         = ProtoSchemaCommonProtoWarEventWarEventAction;
-type WarEventConditionNode  = ProtoSchemaCommonProtoWarEventWarEventConditionNode;
-
 export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DONE
     warEvent    : WarEvent;
     nodeDict    : Map<number, WarEventConditionNode>;

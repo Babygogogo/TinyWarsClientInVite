@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import type { IBwWarStatisticsManager } from "../interface/IBwWarStatisticsManager.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
@@ -17,8 +17,6 @@ import { TurnIndex } from "../../turns/Constants.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../visibilities/Utils.ts";
 import { checkCanMerge, checkAndMergeTo } from "../../warStatistics/Utils.ts";
-
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export class BwWarStatisticsManager implements IBwWarStatisticsManager {
     private _playerStatisticsArray?     : WsPlayerStatistics[];

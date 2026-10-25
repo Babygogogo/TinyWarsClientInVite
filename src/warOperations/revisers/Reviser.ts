@@ -1,5 +1,5 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { newError } from "../../helpers/Misc.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
@@ -36,9 +36,6 @@ import { revise as WarOperationsRevisersUtilsUnitSurfaceRevise } from "./utils/U
 import { revise as WarOperationsRevisersUtilsUnitUseCoSkillRevise } from "./utils/UnitUseCoSkill.ts";
 import { revise as WarOperationsRevisersUtilsUnitWaitRevise } from "./utils/UnitWait.ts";
 import { revise as WarOperationsRevisersUtilsUnknownRevise } from "./utils/Unknown.ts";
-
-type IBwWar             = BaseWarInterfaceIBwWar;
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export function revise(war: IBwWar, rawAction: WoContainer, requesterUserId: Undefinable<number>): WoContainer {
     // if (Object.keys(rawAction).length !== 2) {

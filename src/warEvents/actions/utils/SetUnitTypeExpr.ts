@@ -7,20 +7,15 @@ import { Num } from "../../../expressionParsers/results/Num.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
-import type {
-    WeaSetUnitTypeExpr as ProtoSchemaCommonProtoWarEventWeaSetUnitTypeExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitTypeExpr.ts";
+import type { WeaSetUnitTypeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitTypeExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import { Hp } from "../../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import { getNormalizedHp } from "../../../units/utils/Common.ts";
 import { createNewUnitDataForChangeType } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { ExpressionInfoDict } from "../constants/SetUnitTypeExpr.ts";
-
-type WeaSetUnitTypeExpr = ProtoSchemaCommonProtoWarEventWeaSetUnitTypeExpr;
-type IUnit              = UnitsIUnit;
 
 export function checkIsValid(action: Undefinable<WeaSetUnitTypeExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

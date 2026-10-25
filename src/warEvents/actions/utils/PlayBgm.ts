@@ -4,12 +4,10 @@ import type { GcData } from "../../../gameConfig/GcData.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getText, getBgmSfxName } from "../../../lang/Utils.ts";
-import type { WeaPlayBgm as ProtoSchemaCommonProtoWarEventWeaPlayBgm } from "../../../proto/schema/CommonProto/WarEvent/WeaPlayBgm.ts";
+import type { WeaPlayBgm } from "../../../proto/schema/CommonProto/WarEvent/WeaPlayBgm.ts";
 import { playCoBgmWithWar, playBgm } from "../../../sounds/SoundPlayer.ts";
 import { checkIsBgm } from "../../../sounds/Utils.ts";
 import { getSelfSettingsCoBgmCodeArray } from "../../../users/Model.ts";
-
-type WeaPlayBgm         = ProtoSchemaCommonProtoWarEventWeaPlayBgm;
 
 export function checkIsValid(action: Undefinable<WeaPlayBgm>, gameConfig: GcData): boolean {
     if (action == null) {

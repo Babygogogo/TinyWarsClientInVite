@@ -1,9 +1,7 @@
-import type { TreeNode as AuxiliaryTypesTreeNode } from "../../auxiliaryTypes/TreeNode.ts";
+import type { TreeNode } from "../../auxiliaryTypes/TreeNode.ts";
 import type { IUiComponent } from "./IUiComponent.ts";
 import type { UiSkin } from "../types/UiSkin.ts";
 import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
-
-type TreeNode<T> = AuxiliaryTypesTreeNode<T>;
 
 export interface IUiSkinInfo {
     getIsLoaded(): boolean;

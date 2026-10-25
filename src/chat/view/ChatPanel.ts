@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { MainCategoryId, Common, ToCategoryId, PublicChannelId } from "../Constants.ts";
 import {
@@ -75,8 +75,6 @@ import {
 } from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
-
-type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 let _preferredChatToTarget          = new ChatToTarget();
 const _preferredChatToTargetDict    = new Map<MainCategoryId, ChatToTarget>();

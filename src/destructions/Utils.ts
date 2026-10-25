@@ -1,6 +1,6 @@
 import type { BattleInfo } from "../auxiliaryTypes/BattleInfo.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { EnergyTypeId } from "../cos/Constants.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { getExisted } from "../helpers/Misc.ts";
@@ -13,7 +13,6 @@ import type { IUnit } from "../units/IUnit.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../visibilities/Utils.ts";
 
-type IBwWar             = BaseWarInterfaceIBwWar;
 type IBwUnit            = IUnit;
 
 export function destroyUnitOnMap(war: IBwWar, gridIndex: GridIndex, showExplosionEffect: boolean): IBwUnit[] {

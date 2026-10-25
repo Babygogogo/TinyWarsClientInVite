@@ -1,11 +1,3 @@
-
-
-// eslint-disable-next-line no-shadow
-export const enum DamageFormulaTypeId {
-    Dor     = 1,
-    Trilogy = 2,
-}
-
 // eslint-disable-next-line no-shadow
 export const enum SyncRequestType {
     PlayerRequest,

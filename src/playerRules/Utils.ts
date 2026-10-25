@@ -1,7 +1,7 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CategoryId, CoId } from "../cos/Constants.ts";
 import { checkIsValidSkinId } from "../forceSkins/Utils.ts";
-import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
 import { checkIsSameSet } from "../helpers/Collection.ts";
 import {
     InitialFund,
@@ -19,15 +19,10 @@ import {
 } from "./Constants.ts";
 import { PlayerIndex } from "../players/Constants.ts";
 import { PlayerRule } from "../proto/schema/CommonProto/WarRule/PlayerRule.ts";
-import type {
-    RuleAvailability as ProtoSchemaCommonProtoWarRuleRuleAvailability,
-} from "../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
+import type { RuleAvailability } from "../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
 import { TeamIndex } from "../teams/Constants.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { WarTypeId } from "../warTypes/Constants.ts";
-
-type GcData             = GameConfigGcData;
-type RuleAvailability   = ProtoSchemaCommonProtoWarRuleRuleAvailability;
 
 export function createDefaultPlayerRule(playerIndex: number, gcData: GcData): PlayerRule {
     return PlayerRule.fromJson({
@@ -75,7 +70,7 @@ export function createDefaultPlayerRuleList(playersCountUnneutral: number, gcDat
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, isCampaignMap }: {
     playerRule              : PlayerRule;
-    gameConfig              : GameConfigGcData;
+    gameConfig              : GcData;
     playersCountUnneutral   : number;
     isCampaignMap           : boolean;
 }): ClientErrorCode {
@@ -340,7 +335,7 @@ export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, is
 
 export function getErrorCodeForPlayerRuleList({ playerRuleList, gameConfig, playersCountUnneutral, ruleAvailability, isCampaignMap }: {
     playerRuleList          : PlayerRule[];
-    gameConfig              : GameConfigGcData;
+    gameConfig              : GcData;
     playersCountUnneutral   : number;
     ruleAvailability        : RuleAvailability | null;
     isCampaignMap           : boolean;

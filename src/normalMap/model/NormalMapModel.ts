@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
 import { SortType } from "../../maps/Constants.ts";
@@ -50,8 +50,6 @@ import type {
 } from "../../proto/schema/CommonProto/NetMessage/MsgNormalMapGetBriefDataVersion/S.ts";
 import { getMapRating, getIsSelfMapCommittee } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 const _mapTagAccessor   = new CachedDataAccessor<null, MapTag>({
     reqData : () => reqMapGetMapTag(),
@@ -422,7 +420,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
     }
 }
 
-export async function checkIsMeetFilter(normalMapId: number, filter: AuxiliaryTypesAuxiliaryTypesUndefinable<MapFilter>): Promise<boolean> {
+export async function checkIsMeetFilter(normalMapId: number, filter: Undefinable<MapFilter>): Promise<boolean> {
     const mapBriefData = await getBriefData(normalMapId);
     if (mapBriefData == null) {
         return false;

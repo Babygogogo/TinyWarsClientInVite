@@ -1,18 +1,13 @@
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
-import type {
-    WoUnitRepairUnit as ProtoSchemaCommonProtoWarOperationWoUnitRepairUnit,
-} from "../../../proto/schema/CommonProto/WarOperation/WoUnitRepairUnit.ts";
+import type { WoUnitRepairUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitRepairUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import { ActionStateId, Hp } from "../../../units/Constants.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
-
-type WoUnitRepairUnit       = ProtoSchemaCommonProtoWarOperationWoUnitRepairUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export async function execute(war: IBwWar, action: WoUnitRepairUnit, isFast: boolean): Promise<void> {

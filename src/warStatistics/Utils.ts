@@ -1,8 +1,4 @@
-import type {
-    WsUnitStatistics as ProtoSchemaCommonProtoWarSerializationWsUnitStatistics,
-} from "../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-
-type WsUnitStatistics  = ProtoSchemaCommonProtoWarSerializationWsUnitStatistics;
+import type { WsUnitStatistics } from "../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
 export function checkCanMerge(data1: WsUnitStatistics, data2: WsUnitStatistics): boolean {
     return ((data1.getUnitType() ?? 0) === (data2.getUnitType() ?? 0))

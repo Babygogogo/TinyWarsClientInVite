@@ -1,5 +1,5 @@
 import { closePanel } from "../../gamePanels/Manager.ts";
-import type { PanelConfig as GamePanelsTypesPanelConfig } from "../../gamePanels/Types.ts";
+import type { PanelConfig } from "../../gamePanels/Types.ts";
 import { Tween } from "../../graphics/Constants.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { PointerEventType } from "../../helpers/PointerInput.ts";
@@ -37,8 +37,6 @@ interface ComponentsForDefaultOpenAndCloseAnimation {
 }
 
 
-
-type PanelConfig<T> = GamePanelsTypesPanelConfig<T>;
 
 export abstract class UiPanel<OpenData> extends UiOpenableComponent<OpenData> implements IUiPanel<OpenData> {
     private _panelConfig?                               : PanelConfig<OpenData>;

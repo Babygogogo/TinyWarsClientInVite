@@ -1,5 +1,5 @@
 import type {
-    Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable,
+    Undefinable,
     DecodedSpmWarSaveSlotData,
 } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
@@ -59,8 +59,6 @@ import { TurnIndex, PhaseCode } from "../../turns/Constants.ts";
 import { getSelfUserId } from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { create } from "../../warRules/utils/Instance.ts";
-
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 // 多人模式战局当前数据（需要把后端warID改为数据库自增，下同）
 // 多人模式半路回放
@@ -359,7 +357,7 @@ function setReplayData(rankId: number, data: SerialWar | null): Promise<void> {
     _replayDataAccessor.setData(rankId, data);
     return StoreSpmReplayData.setData(rankId, data);
 }
-async function decodeAndReviseReplayData(encodedWar: AuxiliaryTypesAuxiliaryTypesUndefinable<Uint8Array>): Promise<SerialWar | null> {
+async function decodeAndReviseReplayData(encodedWar: Undefinable<Uint8Array>): Promise<SerialWar | null> {
     if (encodedWar == null) {
         return null;
     }

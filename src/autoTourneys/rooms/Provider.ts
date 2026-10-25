@@ -1,5 +1,5 @@
 import { reqAtrGetRoomPublicInfo, reqAtrGetJoinedRoomIdArray } from "./Gateway.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { DefaultParams, TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
@@ -12,9 +12,7 @@ import { getExisted, checkIsAnyPromiseTrue, newError } from "../../helpers/Misc.
 import { warn } from "../../Logger.ts";
 import { SelfSettings } from "../../multiPlayerRooms/SelfSettings.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
-import type {
-    AtrRoomInfo as ProtoSchemaCommonProtoAutoTourneyRoomAtrRoomInfo,
-} from "../../proto/schema/CommonProto/AutoTourneyRoom/AtrRoomInfo.ts";
+import type { AtrRoomInfo } from "../../proto/schema/CommonProto/AutoTourneyRoom/AtrRoomInfo.ts";
 import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgAtrDeleteRoomByServer/S.ts";
 import type {
     S as ProtoSchemaCommonProtoNetMessageMsgAtrGetRoomPublicInfoS,
@@ -34,9 +32,6 @@ import { getPlayerRule, getPlayersCountUnneutral } from "../../warRules/utils/Co
 type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
 type OpenDataForCommonWarAdvancedSettingsPage   = OpenData;
 type OpenDataForCommonWarPlayerInfoPage         = CommonViewCommonWarPlayerInfoPageOpenData;
-type AtrRoomInfo                                = ProtoSchemaCommonProtoAutoTourneyRoomAtrRoomInfo;
-type Undefinable<T>                             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-
 const _selfSettingsDict         = new Map<number, SelfSettings>();
 const _roomInfoAccessor         = new CachedDataAccessor<number, AtrRoomInfo>({
     reqData : (roomId: number) => reqAtrGetRoomPublicInfo(roomId),
@@ -176,7 +171,7 @@ export async function checkIsRedForRoom(roomId: number): Promise<boolean> {
     return false;
 }
 
-export async function createDataForCommonWarPlayerInfoPage(roomId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): Promise<OpenDataForCommonWarPlayerInfoPage> {
+export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<number>): Promise<OpenDataForCommonWarPlayerInfoPage> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return null;
@@ -215,7 +210,7 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: AuxiliaryType
     };
 }
 
-export async function createDataForCommonWarBasicSettingsPage(roomId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): Promise<OpenDataForCommonWarBasicSettingsPage> {
+export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinable<number>): Promise<OpenDataForCommonWarBasicSettingsPage> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return { dataArrayForListSettings: [] };
@@ -324,7 +319,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: AuxiliaryT
     return openData;
 }
 
-export async function createDataForCommonWarAdvancedSettingsPage(roomId: AuxiliaryTypesAuxiliaryTypesUndefinable<number>): Promise<OpenDataForCommonWarAdvancedSettingsPage> {
+export async function createDataForCommonWarAdvancedSettingsPage(roomId: Undefinable<number>): Promise<OpenDataForCommonWarAdvancedSettingsPage> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
         return null;

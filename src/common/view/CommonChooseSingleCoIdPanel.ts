@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { DisplayCategoryArray, ForceArray, CoId } from "../../cos/Constants.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
 import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
@@ -19,8 +19,6 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import { getUiLayoutClass, getUiImageClass } from "../../ui/utils/UiFactory.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-
-type Undefinable<T> = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export interface OpenData {
     currentCoId         : Undefinable<number>;

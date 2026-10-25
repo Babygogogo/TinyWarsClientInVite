@@ -1,6 +1,6 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { EnergyTypeId, CoId } from "../cos/Constants.ts";
 import { checkIsValidEnergy, getValidEnergy, getCoMaxEnergy } from "../cos/Utils.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
@@ -27,8 +27,6 @@ import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/
 import { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 import { getSelfUserId, getUserNickname } from "../users/Model.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
-
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 export class Player implements IPlayer {
     private _playerIndex?               : number;

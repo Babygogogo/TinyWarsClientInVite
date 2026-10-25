@@ -6,18 +6,13 @@ import { Num } from "../../../expressionParsers/results/Num.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
-import type {
-    WeaSetCustomCannonStateExpr as ProtoSchemaCommonProtoWarEventWeaSetCustomCannonStateExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCannonStateExpr.ts";
+import type { WeaSetCustomCannonStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetCustomCannonStateExpr.ts";
 import { TileCustomCannonData } from "../../../proto/schema/CommonProto/WarSerialization/TileCustomCannonData.ts";
 import { TileTypeId } from "../../../tiles/constants/Common.ts";
 import { Cannon } from "../../../tiles/constants/CustomLimits.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
 import { ExpressionInfoDict } from "../constants/SetCustomCannonStateExpr.ts";
-
-type WeaSetCustomCannonStateExpr    = ProtoSchemaCommonProtoWarEventWeaSetCustomCannonStateExpr;
-type ITile                          = TilesITile;
 
 export function checkIsValid(action: Undefinable<WeaSetCustomCannonStateExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

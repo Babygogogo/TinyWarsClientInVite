@@ -1,5 +1,5 @@
 import type { IActionPlanner } from "../../actionPlanners/IActionPlanner.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import type { IBwCommonSettingManager } from "../interface/IBwCommonSettingManager.ts";
@@ -15,7 +15,7 @@ import type { IBwWarView } from "../interface/IBwWarView.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { IField } from "../../fields/IField.ts";
 import type { IFogMap } from "../../fogMaps/IFogMap.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import {
     getBwWeatherManagerClass,
     getTurnManagerClass,
@@ -37,8 +37,8 @@ import { TextType } from "../../lang/Constants.ts";
 import { getFormattedText, getTileName, getText } from "../../lang/Utils.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { AliveStateId } from "../../players/Constants.ts";
-import type { IPlayer as PlayersIPlayer } from "../../players/IPlayer.ts";
-import type { IPlayerManager as PlayersIPlayerManager } from "../../players/IPlayerManager.ts";
+import type { IPlayer } from "../../players/IPlayer.ts";
+import type { IPlayerManager } from "../../players/IPlayerManager.ts";
 import { getPlayersCountUnneutral } from "../../players/utils/Common.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { MovingUnitAndPath } from "../../proto/schema/CommonProto/Structure/MovingUnitAndPath.ts";
@@ -46,7 +46,7 @@ import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/Ins
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { playCoBgmWithWar } from "../../sounds/SoundPlayer.ts";
 import type { ITaskObjectiveManager } from "../../taskObjectives/ITaskObjectiveManager.ts";
-import type { ITileMap as TilesITileMap } from "../../tiles/ITileMap.ts";
+import type { ITileMap } from "../../tiles/ITileMap.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import type { PhaseCode } from "../../turns/Constants.ts";
 import type { ITurnManager } from "../../turns/ITurnManager.ts";
@@ -59,12 +59,6 @@ import { checkIsDummy } from "../../users/Utils.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 import type { IManager } from "../../weathers/IManager.ts";
-
-type GcData                 = GameConfigGcData;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type IPlayerManager         = PlayersIPlayerManager;
-type IPlayer                = PlayersIPlayer;
-type ITileMap               = TilesITileMap;
 
 type DamagePreviewSettings = {
     isEnabled   : boolean;

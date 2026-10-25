@@ -1,6 +1,6 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { newError, getExisted } from "../../../helpers/Misc.ts";
 import { AliveStateId, PlayerIndex } from "../../../players/Constants.ts";
 import { WoContainer } from "../../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
@@ -10,9 +10,6 @@ import { PhaseCode } from "../../../turns/Constants.ts";
 import { Hp, CategoryId } from "../../../units/Constants.ts";
 import { getNormalizedHp } from "../../../units/utils/Common.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
-
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type Undefinable<T>         = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export function revise(war: IBwWar, rawAction: WoPlayerProduceUnit, requesterUserId: Undefinable<number>): WoContainer {
     if (war.getTurnPhaseCode() !== PhaseCode.Main) {

@@ -9,12 +9,8 @@ import { Position as ExpressionParsersResultsPosition } from "../../../expressio
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
-import type {
-    WeaSetUnitMovePathVisibility as ProtoSchemaCommonProtoWarEventWeaSetUnitMovePathVisibility,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitMovePathVisibility.ts";
+import type { WeaSetUnitMovePathVisibility } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitMovePathVisibility.ts";
 import { ExpressionInfoDict } from "../constants/SetUnitMovePathVisibility.ts";
-
-type WeaSetUnitMovePathVisibility   = ProtoSchemaCommonProtoWarEventWeaSetUnitMovePathVisibility;
 
 export function checkIsValid(action: Undefinable<WeaSetUnitMovePathVisibility>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

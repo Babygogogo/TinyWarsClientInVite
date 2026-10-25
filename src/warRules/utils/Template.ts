@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { checkIsSameList } from "../../helpers/Collection.ts";
 import { checkIsValidLanguageTextArray } from "../../lang/Utils.ts";
 import { createDefaultPlayerRuleList, getErrorCodeForPlayerRuleList } from "../../playerRules/Utils.ts";
@@ -8,8 +8,6 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { Constants } from "../Constants.ts";
 import { checkIsValid } from "./Availability.ts";
 import { getErrorCode as WarRulesUtilsCommonDataGetErrorCode, checkIsSame } from "./CommonData.ts";
-
-type GcData                     = GameConfigGcData;
 
 export function createDefault(ruleId: number, playersCount: number, gcData: GcData): TemplateWarRule {
     return TemplateWarRule.fromJson({
@@ -42,7 +40,7 @@ export function createDefault(ruleId: number, playersCount: number, gcData: GcDa
 export function getErrorCode({ templateWarRule, allWarEventIdArray, gameConfig, playersCountUnneutral, allMapSimpleDialogueIdArray, isCampaignMap, allTaskObjectiveIdSet }: {
     templateWarRule             : TemplateWarRule;
     allWarEventIdArray          : number[];
-    gameConfig                  : GameConfigGcData;
+    gameConfig                  : GcData;
     playersCountUnneutral       : number;
     allMapSimpleDialogueIdArray : number[];
     isCampaignMap               : boolean;

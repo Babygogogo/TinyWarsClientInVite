@@ -1,16 +1,11 @@
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import type {
-    SettingsForScw as ProtoSchemaCommonProtoWarSettingsSettingsForScw,
-} from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
+import type { SettingsForScw } from "../../proto/schema/CommonProto/WarSettings/SettingsForScw.ts";
 import { SpwWar } from "../../singlePlayerWar/model/SpwWar.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
-
-type SettingsForScw     = ProtoSchemaCommonProtoWarSettingsSettingsForScw;
-type GcData             = GameConfigGcData;
 
 export class ScwWar extends SpwWar {
     private _settingsForScw?    : SettingsForScw;

@@ -1,8 +1,6 @@
 import { ResultType } from "../Enums.ts";
 import { Base } from "./Base.ts";
-import type { IFogMap as FogMapsIFogMap } from "../../fogMaps/IFogMap.ts";
-
-type IFogMap = FogMapsIFogMap;
+import type { IFogMap } from "../../fogMaps/IFogMap.ts";
 
 export class FogMap extends Base {
     public readonly fogMap: IFogMap;

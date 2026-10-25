@@ -1,9 +1,6 @@
 import type { IUiComponent } from "./IUiComponent.ts";
-import type { UiHorizontalAlign as UiTypesUiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
-import type { UiVerticalAlign as UiTypesUiVerticalAlign } from "../types/UiVerticalAlign.ts";
-
-type UiHorizontalAlign  = UiTypesUiHorizontalAlign;
-type UiVerticalAlign    = UiTypesUiVerticalAlign;
+import type { UiHorizontalAlign } from "../types/UiHorizontalAlign.ts";
+import type { UiVerticalAlign } from "../types/UiVerticalAlign.ts";
 
 export interface IUiTextInput extends IUiComponent {
     getText(): string;

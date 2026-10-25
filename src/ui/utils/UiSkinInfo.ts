@@ -1,11 +1,9 @@
 import type { TreeNode } from "../../auxiliaryTypes/TreeNode.ts";
 import type { IUiComponent } from "../interfaces/IUiComponent.ts";
 import type { IUiSkinInfo } from "../interfaces/IUiSkinInfo.ts";
-import type { UiSkin as UiTypesUiSkin } from "../types/UiSkin.ts";
-import type { UiSkinAttrs as UiTypesUiSkinAttrs } from "../types/UiSkinAttrs.ts";
+import type { UiSkin } from "../types/UiSkin.ts";
+import type { UiSkinAttrs } from "../types/UiSkinAttrs.ts";
 
-type UiSkinAttrs    = UiTypesUiSkinAttrs;
-type UiSkin         = UiTypesUiSkin;
 type IUiSkinLoader  = IUiComponent;
 
 export class UiSkinInfo implements IUiSkinInfo {

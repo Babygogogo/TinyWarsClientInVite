@@ -1,6 +1,6 @@
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData as GameConfigGcData } from "../../../gameConfig/GcData.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { GcData } from "../../../gameConfig/GcData.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { closePanel, openPanel } from "../../../gamePanels/Manager.ts";
 import { newError, getExisted } from "../../../helpers/Misc.ts";
@@ -9,9 +9,7 @@ import { checkIsValidLanguageTextArray, getText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import { ConditionIdAndFlags } from "../../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
 import { WarEventCondition } from "../../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
-import type {
-    WarEventFullData as ProtoSchemaCommonProtoWarEventWarEventFullData,
-} from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import type { WarEventFullData } from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { WecCustomCounter } from "../../../proto/schema/CommonProto/WarEvent/WecCustomCounter.ts";
 import { WecEventCalledCount } from "../../../proto/schema/CommonProto/WarEvent/WecEventCalledCount.ts";
 import { WecExpression } from "../../../proto/schema/CommonProto/WarEvent/WecExpression.ts";
@@ -82,10 +80,6 @@ import {
 } from "./WeatherAndFog.ts";
 import { Event } from "../../Constants.ts";
 import { getNode } from "../../fullDatas/Utils.ts";
-
-type GcData                 = GameConfigGcData;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-type WarEventFullData       = ProtoSchemaCommonProtoWarEventWarEventFullData;
 
 export function checkIsValidWarEventCondition({ condition, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet }: {  // DONE
     condition               : WarEventCondition;

@@ -1,4 +1,4 @@
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -22,8 +22,6 @@ import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-
-type GcData                 = GameConfigGcData;
 
 export type OpenData = {
     canModify       : boolean;

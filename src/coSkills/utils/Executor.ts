@@ -10,7 +10,7 @@ import { getValueInRange } from "../../numbers/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { IPlayer } from "../../players/IPlayer.ts";
 import { getValidFund } from "../../players/utils/Common.ts";
-import type { CoSkillCfg as ProtoSchemaCommonProtoConfigCoSkillCfg } from "../../proto/schema/CommonProto/Config/CoSkillCfg.ts";
+import type { CoSkillCfg } from "../../proto/schema/CommonProto/Config/CoSkillCfg.ts";
 import type { DataForUseCoSkill } from "../../proto/schema/CommonProto/Structure/DataForUseCoSkill.ts";
 import type { GridIndex as ProtoSchemaCommonProtoStructureGridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
 import { WsUnitStatistics } from "../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
@@ -21,7 +21,6 @@ import { create as UnitsUtilsSerializationCreate } from "../../units/utils/Seria
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../visibilities/Utils.ts";
 
-type CoSkillCfg                     = ProtoSchemaCommonProtoConfigCoSkillCfg;
 type IBwPlayer                      = IPlayer;
 
 export function executeInstantSkill({ player, skillId, skillData, targetGridIndexes, hasExtraData, isFastExecute }: {

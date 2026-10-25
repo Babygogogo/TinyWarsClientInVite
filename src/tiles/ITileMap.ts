@@ -1,22 +1,12 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
-import type { MapSize as AuxiliaryTypesMapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
-import type {
-    TileCustomName as ProtoSchemaCommonProtoStructureTileCustomName,
-} from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
-import type {
-    SerialTileMap as ProtoSchemaCommonProtoWarSerializationSerialTileMap,
-} from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
+import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
+import type { TileCustomName } from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
+import type { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
 import type { ITile } from "./ITile.ts";
 import type { ITileMapView } from "./ITileMapView.ts";
-
-type MapSize            = AuxiliaryTypesMapSize;
-type GcData             = GameConfigGcData;
-type SerialTileMap      = ProtoSchemaCommonProtoWarSerializationSerialTileMap;
-type TileCustomName     = ProtoSchemaCommonProtoStructureTileCustomName;
-type IBwWar             = BaseWarInterfaceIBwWar;
 
 export interface ITileMap {
     init({ data, gameConfig, mapSize, playersCountUnneutral }: {

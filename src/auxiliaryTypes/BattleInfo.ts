@@ -1,16 +1,10 @@
 import type { IPlayer } from "../players/IPlayer.ts";
-import type {
-    BattleDamageInfo as ProtoSchemaCommonProtoStructureBattleDamageInfo,
-} from "../proto/schema/CommonProto/Structure/BattleDamageInfo.ts";
+import type { BattleDamageInfo } from "../proto/schema/CommonProto/Structure/BattleDamageInfo.ts";
 import type { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
 import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { SerialUnit } from "../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-import type { ITile as TilesITile } from "../tiles/ITile.ts";
-import type { IUnit as UnitsIUnit } from "../units/IUnit.ts";
-
-type BattleDamageInfo       = ProtoSchemaCommonProtoStructureBattleDamageInfo;
-type IUnit                  = UnitsIUnit;
-type ITile                  = TilesITile;
+import type { ITile } from "../tiles/ITile.ts";
+import type { IUnit } from "../units/IUnit.ts";
 
 export class BattleInfo {
     public readonly oldUnits                    = new Map<number, SerialUnit>();

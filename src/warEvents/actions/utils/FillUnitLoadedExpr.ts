@@ -15,20 +15,15 @@ import { getFormattedText, getText } from "../../../lang/Utils.ts";
 import { MinId, MaxId } from "../../../locations/Constants.ts";
 import { encode } from "../../../locations/Utils.ts";
 import { getValueInRange, getValueInInt32 } from "../../../numbers/Utils.ts";
-import type {
-    WeaFillUnitLoadedExpr as ProtoSchemaCommonProtoWarEventWeaFillUnitLoadedExpr,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitLoadedExpr.ts";
+import type { WeaFillUnitLoadedExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaFillUnitLoadedExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import { ActionStateId, AiModeId, TagId } from "../../../units/Constants.ts";
-import type { IUnit as UnitsIUnit } from "../../../units/IUnit.ts";
+import type { IUnit } from "../../../units/IUnit.ts";
 import { checkIsValidActionStateId, checkIsValidAiModeId, getEncodedTagId } from "../../../units/utils/Common.ts";
 import { create } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { ExpressionInfoDict } from "../constants/FillUnitLoadedExpr.ts";
-
-type WeaFillUnitLoadedExpr  = ProtoSchemaCommonProtoWarEventWeaFillUnitLoadedExpr;
-type IUnit                  = UnitsIUnit;
 
 export function checkIsValid(action: Undefinable<WeaFillUnitLoadedExpr>, customCounterNameSet: Set<string>): boolean {
     if (action == null) {

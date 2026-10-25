@@ -1,5 +1,5 @@
 import { Common } from "../autoTourneys/Constants.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, UserOnlineState } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, UserOnlineState } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
 import { reqGetAllMessages, reqGetAllReadProgressList } from "../chat/Proxy.ts";
 import { updateOnUnitAndTileTextureVersionChanged } from "../common/model/CommonModel.ts";
@@ -93,8 +93,6 @@ import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import type { Event } from "../vendor/egret/Egret.ts";
 import { WarTypeId } from "../warTypes/Constants.ts";
 import { reqMpwWatchRequestedWarIdArray } from "../watchWar/model/WwProxy.ts";
-
-type Undefinable<T>                 = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 let _isLoggedIn                 = false;
 let _selfInfo                   : UserSelfInfo | null = null;

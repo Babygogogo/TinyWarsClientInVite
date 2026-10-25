@@ -8,9 +8,7 @@ import { War as ExpressionParsersResultsWar } from "../results/War.ts";
 import type { EpVariableInfoDict, EpFunctionInfoDict } from "../Types.ts";
 import { extendVariableInfoDict, extendFunctionInfoDict } from "../Utils.ts";
 import { TextType } from "../../lang/Constants.ts";
-import type { ITurnManager as TurnsITurnManager } from "../../turns/ITurnManager.ts";
-
-type ITurnManager   = TurnsITurnManager;
+import type { ITurnManager } from "../../turns/ITurnManager.ts";
 
 export class Turn extends Base {
     private static readonly VnPlayerIndex   = "playerIndex";

@@ -1,5 +1,5 @@
 import { MovePath } from "../../../auxiliaryTypes/MovePath.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import {
     getUnitClass,
     getMeWarClass,
@@ -14,9 +14,7 @@ import { TextType } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
 import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
-import type {
-    WoUnitProduceUnit as ProtoSchemaCommonProtoWarOperationWoUnitProduceUnit,
-} from "../../../proto/schema/CommonProto/WarOperation/WoUnitProduceUnit.ts";
+import type { WoUnitProduceUnit } from "../../../proto/schema/CommonProto/WarOperation/WoUnitProduceUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import type { IRwWarBase } from "../../../replayWar/interface/IRwWarBase.ts";
 import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
@@ -30,10 +28,7 @@ import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { handleCommonExtraData, handlePostOperationPlunder } from "./Common.ts";
 
-type WoUnitProduceUnit      = ProtoSchemaCommonProtoWarOperationWoUnitProduceUnit;
 type IBwUnit                = IUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-
 let _meWarClass     : new () => IMeWar;
 let _mpwWarClass    : new () => IMpwWar;
 let _rwWarBaseClass : new () => IRwWarBase;

@@ -1,12 +1,10 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import {
     Building as TilesConstantsCustomLimitsBuilding,
     Crystal as TilesConstantsCustomLimitsCrystal,
     Cannon as TilesConstantsCustomLimitsCannon,
     LaserTurret as TilesConstantsCustomLimitsLaserTurret,
 } from "../constants/CustomLimits.ts";
-
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export namespace Building {
     

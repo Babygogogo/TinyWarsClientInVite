@@ -1,4 +1,4 @@
-import type { GcData as GameConfigGcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfig/GcData.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -7,10 +7,8 @@ import { getText, getTextForYesOrNo, getPlayerRuleHelpText, getPlayerRuleName } 
 import { TypeId } from "../../notifications/TypeId.ts";
 import { RuleTypeId } from "../../playerRules/Constants.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
-import type { PlayerRule as ProtoSchemaCommonProtoWarRulePlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
-import type {
-    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
-} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -22,10 +20,6 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiList } from "../../ui/interfaces/IUiList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-
-type TemplateWarRule    = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
-type PlayerRule         = ProtoSchemaCommonProtoWarRulePlayerRule;
-type GcData             = GameConfigGcData;
 
 export interface OpenData {
     gcData                  : GcData;

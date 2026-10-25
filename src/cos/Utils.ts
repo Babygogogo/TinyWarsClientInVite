@@ -1,9 +1,7 @@
 import { EnergyHardLimit, CoId } from "./Constants.ts";
 import { pickRandomElement } from "../helpers/Collection.ts";
 import { getValueInRange } from "../numbers/Utils.ts";
-import type { CoBasicCfg as ProtoSchemaCommonProtoConfigCoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
-
-type CoBasicCfg         = ProtoSchemaCommonProtoConfigCoBasicCfg;
+import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
 
 export function checkIsValidEnergy(energy: number): boolean {
     return (energy === Math.floor(energy))

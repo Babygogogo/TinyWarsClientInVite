@@ -1,6 +1,6 @@
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GcData } from "../../../gameConfig/GcData.ts";
 import {
     getUnitClass,
@@ -20,9 +20,7 @@ import type { IMeWar } from "../../../mapEditor/interface/IMeWar.ts";
 import type { IMpwWar } from "../../../multiPlayerWar/interface/IMpwWar.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
 import { TileBuff } from "../../../proto/schema/CommonProto/Structure/TileBuff.ts";
-import type {
-    WoPlayerProduceUnit as ProtoSchemaCommonProtoWarOperationWoPlayerProduceUnit,
-} from "../../../proto/schema/CommonProto/WarOperation/WoPlayerProduceUnit.ts";
+import type { WoPlayerProduceUnit } from "../../../proto/schema/CommonProto/WarOperation/WoPlayerProduceUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 import type { IRwWar } from "../../../replayWar/interface/IRwWar.ts";
 import type { ISpwWar } from "../../../singlePlayerWar/interface/ISpwWar.ts";
@@ -36,9 +34,6 @@ import { create } from "../../../units/utils/Serialization.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { handleCommonExtraData } from "./Common.ts";
-
-type WoPlayerProduceUnit    = ProtoSchemaCommonProtoWarOperationWoPlayerProduceUnit;
-type IBwWar                 = BaseWarInterfaceIBwWar;
 
 let _hrwWarClass    : new () => IHrwWar;
 let _meWarClass     : new () => IMeWar;

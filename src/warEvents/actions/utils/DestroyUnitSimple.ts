@@ -5,16 +5,12 @@ import { destroyUnitOnMap, destroyUnitLoaded } from "../../../destructions/Utils
 import type { GcData } from "../../../gameConfig/GcData.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText } from "../../../lang/Utils.ts";
-import type { IPlayer as PlayersIPlayer } from "../../../players/IPlayer.ts";
+import type { IPlayer } from "../../../players/IPlayer.ts";
 import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
-import type {
-    PlayerFilter as ProtoSchemaCommonProtoStructurePlayerFilter,
-} from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
-import type { TileFilter as ProtoSchemaCommonProtoStructureTileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
-import type {
-    WeaDestroyUnitSimple as ProtoSchemaCommonProtoWarEventWeaDestroyUnitSimple,
-} from "../../../proto/schema/CommonProto/WarEvent/WeaDestroyUnitSimple.ts";
-import type { ITile as TilesITile } from "../../../tiles/ITile.ts";
+import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
+import type { TileFilter } from "../../../proto/schema/CommonProto/Structure/TileFilter.ts";
+import type { WeaDestroyUnitSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaDestroyUnitSimple.ts";
+import type { ITile } from "../../../tiles/ITile.ts";
 import {
     getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
     checkIsValid as TilesUtilsFilterCheckIsValid,
@@ -26,12 +22,6 @@ import {
     checkIsValid as UnitsUtilsFilterCheckIsValid,
     checkIsMeet as UnitsUtilsFilterCheckIsMeet,
 } from "../../../units/utils/Filter.ts";
-
-type PlayerFilter           = ProtoSchemaCommonProtoStructurePlayerFilter;
-type TileFilter             = ProtoSchemaCommonProtoStructureTileFilter;
-type WeaDestroyUnitSimple   = ProtoSchemaCommonProtoWarEventWeaDestroyUnitSimple;
-type IPlayer                = PlayersIPlayer;
-type ITile                  = TilesITile;
 
 export function checkIsValid(data: Undefinable<WeaDestroyUnitSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);

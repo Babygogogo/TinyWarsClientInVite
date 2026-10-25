@@ -11,10 +11,10 @@ import { getText, getPlayerTeamName, getTileName, getFormattedText, getTextForYe
 import { checkIsValidLocationIdSubset } from "../../locations/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { checkIsValidPlayerIndexSubset } from "../../players/utils/Common.ts";
-import type { TileFilter as ProtoSchemaCommonProtoStructureTileFilter } from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
+import type { TileFilter } from "../../proto/schema/CommonProto/Structure/TileFilter.ts";
 import { checkIsValidTeamIndexSubset } from "../../teams/Utils.ts";
 import { checkIsValidTypeIdSubset } from "../../tileBuffs/utils/Common.ts";
-import type { ITile as TilesITile } from "../ITile.ts";
+import type { ITile } from "../ITile.ts";
 import {
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
     getDesc as ValueAndComparatorsUtilsGetDesc,
@@ -30,9 +30,6 @@ import {
     getDesc as ValueSetAndRelationsUtilsGetDesc,
     checkIsValid as ValueSetAndRelationsUtilsCheckIsValid,
 } from "../../valueSetAndRelations/Utils.ts";
-
-type TileFilter                         = ProtoSchemaCommonProtoStructureTileFilter;
-type ITile                              = TilesITile;
 
 export function checkIsValid(data: TileFilter, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GcData): boolean {
     return getErrorTip(data, playersCountUnneutral, mapSize, gameConfig) == null;

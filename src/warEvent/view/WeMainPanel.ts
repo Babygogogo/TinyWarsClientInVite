@@ -6,7 +6,7 @@ import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getFormattedText, getLanguageText, getTextForYesOrNo, getWarEventConditionNodeDesc } from "../../lang/Utils.ts";
-import type { IMeWar as MapEditorInterfaceIMeWar } from "../../mapEditor/interface/IMeWar.ts";
+import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -39,8 +39,6 @@ import {
     getErrorTipForEventCallCountTotal,
 } from "../../warEvents/events/Utils.ts";
 import { checkAndDeleteUnusedComponents } from "../../warEvents/fullDatas/Utils.ts";
-
-type IMeWar                 = MapEditorInterfaceIMeWar;
 
 let _isShowDetail           = false;
 let _prevWarEventId         : number | null = null;

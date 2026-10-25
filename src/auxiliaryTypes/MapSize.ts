@@ -2,18 +2,10 @@ import type { Undefinable } from "./AuxiliaryTypes.ts";
 import { GridIndex } from "./GridIndex.ts";
 import { Common } from "../maps/Constants.ts";
 import { getExisted } from "../helpers/Misc.ts";
-import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { GridIndex as ProtoSchemaCommonProtoStructureGridIndex } from "../proto/schema/CommonProto/Structure/GridIndex.ts";
-import type {
-    SerialTile as ProtoSchemaCommonProtoWarSerializationSerialTile,
-} from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import type {
-    SerialTileMap as ProtoSchemaCommonProtoWarSerializationSerialTileMap,
-} from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
-
-type  SerialTile        = ProtoSchemaCommonProtoWarSerializationSerialTile;
-type  SerialTileMap     = ProtoSchemaCommonProtoWarSerializationSerialTileMap;
-type  MapRawData        = ProtoSchemaCommonProtoMapMapRawData;
+import type { SerialTile } from "../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import type { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
 
 export class MapSize {
     private _width  : number;

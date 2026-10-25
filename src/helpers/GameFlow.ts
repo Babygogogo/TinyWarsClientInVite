@@ -3,7 +3,7 @@ import { ActionPlannerView } from "../actionPlanners/ActionPlannerView.ts";
 import { init } from "../autoTourneys/mains/Gateway.ts";
 import { init as AutoTourneysRoomsGatewayInit } from "../autoTourneys/rooms/Gateway.ts";
 import { War } from "../autoTourneys/wars/War.ts";
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable, CustomError } from "../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable, CustomError } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { BwCommonSettingManager } from "../baseWar/model/BwCommonSettingManager.ts";
 import { BwCursor } from "../baseWar/model/BwCursor.ts";
@@ -93,12 +93,10 @@ import { addEventListeners } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import { Player } from "../players/Player.ts";
 import { PlayerManager } from "../players/PlayerManager.ts";
-import type { MapRawData as ProtoSchemaCommonProtoMapMapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
+import type { MapRawData } from "../proto/schema/CommonProto/Map/MapRawData.ts";
 import { SpmWarSaveSlotExtraData } from "../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
-import type { GridMarkData as ProtoSchemaCommonProtoStructureGridMarkData } from "../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import type {
-    SerialWar as ProtoSchemaCommonProtoWarSerializationSerialWar,
-} from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
+import type { GridMarkData } from "../proto/schema/CommonProto/Structure/GridMarkData.ts";
+import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { IRwWarBase } from "../replayWar/interface/IRwWarBase.ts";
 import {
     init as ReplayWarModelRwModelInit,
@@ -189,11 +187,6 @@ import { WarTypeId } from "../warTypes/Constants.ts";
 import { init as WatchWarModelWwProxyInit } from "../watchWar/model/WwProxy.ts";
 import { Manager } from "../weathers/Manager.ts";
 import { View } from "../weathers/View.ts";
-
-type SerialWar                  = ProtoSchemaCommonProtoWarSerializationSerialWar;
-type MapRawData                 = ProtoSchemaCommonProtoMapMapRawData;
-type Undefinable<T>             = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
-type GridMarkData               = ProtoSchemaCommonProtoStructureGridMarkData;
 
 const _NET_EVENTS = [
     { msgCode: MessageCodes.MsgCommonServerDisconnect, callback: _onMsgCommonServerDisconnect },

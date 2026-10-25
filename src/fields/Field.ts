@@ -1,13 +1,13 @@
 import type { IActionPlanner } from "../actionPlanners/IActionPlanner.ts";
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import type { IBwCursor as BaseWarInterfaceIBwCursor } from "../baseWar/interface/IBwCursor.ts";
-import type { IBwGridVisualEffect as BaseWarInterfaceIBwGridVisualEffect } from "../baseWar/interface/IBwGridVisualEffect.ts";
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../baseWar/interface/IBwWar.ts";
+import type { IBwCursor } from "../baseWar/interface/IBwCursor.ts";
+import type { IBwGridVisualEffect } from "../baseWar/interface/IBwGridVisualEffect.ts";
+import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { IField } from "./IField.ts";
 import type { IFieldView } from "./IFieldView.ts";
 import type { IFogMap } from "../fogMaps/IFogMap.ts";
-import type { GcData as GameConfigGcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfig/GcData.ts";
 import {
     getBwCursorClass,
     getBwGridVisualEffectClass,
@@ -23,13 +23,8 @@ import type { ITileMap } from "../tiles/ITileMap.ts";
 import type { IUnitMap } from "../units/IUnitMap.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type GcData                 = GameConfigGcData;
 type IBwTileMap             = ITileMap;
 type IBwUnitMap             = IUnitMap;
-type IBwCursor              = BaseWarInterfaceIBwCursor;
-type IBwGridVisualEffect    = BaseWarInterfaceIBwGridVisualEffect;
-type IBwWar                 = BaseWarInterfaceIBwWar;
-
 export class Field implements IField {
     private readonly _cursor            = new (getBwCursorClass())();
     private readonly _gridVisualEffect  = new (getBwGridVisualEffectClass())();

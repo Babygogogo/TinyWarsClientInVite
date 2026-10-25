@@ -9,12 +9,8 @@ import { newError, getExisted, getDefined } from "../../helpers/Misc.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex, AliveStateId } from "../../players/Constants.ts";
-import type {
-    ConditionIdAndFlags as ProtoSchemaCommonProtoWarEventConditionIdAndFlags,
-} from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
-import type {
-    NodeIdAndFlags as ProtoSchemaCommonProtoWarEventNodeIdAndFlags,
-} from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
+import type { ConditionIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/ConditionIdAndFlags.ts";
+import type { NodeIdAndFlags } from "../../proto/schema/CommonProto/WarEvent/NodeIdAndFlags.ts";
 import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
 import type { WarEventAction } from "../../proto/schema/CommonProto/WarEvent/WarEventAction.ts";
 import type { WarEventCondition } from "../../proto/schema/CommonProto/WarEvent/WarEventCondition.ts";
@@ -24,7 +20,7 @@ import type { WoSystemCallWarEvent } from "../../proto/schema/CommonProto/WarOpe
 import { CustomCounter } from "../../proto/schema/CommonProto/WarSerialization/CustomCounter.ts";
 import { DataForWarEventCalledCount } from "../../proto/schema/CommonProto/WarSerialization/DataForWarEventCalledCount.ts";
 import { SerialWarEventManager } from "../../proto/schema/CommonProto/WarSerialization/SerialWarEventManager.ts";
-import type { IUnit as UnitsIUnit } from "../../units/IUnit.ts";
+import type { IUnit } from "../../units/IUnit.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { applyWithExtraData, applyWithoutExtraData } from "../../warEvents/actions/utils/AddTileBuffExpr.ts";
 import {
@@ -278,13 +274,8 @@ import { checkIsMeet as WarEventsConditionsUtilsTilePresenceCheckIsMeet } from "
 import { checkIsMeet as WarEventsConditionsUtilsTurnAndPlayerCheckIsMeet } from "../../warEvents/conditions/utils/TurnAndPlayer.ts";
 import { checkIsMeet as WarEventsConditionsUtilsUnitPresenceCheckIsMeet } from "../../warEvents/conditions/utils/UnitPresence.ts";
 import { checkIsMeet as WarEventsConditionsUtilsWeatherAndFogCheckIsMeet } from "../../warEvents/conditions/utils/WeatherAndFog.ts";
-import type { WarEventIdAndDataIndex as WarEventsTypesWarEventIdAndDataIndex } from "../../warEvents/Types.ts";
+import type { WarEventIdAndDataIndex } from "../../warEvents/Types.ts";
 import { handleCommonExtraData } from "../../warOperations/executors/utils/Common.ts";
-
-type IUnit                                  = UnitsIUnit;
-type NodeIdAndFlags                         = ProtoSchemaCommonProtoWarEventNodeIdAndFlags;
-type ConditionIdAndFlags                    = ProtoSchemaCommonProtoWarEventConditionIdAndFlags;
-type WarEventIdAndDataIndex                 = WarEventsTypesWarEventIdAndDataIndex;
 
 export class BwWarEventManager implements IBwWarEventManager {
     private _war?                           : IBwWar;

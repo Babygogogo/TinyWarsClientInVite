@@ -1,10 +1,8 @@
 import type { StateId } from "../Constants.ts";
 import type { IActionPlanner } from "../IActionPlanner.ts";
-import type { GridIndex as AuxiliaryTypesGridIndex } from "../../auxiliaryTypes/GridIndex.ts";
+import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 
 type ApStateId  = StateId;
-type GridIndex  = AuxiliaryTypesGridIndex;
-
 export interface IState {
     getStateId(): ApStateId;
 

@@ -18,9 +18,7 @@ import {
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { RuleAvailability } from "../../proto/schema/CommonProto/WarRule/RuleAvailability.ts";
-import type {
-    TemplateWarRule as ProtoSchemaCommonProtoWarRuleTemplateWarRule,
-} from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
+import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { getNextThemeId } from "../../tiles/utils/Common.ts";
@@ -36,8 +34,6 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getIsSelfMapCommittee } from "../../users/Model.ts";
 import { Constants } from "../../warRules/Constants.ts";
 import { tickDefaultWeatherType, getDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
-
-type TemplateWarRule    = ProtoSchemaCommonProtoWarRuleTemplateWarRule;
 
 export interface OpenData {
     war     : IMeWar;

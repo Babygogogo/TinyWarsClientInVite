@@ -1,10 +1,8 @@
-import type { IBwWar as BaseWarInterfaceIBwWar } from "../../baseWar/interface/IBwWar.ts";
+import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText, getUnitBuffName, getComparatorName, getFormattedText } from "../../lang/Utils.ts";
-import type { UnitBuff as ProtoSchemaCommonProtoStructureUnitBuff } from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
-import type {
-    UnitBuffFilter as ProtoSchemaCommonProtoStructureUnitBuffFilter,
-} from "../../proto/schema/CommonProto/Structure/UnitBuffFilter.ts";
+import type { UnitBuff } from "../../proto/schema/CommonProto/Structure/UnitBuff.ts";
+import type { UnitBuffFilter } from "../../proto/schema/CommonProto/Structure/UnitBuffFilter.ts";
 import { checkIsEverlasting, checkIsValidTypeIdSubset } from "./Common.ts";
 import {
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
@@ -15,10 +13,6 @@ import {
     getDesc as ValueArrayAndPredicatesUtilsGetDesc,
     checkIsValid as ValueArrayAndPredicatesUtilsCheckIsValid,
 } from "../../valueArrayAndPredicates/Utils.ts";
-
-type UnitBuffFilter                     = ProtoSchemaCommonProtoStructureUnitBuffFilter;
-type UnitBuff                           = ProtoSchemaCommonProtoStructureUnitBuff;
-type IBwWar                             = BaseWarInterfaceIBwWar;
 
 export function tickConIsEverlasting(data: UnitBuffFilter): boolean | null {
     const oldValue = data.getConIsEverlasting();

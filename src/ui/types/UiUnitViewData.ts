@@ -1,11 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { SkillTypeId } from "../../coSkills/Constants.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
-import type {
-    SerialUnit as ProtoSchemaCommonProtoWarSerializationSerialUnit,
-} from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
-
-type SerialUnit         = ProtoSchemaCommonProtoWarSerializationSerialUnit;
+import type { SerialUnit } from "../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 
 export class UiUnitViewData {
     public unitData             : SerialUnit;

@@ -1,4 +1,4 @@
-import type { Undefinable as AuxiliaryTypesAuxiliaryTypesUndefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
 import type { GcData } from "../../gameConfig/GcData.ts";
 import { getSkinCircle } from "../../helpers/ImageSource.ts";
@@ -18,8 +18,6 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiUnitViewData } from "../../ui/types/UiUnitViewData.ts";
 import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
-
-type Undefinable<T>     = AuxiliaryTypesAuxiliaryTypesUndefinable<T>;
 
 export interface OpenData {
     gameConfig          : GcData;

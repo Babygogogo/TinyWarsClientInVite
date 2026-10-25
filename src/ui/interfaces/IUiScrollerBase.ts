@@ -1,10 +1,7 @@
 import type { IUiComponent } from "./IUiComponent.ts";
 import type { IUiContainerBase } from "./IUiContainerBase.ts";
-import type { UiOrientation as UiTypesUiOrientation } from "../types/UiOrientation.ts";
-import type { UiScrollerOptions as UiTypesUiScrollerOptions } from "../types/UiScrollerOptions.ts";
-
-type UiOrientation      = UiTypesUiOrientation;
-type UiScrollerOptions  = UiTypesUiScrollerOptions;
+import type { UiOrientation } from "../types/UiOrientation.ts";
+import type { UiScrollerOptions } from "../types/UiScrollerOptions.ts";
 
 export interface IUiScrollerBase extends IUiContainerBase {
     getIsTouchChildrenEnabled(): boolean;
