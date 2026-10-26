@@ -1,5 +1,5 @@
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type { SelfTileIncome } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfTileIncome.ts";
 
 export function getTotalMultiplier({
@@ -11,7 +11,7 @@ export function getTotalMultiplier({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfTileIncome | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     tileTypeId                  : number;
     gridIndex                   : GridIndex;
     coZoneRadius                : number;

@@ -1,7 +1,7 @@
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import type { IBwCommonSettingManager } from "../interface/IBwCommonSettingManager.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { newError, getExisted } from "../../helpers/Misc.ts";
@@ -28,7 +28,7 @@ export class BwCommonSettingManager implements IBwCommonSettingManager {
         settings                : SettingsForCommon;
         warType                 : WarTypeId;
         playersCountUnneutral   : number;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         mapSize                 : MapSize;
     }): void {
         const configVersion = settings.getConfigVersion();

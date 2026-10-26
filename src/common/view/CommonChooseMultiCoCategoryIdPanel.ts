@@ -1,6 +1,6 @@
 import { DisplayCategoryArray, ForceArray, CategoryId } from "../../cos/Constants.ts";
 import { show } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
@@ -33,7 +33,7 @@ const enum InfoType {
 export interface OpenData {
     currentCoCategoryIdArray        : number[];
     availableCoCategoryIdArray      : number[];
-    gameConfig                      : GcData;
+    gameConfig                      : GameConfig;
     forceUnchosenCoCategoryIdArray  : number[] | null;
     maxChooseCount                  : number | null;
     isBan                           : boolean;
@@ -422,7 +422,7 @@ class RendererForCoCategory extends UiContainer {
     private _isSelected     = false;
     private _canSelect      = false;
     private _panel          : Panel | null = null;
-    private _gameConfig     : GcData | null = null;
+    private _gameConfig     : GameConfig | null = null;
     private _coCategoryId   : number | null = null;
 
     public constructor(isBan: boolean) {
@@ -454,10 +454,10 @@ class RendererForCoCategory extends UiContainer {
         return this._panel;
     }
 
-    public setGameConfig(config: GcData): void {
+    public setGameConfig(config: GameConfig): void {
         this._gameConfig = config;
     }
-    public getGameConfig(): GcData | null {
+    public getGameConfig(): GameConfig | null {
         return this._gameConfig;
     }
 

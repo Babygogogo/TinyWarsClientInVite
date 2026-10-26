@@ -1,5 +1,5 @@
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type { SelfUnitAttackRange } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitAttackRange.ts";
 
 export function getTotalUpperOffset({
@@ -12,7 +12,7 @@ export function getTotalUpperOffset({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfUnitAttackRange | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
     gridIndex                   : GridIndex;

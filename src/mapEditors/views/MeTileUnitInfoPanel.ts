@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getUnitViewClass, getUnitClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel } from "../../gamePanels/Manager.ts";
@@ -200,7 +200,7 @@ interface DataForTileRenderer extends UiListItemData {
     count       : number;
     tileType    : number;
     playerIndex : number;
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
 }
 class TileRenderer extends UiListItemRenderer<DataForTileRenderer> {
     private readonly _group!        : IUiContainer;

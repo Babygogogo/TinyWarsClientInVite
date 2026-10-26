@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -22,7 +22,7 @@ import type { IUiList } from "../../ui/interfaces/IUiList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
-    gcData                  : GcData;
+    gcData                  : GameConfig;
     mapRawData              : MapRawData;
     templateWarRule         : TemplateWarRule;
 }

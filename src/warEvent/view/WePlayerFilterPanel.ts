@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { AllSkillTypeIdArray } from "../../coSkills/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
@@ -33,7 +33,7 @@ import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
 import { tickIsOneOf } from "../../valueArrayAndPredicates/Utils.ts";
 
 export interface OpenData {
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     playersCountUnneutral   : number;
     currentFilter           : Undefinable<PlayerFilter>;
     callback                : ((playerFilter: PlayerFilter | null) => void) | null;

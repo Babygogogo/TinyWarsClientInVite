@@ -1,5 +1,5 @@
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type { SelfUnitVision } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitVision.ts";
 
 export function getTotalRangeOffset({
@@ -12,7 +12,7 @@ export function getTotalRangeOffset({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfUnitVision | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
     gridIndex                   : GridIndex;
@@ -57,7 +57,7 @@ export function checkCanSeeThrough({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfUnitVision | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
     gridIndex                   : GridIndex;

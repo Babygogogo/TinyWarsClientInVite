@@ -2,10 +2,8 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { EnergyTypeId } from "../cos/Constants.ts";
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { ModeId } from "../gameModes/Constants.ts";
-import type { SymmetryTypeId } from "../geometries/Constants.ts";
 import { getExisted, newError } from "../helpers/Misc.ts";
 import { LanguageType } from "../lang/Constants.ts";
-import { PlayerIndex } from "../players/Constants.ts";
 import type { BuildableTileCfg } from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";
 import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
 import type { CoCategoryCfg } from "../proto/schema/CommonProto/Config/CoCategoryCfg.ts";
@@ -26,22 +24,13 @@ import type { UnitTemplateCfg } from "../proto/schema/CommonProto/Config/UnitTem
 import type { VisionBonusCfg } from "../proto/schema/CommonProto/Config/VisionBonusCfg.ts";
 import { WeatherCategoryCfg } from "../proto/schema/CommonProto/Config/WeatherCategoryCfg.ts";
 import type { WeatherCfg } from "../proto/schema/CommonProto/Config/WeatherCfg.ts";
-import {
-    BaseCfgDict,
-    BaseSymmetryCfgDict,
-    CategoryId,
-    DecorationCfgDict,
-    DecorationSymmetryCfgDict,
-    ObjectCfgDict,
-    ObjectSymmetryCfgDict,
-} from "../tiles/constants/Common.ts";
-import type { TileBaseCfg, TileDecorationCfg, TileObjectCfg } from "../tiles/Types.ts";
+import { CategoryId } from "../tiles/constants/Common.ts";
 import { CategoryId as UnitsConstantsCategoryId, WeaponTypeId } from "../units/Constants.ts";
 import type { WarTypeId } from "../warTypes/Constants.ts";
 import { checkIsAtw, checkIsMrw } from "../warTypes/Utils.ts";
 import { CategoryId as WeathersConstantsCategoryId } from "../weathers/Constants.ts";
 
-export class GcData {
+export class GameConfig {
     private readonly _version                       : string;
     private readonly _systemCfg                     : SystemCfg;
     private readonly _unitMaxPromotion              : number;
@@ -178,132 +167,6 @@ export class GcData {
             .filter(v => v[1].getMaxHp() == null)
             .sort((v1, v2) => getExisted(v1[1].getSortWeightForTileChart()) - getExisted(v2[1].getSortWeightForTileChart()))
             .map(v => v[0]);
-    }
-
-    public static getTileBaseCfg(tileBaseType: number): TileBaseCfg | null {
-        return BaseCfgDict.get(tileBaseType) ?? null;
-    }
-    public static checkIsUsableTileBaseType(tileBaseType: number): boolean {
-        return !!BaseCfgDict.get(tileBaseType)?.isEnabled;
-    }
-    public static getAllEnabledTileBaseCfgArray(): TileBaseCfg[] {
-        return [...BaseCfgDict].filter(v => v[1].isEnabled).map(v => v[1]).sort((v1, v2) => v1.tileBaseTypeId - v2.tileBaseTypeId);
-    }
-    public static getDefaultTileBaseType(): number {
-        for (const [tileBaseType, cfg] of BaseCfgDict) {
-            if (cfg.isDefault) {
-                return tileBaseType;
-            }
-        }
-        throw newError(`No default tile base type.`);
-    }
-    public static checkIsValidTileBaseShapeId(tileBaseType: number, shapeId: Undefinable<number>): boolean {
-        const cfg = GcData.getTileBaseCfg(tileBaseType);
-        return (!!cfg?.isEnabled)
-            && ((shapeId == null) || ((shapeId >= 0) && (shapeId < cfg.shapesCount)));
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static getSymmetricalTileBaseShapeId(tileBaseType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
-        const shapeIdList = BaseSymmetryCfgDict.get(tileBaseType)?.get(shapeId)?.symmetryShapeIds;
-        return shapeIdList ? shapeIdList[symmetryType] : null;
-    }
-    public static checkIsTileBaseSymmetrical({ baseType, shapeId1, shapeId2, symmetryType }: {
-        baseType    : number;
-        shapeId1    : number;
-        shapeId2    : number;
-        symmetryType: SymmetryTypeId;
-    }): boolean {
-        return GcData.getSymmetricalTileBaseShapeId(baseType, shapeId1, symmetryType) === (shapeId2 || 0);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static getTileObjectCfg(tileObjectType: number): TileObjectCfg | null {
-        return ObjectCfgDict.get(tileObjectType) ?? null;
-    }
-    public static checkIsValidTileObjectType(tileObjectType: number): boolean {
-        return ObjectCfgDict.has(tileObjectType);
-    }
-    public static getAllTileObjectCfgArray(): TileObjectCfg[] {
-        return [...ObjectCfgDict]
-            .sort((v1, v2) => v1[1].sortWeight - v2[1].sortWeight)
-            .map(v => v[1]);
-    }
-    public static checkIsValidPlayerIndexForTileObject({ playerIndex, tileObjectType }: {
-        playerIndex     : number;
-        tileObjectType  : number;
-    }): boolean {
-        const cfg = GcData.getTileObjectCfg(tileObjectType);
-        return (cfg != null)
-            && (playerIndex >= PlayerIndex.Neutral)
-            && (playerIndex <= PlayerIndex.Max)
-            && ((!cfg.isNeutralOnly) || (playerIndex === PlayerIndex.Neutral));
-    }
-    public static checkIsValidTileObjectShapeId(tileObjectType: number, shapeId: Undefinable<number>): boolean {
-        const shapesCount = GcData.getTileObjectCfg(tileObjectType)?.shapesCount;
-        return (shapesCount != null)
-            && ((shapeId == null) || ((shapeId >= 0) && (shapeId < shapesCount)));
-    }
-    public static getSymmetricalTileObjectType(tileObjectType: number, symmetryType: SymmetryTypeId): number {
-        return getExisted(GcData.getTileObjectCfg(tileObjectType)?.symmetryTypes)[symmetryType];
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static getSymmetricalTileObjectShapeId(tileObjectType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
-        const shapeIdArray = ObjectSymmetryCfgDict.get(tileObjectType)?.get(shapeId)?.symmetryShapeIds;
-        return shapeIdArray ? shapeIdArray[symmetryType] : null;
-    }
-    public static checkIsTileObjectSymmetrical({ objectType, shapeId1, shapeId2, symmetryType }: {
-        objectType      : number;
-        shapeId1        : number;
-        shapeId2        : number;
-        symmetryType    : SymmetryTypeId;
-    }): boolean {
-        return GcData.getSymmetricalTileObjectShapeId(objectType, shapeId1, symmetryType) === (shapeId2 || 0);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static getTileDecorationCfg(tileDecorationType: number): TileDecorationCfg | null {
-        return DecorationCfgDict.get(tileDecorationType) ?? null;
-    }
-    public static checkIsValidTileDecorationType(tileDecorationType: number): boolean {
-        return DecorationCfgDict.has(tileDecorationType);
-    }
-    public static getAllTileDecorationCfgArray(): TileDecorationCfg[] {
-        return [...DecorationCfgDict].sort((v1, v2) => v1[0] - v2[0]).map(v => v[1]);
-    }
-    public static checkIsValidTileDecorationShapeId(tileDecorationType: Undefinable<number>, shapeId: Undefinable<number>): boolean {
-        if (tileDecorationType == null) {
-            return shapeId == null;
-        }
-
-        const cfg = GcData.getTileDecorationCfg(tileDecorationType);
-        return (cfg != null)
-            && ((shapeId == null) || ((shapeId >= 0) && (shapeId < cfg.shapesCount)));
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static getSymmetricalTileDecorationShapeId(tileDecorationType: number, shapeId: number, symmetryType: SymmetryTypeId): number | null {
-        const shapeIdArray = DecorationSymmetryCfgDict.get(tileDecorationType)?.get(shapeId)?.symmetryShapeIds;
-        return shapeIdArray ? shapeIdArray[symmetryType] : null;
-    }
-    public static checkIsTileDecorationSymmetrical({ tileDecorationType, shapeId1, shapeId2, symmetryType }: {
-        tileDecorationType  : number | null;
-        shapeId1            : Undefinable<number>;
-        shapeId2            : Undefinable<number>;
-        symmetryType        : SymmetryTypeId;
-    }): boolean {
-        if (tileDecorationType == null) {
-            return (shapeId1 == null) && (shapeId2 == null);
-        }
-
-        if (shapeId1 == null) {
-            return shapeId2 == null;
-        } else if (shapeId2 == null) {
-            return shapeId1 == null;
-        } else {
-            return GcData.getSymmetricalTileDecorationShapeId(tileDecorationType, shapeId1, symmetryType) === shapeId2;
-        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

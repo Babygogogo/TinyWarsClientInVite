@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type { SelfUnitOffense } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitOffense.ts";
 import { getNormalizedHp } from "../../../units/utils/Common.ts";
 
@@ -39,7 +39,7 @@ export function getTotalOffsetPct({
     getOwnTilesCount,
 }: {
     cfg                         : SelfUnitOffense | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     unitTypeId                  : number;
     tileTypeId                  : number;
     weatherTypeId               : number;
@@ -118,7 +118,7 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
     getOwnTilesCount,
 }: {
     cfg                 : SelfUnitOffense | null | undefined;
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     unitTypeId          : number;
     tileTypeId          : number;
     weatherTypeId       : number;

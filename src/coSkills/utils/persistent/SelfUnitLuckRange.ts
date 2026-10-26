@@ -1,5 +1,5 @@
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type { SelfUnitLuckRange } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitLuckRange.ts";
 
 export function getTotalOffset({
@@ -12,7 +12,7 @@ export function getTotalOffset({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfUnitLuckRange | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
     gridIndex                   : GridIndex;
@@ -48,7 +48,7 @@ export function getTotalOffsetForDamageCalculatorPanel({
     unitTypeId,
 }: {
     cfg                         : SelfUnitLuckRange | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     unitTypeId                  : number;
 }): { lower: number; upper: number } {
     if (cfg == null) {

@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type { SelfUnitDefense } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitDefense.ts";
 import { getNormalizedHp } from "../../../units/utils/Common.ts";
 
@@ -18,7 +18,7 @@ function getTotalPctFromTileDefense(cfg: Undefinable<number[]>, tileDefenseAmoun
         return ((canTileDefendUnit) || (!cfg[1])) ? cfg[0] / 100 * tileDefenseAmount : 0;
     }
 }
-function getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig: GcData, cfg: Undefinable<number[]>, attackerUnitTypeId: number | null): number {
+function getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig: GameConfig, cfg: Undefinable<number[]>, attackerUnitTypeId: number | null): number {
     if ((!cfg) || (cfg.length !== 2) || (attackerUnitTypeId == null)) {
         return 0;
     }
@@ -47,7 +47,7 @@ export function getTotalOffsetPct({
     canTileDefendUnit,
 }: {
     cfg                         : SelfUnitDefense | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     unitTypeId1                 : number | null;
     unitTypeId2                 : number;
     tileTypeId2                 : number;
@@ -125,7 +125,7 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
     getOwnTilesCount,
 }: {
     cfg                 : SelfUnitDefense | null | undefined;
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     unitTypeId1         : number;
     unitTypeId2         : number;
     tileTypeId2         : number;

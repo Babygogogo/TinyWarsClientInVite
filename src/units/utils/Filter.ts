@@ -1,5 +1,5 @@
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
     checkIsMeet as GridIndexArrayAndPredicatesUtilsCheckIsMeet,
     getDesc as GridIndexArrayAndPredicatesUtilsGetDesc,
@@ -40,7 +40,7 @@ import {
     checkIsValid as ValueSetAndRelationsUtilsCheckIsValid,
 } from "../../valueSetAndRelations/Utils.ts";
 
-export function checkIsValid(data: UnitFilter, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GcData): boolean {
+export function checkIsValid(data: UnitFilter, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GameConfig): boolean {
     return getErrorTip(data, playersCountUnneutral, mapSize, gameConfig) == null;
 }
 
@@ -265,7 +265,7 @@ export function checkIsEmpty(data: UnitFilter): boolean {
         && (data.getConBuffTypeId() == null);
 }
 
-export function getDesc(data: UnitFilter, gameConfig: GcData): string {
+export function getDesc(data: UnitFilter, gameConfig: GameConfig): string {
     const textArrayForSubConditions: string[] = [];
 
     {
@@ -454,7 +454,7 @@ export function getDescForEmbed(data: UnitFilter): string | null {
         );
 }
 
-export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GcData): string | null {
+export function getErrorTip(data: UnitFilter, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GameConfig): string | null {
     {
         const con = data.getConPlayerIndex();
         if (con != null) {

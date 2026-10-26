@@ -2,9 +2,9 @@ import { checkIsValid as ArrayModifiersUtilsCheckIsValid, getResultValue } from 
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { GcData } from "../../../gameConfigs/GcData.ts";
+import { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../../lang/Utils.ts";
+import { getFormattedText, getText } from "../../../lang/Utils.ts";
 import { AllLocationIdSet } from "../../../locations/Constants.ts";
 import { encode } from "../../../locations/Utils.ts";
 import {
@@ -12,25 +12,26 @@ import {
     getResultValue as MultiplierAndOffsetsUtilsGetResultValue,
 } from "../../../multiplierAndOffsets/Utils.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
-import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
+import { checkIsMeet, getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid } from "../../../players/utils/Filter.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { WeaSetTileStateSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileStateSimple.ts";
+import { checkIsValidPlayerIndexForTileObject } from "../../../tileObjects/Utils.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import { checkIsValidCustomNameId } from "../../../tiles/utils/Common.ts";
 import {
-    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
-    checkIsValid as TilesUtilsFilterCheckIsValid,
     checkIsMeet as TilesUtilsFilterCheckIsMeet,
+    checkIsValid as TilesUtilsFilterCheckIsValid,
+    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
 } from "../../../tiles/utils/Filter.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
-import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
+import { checkIsMeet as UnitsUtilsFilterCheckIsMeet, checkIsValid as UnitsUtilsFilterCheckIsValid } from "../../../units/utils/Filter.ts";
 import {
     getDesc,
-    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
+    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
 } from "../../../valueAndComparators/Utils.ts";
 
-export function checkIsValid(data: Undefinable<WeaSetTileStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetTileStateSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
@@ -182,7 +183,7 @@ export function getDetailDesc(data: Undefinable<WeaSetTileStateSimple>): string 
     );
 }
 
-export function getErrorTip(data: WeaSetTileStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaSetTileStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
@@ -331,27 +332,27 @@ export async function applyWithoutExtraData(data: WeaSetTileStateSimple, isFastE
     {
         for (const tile of targetTileArray) {
             const tileData = create({
-                baseType                : tile.getBaseType(),
-                baseShapeId             : tile.getBaseShapeId(),
-                objectType              : tile.getObjectType(),
-                objectShapeId           : tile.getObjectShapeId(),
-                decorationType          : tile.getDecorationType(),
-                decorationShapeId       : tile.getDecorationShapeId(),
-                gridIndex               : tile.getGridIndex().toProto().toJson(),
-                unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
+                baseType          : tile.getBaseType(),
+                baseShapeId       : tile.getBaseShapeId(),
+                objectType        : tile.getObjectType(),
+                objectShapeId     : tile.getObjectShapeId(),
+                decorationType    : tile.getDecorationType(),
+                decorationShapeId : tile.getDecorationShapeId(),
+                gridIndex         : tile.getGridIndex().toProto().toJson(),
+                unfixedBuffArray  : tile.getUnfixedBuffList().map(v => v.toJson()),
 
-                customBuildingData      : tile.getCustomBuildingData()?.toJson() ?? null,
-                customCannonData        : tile.getCustomCannonData()?.toJson() ?? null,
-                customCrystalData       : tile.getCustomCrystalData()?.toJson() ?? null,
-                customLaserTurretData   : tile.getCustomLaserTurretData()?.toJson() ?? null,
+                customBuildingData    : tile.getCustomBuildingData()?.toJson() ?? null,
+                customCannonData      : tile.getCustomCannonData()?.toJson() ?? null,
+                customCrystalData     : tile.getCustomCrystalData()?.toJson() ?? null,
+                customLaserTurretData : tile.getCustomLaserTurretData()?.toJson() ?? null,
 
-                playerIndex             : evalActPlayerIndex(data, tile),
-                currentHp               : evalActCurrentHp(data, tile),
-                currentBuildPoint       : evalActCurrentBuildPoint(data, tile),
-                currentCapturePoint     : evalActCurrentCapturePoint(data, tile),
-                isHighlighted           : evalActIsHighlighted(data, tile),
-                groupedLocationIdArray  : evalActLocationIdArray(data, tile),
-                customNameId            : evalActCustomNameId(data, tile) ?? null,
+                playerIndex            : evalActPlayerIndex(data, tile),
+                currentHp              : evalActCurrentHp(data, tile),
+                currentBuildPoint      : evalActCurrentBuildPoint(data, tile),
+                currentCapturePoint    : evalActCurrentCapturePoint(data, tile),
+                isHighlighted          : evalActIsHighlighted(data, tile),
+                groupedLocationIdArray : evalActLocationIdArray(data, tile),
+                customNameId           : evalActCustomNameId(data, tile) ?? null,
             });
 
             tile.init(tileData, tile.getGameConfig());
@@ -378,7 +379,9 @@ function evalActPlayerIndex(action: WeaSetTileStateSimple, tile: ITile): number 
     }
 
     const newValue = MultiplierAndOffsetsUtilsGetResultValue(act, defaultValue);
-    if ((tile.getWar().getPlayerManager().checkHasPlayer(newValue)) && (GcData.checkIsValidPlayerIndexForTileObject({ playerIndex: newValue, tileObjectType: tile.getObjectType() }))) {
+    if ((tile.getWar().getPlayerManager().checkHasPlayer(newValue)) &&
+        (checkIsValidPlayerIndexForTileObject({ playerIndex : newValue, tileObjectType : tile.getObjectType() }))
+    ) {
         return newValue;
     } else {
         return defaultValue;

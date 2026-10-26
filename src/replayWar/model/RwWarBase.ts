@@ -7,7 +7,7 @@ import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventMana
 import { BwWar } from "../../baseWar/model/BwWar.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
 import { show } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
@@ -71,7 +71,7 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
     public abstract serializeForCheckpoint(): ReplayCheckpointData;
     public abstract tickVisionTeamIndex(): number | null;
 
-    public init(warData: SerialWar, gameConfig: GcData): void {
+    public init(warData: SerialWar, gameConfig: GameConfig): void {
         warData                             = warData.clone();
         const srcExecutedOperationArray     = warData.getExecutedOperationManager()?.getExecutedOperationArray() ?? [];
         this._srcExecutedOperationArray     = srcExecutedOperationArray;

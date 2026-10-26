@@ -6,7 +6,7 @@ import {
     getCachedTileDecorationImageSource,
 } from "../../common/model/CommonModel.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
 import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
 import { ThemeTypeId } from "../../tiles/constants/Common.ts";
@@ -23,7 +23,7 @@ export class UiTileView implements IUiTileView {
     private readonly _imgDecoration = new (getUiImageClass())();
     private readonly _imgObject     = new (getUiImageClass())();
 
-    private _gameConfig         : GcData | null = null;
+    private _gameConfig         : GameConfig | null = null;
     private _baseType           : Undefinable<number>;
     private _baseShapeId        : Undefinable<number>;
     private _decorationType     : Undefinable<number>;

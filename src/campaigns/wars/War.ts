@@ -1,6 +1,6 @@
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { IWar } from "./IWar.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
@@ -14,7 +14,7 @@ import { PlayerScore } from "../../singlePlayerWars/Constants.ts";
 export class War extends SpwWar implements IWar {
     private _settingsForCaw?    : SettingsForCaw;
 
-    public init(data: SerialWar, gameConfig: GcData): void {
+    public init(data: SerialWar, gameConfig: GameConfig): void {
         this._baseInit(data, gameConfig, getWarTypeId(data));
         this._setSettingsForCaw(getExisted(data.getSettingsForCaw(), ClientErrorCode.CawWar_Init_00));
 

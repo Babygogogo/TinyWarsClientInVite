@@ -1,5 +1,5 @@
 import { showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
@@ -28,7 +28,7 @@ let _isShowDetail           = false;
 export interface OpenData {
     warEventFullData    : WarEventFullData;
     warEventIdArray     : number[];
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _imgMask!              : IUiImage;
@@ -183,7 +183,7 @@ export class Panel extends UiPanel<OpenData> {
 
 function generateDataArrayForListWarEventDesc({ fullData, gameConfig, eventId }: {
     fullData    : WarEventFullData;
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     eventId     : number;
 }): DataForWarEventDetailRenderer[] {
     const prefixArray   = [`E${eventId}`];
@@ -251,7 +251,7 @@ function generateDataArrayForListWarEventDesc({ fullData, gameConfig, eventId }:
 function generateNodeDataArrayForListWarEventDesc({ fullData, eventId, gameConfig, parentNodeId, nodeIdAndFlags: nodeId, prefixArray }: {
     fullData        : WarEventFullData;
     eventId         : number;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     parentNodeId    : NodeIdAndFlags | null;
     nodeIdAndFlags  : NodeIdAndFlags;
     prefixArray     : string[];
@@ -323,7 +323,7 @@ class WarEventIdRenderer
 
 interface DataForWarEventDetailRenderer extends UiListItemData {
     fullData                : WarEventFullData;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     descType                : DescType;
     prefixArray             : string[];
     eventId                 : number;

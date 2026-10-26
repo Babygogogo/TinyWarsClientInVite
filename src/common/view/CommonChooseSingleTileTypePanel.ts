@@ -1,5 +1,5 @@
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getTileName } from "../../lang/Utils.ts";
@@ -20,7 +20,7 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 
 export interface OpenData {
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     currentTileType     : number;
     tileTypeArray       : number[];
     callback            : (tileType: number) => void;
@@ -132,7 +132,7 @@ export class Panel extends UiPanel<OpenData> {
 }
 
 interface DataForTypeRenderer extends UiListItemData {
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     tileType    : number;
     callback    : (tileType: number) => void;
     panel       : Panel;

@@ -2,7 +2,7 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { CoStatisticsFilter } from "../../auxiliaryTypes/CoStatisticsFilter.ts";
 import { getCoStatistics } from "../model/CommonModel.ts";
 import { DisplayCategoryArray, ForceArray } from "../../cos/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getEnum } from "../../gameModes/Utils.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
@@ -289,7 +289,7 @@ export class Panel extends UiPanel<OpenData> {
 }
 
 interface DataForCoRenderer extends UiListItemData {
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     coId                : number;
     allReplaysCount     : number;
     rankedReplaysCount  : number;

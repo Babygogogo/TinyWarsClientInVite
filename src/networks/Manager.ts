@@ -41,7 +41,7 @@ function getFullUrl(): string {
 export type MsgListener = {
     msgCode     : MessageCodes;
     callback    : (e: Event) => void;
-    thisObject? : any;
+    thisObject? : unknown;
 };
 
 class NetMessageDispatcher extends EventDispatcher {
@@ -85,14 +85,14 @@ export function init(): void {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function addListeners(listeners: MsgListener[], thisObject?: any): void {
+export function addListeners(listeners: MsgListener[], thisObject?: unknown): void {
     for (const one of listeners) {
         dispatcher.addEventListener(MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
     }
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export function removeListeners(listeners: MsgListener[], thisObject?: any): void {
+export function removeListeners(listeners: MsgListener[], thisObject?: unknown): void {
     for (const one of listeners) {
         dispatcher.removeEventListener(MessageCodes[one.msgCode], one.callback, one.thisObject || thisObject);
     }

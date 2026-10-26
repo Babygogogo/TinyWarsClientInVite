@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText, getWeatherName } from "../../../lang/Utils.ts";
 import type { WecWeatherAndFog } from "../../../proto/schema/CommonProto/WarEvent/WecWeatherAndFog.ts";
@@ -12,7 +12,7 @@ export function getBriefDesc(data: Undefinable<WecWeatherAndFog>): string | null
 
     return getText(TextType.A0947);
 }
-export function getDetailedDesc(data: Undefinable<WecWeatherAndFog>, gameConfig: GcData): string | null {
+export function getDetailedDesc(data: Undefinable<WecWeatherAndFog>, gameConfig: GameConfig): string | null {
     if (data == null) {
         return null;
     }
@@ -55,7 +55,7 @@ export function getErrorTip(data: WecWeatherAndFog, war: IBwWar): string | null 
     return null;
 }
 
-export function checkIsValid(condition: Undefinable<WecWeatherAndFog>, gameConfig: GcData): boolean {
+export function checkIsValid(condition: Undefinable<WecWeatherAndFog>, gameConfig: GameConfig): boolean {
     if (condition == null) {
         return false;
     }

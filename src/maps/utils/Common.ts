@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { Common } from "../Constants.ts";
 import { LanguageType } from "../../lang/Constants.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -10,7 +10,7 @@ import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import { getSelfUserId } from "../../users/Model.ts";
 import { createDefault as WarRulesUtilsTemplateCreateDefault } from "../../warRules/utils/Template.ts";
 
-export function convertAwbwMap(text: string, gcData: GcData): MapRawData | undefined {
+export function convertAwbwMap(text: string, gcData: GameConfig): MapRawData | undefined {
     const awbwIdMap = text.trim().split(`\n`).map(line => line.split(`,`)).map(line => line.map(cell => parseInt(cell)));
     const mapHeight = awbwIdMap.length;
     if (mapHeight <= 0) {

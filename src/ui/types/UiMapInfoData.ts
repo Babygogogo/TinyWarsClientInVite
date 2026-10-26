@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
@@ -10,6 +10,6 @@ export interface UiMapInfoData {
     mapInfo?    : {
         hasFog      : boolean | null | undefined;
         mapRawData  : MapRawData;
-        gameConfig  : GcData;
+        gameConfig  : GameConfig;
     },
 }

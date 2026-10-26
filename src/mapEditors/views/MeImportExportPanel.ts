@@ -2,7 +2,7 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getIsTransparentTouchLayerTouched, setIsTransparentTouchLayerTouched } from "../../common/model/CommonModel.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { showLang, show } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -264,7 +264,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 }
 
-function handleUnsupportedCoId(mapRawData: MapRawData, gcData: GcData): void {
+function handleUnsupportedCoId(mapRawData: MapRawData, gcData: GameConfig): void {
     {
         for (const data1 of mapRawData.getMapSimpleDialogueArray() ?? []) {
             for (const data2 of data1.getDataArray() ?? []) {
@@ -309,6 +309,6 @@ function handleUnsupportedCoId(mapRawData: MapRawData, gcData: GcData): void {
         }
     }
 }
-function checkShouldModifyCoId(coId: Undefinable<number>, gcData: GcData): boolean {
+function checkShouldModifyCoId(coId: Undefinable<number>, gcData: GameConfig): boolean {
     return (coId != null) && (!gcData.checkHasCo(coId));
 }

@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { getErrorCode as DialoguesUtilsMapSmallDialogueGetErrorCode } from "../../dialogues/utils/MapSmallDialogue.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getCurrentLanguageType, getSecondaryLanguageType, getText, checkIsValidLanguageTextArray } from "../../lang/Utils.ts";
@@ -36,7 +36,7 @@ export function create({ templateWarRule, warEventFullData, allMapSimpleDialogue
         taskObjectiveFullData   : trimAndClone(taskObjectiveFullData, templateWarRule.getTaskObjectiveIdArray())?.toJson(),
     });
 }
-export function createDefault(playersCount: number, gcData: GcData): InstanceWarRule {
+export function createDefault(playersCount: number, gcData: GameConfig): InstanceWarRule {
     const languageType1 = getCurrentLanguageType();
     const languageType2 = getSecondaryLanguageType();
     return InstanceWarRule.fromJson({
@@ -65,7 +65,7 @@ export function createDefault(playersCount: number, gcData: GcData): InstanceWar
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function getErrorCode({ instanceWarRule, gameConfig, playersCountUnneutral, warType, mapSize }: {
     instanceWarRule         : InstanceWarRule;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     playersCountUnneutral   : number;
     warType                 : WarTypeId;
     mapSize                 : MapSize;

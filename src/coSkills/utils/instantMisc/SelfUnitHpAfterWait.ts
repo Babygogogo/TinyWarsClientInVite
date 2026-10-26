@@ -1,4 +1,4 @@
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
 import type { SelfUnitHpAfterWait } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitHpAfterWait.ts";
 import { Hp } from "../../../units/Constants.ts";
@@ -10,7 +10,7 @@ export function getTotalOffset({
     currentHp,
 }: {
     cfg         : SelfUnitHpAfterWait;
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     maxHp       : number;
     currentHp   : number;
 }): number {

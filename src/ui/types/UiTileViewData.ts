@@ -1,8 +1,8 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 
 export interface UiTileViewData {
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     tileBaseType            : Undefinable<number>;
     tileBaseShapeId         : Undefinable<number>;
     tileDecorationType      : Undefinable<number>;

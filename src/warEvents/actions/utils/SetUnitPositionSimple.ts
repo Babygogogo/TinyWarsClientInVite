@@ -2,7 +2,7 @@ import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText } from "../../../lang/Utils.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
@@ -23,7 +23,7 @@ import {
     checkIsMeet as UnitsUtilsFilterCheckIsMeet,
 } from "../../../units/utils/Filter.ts";
 
-export function checkIsValid(data: Undefinable<WeaSetUnitPositionSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetUnitPositionSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
@@ -88,7 +88,7 @@ export function getDetailDesc(data: Undefinable<WeaSetUnitPositionSimple>): stri
     );
 }
 
-export function getErrorTip(data: WeaSetUnitPositionSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaSetUnitPositionSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     {
         const filter = data.getConUnitFilter();
         if ((filter != null)                                                                            &&

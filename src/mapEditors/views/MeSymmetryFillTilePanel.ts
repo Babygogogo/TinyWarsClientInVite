@@ -1,4 +1,3 @@
-import { GcData } from "../../gameConfigs/GcData.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
@@ -10,6 +9,9 @@ import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { getSymmetricalGridIndex } from "../../mapEditor/model/MeHelpers.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
+import { getSymmetricalTileBaseShapeId } from "../../tileBases/Utils.ts";
+import { getSymmetricalTileDecorationShapeId } from "../../tileDecorations/Utils.ts";
+import { getSymmetricalTileObjectShapeId, getSymmetricalTileObjectType } from "../../tileObjects/Utils.ts";
 import { create } from "../../tiles/utils/Serialization.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -51,28 +53,28 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
+            { ui : this._btnClose,                   callback : this.closePanel },
 
-            { ui: this._btnUpDown1,                 callback: this._onTouchedBtnUpDown1 },
-            { ui: this._btnDownUp1,                 callback: this._onTouchedBtnDownUp1 },
-            { ui: this._btnLeftRight1,              callback: this._onTouchedBtnLeftRight1 },
-            { ui: this._btnRightLeft1,              callback: this._onTouchedBtnRightLeft1 },
-            { ui: this._btnUpLeftDownRight1,        callback: this._onTouchedBtnUpLeftDownRight1 },
-            { ui: this._btnDownRightUpLeft1,        callback: this._onTouchedBtnDownRightUpLeft1 },
-            { ui: this._btnUpRightDownLeft1,        callback: this._onTouchedBtnUpRightDownLeft1 },
-            { ui: this._btnDownLeftUpRight1,        callback: this._onTouchedBtnDownLeftUpRight1 },
+            { ui : this._btnUpDown1,                 callback : this._onTouchedBtnUpDown1 },
+            { ui : this._btnDownUp1,                 callback : this._onTouchedBtnDownUp1 },
+            { ui : this._btnLeftRight1,              callback : this._onTouchedBtnLeftRight1 },
+            { ui : this._btnRightLeft1,              callback : this._onTouchedBtnRightLeft1 },
+            { ui : this._btnUpLeftDownRight1,        callback : this._onTouchedBtnUpLeftDownRight1 },
+            { ui : this._btnDownRightUpLeft1,        callback : this._onTouchedBtnDownRightUpLeft1 },
+            { ui : this._btnUpRightDownLeft1,        callback : this._onTouchedBtnUpRightDownLeft1 },
+            { ui : this._btnDownLeftUpRight1,        callback : this._onTouchedBtnDownLeftUpRight1 },
 
-            { ui: this._btnUpDown2,                 callback: this._onTouchedBtnUpDown2 },
-            { ui: this._btnDownUp2,                 callback: this._onTouchedBtnDownUp2 },
-            { ui: this._btnLeftRight2,              callback: this._onTouchedBtnLeftRight2 },
-            { ui: this._btnRightLeft2,              callback: this._onTouchedBtnRightLeft2 },
-            { ui: this._btnUpLeftDownRight2,        callback: this._onTouchedBtnUpLeftDownRight2 },
-            { ui: this._btnDownRightUpLeft2,        callback: this._onTouchedBtnDownRightUpLeft2 },
-            { ui: this._btnUpRightDownLeft2,        callback: this._onTouchedBtnUpRightDownLeft2 },
-            { ui: this._btnDownLeftUpRight2,        callback: this._onTouchedBtnDownLeftUpRight2 },
+            { ui : this._btnUpDown2,                 callback : this._onTouchedBtnUpDown2 },
+            { ui : this._btnDownUp2,                 callback : this._onTouchedBtnDownUp2 },
+            { ui : this._btnLeftRight2,              callback : this._onTouchedBtnLeftRight2 },
+            { ui : this._btnRightLeft2,              callback : this._onTouchedBtnRightLeft2 },
+            { ui : this._btnUpLeftDownRight2,        callback : this._onTouchedBtnUpLeftDownRight2 },
+            { ui : this._btnDownRightUpLeft2,        callback : this._onTouchedBtnDownRightUpLeft2 },
+            { ui : this._btnUpRightDownLeft2,        callback : this._onTouchedBtnUpRightDownLeft2 },
+            { ui : this._btnDownLeftUpRight2,        callback : this._onTouchedBtnDownLeftUpRight2 },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -92,7 +94,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0864),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
@@ -115,7 +117,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0865),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
@@ -138,7 +140,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0866),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
@@ -161,7 +163,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0867),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
@@ -192,7 +194,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0868),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = mapHeight - x; y < mapHeight; ++y) {
                         autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.UpLeftToDownRight);
@@ -220,7 +222,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0869),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = 0; y < mapWidth - x - 1; ++y) {
                         autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.UpLeftToDownRight);
@@ -248,7 +250,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0870),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = x + 1; y < mapHeight; ++y) {
                         autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.UpRightToDownLeft);
@@ -276,7 +278,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0871),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = 0; y < x; ++y) {
                         autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.UpRightToDownLeft);
@@ -297,7 +299,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0864),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
@@ -320,7 +322,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0865),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
@@ -343,7 +345,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0866),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
@@ -366,7 +368,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0867),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 const mapSize       = war.getTileMap().getMapSize();
                 const mapWidth      = mapSize.getWidth();
                 const mapHeight     = mapSize.getHeight();
@@ -397,7 +399,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0868),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = mapHeight - x; y < mapHeight; ++y) {
                         autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
@@ -425,7 +427,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0869),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = 0; y < mapWidth - x - 1; ++y) {
                         autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
@@ -453,7 +455,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0870),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 for (let x = 0; x < mapWidth - 1; ++x) {
                     for (let y = x + 1; y < mapHeight; ++y) {
                         autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
@@ -481,7 +483,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0871),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 for (let x = 1; x < mapWidth; ++x) {
                     for (let y = 0; y < x; ++y) {
                         autoFillTile(war, new GridIndex(x, y), SymmetryTypeId.Rotation);
@@ -534,33 +536,33 @@ function autoFillTile(war: IMeWar, dstGridIndex: GridIndex, symmetryType: Symmet
     const baseType          = srcTile.getBaseType();
 
     const tileData = create({
-        gridIndex               : dstGridIndex.toProto().toJson(),
-        groupedLocationIdArray  : dstTile.getGroupedLocationIdArray(),
-        baseType                : baseType,
-        baseShapeId             : GcData.getSymmetricalTileBaseShapeId(baseType, srcTile.getBaseShapeId(), symmetryType) ?? 0,
-        objectType              : GcData.getSymmetricalTileObjectType(objectType, symmetryType),
-        objectShapeId           : GcData.getSymmetricalTileObjectShapeId(objectType, srcTile.getObjectShapeId(), symmetryType) ?? 0,
-        isHighlighted           : dstTile.getIsHighlighted(),
-        unfixedBuffArray        : dstTile.getUnfixedBuffList()?.map(v => v.toJson()),
-        customNameId            : dstTile.getCustomNameId() ?? null,
+        gridIndex              : dstGridIndex.toProto().toJson(),
+        groupedLocationIdArray : dstTile.getGroupedLocationIdArray(),
+        baseType               : baseType,
+        baseShapeId            : getSymmetricalTileBaseShapeId(baseType, srcTile.getBaseShapeId(), symmetryType) ?? 0,
+        objectType             : getSymmetricalTileObjectType(objectType, symmetryType),
+        objectShapeId          : getSymmetricalTileObjectShapeId(objectType, srcTile.getObjectShapeId(), symmetryType) ?? 0,
+        isHighlighted          : dstTile.getIsHighlighted(),
+        unfixedBuffArray       : dstTile.getUnfixedBuffList()?.map(v => v.toJson()),
+        customNameId           : dstTile.getCustomNameId() ?? null,
 
-        playerIndex             : drawer.getIsSymmetricalPlayerIndexEnabled()
+        playerIndex : drawer.getIsSymmetricalPlayerIndexEnabled()
             ? drawer.getSymmetricalPlayerIndex(srcTile.getPlayerIndex())
             : srcTile.getPlayerIndex(),
 
-        decorationType          : decorationType,
-        decorationShapeId       : ((decorationType != null) && (decorationShapeId != null))
-            ? GcData.getSymmetricalTileDecorationShapeId(decorationType, decorationShapeId, symmetryType) ?? 0
+        decorationType    : decorationType,
+        decorationShapeId : ((decorationType != null) && (decorationShapeId != null))
+            ? getSymmetricalTileDecorationShapeId(decorationType, decorationShapeId, symmetryType) ?? 0
             : decorationShapeId,
 
-        currentBuildPoint       : srcTile.getCurrentBuildPoint(),
-        currentCapturePoint     : srcTile.getCurrentCapturePoint(),
-        currentHp               : srcTile.getCurrentHp(),
+        currentBuildPoint   : srcTile.getCurrentBuildPoint(),
+        currentCapturePoint : srcTile.getCurrentCapturePoint(),
+        currentHp           : srcTile.getCurrentHp(),
 
-        customBuildingData      : srcTile.getCustomBuildingData()?.toJson() ?? null,
-        customCrystalData       : srcTile.getCustomCrystalData()?.toJson() ?? null,
-        customCannonData        : srcTile.getCustomCannonData()?.toJson() ?? null,
-        customLaserTurretData   : srcTile.getCustomLaserTurretData()?.toJson() ?? null,
+        customBuildingData    : srcTile.getCustomBuildingData()?.toJson() ?? null,
+        customCrystalData     : srcTile.getCustomCrystalData()?.toJson() ?? null,
+        customCannonData      : srcTile.getCustomCannonData()?.toJson() ?? null,
+        customLaserTurretData : srcTile.getCustomLaserTurretData()?.toJson() ?? null,
     });
 
     dstTile.init(tileData, gameConfig);

@@ -1,6 +1,6 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
-import { GcData } from "./GcData.ts";
+import { GameConfig } from "./GameConfig.ts";
 import { reqCommonLatestConfigVersion } from "./Gateway.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { getNumText } from "../helpers/Text.ts";
@@ -10,7 +10,7 @@ import { getResByUrl, ResourceItemHelper } from "../vendor/egret/Res.ts";
 const _latestVersionAccessor    = new CachedDataAccessor<null, string>({
     reqData : () => reqCommonLatestConfigVersion(),
 });
-const _gameConfigAccessor       = new CachedDataAccessor<string, GcData>({
+const _gameConfigAccessor       = new CachedDataAccessor<string, GameConfig>({
     reqData : async (version: string) => {
         const configBin : Undefinable<ArrayBuffer> = await getResByUrl(
             `resource/config/FullConfig${version}.bin`,
@@ -23,7 +23,7 @@ const _gameConfigAccessor       = new CachedDataAccessor<string, GcData>({
         if (rawConfig == null) {
             _gameConfigAccessor.setData(version, null);
         } else {
-            _gameConfigAccessor.setData(version, new GcData(version, rawConfig));
+            _gameConfigAccessor.setData(version, new GameConfig(version, rawConfig));
         }
     },
 });
@@ -79,9 +79,9 @@ export async function getNextConfigVersion(version: string): Promise<string | nu
     return `${version[0]}${getNumText(num, 7)}`;
 }
 
-export async function getGameConfig(version: string): Promise<GcData> {
+export async function getGameConfig(version: string): Promise<GameConfig> {
     return getExisted(await _gameConfigAccessor.getData(version));
 }
-export async function getLatestGameConfig(): Promise<GcData> {
+export async function getLatestGameConfig(): Promise<GameConfig> {
     return await getGameConfig(await getLatestConfigVersion());
 }

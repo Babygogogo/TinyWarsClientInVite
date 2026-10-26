@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { MouseStyleType } from "../../helpers/PointerInput.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
@@ -9,7 +9,7 @@ import type { IUiContainerBase } from "./IUiContainerBase.ts";
 export interface IUiZoomableMap extends IUiContainerBase {
     showMapByMapData({ mapRawData, gameConfig, overridingPlayers }: {
         mapRawData          : MapRawData;
-        gameConfig          : GcData;
+        gameConfig          : GameConfig;
         overridingPlayers   : Undefinable<SerialPlayer[]>;
     }): void;
     showMapByWarData({ warData, overridingPlayers, showInitialWarData }: {

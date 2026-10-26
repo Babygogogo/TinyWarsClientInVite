@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getBgmSfxName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -17,7 +17,7 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
     currentSfxCode  : Undefinable<number>;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     callback        : (sfxCode: number) => void;
 }
 export class Panel extends UiPanel<OpenData> {
@@ -96,7 +96,7 @@ export class Panel extends UiPanel<OpenData> {
 
 interface DataForSfxRenderer extends UiListItemData {
     sfxCode     : number;
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     callback    : (sfxCode: number) => void;
     panel       : Panel;
 }

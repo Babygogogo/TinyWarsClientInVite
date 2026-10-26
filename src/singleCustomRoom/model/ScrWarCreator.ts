@@ -1,7 +1,7 @@
 import { WarCreatorBase } from "../../auxiliaryTypes/WarCreatorBase.ts";
 import { pickRandomCo } from "../../cos/Utils.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import type { ScrCreatePlayerInfoChanged } from "../../notifications/DataTypes.ts";
@@ -20,7 +20,7 @@ import { create } from "../../warRules/utils/Instance.ts";
 export class ScrWarCreator extends WarCreatorBase {
     private readonly _settingsForScw = new SettingsForScw();
 
-    public constructor(gcData: GcData, mapRawData: MapRawData, saveSlotIndex: number) {
+    public constructor(gcData: GameConfig, mapRawData: MapRawData, saveSlotIndex: number) {
         super(gcData, mapRawData, saveSlotIndex);
 
         this.getSettingsForScw().setNormalMapId(mapRawData.getNormalMapId());

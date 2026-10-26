@@ -2,7 +2,7 @@ import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { SmallDialogueSideId } from "../../../dialogues/Constants.ts";
 import { ForcedFogCode } from "../../../fogMaps/Constants.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { closePanel, openPanel } from "../../../gamePanels/Manager.ts";
 import { newError, getExisted } from "../../../helpers/Misc.ts";
@@ -433,7 +433,7 @@ export function checkIsValidBuffEndTimeModificationMode(mode: number): boolean {
 export function checkIsValidWarEventAction({ action, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet }: {    // DONE
     action                  : WarEventAction;
     mapSize                 : MapSize;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     playersCountUnneutral   : number;
     customCounterNameSet    : Set<string>;
 }): boolean {
@@ -650,7 +650,7 @@ export function openActionModifyPanel(war: IMeWar, fullData: WarEventFullData, a
     else                                                                { throw newError(`Invalid action.`, ClientErrorCode.WarEventHelper_OpenActionModifyPanel_00); }
 }
 
-export function getBriefDescForAction(action: WarEventAction, gameConfig: GcData): string | null {
+export function getBriefDescForAction(action: WarEventAction, gameConfig: GameConfig): string | null {
     // todo: add functions for other actions
     return (WarEventsActionsUtilsAddUnitOnMapSimpleGetBriefDesc(action.getWeaAddUnitOnMapSimple(), gameConfig))
         || (WarEventsActionsUtilsFillUnitOnMapExprGetBriefDesc(action.getWeaFillUnitOnMapExpr()))
@@ -709,7 +709,7 @@ export function getBriefDescForAction(action: WarEventAction, gameConfig: GcData
         || (WarEventsActionsUtilsPersistentModifyPlayerAttributeGetBriefDesc(action.getWeaPersistentModifyPlayerAttribute()))
         || (WarEventsActionsUtilsPersistentModifyUnitAttributeGetBriefDesc(action.getWeaPersistentModifyUnitAttribute()));
 }
-export function getDetailDescForAction(action: WarEventAction, gameConfig: GcData): string | null {
+export function getDetailDescForAction(action: WarEventAction, gameConfig: GameConfig): string | null {
     // todo: add functions for other actions
     return (WarEventsActionsUtilsAddUnitOnMapSimpleGetDetailDesc(action.getWeaAddUnitOnMapSimple(), gameConfig))
         || (WarEventsActionsUtilsFillUnitOnMapExprGetDetailDesc(action.getWeaFillUnitOnMapExpr()))
@@ -1140,7 +1140,7 @@ export function cloneAction(fullData: WarEventFullData, srcActionId: number): nu
     }
 }
 
-export function resetAction(action: WarEventAction, actionType: ActionTypeId, gameConfig: GcData): void {
+export function resetAction(action: WarEventAction, actionType: ActionTypeId, gameConfig: GameConfig): void {
     action.clearActionData();
 
     // todo handle future actions.

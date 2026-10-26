@@ -15,7 +15,7 @@ import type { IBwWarView } from "../interface/IBwWarView.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { IField } from "../../fields/IField.ts";
 import type { IFogMap } from "../../fogMaps/IFogMap.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
     getBwWeatherManagerClass,
     getTurnManagerClass,
@@ -82,7 +82,7 @@ export abstract class BwWar implements IBwWar {
     private readonly _playerManager         = new (getPlayerManagerClass())();
     private readonly _view                  = new (getBwWarViewClass())();
 
-    private _gameConfig             : GcData | null = null;
+    private _gameConfig             : GameConfig | null = null;
     private _warId                  : number | null = null;
     private _warType                = WarTypeId.Undefined;
     private _isRunning              = false;
@@ -96,7 +96,7 @@ export abstract class BwWar implements IBwWar {
         settings    : [],
     };
 
-    public abstract init(data: SerialWar, gameConfig: GcData): void;
+    public abstract init(data: SerialWar, gameConfig: GameConfig): void;
     public abstract getNormalMapId(): number | null;
     public abstract getIsNeedExecutedOperations(): boolean;
     public abstract getIsNeedSeedRandom(): boolean;
@@ -108,7 +108,7 @@ export abstract class BwWar implements IBwWar {
     public abstract getIsExecuteActionsWithExtraData(): boolean;
     public abstract updateTilesAndUnitsOnVisibilityChanged(isFastExecute: boolean): void;
 
-    protected _baseInit(data: SerialWar, gameConfig: GcData, warType: WarTypeId): void {
+    protected _baseInit(data: SerialWar, gameConfig: GameConfig, warType: WarTypeId): void {
         const settingsForCommon = getExisted(data.getSettingsForCommon(), ClientErrorCode.BwWar_BaseInit_00);
         const configVersion     = getExisted(settingsForCommon.getConfigVersion(), ClientErrorCode.BwWar_BaseInit_01);
         if (configVersion !== gameConfig.getVersion()) {
@@ -448,10 +448,10 @@ export abstract class BwWar implements IBwWar {
         return this._warType;
     }
 
-    public getGcData(): GcData {
+    public getGcData(): GameConfig {
         return getExisted(this._gameConfig);
     }
-    private _setGameConfig(gameConfig: GcData): void {
+    private _setGameConfig(gameConfig: GameConfig): void {
         this._gameConfig = gameConfig;
     }
 

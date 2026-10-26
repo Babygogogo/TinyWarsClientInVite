@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CommonMapView } from "../../common/view/CommonMapView.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { MouseStyleType } from "../../helpers/PointerInput.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
@@ -31,7 +31,7 @@ export class UiZoomableMap extends UiContainer implements IUiZoomableMap {
 
     public showMapByMapData({ mapRawData, gameConfig, overridingPlayers }: {
         mapRawData          : MapRawData;
-        gameConfig          : GcData;
+        gameConfig          : GameConfig;
         overridingPlayers   : Undefinable<SerialPlayer[]>;
     }): void {
         const mapView = this._mapView;

@@ -1,7 +1,7 @@
 import type { PlayerInfo2, Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { Common } from "../../chat/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCoEyeBackground, getCoEye } from "../../helpers/ImageSource.ts";
@@ -27,7 +27,7 @@ import { getSelfUserId, getUserNickname } from "../../users/Model.ts";
 type PlayerInfo     = PlayerInfo2;
 
 export interface OpenData {
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     warId           : Undefinable<number>;
     playerInfoArray : PlayerInfo[];
 }
@@ -114,7 +114,7 @@ export class Panel extends UiPanel<OpenData> {
 }
 
 interface DataForPlayerRenderer extends UiListItemData {
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     warId       : Undefinable<number>;
     playerInfo  : PlayerInfo;
 }

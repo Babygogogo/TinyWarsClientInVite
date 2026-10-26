@@ -1,5 +1,5 @@
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { SerialDrawVoteManager } from "../../proto/schema/CommonProto/WarSerialization/SerialDrawVoteManager.ts";
@@ -12,7 +12,7 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 export class SrwWar extends SpwWar implements ISrwWar {
     private _settingsForSrw?    : SettingsForSrw;
 
-    public init(data: SerialWar, gameConfig: GcData): void {
+    public init(data: SerialWar, gameConfig: GameConfig): void {
         this._baseInit(data, gameConfig, getWarTypeId(data));
         this._setSettingsForSrw(getExisted(data.getSettingsForSrw(), ClientErrorCode.SrwWar_Init_00));
 

@@ -1,6 +1,6 @@
 import { CoId } from "../../cos/Constants.ts";
 import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -98,7 +98,7 @@ export class Page extends UiOpenableComponent<OpenData> {
 interface DataForPlayerRenderer extends UiListItemData {
     roomCreator  : MfrRoomCreator;
     playerIndex     : number;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     page            : Page;
 }
 class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {

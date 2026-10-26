@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getText, getBgmSfxName } from "../../../lang/Utils.ts";
 import type { WeaPlaySfx } from "../../../proto/schema/CommonProto/WarEvent/WeaPlaySfx.ts";
@@ -14,7 +14,7 @@ export function checkIsValid(action: Undefinable<WeaPlaySfx>): boolean {
     return checkIsSfx(action.getSfxCode() ?? 0);
 }
 
-export function getBriefDesc(data: Undefinable<WeaPlaySfx>, gameConfig: GcData): string | null {
+export function getBriefDesc(data: Undefinable<WeaPlaySfx>, gameConfig: GameConfig): string | null {
     if (data == null) {
         return null;
     }
@@ -22,7 +22,7 @@ export function getBriefDesc(data: Undefinable<WeaPlaySfx>, gameConfig: GcData):
     const sfxCode = data.getSfxCode() ?? 0;
     return `${getText(TextType.B1164)}: ${getBgmSfxName(sfxCode, gameConfig) ?? UndefinedError}`;
 }
-export function getDetailDesc(data: Undefinable<WeaPlaySfx>, gameConfig: GcData): string | null {
+export function getDetailDesc(data: Undefinable<WeaPlaySfx>, gameConfig: GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
 }
 

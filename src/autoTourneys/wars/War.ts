@@ -1,6 +1,6 @@
 import type { IWar } from "./IWar.ts";
 import { DefaultParams } from "../../bootTimers/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";
@@ -10,7 +10,7 @@ import type { SettingsForAtw } from "../../proto/schema/CommonProto/WarSettings/
 export class War extends MpwWar implements IWar {
     private _settingsForAtw?    : SettingsForAtw;
 
-    public init(data: SerialWar, gameConfig: GcData): void {
+    public init(data: SerialWar, gameConfig: GameConfig): void {
         this._baseInit(data, gameConfig, getWarTypeId(data));
         this._setSettingsForAtw(getExisted(data.getSettingsForAtw()));
 

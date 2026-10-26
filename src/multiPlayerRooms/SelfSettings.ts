@@ -1,6 +1,6 @@
 import { CoId } from "../cos/Constants.ts";
 import { SkinId } from "../forceSkins/Constants.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { newError, getExisted } from "../helpers/Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
@@ -15,13 +15,13 @@ import { getPlayerRule } from "../warRules/utils/CommonData.ts";
 type RoomInfo           = AtrRoomInfo | MmrRoomInfo | MrrRoomInfo;
 
 export class SelfSettings {
-    private readonly _gcData    : GcData;
+    private readonly _gcData    : GameConfig;
     private readonly _roomId    : number;
     private _coId               : number | null = null;
     private _unitAndTileSkinId  : number | null = null;
     private _availableCoIdArray : number[] | null = null;
 
-    public constructor(roomInfo: RoomInfo, gcData: GcData) {
+    public constructor(roomInfo: RoomInfo, gcData: GameConfig) {
         this._gcData = gcData;
         this._roomId = roomInfo.getRoomId();
 
@@ -91,7 +91,7 @@ export class SelfSettings {
     }
 }
 
-function generateAvailableCoIdArray(roomInfo: RoomInfo, gcData: GcData, playerIndex: number): number[] {
+function generateAvailableCoIdArray(roomInfo: RoomInfo, gcData: GameConfig, playerIndex: number): number[] {
     const bannedCoCategoryIdSet = new Set<number>();
     for (const data of getDataArrayForBanCo(roomInfo)) {
         for (const coId of data.getBannedCoIdArray()) {

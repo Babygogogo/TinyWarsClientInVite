@@ -1,6 +1,6 @@
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
@@ -20,7 +20,7 @@ import { reqUserSetCoBgmSettings } from "../Proxy.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _imgMask!          : IUiImage;

@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -27,7 +27,7 @@ export type OpenData = {
     canModify       : boolean;
     instanceWarRule : InstanceWarRule;
     gameModeId      : ModeId;
-    gcData          : GcData;
+    gcData          : GameConfig;
 } | null;
 export class Page extends UiOpenableComponent<OpenData> {
     private readonly _scroller!     : IUiScroller<IUiContainer>;

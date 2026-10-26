@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getUnitViewClass, getUnitClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
@@ -234,7 +234,7 @@ class PlayerIndexRenderer extends UiListItemRenderer<DataForPlayerIndexRenderer>
 interface DataForUnitRenderer extends UiListItemData {
     dataForDrawUnit : DataForDrawUnit;
     panel           : Panel;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
 }
 class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
     private readonly _group!        : IUiContainer;

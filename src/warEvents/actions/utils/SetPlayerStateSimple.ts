@@ -4,7 +4,7 @@ import { PlayerDataForWeaSetPlayerState } from "../../../auxiliaryTypes/PlayerDa
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getValidEnergy } from "../../../cos/Utils.ts";
 import { checkIsValidSkillTypeId } from "../../../coSkills/utils/Common.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { createLazyFunc } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText } from "../../../lang/Utils.ts";
@@ -19,7 +19,7 @@ import { checkIsValid as TilesUtilsFilterCheckIsValid, checkIsMeet as TilesUtils
 import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
 import { getDesc, checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet } from "../../../valueAndComparators/Utils.ts";
 
-export function checkIsValid(data: Undefinable<WeaSetPlayerStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetPlayerStateSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
@@ -160,7 +160,7 @@ export function getDetailDesc(data: Undefinable<WeaSetPlayerStateSimple>): strin
     );
 }
 
-export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaSetPlayerStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     {
         const filter = data.getConPlayerFilter();
         if ((filter != null)                                                                    &&

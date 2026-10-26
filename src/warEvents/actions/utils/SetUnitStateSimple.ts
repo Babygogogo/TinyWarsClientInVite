@@ -2,7 +2,7 @@ import { checkIsValid as ArrayModifiersUtilsCheckIsValid, getResultValue } from 
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText } from "../../../lang/Utils.ts";
@@ -38,7 +38,7 @@ import {
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { checkIsValid as WeightedGridIndexesUtilsCheckIsValid } from "../../../weightedGridIndexes/Utils.ts";
 
-export function checkIsValid(data: Undefinable<WeaSetUnitStateSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetUnitStateSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
@@ -283,7 +283,7 @@ export function getDetailDesc(data: Undefinable<WeaSetUnitStateSimple>): string 
     );
 }
 
-export function getErrorTip(data: WeaSetUnitStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaSetUnitStateSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     {
         const filter = data.getConUnitFilter();
         if ((filter != null)                                                                            &&

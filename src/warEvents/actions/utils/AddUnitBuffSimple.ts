@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText, getText, getUnitBuffName } from "../../../lang/Utils.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
@@ -31,7 +31,7 @@ import {
 
 export function checkIsValid(
     data                    : Undefinable<WeaAddUnitBuffSimple>,
-    gameConfig              : GcData,
+    gameConfig              : GameConfig,
     mapSize                 : MapSize,
     playersCountUnneutral   : number
 ): boolean {
@@ -123,7 +123,7 @@ export function getErrorTip(
     data                    : WeaAddUnitBuffSimple,
     mapSize                 : MapSize,
     playersCountUnneutral   : number,
-    gameConfig              : GcData
+    gameConfig              : GameConfig
 ): string | null {
     {
         const filter = data.getConUnitFilter();

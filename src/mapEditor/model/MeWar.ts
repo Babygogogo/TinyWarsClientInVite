@@ -2,7 +2,7 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
 import { BwWar } from "../../baseWar/model/BwWar.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getMeDrawerClass, getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
 import { pickRandomElement } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -46,7 +46,7 @@ export class MeWar extends BwWar implements IMeWar {
     private _taskObjectiveFullData          : TaskObjectiveFullData | null = null;
     private readonly _gridMarkData          = new GridMarkData();
 
-    public init(data: SerialWar, gameConfig: GcData): void {
+    public init(data: SerialWar, gameConfig: GameConfig): void {
         this._baseInit(data, gameConfig, WarTypeId.Me);
         this.getDrawer().init();
 
@@ -55,7 +55,7 @@ export class MeWar extends BwWar implements IMeWar {
     public async initWithMapRawData({ mapRawData, slotIndex, gameConfig, srcNormalMapIdForAddEvent, gridMarkData }: {
         mapRawData                  : MapRawData;
         slotIndex                   : number;
-        gameConfig                  : GcData;
+        gameConfig                  : GameConfig;
         srcNormalMapIdForAddEvent   : number | null;
         gridMarkData                : Undefinable<GridMarkData>;
     }): Promise<void> {

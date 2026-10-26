@@ -1,7 +1,7 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CategoryId, CoId } from "../cos/Constants.ts";
 import { checkIsValidSkinId } from "../forceSkins/Utils.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { checkIsSameSet } from "../helpers/Collection.ts";
 import {
     InitialFund,
@@ -24,7 +24,7 @@ import { TeamIndex } from "../teams/Constants.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { WarTypeId } from "../warTypes/Constants.ts";
 
-export function createDefaultPlayerRule(playerIndex: number, gcData: GcData): PlayerRule {
+export function createDefaultPlayerRule(playerIndex: number, gcData: GameConfig): PlayerRule {
     return PlayerRule.fromJson({
         playerIndex                 : playerIndex,
         teamIndex                   : playerIndex,
@@ -59,7 +59,7 @@ export function createDefaultPlayerRule(playerIndex: number, gcData: GcData): Pl
         luckUpperLimit              : gcData.getSystemCfg().getDefaultLuckUpperLimit(),
     });
 }
-export function createDefaultPlayerRuleList(playersCountUnneutral: number, gcData: GcData): PlayerRule[] {
+export function createDefaultPlayerRuleList(playersCountUnneutral: number, gcData: GameConfig): PlayerRule[] {
     const playerRuleDataList: PlayerRule[] = [];
     for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
         playerRuleDataList.push(createDefaultPlayerRule(playerIndex, gcData));
@@ -70,7 +70,7 @@ export function createDefaultPlayerRuleList(playersCountUnneutral: number, gcDat
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, isCampaignMap }: {
     playerRule              : PlayerRule;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     playersCountUnneutral   : number;
     isCampaignMap           : boolean;
 }): ClientErrorCode {
@@ -335,7 +335,7 @@ export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, is
 
 export function getErrorCodeForPlayerRuleList({ playerRuleList, gameConfig, playersCountUnneutral, ruleAvailability, isCampaignMap }: {
     playerRuleList          : PlayerRule[];
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     playersCountUnneutral   : number;
     ruleAvailability        : RuleAvailability | null;
     isCampaignMap           : boolean;
@@ -555,7 +555,7 @@ export function checkIsSame(playerRule1: PlayerRule, playerRule2: PlayerRule): b
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 export function getFinalScwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom }: {
     playerRule      : PlayerRule;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     hasFogByDefault : boolean;
     includeRandom   : boolean;
 }): Set<number> {
@@ -571,7 +571,7 @@ export function getFinalScwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
 
 export function getFinalSrwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom }: {
     playerRule      : PlayerRule;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     hasFogByDefault : boolean;
     includeRandom   : boolean;
 }): Set<number> {
@@ -591,7 +591,7 @@ export function getFinalSrwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
 
 export function getFinalSfwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom }: {
     playerRule      : PlayerRule;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     hasFogByDefault : boolean;
     includeRandom   : boolean;
 }): Set<number> {
@@ -607,7 +607,7 @@ export function getFinalSfwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
 
 export function getFinalMfwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom }: {
     playerRule      : PlayerRule;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     hasFogByDefault : boolean;
     includeRandom   : boolean;
 }): Set<number> {
@@ -623,7 +623,7 @@ export function getFinalMfwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
 
 export function getFinalMcwHumanCoIdSet({ playerRule, gameConfiguration, hasFogByDefault, includeRandom }: {
     playerRule          : PlayerRule;
-    gameConfiguration   : GcData;
+    gameConfiguration   : GameConfig;
     hasFogByDefault     : boolean;
     includeRandom       : boolean;
 }): Set<number> {
@@ -639,7 +639,7 @@ export function getFinalMcwHumanCoIdSet({ playerRule, gameConfiguration, hasFogB
 
 export function getFinalCcwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom }: {
     playerRule      : PlayerRule;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     hasFogByDefault : boolean;
     includeRandom   : boolean;
 }): Set<number> {
@@ -659,7 +659,7 @@ export function getFinalCcwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
 
 export function getFinalMmwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom, bannedCoCategoryIdSetByBp }: {
     playerRule                  : PlayerRule;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     hasFogByDefault             : boolean;
     includeRandom               : boolean;
     bannedCoCategoryIdSetByBp   : Set<number>;
@@ -676,7 +676,7 @@ export function getFinalMmwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
 
 export function getFinalMrwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom, bannedCoCategoryIdSetByBp }: {
     playerRule                  : PlayerRule;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     hasFogByDefault             : boolean;
     includeRandom               : boolean;
     bannedCoCategoryIdSetByBp   : Set<number>;
@@ -693,7 +693,7 @@ export function getFinalMrwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefaul
 
 export function getFinalAtwHumanCoIdSet({ playerRule, gameConfig, hasFogByDefault, includeRandom, bannedCoCategoryIdSetByBp }: {
     playerRule                  : PlayerRule;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     hasFogByDefault             : boolean;
     includeRandom               : boolean;
     bannedCoCategoryIdSetByBp   : Set<number>;
@@ -712,7 +712,7 @@ function getFinalHumanCoIdSet({ ruleBannedCoCategoryIdArray, bpBannedCoCategoryI
     ruleBannedCoCategoryIdArray : Undefinable<number[]>;
     bpBannedCoCategoryIdSet     : Undefinable<Set<number>>;
     specifiedCoCategoryIdArray  : Undefinable<number[]>;
-    gcData                      : GcData;
+    gcData                      : GameConfig;
     warType                     : WarTypeId;
     includeRandom               : boolean;
 }): Set<number> {

@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { Incremental, TimerTypeId } from "../../bootTimers/Constants.ts";
 import { show } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
@@ -91,7 +91,7 @@ interface DataForSettingsRenderer extends UiListItemData {
     settingsType        : BasicSettingsTypeId;
     currentValue        : number | string | null;
     instanceWarRule     : InstanceWarRule;
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     warEventFullData    : Undefinable<WarEventFullData>;
     callbackOnModify    : ((newValue: string | number | null) => void) | null;
 }

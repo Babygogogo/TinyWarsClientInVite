@@ -2,7 +2,7 @@ import type { PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCoHead, getCoHeadFrame } from "../../helpers/ImageSource.ts";
@@ -34,7 +34,7 @@ import { checkIsDummy } from "../../users/Utils.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export type OpenData = {
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     playersCountUnneutral   : number;
     enterTurnTime           : number | null;
     roomOwnerPlayerIndex    : number | null;
@@ -120,7 +120,7 @@ export class Page extends UiOpenableComponent<OpenData> {
 }
 
 interface DataForPlayerRenderer extends UiListItemData {
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     isRoomOwnedBySelf       : boolean;
     enterTurnTime           : number | null;
     playerInfo              : PlayerInfo;

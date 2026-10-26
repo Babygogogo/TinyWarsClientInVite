@@ -1,5 +1,5 @@
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type { SelfUnitMoveRange } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitMoveRange.ts";
 
 export function getTotalOffset({
@@ -14,7 +14,7 @@ export function getTotalOffset({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfUnitMoveRange | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     unitTypeId                  : number;
     tileTypeId                  : number;
     weatherTypeId               : number;

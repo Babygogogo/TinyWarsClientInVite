@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
@@ -40,7 +40,7 @@ import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
 import { SetRelationId, AllSetRelationIdArray } from "../../valueSetAndRelations/Constants.ts";
 
 export interface OpenData {
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     playersCountUnneutral   : number;
     mapSize                 : MapSize;
     currentFilter           : Undefinable<TileFilter>;

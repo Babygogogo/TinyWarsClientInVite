@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
 import type { ActionTypeId } from "../../units/Constants.ts";
 import type { IUnit } from "../../units/IUnit.ts";
@@ -23,7 +23,7 @@ export interface DataForUnitAction {
 }
 
 export interface DataForTileView {
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     tileData            : SerialTile;
     themeType           : number;
     hasFog              : boolean;

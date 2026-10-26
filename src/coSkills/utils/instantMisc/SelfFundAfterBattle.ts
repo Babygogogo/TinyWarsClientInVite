@@ -1,5 +1,5 @@
 import { AreaTypeId } from "../../Constants.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type { SelfFundAfterBattle } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfFundAfterBattle.ts";
 
 export function getTotalOffset({
@@ -13,7 +13,7 @@ export function getTotalOffset({
     enemyFinalProductionCost,
 }: {
     cfg                         : SelfFundAfterBattle | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     selfUnitTypeId              : number;
     isSelfInCoZone              : boolean;
     enemyUnitTypeId             : number;

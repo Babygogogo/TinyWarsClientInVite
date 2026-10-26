@@ -1,5 +1,5 @@
 import { showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -34,7 +34,7 @@ import { Constants } from "../../warRules/Constants.ts";
 import { tickDefaultWeatherType, getDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
 
 export interface OpenData {
-    gcData          : GcData;
+    gcData          : GameConfig;
     mapRawData      : MapRawData;
     templateWarRule : TemplateWarRule;
 }

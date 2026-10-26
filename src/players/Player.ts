@@ -6,7 +6,7 @@ import { checkIsValidEnergy, getValidEnergy, getCoMaxEnergy } from "../cos/Utils
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
 import { getTotalMultiplier } from "../coSkills/utils/persistent/SelfUnitCost.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { addGridMark, deleteGridMark, updateGridMarkList } from "../gridMarks/Utils.ts";
 import { checkIsSameSet } from "../helpers/Collection.ts";
 import { newError, getExisted, getDefined } from "../helpers/Misc.ts";
@@ -50,7 +50,7 @@ export class Player implements IPlayer {
     private _war?                       : IBwWar;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public init(data: SerialPlayer, gcData: GcData): void {
+    public init(data: SerialPlayer, gcData: GameConfig): void {
         const coId = data.getCoId();
         if (gcData.getCoBasicCfg(coId) == null) {
             throw newError(`Invalid coId: ${coId}`, ClientErrorCode.BwPlayer_Init_01);

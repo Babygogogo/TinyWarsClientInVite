@@ -1,5 +1,5 @@
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type {
     SelfUnitPromotionAfterBattle,
 } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitPromotionAfterBattle.ts";
@@ -16,7 +16,7 @@ export function getTotalOffset({
     isTargetKilled,
 }: {
     cfg                         : SelfUnitPromotionAfterBattle | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
     gridIndex                   : GridIndex;

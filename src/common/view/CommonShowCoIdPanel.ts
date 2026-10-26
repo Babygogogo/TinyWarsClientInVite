@@ -1,5 +1,5 @@
 import { DisplayCategoryArray, ForceArray, CoId } from "../../cos/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
@@ -21,7 +21,7 @@ import { getUiLayoutClass, getUiImageClass } from "../../ui/utils/UiFactory.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 
 export interface OpenData {
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     currentCoIdArray    : number[];
     availableCoIdArray  : number[];
     isBan               : boolean;
@@ -219,7 +219,7 @@ class RendererForCoName extends UiContainer {
     private _canSelect      = false;
     private _showCoId       = false;
 
-    private _gameConfig     : GcData | null = null;
+    private _gameConfig     : GameConfig | null = null;
     private _coId           : number | null = null;
     private _panel          : Panel | null = null;
 
@@ -252,10 +252,10 @@ class RendererForCoName extends UiContainer {
         return this._panel;
     }
 
-    public setGameConfig(config: GcData): void {
+    public setGameConfig(config: GameConfig): void {
         this._gameConfig = config;
     }
-    public getGameConfig(): GcData | null {
+    public getGameConfig(): GameConfig | null {
         return this._gameConfig;
     }
 

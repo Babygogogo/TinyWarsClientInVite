@@ -3,7 +3,7 @@ import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { EnergyTypeId } from "../cos/Constants.ts";
 import type { SkillTypeId } from "../coSkills/Constants.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import type { AliveStateId } from "./Constants.ts";
 import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
 import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
@@ -12,7 +12,7 @@ import type { SerialPlayer } from "../proto/schema/CommonProto/WarSerialization/
 type PlayerAliveState       = AliveStateId;
 type CoSkillType            = SkillTypeId;
 type CoEnergyType           = EnergyTypeId;
-type GameConfiguration      = GcData;
+type GameConfiguration      = GameConfig;
 export interface IPlayer {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     init(data: SerialPlayer, gameConfig: GameConfiguration): void;

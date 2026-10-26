@@ -2,7 +2,7 @@ import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
 import { getNonNullElements } from "../../../helpers/Collection.ts";
 import { getExisted, newError } from "../../../helpers/Misc.ts";
@@ -18,7 +18,7 @@ import type { IUnitMap } from "../../../units/IUnitMap.ts";
 import { getErrorCodeForUnitDataIgnoringUnitId } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 
-export function checkIsValid(action: Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(action: Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
     if (action == null) {
         return false;
     }
@@ -51,7 +51,7 @@ export function checkIsValid(action: Undefinable<WeaFillUnitOnMapSimple>, gameCo
     return true;
 }
 
-export function getBriefDesc(data: Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GcData): string | null {
+export function getBriefDesc(data: Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GameConfig): string | null {
     if (!data) {
         return null;
     }
@@ -85,11 +85,11 @@ export function getBriefDesc(data: Undefinable<WeaFillUnitOnMapSimple>, gameConf
         ) + (textForActIsInTurn ? ` ${textForActIsInTurn}` : ``);
     }
 }
-export function getDetailDesc(data: Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GcData): string | null {
+export function getDetailDesc(data: Undefinable<WeaFillUnitOnMapSimple>, gameConfig: GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
 }
 
-export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaFillUnitOnMapSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     {
         const conTileFilter = data.getConTileFilter();
         if ((conTileFilter != null) && (!TilesUtilsFilterCheckIsValid(conTileFilter, playersCountUnneutral, mapSize, gameConfig))) {

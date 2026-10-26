@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getFormattedText, getText } from "../../lang/Utils.ts";
 import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
@@ -14,10 +14,10 @@ import {
 
 export namespace Building {
 
-    export function checkIsValid(data: TileCustomBuildingData, config: GcData): boolean {
+    export function checkIsValid(data: TileCustomBuildingData, config: GameConfig): boolean {
         return Building.getErrorTip(data, config) == null;
     }
-    export function getErrorTip(data: TileCustomBuildingData, config: GcData): string | null {
+    export function getErrorTip(data: TileCustomBuildingData, config: GameConfig): string | null {
         {
             // defenseAmount
             if (!TilesUtilsCustomLimitsBuilding.DefenseAmount.checkIsValid(data.getDefenseAmount())) {

@@ -1,47 +1,50 @@
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { destroyUnitOnMap } from "../../destructions/Utils.ts";
 import { show, showLang } from "../../FloatText.ts";
-import { GcData } from "../../gameConfigs/GcData.ts";
-import { DrawerMode } from "../../mapEditors/Constants.ts";
+import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getUnitClass } from "../../gameHelpers/GhFactory.ts";
 import { SymmetryTypeId } from "../../geometries/Constants.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getFormattedText } from "../../lang/Utils.ts";
-import type { IMeDrawer } from "../interface/IMeDrawer.ts";
-import type { IMeWar } from "../interface/IMeWar.ts";
-import {
-    getAutoRiverShapeId,
-    getAutoBeachShapeId,
-    getAutoSeaShapeId,
-    getAutoRoadShapeId,
-    getAutoBridgeShapeId,
-    getAutoPlasmaShapeId,
-    getAutoPipeShapeId,
-    getAutoTileDecorationTypeAndShapeId,
-    getSymmetricalGridIndex,
-} from "./MeHelpers.ts";
-import type {
-    DataForDrawTileObject,
-    DataForDrawTileBase,
-    DataForDrawTileDecoration,
-    DataForAddTileToLocation,
-    DataForDeleteTileFromLocation,
-    DataForDrawUnit,
-} from "./MeTypes.ts";
-import type { BwCursorTapped, BwCursorDragged, BwTileChanged, BwUnitChanged } from "../../notifications/DataTypes.ts";
-import { addEventListeners, removeEventListeners, dispatch } from "../../notifications/Dispatcher.ts";
+import { DrawerMode } from "../../mapEditors/Constants.ts";
+import type { BwCursorDragged, BwCursorTapped, BwTileChanged, BwUnitChanged } from "../../notifications/DataTypes.ts";
+import { addEventListeners, dispatch, removeEventListeners } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { Listener } from "../../notifications/Types.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { SerialField } from "../../proto/schema/CommonProto/WarSerialization/SerialField.ts";
 import type { SerialTile } from "../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
-import { TileTypeId, BaseTypeId, ObjectTypeId } from "../../tiles/constants/Common.ts";
+import { getSymmetricalTileBaseShapeId } from "../../tileBases/Utils.ts";
+import { getSymmetricalTileDecorationShapeId } from "../../tileDecorations/Utils.ts";
+import { getSymmetricalTileObjectShapeId, getSymmetricalTileObjectType } from "../../tileObjects/Utils.ts";
+import { BaseTypeId, ObjectTypeId, TileTypeId } from "../../tiles/constants/Common.ts";
 import type { ITile } from "../../tiles/ITile.ts";
 import { create, fillNonTrivialDefaultValues } from "../../tiles/utils/Serialization.ts";
 import type { IUnit } from "../../units/IUnit.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
+import type { IMeDrawer } from "../interface/IMeDrawer.ts";
+import type { IMeWar } from "../interface/IMeWar.ts";
+import {
+    getAutoBeachShapeId,
+    getAutoBridgeShapeId,
+    getAutoPipeShapeId,
+    getAutoPlasmaShapeId,
+    getAutoRiverShapeId,
+    getAutoRoadShapeId,
+    getAutoSeaShapeId,
+    getAutoTileDecorationTypeAndShapeId,
+    getSymmetricalGridIndex,
+} from "./MeHelpers.ts";
+import type {
+    DataForAddTileToLocation,
+    DataForDeleteTileFromLocation,
+    DataForDrawTileBase,
+    DataForDrawTileDecoration,
+    DataForDrawTileObject,
+    DataForDrawUnit,
+} from "./MeTypes.ts";
 
 const MaxCheckpointCount            = 1000;
 const SymmetricalPlayerIndexArray   = [0, 2, 1, 4, 3, 6, 5, 8, 7];
@@ -97,8 +100,8 @@ export class MeDrawer implements IMeDrawer {
     private _currentCheckpointIndex             = 0;
 
     private _notifyListeners: Listener[] = [
-        { type: TypeId.BwCursorTapped,     callback: this._onNotifyBwCursorTapped },
-        { type: TypeId.BwCursorDragged,    callback: this._onNotifyBwCursorDragged },
+        { type : TypeId.BwCursorTapped,     callback : this._onNotifyBwCursorTapped },
+        { type : TypeId.BwCursorDragged,    callback : this._onNotifyBwCursorDragged },
     ];
 
     public init(): IMeDrawer {
@@ -207,7 +210,7 @@ export class MeDrawer implements IMeDrawer {
         const unit          = new (getUnitClass())();
         const gameConfig    = war.getGcData();
         unit.init(createDefault({
-            gridIndex   : { x: 0, y: 0 },
+            gridIndex   : { x : 0, y : 0 },
             unitId      : -1,
             unitTypeId  : data.unitType,
             playerIndex : data.playerIndex,
@@ -561,27 +564,27 @@ export class MeDrawer implements IMeDrawer {
                 tile.setBaseShapeId(baseShapeId);
             } else {
                 const data = create({
-                    gridIndex               : tile.getGridIndex().toProto().toJson(),
-                    playerIndex             : tile.getPlayerIndex(),
-                    objectType              : objectType,
-                    objectShapeId           : tile.getObjectShapeId(),
-                    decorationType          : tile.getDecorationType(),
-                    decorationShapeId       : tile.getDecorationShapeId(),
-                    baseType                : baseType,
-                    baseShapeId             : baseShapeId,
-                    groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-                    isHighlighted           : tile.getIsHighlighted(),
-                    unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                    customNameId            : tile.getCustomNameId() ?? null,
+                    gridIndex              : tile.getGridIndex().toProto().toJson(),
+                    playerIndex            : tile.getPlayerIndex(),
+                    objectType             : objectType,
+                    objectShapeId          : tile.getObjectShapeId(),
+                    decorationType         : tile.getDecorationType(),
+                    decorationShapeId      : tile.getDecorationShapeId(),
+                    baseType               : baseType,
+                    baseShapeId            : baseShapeId,
+                    groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+                    isHighlighted          : tile.getIsHighlighted(),
+                    unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                    customNameId           : tile.getCustomNameId() ?? null,
 
-                    currentBuildPoint       : null,
-                    currentCapturePoint     : null,
-                    currentHp               : null,
+                    currentBuildPoint   : null,
+                    currentCapturePoint : null,
+                    currentHp           : null,
 
-                    customBuildingData      : null,
-                    customCannonData        : null,
-                    customCrystalData       : null,
-                    customLaserTurretData   : null,
+                    customBuildingData    : null,
+                    customCannonData      : null,
+                    customCrystalData     : null,
+                    customLaserTurretData : null,
                 });
                 fillNonTrivialDefaultValues(data, gameConfig);
 
@@ -609,33 +612,33 @@ export class MeDrawer implements IMeDrawer {
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile          = tileMap.getTile(symGridIndex);
                 const objectType    = tile.getObjectType();
-                const baseShapeId2  = GcData.getSymmetricalTileBaseShapeId(baseType, baseShapeId, symmetryType) ?? 0;
+                const baseShapeId2  = getSymmetricalTileBaseShapeId(baseType, baseShapeId, symmetryType) ?? 0;
                 if (tile.getTileTypeId() === gameConfig.getTileType(baseType, objectType)) {
                     tile.setBaseType(baseType);
                     tile.setBaseShapeId(baseShapeId2);
                 } else {
                     const data = create({
-                        gridIndex               : tile.getGridIndex().toProto().toJson(),
-                        playerIndex             : tile.getPlayerIndex(),
-                        objectType              : objectType,
-                        objectShapeId           : tile.getObjectShapeId(),
-                        decorationType          : tile.getDecorationType(),
-                        decorationShapeId       : tile.getDecorationShapeId(),
-                        baseType                : baseType,
-                        baseShapeId             : baseShapeId2,
-                        groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-                        isHighlighted           : tile.getIsHighlighted(),
-                        unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                        customNameId            : tile.getCustomNameId() ?? null,
+                        gridIndex              : tile.getGridIndex().toProto().toJson(),
+                        playerIndex            : tile.getPlayerIndex(),
+                        objectType             : objectType,
+                        objectShapeId          : tile.getObjectShapeId(),
+                        decorationType         : tile.getDecorationType(),
+                        decorationShapeId      : tile.getDecorationShapeId(),
+                        baseType               : baseType,
+                        baseShapeId            : baseShapeId2,
+                        groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+                        isHighlighted          : tile.getIsHighlighted(),
+                        unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                        customNameId           : tile.getCustomNameId() ?? null,
 
-                        currentBuildPoint       : null,
-                        currentCapturePoint     : null,
-                        currentHp               : null,
+                        currentBuildPoint   : null,
+                        currentCapturePoint : null,
+                        currentHp           : null,
 
-                        customBuildingData      : null,
-                        customCannonData        : null,
-                        customCrystalData       : null,
-                        customLaserTurretData   : null,
+                        customBuildingData    : null,
+                        customCannonData      : null,
+                        customCrystalData     : null,
+                        customLaserTurretData : null,
                     });
                     fillNonTrivialDefaultValues(data, gameConfig);
 
@@ -644,7 +647,7 @@ export class MeDrawer implements IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex : symGridIndex } as BwTileChanged);
 
                 if (isRealTileAdjust) {
                     for (const g of symGridIndex.getGridsWithinDistance({
@@ -693,11 +696,11 @@ export class MeDrawer implements IMeDrawer {
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile = tileMap.getTile(symGridIndex);
                 tile.setDecorationType(decorationType);
-                tile.setDecorationShapeId(GcData.getSymmetricalTileDecorationShapeId(decorationType, decorationShapeId, symmetryType) ?? 0);
+                tile.setDecorationShapeId(getSymmetricalTileDecorationShapeId(decorationType, decorationShapeId, symmetryType) ?? 0);
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex : symGridIndex } as BwTileChanged);
 
                 if (isRealTileAdjust) {
                     for (const g of symGridIndex.getGridsWithinDistance({
@@ -733,27 +736,27 @@ export class MeDrawer implements IMeDrawer {
                 tile.setObjectShapeId(objectShapeId);
             } else {
                 const data = create({
-                    gridIndex               : tile.getGridIndex().toProto().toJson(),
-                    baseType                : baseType,
-                    baseShapeId             : tile.getBaseShapeId(),
-                    decorationType          : tile.getDecorationType(),
-                    decorationShapeId       : tile.getDecorationShapeId(),
-                    playerIndex             : playerIndex,
-                    objectType              : objectType,
-                    objectShapeId           : objectShapeId,
-                    groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-                    isHighlighted           : tile.getIsHighlighted(),
-                    unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                    customNameId            : tile.getCustomNameId() ?? null,
+                    gridIndex              : tile.getGridIndex().toProto().toJson(),
+                    baseType               : baseType,
+                    baseShapeId            : tile.getBaseShapeId(),
+                    decorationType         : tile.getDecorationType(),
+                    decorationShapeId      : tile.getDecorationShapeId(),
+                    playerIndex            : playerIndex,
+                    objectType             : objectType,
+                    objectShapeId          : objectShapeId,
+                    groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+                    isHighlighted          : tile.getIsHighlighted(),
+                    unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                    customNameId           : tile.getCustomNameId() ?? null,
 
-                    currentBuildPoint       : null,
-                    currentCapturePoint     : null,
-                    currentHp               : null,
+                    currentBuildPoint   : null,
+                    currentCapturePoint : null,
+                    currentHp           : null,
 
-                    customBuildingData      : null,
-                    customCannonData        : null,
-                    customCrystalData       : null,
-                    customLaserTurretData   : null,
+                    customBuildingData    : null,
+                    customCannonData      : null,
+                    customCrystalData     : null,
+                    customLaserTurretData : null,
                 });
                 fillNonTrivialDefaultValues(data, gameConfig);
 
@@ -781,13 +784,13 @@ export class MeDrawer implements IMeDrawer {
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const tile          = tileMap.getTile(symGridIndex);
                 const baseType      = tile.getBaseType();
-                const objectType2   = GcData.getSymmetricalTileObjectType(objectType, symmetryType);
+                const objectType2   = getSymmetricalTileObjectType(objectType, symmetryType);
                 const tileType      = getExisted(gameConfig.getTileType(baseType, objectType2));
                 if ((!!gameConfig.getTileTemplateCfg(tileType)?.getMaxHp()) && (unitMap.getUnitOnMap(symGridIndex))) {
                     return;
                 }
 
-                const objectShapeId2    = GcData.getSymmetricalTileObjectShapeId(objectType, objectShapeId, symmetryType);
+                const objectShapeId2    = getSymmetricalTileObjectShapeId(objectType, objectShapeId, symmetryType);
                 const playerIndex2      = this.getIsSymmetricalPlayerIndexEnabled() ? this.getSymmetricalPlayerIndex(playerIndex) : playerIndex;
                 if (tileType === tile.getTileTypeId()) {
                     tile.setPlayerIndex(playerIndex2);
@@ -795,27 +798,27 @@ export class MeDrawer implements IMeDrawer {
                     tile.setObjectShapeId(objectShapeId2 ?? 0);
                 } else {
                     const data = create({
-                        gridIndex               : tile.getGridIndex().toProto().toJson(),
-                        baseType                : tile.getBaseType(),
-                        baseShapeId             : tile.getBaseShapeId(),
-                        decorationType          : tile.getDecorationType(),
-                        decorationShapeId       : tile.getDecorationShapeId(),
-                        playerIndex             : playerIndex2,
-                        objectType              : objectType2,
-                        objectShapeId           : objectShapeId2 ?? 0,
-                        groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-                        isHighlighted           : tile.getIsHighlighted(),
-                        unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                        customNameId            : tile.getCustomNameId() ?? null,
+                        gridIndex              : tile.getGridIndex().toProto().toJson(),
+                        baseType               : tile.getBaseType(),
+                        baseShapeId            : tile.getBaseShapeId(),
+                        decorationType         : tile.getDecorationType(),
+                        decorationShapeId      : tile.getDecorationShapeId(),
+                        playerIndex            : playerIndex2,
+                        objectType             : objectType2,
+                        objectShapeId          : objectShapeId2 ?? 0,
+                        groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+                        isHighlighted          : tile.getIsHighlighted(),
+                        unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                        customNameId           : tile.getCustomNameId() ?? null,
 
-                        currentBuildPoint       : null,
-                        currentCapturePoint     : null,
-                        currentHp               : null,
+                        currentBuildPoint   : null,
+                        currentCapturePoint : null,
+                        currentHp           : null,
 
-                        customBuildingData      : null,
-                        customCannonData        : null,
-                        customCrystalData       : null,
-                        customLaserTurretData   : null,
+                        customBuildingData    : null,
+                        customCannonData      : null,
+                        customCrystalData     : null,
+                        customLaserTurretData : null,
                     });
                     fillNonTrivialDefaultValues(data, gameConfig);
 
@@ -824,7 +827,7 @@ export class MeDrawer implements IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex : symGridIndex } as BwTileChanged);
 
                 if (isRealTileAdjust) {
                     for (const g of symGridIndex.getGridsWithinDistance({
@@ -877,7 +880,7 @@ export class MeDrawer implements IMeDrawer {
             t2.deleteTileDecoration();
             t2.flushDataToView();
 
-            dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
+            dispatch(TypeId.BwTileChanged, { gridIndex : symGridIndex } as BwTileChanged);
         }
     }
     private _handleDeleteTileObject(gridIndex: GridIndex): void {
@@ -903,7 +906,7 @@ export class MeDrawer implements IMeDrawer {
                 this.startRunning(war);
                 tile.flushDataToView();
 
-                dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex : symGridIndex } as BwTileChanged);
             }
         }
     }
@@ -963,7 +966,7 @@ export class MeDrawer implements IMeDrawer {
             const symGridIndex = getSymmetricalGridIndex(gridIndex, symmetryType, tileMap.getMapSize());
             if ((symGridIndex) && (!symGridIndex.checkIsEqual(gridIndex))) {
                 const newBaseType   = srcBaseType;
-                const newObjectType = GcData.getSymmetricalTileObjectType(srcObjectType, symmetryType);
+                const newObjectType = getSymmetricalTileObjectType(srcObjectType, symmetryType);
                 const newTileType   = getExisted(gameConfig.getTileType(newBaseType, newObjectType));
                 if ((!!gameConfig.getTileTemplateCfg(newTileType)?.getMaxHp()) && (unitMap.getUnitOnMap(symGridIndex))) {
                     return;
@@ -972,10 +975,10 @@ export class MeDrawer implements IMeDrawer {
                 const newTileData = srcTileData.clone();
                 newTileData.setGridIndex(symGridIndex.toProto());
                 newTileData.setBaseType(newBaseType);
-                newTileData.setBaseShapeId(GcData.getSymmetricalTileBaseShapeId(srcBaseType, newTileData.getBaseShapeId() ?? 0, symmetryType));
+                newTileData.setBaseShapeId(getSymmetricalTileBaseShapeId(srcBaseType, newTileData.getBaseShapeId() ?? 0, symmetryType));
                 newTileData.setObjectType(newObjectType);
-                newTileData.setObjectShapeId(GcData.getSymmetricalTileObjectShapeId(srcObjectType, newTileData.getObjectShapeId() ?? 0, symmetryType));
-                newTileData.setDecorationShapeId(GcData.getSymmetricalTileDecorationShapeId(newTileData.getDecorationType() ?? 0, newTileData.getDecorationShapeId() ?? 0, symmetryType));
+                newTileData.setObjectShapeId(getSymmetricalTileObjectShapeId(srcObjectType, newTileData.getObjectShapeId() ?? 0, symmetryType));
+                newTileData.setDecorationShapeId(getSymmetricalTileDecorationShapeId(newTileData.getDecorationType() ?? 0, newTileData.getDecorationShapeId() ?? 0, symmetryType));
                 if (newTileType != gameConfig.getTileType(srcBaseType, srcObjectType)) {
                     newTileData.setCustomBuildingData(null);
                     newTileData.setCustomCannonData(null);
@@ -988,7 +991,7 @@ export class MeDrawer implements IMeDrawer {
                 tile.startRunning(war);
                 tile.flushDataToView();
 
-                dispatch(TypeId.BwTileChanged, { gridIndex: symGridIndex } as BwTileChanged);
+                dispatch(TypeId.BwTileChanged, { gridIndex : symGridIndex } as BwTileChanged);
 
                 if (isRealTileAdjust) {
                     for (const g of symGridIndex.getGridsWithinDistance({
@@ -1129,9 +1132,9 @@ export class MeDrawer implements IMeDrawer {
         const war = this._getWar();
         war.stopRunning();
         war.getField().init({
-            data                    : data,
-            gameConfig              : war.getGcData(),
-            playersCountUnneutral   : PlayerIndex.Max,
+            data                  : data,
+            gameConfig            : war.getGcData(),
+            playersCountUnneutral : PlayerIndex.Max,
         });
         war.startRunning();
         war.startRunningView();
@@ -1152,7 +1155,7 @@ export class MeDrawer implements IMeDrawer {
     }
 }
 
-function generateSerialTileForDeleteTileObject(tile: ITile, gcData: GcData): SerialTile {
+function generateSerialTileForDeleteTileObject(tile: ITile, gcData: GameConfig): SerialTile {
     const data = tile.serialize();
     data.setPlayerIndex(PlayerIndex.Neutral);
     data.setObjectType(ObjectTypeId.Empty);

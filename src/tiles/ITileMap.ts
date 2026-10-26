@@ -2,7 +2,7 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import type { TileCustomName } from "../proto/schema/CommonProto/Structure/TileCustomName.ts";
 import type { SerialTileMap } from "../proto/schema/CommonProto/WarSerialization/SerialTileMap.ts";
 import type { ITile } from "./ITile.ts";
@@ -11,14 +11,14 @@ import type { ITileMapView } from "./ITileMapView.ts";
 export interface ITileMap {
     init({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialTileMap>;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         mapSize                 : MapSize;
         playersCountUnneutral   : number;
     }): void;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialTileMap>;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         mapSize                 : MapSize;
         playersCountUnneutral   : number;
     }): void;

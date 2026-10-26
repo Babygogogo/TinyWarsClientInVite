@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CategoryId } from "../../cos/Constants.ts";
 import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -39,7 +39,7 @@ import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface DataForUiPlayerRuleRenderer extends UiListItemData {
     canModify               : boolean;
-    gcData                  : GcData;
+    gcData                  : GameConfig;
     gameModeId              : Undefinable<ModeId>;
     instanceWarRule         : Undefinable<InstanceWarRule>;
     warRuleCommonData       : WarRuleCommonData;

@@ -1,6 +1,6 @@
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { closePanel, openPanel } from "../../../gamePanels/Manager.ts";
 import { newError, getExisted } from "../../../helpers/Misc.ts";
@@ -84,7 +84,7 @@ import { getNode } from "../../fullDatas/Utils.ts";
 export function checkIsValidWarEventCondition({ condition, mapSize, gameConfig, playersCountUnneutral, customCounterNameSet }: {  // DONE
     condition               : WarEventCondition;
     mapSize                 : MapSize;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     playersCountUnneutral   : number;
     customCounterNameSet    : Set<string>;
 }): boolean {
@@ -223,7 +223,7 @@ export function openConditionModifyPanel({ fullData, condition, war }: {
     else                                                        { throw newError(`Invalid condition.`, ClientErrorCode.WarEventHelper_OpenConditionModifyPanel_00); }
 }
 
-export function getBriefDescForCondition(con: WarEventCondition, gameConfig: GcData): string | null {
+export function getBriefDescForCondition(con: WarEventCondition, gameConfig: GameConfig): string | null {
     return (WarEventsConditionsUtilsEventCalledCountGetBriefDesc(con.getWecEventCalledCount()))
         || (WarEventsConditionsUtilsPlayerPresenceGetBriefDesc(con.getWecPlayerPresence()))
         || (WarEventsConditionsUtilsTurnAndPlayerGetBriefDesc(con.getWecTurnAndPlayer()))
@@ -235,7 +235,7 @@ export function getBriefDescForCondition(con: WarEventCondition, gameConfig: GcD
         || (WarEventsConditionsUtilsOngoingPersistentActionPresenceGetBriefDesc(con.getWecOngoingPersistentActionPresence()))
         || (WarEventsConditionsUtilsManualActionStatisticsGetBriefDesc(con.getWecManualActionStatistics()));
 }
-export function getDetailedDescForCondition(con: WarEventCondition, gameConfig: GcData): string | null {
+export function getDetailedDescForCondition(con: WarEventCondition, gameConfig: GameConfig): string | null {
     return (WarEventsConditionsUtilsEventCalledCountGetDetailedDesc(con.getWecEventCalledCount()))
         || (WarEventsConditionsUtilsPlayerPresenceGetDetailedDesc(con.getWecPlayerPresence()))
         || (WarEventsConditionsUtilsTurnAndPlayerGetDetailedDesc(con.getWecTurnAndPlayer()))

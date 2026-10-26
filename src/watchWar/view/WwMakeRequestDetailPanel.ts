@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -194,7 +194,7 @@ export class Panel extends UiPanel<OpenData> {
 
 interface DataForPlayerRenderer extends UiListItemData {
     panel               : Panel;
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     playerStaticInfo    : ProtoSchemaCommonProtoMultiPlayerWarMpwWarSettingsPlayerInfo;
     playerProgressInfo  : PlayerInfo;
     isRequested         : boolean;

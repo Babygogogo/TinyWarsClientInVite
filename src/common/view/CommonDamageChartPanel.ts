@@ -1,7 +1,7 @@
 import { getUnitAnimationTickCount, getCachedTileObjectImageSource, getTileAnimationTickCount } from "../model/CommonModel.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TypeName } from "../../gameVersions/Constants.ts";
@@ -47,7 +47,7 @@ const enum UnitInfoType {
     LoadUnit,
 }
 export type OpenData = {
-    gameConfig   : GcData;
+    gameConfig   : GameConfig;
 };
 export class Panel extends UiPanel<OpenData> {
     private readonly _imgMask!              : IUiImage;
@@ -290,7 +290,7 @@ export class Panel extends UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Util functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private _createInfoHp(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer {
+    private _createInfoHp(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer {
         return {
             index           : 0,
             infoType        : UnitInfoType.Hp,
@@ -298,7 +298,7 @@ export class Panel extends UiPanel<OpenData> {
             gameConfig,
         };
     }
-    private _createInfoProductionCost(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer {
+    private _createInfoProductionCost(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer {
         return {
             index       : 0,
             infoType    : UnitInfoType.ProductionCost,
@@ -306,7 +306,7 @@ export class Panel extends UiPanel<OpenData> {
             gameConfig,
         };
     }
-    private _createInfoEnergyPerNormalizedHp(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+    private _createInfoEnergyPerNormalizedHp(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
         const gameVersion = window.GAME_VERSION;
         if ((gameVersion !== TypeName.Test) &&
             (gameVersion !== TypeName.Trilogy)
@@ -321,7 +321,7 @@ export class Panel extends UiPanel<OpenData> {
             };
         }
     }
-    private _createInfoMovement(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer {
+    private _createInfoMovement(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer {
         return {
             index       : 0,
             infoType    : UnitInfoType.Movement,
@@ -329,7 +329,7 @@ export class Panel extends UiPanel<OpenData> {
             gameConfig,
         };
     }
-    private _createInfoFuel(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer {
+    private _createInfoFuel(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer {
         return {
             index       : 0,
             infoType    : UnitInfoType.Fuel,
@@ -337,7 +337,7 @@ export class Panel extends UiPanel<OpenData> {
             gameConfig,
         };
     }
-    private _createInfoAttackRange(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+    private _createInfoAttackRange(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
         return unitTemplateCfg.getMinAttackRange() == null
             ? null
             : {
@@ -347,7 +347,7 @@ export class Panel extends UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoVision(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer {
+    private _createInfoVision(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer {
         return {
             index       : 0,
             infoType    : UnitInfoType.Vision,
@@ -355,7 +355,7 @@ export class Panel extends UiPanel<OpenData> {
             gameConfig,
         };
     }
-    private _createInfoPrimaryWeaponAmmo(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+    private _createInfoPrimaryWeaponAmmo(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
         return unitTemplateCfg.getPrimaryWeaponMaxAmmo() == null
             ? null
             : {
@@ -365,7 +365,7 @@ export class Panel extends UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoBuildMaterial(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+    private _createInfoBuildMaterial(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
         return unitTemplateCfg.getMaxBuildMaterial() == null
             ? null
             : {
@@ -375,7 +375,7 @@ export class Panel extends UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoProduceMaterial(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+    private _createInfoProduceMaterial(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
         return unitTemplateCfg.getMaxProduceMaterial() == null
             ? null
             : {
@@ -385,7 +385,7 @@ export class Panel extends UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoFlareAmmo(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+    private _createInfoFlareAmmo(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
         return unitTemplateCfg.getFlareMaxAmmo() == null
             ? null
             : {
@@ -395,7 +395,7 @@ export class Panel extends UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoIsDiver(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+    private _createInfoIsDiver(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
         return unitTemplateCfg.getDiveCfg() == null
             ? null
             : {
@@ -405,7 +405,7 @@ export class Panel extends UiPanel<OpenData> {
                 gameConfig,
             };
     }
-    private _createInfoLoadUnit(unitTemplateCfg: UnitTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+    private _createInfoLoadUnit(unitTemplateCfg: UnitTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
         return unitTemplateCfg.getLoadUnitCategoryId() == null
             ? null
             : {
@@ -494,7 +494,7 @@ export class Panel extends UiPanel<OpenData> {
 }
 
 interface DataForUnitRenderer extends UiListItemData {
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     unitType        : number;
     index           : number;
     panel           : Panel;
@@ -560,7 +560,7 @@ interface DataForInfoRenderer extends UiListItemData {
     index           : number;
     infoType        : UnitInfoType;
     unitTemplateCfg : UnitTemplateCfg;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
 }
 class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
     private readonly _imgBg!            : IUiImage;
@@ -803,7 +803,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
 }
 
 interface DataForDamageRenderer extends UiListItemData {
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     index           : number;
     attackUnitType  : number;
     playerIndex     : number;
@@ -918,7 +918,7 @@ class DamageRenderer extends UiListItemRenderer<DataForDamageRenderer> {
 
 interface DataForMoveCostRenderer extends UiListItemData {
     index           : number;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     tileType        : number;
     unitType        : number;
 }

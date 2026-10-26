@@ -1,5 +1,5 @@
 import { getAvailableUserAvatarIdArray } from "../../avatars/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getUserAvatar } from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
@@ -28,7 +28,7 @@ export class Panel extends UiPanel<OpenData> {
     private readonly _imgAvatar!        : IUiImage;
     private readonly _btnConfirm!       : IUiButton;
 
-    private _gameConfig : GcData | null = null;
+    private _gameConfig : GameConfig | null = null;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([

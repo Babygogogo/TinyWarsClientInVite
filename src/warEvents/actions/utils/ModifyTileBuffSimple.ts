@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { newError } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText, getTileBuffName } from "../../../lang/Utils.ts";
@@ -43,7 +43,7 @@ export function checkIsValid(
     data                    : Undefinable<WeaModifyTileBuffSimple>,
     mapSize                 : MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GcData
+    gcData                  : GameConfig
 ): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gcData) == null);
 }
@@ -177,7 +177,7 @@ export function getErrorTip(
     data                    : WeaModifyTileBuffSimple,
     mapSize                 : MapSize,
     playersCountUnneutral   : number,
-    gcData                  : GcData
+    gcData                  : GameConfig
 ): string | null {
     {
         const filter = data.getConPlayerFilter();

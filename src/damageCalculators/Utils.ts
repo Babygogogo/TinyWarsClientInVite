@@ -8,7 +8,7 @@ import {
     getTotalOffset as CoSkillsUtilsInstantMiscSelfUnitPromotionAfterBattleGetTotalOffset,
 } from "../coSkills/utils/instantMisc/SelfUnitPromotionAfterBattle.ts";
 import { destroyUnitOnMapForWarDamageCalculator } from "../destructions/Utils.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { DamageFormulaTypeId } from "./Constants.ts";
 import { newError, getExisted } from "../helpers/Misc.ts";
 import { encodeTeamIndex } from "../helpers/Team.ts";
@@ -69,7 +69,7 @@ function getLuckValue(war: IBwWar, attackerUnit: IBwUnit, attackerGridIndex: Gri
     }
 }
 
-export function getDamageMultiplierForDefenseBonus(gcData: GcData, bonus: number): number {    // DONE
+export function getDamageMultiplierForDefenseBonus(gcData: GameConfig, bonus: number): number {    // DONE
     const formulaTypeId = gcData.getSystemCfg().getDamageFormulaTypeId();
     if (formulaTypeId === DamageFormulaTypeId.Dor) {
         return (bonus >= 0)

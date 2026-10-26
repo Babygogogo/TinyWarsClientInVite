@@ -7,17 +7,14 @@ import { SkillTypeId } from "../coSkills/Constants.ts";
 import { SmallDialogueSideId } from "../dialogues/Constants.ts";
 import { ContextType, ResultType } from "../expressionParsers/Enums.ts";
 import { ForcedFogCode } from "../fogMaps/Constants.ts";
-import { GcData } from "../gameConfigs/GcData.ts";
-import { ReviewStatus, SortType } from "../maps/Constants.ts";
-import { DrawerMode } from "../mapEditors/Constants.ts";
+import { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { ModeId } from "../gameModes/Constants.ts";
 import { TypeName } from "../gameVersions/Constants.ts";
 import { newError } from "../helpers/Misc.ts";
 import { format, getNumText } from "../helpers/Text.ts";
-import { CommonText } from "./CommonText.ts";
-import { LanguageType, TextType, UndefinedError } from "./Constants.ts";
-import { ErrorText } from "./ErrorText.ts";
 import { getLanguageType } from "../localData/Storage.ts";
+import { DrawerMode } from "../mapEditors/Constants.ts";
+import { ReviewStatus, SortType } from "../maps/Constants.ts";
 import { MedalTypeId } from "../medals/Constants.ts";
 import { getMedalCfg } from "../medals/Utils.ts";
 import { MultiPlayerRoomType } from "../multiPlayerRooms/Constants.ts";
@@ -26,22 +23,27 @@ import { AliveStateId } from "../players/Constants.ts";
 import type { LanguageText } from "../proto/schema/CommonProto/Structure/LanguageText.ts";
 import { getBgmSfxCfg } from "../sounds/Utils.ts";
 import { BuffTypeId } from "../tileBuffs/Constants.ts";
+import { getTileDecorationCfg } from "../tileDecorations/Utils.ts";
+import { getTileObjectCfg } from "../tileObjects/Utils.ts";
 import { ObjectTypeId, ThemeTypeId, TileTypeId } from "../tiles/constants/Common.ts";
 import { PhaseCode } from "../turns/Constants.ts";
-import { BuffTypeId as UnitBuffsConstantsBuffTypeId } from "../unitBuffs/Constants.ts";
-import { ActionTypeId, AiModeId, ActionStateId } from "../units/Constants.ts";
+import { BuffTypeId as UnitBuffTypeId } from "../unitBuffs/Constants.ts";
+import { ActionStateId, ActionTypeId, AiModeId } from "../units/Constants.ts";
 import { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 import { ServerErrorCode } from "../utils/ServerErrorCode.ts";
 import { ComparatorId } from "../valueAndComparators/Constants.ts";
 import { SetRelationId } from "../valueSetAndRelations/Constants.ts";
 import {
-    CategoryId,
-    ActionTypeId as WarEventsActionsConstantsCommonActionTypeId,
     BuffEndTimeModificationMode,
+    CategoryId,
+    ActionTypeId as WarEventActionTypeId,
 } from "../warEvents/actions/constants/Common.ts";
 import { ConditionTypeId } from "../warEvents/conditions/Constants.ts";
+import { BasicSettingsTypeId } from "../wars/Constants.ts";
 import { WarTypeId } from "../warTypes/Constants.ts";
-import {BasicSettingsTypeId} from "../wars/Constants.ts";
+import { CommonText } from "./CommonText.ts";
+import { LanguageType, TextType, UndefinedError } from "./Constants.ts";
+import { ErrorText } from "./ErrorText.ts";
 
 let _languageType = LanguageType.Chinese;
 export function init(): void {
@@ -178,19 +180,19 @@ export function getPlayerShortTeamName(teamIndex: number): string | null {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getWeatherName(weatherType: number, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
+export function getWeatherName(weatherType: number, gameConfig: GameConfig, languageType = getCurrentLanguageType()): string | null {
     const textId    = gameConfig.getWeatherCfg(weatherType)?.getNameTextId();
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
 }
 
-export function getWeatherDesc(weatherType: number, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
+export function getWeatherDesc(weatherType: number, gameConfig: GameConfig, languageType = getCurrentLanguageType()): string | null {
     const textId    = gameConfig.getWeatherCfg(weatherType)?.getDescTextId();
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
 }
 
-export function getWeatherFullDesc(gameConfig: GcData): string {
+export function getWeatherFullDesc(gameConfig: GameConfig): string {
     const textArray: string[] = [];
     for (const weatherType of gameConfig.getAllWeatherTypeArray()) {
         textArray.push(`${getWeatherName(weatherType, gameConfig)}: ${getWeatherDesc(weatherType, gameConfig)}`);
@@ -199,7 +201,7 @@ export function getWeatherFullDesc(gameConfig: GcData): string {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getTileBaseName(tileBaseType: number, gameConfig: GcData): string | null {
+export function getTileBaseName(tileBaseType: number, gameConfig: GameConfig): string | null {
     const tileType = gameConfig.getTileType(tileBaseType, ObjectTypeId.Empty);
     return tileType == null ? null : getTileName(tileType, gameConfig);
 }
@@ -242,32 +244,32 @@ export function getTileBuffExtraParamDesc(buffType: number): string | null {
     }
 }
 
-export function getTileName(tileType: TileTypeId, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
+export function getTileName(tileType: TileTypeId, gameConfig: GameConfig, languageType = getCurrentLanguageType()): string | null {
     const textId    = gameConfig.getTileTemplateCfg(tileType)?.getNameTextId();
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
 }
 
-export function getTileObjectName(tileObjectType: number, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
-    const textId    = GcData.getTileObjectCfg(tileObjectType)?.nameTextId;
+export function getTileObjectName(tileObjectType: number, gameConfig: GameConfig, languageType = getCurrentLanguageType()): string | null {
+    const textId    = getTileObjectCfg(tileObjectType)?.nameTextId;
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
 }
 
-export function getTileDecorationName(tileDecorationType: number, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
-    const textId    = GcData.getTileDecorationCfg(tileDecorationType)?.nameTextId;
+export function getTileDecorationName(tileDecorationType: number, gameConfig: GameConfig, languageType = getCurrentLanguageType()): string | null {
+    const textId    = getTileDecorationCfg(tileDecorationType)?.nameTextId;
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getUnitName(unitType: number, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
+export function getUnitName(unitType: number, gameConfig: GameConfig, languageType = getCurrentLanguageType()): string | null {
     const textId    = gameConfig.getUnitTemplateCfg(unitType)?.getNameTextId();
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
 }
 
-export function getUnitCategoryName(unitCategory: number, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
+export function getUnitCategoryName(unitCategory: number, gameConfig: GameConfig, languageType = getCurrentLanguageType()): string | null {
     const textId    = gameConfig.getUnitCategoryCfg(unitCategory)?.getNameTextId();
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
@@ -310,39 +312,39 @@ export function getUnitAiModeName(mode: AiModeId): string | null {
 
 export function getUnitBuffName(buffTypeId: number): string | null {
     switch (buffTypeId) {
-        case UnitBuffsConstantsBuffTypeId.Fire      : return getText(TextType.B1307);
-        case UnitBuffsConstantsBuffTypeId.Disease   : return getText(TextType.B1465);
-        case UnitBuffsConstantsBuffTypeId.Custom    : return getText(TextType.B0321);
+        case UnitBuffTypeId.Fire      : return getText(TextType.B1307);
+        case UnitBuffTypeId.Disease   : return getText(TextType.B1465);
+        case UnitBuffTypeId.Custom    : return getText(TextType.B0321);
         default                                         : return null;
     }
 }
 
 export function getUnitBuffDesc(buffType: number): string | null {
     switch (buffType) {
-        case UnitBuffsConstantsBuffTypeId.Fire      : return getText(TextType.A0968);
-        case UnitBuffsConstantsBuffTypeId.Disease   : return getText(TextType.A0969);
-        case UnitBuffsConstantsBuffTypeId.Custom    : return getText(TextType.A0970);
+        case UnitBuffTypeId.Fire      : return getText(TextType.A0968);
+        case UnitBuffTypeId.Disease   : return getText(TextType.A0969);
+        case UnitBuffTypeId.Custom    : return getText(TextType.A0970);
         default                                         : return null;
     }
 }
 
 export function getUnitBuffExtraParamDesc(buffType: number): string | null {
     switch (buffType) {
-        case UnitBuffsConstantsBuffTypeId.Fire      : return getText(TextType.A0745);
-        case UnitBuffsConstantsBuffTypeId.Disease   : return getText(TextType.A0745);
-        case UnitBuffsConstantsBuffTypeId.Custom    : return getText(TextType.A0745);
+        case UnitBuffTypeId.Fire      : return getText(TextType.A0745);
+        case UnitBuffTypeId.Disease   : return getText(TextType.A0745);
+        case UnitBuffTypeId.Custom    : return getText(TextType.A0745);
         default                                         : return null;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getMoveTypeName(moveType: number, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
+export function getMoveTypeName(moveType: number, gameConfig: GameConfig, languageType = getCurrentLanguageType()): string | null {
     const textId = gameConfig.getMoveTypeCfg(moveType)?.getNameTextId();
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
 }
 
-export function getBgmSfxName(bgmCode: number, gameConfig: GcData, languageType = getCurrentLanguageType()): string | null {
+export function getBgmSfxName(bgmCode: number, gameConfig: GameConfig, languageType = getCurrentLanguageType()): string | null {
     const textId = getBgmSfxCfg(bgmCode)?.nameTextId;
     const textArray = textId == null ? null : gameConfig.getTextArray(textId, languageType);
     return textArray == null ? null : textArray[0];
@@ -487,7 +489,7 @@ export function getCoSkillTypeName(skillType: SkillTypeId): string | null {
 export function getCoSkillDescArray({ coId, skillType, gameConfig, languageType, isExtra }: {
     coId            : number;
     skillType       : SkillTypeId;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     languageType    : LanguageType;
     isExtra         : boolean;
 }): string[] | null {
@@ -609,64 +611,64 @@ export function getWarEventActionCategoryName(category: CategoryId): string | nu
     }
 }
 
-export function getWarEventActionTypeName(type: WarEventsActionsConstantsCommonActionTypeId): string | null {
+export function getWarEventActionTypeName(type: WarEventActionTypeId): string | null {
     switch (type) {
-        case WarEventsActionsConstantsCommonActionTypeId.AddUnitOnMapSimple                          : return getText(TextType.B0617);
-        case WarEventsActionsConstantsCommonActionTypeId.FillUnitOnMapExpr                           : return getText(TextType.B1190);
-        case WarEventsActionsConstantsCommonActionTypeId.FillUnitOnMapSimple                         : return getText(TextType.B1059);
-        case WarEventsActionsConstantsCommonActionTypeId.FillUnitLoadedSimple                        : return getText(TextType.B1191);
-        case WarEventsActionsConstantsCommonActionTypeId.FillUnitLoadedExpr                          : return `${getText(TextType.B1191)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.DestroyUnitSimple                           : return getText(TextType.B1374);
-        case WarEventsActionsConstantsCommonActionTypeId.DestroyUnitExpr                             : return `${getText(TextType.B1374)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetUnitTypeSimple                           : return getText(TextType.B1192);
-        case WarEventsActionsConstantsCommonActionTypeId.SetUnitTypeExpr                             : return `${getText(TextType.B1192)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetUnitOwnershipSimple                      : return getText(TextType.B1193);
-        case WarEventsActionsConstantsCommonActionTypeId.SetUnitOwnershipExpr                        : return `${getText(TextType.B1193)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetUnitPositionSimple                       : return getText(TextType.B1198);
-        case WarEventsActionsConstantsCommonActionTypeId.SetUnitPositionExpr                         : return `${getText(TextType.B1198)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetUnitStateSimple                          : return getText(TextType.B0806);
-        case WarEventsActionsConstantsCommonActionTypeId.SetUnitStateExpr                            : return `${getText(TextType.B0806)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.AddUnitBuffSimple                           : return getText(TextType.B1466);
-        case WarEventsActionsConstantsCommonActionTypeId.ModifyUnitBuffSimple                        : return getText(TextType.B1467);
-        case WarEventsActionsConstantsCommonActionTypeId.DeleteUnitBuffSimple                        : return getText(TextType.B1469);
-        case WarEventsActionsConstantsCommonActionTypeId.SetTileTypeExpr                             : return `${getText(TextType.B0825)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetTileTypeSimple                           : return getText(TextType.B0825);
-        case WarEventsActionsConstantsCommonActionTypeId.SetTileStateExpr                            : return `${getText(TextType.B0861)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetTileStateSimple                          : return getText(TextType.B0861);
-        case WarEventsActionsConstantsCommonActionTypeId.SetCustomBuildingStateExpr                  : return `${getText(TextType.B1211)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetCustomBuildingStateSimple                : return getText(TextType.B1211);
-        case WarEventsActionsConstantsCommonActionTypeId.SetCustomCrystalStateExpr                   : return `${getText(TextType.B1208)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetCustomCrystalStateSimple                 : return getText(TextType.B1208);
-        case WarEventsActionsConstantsCommonActionTypeId.SetCustomCannonStateExpr                    : return `${getText(TextType.B1209)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetCustomCannonStateSimple                  : return getText(TextType.B1209);
-        case WarEventsActionsConstantsCommonActionTypeId.SetCustomLaserTurretStateExpr               : return `${getText(TextType.B1210)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetCustomLaserTurretStateSimple             : return getText(TextType.B1210);
-        case WarEventsActionsConstantsCommonActionTypeId.DeleteTileBuffExpr                          : return `${getText(TextType.B1234)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.DeleteTileBuffSimple                        : return getText(TextType.B1234);
-        case WarEventsActionsConstantsCommonActionTypeId.AddTileBuffExpr                             : return `${getText(TextType.B1238)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.AddTileBuffSimple                           : return getText(TextType.B1238);
-        case WarEventsActionsConstantsCommonActionTypeId.ModifyTileBuffExpr                          : return `${getText(TextType.B1239)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.ModifyTileBuffSimple                        : return getText(TextType.B1239);
-        case WarEventsActionsConstantsCommonActionTypeId.BigDialogueSimple                           : return getText(TextType.B0674);
-        case WarEventsActionsConstantsCommonActionTypeId.SetViewpointExpr                            : return `${getText(TextType.B0713)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetViewpointSimple                          : return getText(TextType.B0713);
-        case WarEventsActionsConstantsCommonActionTypeId.SetWeatherExpr                              : return `${getText(TextType.B0715)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetWeatherSimple                            : return getText(TextType.B0715);
-        case WarEventsActionsConstantsCommonActionTypeId.SetForceFogCodeExpr                         : return `${getText(TextType.B0795)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetForceFogCodeSimple                       : return getText(TextType.B0795);
-        case WarEventsActionsConstantsCommonActionTypeId.SetCustomCounters                           : return getText(TextType.B0800);
-        case WarEventsActionsConstantsCommonActionTypeId.SmallDialogueSimple                         : return getText(TextType.B0728);
-        case WarEventsActionsConstantsCommonActionTypeId.PlayBgm                                     : return getText(TextType.B0750);
-        case WarEventsActionsConstantsCommonActionTypeId.PlaySfx                                     : return getText(TextType.B1164);
-        case WarEventsActionsConstantsCommonActionTypeId.StopPersistentAction                        : return getText(TextType.B0887);
-        case WarEventsActionsConstantsCommonActionTypeId.SetPlayerStateExpr                          : return `${getText(TextType.B0810)} (${getText(TextType.B0129)})`;
-        case WarEventsActionsConstantsCommonActionTypeId.SetPlayerStateSimple                        : return getText(TextType.B0810);
-        case WarEventsActionsConstantsCommonActionTypeId.SetTaskObjectiveState                       : return getText(TextType.B1224);
-        case WarEventsActionsConstantsCommonActionTypeId.SetUnitMovePathVisibility                   : return getText(TextType.B1340);
-        case WarEventsActionsConstantsCommonActionTypeId.PersistentShowText                          : return getText(TextType.B0888);
-        case WarEventsActionsConstantsCommonActionTypeId.PersistentPlayBgm                           : return getText(TextType.B1083);
-        case WarEventsActionsConstantsCommonActionTypeId.PersistentModifyPlayerAttribute             : return getText(TextType.B0903);
-        case WarEventsActionsConstantsCommonActionTypeId.PersistentModifyUnitAttribute               : return getText(TextType.B1080);
+        case WarEventActionTypeId.AddUnitOnMapSimple                          : return getText(TextType.B0617);
+        case WarEventActionTypeId.FillUnitOnMapExpr                           : return getText(TextType.B1190);
+        case WarEventActionTypeId.FillUnitOnMapSimple                         : return getText(TextType.B1059);
+        case WarEventActionTypeId.FillUnitLoadedSimple                        : return getText(TextType.B1191);
+        case WarEventActionTypeId.FillUnitLoadedExpr                          : return `${getText(TextType.B1191)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.DestroyUnitSimple                           : return getText(TextType.B1374);
+        case WarEventActionTypeId.DestroyUnitExpr                             : return `${getText(TextType.B1374)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetUnitTypeSimple                           : return getText(TextType.B1192);
+        case WarEventActionTypeId.SetUnitTypeExpr                             : return `${getText(TextType.B1192)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetUnitOwnershipSimple                      : return getText(TextType.B1193);
+        case WarEventActionTypeId.SetUnitOwnershipExpr                        : return `${getText(TextType.B1193)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetUnitPositionSimple                       : return getText(TextType.B1198);
+        case WarEventActionTypeId.SetUnitPositionExpr                         : return `${getText(TextType.B1198)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetUnitStateSimple                          : return getText(TextType.B0806);
+        case WarEventActionTypeId.SetUnitStateExpr                            : return `${getText(TextType.B0806)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.AddUnitBuffSimple                           : return getText(TextType.B1466);
+        case WarEventActionTypeId.ModifyUnitBuffSimple                        : return getText(TextType.B1467);
+        case WarEventActionTypeId.DeleteUnitBuffSimple                        : return getText(TextType.B1469);
+        case WarEventActionTypeId.SetTileTypeExpr                             : return `${getText(TextType.B0825)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetTileTypeSimple                           : return getText(TextType.B0825);
+        case WarEventActionTypeId.SetTileStateExpr                            : return `${getText(TextType.B0861)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetTileStateSimple                          : return getText(TextType.B0861);
+        case WarEventActionTypeId.SetCustomBuildingStateExpr                  : return `${getText(TextType.B1211)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetCustomBuildingStateSimple                : return getText(TextType.B1211);
+        case WarEventActionTypeId.SetCustomCrystalStateExpr                   : return `${getText(TextType.B1208)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetCustomCrystalStateSimple                 : return getText(TextType.B1208);
+        case WarEventActionTypeId.SetCustomCannonStateExpr                    : return `${getText(TextType.B1209)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetCustomCannonStateSimple                  : return getText(TextType.B1209);
+        case WarEventActionTypeId.SetCustomLaserTurretStateExpr               : return `${getText(TextType.B1210)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetCustomLaserTurretStateSimple             : return getText(TextType.B1210);
+        case WarEventActionTypeId.DeleteTileBuffExpr                          : return `${getText(TextType.B1234)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.DeleteTileBuffSimple                        : return getText(TextType.B1234);
+        case WarEventActionTypeId.AddTileBuffExpr                             : return `${getText(TextType.B1238)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.AddTileBuffSimple                           : return getText(TextType.B1238);
+        case WarEventActionTypeId.ModifyTileBuffExpr                          : return `${getText(TextType.B1239)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.ModifyTileBuffSimple                        : return getText(TextType.B1239);
+        case WarEventActionTypeId.BigDialogueSimple                           : return getText(TextType.B0674);
+        case WarEventActionTypeId.SetViewpointExpr                            : return `${getText(TextType.B0713)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetViewpointSimple                          : return getText(TextType.B0713);
+        case WarEventActionTypeId.SetWeatherExpr                              : return `${getText(TextType.B0715)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetWeatherSimple                            : return getText(TextType.B0715);
+        case WarEventActionTypeId.SetForceFogCodeExpr                         : return `${getText(TextType.B0795)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetForceFogCodeSimple                       : return getText(TextType.B0795);
+        case WarEventActionTypeId.SetCustomCounters                           : return getText(TextType.B0800);
+        case WarEventActionTypeId.SmallDialogueSimple                         : return getText(TextType.B0728);
+        case WarEventActionTypeId.PlayBgm                                     : return getText(TextType.B0750);
+        case WarEventActionTypeId.PlaySfx                                     : return getText(TextType.B1164);
+        case WarEventActionTypeId.StopPersistentAction                        : return getText(TextType.B0887);
+        case WarEventActionTypeId.SetPlayerStateExpr                          : return `${getText(TextType.B0810)} (${getText(TextType.B0129)})`;
+        case WarEventActionTypeId.SetPlayerStateSimple                        : return getText(TextType.B0810);
+        case WarEventActionTypeId.SetTaskObjectiveState                       : return getText(TextType.B1224);
+        case WarEventActionTypeId.SetUnitMovePathVisibility                   : return getText(TextType.B1340);
+        case WarEventActionTypeId.PersistentShowText                          : return getText(TextType.B0888);
+        case WarEventActionTypeId.PersistentPlayBgm                           : return getText(TextType.B1083);
+        case WarEventActionTypeId.PersistentModifyPlayerAttribute             : return getText(TextType.B0903);
+        case WarEventActionTypeId.PersistentModifyUnitAttribute               : return getText(TextType.B1080);
         default                                                             : return null;
     }
 }
@@ -928,7 +930,7 @@ export function getLanguageText({ textArray, languageType = getCurrentLanguageTy
         return null;
     }
 
-    const secondaryText = getLanguageText({ textArray, languageType: getSecondaryLanguageType(languageType), useAlternate: false });
+    const secondaryText = getLanguageText({ textArray, languageType : getSecondaryLanguageType(languageType), useAlternate : false });
     if (secondaryText) {
         return secondaryText;
     } else {
@@ -943,8 +945,8 @@ export function concatLanguageTextList(textList: Undefinable<LanguageText[]>): s
     return strList.join(`, `);
 }
 export function getJoinedShortLanguageText(textArray: Undefinable<LanguageText[]>, limit?: number): string {
-    const rawText1 = getLanguageText({ textArray, languageType: getCurrentLanguageType(), useAlternate: false })?.trim() || `----`;
-    const rawText2 = getLanguageText({ textArray, languageType: getSecondaryLanguageType(), useAlternate: false })?.trim() || `----`;
+    const rawText1 = getLanguageText({ textArray, languageType : getCurrentLanguageType(), useAlternate : false })?.trim() || `----`;
+    const rawText2 = getLanguageText({ textArray, languageType : getSecondaryLanguageType(), useAlternate : false })?.trim() || `----`;
     if (!limit) {
         return `${rawText1}\n${rawText2}`;
     } else {
@@ -964,10 +966,18 @@ export function getTimeDurationText(totalSeconds: number, separator = ``): strin
         const days    = Math.floor(totalSeconds / (60 * 60 * 24));
 
         const textArray: string[] = [];
-        (days    > 0) && (textArray.push(`${days}${getText(TextType.B0014)}`));
-        (hours   > 0) && (textArray.push(`${hours}${getText(TextType.B0015)}`));
-        (minutes > 0) && (textArray.push(`${minutes}${getText(TextType.B0016)}`));
-        (seconds > 0) && (textArray.push(`${seconds}${getText(TextType.B0017)}`));
+        if (days    > 0) {
+            textArray.push(`${days}${getText(TextType.B0014)}`);
+        }
+        if (hours   > 0) {
+            textArray.push(`${hours}${getText(TextType.B0015)}`);
+        }
+        if (minutes > 0) {
+            textArray.push(`${minutes}${getText(TextType.B0016)}`);
+        }
+        if (seconds > 0) {
+            textArray.push(`${seconds}${getText(TextType.B0017)}`);
+        }
         return textArray.join(separator);
     }
 }

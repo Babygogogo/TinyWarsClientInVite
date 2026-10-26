@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { checkIsValidId, checkIsValidName } from "../../customCounters/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import type { WarEvent } from "../../proto/schema/CommonProto/WarEvent/WarEvent.ts";
@@ -128,7 +128,7 @@ type WarEventConditionDict      = Map<number, WarEventCondition>;
 type WarEventConditionNodeDict  = Map<number, WarEventConditionNode>;
 export function getErrorCodeForWarEventFullData({ warEventFullData, gameConfig, mapSize, playersCountUnneutral }: {
     warEventFullData        : Undefinable<WarEventFullData>;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     mapSize                 : MapSize;
     playersCountUnneutral   : number;
 }): ClientErrorCode {   // DONE

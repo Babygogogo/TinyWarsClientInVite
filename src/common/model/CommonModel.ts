@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { reqCommonGetCoStatistics } from "./CommonProxy.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { TextureVersionId } from "../../graphics/Constants.ts";
 import { getUnit, getUnitFlash, getTileBase, getTileDecoration, getTileObject, getTileBuff } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -178,7 +178,7 @@ export function tickUnitImageSources(): void {
 }
 
 export function getCachedUnitImageSource({ gcData, version, skinId, unitType, isDark, animationType, tickCount }: {
-    gcData          : GcData;
+    gcData          : GameConfig;
     version         : TextureVersionId;
     skinId          : number;
     unitType        : number;

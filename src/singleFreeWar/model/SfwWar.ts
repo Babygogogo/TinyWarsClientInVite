@@ -1,5 +1,5 @@
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
@@ -11,7 +11,7 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 export class SfwWar extends SpwWar implements ISfwWar {
     private _settingsForSfw?    : SettingsForSfw;
 
-    public init(data: SerialWar, gameConfig: GcData): void {
+    public init(data: SerialWar, gameConfig: GameConfig): void {
         this._baseInit(data, gameConfig, getWarTypeId(data));
         this._setSettingsForSfw(getExisted(data.getSettingsForSfw(), ClientErrorCode.SfwWar_Init_00));
         this.getRetractManager().setCanRetract(true);

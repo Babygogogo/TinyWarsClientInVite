@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { RoomCreatorBase } from "../../multiPlayerRooms/RoomCreatorBase.ts";
 import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
@@ -12,7 +12,7 @@ export type DataForJoinRoom = ProtoSchemaCommonProtoNetMessageMsgMfrJoinRoomC;
 export class MfrRoomCreator extends RoomCreatorBase {
     private readonly _settingsForMfw = new SettingsForMfw();
 
-    public constructor(gcData: GcData, warData: SerialWar) {
+    public constructor(gcData: GameConfig, warData: SerialWar) {
         super(gcData, getExisted(warData.getSettingsForCommon()));
 
         if (gcData.getVersion() !== this.getSettingsForCommon().getConfigVersion()) {

@@ -2,7 +2,7 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { DefaultParams, TimerTypeId, Incremental } from "../bootTimers/Constants.ts";
 import { CoId } from "../cos/Constants.ts";
 import { SkinId } from "../forceSkins/Constants.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
@@ -18,7 +18,7 @@ const REGULAR_TIME_LIMITS = [
 ];
 
 export abstract class RoomCreatorBase {
-    private readonly _gcData            : GcData;
+    private readonly _gcData            : GameConfig;
     private readonly _settingsForCommon : SettingsForCommon;
 
     private _selfCoId                   = CoId.Empty;
@@ -31,12 +31,12 @@ export abstract class RoomCreatorBase {
 
     private readonly _bootTimerParams   = DefaultParams.concat();
 
-    public constructor(gcData: GcData, settingsForCommon: SettingsForCommon) {
+    public constructor(gcData: GameConfig, settingsForCommon: SettingsForCommon) {
         this._gcData            = gcData;
         this._settingsForCommon = settingsForCommon;
     }
 
-    public getGcData(): GcData {
+    public getGcData(): GameConfig {
         return this._gcData;
     }
     public getSettingsForCommon(): SettingsForCommon {

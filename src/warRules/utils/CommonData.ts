@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { NeutralPlayerRule } from "../../playerRules/Constants.ts";
 import { checkIsSame as PlayerRulesUtilsCheckIsSame } from "../../playerRules/Utils.ts";
@@ -22,16 +22,16 @@ export function getPlayersCountUnneutral(data: WarRuleCommonDataSchema): number 
     return data.getPlayerRuleList().length;
 }
 
-export function getDefaultWeatherType(data: WarRuleCommonDataSchema, gameConfig: GcData): number {
+export function getDefaultWeatherType(data: WarRuleCommonDataSchema, gameConfig: GameConfig): number {
     return data.getDefaultWeatherType() ?? gameConfig.getDefaultWeatherType();
 }
-export function tickDefaultWeatherType(data: WarRuleCommonDataSchema, gcData: GcData): void {
+export function tickDefaultWeatherType(data: WarRuleCommonDataSchema, gcData: GameConfig): void {
     const typeArray = gcData.getAllWeatherTypeArray();
     data.setDefaultWeatherType(typeArray[(typeArray.indexOf(getDefaultWeatherType(data, gcData)) + 1) % typeArray.length]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-export function getErrorCode(data: WarRuleCommonDataSchema, gcData: GcData): ClientErrorCode {
+export function getErrorCode(data: WarRuleCommonDataSchema, gcData: GameConfig): ClientErrorCode {
     {
         const defaultWeatherType = getDefaultWeatherType(data, gcData);
         if ((defaultWeatherType != null)                            &&

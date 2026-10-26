@@ -1,5 +1,5 @@
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type { SelfUnitCaptureAmount } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCaptureAmount.ts";
 
 export function getTotalOffsetPct({
@@ -12,7 +12,7 @@ export function getTotalOffsetPct({
     getCoGridIndexArrayOnMap,
 }: {
     cfg                         : SelfUnitCaptureAmount | null | undefined;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     unitTypeId                  : number;
     isCoOnboard                 : boolean;
     gridIndex                   : GridIndex;

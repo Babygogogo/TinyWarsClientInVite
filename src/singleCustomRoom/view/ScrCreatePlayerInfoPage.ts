@@ -1,5 +1,5 @@
 import { CoId } from "../../cos/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -116,7 +116,7 @@ export class Page
 
 interface DataForPlayerRenderer extends UiListItemData {
     warCreator      : ScrWarCreator;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     playerIndex     : number;
 }
 class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {

@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { checkIsSameList } from "../../helpers/Collection.ts";
 import { checkIsValidLanguageTextArray } from "../../lang/Utils.ts";
 import { createDefaultPlayerRuleList, getErrorCodeForPlayerRuleList } from "../../playerRules/Utils.ts";
@@ -9,7 +9,7 @@ import { Constants } from "../Constants.ts";
 import { checkIsValid } from "./Availability.ts";
 import { getErrorCode as WarRulesUtilsCommonDataGetErrorCode, checkIsSame } from "./CommonData.ts";
 
-export function createDefault(ruleId: number, playersCount: number, gcData: GcData): TemplateWarRule {
+export function createDefault(ruleId: number, playersCount: number, gcData: GameConfig): TemplateWarRule {
     return TemplateWarRule.fromJson({
         ruleId  : ruleId,
         // ruleNameArray   : [
@@ -40,7 +40,7 @@ export function createDefault(ruleId: number, playersCount: number, gcData: GcDa
 export function getErrorCode({ templateWarRule, allWarEventIdArray, gameConfig, playersCountUnneutral, allMapSimpleDialogueIdArray, isCampaignMap, allTaskObjectiveIdSet }: {
     templateWarRule             : TemplateWarRule;
     allWarEventIdArray          : number[];
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     playersCountUnneutral       : number;
     allMapSimpleDialogueIdArray : number[];
     isCampaignMap               : boolean;
@@ -121,7 +121,7 @@ export function getErrorCodeForTemplateWarRuleArray({ templateWarRuleArray, play
     templateWarRuleArray        : Undefinable<TemplateWarRule[]>;
     playersCountUnneutral       : number;
     allWarEventIdArray          : number[];
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     allMapSimpleDialogueIdArray : number[];
     isCampaignMap               : boolean;
     allTaskObjectiveIdSet       : Set<number>;

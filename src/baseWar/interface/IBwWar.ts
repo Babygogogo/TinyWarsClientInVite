@@ -13,7 +13,7 @@ import type { IBwWarView } from "./IBwWarView.ts";
 import type { DamagePreviewSettings } from "../model/BwTypes.ts";
 import type { IField } from "../../fields/IField.ts";
 import type { IFogMap } from "../../fogMaps/IFogMap.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { IPlayer } from "../../players/IPlayer.ts";
 import type { IPlayerManager } from "../../players/IPlayerManager.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -31,7 +31,7 @@ import type { IManager } from "../../weathers/IManager.ts";
 
 type WarType            = WarTypeId;
 export interface IBwWar {
-    init(data: SerialWar, gcData: GcData): void;
+    init(data: SerialWar, gcData: GameConfig): void;
     getNormalMapId(): number | null;
     getIsNeedExecutedOperations(): boolean;
     getIsNeedSeedRandom(): boolean;
@@ -81,7 +81,7 @@ export interface IBwWar {
 
     getWarType(): WarType;
 
-    getGcData(): GcData;
+    getGcData(): GameConfig;
 
     getDamagePreviewSettings(): DamagePreviewSettings;
 

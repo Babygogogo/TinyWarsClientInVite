@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { Common } from "../../maps/Constants.ts";
 import { getLatestGameConfig, getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
@@ -317,7 +317,7 @@ export class UiMapInfo extends UiOpenableComponent<UiMapInfoData> implements IUi
     }
 }
 
-function generateDataForListTile(tileDataArray: SerialTile[], gameConfig: GcData): DataForTileRenderer[] {
+function generateDataForListTile(tileDataArray: SerialTile[], gameConfig: GameConfig): DataForTileRenderer[] {
     const tileCountDict = new Map<number, number>();
     for (const tile of tileDataArray || []) {
         const tileType = gameConfig.getTileType(tile.getBaseType() ?? 0, tile.getObjectType() ?? 0);
@@ -351,7 +351,7 @@ function getHasFog(data: Undefinable<UiMapInfoData>): boolean | null {
 }
 
 interface DataForTileRenderer extends UiListItemData {
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     tileType        : number;
     num             : number;
 }

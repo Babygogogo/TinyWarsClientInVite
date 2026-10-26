@@ -25,7 +25,7 @@ import {
     getTotalOffsetPct as CoSkillsUtilsPersistentSelfUnitOffenseGetTotalOffsetPct,
 } from "../coSkills/utils/persistent/SelfUnitOffense.ts";
 import { getTotalRangeOffset, checkCanSeeThrough } from "../coSkills/utils/persistent/SelfUnitVision.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { getUnitViewClass, getUnitClass } from "../gameHelpers/GhFactory.ts";
 import { deleteElementFromList } from "../helpers/Collection.ts";
 import { newError, getExisted, createLazyFunc, createLazyFunc2 } from "../helpers/Misc.ts";
@@ -69,7 +69,7 @@ import { toGridIndexAndWeight } from "../weightedGridIndexes/Utils.ts";
 type IBwTile                = ITile;
 
 export class Unit implements IUnit {
-    private _gameConfig?                        : GcData;
+    private _gameConfig?                        : GameConfig;
     private _templateCfg?                       : UnitTemplateCfg;
     private _playerIndex                        = 0;
     private _gridX                              = 0;
@@ -100,7 +100,7 @@ export class Unit implements IUnit {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Initializers and serializers.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public init(unitData: SerialUnit, gameConfig: GcData): void {
+    public init(unitData: SerialUnit, gameConfig: GameConfig): void {
         const validationError = getErrorCodeForUnitDataIgnoringUnitId({
             unitData                : unitData,
             gameConfig              : gameConfig,
@@ -204,10 +204,10 @@ export class Unit implements IUnit {
         return getExisted(this._war);
     }
 
-    public getGcData(): GcData {
+    public getGcData(): GameConfig {
         return getExisted(this._gameConfig);
     }
-    private _setGameConfig(config: GcData): void {
+    private _setGameConfig(config: GameConfig): void {
         this._gameConfig = config;
     }
 

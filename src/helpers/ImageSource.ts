@@ -1,5 +1,5 @@
 import type { Undefinable, UserOnlineState } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
 import { TextureVersionId } from "../graphics/Constants.ts";
 import { newError, getExisted, createLazyFunc } from "./Misc.ts";
@@ -11,7 +11,7 @@ import type { BuffTypeId } from "../unitBuffs/Constants.ts";
 import type { CornerStateIconTypeId, AnimationTypeId } from "../units/Constants.ts";
 
 type UnitBuffTypeId                 = BuffTypeId;
-export function getCoBust(gcData: GcData, coId: number): string | null {
+export function getCoBust(gcData: GameConfig, coId: number): string | null {
     const imgNumber = gcData.getCoBasicCfg(coId)?.getImage();
     return (imgNumber != null) ? `coBust${getNumText(imgNumber, 4)}` : null;
 }
@@ -29,7 +29,7 @@ export function getCoEyeBackground(skinId: number): string {
         default                                         : throw newError(`Invalid skinId: ${skinId}`);
     }
 }
-export function getCoEyeBackgroundByCoId(gcData: GcData, coId: number): string | null {
+export function getCoEyeBackgroundByCoId(gcData: GameConfig, coId: number): string | null {
     switch (gcData.getCoBasicCfg(coId)?.getForce()) {
         case 1  : return `uncompressedTriangle0001`;
         case 2  : return `uncompressedTriangle0002`;
@@ -42,7 +42,7 @@ export function getCoEyeBackgroundByCoId(gcData: GcData, coId: number): string |
         default : return null;
     }
 }
-export function getCoEye(gcData: GcData, coId: number, isAlive: boolean): string | null {
+export function getCoEye(gcData: GameConfig, coId: number, isAlive: boolean): string | null {
     const imgNumber = gcData.getCoBasicCfg(coId)?.getImage();
     return (imgNumber != null) ? `coEye${isAlive ? `Normal` : `Grey`}${getNumText(imgNumber, 4)}` : null;
 }
@@ -59,7 +59,7 @@ export function getCoHeadFrame(skinId: Undefinable<number>): string {
         default : return `uncompressedRectangle0006`;
     }
 }
-export function getCoHeadBackgroundByCoId(gcData: GcData, coId: number): string | null {
+export function getCoHeadBackgroundByCoId(gcData: GameConfig, coId: number): string | null {
     switch (gcData.getCoBasicCfg(coId)?.getForce()) {
         case 1      : return `uncompressedColorRed0001`;
         case 2      : return `uncompressedColorBlue0000`;
@@ -70,7 +70,7 @@ export function getCoHeadBackgroundByCoId(gcData: GcData, coId: number): string 
         default     : return null;
     }
 }
-export function getCoHead(gcData: GcData, coId: number): string | null {
+export function getCoHead(gcData: GameConfig, coId: number): string | null {
     const imgNumber = gcData.getCoBasicCfg(coId)?.getImage();
     return (imgNumber != null) ? `coHead${getNumText(imgNumber, 4)}` : null;
 }
@@ -200,7 +200,7 @@ export function getTileBuff({ version, buffType, isDark }: {
 }
 
 export function getUnit({ gcData, version, skinId, unitType, isDark, animationType, tickCount }: {
-    gcData          : GcData;
+    gcData          : GameConfig;
     version         : TextureVersionId;
     skinId          : number;
     unitType        : number;

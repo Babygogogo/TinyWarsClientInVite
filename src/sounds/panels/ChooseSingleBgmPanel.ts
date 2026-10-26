@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -25,7 +25,7 @@ import type { Event } from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
     currentBgmCode      : Undefinable<number>;
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     callbackOnConfirm   : (bgmCode: number) => void;
     callbackOnCancel?   : () => void;
 }
@@ -193,7 +193,7 @@ export class Panel extends UiPanel<OpenData> {
 
 interface DataForBgmRenderer extends UiListItemData {
     bgmCode     : number;
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     callback    : (bgmCode: number) => void;
     panel       : Panel;
 }

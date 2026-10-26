@@ -1,6 +1,6 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import {
     getPlayerClass,
     getMeWarClass,
@@ -26,7 +26,7 @@ export class PlayerManager implements IPlayerManager {
     private _war?                       : IBwWar;
     private _watcherTeamIndexesForHrw?  : Set<number>;
 
-    public init(data: Undefinable<SerialPlayerManager>, gameConfig: GcData): void {
+    public init(data: Undefinable<SerialPlayerManager>, gameConfig: GameConfig): void {
         if (data == null) {
             throw newError(`Empty data.`, ClientErrorCode.BwPlayerManager_Init_00);
         }
@@ -79,7 +79,7 @@ export class PlayerManager implements IPlayerManager {
             playerMap.set(playerIndex, player);
         }
     }
-    public fastInit(data: SerialPlayerManager, gameConfig: GcData): void {
+    public fastInit(data: SerialPlayerManager, gameConfig: GameConfig): void {
         for (const playerData of data ? data.getPlayers() : []) {
             const playerIndex   = playerData.getPlayerIndex();
             const player        = getExisted(this.getPlayer(playerIndex), ClientErrorCode.BwPlayerManager_FastInit_01);

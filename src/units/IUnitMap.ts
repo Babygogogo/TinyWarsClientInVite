@@ -2,13 +2,13 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import type { UnitCustomName } from "../proto/schema/CommonProto/Structure/UnitCustomName.ts";
 import type { SerialUnitMap } from "../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
 import type { IUnit } from "./IUnit.ts";
 import type { IUnitMapView } from "./IUnitMapView.ts";
 
-type GameConfiguration      = GcData;
+type GameConfiguration      = GameConfig;
 export interface IUnitMap {
     init({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialUnitMap>;

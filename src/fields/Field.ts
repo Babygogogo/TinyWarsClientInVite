@@ -7,7 +7,7 @@ import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { IField } from "./IField.ts";
 import type { IFieldView } from "./IFieldView.ts";
 import type { IFogMap } from "../fogMaps/IFogMap.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import {
     getBwCursorClass,
     getBwGridVisualEffectClass,
@@ -36,7 +36,7 @@ export class Field implements IField {
 
     public init({ data, gameConfig, playersCountUnneutral }: {
         data                    : Undefinable<SerialField>;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         playersCountUnneutral   : number;
     }): void {
         if (data == null) {
@@ -88,7 +88,7 @@ export class Field implements IField {
     }
     public fastInit({ data, gameConfig, playersCountUnneutral }: {
         data                    : SerialField;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         playersCountUnneutral   : number;
     }): void {
         const mapSize = MapSize.createWithSerialTileMap(data.getTileMap());

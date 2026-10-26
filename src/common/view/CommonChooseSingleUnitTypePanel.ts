@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getUnitName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -23,7 +23,7 @@ import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 
 export interface OpenData {
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     currentUnitType     : Undefinable<number>;
     unitTypeArray       : number[];
     playerIndex         : number;
@@ -129,7 +129,7 @@ export class Panel extends UiPanel<OpenData> {
 }
 
 interface DataForTypeRenderer extends UiListItemData {
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     unitType            : number;
     playerIndex         : number;
     skinId              : number;

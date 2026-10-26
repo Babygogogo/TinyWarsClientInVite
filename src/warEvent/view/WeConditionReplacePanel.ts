@@ -1,5 +1,5 @@
 import { showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel } from "../../gamePanels/Manager.ts";
 import { deleteElementFromList2 } from "../../helpers/Collection.ts";
@@ -22,7 +22,7 @@ import { getBriefDescForCondition } from "../../warEvents/conditions/utils/Commo
 import { getNode, getCondition } from "../../warEvents/fullDatas/Utils.ts";
 
 export interface OpenData {
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     fullData        : WarEventFullData;
     parentNodeId    : number;
     oldConditionId  : number | null;
@@ -100,7 +100,7 @@ export class Panel extends UiPanel<OpenData> {
 }
 
 interface DataForConditionRenderer extends UiListItemData {
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     parentNodeId            : number;
     oldConditionId          : number | null;
     candidateConditionId    : number;

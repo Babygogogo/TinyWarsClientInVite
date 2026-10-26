@@ -1,11 +1,8 @@
-import { GcData } from "../../gameConfigs/GcData.ts";
 import type {
     DecodedMapEditorData,
     Undefinable,
 } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { ReviewStatus } from "../../maps/Constants.ts";
-import { SlotConstants } from "../../mapEditors/Constants.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -13,9 +10,8 @@ import { TextType } from "../../lang/Constants.ts";
 import { getCurrentLanguageType, getSecondaryLanguageType, getText } from "../../lang/Utils.ts";
 import { StoreMeFullData } from "../../localData/Storage.ts";
 import { warn } from "../../Logger.ts";
-import type { IMeWar } from "../interface/IMeWar.ts";
-import { createDefaultMapRawData, createDefaultTileDataArray } from "./MeHelpers.ts";
-import { reqMeGetAllMapDataTimestamps, reqMeGetMapData, reqMeGetMapDataArray } from "./MeProxy.ts";
+import { SlotConstants } from "../../mapEditors/Constants.ts";
+import { ReviewStatus } from "../../maps/Constants.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import type { MapEditorData } from "../../proto/schema/CommonProto/Map/MapEditorData.ts";
 import { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -33,8 +29,12 @@ import type {
 import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
 import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
+import { getDefaultTileBaseType } from "../../tileBases/Utils.ts";
 import { getServerTimestamp } from "../../timer/TimerModel.ts";
-import { getSelfUserId, getIsSelfMapCommittee, getSelfNickname } from "../../users/Model.ts";
+import { getIsSelfMapCommittee, getSelfNickname, getSelfUserId } from "../../users/Model.ts";
+import type { IMeWar } from "../interface/IMeWar.ts";
+import { createDefaultMapRawData, createDefaultTileDataArray } from "./MeHelpers.ts";
+import { reqMeGetAllMapDataTimestamps, reqMeGetMapData, reqMeGetMapDataArray } from "./MeProxy.ts";
 
 const _allDataTimestampsAccessor    = new CachedDataAccessor<null, Map<number, number | null>>({
     reqData : () => reqMeGetAllMapDataTimestamps(),
@@ -183,11 +183,11 @@ export async function loadWar({ mapRawData, slotIndex, isReview, srcNormalMapIdF
     const gameConfig    = await getLatestGameConfig();
     _war                = new (getMeWarClass())();
     await _war.initWithMapRawData({
-        mapRawData                  : mapRawData ?? await createDefaultMapRawData(slotIndex, gameConfig),
-        slotIndex                   : slotIndex,
-        gameConfig                  : gameConfig,
-        srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-        gridMarkData                : gridMarkData,
+        mapRawData                : mapRawData ?? await createDefaultMapRawData(slotIndex, gameConfig),
+        slotIndex                 : slotIndex,
+        gameConfig                : gameConfig,
+        srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+        gridMarkData              : gridMarkData,
     });
     _war.setIsMapModified(false);
     _war.setIsReviewingMap(isReview);
@@ -222,13 +222,13 @@ async function convertMapEditorData(data: MapEditorData | null): Promise<Decoded
     const slotIndex                 = data.getSlotIndex() ?? 0;
     if (srcNormalMapIdForAddEvent == null) {
         return {
-            slotIndex                   : slotIndex,
-            reviewStatus                : reviewStatus,
-            reviewComment               : data.getReviewComment() ?? null,
-            mapRawData                  : await handleDeprecatedData(encodedMapRawData),
-            srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-            dataTimestamp               : data.getDataTimestamp() ?? 0,
-            gridMarkData                : data.getGridMarkData(),
+            slotIndex                 : slotIndex,
+            reviewStatus              : reviewStatus,
+            reviewComment             : data.getReviewComment() ?? null,
+            mapRawData                : await handleDeprecatedData(encodedMapRawData),
+            srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+            dataTimestamp             : data.getDataTimestamp() ?? 0,
+            gridMarkData              : data.getGridMarkData(),
         };
     } else {
         const srcMapRawData = getExisted(await getRawData(srcNormalMapIdForAddEvent)).clone();
@@ -301,13 +301,13 @@ async function convertMapEditorData(data: MapEditorData | null): Promise<Decoded
         mapRawData.setWarEventFullData(srcWarEventFullData);
 
         return {
-            slotIndex                   : slotIndex,
-            reviewStatus                : reviewStatus,
-            reviewComment               : data.getReviewComment() ?? null,
-            mapRawData                  : mapRawData,
-            srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-            dataTimestamp               : data.getDataTimestamp() ?? 0,
-            gridMarkData                : data.getGridMarkData(),
+            slotIndex                 : slotIndex,
+            reviewStatus              : reviewStatus,
+            reviewComment             : data.getReviewComment() ?? null,
+            mapRawData                : mapRawData,
+            srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+            dataTimestamp             : data.getDataTimestamp() ?? 0,
+            gridMarkData              : data.getGridMarkData(),
         };
     }
 }
@@ -333,17 +333,17 @@ async function handleDeprecatedData(encodedMapRawData: Undefinable<Uint8Array>):
         mapRawData.setModifiedTime(mapRawData.getModifiedTime() ?? getServerTimestamp());
         mapRawData.setMapNameArray(mapRawData.getMapNameArray() ?? [
             LanguageText.fromJson({
-                languageType: languageType1,
-                text        : `${getText(TextType.B1135, languageType1)} ${campaignMapData?.getCampaignId() ?? 0}-${campaignMapData?.getCampaignMapId() ?? 0}`,
+                languageType : languageType1,
+                text         : `${getText(TextType.B1135, languageType1)} ${campaignMapData?.getCampaignId() ?? 0}-${campaignMapData?.getCampaignMapId() ?? 0}`,
             }),
             LanguageText.fromJson({
-                languageType: languageType2,
-                text        : `${getText(TextType.B1135, languageType2)} ${campaignMapData?.getCampaignId() ?? 0}-${campaignMapData?.getCampaignMapId() ?? 0}`,
+                languageType : languageType2,
+                text         : `${getText(TextType.B1135, languageType2)} ${campaignMapData?.getCampaignId() ?? 0}-${campaignMapData?.getCampaignMapId() ?? 0}`,
             }),
         ]);
         mapRawData.setTileDataArray(
             mapRawData.getTileDataArray() ??
-            createDefaultTileDataArray(mapWidth, mapHeight, GcData.getDefaultTileBaseType(), gameConfig)
+            createDefaultTileDataArray(mapWidth, mapHeight, getDefaultTileBaseType(), gameConfig)
         );
         mapRawData.setWarEventFullData(mapRawData.getWarEventFullData() ?? new WarEventFullData());
     }

@@ -1,5 +1,5 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getSkinButtonBackground, getCoEye } from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
@@ -132,7 +132,7 @@ interface DataForCoRenderer extends UiListItemData {
     skinId      : number;
     coId        : number;
     isAlive     : boolean;
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     panel       : Panel;
 }
 class CoRenderer extends UiListItemRenderer<DataForCoRenderer> {

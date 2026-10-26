@@ -1,19 +1,22 @@
-import { GcData } from "../../gameConfigs/GcData.ts";
+import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import {
-    getText,
-    getUnitName,
     getMoveTypeName,
-    getTileName,
-    getTileBaseName,
-    getTileObjectName,
-    getTileDecorationName,
-    getWeatherName,
     getPlayerAliveStateName,
+    getText,
+    getTileBaseName,
+    getTileDecorationName,
+    getTileName,
+    getTileObjectName,
+    getUnitName,
+    getWeatherName,
 } from "../../lang/Utils.ts";
-import { TypeId } from "../../notifications/TypeId.ts";
+import { TypeId as NotificationTypeId } from "../../notifications/TypeId.ts";
 import { AllAliveStateIdArray } from "../../players/Constants.ts";
+import { getAllEnabledTileBaseCfgArray } from "../../tileBases/Utils.ts";
+import { getAllTileDecorationCfgArray } from "../../tileDecorations/Utils.ts";
+import { getAllTileObjectCfgArray } from "../../tileObjects/Utils.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -24,7 +27,6 @@ import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
-// eslint-disable-next-line no-shadow
 const enum Category {
     UnitType,
     UnitMoveType,
@@ -38,7 +40,7 @@ const enum Category {
     PlayerAliveState,
     WarOperation,
 }
-// eslint-disable-next-line no-shadow
+
 const enum SortType {
     TypeId,
     TypeName,
@@ -58,7 +60,7 @@ const AllCategoryArray = [
 ];
 
 export interface OpenData {
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _imgMask!              : IUiImage;
@@ -79,11 +81,11 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,     callback: this._onNotifyLanguageChanged },
+            { type : NotificationTypeId.LanguageChanged,     callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnSort,                    callback: this._onTouchedBtnSort },
-            { ui: this._btnClose,                   callback: this.closePanel },
+            { ui : this._btnSort,                    callback : this._onTouchedBtnSort },
+            { ui : this._btnClose,                   callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -144,9 +146,9 @@ export class Panel extends UiPanel<OpenData> {
         const dataArray: DataForCategoryRenderer[] = [];
         for (const category of AllCategoryArray) {
             dataArray.push({
-                name        : getCategoryName(category),
-                category    : category,
-                panel       : this,
+                name     : getCategoryName(category),
+                category : category,
+                panel    : this,
             });
         }
         return dataArray;
@@ -162,35 +164,35 @@ export class Panel extends UiPanel<OpenData> {
         const sortType = this._sortType;
         if (category === Category.UnitType) {
             return getTextForCategoryData(gameConfig.getAllUnitTypeArray().map(v => ({
-                typeId      : v,
-                typeName    : getUnitName(v, gameConfig) ?? UndefinedError
+                typeId   : v,
+                typeName : getUnitName(v, gameConfig) ?? UndefinedError
             })), sortType);
         } else if (category === Category.UnitMoveType) {
-            return getTextForCategoryData(gameConfig.getAllMoveTypeIdArray().map(v => ({ typeId: v, typeName: getMoveTypeName(v, gameConfig) ?? UndefinedError })), sortType);
+            return getTextForCategoryData(gameConfig.getAllMoveTypeIdArray().map(v => ({ typeId : v, typeName : getMoveTypeName(v, gameConfig) ?? UndefinedError })), sortType);
         } else if (category === Category.TileType) {
-            return getTextForCategoryData(gameConfig.getAllTileTypeArraySortedByWeight().map(v => ({ typeId: v, typeName: getTileName(v, gameConfig) ?? UndefinedError })), sortType);
+            return getTextForCategoryData(gameConfig.getAllTileTypeArraySortedByWeight().map(v => ({ typeId : v, typeName : getTileName(v, gameConfig) ?? UndefinedError })), sortType);
         } else if (category === Category.TileBaseType) {
-            return getTextForCategoryData(GcData.getAllEnabledTileBaseCfgArray().map(v => {
+            return getTextForCategoryData(getAllEnabledTileBaseCfgArray().map(v => {
                 const tileBaseType = v.tileBaseTypeId;
                 return {
-                    typeId      : tileBaseType,
-                    typeName    : getTileBaseName(tileBaseType, gameConfig) ?? UndefinedError,
+                    typeId   : tileBaseType,
+                    typeName : getTileBaseName(tileBaseType, gameConfig) ?? UndefinedError,
                 };
             }), sortType);
         } else if (category === Category.TileObjectType) {
-            return getTextForCategoryData(GcData.getAllTileObjectCfgArray().map(v => {
+            return getTextForCategoryData(getAllTileObjectCfgArray().map(v => {
                 const typeId = v.tileObjectTypeId;
                 return {
-                    typeId      : typeId,
-                    typeName    : getTileObjectName(typeId, gameConfig) ?? UndefinedError,
+                    typeId   : typeId,
+                    typeName : getTileObjectName(typeId, gameConfig) ?? UndefinedError,
                 };
             }), sortType);
         } else if (category === Category.TileDecorationType) {
-            return getTextForCategoryData(GcData.getAllTileDecorationCfgArray().map(v => {
+            return getTextForCategoryData(getAllTileDecorationCfgArray().map(v => {
                 const tileDecorationType = v.tileDecorationTypeId;
                 return {
-                    typeId      : tileDecorationType,
-                    typeName    : getTileDecorationName(tileDecorationType, gameConfig) ?? UndefinedError,
+                    typeId   : tileDecorationType,
+                    typeName : getTileDecorationName(tileDecorationType, gameConfig) ?? UndefinedError,
                 };
             }), sortType);
         } else if (category === Category.TileBuff) {
@@ -198,15 +200,15 @@ export class Panel extends UiPanel<OpenData> {
         } else if (category === Category.Weather) {
             return getTextForCategoryData(
                 gameConfig.getAllWeatherTypeArray().map(v => ({
-                    typeId: v,
-                    typeName: getWeatherName(v, gameConfig) ?? UndefinedError
+                    typeId   : v,
+                    typeName : getWeatherName(v, gameConfig) ?? UndefinedError
                 })),
                 sortType
             );
         } else if (category === Category.CoCategory) {
-            return getTextForCategoryData(gameConfig.getAllEnabledCoCategoryIdArray().map(v => ({ typeId: v, typeName: gameConfig.getCoCategoryCfg(v)?.getName() ?? UndefinedError })), sortType);
+            return getTextForCategoryData(gameConfig.getAllEnabledCoCategoryIdArray().map(v => ({ typeId : v, typeName : gameConfig.getCoCategoryCfg(v)?.getName() ?? UndefinedError })), sortType);
         } else if (category === Category.PlayerAliveState) {
-            const text1 = getTextForCategoryData(AllAliveStateIdArray.map(v => ({ typeId: v, typeName: getPlayerAliveStateName(v) ?? UndefinedError })), sortType);
+            const text1 = getTextForCategoryData(AllAliveStateIdArray.map(v => ({ typeId : v, typeName : getPlayerAliveStateName(v) ?? UndefinedError })), sortType);
             const text2 = getText(TextType.A0272);
             return `${text1}\n\n${text2}`;
         } else if (category === Category.WarOperation) {

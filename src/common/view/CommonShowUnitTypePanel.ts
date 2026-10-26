@@ -1,6 +1,6 @@
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
@@ -23,7 +23,7 @@ import { getUiUnitViewClass } from "../../ui/utils/UiFactory.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 
 export interface OpenData {
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     currentUnitTypeArray    : number[];
     availableUnitTypeArray  : number[];
     getHelpText?            : (() => string) | null;
@@ -147,7 +147,7 @@ export class Panel extends UiPanel<OpenData> {
 
 interface DataForUnitTypeRenderer extends UiListItemData {
     unitType    : number;
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     panel       : Panel;
 }
 class UnitTypeRenderer extends UiListItemRenderer<DataForUnitTypeRenderer> {

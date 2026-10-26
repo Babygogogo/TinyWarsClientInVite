@@ -2,7 +2,7 @@ import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { getUnitAnimationTickCount } from "../../common/model/CommonModel.ts";
 import { show } from "../../FloatText.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
@@ -1080,7 +1080,7 @@ function getErrorTipsForAddUnit({ dataForAddUnit, war }: {
     return null;
 }
 
-function getDefaultAddUnitData(gameConfig: GcData): DataForAddUnit {
+function getDefaultAddUnitData(gameConfig: GameConfig): DataForAddUnit {
     return DataForAddUnit.fromJson({
         canBeBlockedByUnit  : true,
         needMovableTile     : true,

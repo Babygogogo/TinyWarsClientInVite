@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getPlayerForceName, getPlayerTeamName, getText } from "../../lang/Utils.ts";
@@ -15,7 +15,7 @@ import type { IUiPanel } from "../../ui/interfaces/IUiPanel.ts";
 import { setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
 
 export interface OpenData {
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     playerIndex         : number;
     teamIndex           : number;
     nickname            : string;

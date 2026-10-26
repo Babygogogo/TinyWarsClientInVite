@@ -1,4 +1,4 @@
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import type { SelfCanCoBoard } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfCanCoBoard.ts";
 
 export function checkCanCoBoard({
@@ -9,7 +9,7 @@ export function checkCanCoBoard({
     isOwnTile,
 }: {
     cfg             : SelfCanCoBoard | null | undefined;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     unitTypeId      : number;
     tileTypeId      : number;
     isOwnTile       : boolean;

@@ -2,7 +2,7 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import { ReplayFilter } from "../../auxiliaryTypes/ReplayFilter.ts";
 import { showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
@@ -43,7 +43,7 @@ export interface OpenData {
     },
     mapInfo?    : {
         mapRawData          : MapRawData;
-        gameConfig          : GcData;
+        gameConfig          : GameConfig;
         overridingPlayers   : Undefinable<SerialPlayer[]>;
     },
 }

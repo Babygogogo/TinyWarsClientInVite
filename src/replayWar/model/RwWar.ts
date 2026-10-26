@@ -1,5 +1,5 @@
 import type { ReplayCheckpointData } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
@@ -11,7 +11,7 @@ export class RwWar extends RwWarBase {
     private _replayId?              : number;
     private _isShowAllUnits         = true;
 
-    public init(warData: SerialWar, gameConfig: GcData): void {
+    public init(warData: SerialWar, gameConfig: GameConfig): void {
         super.init(warData, gameConfig);
 
         this._initView();

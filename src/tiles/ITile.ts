@@ -1,7 +1,7 @@
 import type { Undefinable, RepairHpAndCost } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import type { LanguageType } from "../lang/Constants.ts";
 import type { IPlayer } from "../players/IPlayer.ts";
 import type {
@@ -18,7 +18,7 @@ import type { ITileView } from "./ITileView.ts";
 import type { IUnit } from "../units/IUnit.ts";
 import type { ClientErrorCode } from "../utils/ClientErrorCode.ts";
 
-type GameConfiguration      = GcData;
+type GameConfiguration      = GameConfig;
 export interface ITile {
     init(data: SerialTile, gameConfig: GameConfiguration): void;
     fastInit(data: SerialTile, gameConfig: GameConfiguration): void;

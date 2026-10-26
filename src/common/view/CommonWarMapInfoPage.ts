@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCurrentGameEssentialConfig } from "../../gameVersions/Utils.ts";
@@ -32,7 +32,7 @@ export type OpenData = {
     mapInfo?    : {
         hasFog              : boolean | null;
         mapRawData          : MapRawData;
-        gameConfig          : GcData;
+        gameConfig          : GameConfig;
         overridingPlayers   : Undefinable<SerialPlayer[]>;
     },
 } | null;

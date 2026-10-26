@@ -1,6 +1,6 @@
 import { pickRandomCo } from "../../cos/Utils.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { RoomCreatorBase } from "../../multiPlayerRooms/RoomCreatorBase.ts";
@@ -22,7 +22,7 @@ export class CcrRoomCreator extends RoomCreatorBase {
     private readonly _settingsForCcw    = new SettingsForCcw();
     private readonly _aiSkinInfoArray   : AiSkinInfo[] = [];
 
-    public constructor(gcData: GcData, mapRawData: MapRawData) {
+    public constructor(gcData: GameConfig, mapRawData: MapRawData) {
         super(
             gcData,
             SettingsForCommon.fromJson({

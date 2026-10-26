@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { Common, SmallDialogueSideId } from "../Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { UndefinedError, TextType } from "../../lang/Constants.ts";
 import { checkIsValidLanguageTextArray, getFormattedText, getText } from "../../lang/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -13,7 +13,7 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 
 type MapSimpleDialogueSchema            = MapSimpleDialogue;
 
-export function getErrorCode(data: MapSimpleDialogueSchema, playersCountUnneutral: number, gameConfig: GcData): ClientErrorCode {
+export function getErrorCode(data: MapSimpleDialogueSchema, playersCountUnneutral: number, gameConfig: GameConfig): ClientErrorCode {
     if (data == null) {
         return ClientErrorCode.PhMapSimpleDialogue_GetErrorCode_00;
     }
@@ -70,7 +70,7 @@ export function getErrorCode(data: MapSimpleDialogueSchema, playersCountUnneutra
 
     return ClientErrorCode.NoError;
 }
-function getErrorCodeForDataForCoDialogue(data: DataForCoDialogue, playersCountUnneutral: number, gameConfig: GcData): ClientErrorCode {
+function getErrorCodeForDataForCoDialogue(data: DataForCoDialogue, playersCountUnneutral: number, gameConfig: GameConfig): ClientErrorCode {
     const coId = data.getCoId();
     if (coId != null) {
         if (gameConfig.getCoBasicCfg(coId) == null) {
@@ -134,7 +134,7 @@ function getErrorCodeForDataForAside(data: DataForAside): ClientErrorCode {
     return ClientErrorCode.NoError;
 }
 
-export function getDesc(data: Undefinable<MapSimpleDialogueSchema>, gameConfig: GcData): string | null {
+export function getDesc(data: Undefinable<MapSimpleDialogueSchema>, gameConfig: GameConfig): string | null {
     if (data == null) {
         return null;
     } else {
@@ -160,7 +160,7 @@ export function getDesc(data: Undefinable<MapSimpleDialogueSchema>, gameConfig: 
     }
 }
 
-export function getErrorTip(data: MapSimpleDialogueSchema, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: MapSimpleDialogueSchema, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     const dialoguesArray    = data.getDataArray();
     const dialoguesCount    = dialoguesArray.length;
     if ((dialoguesCount <= 0) || (dialoguesCount > Common.MaxCount)) {
@@ -189,7 +189,7 @@ export function getErrorTip(data: MapSimpleDialogueSchema, playersCountUnneutral
 
     return null;
 }
-export function getErrorTipForDataForDialogue(dialogueData: DataForDialogue, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTipForDataForDialogue(dialogueData: DataForDialogue, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     // if (Object.keys(dialogueData).length !== 1) {
     //     return Lang.getText(LangTextType.A0230);
     // }

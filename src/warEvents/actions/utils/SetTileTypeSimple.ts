@@ -1,29 +1,32 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { GcData } from "../../../gameConfigs/GcData.ts";
+import { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../../lang/Utils.ts";
+import { getFormattedText, getText } from "../../../lang/Utils.ts";
 import { PlayerIndex } from "../../../players/Constants.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
-import { getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid, checkIsMeet } from "../../../players/utils/Filter.ts";
+import { checkIsMeet, getDescForEmbed, checkIsValid as PlayersUtilsFilterCheckIsValid } from "../../../players/utils/Filter.ts";
 import type { PlayerFilter } from "../../../proto/schema/CommonProto/Structure/PlayerFilter.ts";
 import type { WeaSetTileTypeSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileTypeSimple.ts";
+import { getTileBaseCfg } from "../../../tileBases/Utils.ts";
+import { getTileDecorationCfg } from "../../../tileDecorations/Utils.ts";
+import { getTileObjectCfg } from "../../../tileObjects/Utils.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import {
-    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
-    checkIsValid as TilesUtilsFilterCheckIsValid,
     checkIsMeet as TilesUtilsFilterCheckIsMeet,
+    checkIsValid as TilesUtilsFilterCheckIsValid,
+    getDescForEmbed as TilesUtilsFilterGetDescForEmbed,
 } from "../../../tiles/utils/Filter.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
-import { checkIsValid as UnitsUtilsFilterCheckIsValid, checkIsMeet as UnitsUtilsFilterCheckIsMeet } from "../../../units/utils/Filter.ts";
+import { checkIsMeet as UnitsUtilsFilterCheckIsMeet, checkIsValid as UnitsUtilsFilterCheckIsValid } from "../../../units/utils/Filter.ts";
 import {
     getDesc,
-    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
     checkIsMeet as ValueAndComparatorsUtilsCheckIsMeet,
+    checkIsValid as ValueAndComparatorsUtilsCheckIsValid,
 } from "../../../valueAndComparators/Utils.ts";
 
-export function checkIsValid(data: Undefinable<WeaSetTileTypeSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetTileTypeSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
@@ -121,7 +124,7 @@ export function getDetailDesc(data: Undefinable<WeaSetTileTypeSimple>): string |
     );
 }
 
-export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     {
         const filter = data.getConUnitFilter();
         if (filter != null) {
@@ -171,7 +174,7 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: MapSize, player
                 return getFormattedText(TextType.F0091, getText(TextType.TileBase));
             }
 
-            const cfg = GcData.getTileBaseCfg(actTileBaseType);
+            const cfg = getTileBaseCfg(actTileBaseType);
             if (cfg == null) {
                 return getFormattedText(TextType.F0091, getText(TextType.TileBase));
             }
@@ -198,7 +201,7 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: MapSize, player
                     return getFormattedText(TextType.F0091, getText(TextType.TileDecoration));
                 }
 
-                const cfg = GcData.getTileDecorationCfg(actTileDecorationType);
+                const cfg = getTileDecorationCfg(actTileDecorationType);
                 if (cfg == null) {
                     return getFormattedText(TextType.F0091, getText(TextType.TileDecoration));
                 }
@@ -226,7 +229,7 @@ export function getErrorTip(data: WeaSetTileTypeSimple, mapSize: MapSize, player
                     return getFormattedText(TextType.F0091, getText(TextType.TileObject));
                 }
 
-                const cfg = GcData.getTileObjectCfg(actTileObjectType);
+                const cfg = getTileObjectCfg(actTileObjectType);
                 if (cfg == null) {
                     return getFormattedText(TextType.F0091, getText(TextType.TileObject));
                 }
@@ -300,7 +303,7 @@ export async function applyWithoutExtraData(data: WeaSetTileTypeSimple, isFastEx
                     ? (data.getActTileObjectType() ?? 0)
                     : tile.getObjectType()
                 );
-            const newTileObjectCfg = GcData.getTileObjectCfg(newTileObjectType);
+            const newTileObjectCfg = getTileObjectCfg(newTileObjectType);
             if (newTileObjectCfg == null) {
                 continue;
             }
@@ -319,50 +322,50 @@ export async function applyWithoutExtraData(data: WeaSetTileTypeSimple, isFastEx
             const maxHp             = newTileTemplateCfg.getMaxHp() ?? 0;
 
             const tileData          = create({
-                gridIndex       : tile.getGridIndex().toProto().toJson(),
-                playerIndex     : newTileObjectCfg.isNeutralOnly
+                gridIndex   : tile.getGridIndex().toProto().toJson(),
+                playerIndex : newTileObjectCfg.isNeutralOnly
                     ? PlayerIndex.Neutral
                     : tile.getPlayerIndex(),
 
-                baseType        : newTileBaseType,
-                baseShapeId     : data.getActChangeTileBase()
+                baseType    : newTileBaseType,
+                baseShapeId : data.getActChangeTileBase()
                     ? (data.getActTileBaseShapeId() ?? 0)
                     : tile.getBaseShapeId(),
 
-                decorationType      : data.getActDeleteTileDecoration()
+                decorationType : data.getActDeleteTileDecoration()
                     ? 0
                     : (data.getActChangeTileDecoration()
                         ? (data.getActTileDecorationType() ?? 0)
                         : tile.getDecorationType()
                     ),
-                decorationShapeId   : data.getActDeleteTileDecoration()
+                decorationShapeId : data.getActDeleteTileDecoration()
                     ? 0
                     : (data.getActChangeTileDecoration()
                         ? (data.getActTileDecorationShapeId() ?? 0)
                         : tile.getDecorationShapeId()
                     ),
 
-                objectType      : newTileObjectType,
-                objectShapeId   : data.getActDeleteTileObject()
+                objectType    : newTileObjectType,
+                objectShapeId : data.getActDeleteTileObject()
                     ? 0
                     : (data.getActChangeTileObject()
                         ? (data.getActTileObjectShapeId() ?? 0)
                         : tile.getObjectShapeId()
                     ),
 
-                customNameId            : tile.getCustomNameId() ?? null,
-                isHighlighted           : tile.getIsHighlighted(),
-                unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
+                customNameId           : tile.getCustomNameId() ?? null,
+                isHighlighted          : tile.getIsHighlighted(),
+                unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                groupedLocationIdArray : tile.getGroupedLocationIdArray(),
 
-                currentBuildPoint       : tile.getMaxBuildPoint() == null   ? maxBuildPoint     : Math.min(tile.getCurrentBuildPoint(), maxBuildPoint),
-                currentCapturePoint     : tile.getMaxCapturePoint() == null ? maxCapturePoint   : Math.min(tile.getCurrentCapturePoint(), maxCapturePoint),
-                currentHp               : tile.getMaxHp() == null           ? maxHp             : Math.min(tile.getCurrentHp(), maxHp),
+                currentBuildPoint   : tile.getMaxBuildPoint() == null   ? maxBuildPoint     : Math.min(tile.getCurrentBuildPoint(), maxBuildPoint),
+                currentCapturePoint : tile.getMaxCapturePoint() == null ? maxCapturePoint   : Math.min(tile.getCurrentCapturePoint(), maxCapturePoint),
+                currentHp           : tile.getMaxHp() == null           ? maxHp             : Math.min(tile.getCurrentHp(), maxHp),
 
-                customBuildingData      : isSameTileTypeId ? tile.getCustomBuildingData()?.toJson() ?? null     : null,
-                customCrystalData       : isSameTileTypeId ? tile.getCustomCrystalData()?.toJson() ?? null      : null,
-                customCannonData        : isSameTileTypeId ? tile.getCustomCannonData()?.toJson() ?? null       : null,
-                customLaserTurretData   : isSameTileTypeId ? tile.getCustomLaserTurretData()?.toJson() ?? null  : null,
+                customBuildingData    : isSameTileTypeId ? tile.getCustomBuildingData()?.toJson() ?? null     : null,
+                customCrystalData     : isSameTileTypeId ? tile.getCustomCrystalData()?.toJson() ?? null      : null,
+                customCannonData      : isSameTileTypeId ? tile.getCustomCannonData()?.toJson() ?? null       : null,
+                customLaserTurretData : isSameTileTypeId ? tile.getCustomLaserTurretData()?.toJson() ?? null  : null,
             });
 
             tile.init(tileData, gameConfig);

@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { Common, BigDialogueSideId } from "../../../dialogues/Constants.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { UndefinedError, TextType } from "../../../lang/Constants.ts";
@@ -15,7 +15,7 @@ import type { DataForDialogue } from "../../../proto/schema/CommonProto/WarEvent
 import type { DataForMisc } from "../../../proto/schema/CommonProto/WarEvent/WeaBigDialogueSimple/DataForMisc.ts";
 import { checkIsBgm, checkIsSfx } from "../../../sounds/Utils.ts";
 
-export function checkIsValid(action: Undefinable<WeaBigDialogueSimple>, playersCountUnneutral: number, gameConfig: GcData): boolean {
+export function checkIsValid(action: Undefinable<WeaBigDialogueSimple>, playersCountUnneutral: number, gameConfig: GameConfig): boolean {
     if (action == null) {
         return false;
     }
@@ -64,7 +64,7 @@ export function checkIsValid(action: Undefinable<WeaBigDialogueSimple>, playersC
 
     return true;
 }
-function checkIsValidDataForCoDialogue(data: DataForCoDialogue, playersCountUnneutral: number, gameConfig: GcData): boolean {
+function checkIsValidDataForCoDialogue(data: DataForCoDialogue, playersCountUnneutral: number, gameConfig: GameConfig): boolean {
     const coId = data.getCoId();
     if (coId != null) {
         if (gameConfig.getCoBasicCfg(coId) == null) {
@@ -140,7 +140,7 @@ function checkIsValidDataForMisc(data: DataForMisc): boolean {
     return true;
 }
 
-export function getBriefDesc(data: Undefinable<WeaBigDialogueSimple>, gameConfig: GcData): string | null {
+export function getBriefDesc(data: Undefinable<WeaBigDialogueSimple>, gameConfig: GameConfig): string | null {
     if (data == null) {
         return null;
     } else {
@@ -165,11 +165,11 @@ export function getBriefDesc(data: Undefinable<WeaBigDialogueSimple>, gameConfig
         return getFormattedText(TextType.F0070, coNameArray.join(`, `));
     }
 }
-export function getDetailDesc(data: Undefinable<WeaBigDialogueSimple>, gameConfig: GcData): string | null {
+export function getDetailDesc(data: Undefinable<WeaBigDialogueSimple>, gameConfig: GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
 }
 
-export function getErrorTip(data: WeaBigDialogueSimple, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaBigDialogueSimple, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     const backgroundId = data.getBackgroundId();
     if ((backgroundId != null) && (backgroundId > Common.BackgroundMaxId)) {
         return getText(TextType.A0258);
@@ -189,7 +189,7 @@ export function getErrorTip(data: WeaBigDialogueSimple, playersCountUnneutral: n
 
     return null;
 }
-export function getErrorTipForWeaDialogueData(dialogueData: DataForDialogue, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTipForWeaDialogueData(dialogueData: DataForDialogue, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     // if (Object.keys(dialogueData).length !== 1) {
     //     return Lang.getText(LangTextType.A0230);
     // }

@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -22,7 +22,7 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 
 export interface OpenData {
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     currentTileTypeArray    : number[];
     availableTileTypeArray  : number[];
     getHelpText?            : (() => string) | null;
@@ -213,7 +213,7 @@ export class Panel extends UiPanel<OpenData> {
 
 interface DataForTileTypeRenderer extends UiListItemData {
     tileType    : number;
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     panel       : Panel;
 }
 class TileTypeRenderer extends UiListItemRenderer<DataForTileTypeRenderer> {

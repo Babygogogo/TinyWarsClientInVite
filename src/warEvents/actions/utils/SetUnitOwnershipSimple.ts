@@ -2,7 +2,7 @@ import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { IBwWarStatisticsManager } from "../../../baseWar/interface/IBwWarStatisticsManager.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType } from "../../../lang/Constants.ts";
@@ -29,7 +29,7 @@ import {
 } from "../../../units/utils/Filter.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 
-export function checkIsValid(data: Undefinable<WeaSetUnitOwnershipSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetUnitOwnershipSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
@@ -79,7 +79,7 @@ export function getDetailDesc(data: Undefinable<WeaSetUnitOwnershipSimple>): str
     );
 }
 
-export function getErrorTip(data: WeaSetUnitOwnershipSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaSetUnitOwnershipSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     {
         const filter = data.getConUnitFilter();
         if ((filter != null)                                                                            &&

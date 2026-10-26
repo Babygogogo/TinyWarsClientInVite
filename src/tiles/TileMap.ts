@@ -2,7 +2,7 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { getTileMapViewClass, getTileClass } from "../gameHelpers/GhFactory.ts";
 import { createEmptyMap, createRange } from "../helpers/Collection.ts";
 import { newError, getExisted } from "../helpers/Misc.ts";
@@ -33,7 +33,7 @@ export class TileMap implements ITileMap {
 
     public init({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialTileMap>;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         mapSize                 : MapSize;
         playersCountUnneutral   : number;
     }): void {
@@ -94,7 +94,7 @@ export class TileMap implements ITileMap {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialTileMap>;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         mapSize                 : MapSize;
         playersCountUnneutral   : number;
     }): void {

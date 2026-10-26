@@ -1,6 +1,6 @@
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "./IBwWar.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { InstanceWarRule } from "../../proto/schema/CommonProto/WarRule/InstanceWarRule.ts";
 import type { PlayerRule } from "../../proto/schema/CommonProto/WarRule/PlayerRule.ts";
 import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/TemplateWarRule.ts";
@@ -13,7 +13,7 @@ export interface IBwCommonSettingManager {
         settings                : SettingsForCommon;
         warType                 : WarTypeId;
         playersCountUnneutral   : number;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         mapSize                 : MapSize;
     }): void;
 

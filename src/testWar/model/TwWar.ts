@@ -5,7 +5,7 @@ import { TimerTypeId, DefaultParams } from "../../bootTimers/Constants.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { ForcedFogCode } from "../../fogMaps/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestConfigVersion } from "../../gameConfigs/Provider.ts";
 import { getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
 import { newError, getExisted } from "../../helpers/Misc.ts";
@@ -53,14 +53,14 @@ export class TwWar extends BwWar implements ITwWar {
         // nothing to do.
     }
 
-    public init(data: SerialWar, gameConfig: GcData, warTypeId = getWarTypeId(data)): void {
+    public init(data: SerialWar, gameConfig: GameConfig, warTypeId = getWarTypeId(data)): void {
         this._baseInit(data, gameConfig, warTypeId);
     }
-    public async initByMapRawData(mapRawData: MapRawData, gameConfig: GcData): Promise<void> {
+    public async initByMapRawData(mapRawData: MapRawData, gameConfig: GameConfig): Promise<void> {
         this.init(await _createDataForCreateTwWar(mapRawData, gameConfig), gameConfig);
     }
 
-    public getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GcData): ClientErrorCode {
+    public getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GameConfig): ClientErrorCode {
         try {
             this.init(
                 data,
@@ -74,7 +74,7 @@ export class TwWar extends BwWar implements ITwWar {
 
         return ClientErrorCode.NoError;
     }
-    public getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GcData): ClientErrorCode {
+    public getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GameConfig): ClientErrorCode {
         try {
             this.init(
                 data,
@@ -88,7 +88,7 @@ export class TwWar extends BwWar implements ITwWar {
 
         return ClientErrorCode.NoError;
     }
-    public async getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GcData): Promise<ClientErrorCode> {
+    public async getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfig): Promise<ClientErrorCode> {
         return await this.initByMapRawData(mapRawData, gameConfig).catch(e => {
             const error = e as CustomError;
             return error?.errorCode ?? ClientErrorCode.TwWar_GetErrorCodeForInitByMapRawData_00;
@@ -114,7 +114,7 @@ export class TwWar extends BwWar implements ITwWar {
     }
 }
 
-async function _createDataForCreateTwWar(mapRawData: MapRawData, gameConfig: GcData): Promise<SerialWar> {
+async function _createDataForCreateTwWar(mapRawData: MapRawData, gameConfig: GameConfig): Promise<SerialWar> {
     const dataForPlayerManager  = await _createInitialPlayerManagerDataForTw(mapRawData, gameConfig);
     const fieldData             = await _createInitialFieldData(mapRawData);
     const seedRandomState       = new Generator("" + Math.random(), { state: true }).state();
@@ -158,7 +158,7 @@ function _createInitialTurnData(): SerialTurnManager {
     });
 }
 
-async function _createInitialPlayerManagerDataForTw(mapRawData: MapRawData, gameConfig: GcData): Promise<SerialPlayerManager> {
+async function _createInitialPlayerManagerDataForTw(mapRawData: MapRawData, gameConfig: GameConfig): Promise<SerialPlayerManager> {
     const playersCountUnneutral = mapRawData.getPlayersCountUnneutral();
     if ((playersCountUnneutral == null) || (playersCountUnneutral < 2)) {
         throw newError(`Invalid playersCountUnneutral: ${playersCountUnneutral}`, ClientErrorCode.TwWar_CreateInitialPlayerManagerDataForTw_00);

@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText, getText, getComparatorName } from "../../../lang/Utils.ts";
 import type { IPlayer } from "../../../players/IPlayer.ts";
@@ -82,7 +82,7 @@ export function getDetailedDesc(data: Undefinable<WecUnitPresence>): string | nu
         con == null ? UndefinedError : (con.getValue() ?? UndefinedError)
     );
 }
-export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GcData): string | null {
+export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GameConfig): string | null {
     {
         const filter = data.getConTileFilter();
         if ((filter != null)                                                                            &&
@@ -130,7 +130,7 @@ export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number
     return null;
 }
 
-export function checkIsValid(data: Undefinable<WecUnitPresence>, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GcData): boolean {
+export function checkIsValid(data: Undefinable<WecUnitPresence>, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GameConfig): boolean {
     return (data != null) && (getErrorTip(data, playersCountUnneutral, mapSize, gameConfig) == null);
 }
 

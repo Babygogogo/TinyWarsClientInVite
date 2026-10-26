@@ -1,5 +1,5 @@
 import { showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestConfigVersion, getPreviousConfigVersion, getNextConfigVersion, getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -154,7 +154,7 @@ export class Panel extends UiPanel<OpenData> {
 }
 
 interface DataForSpmUserRenderer extends UiListItemData {
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     index       : number;
     rank        : number;
     userId      : number;

@@ -11,7 +11,7 @@ import {
 } from "../model/CommonModel.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
 import { createLazyFunc, getExisted, newError } from "../../helpers/Misc.ts";
@@ -57,7 +57,7 @@ export class CommonMapView extends UiContainerBase {
 
     public showMapByMapData({ mapRawData, gameConfig, overridingPlayers }: {
         mapRawData          : MapRawData;
-        gameConfig          : GcData;
+        gameConfig          : GameConfig;
         overridingPlayers   : Undefinable<SerialPlayer[]>;
     }): void {
         this.setUnscaledManualWidth(getGridWidth()  * getExisted(mapRawData.getMapWidth()));
@@ -189,7 +189,7 @@ class TileMapView extends UiContainer {
         }
     }
 
-    public showTileMap(gameConfig: GcData, dataList: SerialTile[], players?: Undefinable<SerialPlayer[]>): void {
+    public showTileMap(gameConfig: GameConfig, dataList: SerialTile[], players?: Undefinable<SerialPlayer[]>): void {
         this._baseLayer.updateWithTileDataList(gameConfig, dataList, players);
         this._decorationLayer.updateWithTileDataList(gameConfig, dataList, players);
         this._objectLayer.updateWithTileDataList(gameConfig, dataList, players);
@@ -344,11 +344,11 @@ class TileMapView extends UiContainer {
 }
 
 abstract class TileLayerBase extends UiContainer {
-    private _gameConfig             : GcData | null = null;
+    private _gameConfig             : GameConfig | null = null;
     private readonly _tileDataMap   : WarMapTileViewData[][] = [];
     private readonly _imageMap      : IUiImage[][] = [];
 
-    public updateWithTileDataList(gameConfig: GcData, tileDataArray: SerialTile[], players?: Undefinable<SerialPlayer[]>): void {
+    public updateWithTileDataList(gameConfig: GameConfig, tileDataArray: SerialTile[], players?: Undefinable<SerialPlayer[]>): void {
         const mapSize       = MapSize.createWithTileArray(tileDataArray);
         this._gameConfig    = gameConfig;
         this._resetTileDataMap(mapSize, tileDataArray, players);
@@ -440,12 +440,12 @@ abstract class TileLayerBase extends UiContainer {
         }
     }
 
-    protected abstract _getImageSource(gameConfig: GcData, tileData: WarMapTileViewData, tickCount: number): string;
+    protected abstract _getImageSource(gameConfig: GameConfig, tileData: WarMapTileViewData, tickCount: number): string;
     protected abstract _getImageY(gridY: number): number;
 }
 
 class TileBaseLayer extends TileLayerBase {
-    protected _getImageSource(gameConfig: GcData, tileData: SerialTile, tickCount: number): string {
+    protected _getImageSource(gameConfig: GameConfig, tileData: SerialTile, tickCount: number): string {
         return tileData == null
             ? ``
             : getCachedTileBaseImageSource({
@@ -465,7 +465,7 @@ class TileBaseLayer extends TileLayerBase {
 }
 
 class TileDecorationLayer extends TileLayerBase {
-    protected _getImageSource(gameConfig: GcData, tileData: SerialTile, tickCount: number): string {
+    protected _getImageSource(gameConfig: GameConfig, tileData: SerialTile, tickCount: number): string {
         return tileData == null
             ? ``
             : getCachedTileDecorationImageSource({
@@ -485,7 +485,7 @@ class TileDecorationLayer extends TileLayerBase {
 }
 
 class TileObjectLayer extends TileLayerBase {
-    protected _getImageSource(gameConfig: GcData, tileData: WarMapTileViewData, tickCount: number): string {
+    protected _getImageSource(gameConfig: GameConfig, tileData: WarMapTileViewData, tickCount: number): string {
         return tileData == null
             ? ``
             : getCachedTileObjectImageSource({
@@ -531,7 +531,7 @@ class WarMapUnitMapView extends UiContainer {
     public showUnitMap({ unitDataArray, players, gameConfig }: {
         unitDataArray   : SerialUnit[];
         players         : Undefinable<SerialPlayer[]>;
-        gameConfig      : GcData;
+        gameConfig      : GameConfig;
     }): void {
         this._initWithDataList(_createUnitViewDataList({ unitDataArray, players, gameConfig }));
     }
@@ -609,7 +609,7 @@ class WarMapUnitMapView extends UiContainer {
 function _createUnitViewDataList({ unitDataArray, players, gameConfig }: {
     unitDataArray   : SerialUnit[];
     players         : Undefinable<SerialPlayer[]>;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
 }): UiUnitViewData[] {
     const dataArray: UiUnitViewData[] = [];
     if (unitDataArray) {

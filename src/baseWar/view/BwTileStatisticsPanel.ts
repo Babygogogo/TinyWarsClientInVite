@@ -1,8 +1,8 @@
-import type { IBwWar } from "../interface/IBwWar.ts";
-import { GcData } from "../../gameConfigs/GcData.ts";
+import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
+import { getTileObjectCfg } from "../../tileObjects/Utils.ts";
 import type { ITile } from "../../tiles/ITile.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -15,6 +15,7 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 import { checkAndAddAutoSizerInfo } from "../../ui/utils/UiSizerHelpers.ts";
 import { getAllTilesVisibleToTeams } from "../../visibilities/Utils.ts";
+import type { IBwWar } from "../interface/IBwWar.ts";
 
 export interface OpenData {
     war             : IBwWar;
@@ -41,10 +42,10 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
+            { type : TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
+            { ui : this._btnClose,           callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -137,18 +138,18 @@ export class Panel extends UiPanel<OpenData> {
                 continue;
             }
 
-            const tileObjectCfg = GcData.getTileObjectCfg(tileObjectType);
+            const tileObjectCfg = getTileObjectCfg(tileObjectType);
             if ((tileObjectCfg == null) || (tileObjectCfg.isNeutralOnly)) {
                 continue;
             }
 
             dataArray.push({
-                index                   : index++,
-                gameConfig              : gameConfig,
-                tileObjectType          : tileObjectType,
-                playersCountUnneutral   : playersCountUnneutral,
-                total                   : allTiles.filter(v => v.getTileTypeId() === tileType).length,
-                countArray              : allTilesForPlayers.map(v => v.filter(t => t.getTileTypeId() === tileType).length),
+                index                 : index++,
+                gameConfig            : gameConfig,
+                tileObjectType        : tileObjectType,
+                playersCountUnneutral : playersCountUnneutral,
+                total                 : allTiles.filter(v => v.getTileTypeId() === tileType).length,
+                countArray            : allTilesForPlayers.map(v => v.filter(t => t.getTileTypeId() === tileType).length),
             });
         }
 
@@ -158,7 +159,7 @@ export class Panel extends UiPanel<OpenData> {
 
 interface DataForTileRenderer extends UiListItemData {
     index                   : number;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     tileObjectType          : number;
     playersCountUnneutral   : number;
     total                   : number;
@@ -185,7 +186,7 @@ class UnitRenderer extends UiListItemRenderer<DataForTileRenderer> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.TileAnimationTick,       callback: this._onNotifyTileAnimationTick },
+            { type : TypeId.TileAnimationTick,       callback : this._onNotifyTileAnimationTick },
         ]);
 
         const conTileView   = this._conTileView;
@@ -217,34 +218,34 @@ class UnitRenderer extends UiListItemRenderer<DataForTileRenderer> {
         {
             const tileView = this._tileView;
             tileView.init({
-                tileBaseType            : null,
-                tileBaseShapeId         : null,
-                tileDecorationType      : null,
-                tileDecorationShapeId   : null,
-                tileObjectType          : openData.tileObjectType,
-                tileObjectShapeId       : 0,
-                skinId                  : PlayerIndex.Neutral,
-                overridingSkinId        : undefined,
-                gameConfig              : gameConfig,
+                tileBaseType          : null,
+                tileBaseShapeId       : null,
+                tileDecorationType    : null,
+                tileDecorationShapeId : null,
+                tileObjectType        : openData.tileObjectType,
+                tileObjectShapeId     : 0,
+                skinId                : PlayerIndex.Neutral,
+                overridingSkinId      : undefined,
+                gameConfig            : gameConfig,
             });
             tileView.updateView();
         }
 
         {
-           const playersCountUnneutral  = openData.playersCountUnneutral;
-           const countArray             = openData.countArray;
-           this._labelTotal.setText(`${openData.total}`);
-           this._labelP0.setText(`${countArray[0]}`);
-           this._labelP1.setText(`${countArray[1]}`);
-           this._labelP2.setText(`${countArray[2]}`);
-           this._labelP3.setText(playersCountUnneutral >= 3 ? `${countArray[3]}` : ``);
-           this._labelP4.setText(playersCountUnneutral >= 4 ? `${countArray[4]}` : ``);
-           this._labelP5.setText(playersCountUnneutral >= 5 ? `${countArray[5]}` : ``);
-           this._labelP6.setText(playersCountUnneutral >= 6 ? `${countArray[6]}` : ``);
-           this._labelP7.setText(playersCountUnneutral >= 7 ? `${countArray[7]}` : ``);
-           this._labelP8.setText(playersCountUnneutral >= 8 ? `${countArray[8]}` : ``);
+            const playersCountUnneutral  = openData.playersCountUnneutral;
+            const countArray             = openData.countArray;
+            this._labelTotal.setText(`${openData.total}`);
+            this._labelP0.setText(`${countArray[0]}`);
+            this._labelP1.setText(`${countArray[1]}`);
+            this._labelP2.setText(`${countArray[2]}`);
+            this._labelP3.setText(playersCountUnneutral >= 3 ? `${countArray[3]}` : ``);
+            this._labelP4.setText(playersCountUnneutral >= 4 ? `${countArray[4]}` : ``);
+            this._labelP5.setText(playersCountUnneutral >= 5 ? `${countArray[5]}` : ``);
+            this._labelP6.setText(playersCountUnneutral >= 6 ? `${countArray[6]}` : ``);
+            this._labelP7.setText(playersCountUnneutral >= 7 ? `${countArray[7]}` : ``);
+            this._labelP8.setText(playersCountUnneutral >= 8 ? `${countArray[8]}` : ``);
 
-           checkAndAddAutoSizerInfo(this._groupValue, false);
+            checkAndAddAutoSizerInfo(this._groupValue, false);
         }
     }
 }

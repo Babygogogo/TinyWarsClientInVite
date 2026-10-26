@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
@@ -29,11 +29,11 @@ import {
 import { createNewUnitDataForChangeType } from "../../../units/utils/Serialization.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 
-export function checkIsValid(data: Undefinable<WeaSetUnitTypeSimple>, gameConfig: GcData, mapSize: MapSize, playersCountUnneutral: number): boolean {
+export function checkIsValid(data: Undefinable<WeaSetUnitTypeSimple>, gameConfig: GameConfig, mapSize: MapSize, playersCountUnneutral: number): boolean {
     return (data != null) && (getErrorTip(data, mapSize, playersCountUnneutral, gameConfig) == null);
 }
 
-export function getBriefDesc(data: Undefinable<WeaSetUnitTypeSimple>, gameConfig: GcData): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetUnitTypeSimple>, gameConfig: GameConfig): string | null {
     if (!data) {
         return null;
     }
@@ -44,7 +44,7 @@ export function getBriefDesc(data: Undefinable<WeaSetUnitTypeSimple>, gameConfig
         unitType == null ? UndefinedError : getUnitName(unitType, gameConfig)
     );
 }
-export function getDetailDesc(data: Undefinable<WeaSetUnitTypeSimple>, gameConfig: GcData): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetUnitTypeSimple>, gameConfig: GameConfig): string | null {
     if (!data) {
         return null;
     }
@@ -81,7 +81,7 @@ export function getDetailDesc(data: Undefinable<WeaSetUnitTypeSimple>, gameConfi
     );
 }
 
-export function getErrorTip(data: WeaSetUnitTypeSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaSetUnitTypeSimple, mapSize: MapSize, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     {
         const filter = data.getConUnitFilter();
         if ((filter != null)                                                                            &&

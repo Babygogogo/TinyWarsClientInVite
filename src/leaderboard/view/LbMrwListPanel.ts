@@ -1,6 +1,6 @@
 import { getMrwRankList } from "../../common/model/CommonModel.ts";
 import { reqGetRankList } from "../../common/model/CommonProxy.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -204,7 +204,7 @@ export class Panel extends UiPanel<OpenData> {
 }
 
 interface DataForMrwUserRenderer extends UiListItemData {
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     rank            : number;
     userId          : number;
     playersCount    : number;

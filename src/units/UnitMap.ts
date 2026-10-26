@@ -2,7 +2,7 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { getUnitMapViewClass, getUnitClass } from "../gameHelpers/GhFactory.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
 import { newError, getExisted } from "../helpers/Misc.ts";
@@ -28,7 +28,7 @@ export class UnitMap implements IUnitMap {
 
     public init({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialUnitMap>;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         mapSize                 : MapSize;
         playersCountUnneutral   : number;
     }): void {
@@ -129,7 +129,7 @@ export class UnitMap implements IUnitMap {
     }
     public fastInit({ data, gameConfig, mapSize, playersCountUnneutral }: {
         data                    : Undefinable<SerialUnitMap>;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         mapSize                 : MapSize;
         playersCountUnneutral   : number;
     }): void {

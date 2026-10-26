@@ -1,6 +1,6 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import type { IPlayer } from "./IPlayer.ts";
 import type { SerialPlayerManager } from "../proto/schema/CommonProto/WarSerialization/SerialPlayerManager.ts";
 import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
@@ -8,8 +8,8 @@ import type { SerialWar } from "../proto/schema/CommonProto/WarSerialization/Ser
 export interface IPlayerManager {
     getWatcherTeamIndexesForSelf(): Set<number>;
 
-    init(data: Undefinable<SerialPlayerManager>, gameConfig: GcData): void;
-    fastInit(data: SerialPlayerManager, gameConfig: GcData): void;
+    init(data: Undefinable<SerialPlayerManager>, gameConfig: GameConfig): void;
+    fastInit(data: SerialPlayerManager, gameConfig: GameConfig): void;
     initWatcherTeamIndexesForHrw(warData: SerialWar): void;
 
     startRunning(war: IBwWar): void;

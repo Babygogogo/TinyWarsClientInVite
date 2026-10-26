@@ -1,7 +1,7 @@
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import {
     getUnitClass,
     getHrwWarClass,
@@ -309,7 +309,7 @@ function compareDistanceList(list1: number[], list2: number[]): number {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getDesc(war: IBwWar, action: WoPlayerProduceUnit, gcData: GcData): Promise<string | null> {
+async function getDesc(war: IBwWar, action: WoPlayerProduceUnit, gcData: GameConfig): Promise<string | null> {
     _hrwWarClass    ??= getHrwWarClass();
     _meWarClass     ??= getMeWarClass();
     _mpwWarClass    ??= getMpwWarClass();

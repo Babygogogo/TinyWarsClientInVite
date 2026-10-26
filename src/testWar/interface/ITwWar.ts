@@ -2,7 +2,7 @@ import type { IBwCommonSettingManager } from "../../baseWar/interface/IBwCommonS
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
 import type { IBwWarStatisticsManager } from "../../baseWar/interface/IBwWarStatisticsManager.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { IPlayerManager } from "../../players/IPlayerManager.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
@@ -20,12 +20,12 @@ export interface ITwWar extends IBwWar {
     getIsExecuteActionsWithExtraData(): boolean;
     updateTilesAndUnitsOnVisibilityChanged(): void;
 
-    init(data: SerialWar, gameConfig: GcData, warType?: WarTypeId): void;
-    initByMapRawData(mapRawData: MapRawData, gameConfig: GcData): Promise<void>;
+    init(data: SerialWar, gameConfig: GameConfig, warType?: WarTypeId): void;
+    initByMapRawData(mapRawData: MapRawData, gameConfig: GameConfig): Promise<void>;
 
-    getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GcData): ClientErrorCode;
-    getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GcData): ClientErrorCode;
-    getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GcData): Promise<ClientErrorCode>;
+    getErrorCodeForInitForSfw(data: SerialWar, gameConfig: GameConfig): ClientErrorCode;
+    getErrorCodeForInitForMfw(data: SerialWar, gameConfig: GameConfig): ClientErrorCode;
+    getErrorCodeForInitByMapRawData(mapRawData: MapRawData, gameConfig: GameConfig): Promise<ClientErrorCode>;
 
     getNormalMapId(): number | null;
 

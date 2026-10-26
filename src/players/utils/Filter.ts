@@ -1,5 +1,5 @@
 import { checkIsValidSkillTypeIdSubset } from "../../coSkills/utils/Common.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText, getPlayerTeamName, getPlayerAliveStateName, getCoSkillTypeName, getFormattedText } from "../../lang/Utils.ts";
@@ -20,7 +20,7 @@ import {
 
 type PlayerFilterSchema                 = PlayerFilter;
 
-export function checkIsValid(data: PlayerFilterSchema, playersCountUnneutral: number, gameConfig: GcData): boolean {
+export function checkIsValid(data: PlayerFilterSchema, playersCountUnneutral: number, gameConfig: GameConfig): boolean {
     return getErrorTip(data, playersCountUnneutral, gameConfig) == null;
 }
 
@@ -103,7 +103,7 @@ export function checkIsEmpty(data: PlayerFilterSchema): boolean {
         && (data.getConCoEnergy() == null);
 }
 
-export function getDesc(data: PlayerFilterSchema, gameConfig: GcData): string {
+export function getDesc(data: PlayerFilterSchema, gameConfig: GameConfig): string {
     const conPlayerIndex        = data.getConPlayerIndex();
     const textForConPlayerIndex = conPlayerIndex == null
         ? null
@@ -189,7 +189,7 @@ export function getDescForEmbed(data: PlayerFilterSchema): string | null {
         );
 }
 
-export function getErrorTip(data: PlayerFilterSchema, playersCountUnneutral: number, gameConfig: GcData): string | null {
+export function getErrorTip(data: PlayerFilterSchema, playersCountUnneutral: number, gameConfig: GameConfig): string | null {
     {
         const con = data.getConPlayerIndex();
         if (con != null) {

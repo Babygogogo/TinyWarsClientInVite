@@ -5,7 +5,7 @@ import type { IBwGridVisualEffect } from "../baseWar/interface/IBwGridVisualEffe
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { IFieldView } from "./IFieldView.ts";
 import type { IFogMap } from "../fogMaps/IFogMap.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import type { SerialField } from "../proto/schema/CommonProto/WarSerialization/SerialField.ts";
 import type { ITileMap } from "../tiles/ITileMap.ts";
 import type { IUnitMap } from "../units/IUnitMap.ts";
@@ -20,12 +20,12 @@ export interface IField {
 
     init({ data, gameConfig, playersCountUnneutral }: {
         data                    : Undefinable<SerialField>;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         playersCountUnneutral   : number;
     }): void;
     fastInit({ data, gameConfig, playersCountUnneutral }: {
         data                    : SerialField;
-        gameConfig              : GcData;
+        gameConfig              : GameConfig;
         playersCountUnneutral   : number;
     }): void;
 

@@ -1,13 +1,13 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getWeatherName, getFormattedText, getText } from "../../../lang/Utils.ts";
 import type { WeaSetWeatherSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherSimple.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
-export function checkIsValid(action: Undefinable<WeaSetWeatherSimple>, gameConfig: GcData): boolean {
+export function checkIsValid(action: Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfig): boolean {
     if (action == null) {
         return false;
     }
@@ -18,7 +18,7 @@ export function checkIsValid(action: Undefinable<WeaSetWeatherSimple>, gameConfi
         && (action.getWeatherTurnsCount() != null);
 }
 
-export function getBriefDesc(data: Undefinable<WeaSetWeatherSimple>, gameConfig: GcData): string | null {
+export function getBriefDesc(data: Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfig): string | null {
     if (data == null) {
         return null;
     }
@@ -29,11 +29,11 @@ export function getBriefDesc(data: Undefinable<WeaSetWeatherSimple>, gameConfig:
         ? getFormattedText(TextType.F0077, weatherName)
         : getFormattedText(TextType.F0076, weatherName, weatherTurnsCount);
 }
-export function getDetailDesc(data: Undefinable<WeaSetWeatherSimple>, gameConfig: GcData): string | null {
+export function getDetailDesc(data: Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
 }
 
-export function getErrorTip(data: WeaSetWeatherSimple, gameConfig: GcData): string | null {
+export function getErrorTip(data: WeaSetWeatherSimple, gameConfig: GameConfig): string | null {
     const weatherType = data.getWeatherType();
     if ((weatherType == null) || (!gameConfig.checkIsValidWeatherType(weatherType))) {
         return getText(TextType.A0252);

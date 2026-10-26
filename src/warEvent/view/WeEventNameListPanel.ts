@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { show, showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, getRunningPanel } from "../../gamePanels/Manager.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
@@ -27,7 +27,7 @@ import { checkAndDeleteUnusedComponents } from "../../warEvents/fullDatas/Utils.
 
 export interface OpenData {
     war                     : IMeWar;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     templateWarRuleArray    : TemplateWarRule[];
     fullData                : WarEventFullData;
     selectedEventId         : Undefinable<number>;
@@ -161,7 +161,7 @@ export class Panel extends UiPanel<OpenData> {
 
 interface DataForEventRenderer extends UiListItemData {
     war                     : IMeWar;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     templateWarRuleArray    : TemplateWarRule[];
     selectedEventId         : Undefinable<number>;
     eventId                 : number;

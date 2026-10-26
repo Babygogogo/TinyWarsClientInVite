@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getText, getBgmSfxName } from "../../../lang/Utils.ts";
@@ -9,7 +9,7 @@ import { playCoBgmWithWar, playBgm } from "../../../sounds/SoundPlayer.ts";
 import { checkIsBgm } from "../../../sounds/Utils.ts";
 import { getSelfSettingsCoBgmCodeArray } from "../../../users/Model.ts";
 
-export function checkIsValid(action: Undefinable<WeaPlayBgm>, gameConfig: GcData): boolean {
+export function checkIsValid(action: Undefinable<WeaPlayBgm>, gameConfig: GameConfig): boolean {
     if (action == null) {
         return false;
     }
@@ -22,7 +22,7 @@ export function checkIsValid(action: Undefinable<WeaPlayBgm>, gameConfig: GcData
     return (bgmCode != null) && (checkIsBgm(bgmCode));
 }
 
-export function getBriefDesc(data: Undefinable<WeaPlayBgm>, gameConfig: GcData): string | null {
+export function getBriefDesc(data: Undefinable<WeaPlayBgm>, gameConfig: GameConfig): string | null {
     if (data == null) {
         return null;
     }
@@ -34,7 +34,7 @@ export function getBriefDesc(data: Undefinable<WeaPlayBgm>, gameConfig: GcData):
         return `${getText(TextType.B0750)}: ${(bgmCode == null ? null : getBgmSfxName(bgmCode, gameConfig)) ?? UndefinedError}`;
     }
 }
-export function getDetailDesc(data: Undefinable<WeaPlayBgm>, gameConfig: GcData): string | null {
+export function getDetailDesc(data: Undefinable<WeaPlayBgm>, gameConfig: GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
 }
 

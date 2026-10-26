@@ -1,4 +1,3 @@
-import { GcData } from "../../../gameConfigs/GcData.ts";
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { Tile } from "../../../expressionParsers/contexts/Tile.ts";
@@ -7,11 +6,12 @@ import { Num } from "../../../expressionParsers/results/Num.ts";
 import { NumArray } from "../../../expressionParsers/results/NumArray.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getFormattedText } from "../../../lang/Utils.ts";
-import { MinId, MaxId } from "../../../locations/Constants.ts";
+import { MaxId, MinId } from "../../../locations/Constants.ts";
 import { encode } from "../../../locations/Utils.ts";
 import { getValueInInt32 } from "../../../numbers/Utils.ts";
 import type { WeaSetTileStateExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetTileStateExpr.ts";
 import type { SerialTile } from "../../../proto/schema/CommonProto/WarSerialization/SerialTile.ts";
+import { checkIsValidPlayerIndexForTileObject } from "../../../tileObjects/Utils.ts";
 import type { ITile } from "../../../tiles/ITile.ts";
 import { checkIsValidCustomNameId } from "../../../tiles/utils/Common.ts";
 import { create } from "../../../tiles/utils/Serialization.ts";
@@ -24,9 +24,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileStateExpr>, customCou
 
     {
         if (!Parser.checkIsValidString2({
-            str                     : action.getConTileFilter(),
-            expressionInfo          : ExpressionInfoDict.ConTileFilter,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getConTileFilter(),
+            expressionInfo       : ExpressionInfoDict.ConTileFilter,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -34,9 +34,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileStateExpr>, customCou
 
     {
         if (!Parser.checkIsValidString2({
-            str                     : action.getActPlayerIndex(),
-            expressionInfo          : ExpressionInfoDict.ActPlayerIndex,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActPlayerIndex(),
+            expressionInfo       : ExpressionInfoDict.ActPlayerIndex,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -44,9 +44,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileStateExpr>, customCou
 
     {
         if (!Parser.checkIsValidString2({
-            str                     : action.getActCurrentHp(),
-            expressionInfo          : ExpressionInfoDict.ActCurrentHp,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCurrentHp(),
+            expressionInfo       : ExpressionInfoDict.ActCurrentHp,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -54,9 +54,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileStateExpr>, customCou
 
     {
         if (!Parser.checkIsValidString2({
-            str                     : action.getActCurrentBuildPoint(),
-            expressionInfo          : ExpressionInfoDict.ActCurrentBuildPoint,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCurrentBuildPoint(),
+            expressionInfo       : ExpressionInfoDict.ActCurrentBuildPoint,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -64,9 +64,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileStateExpr>, customCou
 
     {
         if (!Parser.checkIsValidString2({
-            str                     : action.getActCurrentCapturePoint(),
-            expressionInfo          : ExpressionInfoDict.ActCurrentCapturePoint,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCurrentCapturePoint(),
+            expressionInfo       : ExpressionInfoDict.ActCurrentCapturePoint,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -74,9 +74,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileStateExpr>, customCou
 
     {
         if (!Parser.checkIsValidString2({
-            str                     : action.getActIsHighlighted(),
-            expressionInfo          : ExpressionInfoDict.ActIsHighlighted,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActIsHighlighted(),
+            expressionInfo       : ExpressionInfoDict.ActIsHighlighted,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -84,9 +84,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileStateExpr>, customCou
 
     {
         if (!Parser.checkIsValidString2({
-            str                     : action.getActGroupedLocationIdArray(),
-            expressionInfo          : ExpressionInfoDict.ActGroupedLocationIdArray,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActGroupedLocationIdArray(),
+            expressionInfo       : ExpressionInfoDict.ActGroupedLocationIdArray,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -94,9 +94,9 @@ export function checkIsValid(action: Undefinable<WeaSetTileStateExpr>, customCou
 
     {
         if (!Parser.checkIsValidString2({
-            str                     : action.getActCustomNameId(),
-            expressionInfo          : ExpressionInfoDict.ActCustomNameId,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : action.getActCustomNameId(),
+            expressionInfo       : ExpressionInfoDict.ActCustomNameId,
+            customCounterNameSet : customCounterNameSet,
         })) {
             return false;
         }
@@ -133,9 +133,9 @@ export function getErrorTip(data: WeaSetTileStateExpr, customCounterNameSet: Set
     {
         const info      = ExpressionInfoDict.ConTileFilter;
         const errorData = Parser.getErrorDataForString2({
-            str                     : data.getConTileFilter(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getConTileFilter(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -145,9 +145,9 @@ export function getErrorTip(data: WeaSetTileStateExpr, customCounterNameSet: Set
     {
         const info      = ExpressionInfoDict.ActPlayerIndex;
         const errorData = Parser.getErrorDataForString2({
-            str                     : data.getActPlayerIndex(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActPlayerIndex(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -157,9 +157,9 @@ export function getErrorTip(data: WeaSetTileStateExpr, customCounterNameSet: Set
     {
         const info      = ExpressionInfoDict.ActCurrentHp;
         const errorData = Parser.getErrorDataForString2({
-            str                     : data.getActCurrentHp(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCurrentHp(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -169,9 +169,9 @@ export function getErrorTip(data: WeaSetTileStateExpr, customCounterNameSet: Set
     {
         const info      = ExpressionInfoDict.ActCurrentBuildPoint;
         const errorData = Parser.getErrorDataForString2({
-            str                     : data.getActCurrentBuildPoint(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCurrentBuildPoint(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -181,9 +181,9 @@ export function getErrorTip(data: WeaSetTileStateExpr, customCounterNameSet: Set
     {
         const info      = ExpressionInfoDict.ActCurrentCapturePoint;
         const errorData = Parser.getErrorDataForString2({
-            str                     : data.getActCurrentCapturePoint(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCurrentCapturePoint(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -193,9 +193,9 @@ export function getErrorTip(data: WeaSetTileStateExpr, customCounterNameSet: Set
     {
         const info      = ExpressionInfoDict.ActIsHighlighted;
         const errorData = Parser.getErrorDataForString2({
-            str                     : data.getActIsHighlighted(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActIsHighlighted(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -205,9 +205,9 @@ export function getErrorTip(data: WeaSetTileStateExpr, customCounterNameSet: Set
     {
         const info      = ExpressionInfoDict.ActGroupedLocationIdArray;
         const errorData = Parser.getErrorDataForString2({
-            str                     : data.getActGroupedLocationIdArray(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActGroupedLocationIdArray(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -217,9 +217,9 @@ export function getErrorTip(data: WeaSetTileStateExpr, customCounterNameSet: Set
     {
         const info      = ExpressionInfoDict.ActCustomNameId;
         const errorData = Parser.getErrorDataForString2({
-            str                     : data.getActCustomNameId(),
-            expressionInfo          : info,
-            customCounterNameSet    : customCounterNameSet,
+            str                  : data.getActCustomNameId(),
+            expressionInfo       : info,
+            customCounterNameSet : customCounterNameSet,
         });
         if (errorData.errorCode) {
             return `${getFormattedText(TextType.F0091, info.getTitleText())} ${errorData.errorText}`;
@@ -233,7 +233,7 @@ function checkIsMeetConditionForTile(action: WeaSetTileStateExpr, tile: ITile): 
     try {
         const result = Parser.getParseResult(action.getConTileFilter() ?? ``).eval(new Tile(tile), false);
         return (result instanceof Num) && (result.num !== 0);
-    } catch (Exception) {
+    } catch {
         return false;
     }
 }
@@ -248,13 +248,13 @@ function evalActPlayerIndex(action: WeaSetTileStateExpr, tile: ITile): number {
         const epResult = Parser.getParseResult(act).eval(new Tile(tile), false);
         if (epResult instanceof Num) {
             const newValue = Math.floor(epResult.num);
-            return (tile.getWar().getPlayerManager().checkHasPlayer(newValue)) && (GcData.checkIsValidPlayerIndexForTileObject({ playerIndex: newValue, tileObjectType: tile.getObjectType() }))
+            return (tile.getWar().getPlayerManager().checkHasPlayer(newValue)) && (checkIsValidPlayerIndexForTileObject({ playerIndex : newValue, tileObjectType : tile.getObjectType() }))
                 ? newValue
                 : defaultValue;
         } else {
             return defaultValue;
         }
-    } catch (Exception) {
+    } catch {
         return defaultValue;
     }
 }
@@ -415,27 +415,27 @@ function createNewTileData(action: WeaSetTileStateExpr, tile: ITile): SerialTile
     const customNameId              = evalActCustomNameId(action, tile);
 
     return create({
-        baseType                : tile.getBaseType(),
-        baseShapeId             : tile.getBaseShapeId(),
-        objectType              : tile.getObjectType(),
-        objectShapeId           : tile.getObjectShapeId(),
-        decorationType          : tile.getDecorationType(),
-        decorationShapeId       : tile.getDecorationShapeId(),
-        gridIndex               : tile.getGridIndex().toProto().toJson(),
-        unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
+        baseType          : tile.getBaseType(),
+        baseShapeId       : tile.getBaseShapeId(),
+        objectType        : tile.getObjectType(),
+        objectShapeId     : tile.getObjectShapeId(),
+        decorationType    : tile.getDecorationType(),
+        decorationShapeId : tile.getDecorationShapeId(),
+        gridIndex         : tile.getGridIndex().toProto().toJson(),
+        unfixedBuffArray  : tile.getUnfixedBuffList().map(v => v.toJson()),
 
-        customBuildingData      : tile.getCustomBuildingData()?.toJson() ?? null,
-        customCannonData        : tile.getCustomCannonData()?.toJson() ?? null,
-        customCrystalData       : tile.getCustomCrystalData()?.toJson() ?? null,
-        customLaserTurretData   : tile.getCustomLaserTurretData()?.toJson() ?? null,
+        customBuildingData    : tile.getCustomBuildingData()?.toJson() ?? null,
+        customCannonData      : tile.getCustomCannonData()?.toJson() ?? null,
+        customCrystalData     : tile.getCustomCrystalData()?.toJson() ?? null,
+        customLaserTurretData : tile.getCustomLaserTurretData()?.toJson() ?? null,
 
-        playerIndex             : playerIndex,
-        currentHp               : currentHp,
-        currentBuildPoint       : currentBuildPoint,
-        currentCapturePoint     : currentCapturePoint,
-        isHighlighted           : isHighlighted,
-        groupedLocationIdArray  : groupedLocationIdArray,
-        customNameId            : customNameId ?? null,
+        playerIndex            : playerIndex,
+        currentHp              : currentHp,
+        currentBuildPoint      : currentBuildPoint,
+        currentCapturePoint    : currentCapturePoint,
+        isHighlighted          : isHighlighted,
+        groupedLocationIdArray : groupedLocationIdArray,
+        customNameId           : customNameId ?? null,
     });
 }
 function applyNewTileDataDict(dict: Map<ITile, SerialTile>, war: IBwWar, isFast: boolean): void {

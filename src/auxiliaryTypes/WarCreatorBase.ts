@@ -1,5 +1,5 @@
 import type { Undefinable } from "./AuxiliaryTypes.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
@@ -11,7 +11,7 @@ import { TurnIndex } from "../turns/Constants.ts";
 import { Common } from "../warOperations/Constants.ts";
 
 export class WarCreatorBase {
-    private readonly _gcData            : GcData;
+    private readonly _gcData            : GameConfig;
     private readonly _settingsForCommon : SettingsForCommon;
 
     private readonly _mapRawData        : MapRawData;
@@ -21,7 +21,7 @@ export class WarCreatorBase {
     private _saveSlotIndex              = 0;
     private _saveSlotComment            : Undefinable<string>;
 
-    public constructor(gcData: GcData, mapRawData: MapRawData, saveSlotIndex: number) {
+    public constructor(gcData: GameConfig, mapRawData: MapRawData, saveSlotIndex: number) {
         this._gcData            = gcData;
         this._settingsForCommon = SettingsForCommon.fromJson({
             configVersion       : gcData.getVersion(),
@@ -34,7 +34,7 @@ export class WarCreatorBase {
         this.setSaveSlotIndex(saveSlotIndex);
     }
 
-    public getGcData(): GcData {
+    public getGcData(): GameConfig {
         return this._gcData;
     }
     public getSettingsForCommon(): SettingsForCommon {

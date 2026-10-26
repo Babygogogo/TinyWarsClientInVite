@@ -1,4 +1,4 @@
-import { GcData } from "../../gameConfigs/GcData.ts";
+import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -14,6 +14,7 @@ import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
+import { getAllEnabledTileBaseCfgArray, getTileBaseCfg } from "../../tileBases/Utils.ts";
 import { create } from "../../tiles/utils/Serialization.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -62,15 +63,15 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,                   callback: this.closePanel },
-            { ui: this._btnSwitch,                  callback: this._onTouchedBtnSwitch },
-            { ui: this._btnRandomize,               callback: this._onTouchedBtnRandomize },
-            { ui: this._groupFill,                  callback: this._onTouchedGroupFill },
-            { ui: this._groupRealTimeAdjust,        callback: this._onTouchedGroupRealTimeAdjust },
-            { ui: this._btnHelpRealTimeAdjust,      callback: this._onTouchedBtnHelpRealTimeAdjust },
+            { ui : this._btnClose,                   callback : this.closePanel },
+            { ui : this._btnSwitch,                  callback : this._onTouchedBtnSwitch },
+            { ui : this._btnRandomize,               callback : this._onTouchedBtnRandomize },
+            { ui : this._groupFill,                  callback : this._onTouchedGroupFill },
+            { ui : this._groupRealTimeAdjust,        callback : this._onTouchedGroupRealTimeAdjust },
+            { ui : this._btnHelpRealTimeAdjust,      callback : this._onTouchedBtnHelpRealTimeAdjust },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -163,8 +164,8 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         openPanel(getDict().CommonConfirmPanel, {
-            getContent     : () => getText(TextType.A0657),
-            callback    : () => {
+            getContent : () => getText(TextType.A0657),
+            callback   : () => {
                 const tileMap   = war.getTileMap();
                 const allTiles  = tileMap.getAllTiles();
                 for (const tile of allTiles) {
@@ -245,14 +246,14 @@ export class Panel extends UiPanel<OpenData> {
         const baseType      = this._listType.getFirstSelectedData()?.baseType;
         const dataList      : DataForTileBaseRenderer[] = [];
         if (baseType != null) {
-            const cfg = getExisted(GcData.getTileBaseCfg(baseType));
+            const cfg = getExisted(getTileBaseCfg(baseType));
             for (let shapeId = 0; shapeId < cfg.shapesCount; ++shapeId) {
                 dataList.push({
                     panel               : this,
                     gameConfig          : gameConfig,
                     dataForDrawTileBase : {
-                        baseType    : baseType,
-                        shapeId     : shapeId,
+                        baseType : baseType,
+                        shapeId  : shapeId,
                     },
                 });
             }
@@ -264,11 +265,11 @@ export class Panel extends UiPanel<OpenData> {
     private async _updateListType(selectedType: number | undefined): Promise<void> {
         const gameConfig    = getExisted(getWar()?.getGcData());
         const dataArray     : DataForTypeRenderer[] = [];
-        for (const cfg of GcData.getAllEnabledTileBaseCfgArray()) {
+        for (const cfg of getAllEnabledTileBaseCfgArray()) {
             dataArray.push({
-                baseType        : cfg.tileBaseTypeId,
-                gameConfig      : gameConfig,
-                panel           : this,
+                baseType   : cfg.tileBaseTypeId,
+                gameConfig : gameConfig,
+                panel      : this,
             });
         }
 
@@ -294,7 +295,7 @@ export class Panel extends UiPanel<OpenData> {
 
 interface DataForTypeRenderer extends UiListItemData {
     baseType        : number;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     panel           : Panel;
 }
 class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
@@ -311,9 +312,9 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Executor.removeTweens(this._imgSelected);
@@ -338,7 +339,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
 interface DataForTileBaseRenderer extends UiListItemData {
     dataForDrawTileBase : DataForDrawTileBase;
     panel               : Panel;
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
 }
 class TileBaseRenderer extends UiListItemRenderer<DataForTileBaseRenderer> {
     private readonly _labelShapeId! : IUiLabel;
@@ -348,7 +349,7 @@ class TileBaseRenderer extends UiListItemRenderer<DataForTileBaseRenderer> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.TileAnimationTick,  callback: this._onNotifyTileAnimationTick },
+            { type : TypeId.TileAnimationTick,  callback : this._onNotifyTileAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -375,15 +376,15 @@ class TileBaseRenderer extends UiListItemRenderer<DataForTileBaseRenderer> {
         const tileView              = this._tileView;
         this._labelShapeId.setText(`${shapeId}`);
         tileView.init({
-            tileBaseShapeId         : shapeId,
-            tileBaseType            : dataForDrawTileBase.baseType,
-            tileDecorationType      : null,
-            tileDecorationShapeId   : null,
-            tileObjectShapeId       : null,
-            tileObjectType          : null,
-            skinId                  : PlayerIndex.Neutral,
-            overridingSkinId        : undefined,
-            gameConfig              : openData.gameConfig,
+            tileBaseShapeId       : shapeId,
+            tileBaseType          : dataForDrawTileBase.baseType,
+            tileDecorationType    : null,
+            tileDecorationShapeId : null,
+            tileObjectShapeId     : null,
+            tileObjectType        : null,
+            skinId                : PlayerIndex.Neutral,
+            overridingSkinId      : undefined,
+            gameConfig            : openData.gameConfig,
         });
         tileView.updateView();
     }
@@ -403,7 +404,7 @@ class TileBaseRenderer extends UiListItemRenderer<DataForTileBaseRenderer> {
         } else {
             openPanel(getDict().CommonConfirmPanel, {
                 getContent : () => getText(TextType.A0089),
-                callback: () => {
+                callback   : () => {
                     const war           = getExisted(getWar());
                     const gameConfig    = war.getGcData();
                     const baseType      = dataForDrawTileBase.baseType;
@@ -411,28 +412,28 @@ class TileBaseRenderer extends UiListItemRenderer<DataForTileBaseRenderer> {
 
                     for (const tile of war.getTileMap().getAllTiles()) {
                         const tileData = create({
-                            gridIndex               : tile.getGridIndex().toProto().toJson(),
-                            playerIndex             : PlayerIndex.Neutral,
-                            baseType                : baseType,
-                            baseShapeId             : baseShapeId,
-                            groupedLocationIdArray  : tile.getGroupedLocationIdArray(),
-                            isHighlighted           : tile.getIsHighlighted(),
-                            unfixedBuffArray        : tile.getUnfixedBuffList().map(v => v.toJson()),
-                            customNameId            : tile.getCustomNameId() ?? null,
+                            gridIndex              : tile.getGridIndex().toProto().toJson(),
+                            playerIndex            : PlayerIndex.Neutral,
+                            baseType               : baseType,
+                            baseShapeId            : baseShapeId,
+                            groupedLocationIdArray : tile.getGroupedLocationIdArray(),
+                            isHighlighted          : tile.getIsHighlighted(),
+                            unfixedBuffArray       : tile.getUnfixedBuffList().map(v => v.toJson()),
+                            customNameId           : tile.getCustomNameId() ?? null,
 
-                            objectType              : null,
-                            objectShapeId           : null,
-                            decorationType          : null,
-                            decorationShapeId       : null,
+                            objectType        : null,
+                            objectShapeId     : null,
+                            decorationType    : null,
+                            decorationShapeId : null,
 
-                            currentBuildPoint       : null,
-                            currentCapturePoint     : null,
-                            currentHp               : null,
+                            currentBuildPoint   : null,
+                            currentCapturePoint : null,
+                            currentHp           : null,
 
-                            customBuildingData      : null,
-                            customCannonData        : null,
-                            customCrystalData       : null,
-                            customLaserTurretData   : null,
+                            customBuildingData    : null,
+                            customCannonData      : null,
+                            customCrystalData     : null,
+                            customLaserTurretData : null,
                         });
 
                         tile.init(tileData, gameConfig);
@@ -442,7 +443,7 @@ class TileBaseRenderer extends UiListItemRenderer<DataForTileBaseRenderer> {
 
                     panel.updateOnChooseTileBase(dataForDrawTileBase);
                     panel.closePanel();
-                    dispatch(TypeId.BwTileChanged, { gridIndex: war.getCursor().getGridIndex() } as BwTileChanged);
+                    dispatch(TypeId.BwTileChanged, { gridIndex : war.getCursor().getGridIndex() } as BwTileChanged);
                 },
             });
         }

@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import type { IMeDrawer } from "./IMeDrawer.ts";
 import type { CampaignMapData } from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
@@ -13,11 +13,11 @@ import type { TemplateWarRule } from "../../proto/schema/CommonProto/WarRule/Tem
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 
 export interface IMeWar extends IBwWar {
-    init(data: SerialWar, gameConfig: GcData): void;
+    init(data: SerialWar, gameConfig: GameConfig): void;
     initWithMapRawData({ mapRawData, slotIndex, gameConfig, srcNormalMapIdForAddEvent, gridMarkData }: {
         mapRawData                  : MapRawData;
         slotIndex                   : number;
-        gameConfig                  : GcData;
+        gameConfig                  : GameConfig;
         srcNormalMapIdForAddEvent   : number | null;
         gridMarkData                : Undefinable<GridMarkData>;
     }): Promise<void>;

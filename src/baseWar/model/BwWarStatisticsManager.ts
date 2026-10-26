@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import type { IBwWarStatisticsManager } from "../interface/IBwWarStatisticsManager.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { encodeTeamIndex, decodeTeamIndex } from "../../helpers/Team.ts";
@@ -28,7 +28,7 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         data                    : Undefinable<SerialWarStatisticsManager>;
         playersCountUnneutral   : number;
         currentTurnIndex        : number;
-        gameConfiguration       : GcData;
+        gameConfiguration       : GameConfig;
     }): void {
         this._hasHandledPreDeployedUnits = data?.getHasHandledPreDeployedUnits() ?? false;
         this._initPlayerStatisticsArray(data?.getPlayerStatisticsArray() ?? [], playersCountUnneutral, currentTurnIndex);
@@ -191,7 +191,7 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         }
         return resultArray;
     }
-    private _initUnitStatisticsArray(unitStatisticsArray: WsUnitStatistics[], playersCountUnneutral: number, gameConfiguration: GcData): void {
+    private _initUnitStatisticsArray(unitStatisticsArray: WsUnitStatistics[], playersCountUnneutral: number, gameConfiguration: GameConfig): void {
         const length = unitStatisticsArray.length;
         for (let i = 0; i < length; ++i) {
             const unitStatistics = unitStatisticsArray[i];

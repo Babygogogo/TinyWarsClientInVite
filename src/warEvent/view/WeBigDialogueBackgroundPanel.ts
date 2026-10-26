@@ -1,5 +1,5 @@
 import { Common } from "../../dialogues/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getBigDialogueBackgroundImage } from "../../helpers/ImageSource.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -14,7 +14,7 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 
 export interface OpenData {
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     action      : WeaBigDialogueSimple;
 }
 export class Panel extends UiPanel<OpenData> {

@@ -1,5 +1,5 @@
 import { CategoryId } from "../../cos/Constants.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
@@ -26,7 +26,7 @@ import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
 export interface OpenData {
     selectedCoCategoryIdDict        : Map<number, number[]>;    // playerIndex, coCategoryId[]
     availableCoCategoryIdArray      : number[];
-    gameConfig                      : GcData;
+    gameConfig                      : GameConfig;
     isBan                           : boolean;
 }
 export class Panel extends UiPanel<OpenData> {
@@ -254,7 +254,7 @@ class RendererForCoCategory extends UiContainer {
 
     private _isSelected     = false;
     private _panel          : Panel | null = null;
-    private _gameConfig     : GcData | null = null;
+    private _gameConfig     : GameConfig | null = null;
     private _coCategoryId   : number | null = null;
 
     public constructor(isBan: boolean) {
@@ -286,10 +286,10 @@ class RendererForCoCategory extends UiContainer {
         return this._panel;
     }
 
-    public setGameConfig(config: GcData): void {
+    public setGameConfig(config: GameConfig): void {
         this._gameConfig = config;
     }
-    public getGameConfig(): GcData | null {
+    public getGameConfig(): GameConfig | null {
         return this._gameConfig;
     }
 

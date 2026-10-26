@@ -1,6 +1,6 @@
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
@@ -40,7 +40,7 @@ import { WeaponTypeId, CategoryId } from "../../units/Constants.ts";
 import { createDefault } from "../../units/utils/Serialization.ts";
 
 export interface OpenData {
-    gameConfig   : GcData;
+    gameConfig   : GameConfig;
 }
 export class Panel extends UiPanel<OpenData> {
     private readonly _imgMask!              : IUiImage;
@@ -396,7 +396,7 @@ export class Panel extends UiPanel<OpenData> {
 interface DataForTileRenderer extends UiListItemData {
     tileType        : number;
     panel           : Panel;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
 }
 class TileRenderer extends UiListItemRenderer<DataForTileRenderer> {
     private readonly _conTileView!  : IUiContainer;
@@ -456,7 +456,7 @@ class TileRenderer extends UiListItemRenderer<DataForTileRenderer> {
 }
 
 interface DataForInfoRenderer extends UiListItemData {
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     index           : number;
     infoType        : InfoTypeId;
     tileTemplateCfg : TileTemplateCfg;
@@ -1201,7 +1201,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
 
 interface DataForMoveCostRenderer extends UiListItemData {
     index           : number;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     unitType        : number;
     tileCfg         : TileTemplateCfg;
 }
@@ -1267,7 +1267,7 @@ class MoveCostRenderer extends UiListItemRenderer<DataForMoveCostRenderer> {
 }
 
 interface DataForDamageRenderer extends UiListItemData {
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     index               : number;
     targetTileType      : number;
     playerIndex         : number;
@@ -1341,7 +1341,7 @@ class DamageRenderer extends UiListItemRenderer<DataForDamageRenderer> {
     }
 }
 
-function createInfoDefenseBonus(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoDefenseBonus(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getDefenseUnitCategoryId() === CategoryId.None)
         ? null
         : {
@@ -1351,7 +1351,7 @@ function createInfoDefenseBonus(tileTemplateCfg: TileTemplateCfg, gameConfig: Gc
             gameConfig      : gameConfig,
         };
 }
-function createInfoIncome(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoIncome(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const income = tileTemplateCfg.getIncomePerTurn();
     return income == 0
         ? null
@@ -1362,7 +1362,7 @@ function createInfoIncome(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData):
             gameConfig
         };
 }
-function createInfoVision(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoVision(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return ((!tileTemplateCfg.getVisionRange()) && (!tileTemplateCfg.getIsVisionEnabledForAllPlayers()) && (tileTemplateCfg.getMaxCapturePoint() == null))
         ? null
         : {
@@ -1372,7 +1372,7 @@ function createInfoVision(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData):
             gameConfig,
         };
 }
-function createInfoHideUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoHideUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getHideUnitCategoryId() == null)
         ? null
         :  {
@@ -1382,7 +1382,7 @@ function createInfoHideUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig
             gameConfig      : gameConfig,
         };
 }
-function createInfoIsDefeatOnCapture(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoIsDefeatOnCapture(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return !tileTemplateCfg.getIsDefeatedOnCapture()
         ? null
         : {
@@ -1392,7 +1392,7 @@ function createInfoIsDefeatOnCapture(tileTemplateCfg: TileTemplateCfg, gameConfi
             gameConfig,
         };
 }
-function createInfoProduceUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoProduceUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return !tileTemplateCfg.getProduceUnitCategoryId()
         ? null
         : {
@@ -1402,7 +1402,7 @@ function createInfoProduceUnitCategory(tileTemplateCfg: TileTemplateCfg, gameCon
             gameConfig,
         };
 }
-function createInfoGlobalBonus(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoGlobalBonus(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return ((!tileTemplateCfg.getGlobalAttackBonus()) && (!tileTemplateCfg.getGlobalDefenseBonus()))
         ? null
         : {
@@ -1412,7 +1412,7 @@ function createInfoGlobalBonus(tileTemplateCfg: TileTemplateCfg, gameConfig: GcD
             gameConfig,
         };
 }
-function createInfoRepairUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoRepairUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getRepairUnitCategoryId() == CategoryId.None)
         ? null
         : {
@@ -1422,7 +1422,7 @@ function createInfoRepairUnitCategory(tileTemplateCfg: TileTemplateCfg, gameConf
             gameConfig,
         };
 }
-function createInfoBlockEnemyUnit(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoBlockEnemyUnit(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getBlockEnemyUnitCategoryId() == null)
         ? null
         : {
@@ -1432,7 +1432,7 @@ function createInfoBlockEnemyUnit(tileTemplateCfg: TileTemplateCfg, gameConfig: 
             gameConfig,
         };
 }
-function createInfoCoBoardUnit(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCoBoardUnit(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getCoBoardUnitCategoryId() == null)
         ? null
         : {
@@ -1442,7 +1442,7 @@ function createInfoCoBoardUnit(tileTemplateCfg: TileTemplateCfg, gameConfig: GcD
             gameConfig,
         };
 }
-function createInfoHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMaxHp() == null)
         ? null
         : {
@@ -1452,7 +1452,7 @@ function createInfoHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): Dat
             gameConfig,
         };
 }
-function createInfoCapturePoint(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCapturePoint(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMaxCapturePoint() == null)
         ? null
         : {
@@ -1462,7 +1462,7 @@ function createInfoCapturePoint(tileTemplateCfg: TileTemplateCfg, gameConfig: Gc
             gameConfig,
         };
 }
-function createInfoBuildPoint(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoBuildPoint(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMaxBuildPoint() == null)
         ? null
         : {
@@ -1473,14 +1473,14 @@ function createInfoBuildPoint(tileTemplateCfg: TileTemplateCfg, gameConfig: GcDa
         };
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function createInfoIsHighlighted(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoIsHighlighted(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return null;
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function createInfoBuff(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoBuff(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return null;
 }
-function createInfoCrystalRadius(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCrystalRadius(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.Crystal) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCrystal))
         ? null
@@ -1491,7 +1491,7 @@ function createInfoCrystalRadius(tileTemplateCfg: TileTemplateCfg, gameConfig: G
             gameConfig,
         };
 }
-function createInfoCrystalPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCrystalPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
         ? null
         : {
@@ -1501,7 +1501,7 @@ function createInfoCrystalPriority(tileTemplateCfg: TileTemplateCfg, gameConfig:
             gameConfig,
         };
 }
-function createInfoCrystalCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCrystalCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
         ? null
         : {
@@ -1511,7 +1511,7 @@ function createInfoCrystalCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameCo
             gameConfig,
         };
 }
-function createInfoCrystalCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCrystalCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
         ? null
         : {
@@ -1521,7 +1521,7 @@ function createInfoCrystalCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameCo
             gameConfig,
         };
 }
-function createInfoCrystalCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCrystalCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
         ? null
         : {
@@ -1531,7 +1531,7 @@ function createInfoCrystalCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameC
             gameConfig,
         };
 }
-function createInfoCrystalDeltaFund(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCrystalDeltaFund(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
         ? null
         : {
@@ -1541,7 +1541,7 @@ function createInfoCrystalDeltaFund(tileTemplateCfg: TileTemplateCfg, gameConfig
             gameConfig,
         };
 }
-function createInfoCrystalDeltaEnergyPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCrystalDeltaEnergyPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
         ? null
         : {
@@ -1551,7 +1551,7 @@ function createInfoCrystalDeltaEnergyPercentage(tileTemplateCfg: TileTemplateCfg
             gameConfig,
         };
 }
-function createInfoCrystalDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCrystalDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.Crystal) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCrystal))
         ? null
@@ -1562,7 +1562,7 @@ function createInfoCrystalDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: 
             gameConfig,
         };
 }
-function createInfoCrystalDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCrystalDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
         ? null
         : {
@@ -1572,7 +1572,7 @@ function createInfoCrystalDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, 
             gameConfig,
         };
 }
-function createInfoCrystalDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCrystalDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCrystal)
         ? null
         : {
@@ -1582,7 +1582,7 @@ function createInfoCrystalDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTempla
             gameConfig,
         };
 }
-function createInfoCannonRangeForUp(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonRangeForUp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonUp) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon))
         ? null
@@ -1593,7 +1593,7 @@ function createInfoCannonRangeForUp(tileTemplateCfg: TileTemplateCfg, gameConfig
             gameConfig,
         };
 }
-function createInfoCannonRangeForDown(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonRangeForDown(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonDown) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon))
         ? null
@@ -1604,7 +1604,7 @@ function createInfoCannonRangeForDown(tileTemplateCfg: TileTemplateCfg, gameConf
             gameConfig,
         };
 }
-function createInfoCannonRangeForLeft(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonRangeForLeft(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonLeft) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon))
         ? null
@@ -1615,7 +1615,7 @@ function createInfoCannonRangeForLeft(tileTemplateCfg: TileTemplateCfg, gameConf
             gameConfig,
         };
 }
-function createInfoCannonRangeForRight(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonRangeForRight(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonRight) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon))
         ? null
@@ -1626,7 +1626,7 @@ function createInfoCannonRangeForRight(tileTemplateCfg: TileTemplateCfg, gameCon
             gameConfig,
         };
 }
-function createInfoCannonPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
         ? null
         : {
@@ -1636,7 +1636,7 @@ function createInfoCannonPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: 
             gameConfig,
         };
 }
-function createInfoCannonMaxTargetCount(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonMaxTargetCount(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
         ? null
         : {
@@ -1646,7 +1646,7 @@ function createInfoCannonMaxTargetCount(tileTemplateCfg: TileTemplateCfg, gameCo
             gameConfig,
         };
 }
-function createInfoCannonCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
         ? null
         : {
@@ -1656,7 +1656,7 @@ function createInfoCannonCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameCon
             gameConfig,
         };
 }
-function createInfoCannonCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
         ? null
         : {
@@ -1666,7 +1666,7 @@ function createInfoCannonCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameCon
             gameConfig,
         };
 }
-function createInfoCannonCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
         ? null
         : {
@@ -1676,7 +1676,7 @@ function createInfoCannonCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameCo
             gameConfig,
         };
 }
-function createInfoCannonDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonRight) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonLeft) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonDown) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CannonUp) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomCannon))
         ? null
@@ -1687,7 +1687,7 @@ function createInfoCannonDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: G
             gameConfig,
         };
 }
-function createInfoCannonDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
         ? null
         : {
@@ -1697,7 +1697,7 @@ function createInfoCannonDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, g
             gameConfig,
         };
 }
-function createInfoCannonDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoCannonDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomCannon)
         ? null
         : {
@@ -1707,7 +1707,7 @@ function createInfoCannonDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplat
             gameConfig,
         };
 }
-function createInfoLaserTurretRangeForUp(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForUp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.LaserTurret))
         ? null
@@ -1718,7 +1718,7 @@ function createInfoLaserTurretRangeForUp(tileTemplateCfg: TileTemplateCfg, gameC
             gameConfig,
         };
 }
-function createInfoLaserTurretRangeForDown(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForDown(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.LaserTurret))
         ? null
@@ -1729,7 +1729,7 @@ function createInfoLaserTurretRangeForDown(tileTemplateCfg: TileTemplateCfg, gam
             gameConfig,
         };
 }
-function createInfoLaserTurretRangeForLeft(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForLeft(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.LaserTurret))
         ? null
@@ -1740,7 +1740,7 @@ function createInfoLaserTurretRangeForLeft(tileTemplateCfg: TileTemplateCfg, gam
             gameConfig,
         };
 }
-function createInfoLaserTurretRangeForRight(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretRangeForRight(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.LaserTurret))
         ? null
@@ -1751,7 +1751,7 @@ function createInfoLaserTurretRangeForRight(tileTemplateCfg: TileTemplateCfg, ga
             gameConfig,
         };
 }
-function createInfoLaserTurretPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretPriority(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
@@ -1761,7 +1761,7 @@ function createInfoLaserTurretPriority(tileTemplateCfg: TileTemplateCfg, gameCon
             gameConfig,
         };
 }
-function createInfoLaserTurretCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretCanAffectSelf(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
@@ -1771,7 +1771,7 @@ function createInfoLaserTurretCanAffectSelf(tileTemplateCfg: TileTemplateCfg, ga
             gameConfig,
         };
 }
-function createInfoLaserTurretCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretCanAffectAlly(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
@@ -1781,7 +1781,7 @@ function createInfoLaserTurretCanAffectAlly(tileTemplateCfg: TileTemplateCfg, ga
             gameConfig,
         };
 }
-function createInfoLaserTurretCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
@@ -1791,7 +1791,7 @@ function createInfoLaserTurretCanAffectEnemy(tileTemplateCfg: TileTemplateCfg, g
             gameConfig,
         };
 }
-function createInfoLaserTurretDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     const mapWeaponType = tileTemplateCfg.getMapWeaponTypeId();
     return ((mapWeaponType !== TilesConstantsMapWeaponTypeId.CustomLaserTurret) && (mapWeaponType !== TilesConstantsMapWeaponTypeId.LaserTurret))
         ? null
@@ -1802,7 +1802,7 @@ function createInfoLaserTurretDeltaHp(tileTemplateCfg: TileTemplateCfg, gameConf
             gameConfig,
         };
 }
-function createInfoLaserTurretDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretDeltaFuelPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
         ? null
         : {
@@ -1812,7 +1812,7 @@ function createInfoLaserTurretDeltaFuelPercentage(tileTemplateCfg: TileTemplateC
             gameConfig,
         };
 }
-function createInfoLaserTurretDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GcData): DataForInfoRenderer | null {
+function createInfoLaserTurretDeltaPrimaryAmmoPercentage(tileTemplateCfg: TileTemplateCfg, gameConfig: GameConfig): DataForInfoRenderer | null {
     return (tileTemplateCfg.getMapWeaponTypeId() !== TilesConstantsMapWeaponTypeId.CustomLaserTurret)
         ? null
         : {

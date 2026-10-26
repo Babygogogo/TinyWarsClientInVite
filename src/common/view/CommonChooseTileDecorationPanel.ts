@@ -1,10 +1,11 @@
-import { GcData } from "../../gameConfigs/GcData.ts";
+import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getTileDecorationName } from "../../lang/Utils.ts";
 import type { DataForDrawTileDecoration } from "../../mapEditor/model/MeTypes.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
+import { getAllTileDecorationCfgArray, getTileDecorationCfg } from "../../tileDecorations/Utils.ts";
 import { Executor } from "../../tween/Executor.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -18,7 +19,7 @@ import { getUiTileViewClass } from "../../ui/utils/UiFactory.ts";
 
 export interface OpenData {
     currentDecorationType?  : number;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     callback                : (decorationType: number, shapeId: number) => void;
 }
 export class Panel extends UiPanel<OpenData> {
@@ -32,10 +33,10 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,    callback: this._onNotifyLanguageChanged },
+            { type : TypeId.LanguageChanged,    callback : this._onNotifyLanguageChanged },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,      callback: this.closePanel },
+            { ui : this._btnClose,      callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -100,15 +101,15 @@ export class Panel extends UiPanel<OpenData> {
         const decorationType    = this._listType.getFirstSelectedData()?.decorationType;
         const dataList          : DataForTileDecorationRenderer[] = [];
         if (decorationType != null) {
-            const cfg = getExisted(GcData.getTileDecorationCfg(decorationType));
+            const cfg = getExisted(getTileDecorationCfg(decorationType));
             for (let shapeId = 0; shapeId < cfg.shapesCount; ++shapeId) {
                 dataList.push({
-                    panel                       : this,
-                    gameConfig                  : gameConfig,
-                    callback                    : callback,
-                    dataForDrawTileDecoration   : {
-                        decorationType  : decorationType,
-                        shapeId         : shapeId,
+                    panel                     : this,
+                    gameConfig                : gameConfig,
+                    callback                  : callback,
+                    dataForDrawTileDecoration : {
+                        decorationType : decorationType,
+                        shapeId        : shapeId,
                     },
                 });
             }
@@ -125,11 +126,11 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const dataArray: DataForTypeRenderer[] = [];
-        for (const cfg of GcData.getAllTileDecorationCfgArray()) {
+        for (const cfg of getAllTileDecorationCfgArray()) {
             dataArray.push({
-                decorationType  : cfg.tileDecorationTypeId,
-                gameConfig      : gameConfig,
-                panel           : this,
+                decorationType : cfg.tileDecorationTypeId,
+                gameConfig     : gameConfig,
+                panel          : this,
             });
         }
 
@@ -145,7 +146,7 @@ export class Panel extends UiPanel<OpenData> {
 
 interface DataForTypeRenderer extends UiListItemData {
     decorationType  : number;
-    gameConfig      : GcData;
+    gameConfig      : GameConfig;
     panel           : Panel;
 }
 class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
@@ -162,9 +163,9 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
         const imgSelected = this._imgSelected;
         imgSelected.setAlpha(0);
         Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Executor.removeTweens(this._imgSelected);
@@ -189,7 +190,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
 interface DataForTileDecorationRenderer extends UiListItemData {
     dataForDrawTileDecoration   : DataForDrawTileDecoration;
     panel                       : Panel;
-    gameConfig                  : GcData;
+    gameConfig                  : GameConfig;
     callback                    : (decorationType: number, shapeId: number) => void;
 }
 class TileDecorationRenderer extends UiListItemRenderer<DataForTileDecorationRenderer> {
@@ -201,7 +202,7 @@ class TileDecorationRenderer extends UiListItemRenderer<DataForTileDecorationRen
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.TileAnimationTick,  callback: this._onNotifyTileAnimationTick },
+            { type : TypeId.TileAnimationTick,  callback : this._onNotifyTileAnimationTick },
         ]);
         this._applySettingsForWholeTouch();
 
@@ -229,15 +230,15 @@ class TileDecorationRenderer extends UiListItemRenderer<DataForTileDecorationRen
 
         const tileView = this._tileView;
         tileView.init({
-            tileBaseShapeId         : null,
-            tileBaseType            : null,
-            tileDecorationType      : dataForDrawTileDecoration.decorationType,
-            tileDecorationShapeId   : shapeId,
-            tileObjectShapeId       : null,
-            tileObjectType          : null,
-            skinId                  : PlayerIndex.Neutral,
-            overridingSkinId        : undefined,
-            gameConfig              : openData.gameConfig,
+            tileBaseShapeId       : null,
+            tileBaseType          : null,
+            tileDecorationType    : dataForDrawTileDecoration.decorationType,
+            tileDecorationShapeId : shapeId,
+            tileObjectShapeId     : null,
+            tileObjectType        : null,
+            skinId                : PlayerIndex.Neutral,
+            overridingSkinId      : undefined,
+            gameConfig            : openData.gameConfig,
         });
         tileView.updateView();
     }

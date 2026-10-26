@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -144,7 +144,7 @@ export class Panel extends UiPanel<OpenData> {
 interface DataForUserRenderer extends UiListItemData {
     index       : number;
     userId      : Undefinable<number>;
-    gameConfig  : GcData;
+    gameConfig  : GameConfig;
     isBottom    : boolean;
 }
 class UserRenderer

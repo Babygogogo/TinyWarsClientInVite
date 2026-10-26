@@ -3,7 +3,7 @@ import type { IBwWar } from "../interface/IBwWar.ts";
 import { getUnitAnimationTickCount } from "../../common/model/CommonModel.ts";
 import { showLang } from "../../FloatText.ts";
 import { getFinalSkinIdArray, getRawOverridingSkinId, getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import {
     getTileViewClass,
     getMpwWarClass,
@@ -3339,7 +3339,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
 
 interface DataForMoveCostRenderer extends UiListItemData {
     index               : number;
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     unitType            : number;
     tileCfg             : TileTemplateCfg;
     playerIndex         : number;
@@ -3406,7 +3406,7 @@ class MoveCostRenderer extends UiListItemRenderer<DataForMoveCostRenderer> {
 }
 
 interface DataForDamageRenderer extends UiListItemData {
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     index               : number;
     targetTileType      : number;
     playerIndex         : number;

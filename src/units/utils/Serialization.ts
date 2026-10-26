@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { GridIndexJson } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
@@ -63,7 +63,7 @@ export function createNewUnitDataForChangeType(unit: IUnit, newUnitTypeId: numbe
 
 export function getErrorCodeForUnitDataIgnoringUnitId({ unitData, mapSize, playersCountUnneutral, gameConfig }: {
     unitData                : SerialUnit;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     mapSize                 : Undefinable<MapSize>;
     playersCountUnneutral   : Undefinable<number>;
 }): ClientErrorCode {
@@ -168,7 +168,7 @@ export function getErrorCodeForUnitDataIgnoringUnitId({ unitData, mapSize, playe
     return ClientErrorCode.NoError;
 }
 
-export function fillNonTrivialDefaultValues(unitData: SerialUnit, gcData: GcData): void {
+export function fillNonTrivialDefaultValues(unitData: SerialUnit, gcData: GameConfig): void {
     const cfg = gcData.getUnitTemplateCfg(unitData.getUnitType());
     if (!cfg) {
         return;
@@ -192,7 +192,7 @@ export function createDefault({ unitTypeId, unitId, playerIndex, gridIndex, gcDa
     unitId      : number;
     playerIndex : number;
     gridIndex   : Required<GridIndexJson>;
-    gcData      : GcData;
+    gcData      : GameConfig;
 }): SerialUnit {
     const cfg = getExisted(gcData.getUnitTemplateCfg(unitTypeId));
     return create({

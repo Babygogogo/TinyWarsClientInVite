@@ -2,7 +2,7 @@ import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
 import { getExisted, newError } from "../../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../../helpers/Team.ts";
@@ -18,7 +18,7 @@ import { getErrorCodeForUnitDataIgnoringUnitId } from "../../../units/utils/Seri
 import { getObserverTeamIndexListForUnitOnMap } from "../../../visibilities/Utils.ts";
 import { Common } from "../constants/AddUnitOnMapSimple.ts";
 
-export function getBriefDesc(data: Undefinable<WeaAddUnitOnMapSimple>, gameConfig: GcData): string | null {
+export function getBriefDesc(data: Undefinable<WeaAddUnitOnMapSimple>, gameConfig: GameConfig): string | null {
     if (!data) {
         return null;
     } else {
@@ -35,13 +35,13 @@ export function getBriefDesc(data: Undefinable<WeaAddUnitOnMapSimple>, gameConfi
         return getFormattedText(TextType.F0059, unitNameArray.join(", "));
     }
 }
-export function getDetailDesc(data: Undefinable<WeaAddUnitOnMapSimple>, gameConfig: GcData): string | null {
+export function getDetailDesc(data: Undefinable<WeaAddUnitOnMapSimple>, gameConfig: GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
 }
 
 export function checkIsValid({ action, gameConfig, mapSize, playersCountUnneutral }: {
     action                  : Undefinable<WeaAddUnitOnMapSimple>;
-    gameConfig              : GcData;
+    gameConfig              : GameConfig;
     mapSize                 : MapSize;
     playersCountUnneutral   : number;
 }): boolean {

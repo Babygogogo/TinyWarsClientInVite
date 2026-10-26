@@ -2,7 +2,7 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import { getUnitAnimationTickCount } from "../../common/model/CommonModel.ts";
 import { getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { format } from "../../helpers/Text.ts";
@@ -258,7 +258,7 @@ type SingleData = {
 };
 interface DataForUnitRenderer extends UiListItemData {
     index               : number;
-    gameConfig          : GcData;
+    gameConfig          : GameConfig;
     playerIndex         : number;
     skinId              : number;
     overridingSkinId    : Undefinable<number>;

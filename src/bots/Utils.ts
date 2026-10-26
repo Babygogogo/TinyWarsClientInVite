@@ -29,7 +29,7 @@ import type { ScoreAndAction } from "./Types.ts";
 import type { SkillTypeId } from "../coSkills/Constants.ts";
 import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
 import { getDamageMultiplierForDefenseBonus } from "../damageCalculators/Utils.ts";
-import type { GcData } from "../gameConfigs/GcData.ts";
+import type { GameConfig } from "../gameConfigs/GameConfig.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
 import { getExisted, newError } from "../helpers/Misc.ts";
 import { PlayerIndex } from "../players/Constants.ts";
@@ -137,7 +137,7 @@ async function getReachableArea({ commonParams, unit, passableGridIndex, blocked
     });
 }
 
-export function getUnitTypeSetForCoSkillSetUnitIdle(player: IPlayer, coSkillType: SkillTypeId, gameConfig: GcData): Set<number> {
+export function getUnitTypeSetForCoSkillSetUnitIdle(player: IPlayer, coSkillType: SkillTypeId, gameConfig: GameConfig): Set<number> {
     const unitTypeSet = new Set<number>();
     for (const skillId of player.getCoSkills(coSkillType)) {
         const cfg = gameConfig.getCoSkillCfg(skillId)?.getInstantManual()?.getSelfUnitActionState();

@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../../gameConfigs/GcData.ts";
+import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getText, getBgmSfxName } from "../../../lang/Utils.ts";
@@ -17,7 +17,7 @@ export function checkIsValid(action: Undefinable<WeaPersistentPlayBgm>): boolean
     return (bgmCode != null) && (checkIsBgm(bgmCode));
 }
 
-export function getBriefDesc(data: Undefinable<WeaPersistentPlayBgm>, gameConfig: GcData): string | null {
+export function getBriefDesc(data: Undefinable<WeaPersistentPlayBgm>, gameConfig: GameConfig): string | null {
     if (data == null) {
         return null;
     }
@@ -25,7 +25,7 @@ export function getBriefDesc(data: Undefinable<WeaPersistentPlayBgm>, gameConfig
     const bgmCode = data.getBgmCode();
     return `${getText(TextType.B1083)}: ${(bgmCode == null ? null : getBgmSfxName(bgmCode, gameConfig) ?? UndefinedError)}`;
 }
-export function getDetailDesc(data: Undefinable<WeaPersistentPlayBgm>, gameConfig: GcData): string | null {
+export function getDetailDesc(data: Undefinable<WeaPersistentPlayBgm>, gameConfig: GameConfig): string | null {
     return getBriefDesc(data, gameConfig);
 }
 
