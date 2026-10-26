@@ -31,10 +31,10 @@ class Main extends DisplayObjectContainer {
 document.getElementById("logoCon")!.style.backgroundImage = "url(" + loadingIcon + ")";
 
 runEgret({
-    renderMode: "webgl",
-    audioType: 0,
-    entryClass: Main,
-    calculateCanvasScaleFactor: (context: any) => {
+    renderMode                 : "webgl",
+    audioType                  : 0,
+    entryClass                 : Main,
+    calculateCanvasScaleFactor : (context: any) => {
         const backingStore =
             context.backingStorePixelRatio ||
             context.webkitBackingStorePixelRatio ||

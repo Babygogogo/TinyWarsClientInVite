@@ -16,8 +16,8 @@ const _skinDict             = new Map<string, UiSkin>();
 const _modules              = import.meta.glob(
     "./assets/**/*.*",
     {
-        query: "?url",
-        eager: true,
+        query : "?url",
+        eager : true,
     }
 );
 
