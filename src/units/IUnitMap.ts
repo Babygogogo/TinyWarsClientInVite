@@ -2,7 +2,7 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import type { UnitCustomName } from "../proto/schema/CommonProto/Structure/UnitCustomName.ts";
 import type { SerialUnitMap } from "../proto/schema/CommonProto/WarSerialization/SerialUnitMap.ts";
 import type { IUnit } from "./IUnit.ts";

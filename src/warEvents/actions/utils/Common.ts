@@ -2,7 +2,7 @@ import type { MapSize } from "../../../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { SmallDialogueSideId } from "../../../dialogues/Constants.ts";
 import { ForcedFogCode } from "../../../fogMaps/Constants.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { GcData } from "../../../gameConfigs/GcData.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { closePanel, openPanel } from "../../../gamePanels/Manager.ts";
 import { newError, getExisted } from "../../../helpers/Misc.ts";

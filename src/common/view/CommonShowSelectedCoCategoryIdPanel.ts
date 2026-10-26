@@ -1,5 +1,5 @@
 import { CategoryId } from "../../cos/Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";

@@ -1,7 +1,7 @@
 import type { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { destroyUnitOnMap } from "../../destructions/Utils.ts";
 import { show, showLang } from "../../FloatText.ts";
-import { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfigs/GcData.ts";
 import { DrawerMode } from "../../mapEditors/Constants.ts";
 import { getUnitClass } from "../../gameHelpers/GhFactory.ts";
 import { SymmetryTypeId } from "../../geometries/Constants.ts";

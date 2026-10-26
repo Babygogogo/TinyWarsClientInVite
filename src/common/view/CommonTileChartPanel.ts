@@ -1,6 +1,6 @@
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";

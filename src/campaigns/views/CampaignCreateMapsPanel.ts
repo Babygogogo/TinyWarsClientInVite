@@ -4,7 +4,7 @@ import {
     type OpenData as CampaignsViewsCampaignMapRankPageOpenData,
     Page as CampaignsViewsCampaignMapRankPage,
 } from "./CampaignMapRankPage.ts";
-import { getLatestConfigVersion } from "../../gameConfig/GcModel.ts";
+import { getLatestConfigVersion } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";

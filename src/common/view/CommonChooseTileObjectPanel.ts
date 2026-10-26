@@ -1,5 +1,5 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
-import { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfigs/GcData.ts";
 import { TextureVersionId } from "../../graphics/Constants.ts";
 import { getSkinButtonBackground } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";

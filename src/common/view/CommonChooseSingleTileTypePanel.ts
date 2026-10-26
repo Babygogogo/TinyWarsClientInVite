@@ -1,5 +1,5 @@
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getTileName } from "../../lang/Utils.ts";

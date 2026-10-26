@@ -1,5 +1,5 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getSkinButtonBackground, getCoEye } from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";

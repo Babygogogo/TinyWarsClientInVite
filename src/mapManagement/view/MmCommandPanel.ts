@@ -1,6 +1,6 @@
 import { show, showLang } from "../../FloatText.ts";
 import { Common } from "../../maps/Constants.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";

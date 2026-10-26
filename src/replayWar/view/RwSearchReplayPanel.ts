@@ -1,6 +1,6 @@
 import { ReplayFilter } from "../../auxiliaryTypes/ReplayFilter.ts";
 import { Common } from "../../maps/Constants.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";

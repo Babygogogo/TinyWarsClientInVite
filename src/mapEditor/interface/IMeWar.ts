@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import type { IMeDrawer } from "./IMeDrawer.ts";
 import type { CampaignMapData } from "../../proto/schema/CommonProto/Map/CampaignMapData.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";

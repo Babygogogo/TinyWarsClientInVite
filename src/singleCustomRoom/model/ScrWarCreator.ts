@@ -1,7 +1,7 @@
 import { WarCreatorBase } from "../../auxiliaryTypes/WarCreatorBase.ts";
 import { pickRandomCo } from "../../cos/Utils.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import type { ScrCreatePlayerInfoChanged } from "../../notifications/DataTypes.ts";

@@ -1,16 +1,15 @@
-import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
+import type { PlayerInfo, Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { DefaultParams, TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import type { OpenData as CommonViewCommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import type { OpenData as CommonViewCommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { MultiRankedWar, BasicSettingsType } from "../../gameConfig/GcWar.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
-import { getExisted, checkIsAnyPromiseTrue, newError } from "../../helpers/Misc.ts";
+import { checkIsAnyPromiseTrue, getExisted, newError } from "../../helpers/Misc.ts";
 import { warn } from "../../Logger.ts";
 import { SelfSettings } from "../../multiPlayerRooms/SelfSettings.ts";
-import { reqMrrGetRoomPublicInfo, reqMrrGetJoinedRoomIdArray } from "./MrrProxy.ts";
+import { BootTimer } from "../../multiRankedWars/Constants.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import type { MrrRoomInfo } from "../../proto/schema/CommonProto/MultiRankRoom/MrrRoomInfo.ts";
 import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMrrDeleteRoomByServer/S.ts";
@@ -40,6 +39,8 @@ import { DataForPlayerInRoom } from "../../proto/schema/CommonProto/Structure/Da
 import { getSelfUserId } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { getPlayerRule, getPlayersCountUnneutral } from "../../warRules/utils/CommonData.ts";
+import { BasicSettingsTypeId } from "../../wars/Constants.ts";
+import { reqMrrGetJoinedRoomIdArray, reqMrrGetRoomPublicInfo } from "./MrrProxy.ts";
 
 let _maxConcurrentCountForStd               = 0;
 let _maxConcurrentCountForFog               = 0;
@@ -47,8 +48,8 @@ let _additionalMaxDifferenceInScoreForStd   = 0;
 let _additionalMaxDifferenceInScoreForFog   = 0;
 let _bannedNormalMapIdArrayForStd           : number[] = [];
 let _bannedNormalMapIdArrayForFog           : number[] = [];
-let _bootTimerDaysRangeForStd               = [MultiRankedWar.BootTimer.DefaultDays, MultiRankedWar.BootTimer.DefaultDays];
-let _bootTimerDaysRangeForFog               = [MultiRankedWar.BootTimer.DefaultDays, MultiRankedWar.BootTimer.DefaultDays];
+let _bootTimerDaysRangeForStd               = [BootTimer.DefaultDays, BootTimer.DefaultDays];
+let _bootTimerDaysRangeForFog               = [BootTimer.DefaultDays, BootTimer.DefaultDays];
 const _selfSettingsDict                     = new Map<number, SelfSettings>();
 const _roomInfoAccessor                     = new CachedDataAccessor<number, MrrRoomInfo>({
     reqData : (roomId: number) => reqMrrGetRoomPublicInfo(roomId),
@@ -135,7 +136,7 @@ export function updateOnMsgMrrGetBootTimerDaysRange(data: ProtoSchemaCommonProto
         if (range.length === 2) {
             _bootTimerDaysRangeForStd = range;
         } else {
-            _bootTimerDaysRangeForStd = [MultiRankedWar.BootTimer.DefaultDays, MultiRankedWar.BootTimer.DefaultDays];
+            _bootTimerDaysRangeForStd = [BootTimer.DefaultDays, BootTimer.DefaultDays];
         }
     }
     {
@@ -143,7 +144,7 @@ export function updateOnMsgMrrGetBootTimerDaysRange(data: ProtoSchemaCommonProto
         if (range.length === 2) {
             _bootTimerDaysRangeForFog = range;
         } else {
-            _bootTimerDaysRangeForFog = [MultiRankedWar.BootTimer.DefaultDays, MultiRankedWar.BootTimer.DefaultDays];
+            _bootTimerDaysRangeForFog = [BootTimer.DefaultDays, BootTimer.DefaultDays];
         }
     }
 }
@@ -153,7 +154,7 @@ export function updateOnMsgMrrSetBootTimerDaysRange(data: ProtoSchemaCommonProto
         if (range.length === 2) {
             _bootTimerDaysRangeForStd = range;
         } else {
-            _bootTimerDaysRangeForStd = [MultiRankedWar.BootTimer.DefaultDays, MultiRankedWar.BootTimer.DefaultDays];
+            _bootTimerDaysRangeForStd = [BootTimer.DefaultDays, BootTimer.DefaultDays];
         }
     }
     {
@@ -161,7 +162,7 @@ export function updateOnMsgMrrSetBootTimerDaysRange(data: ProtoSchemaCommonProto
         if (range.length === 2) {
             _bootTimerDaysRangeForFog = range;
         } else {
-            _bootTimerDaysRangeForFog = [MultiRankedWar.BootTimer.DefaultDays, MultiRankedWar.BootTimer.DefaultDays];
+            _bootTimerDaysRangeForFog = [BootTimer.DefaultDays, BootTimer.DefaultDays];
         }
     }
 }
@@ -221,11 +222,11 @@ export async function updateOnMsgMrrSetSelfSettings(data: ProtoSchemaCommonProto
     } else {
         warn(`MrrModel.updateOnMsgMrrSetSelfSettings() playerData == null.`);
         dataArray.push(DataForPlayerInRoom.fromJson({
-            playerIndex         : playerIndex,
-            userId              : null,
-            coId                : coId,
-            unitAndTileSkinId   : unitAndTileSkinId,
-            isReady             : true,
+            playerIndex       : playerIndex,
+            userId            : null,
+            coId              : coId,
+            unitAndTileSkinId : unitAndTileSkinId,
+            isReady           : true,
         }));
     }
 }
@@ -277,37 +278,37 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<n
     for (const playerInfo of (roomInfo.getPlayerDataList())) {
         const playerIndex = getExisted(playerInfo.getPlayerIndex());
         playerInfoArray.push({
-            playerIndex         : playerIndex,
-            teamIndex           : getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
-            isAi                : false,
-            userId              : playerInfo.getUserId() ?? null,
-            coId                : playerInfo.getCoId() ?? null,
-            unitAndTileSkinId   : playerInfo.getUnitAndTileSkinId() ?? null,
-            isReady             : playerInfo.getIsReady() ?? false,
-            isInTurn            : null,
-            isDefeat            : null,
-            restTimeToBoot      : null,
+            playerIndex       : playerIndex,
+            teamIndex         : getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
+            isAi              : false,
+            userId            : playerInfo.getUserId() ?? null,
+            coId              : playerInfo.getCoId() ?? null,
+            unitAndTileSkinId : playerInfo.getUnitAndTileSkinId() ?? null,
+            isReady           : playerInfo.getIsReady() ?? false,
+            isInTurn          : null,
+            isDefeat          : null,
+            restTimeToBoot    : null,
         });
     }
 
     return {
-        gameConfig              : await getGameConfig(getExisted(settingsForCommon.getConfigVersion())),
-        playersCountUnneutral   : getPlayersCountUnneutral(warRuleCommonData),
-        roomOwnerPlayerIndex    : null,
-        callbackOnExitRoom      : null,
-        callbackOnDeletePlayer  : null,
-        callbackOnAddDummy      : null,
-        callbackOnChangeDummy   : null,
-        playerInfoArray         : playerInfoArray,
-        enterTurnTime           : null,
-        isReplay                : false,
+        gameConfig             : await getGameConfig(getExisted(settingsForCommon.getConfigVersion())),
+        playersCountUnneutral  : getPlayersCountUnneutral(warRuleCommonData),
+        roomOwnerPlayerIndex   : null,
+        callbackOnExitRoom     : null,
+        callbackOnDeletePlayer : null,
+        callbackOnAddDummy     : null,
+        callbackOnChangeDummy  : null,
+        playerInfoArray        : playerInfoArray,
+        enterTurnTime          : null,
+        isReplay               : false,
     };
 }
 
 export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinable<number>): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
     const roomInfo = roomId == null ? null : await getRoomInfo(roomId);
     if (roomInfo == null) {
-        return { dataArrayForListSettings: [] };
+        return { dataArrayForListSettings : [] };
     }
 
     const settingsForCommon = getExisted(roomInfo.getSettingsForCommon());
@@ -319,91 +320,91 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     const bootTimerParams   = settingsForMrw.getBootTimerParams() ?? DefaultParams.concat();
     const timerType         = bootTimerParams[0] as TimerTypeId;
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
-        dataArrayForListSettings    : [
+        dataArrayForListSettings : [
             {
-                settingsType    : BasicSettingsType.NormalMapId,
-                currentValue    : normalMapId,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : BasicSettingsTypeId.NormalMapId,
+                currentValue     : normalMapId,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.WarRuleTitle,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : BasicSettingsTypeId.WarRuleTitle,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.HasFog,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : BasicSettingsTypeId.HasFog,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.Weather,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : BasicSettingsTypeId.Weather,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType        : BasicSettingsType.TileTheme,
-                currentValue        : null,
-                instanceWarRule     : instanceWarRule,
-                gameConfig          : gameConfig,
-                warEventFullData    : warEventFullData,
-                callbackOnModify    : null,
+                settingsType     : BasicSettingsTypeId.TileTheme,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.WarEvent,
-                currentValue    : null,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : BasicSettingsTypeId.WarEvent,
+                currentValue     : null,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.TurnsAndWarOperationsLimit,
-                currentValue    : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
+                currentValue     : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
             {
-                settingsType    : BasicSettingsType.TimerType,
-                currentValue    : timerType,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : BasicSettingsTypeId.TimerType,
+                currentValue     : timerType,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
         ],
     };
     if (timerType === TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType    : BasicSettingsType.TimerRegularParam,
-            currentValue    : bootTimerParams[1],
-            instanceWarRule : instanceWarRule,
-            gameConfig      : gameConfig,
-            warEventFullData: warEventFullData,
-            callbackOnModify: null,
+            settingsType     : BasicSettingsTypeId.TimerRegularParam,
+            currentValue     : bootTimerParams[1],
+            instanceWarRule  : instanceWarRule,
+            gameConfig       : gameConfig,
+            warEventFullData : warEventFullData,
+            callbackOnModify : null,
         });
     } else if (timerType === TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push(
             {
-                settingsType    : BasicSettingsType.TimerIncrementalParams,
-                currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
-                instanceWarRule : instanceWarRule,
-                gameConfig      : gameConfig,
-                warEventFullData: warEventFullData,
-                callbackOnModify: null,
+                settingsType     : BasicSettingsTypeId.TimerIncrementalParams,
+                currentValue     : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
+                instanceWarRule  : instanceWarRule,
+                gameConfig       : gameConfig,
+                warEventFullData : warEventFullData,
+                callbackOnModify : null,
             },
         );
     } else {

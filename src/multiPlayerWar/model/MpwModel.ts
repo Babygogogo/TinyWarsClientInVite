@@ -5,8 +5,7 @@ import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.t
 import type { OpenData as CommonViewCommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import type { OpenData as CommonViewCommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
 import { showLang } from "../../FloatText.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { BasicSettingsType, SyncRequestType, SyncStatus } from "../../gameConfig/GcWar.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import {
     getMcwWarClass,
     getMrwWarClass,
@@ -107,6 +106,7 @@ import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
 import { getPlayerRule, getPlayersCountUnneutral } from "../../warRules/utils/CommonData.ts";
 import { getWarTypeByMpwWarSettings } from "../../warSettings/utils/MpwWarSettings.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
+import {BasicSettingsTypeId, SyncRequestTypeId, SyncStatusId} from "../../wars/Constants.ts";
 
 const _NOTIFY_LISTENERS     : Listener[] = [
     { type: TypeId.MsgMpwWatchGetIncomingInfo,      callback: _onNotifyMsgMpwWatchGetIncomingInfo },
@@ -500,7 +500,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
-                settingsType        : BasicSettingsType.NormalMapId,
+                settingsType        : BasicSettingsTypeId.NormalMapId,
                 currentValue        : settingsForMcw.getNormalMapId() ?? 0,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -508,7 +508,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarName,
+                settingsType        : BasicSettingsTypeId.WarName,
                 currentValue        : settingsForMcw.getWarName() ?? null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -516,7 +516,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarPassword,
+                settingsType        : BasicSettingsTypeId.WarPassword,
                 currentValue        : settingsForMcw.getWarPassword() ?? null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -524,7 +524,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarComment,
+                settingsType        : BasicSettingsTypeId.WarComment,
                 currentValue        : settingsForMcw.getWarComment() ?? null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -532,7 +532,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarRuleTitle,
+                settingsType        : BasicSettingsTypeId.WarRuleTitle,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -540,7 +540,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.HasFog,
+                settingsType        : BasicSettingsTypeId.HasFog,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -548,7 +548,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.Weather,
+                settingsType        : BasicSettingsTypeId.Weather,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -556,7 +556,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TileTheme,
+                settingsType        : BasicSettingsTypeId.TileTheme,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -564,7 +564,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarEvent,
+                settingsType        : BasicSettingsTypeId.WarEvent,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -572,7 +572,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TurnsAndWarOperationsLimit,
+                settingsType        : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                 currentValue        : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -580,7 +580,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TimerType,
+                settingsType        : BasicSettingsTypeId.TimerType,
                 currentValue        : timerType,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -591,7 +591,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
     };
     if (timerType === TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType        : BasicSettingsType.TimerRegularParam,
+            settingsType        : BasicSettingsTypeId.TimerRegularParam,
             currentValue        : bootTimerParams[1],
             instanceWarRule     : instanceWarRule,
             gameConfig          : gameConfig,
@@ -601,7 +601,7 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
     } else if (timerType === TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push(
             {
-                settingsType        : BasicSettingsType.TimerIncrementalParams,
+                settingsType        : BasicSettingsTypeId.TimerIncrementalParams,
                 currentValue        : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -627,7 +627,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
-                settingsType        : BasicSettingsType.NormalMapId,
+                settingsType        : BasicSettingsTypeId.NormalMapId,
                 currentValue        : settingsForCcw.getNormalMapId() ?? 0,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -635,7 +635,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarName,
+                settingsType        : BasicSettingsTypeId.WarName,
                 currentValue        : settingsForCcw.getWarName() ?? null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -643,7 +643,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarPassword,
+                settingsType        : BasicSettingsTypeId.WarPassword,
                 currentValue        : settingsForCcw.getWarPassword() ?? null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -651,7 +651,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarComment,
+                settingsType        : BasicSettingsTypeId.WarComment,
                 currentValue        : settingsForCcw.getWarComment() ?? null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -659,7 +659,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarRuleTitle,
+                settingsType        : BasicSettingsTypeId.WarRuleTitle,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -667,7 +667,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.HasFog,
+                settingsType        : BasicSettingsTypeId.HasFog,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -675,7 +675,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.Weather,
+                settingsType        : BasicSettingsTypeId.Weather,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -683,7 +683,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TileTheme,
+                settingsType        : BasicSettingsTypeId.TileTheme,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -691,7 +691,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarEvent,
+                settingsType        : BasicSettingsTypeId.WarEvent,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -699,7 +699,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TurnsAndWarOperationsLimit,
+                settingsType        : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                 currentValue        : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -707,7 +707,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TimerType,
+                settingsType        : BasicSettingsTypeId.TimerType,
                 currentValue        : timerType,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -718,7 +718,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
     };
     if (timerType === TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType        : BasicSettingsType.TimerRegularParam,
+            settingsType        : BasicSettingsTypeId.TimerRegularParam,
             currentValue        : bootTimerParams[1],
             instanceWarRule     : instanceWarRule,
             gameConfig          : gameConfig,
@@ -728,7 +728,7 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
     } else if (timerType === TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push(
             {
-                settingsType        : BasicSettingsType.TimerIncrementalParams,
+                settingsType        : BasicSettingsTypeId.TimerIncrementalParams,
                 currentValue        : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -758,7 +758,7 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
-                settingsType        : BasicSettingsType.NormalMapId,
+                settingsType        : BasicSettingsTypeId.NormalMapId,
                 currentValue        : settingsForMrw.getNormalMapId() ?? 0,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -766,7 +766,7 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarRuleTitle,
+                settingsType        : BasicSettingsTypeId.WarRuleTitle,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -774,7 +774,7 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.HasFog,
+                settingsType        : BasicSettingsTypeId.HasFog,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -782,7 +782,7 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.Weather,
+                settingsType        : BasicSettingsTypeId.Weather,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -790,7 +790,7 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TileTheme,
+                settingsType        : BasicSettingsTypeId.TileTheme,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -798,7 +798,7 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarEvent,
+                settingsType        : BasicSettingsTypeId.WarEvent,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -806,7 +806,7 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TurnsAndWarOperationsLimit,
+                settingsType        : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                 currentValue        : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -814,7 +814,7 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TimerType,
+                settingsType        : BasicSettingsTypeId.TimerType,
                 currentValue        : timerType,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -825,7 +825,7 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
     };
     if (timerType === TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType        : BasicSettingsType.TimerRegularParam,
+            settingsType        : BasicSettingsTypeId.TimerRegularParam,
             currentValue        : bootTimerParams[1],
             instanceWarRule     : instanceWarRule,
             gameConfig          : gameConfig,
@@ -834,7 +834,7 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
         });
     } else if (timerType === TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push({
-            settingsType        : BasicSettingsType.TimerIncrementalParams,
+            settingsType        : BasicSettingsTypeId.TimerIncrementalParams,
             currentValue        : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
             instanceWarRule     : instanceWarRule,
             gameConfig          : gameConfig,
@@ -863,7 +863,7 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
-                settingsType        : BasicSettingsType.NormalMapId,
+                settingsType        : BasicSettingsTypeId.NormalMapId,
                 currentValue        : settingsForMmw.getNormalMapId() ?? 0,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -871,7 +871,7 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarRuleTitle,
+                settingsType        : BasicSettingsTypeId.WarRuleTitle,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -879,7 +879,7 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.HasFog,
+                settingsType        : BasicSettingsTypeId.HasFog,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -887,7 +887,7 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.Weather,
+                settingsType        : BasicSettingsTypeId.Weather,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -895,7 +895,7 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TileTheme,
+                settingsType        : BasicSettingsTypeId.TileTheme,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -903,7 +903,7 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarEvent,
+                settingsType        : BasicSettingsTypeId.WarEvent,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -911,7 +911,7 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TurnsAndWarOperationsLimit,
+                settingsType        : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                 currentValue        : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -919,7 +919,7 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
                 callbackOnModify    : null,
             },
             {
-                settingsType    : BasicSettingsType.TimerType,
+                settingsType    : BasicSettingsTypeId.TimerType,
                 currentValue    : timerType,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -930,7 +930,7 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
     };
     if (timerType === TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType        : BasicSettingsType.TimerRegularParam,
+            settingsType        : BasicSettingsTypeId.TimerRegularParam,
             currentValue        : bootTimerParams[1],
             instanceWarRule     : instanceWarRule,
             gameConfig          : gameConfig,
@@ -940,7 +940,7 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
     } else if (timerType === TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push(
             {
-                settingsType        : BasicSettingsType.TimerIncrementalParams,
+                settingsType        : BasicSettingsTypeId.TimerIncrementalParams,
                 currentValue        : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -966,7 +966,7 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
-                settingsType        : BasicSettingsType.NormalMapId,
+                settingsType        : BasicSettingsTypeId.NormalMapId,
                 currentValue        : settingsForAtw.getNormalMapId() ?? 0,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -974,7 +974,7 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarRuleTitle,
+                settingsType        : BasicSettingsTypeId.WarRuleTitle,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -982,7 +982,7 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.HasFog,
+                settingsType        : BasicSettingsTypeId.HasFog,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -990,7 +990,7 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.Weather,
+                settingsType        : BasicSettingsTypeId.Weather,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -998,7 +998,7 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TileTheme,
+                settingsType        : BasicSettingsTypeId.TileTheme,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1006,7 +1006,7 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarEvent,
+                settingsType        : BasicSettingsTypeId.WarEvent,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1014,7 +1014,7 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TurnsAndWarOperationsLimit,
+                settingsType        : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                 currentValue        : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1022,7 +1022,7 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TimerType,
+                settingsType        : BasicSettingsTypeId.TimerType,
                 currentValue        : timerType,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1033,7 +1033,7 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
     };
     if (timerType === TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType        : BasicSettingsType.TimerRegularParam,
+            settingsType        : BasicSettingsTypeId.TimerRegularParam,
             currentValue        : bootTimerParams[1],
             instanceWarRule     : instanceWarRule,
             gameConfig          : gameConfig,
@@ -1042,7 +1042,7 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
         });
     } else if (timerType === TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push({
-            settingsType        : BasicSettingsType.TimerIncrementalParams,
+            settingsType        : BasicSettingsTypeId.TimerIncrementalParams,
             currentValue        : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
             instanceWarRule     : instanceWarRule,
             gameConfig          : gameConfig,
@@ -1067,7 +1067,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
-                settingsType        : BasicSettingsType.WarName,
+                settingsType        : BasicSettingsTypeId.WarName,
                 currentValue        : settingsForMfw.getWarName() ?? null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1075,7 +1075,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarPassword,
+                settingsType        : BasicSettingsTypeId.WarPassword,
                 currentValue        : settingsForMfw.getWarPassword() ?? null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1083,7 +1083,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarComment,
+                settingsType        : BasicSettingsTypeId.WarComment,
                 currentValue        : settingsForMfw.getWarComment() ?? null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1091,7 +1091,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarRuleTitle,
+                settingsType        : BasicSettingsTypeId.WarRuleTitle,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1099,7 +1099,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.HasFog,
+                settingsType        : BasicSettingsTypeId.HasFog,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1107,7 +1107,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.Weather,
+                settingsType        : BasicSettingsTypeId.Weather,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1115,7 +1115,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TileTheme,
+                settingsType        : BasicSettingsTypeId.TileTheme,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1123,7 +1123,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarEvent,
+                settingsType        : BasicSettingsTypeId.WarEvent,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1131,7 +1131,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TurnsAndWarOperationsLimit,
+                settingsType        : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                 currentValue        : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1139,7 +1139,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TimerType,
+                settingsType        : BasicSettingsTypeId.TimerType,
                 currentValue        : timerType,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -1150,7 +1150,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
     };
     if (timerType === TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType        : BasicSettingsType.TimerRegularParam,
+            settingsType        : BasicSettingsTypeId.TimerRegularParam,
             currentValue        : bootTimerParams[1],
             instanceWarRule     : instanceWarRule,
             gameConfig          : gameConfig,
@@ -1159,7 +1159,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
         });
     } else if (timerType === TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push({
-            settingsType        : BasicSettingsType.TimerIncrementalParams,
+            settingsType        : BasicSettingsTypeId.TimerIncrementalParams,
             currentValue        : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
             instanceWarRule     : instanceWarRule,
             gameConfig          : gameConfig,
@@ -1334,7 +1334,7 @@ export function updateOnMsgMpwExecuteWarOperation(container: WoContainer, warId:
     const war = getWar();
     if ((war) && (war.getWarId() === warId)) {
         if (container.getOperationId() !== war.getExecutedOperationManager().getExecutedOperationsCount() + _cachedActions.length + (war.getIsExecutingAction() ? 1 : 0)) {
-            reqMpwCommonSyncWar(war, SyncRequestType.ReconnectionRequest);
+            reqMpwCommonSyncWar(war, SyncRequestTypeId.ReconnectionRequest);
         } else {
             _cachedActions.push(container);
             checkAndSyncWarOrRunCachedAction(war, _cachedActions);
@@ -1362,9 +1362,9 @@ async function checkAndSyncWarOrRunCachedAction(war: IMpwWar, actionList: WoCont
             break;
         }
 
-        const status    = syncWarData.getStatus() as SyncStatus;
+        const status    = syncWarData.getStatus() as SyncStatusId;
         const warData   = syncWarData.getWar();
-        if (status === SyncStatus.EndedOrNotExists) {
+        if (status === SyncStatusId.EndedOrNotExists) {
             war.setIsEnded(true);
             openPanel(getDict().CommonAlertPanel, {
                 getTitle   : () => getText(TextType.B0088),
@@ -1375,7 +1375,7 @@ async function checkAndSyncWarOrRunCachedAction(war: IMpwWar, actionList: WoCont
             });
             return;
 
-        } else if (status === SyncStatus.NotJoined) {
+        } else if (status === SyncStatusId.NotJoined) {
             war.setIsEnded(true);
             openPanel(getDict().CommonAlertPanel, {
                 getTitle   : () => getText(TextType.B0088),
@@ -1386,9 +1386,9 @@ async function checkAndSyncWarOrRunCachedAction(war: IMpwWar, actionList: WoCont
             });
             return;
 
-        } else if (status === SyncStatus.NoError) {
-            const requestType = syncWarData.getRequestType() as SyncRequestType;
-            if (requestType === SyncRequestType.PlayerForce) {
+        } else if (status === SyncStatusId.NoError) {
+            const requestType = syncWarData.getRequestType() as SyncRequestTypeId;
+            if (requestType === SyncRequestTypeId.PlayerForce) {
                 war.setIsEnded(true);
                 if (warData == null) {
                     throw newError(`MpwModel.updateOnPlayerSyncWar() empty warData 1.`);
@@ -1410,7 +1410,7 @@ async function checkAndSyncWarOrRunCachedAction(war: IMpwWar, actionList: WoCont
                     return;
 
                 } else {
-                    if (requestType === SyncRequestType.PlayerRequest) {
+                    if (requestType === SyncRequestTypeId.PlayerRequest) {
                         showLang(TextType.A0038);
                     } else {
                         // Nothing to do.
@@ -1419,9 +1419,9 @@ async function checkAndSyncWarOrRunCachedAction(war: IMpwWar, actionList: WoCont
                 }
             }
 
-        } else if (status === SyncStatus.Synchronized) {
-            const requestType = syncWarData.getRequestType() as SyncRequestType;
-            if (requestType === SyncRequestType.PlayerRequest) {
+        } else if (status === SyncStatusId.Synchronized) {
+            const requestType = syncWarData.getRequestType() as SyncRequestTypeId;
+            if (requestType === SyncRequestTypeId.PlayerRequest) {
                 showLang(TextType.A0038);
             } else {
                 // Nothing to do.

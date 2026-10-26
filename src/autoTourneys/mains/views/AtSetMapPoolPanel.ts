@@ -2,7 +2,7 @@ import { Common } from "../../Constants.ts";
 import { reqAtSetMapPool } from "../Gateway.ts";
 import { getAtFullMapInfo } from "../Provider.ts";
 import { showLang } from "../../../FloatText.ts";
-import { getLatestGameConfig } from "../../../gameConfig/GcModel.ts";
+import { getLatestGameConfig } from "../../../gameConfigs/Provider.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { getExisted } from "../../../helpers/Misc.ts";

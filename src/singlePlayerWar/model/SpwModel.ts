@@ -1,14 +1,13 @@
 import { reqCampaignValidateWar } from "../../campaigns/mains/Gateway.ts";
 import { showLang } from "../../FloatText.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { SinglePlayerWar } from "../../gameConfig/GcWar.ts";
-import { getSfwWarClass, getSrwWarClass, getCawWarClass, getScwWarClass } from "../../gameHelpers/GhFactory.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
+import { getCawWarClass, getScwWarClass, getSfwWarClass, getSrwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
-import { gotoMultiPlayerWar, gotoLobby, gotoCampaignCreateMapsPanel } from "../../helpers/GameFlow.ts";
+import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
+import { gotoCampaignCreateMapsPanel, gotoLobby, gotoMultiPlayerWar } from "../../helpers/GameFlow.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../lang/Utils.ts";
+import { getFormattedText, getText } from "../../lang/Utils.ts";
 import { warn } from "../../Logger.ts";
 import { getOngoingWarData } from "../../multiPlayerWar/model/MpwModel.ts";
 import { AliveStateId } from "../../players/Constants.ts";
@@ -17,11 +16,12 @@ import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/Wo
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import { reqSpmValidateSrw } from "../../singlePlayerMode/model/SpmProxy.ts";
 import type { ISpwWar } from "../interface/ISpwWar.ts";
-import { getSelfUserId, getSelfCawHighScoreInfo } from "../../users/Model.ts";
+import { getSelfCawHighScoreInfo, getSelfUserId } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { checkAndExecute } from "../../warOperations/executors/Executor.ts";
 import { revise } from "../../warOperations/revisers/Reviser.ts";
 import { getNextSystemOrBotOperation } from "../../warOperations/Utils.ts";
+import { PlayerScore } from "../../singlePlayerWars/Constants.ts";
 
 let _war: ISpwWar | null = null;
 
@@ -99,7 +99,7 @@ export async function checkAndHandleAutoActionsAndRobotRecursively(war: ISpwWar)
     }
     _warsWithRobotRunning.add(war);
 
-    // eslint-disable-next-line no-constant-condition
+
     while (true) {
         if ((checkAndEndWar(war))       ||
             (!war.getIsRunning())       ||
@@ -150,11 +150,11 @@ function checkAndEndWar(war: ISpwWar): boolean {
         : null;
     if (mpwWarId != null) {
         openPanel(getDict().CommonConfirmPanel, {
-            getTitle            : () => getText(TextType.B0088),
-            getContent          : () => getText(TextType.A0964),
-            getTextForConfirm   : () => getText(TextType.B0711),
-            getTextForCancel    : () => getText(TextType.B1446),
-            callback            : async () => {
+            getTitle          : () => getText(TextType.B0088),
+            getContent        : () => getText(TextType.A0964),
+            getTextForConfirm : () => getText(TextType.B0711),
+            getTextForCancel  : () => getText(TextType.B1446),
+            callback          : async () => {
                 openPanel(getDict().CommonBlockPanel, {
                     title   : getText(TextType.B0088),
                     content : getText(TextType.A0040),
@@ -169,7 +169,7 @@ function checkAndEndWar(war: ISpwWar): boolean {
 
                 closePanel(getDict().CommonBlockPanel);
             },
-            callbackOnCancel    : () => {
+            callbackOnCancel : () => {
                 war.setIsEnded(false);
                 war.getDrawVoteManager().clearAllVotes();
                 for (const [, player] of war.getPlayerManager().getAllPlayersDict()) {
@@ -181,24 +181,24 @@ function checkAndEndWar(war: ISpwWar): boolean {
     } else {
         if (war.getDrawVoteManager().checkIsDraw()) {
             openPanel(getDict().CommonAlertPanel, {
-                getTitle    : () => getText(TextType.B0088),
-                getContent  : () => getText(TextType.A0030),
-                callback    : () => gotoLobby(),
+                getTitle   : () => getText(TextType.B0088),
+                getContent : () => getText(TextType.A0030),
+                callback   : () => gotoLobby(),
             });
         } else {
             const humanPlayerArray = war.getPlayerManager().getHumanPlayers();
             if (humanPlayerArray.length <= 0) {
                 openPanel(getDict().CommonAlertPanel, {
-                    getTitle    : () => getText(TextType.B0088),
-                    getContent  : () => getText(TextType.A0035),
-                    callback    : () => gotoLobby(),
+                    getTitle   : () => getText(TextType.B0088),
+                    getContent : () => getText(TextType.A0035),
+                    callback   : () => gotoLobby(),
                 });
             } else {
                 if (humanPlayerArray.every(v => v.getAliveState() === AliveStateId.Dead)) {
                     openPanel(getDict().CommonAlertPanel, {
-                        getTitle    : () => getText(TextType.B0088),
-                        getContent  : () => getText(TextType.A0023),
-                        callback    : () => gotoLobby(),
+                        getTitle   : () => getText(TextType.B0088),
+                        getContent : () => getText(TextType.A0023),
+                        callback   : () => gotoLobby(),
                     });
                 } else {
                     if (war instanceof getSrwWarClass()) {
@@ -208,18 +208,18 @@ function checkAndEndWar(war: ISpwWar): boolean {
                             getTitle   : () => getText(TextType.B0088),
                             getContent : () => getFormattedText(
                                 TextType.F0127,
-                                SinglePlayerWar.PlayerScore.BaseScore,
+                                PlayerScore.BaseScore,
                                 `${(turnIndex - 1) * -1000} (${turnIndex})`,
                                 `${-actionsCount} (${actionsCount})`,
                                 war.getTaskObjectiveManager().getScore(),
                                 war.calculateTotalScore(),
                             ),
-                            callback: () => {
+                            callback : () => {
                                 gotoLobby();
 
                                 openPanel(getDict().CommonConfirmPanel, {
                                     getContent : () => getText(TextType.A0277),
-                                    callback: () => {
+                                    callback   : () => {
                                         reqSpmValidateSrw(war);
                                     },
                                 });
@@ -234,13 +234,13 @@ function checkAndEndWar(war: ISpwWar): boolean {
                             getTitle   : () => getText(TextType.B0088),
                             getContent : () => getFormattedText(
                                 TextType.F0127,
-                                SinglePlayerWar.PlayerScore.BaseScore,
+                                PlayerScore.BaseScore,
                                 `${(turnIndex - 1) * -1000} (${turnIndex})`,
                                 `${-actionsCount} (${actionsCount})`,
                                 war.getTaskObjectiveManager().getScore(),
                                 newScore,
                             ),
-                            callback: () => {
+                            callback : () => {
                                 const settingsForCaw    = war.getSettingsForCaw();
                                 const campaignId        = settingsForCaw.getCampaignId() ?? 0;
                                 const existingInfo      = getSelfCawHighScoreInfo(campaignId, settingsForCaw.getCampaignMapId() ?? 0);
@@ -258,9 +258,9 @@ function checkAndEndWar(war: ISpwWar): boolean {
 
                     } else {
                         openPanel(getDict().CommonAlertPanel, {
-                            getTitle    : () => getText(TextType.B0088),
-                            getContent  : () => getText(TextType.A0022),
-                            callback    : () => gotoLobby(),
+                            getTitle   : () => getText(TextType.B0088),
+                            getContent : () => getText(TextType.A0022),
+                            callback   : () => gotoLobby(),
                         });
                     }
                 }

@@ -3,7 +3,7 @@ import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { EnergyTypeId } from "../cos/Constants.ts";
 import type { SkillTypeId } from "../coSkills/Constants.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import type { AliveStateId } from "./Constants.ts";
 import type { CoBasicCfg } from "../proto/schema/CommonProto/Config/CoBasicCfg.ts";
 import type { GridIdAndMarkTypeId } from "../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";

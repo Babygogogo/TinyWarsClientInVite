@@ -1,6 +1,6 @@
 import type { IWar } from "./IWar.ts";
 import { DefaultParams } from "../../bootTimers/Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { MpwWar } from "../../multiPlayerWar/model/MpwWar.ts";

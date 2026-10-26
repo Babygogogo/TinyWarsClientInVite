@@ -1,25 +1,22 @@
 import { show } from "../../FloatText.ts";
-import { ReplayWar } from "../../gameConfig/GcWar.ts";
 import { getTwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import {
-    gotoMapEditorWar,
-    gotoSinglePlayerWar,
-    gotoMfrCreateSettingsPanel,
-    gotoSrrCreateMapListPanel,
-    gotoRwReplayListPanel,
     gotoLobby,
+    gotoMapEditorWar,
+    gotoMfrCreateSettingsPanel,
+    gotoRwReplayListPanel,
+    gotoSinglePlayerWar,
+    gotoSrrCreateMapListPanel,
 } from "../../helpers/GameFlow.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getErrorText, getTextForYesOrNo } from "../../lang/Utils.ts";
+import { getErrorText, getText, getTextForYesOrNo } from "../../lang/Utils.ts";
 import { getMapEditorData } from "../../mapEditor/model/MeModel.ts";
 import { reqMeSubmitNormalMap } from "../../mapEditor/model/MeProxy.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMeSubmitNormalMap/S.ts";
-import type { IRwWar } from "../interface/IRwWar.ts";
-import { getReplaySelfRating } from "../model/RwModel.ts";
-import { reqReplaySetSelfRating } from "../model/RwProxy.ts";
+import { Common } from "../../replayWars/Constants.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
 import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
@@ -28,6 +25,9 @@ import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import { checkIsFavoriteReplayId } from "../../users/Model.ts";
 import { reqUserModifyFavoriteReplayIdArray } from "../../users/Proxy.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
+import type { IRwWar } from "../interface/IRwWar.ts";
+import { getReplaySelfRating } from "../model/RwModel.ts";
+import { reqReplaySetSelfRating } from "../model/RwProxy.ts";
 
 export interface OpenData {
     war     : IRwWar;
@@ -54,25 +54,25 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgReplaySetSelfRating,              callback: this._onNotifyMsgReplaySetRating },
-            { type: TypeId.MsgUserModifyFavoriteReplayIdArray,  callback: this._onNotifyMsgUserModifyFavoriteReplayIdArray },
-            { type: TypeId.MsgMeSubmitNormalMap,                callback: this._onNotifyMsgMeSubmitNormalMap },
+            { type : TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : TypeId.MsgReplaySetSelfRating,              callback : this._onNotifyMsgReplaySetRating },
+            { type : TypeId.MsgUserModifyFavoriteReplayIdArray,  callback : this._onNotifyMsgUserModifyFavoriteReplayIdArray },
+            { type : TypeId.MsgMeSubmitNormalMap,                callback : this._onNotifyMsgMeSubmitNormalMap },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnCalculator,      callback: this._onTouchedBtnCalculator },
-            { ui: this._btnSettings,        callback: this._onTouchedBtnSettings },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnCalculator,      callback : this._onTouchedBtnCalculator },
+            { ui : this._btnSettings,        callback : this._onTouchedBtnSettings },
 
-            { ui: this._btnFavorite,        callback: this._onTouchedBtnFavorite },
-            { ui: this._btnRate,            callback: this._onTouchedBtnRate },
-            { ui: this._btnSimulation,      callback: this._onTouchedBtnSimulation },
-            { ui: this._btnFreeMode,        callback: this._onTouchedBtnFreeMode },
-            { ui: this._btnEditMap,         callback: this._onTouchedBtnEditMap },
-            { ui: this._btnOverrideSkin,    callback: this._onTouchedBtnOverrideSkin },
+            { ui : this._btnFavorite,        callback : this._onTouchedBtnFavorite },
+            { ui : this._btnRate,            callback : this._onTouchedBtnRate },
+            { ui : this._btnSimulation,      callback : this._onTouchedBtnSimulation },
+            { ui : this._btnFreeMode,        callback : this._onTouchedBtnFreeMode },
+            { ui : this._btnEditMap,         callback : this._onTouchedBtnEditMap },
+            { ui : this._btnOverrideSkin,    callback : this._onTouchedBtnOverrideSkin },
 
-            { ui: this._btnReplayList,      callback: this._onTouchedBtnReplayList },
-            { ui: this._btnLobby,           callback: this._onTouchedBtnLobby },
+            { ui : this._btnReplayList,      callback : this._onTouchedBtnReplayList },
+            { ui : this._btnLobby,           callback : this._onTouchedBtnLobby },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -101,27 +101,27 @@ export class Panel extends UiPanel<OpenData> {
     private _onNotifyMsgMeSubmitNormalMap(e: Event): void {
         const slotIndex = (e.data as S).getSlotIndex() ?? 0;
         openPanel(getDict().CommonConfirmPanel, {
-            getContent     : () => getText(TextType.A0872),
-            callback    : async () => {
+            getContent : () => getText(TextType.A0872),
+            callback   : async () => {
                 const mapEditorData             = await getMapEditorData(slotIndex);
                 const srcNormalMapIdForAddEvent = mapEditorData?.srcNormalMapIdForAddEvent ?? null;
                 if (srcNormalMapIdForAddEvent == null) {
                     gotoMapEditorWar({
-                        mapRawData                  : mapEditorData?.mapRawData,
-                        slotIndex                   : slotIndex,
-                        isReview                    : false,
-                        srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                        gridMarkData                : mapEditorData?.gridMarkData,
+                        mapRawData                : mapEditorData?.mapRawData,
+                        slotIndex                 : slotIndex,
+                        isReview                  : false,
+                        srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                        gridMarkData              : mapEditorData?.gridMarkData,
                     });
                 } else {
                     openPanel(getDict().CommonConfirmPanel, {
-                        getContent  : () => getText(TextType.R0015),
-                        callback    : () => gotoMapEditorWar({
-                            mapRawData                  : mapEditorData?.mapRawData,
-                            slotIndex                   : slotIndex,
-                            isReview                    : false,
-                            srcNormalMapIdForAddEvent   : srcNormalMapIdForAddEvent,
-                            gridMarkData                : mapEditorData?.gridMarkData,
+                        getContent : () => getText(TextType.R0015),
+                        callback   : () => gotoMapEditorWar({
+                            mapRawData                : mapEditorData?.mapRawData,
+                            slotIndex                 : slotIndex,
+                            isReview                  : false,
+                            srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
+                            gridMarkData              : mapEditorData?.gridMarkData,
                         }),
                     });
                 }
@@ -136,9 +136,9 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         openPanel(getDict().CommonDamageCalculatorPanel, {
-            war                     : war,
-            needReviseWeaponType    : true,
-            data                    : null,
+            war                  : war,
+            needReviseWeaponType : true,
+            data                 : null,
         });
         this.closePanel();
     }
@@ -164,14 +164,14 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const minValue  = ReplayWar.MinRating;
-        const maxValue  = ReplayWar.MaxRating;
+        const minValue  = Common.MinRating;
+        const maxValue  = Common.MaxRating;
         openPanel(getDict().CommonInputIntegerPanel, {
-            getTitle           : () => `${getText(TextType.B0365)}`,
-            currentValue    : (await getReplaySelfRating(war.getReplayId())) ?? 5,
-            minValue        : minValue,
-            maxValue        : maxValue,
-            callback        : value => {
+            getTitle     : () => `${getText(TextType.B0365)}`,
+            currentValue : (await getReplaySelfRating(war.getReplayId())) ?? 5,
+            minValue     : minValue,
+            maxValue     : maxValue,
+            callback     : value => {
                 reqReplaySetSelfRating(war.getReplayId(), value);
             },
         });
@@ -186,14 +186,14 @@ export class Panel extends UiPanel<OpenData> {
             show(getText(TextType.A0103));
         } else {
             openPanel(getDict().CommonConfirmPanel, {
-                getContent     : () => getText(TextType.A0931),
-                callback    : () => {
+                getContent : () => getText(TextType.A0931),
+                callback   : () => {
                     const warData = war.serializeForCreateSfw();
                     warData.createIfNotExistsSettingsForSfw();
                     gotoSinglePlayerWar({
-                        warData         : warData,
-                        slotIndex       : null,
-                        slotExtraData   : null,
+                        warData       : warData,
+                        slotIndex     : null,
+                        slotExtraData : null,
                     });
                 }
             });
@@ -219,7 +219,7 @@ export class Panel extends UiPanel<OpenData> {
 
         openPanel(getDict().CommonConfirmPanel, {
             getContent : () => `${getText(TextType.R0007)}\n\n\n${getText(TextType.A0201)}`,
-            callback: () => {
+            callback   : () => {
                 gotoMfrCreateSettingsPanel(warData);
             }
         });
@@ -231,16 +231,16 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         openPanel(getDict().CommonChooseSingleMapEditorSlotPanel, {
-            currentSlotIndex        : 0,
-            needConfirmOverwrite    : true,
-            needNonEmptySlot        : false,
-            getHelpText             : null,
-            callback                : async slotIndex => reqMeSubmitNormalMap({
-                slotIndex                   : slotIndex,
-                mapRawData                  : await war.serializeForMap(),
-                needReview                  : false,
-                srcNormalMapIdForAddEvent   : null,
-                gridMarkData                : null,
+            currentSlotIndex     : 0,
+            needConfirmOverwrite : true,
+            needNonEmptySlot     : false,
+            getHelpText          : null,
+            callback             : async slotIndex => reqMeSubmitNormalMap({
+                slotIndex                 : slotIndex,
+                mapRawData                : await war.serializeForMap(),
+                needReview                : false,
+                srcNormalMapIdForAddEvent : null,
+                gridMarkData              : null,
             }),
         });
     }
@@ -261,7 +261,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0651),
             getContent : () => getText(TextType.AreYouSureYouWantToContinue),
-            callback: () => {
+            callback   : () => {
                 if (war.getSettingsForSrw()) {
                     gotoSrrCreateMapListPanel();
                 } else {
@@ -274,7 +274,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonConfirmPanel, {
             getTitle   : () => getText(TextType.B0054),
             getContent : () => getText(TextType.A0025),
-            callback: () => gotoLobby(),
+            callback   : () => gotoLobby(),
         });
     }
 

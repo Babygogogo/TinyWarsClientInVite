@@ -2,11 +2,11 @@ import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import { VisibilityTypeId } from "../gameConfig/GcWar.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
 import type { ITile } from "../tiles/ITile.ts";
 import type { IUnit } from "../units/IUnit.ts";
 import type { IUnitMap } from "../units/IUnitMap.ts";
+import {VisibilityTypeId} from "./Constants.ts";
 
 export function checkIsUnitOnMapVisibleToTeam({ war, gridIndex, unitType, isDiving, isInvisible, unitPlayerIndex, observerTeamIndex }: {
     war                 : IBwWar;

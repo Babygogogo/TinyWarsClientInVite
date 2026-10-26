@@ -1,7 +1,7 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
 import { GcData } from "./GcData.ts";
-import { reqCommonLatestConfigVersion } from "./GcProxy.ts";
+import { reqCommonLatestConfigVersion } from "./Gateway.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { getNumText } from "../helpers/Text.ts";
 import { FullConfig } from "../proto/schema/CommonProto/Config/FullConfig.ts";

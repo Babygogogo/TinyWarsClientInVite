@@ -1,6 +1,5 @@
 import { StateId } from "../../actionPlanners/Constants.ts";
 import { showLang, show } from "../../FloatText.ts";
-import { SyncRequestType } from "../../gameConfig/GcWar.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
 import { gotoHalfwayReplayWar, gotoSinglePlayerWar, gotoMyWarListPanel, gotoWatchWarListPanel, gotoLobby } from "../../helpers/GameFlow.ts";
@@ -20,6 +19,7 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { getWatchIncomingInfo } from "../../watchWar/model/WwModel.ts";
+import {SyncRequestTypeId} from "../../wars/Constants.ts";
 
 export interface OpenData {
     war     : IMpwWar;
@@ -149,8 +149,8 @@ export class Panel extends UiPanel<OpenData> {
         reqMpwCommonSyncWar(
             war,
             war.getActionPlanner().checkIsStateRequesting()
-                ? SyncRequestType.PlayerForce
-                : SyncRequestType.PlayerRequest
+                ? SyncRequestTypeId.PlayerForce
+                : SyncRequestTypeId.PlayerRequest
         );
         this.closePanel();
     }

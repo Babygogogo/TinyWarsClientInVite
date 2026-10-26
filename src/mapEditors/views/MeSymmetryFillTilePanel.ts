@@ -1,4 +1,4 @@
-import { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfigs/GcData.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";

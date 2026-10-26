@@ -32,9 +32,8 @@ import { FieldView } from "../fields/FieldView.ts";
 import { show } from "../FloatText.ts";
 import { FogMap } from "../fogMaps/FogMap.ts";
 import { ReviewStatus } from "../maps/Constants.ts";
-import { init as GameConfigGcModelInit, getGameConfig, getLatestGameConfig } from "../gameConfig/GcModel.ts";
-import { init as GameConfigGcProxyInit } from "../gameConfig/GcProxy.ts";
-import { SyncRequestType } from "../gameConfig/GcWar.ts";
+import { init as GameConfigGcModelInit, getGameConfig, getLatestGameConfig } from "../gameConfigs/Provider.ts";
+import { init as GameConfigGcProxyInit } from "../gameConfigs/Gateway.ts";
 import { init as GameHelpersGhFactoryInit, getTwWarClass, getMeWarClass } from "../gameHelpers/GhFactory.ts";
 import { getDict } from "../gamePanels/Dict.ts";
 import { closeAllPanelsExcept, openPanel } from "../gamePanels/Manager.ts";
@@ -187,6 +186,7 @@ import { WarTypeId } from "../warTypes/Constants.ts";
 import { init as WatchWarModelWwProxyInit } from "../watchWar/model/WwProxy.ts";
 import { Manager } from "../weathers/Manager.ts";
 import { View } from "../weathers/View.ts";
+import {SyncRequestTypeId} from "../wars/Constants.ts";
 
 const _NET_EVENTS = [
     { msgCode: MessageCodes.MsgCommonServerDisconnect, callback: _onMsgCommonServerDisconnect },
@@ -809,7 +809,7 @@ function _onMsgUserLogin(): void {
     } else {
         const mcwWar = MultiPlayerWarModelMpwModelGetWar();
         if (mcwWar) {
-            reqMpwCommonSyncWar(mcwWar, SyncRequestType.ReconnectionRequest);
+            reqMpwCommonSyncWar(mcwWar, SyncRequestTypeId.ReconnectionRequest);
         }
     }
 }

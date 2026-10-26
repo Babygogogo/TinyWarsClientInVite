@@ -1,5 +1,5 @@
 import { getCampaignMapRawData } from "../mains/Provider.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { pickRandomElement } from "../../helpers/Collection.ts";
 import { getCoBust } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";

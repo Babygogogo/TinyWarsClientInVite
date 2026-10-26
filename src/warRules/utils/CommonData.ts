@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { NeutralPlayerRule } from "../../playerRules/Constants.ts";
 import { checkIsSame as PlayerRulesUtilsCheckIsSame } from "../../playerRules/Utils.ts";

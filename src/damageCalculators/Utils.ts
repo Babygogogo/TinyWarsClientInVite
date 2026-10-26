@@ -8,7 +8,7 @@ import {
     getTotalOffset as CoSkillsUtilsInstantMiscSelfUnitPromotionAfterBattleGetTotalOffset,
 } from "../coSkills/utils/instantMisc/SelfUnitPromotionAfterBattle.ts";
 import { destroyUnitOnMapForWarDamageCalculator } from "../destructions/Utils.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import { DamageFormulaTypeId } from "./Constants.ts";
 import { newError, getExisted } from "../helpers/Misc.ts";
 import { encodeTeamIndex } from "../helpers/Team.ts";

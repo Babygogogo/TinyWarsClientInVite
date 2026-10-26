@@ -1,4 +1,4 @@
-import { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfigs/GcData.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType } from "../../lang/Constants.ts";

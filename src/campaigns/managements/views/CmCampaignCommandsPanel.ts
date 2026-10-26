@@ -1,9 +1,8 @@
-import { MaxExtraLinkLength } from "../../Constants.ts";
+import {CampaignWar, MaxExtraLinkLength} from "../../Constants.ts";
 import { getCampaignInfo } from "../../mains/Provider.ts";
 import { reqCmSetCampaignName, reqCmSetCampaignDesc, reqCmSetExtraLink, reqCmSetCampaignEnabled } from "../Gateway.ts";
 import { checkIsValidExtraLink } from "../../Utils.ts";
 import { showLang } from "../../../FloatText.ts";
-import { CampaignWar } from "../../../gameConfig/GcWar.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { TextType } from "../../../lang/Constants.ts";

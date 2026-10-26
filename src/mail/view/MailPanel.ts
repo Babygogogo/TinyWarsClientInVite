@@ -4,7 +4,7 @@ import { reqCcrJoinRoom } from "../../coopCustomRoom/model/CcrProxy.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { showLang, show } from "../../FloatText.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import { getGameConfig, getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getGameConfig, getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
 import {

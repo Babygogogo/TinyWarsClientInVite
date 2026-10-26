@@ -2,7 +2,7 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { DefaultParams, TimerTypeId, Incremental } from "../bootTimers/Constants.ts";
 import { CoId } from "../cos/Constants.ts";
 import { SkinId } from "../forceSkins/Constants.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";

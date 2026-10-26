@@ -1,5 +1,5 @@
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { GcData } from "../../../gameConfigs/GcData.ts";
 import type { SelfUnitAttackRange } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitAttackRange.ts";
 
 export function getTotalUpperOffset({

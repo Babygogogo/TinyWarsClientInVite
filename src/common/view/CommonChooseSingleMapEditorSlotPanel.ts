@@ -1,6 +1,6 @@
 import { showLang } from "../../FloatText.ts";
 import { ReviewStatus } from "../../maps/Constants.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
 import { checkAndCreateSimulation, checkAndCreateMultiFreeWar } from "../../helpers/GameFlow.ts";

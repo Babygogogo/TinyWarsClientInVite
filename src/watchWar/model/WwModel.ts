@@ -5,8 +5,7 @@ import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.t
 import type { OpenData as CommonViewCommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import type { OpenData as CommonViewCommonWarMapInfoPageOpenData } from "../../common/view/CommonWarMapInfoPage.ts";
 import type { OpenData as CommonViewCommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { BasicSettingsType } from "../../gameConfig/GcWar.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getGameModeIdByMpwWarSettings } from "../../gameModes/Utils.ts";
 import { checkIsAnyPromiseTrue, getExisted, newError } from "../../helpers/Misc.ts";
 import { StoreMpwWatchWarData } from "../../localData/Storage.ts";
@@ -28,6 +27,7 @@ import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { getPlayersCountUnneutral, getPlayerRule } from "../../warRules/utils/CommonData.ts";
 import { getNormalMapIdForMpwWarSettings } from "../../warSettings/utils/MpwWarSettings.ts";
 import { reqWatchContinueWar, reqMpwWatchGetIncomingInfo, reqMpwWatchGetOutgoingInfo } from "./WwProxy.ts";
+import {BasicSettingsTypeId} from "../../wars/Constants.ts";
 
 type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
 type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
@@ -280,7 +280,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
     const openData          : OpenDataForCommonWarBasicSettingsPage = {
         dataArrayForListSettings: [
             {
-                settingsType        : BasicSettingsType.NormalMapId,
+                settingsType        : BasicSettingsTypeId.NormalMapId,
                 currentValue        : normalMapId,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -288,7 +288,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarName,
+                settingsType        : BasicSettingsTypeId.WarName,
                 currentValue        : settingsForMcw?.getWarName() ?? settingsForMfw?.getWarName() ?? settingsForCcw?.getWarName() ?? `----`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -296,7 +296,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarComment,
+                settingsType        : BasicSettingsTypeId.WarComment,
                 currentValue        : settingsForMcw?.getWarComment() ?? settingsForMfw?.getWarComment() ?? settingsForCcw?.getWarComment() ?? `----`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -304,7 +304,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarRuleTitle,
+                settingsType        : BasicSettingsTypeId.WarRuleTitle,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -312,7 +312,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.HasFog,
+                settingsType        : BasicSettingsTypeId.HasFog,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -320,7 +320,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.Weather,
+                settingsType        : BasicSettingsTypeId.Weather,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -328,7 +328,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TileTheme,
+                settingsType        : BasicSettingsTypeId.TileTheme,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -336,7 +336,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.WarEvent,
+                settingsType        : BasicSettingsTypeId.WarEvent,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -344,7 +344,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TurnsAndWarOperationsLimit,
+                settingsType        : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                 currentValue        : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -352,7 +352,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
                 callbackOnModify    : null,
             },
             {
-                settingsType        : BasicSettingsType.TimerType,
+                settingsType        : BasicSettingsTypeId.TimerType,
                 currentValue        : timerType,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -363,7 +363,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
     };
     if (timerType === TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType        : BasicSettingsType.TimerRegularParam,
+            settingsType        : BasicSettingsTypeId.TimerRegularParam,
             currentValue        : bootTimerParams[1],
             instanceWarRule     : instanceWarRule,
             gameConfig          : gameConfig,
@@ -373,7 +373,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
     } else if (timerType === TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push(
             {
-                settingsType        : BasicSettingsType.TimerIncrementalParams,
+                settingsType        : BasicSettingsTypeId.TimerIncrementalParams,
                 currentValue        : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,

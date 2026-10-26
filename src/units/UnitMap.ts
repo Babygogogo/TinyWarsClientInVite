@@ -2,7 +2,7 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import { getUnitMapViewClass, getUnitClass } from "../gameHelpers/GhFactory.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
 import { newError, getExisted } from "../helpers/Misc.ts";

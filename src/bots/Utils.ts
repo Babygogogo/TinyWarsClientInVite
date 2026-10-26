@@ -29,7 +29,7 @@ import type { ScoreAndAction } from "./Types.ts";
 import type { SkillTypeId } from "../coSkills/Constants.ts";
 import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
 import { getDamageMultiplierForDefenseBonus } from "../damageCalculators/Utils.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
 import { getExisted, newError } from "../helpers/Misc.ts";
 import { PlayerIndex } from "../players/Constants.ts";

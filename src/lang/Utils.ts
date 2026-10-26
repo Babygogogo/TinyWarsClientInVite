@@ -7,10 +7,9 @@ import { SkillTypeId } from "../coSkills/Constants.ts";
 import { SmallDialogueSideId } from "../dialogues/Constants.ts";
 import { ContextType, ResultType } from "../expressionParsers/Enums.ts";
 import { ForcedFogCode } from "../fogMaps/Constants.ts";
-import { GcData } from "../gameConfig/GcData.ts";
+import { GcData } from "../gameConfigs/GcData.ts";
 import { ReviewStatus, SortType } from "../maps/Constants.ts";
 import { DrawerMode } from "../mapEditors/Constants.ts";
-import { BasicSettingsType } from "../gameConfig/GcWar.ts";
 import { ModeId } from "../gameModes/Constants.ts";
 import { TypeName } from "../gameVersions/Constants.ts";
 import { newError } from "../helpers/Misc.ts";
@@ -42,6 +41,7 @@ import {
 } from "../warEvents/actions/constants/Common.ts";
 import { ConditionTypeId } from "../warEvents/conditions/Constants.ts";
 import { WarTypeId } from "../warTypes/Constants.ts";
+import {BasicSettingsTypeId} from "../wars/Constants.ts";
 
 let _languageType = LanguageType.Chinese;
 export function init(): void {
@@ -375,23 +375,23 @@ export function getWarTypeName(type: WarTypeId): string | null {
     }
 }
 
-export function getWarBasicSettingsName(type: BasicSettingsType): string | null {
+export function getWarBasicSettingsName(type: BasicSettingsTypeId): string | null {
     switch (type) {
-        case BasicSettingsType.NormalMapId                     : return getText(TextType.B0225);
-        case BasicSettingsType.WarName                   : return getText(TextType.B0185);
-        case BasicSettingsType.WarPassword               : return getText(TextType.B0186);
-        case BasicSettingsType.WarComment                : return getText(TextType.B0187);
-        case BasicSettingsType.WarRuleTitle              : return getText(TextType.B0318);
-        case BasicSettingsType.HasFog                    : return getText(TextType.B0020);
-        case BasicSettingsType.Weather                   : return getText(TextType.Weather);
-        case BasicSettingsType.TileTheme                 : return getText(TextType.B1113);
-        case BasicSettingsType.WarEvent                  : return getText(TextType.B0469);
-        case BasicSettingsType.TurnsAndWarOperationsLimit   : return getText(TextType.B0987);
-        case BasicSettingsType.TimerType                 : return getText(TextType.B0574);
-        case BasicSettingsType.TimerRegularParam         : return getText(TextType.B0021);
-        case BasicSettingsType.TimerIncrementalParams    : return getText(TextType.B0990);
-        case BasicSettingsType.SpmSaveSlotIndex          : return getText(TextType.B0255);
-        case BasicSettingsType.SpmSaveSlotComment        : return getText(TextType.B0605);
+        case BasicSettingsTypeId.NormalMapId                     : return getText(TextType.B0225);
+        case BasicSettingsTypeId.WarName                   : return getText(TextType.B0185);
+        case BasicSettingsTypeId.WarPassword               : return getText(TextType.B0186);
+        case BasicSettingsTypeId.WarComment                : return getText(TextType.B0187);
+        case BasicSettingsTypeId.WarRuleTitle              : return getText(TextType.B0318);
+        case BasicSettingsTypeId.HasFog                    : return getText(TextType.B0020);
+        case BasicSettingsTypeId.Weather                   : return getText(TextType.Weather);
+        case BasicSettingsTypeId.TileTheme                 : return getText(TextType.B1113);
+        case BasicSettingsTypeId.WarEvent                  : return getText(TextType.B0469);
+        case BasicSettingsTypeId.TurnsAndWarOperationsLimit   : return getText(TextType.B0987);
+        case BasicSettingsTypeId.TimerType                 : return getText(TextType.B0574);
+        case BasicSettingsTypeId.TimerRegularParam         : return getText(TextType.B0021);
+        case BasicSettingsTypeId.TimerIncrementalParams    : return getText(TextType.B0990);
+        case BasicSettingsTypeId.SpmSaveSlotIndex          : return getText(TextType.B0255);
+        case BasicSettingsTypeId.SpmSaveSlotComment        : return getText(TextType.B0605);
         default                                             : return null;
     }
 }

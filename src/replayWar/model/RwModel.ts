@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getRwWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getNormalMapId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";

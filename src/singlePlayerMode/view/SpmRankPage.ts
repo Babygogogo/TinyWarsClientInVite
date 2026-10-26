@@ -1,4 +1,4 @@
-import { getLatestConfigVersion } from "../../gameConfig/GcModel.ts";
+import { getLatestConfigVersion } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { gotoReplayWar } from "../../helpers/GameFlow.ts";

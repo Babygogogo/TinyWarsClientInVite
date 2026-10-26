@@ -1,4 +1,4 @@
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { GcData } from "../../../gameConfigs/GcData.ts";
 import type { SelfCanCoBoard } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfCanCoBoard.ts";
 
 export function checkCanCoBoard({

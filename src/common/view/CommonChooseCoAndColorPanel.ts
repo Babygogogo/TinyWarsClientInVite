@@ -1,6 +1,6 @@
 import { CoId } from "../../cos/Constants.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCoEye, getSkinCircle } from "../../helpers/ImageSource.ts";

@@ -1,5 +1,5 @@
 import { showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel } from "../../gamePanels/Manager.ts";
 import { deleteElementFromList2 } from "../../helpers/Collection.ts";

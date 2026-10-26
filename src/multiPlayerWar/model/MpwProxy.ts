@@ -1,5 +1,4 @@
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
-import type { SyncRequestType } from "../../gameConfig/GcWar.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import {
     updateOnMsgMpwCommonGetJoinedMpwIdArray,
@@ -69,6 +68,7 @@ import type {
 import type { GridIdAndMarkTypeId } from "../../proto/schema/CommonProto/Structure/GridIdAndMarkTypeId.ts";
 import type { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
+import {SyncRequestTypeId} from "../../wars/Constants.ts";
 
 export function init(): void {
     addListeners([
@@ -138,7 +138,7 @@ async function _onMsgMpwCommonContinueWar(e: Event): Promise<void> {
     }
 }
 
-export function reqMpwCommonSyncWar(war: IBwWar, requestType: SyncRequestType): void {
+export function reqMpwCommonSyncWar(war: IBwWar, requestType: SyncRequestTypeId): void {
     send({
         MsgMpwCommonSyncWar: { c: {
             warId               : war.getWarId(),

@@ -25,6 +25,7 @@ export default defineConfig([
             "no-shadow"                    : "off",
             "@typescript-eslint/no-shadow" : "error",
             "no-extra-semi"                : "error",
+            "object-curly-spacing"         : ["error", "always"],
             "brace-style"                  : ["error", "1tbs", {
                 "allowSingleLine" : false
             }],
@@ -39,7 +40,7 @@ export default defineConfig([
             "object-curly-newline" : [ "error", {
                 "ObjectExpression" : {
                     "multiline"     : true,
-                    "minProperties" : 3,
+                    "minProperties" : 4,
                     "consistent"    : true,
                 },
             }],

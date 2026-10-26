@@ -2,7 +2,7 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
 import { BwWar } from "../../baseWar/model/BwWar.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getMeDrawerClass, getBwWarEventManagerClass } from "../../gameHelpers/GhFactory.ts";
 import { pickRandomElement } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";

@@ -8,7 +8,6 @@ import {
     Page as CommonViewCommonWarMapInfoPage,
 } from "../../common/view/CommonWarMapInfoPage.ts";
 import { showLang } from "../../FloatText.ts";
-import { BasicSettingsType } from "../../gameConfig/GcWar.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -40,6 +39,7 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { Event, setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
 import { tickDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
+import {BasicSettingsTypeId} from "../../wars/Constants.ts";
 
 type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
 type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
@@ -258,7 +258,7 @@ export class Panel extends UiPanel<OpenData> {
         const openDataForPage   : OpenDataForCommonWarBasicSettingsPage = {
             dataArrayForListSettings: [
                 {
-                    settingsType    : BasicSettingsType.NormalMapId,
+                    settingsType    : BasicSettingsTypeId.NormalMapId,
                     currentValue    : mapRawData.getNormalMapId(),
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -266,7 +266,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsType.WarRuleTitle,
+                    settingsType    : BasicSettingsTypeId.WarRuleTitle,
                     currentValue    : null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -279,7 +279,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : BasicSettingsType.HasFog,
+                    settingsType    : BasicSettingsTypeId.HasFog,
                     currentValue    : null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -291,7 +291,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : BasicSettingsType.Weather,
+                    settingsType    : BasicSettingsTypeId.Weather,
                     currentValue    : null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -303,7 +303,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType        : BasicSettingsType.TileTheme,
+                    settingsType        : BasicSettingsTypeId.TileTheme,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gcData,
@@ -321,7 +321,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : BasicSettingsType.WarEvent,
+                    settingsType    : BasicSettingsTypeId.WarEvent,
                     currentValue    : null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -329,7 +329,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsType.SpmSaveSlotIndex,
+                    settingsType    : BasicSettingsTypeId.SpmSaveSlotIndex,
                     currentValue    : warCreator.getSaveSlotIndex(),
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,
@@ -346,7 +346,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : BasicSettingsType.SpmSaveSlotComment,
+                    settingsType    : BasicSettingsTypeId.SpmSaveSlotComment,
                     currentValue    : warCreator.getSlotComment() ?? null,
                     instanceWarRule : instanceWarRule,
                     gameConfig      : gcData,

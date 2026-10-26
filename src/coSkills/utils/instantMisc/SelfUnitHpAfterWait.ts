@@ -1,4 +1,4 @@
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { GcData } from "../../../gameConfigs/GcData.ts";
 import { getValueInRange } from "../../../numbers/Utils.ts";
 import type { SelfUnitHpAfterWait } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfUnitHpAfterWait.ts";
 import { Hp } from "../../../units/Constants.ts";

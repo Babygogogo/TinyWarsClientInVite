@@ -1,5 +1,5 @@
 import type { IBwWar } from "../interface/IBwWar.ts";
-import { GcData } from "../../gameConfig/GcData.ts";
+import { GcData } from "../../gameConfigs/GcData.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";

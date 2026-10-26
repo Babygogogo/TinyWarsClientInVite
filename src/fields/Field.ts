@@ -7,7 +7,7 @@ import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { IField } from "./IField.ts";
 import type { IFieldView } from "./IFieldView.ts";
 import type { IFogMap } from "../fogMaps/IFogMap.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import {
     getBwCursorClass,
     getBwGridVisualEffectClass,

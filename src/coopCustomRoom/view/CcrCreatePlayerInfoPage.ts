@@ -1,7 +1,7 @@
 import type { CcrRoomCreator } from "../model/CcrRoomCreator.ts";
 import { CoId, CategoryId } from "../../cos/Constants.ts";
 import { show } from "../../FloatText.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";

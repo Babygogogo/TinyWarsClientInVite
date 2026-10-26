@@ -1,11 +1,11 @@
-import { SinglePlayerWar } from "../../gameConfig/GcWar.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
-import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
+import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getWarTypeName, getTimestampShortText } from "../../lang/Utils.ts";
+import { getText, getTimestampShortText, getWarTypeName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getSlotFullData, getSlotName } from "../../singlePlayerMode/model/SpmModel.ts";
+import { Common as SinglePlayerWarConstants } from "../../singlePlayerWars/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -48,12 +48,12 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnHelp,                callback: this._onTouchedBtnHelp },
-            { ui: this._groupZoomMap,           callback: this._onTouchedGroupZoomMap },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnHelp,                callback : this._onTouchedBtnHelp },
+            { ui : this._groupZoomMap,           callback : this._onTouchedGroupZoomMap },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged, callback: this._onNotifyLanguageChanged },
+            { type : TypeId.LanguageChanged, callback : this._onNotifyLanguageChanged },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -98,9 +98,9 @@ export class Panel extends UiPanel<OpenData> {
         if (warData) {
             openPanel(getDict().CommonShowMapPanel, {
                 warInfo : {
-                    warData             : warData,
-                    showInitialWarData  : true,
-                    overridingPlayers   : warData.getPlayerManager()?.getPlayers(),
+                    warData            : warData,
+                    showInitialWarData : true,
+                    overridingPlayers  : warData.getPlayerManager()?.getPlayers(),
                 },
             });
             playShortSfx(ShortSfxCode.ButtonNeutral01);
@@ -123,7 +123,7 @@ export class Panel extends UiPanel<OpenData> {
         const list      = this._srlSaveSlot;
         await list.bindData(this._createDataForList());
         list.setSelectedItemIndex(slotIndex);
-        list.scrollToItem(slotIndex >= SinglePlayerWar.MaxSaveSlotCount / 2 ? 100 : 0);
+        list.scrollToItem(slotIndex >= SinglePlayerWarConstants.MaxSaveSlotCount / 2 ? 100 : 0);
 
         await this.showMap(slotIndex);
     }
@@ -157,9 +157,9 @@ export class Panel extends UiPanel<OpenData> {
             labelNoData.setIsVisible(false);
             zoomMap.setIsVisible(true);
             await zoomMap.showMapByWarData({
-                warData             : warData,
-                showInitialWarData  : true,
-                overridingPlayers   : warData.getPlayerManager()?.getPlayers(),
+                warData            : warData,
+                showInitialWarData : true,
+                overridingPlayers  : warData.getPlayerManager()?.getPlayers(),
             });
         }
     }
@@ -181,14 +181,14 @@ export class Panel extends UiPanel<OpenData> {
         const needConfirmOverwrite  = openData.needConfirmOverwrite;
         const needNonEmptyData      = openData.needNonEmptyData ?? false;
         const dataArray             : DataForSlotRenderer[] = [];
-        for (let slotIndex = 0; slotIndex < SinglePlayerWar.MaxSaveSlotCount; ++slotIndex) {
+        for (let slotIndex = 0; slotIndex < SinglePlayerWarConstants.MaxSaveSlotCount; ++slotIndex) {
             dataArray.push({
-                slotIndex               : slotIndex,
-                needComment             : needComment,
-                needConfirmOverwrite    : needConfirmOverwrite,
-                needNonEmptyData        : needNonEmptyData,
-                panel                   : this,
-                callback                : callback,
+                slotIndex            : slotIndex,
+                needComment          : needComment,
+                needConfirmOverwrite : needConfirmOverwrite,
+                needNonEmptyData     : needNonEmptyData,
+                panel                : this,
+                callback             : callback,
             });
         }
 
@@ -216,7 +216,7 @@ class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._imgSelected,  callback: this._onTouchedImgSelected },
+            { ui : this._imgSelected,  callback : this._onTouchedImgSelected },
         ]);
         this._applySettingsForWholeTouch(undefined, true);
     }
@@ -227,9 +227,9 @@ class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
         imgSelected.setIsTouchEnabled(true);
         imgSelected.setAlpha(0);
         Executor.removeTweens(imgSelected);
-        Executor.get(imgSelected, { loop: true })
-            .to({ customAlpha: 0.6 }, 500)
-            .to({ customAlpha: 0 }, 500);
+        Executor.get(imgSelected, { loop : true })
+            .to({ customAlpha : 0.6 }, 500)
+            .to({ customAlpha : 0 }, 500);
     }
     protected override async _onClosed(): Promise<void> {
         Executor.removeTweens(this._imgSelected);
@@ -264,13 +264,13 @@ class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
                 closePanel(getDict().CommonChooseSingleSpmSaveSlotPanel);
             } else {
                 openPanel(getDict().CommonInputPanel, {
-                    title           : getText(TextType.B0088),
-                    maxChars        : SinglePlayerWar.MaxSaveSlotCommentLength,
-                    currentValue    : ``,
-                    tips            : getText(TextType.A0144),
-                    canBeEmpty      : true,
-                    charRestrict    : null,
-                    callback        : panel => {
+                    title        : getText(TextType.B0088),
+                    maxChars     : SinglePlayerWarConstants.MaxSaveSlotCommentLength,
+                    currentValue : ``,
+                    tips         : getText(TextType.A0144),
+                    canBeEmpty   : true,
+                    charRestrict : null,
+                    callback     : panel => {
                         openData.callback(openData.slotIndex, panel.getInputText());
                         closePanel(getDict().CommonChooseSingleSpmSaveSlotPanel);
                     }
@@ -282,8 +282,8 @@ class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
             callback();
         } else {
             openPanel(getDict().CommonConfirmPanel, {
-                getContent  : () => getText(TextType.A0070),
-                callback    : callback,
+                getContent : () => getText(TextType.A0070),
+                callback   : callback,
             });
         }
     }

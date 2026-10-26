@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getUnitName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

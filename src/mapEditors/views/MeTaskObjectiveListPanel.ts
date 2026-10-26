@@ -1,5 +1,4 @@
 import { showLang } from "../../FloatText.ts";
-import { TaskObjectives } from "../../gameConfig/GcWar.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
@@ -20,6 +19,7 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
+import {Common} from "../../taskObjectives/Constants.ts";
 
 export interface OpenData {
     war: IMeWar;
@@ -79,7 +79,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const fullData              = war.getTaskObjectiveFullData() ?? new TaskObjectiveFullData();
         const taskObjectiveArray    = fullData.getTaskObjectiveArray();
-        if (taskObjectiveArray.length >= TaskObjectives.MaxObjectivesCount) {
+        if (taskObjectiveArray.length >= Common.MaxObjectivesCount) {
             showLang(TextType.A0712);
             return;
         }

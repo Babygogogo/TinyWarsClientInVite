@@ -6,7 +6,7 @@ import { checkIsValidEnergy, getValidEnergy, getCoMaxEnergy } from "../cos/Utils
 import { SkillTypeId } from "../coSkills/Constants.ts";
 import { getPowerSkillTargetsCount } from "../coSkills/utils/Common.ts";
 import { getTotalMultiplier } from "../coSkills/utils/persistent/SelfUnitCost.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import { addGridMark, deleteGridMark, updateGridMarkList } from "../gridMarks/Utils.ts";
 import { checkIsSameSet } from "../helpers/Collection.ts";
 import { newError, getExisted, getDefined } from "../helpers/Misc.ts";

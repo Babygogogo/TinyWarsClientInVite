@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getPlayerForceName, getPlayerTeamName, getText } from "../../lang/Utils.ts";

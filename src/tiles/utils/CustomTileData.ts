@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getFormattedText, getText } from "../../lang/Utils.ts";
 import type { TileCustomBuildingData } from "../../proto/schema/CommonProto/WarSerialization/TileCustomBuildingData.ts";
@@ -13,7 +13,7 @@ import {
 } from "./CustomLimits.ts";
 
 export namespace Building {
-    
+
     export function checkIsValid(data: TileCustomBuildingData, config: GcData): boolean {
         return Building.getErrorTip(data, config) == null;
     }
@@ -122,7 +122,7 @@ export namespace Building {
 }
 
 export namespace Cannon {
-    
+
     export function checkIsValid(data: TileCustomCannonData): boolean {
         return Cannon.getErrorTip(data) == null;
     }
@@ -189,7 +189,7 @@ export namespace Cannon {
 }
 
 export namespace Crystal {
-    
+
     export function checkIsValid(data: TileCustomCrystalData): boolean {
         return Crystal.getErrorTip(data) == null;
     }
@@ -246,7 +246,7 @@ export namespace Crystal {
 }
 
 export namespace LaserTurret {
-    
+
     export function checkIsValid(data: TileCustomLaserTurretData): boolean {
         return LaserTurret.getErrorTip(data) == null;
     }

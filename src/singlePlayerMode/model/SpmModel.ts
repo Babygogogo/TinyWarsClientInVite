@@ -1,18 +1,17 @@
 import type {
-    Undefinable,
     DecodedSpmWarSaveSlotData,
+    Undefinable,
 } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { getCampaignMapRawData } from "../../campaigns/mains/Provider.ts";
 import { show } from "../../FloatText.ts";
 import { ForcedFogCode } from "../../fogMaps/Constants.ts";
-import { SingleRankedWar, SinglePlayerWar } from "../../gameConfig/GcWar.ts";
 import { decompress } from "../../helpers/Gzip.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getNormalMapId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getLanguageText } from "../../lang/Utils.ts";
-import { StoreSpmWarSaveSlotFullData, StoreSpmReplayData } from "../../localData/Storage.ts";
+import { getLanguageText, getText } from "../../lang/Utils.ts";
+import { StoreSpmReplayData, StoreSpmWarSaveSlotFullData } from "../../localData/Storage.ts";
 import { getMapNameInCurrentLanguage, getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { addEventListeners } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -48,17 +47,19 @@ import type {
 } from "../../proto/schema/CommonProto/NetMessage/MsgSpmValidateSrw/S.ts";
 import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePlayerMode/SpmWarSaveSlotExtraData.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
-import {
-    reqSpmGetAllWarSaveSlotTimestamps,
-    reqSpmGetWarSaveSlotFullData,
-    reqSpmGetWarSaveSlotFullDataArray,
-    reqSpmGetRankList,
-    reqSpmGetReplayData,
-} from "./SpmProxy.ts";
-import { TurnIndex, PhaseCode } from "../../turns/Constants.ts";
+import { Common as SinglePlayerWarConstants } from "../../singlePlayerWars/Constants.ts";
+import { ValidateStatusId } from "../../singleRankedWars/Constants.ts";
+import { PhaseCode, TurnIndex } from "../../turns/Constants.ts";
 import { getSelfUserId } from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { create } from "../../warRules/utils/Instance.ts";
+import {
+    reqSpmGetAllWarSaveSlotTimestamps,
+    reqSpmGetRankList,
+    reqSpmGetReplayData,
+    reqSpmGetWarSaveSlotFullData,
+    reqSpmGetWarSaveSlotFullDataArray,
+} from "./SpmProxy.ts";
 
 // 多人模式战局当前数据（需要把后端warID改为数据库自增，下同）
 // 多人模式半路回放
@@ -76,18 +77,18 @@ const _slotFullDataAccessor         = new CachedDataAccessor<number, DecodedSpmW
 
 export function init(): void {
     addEventListeners([
-        { type: TypeId.MsgSpmValidateSrw,   callback: _onNotifyMsgSpmValidateSrw, },
+        { type : TypeId.MsgSpmValidateSrw,   callback : _onNotifyMsgSpmValidateSrw, },
     ], null);
 }
 
 function _onNotifyMsgSpmValidateSrw(e: Event): void {
     const data      = e.data as ProtoSchemaCommonProtoNetMessageMsgSpmValidateSrwS;
     const status    = data.getStatus();
-    if (status === SingleRankedWar.ValidateStatus.ConfigVersionNotLatest) {
+    if (status === ValidateStatusId.ConfigVersionNotLatest) {
         show(getText(TextType.A0278));
-    } else if (status === SingleRankedWar.ValidateStatus.ScoreNotHighest) {
+    } else if (status === ValidateStatusId.ScoreNotHighest) {
         show(getText(TextType.A0279));
-    } else if (status === SingleRankedWar.ValidateStatus.ScoreTooLow) {
+    } else if (status === ValidateStatusId.ScoreTooLow) {
         show(getText(TextType.A0281));
     } else {
         show(getText(TextType.A0280));
@@ -167,9 +168,9 @@ export async function updateOnMsgSpmGetWarSaveSlotFullDataArray(data: ProtoSchem
     for (const d of data.getSlotDataArray()) {
         const slotIndex = d.getSlotIndex() ?? 0;
         promiseArray.push(setSlotFullData(slotIndex, {
-            slotIndex   : slotIndex,
-            warData     : SerialWar.decode(decompress(getExisted(d.getCompressedWarData()))),
-            extraData   : SpmWarSaveSlotExtraData.decode(getExisted(d.getEncodedExtraData())),
+            slotIndex : slotIndex,
+            warData   : SerialWar.decode(decompress(getExisted(d.getCompressedWarData()))),
+            extraData : SpmWarSaveSlotExtraData.decode(getExisted(d.getEncodedExtraData())),
         }));
     }
     await Promise.all(promiseArray);
@@ -184,9 +185,9 @@ export function updateOnMsgSpmGetWarSaveSlotFullData(data: ProtoSchemaCommonProt
         return setSlotFullData(slotIndex, null);
     } else {
         return setSlotFullData(slotIndex, {
-            slotIndex   : slotIndex,
-            warData     : SerialWar.decode(decompress(getExisted(slotData.getCompressedWarData()))),
-            extraData   : SpmWarSaveSlotExtraData.decode(getExisted(slotData.getEncodedExtraData())),
+            slotIndex : slotIndex,
+            warData   : SerialWar.decode(decompress(getExisted(slotData.getCompressedWarData()))),
+            extraData : SpmWarSaveSlotExtraData.decode(getExisted(slotData.getEncodedExtraData())),
         });
     }
 }
@@ -256,9 +257,9 @@ export async function updateOnMsgSpmDeleteWarSaveSlot(slotIndex: number): Promis
 async function updateTimestampAndSlotFullData(slotIndex: number, slotExtraData: SpmWarSaveSlotExtraData, warData: SerialWar): Promise<void> {
     (await getAllSlotTimestamps())?.set(slotIndex, slotExtraData.getTimestamp() ?? 0);
     await setSlotFullData(slotIndex, {
-        slotIndex       : slotIndex,
-        extraData       : slotExtraData,
-        warData         : warData,
+        slotIndex : slotIndex,
+        extraData : slotExtraData,
+        warData   : warData,
     });
 }
 
@@ -268,13 +269,13 @@ export async function checkIsEmpty(slotIndex: number): Promise<boolean> {
 }
 export async function getEmptySlotIndexArray(): Promise<number[]> {
     const promiseArray: Promise<boolean>[] = [];
-    for (let slotIndex = 0; slotIndex < SinglePlayerWar.MaxSaveSlotCount; ++slotIndex) {
+    for (let slotIndex = 0; slotIndex < SinglePlayerWarConstants.MaxSaveSlotCount; ++slotIndex) {
         promiseArray.push(checkIsEmpty(slotIndex));
     }
 
     const emptyResultArray      = await Promise.all(promiseArray);
     const emptySlotIndexArray   : number[] = [];
-    for (let slotIndex = 0; slotIndex < SinglePlayerWar.MaxSaveSlotCount; ++slotIndex) {
+    for (let slotIndex = 0; slotIndex < SinglePlayerWarConstants.MaxSaveSlotCount; ++slotIndex) {
         if (emptyResultArray[slotIndex]) {
             emptySlotIndexArray.push(slotIndex);
         }
@@ -312,7 +313,7 @@ export async function getSlotName(slotIndex: number): Promise<string> {
     const settingsForCaw = warData.getSettingsForCaw();
     if (settingsForCaw != null) {
         const mapRawData = await getCampaignMapRawData(settingsForCaw.getCampaignId() ?? 0, settingsForCaw.getCampaignMapId() ?? 0);
-        return getLanguageText({ textArray: mapRawData?.getMapNameArray() }) ?? UndefinedError;
+        return getLanguageText({ textArray : mapRawData?.getMapNameArray() }) ?? UndefinedError;
     }
 
     return `(${getText(TextType.B0321)})`;
@@ -385,27 +386,27 @@ async function decodeAndReviseReplayData(encodedWar: Undefinable<Uint8Array>): P
     }
 
     settingsForCommon.setInstanceWarRule(create({
-        templateWarRule             : templateWarRule,
-        warEventFullData            : mapRawData.getWarEventFullData(),
-        allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
-        taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
+        templateWarRule           : templateWarRule,
+        warEventFullData          : mapRawData.getWarEventFullData(),
+        allMapSimpleDialogueArray : mapRawData.getMapSimpleDialogueArray(),
+        taskObjectiveFullData     : mapRawData.getTaskObjectiveFullData(),
     }));
 
     if (!warData.checkHasField()) {
         warData.createIfNotExistsField().loadJson({
-            fogMap  : {
-                forceFogCode    : ForcedFogCode.None,
-                mapsFromPath    : [],
+            fogMap : {
+                forceFogCode : ForcedFogCode.None,
+                mapsFromPath : [],
             },
         });
     }
 
     if (!warData.checkHasTurnManager()) {
         warData.createIfNotExistsTurnManager().loadJson({
-            turnIndex       : TurnIndex.FirstIndex,
-            turnPhaseCode   : PhaseCode.WaitBeginTurn,
-            playerIndex     : PlayerIndex.Neutral,
-            enterTurnTime   : 0,
+            turnIndex     : TurnIndex.FirstIndex,
+            turnPhaseCode : PhaseCode.WaitBeginTurn,
+            playerIndex   : PlayerIndex.Neutral,
+            enterTurnTime : 0,
         });
     }
 

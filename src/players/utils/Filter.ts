@@ -1,5 +1,5 @@
 import { checkIsValidSkillTypeIdSubset } from "../../coSkills/utils/Common.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText, getPlayerTeamName, getPlayerAliveStateName, getCoSkillTypeName, getFormattedText } from "../../lang/Utils.ts";

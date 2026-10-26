@@ -1,7 +1,7 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CategoryId, CoId } from "../cos/Constants.ts";
 import { checkIsValidSkinId } from "../forceSkins/Utils.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import { checkIsSameSet } from "../helpers/Collection.ts";
 import {
     InitialFund,

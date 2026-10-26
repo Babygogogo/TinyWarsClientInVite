@@ -1,5 +1,5 @@
 import { showLang } from "../../FloatText.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { gotoMapEditorWar } from "../../helpers/GameFlow.ts";

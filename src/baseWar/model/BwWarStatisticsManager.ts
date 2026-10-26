@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../interface/IBwWar.ts";
 import type { IBwWarStatisticsManager } from "../interface/IBwWarStatisticsManager.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { encodeTeamIndex, decodeTeamIndex } from "../../helpers/Team.ts";

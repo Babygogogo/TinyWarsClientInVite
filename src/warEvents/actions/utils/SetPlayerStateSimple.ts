@@ -4,7 +4,7 @@ import { PlayerDataForWeaSetPlayerState } from "../../../auxiliaryTypes/PlayerDa
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getValidEnergy } from "../../../cos/Utils.ts";
 import { checkIsValidSkillTypeId } from "../../../coSkills/utils/Common.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { GcData } from "../../../gameConfigs/GcData.ts";
 import { createLazyFunc } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getText, getFormattedText } from "../../../lang/Utils.ts";

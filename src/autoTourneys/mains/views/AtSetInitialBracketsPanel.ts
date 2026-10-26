@@ -1,12 +1,10 @@
-import { reqAtSetInitialBrackets } from "../Gateway.ts";
-import { getAtFullBracketInfo } from "../Provider.ts";
 import { showLang } from "../../../FloatText.ts";
-import { MultiRankedWar } from "../../../gameConfig/GcWar.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../../helpers/Collection.ts";
 import { TextType, UndefinedError } from "../../../lang/Constants.ts";
 import { getText } from "../../../lang/Utils.ts";
+import { Common as MultiRankedWarConstants } from "../../../multiRankedWars/Constants.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
 import { InitialBracket } from "../../../proto/schema/CommonProto/NetMessage/MsgAtSetInitialBrackets/InitialBracket.ts";
 import { ShortSfxCode } from "../../../sounds/Constants.ts";
@@ -21,9 +19,11 @@ import type { IUiLabel } from "../../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../../ui/interfaces/IUiLayout.ts";
 import type { IUiScrollList } from "../../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../../ui/types/UiListItemData.ts";
-import { getUserMrwRankScoreInfo, checkHasUserPublicInfo, getUserNickname } from "../../../users/Model.ts";
+import { checkHasUserPublicInfo, getUserMrwRankScoreInfo, getUserNickname } from "../../../users/Model.ts";
 import { reqUserGetPublicInfoArray } from "../../../users/Proxy.ts";
 import { WarTypeId } from "../../../warTypes/Constants.ts";
+import { reqAtSetInitialBrackets } from "../Gateway.ts";
+import { getAtFullBracketInfo } from "../Provider.ts";
 
 type Slot = {
     bracketGameId   : number;
@@ -51,16 +51,16 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgAtSetInitialBrackets,     callback: this._onNotifyMsgAtSetInitialBrackets },
+            { type : TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : TypeId.MsgAtSetInitialBrackets,     callback : this._onNotifyMsgAtSetInitialBrackets },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,           callback: this.closePanel },
-            { ui: this._btnHelp,            callback: this._onTouchedBtnHelp },
-            { ui: this._btnSort,            callback: this._onTouchedBtnSort },
+            { ui : this._btnClose,           callback : this.closePanel },
+            { ui : this._btnHelp,            callback : this._onTouchedBtnHelp },
+            { ui : this._btnSort,            callback : this._onTouchedBtnSort },
 
-            { ui: this._btnCancel,          callback: this.closePanel },
-            { ui: this._btnConfirm,         callback: this._onTouchedBtnConfirm },
+            { ui : this._btnCancel,          callback : this.closePanel },
+            { ui : this._btnConfirm,         callback : this._onTouchedBtnConfirm },
         ]);
         this._setIsTouchMaskEnabled();
         this._enableKeyEscapeToClosePanel();
@@ -81,8 +81,8 @@ export class Panel extends UiPanel<OpenData> {
     public updateOnSelectedSlot(bracketGameId: number, userSlotIndex: number): void {
         if (this._selectedSlot == null) {
             this._selectedSlot = {
-                bracketGameId   : bracketGameId,
-                userSlotIndex   : userSlotIndex,
+                bracketGameId : bracketGameId,
+                userSlotIndex : userSlotIndex,
             };
             return;
         }
@@ -132,10 +132,10 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         openPanel(getDict().CommonChooseSingleNumberPanel, {
-            getTitleText            : () => getText(TextType.B0567),
-            availableNumberArray    : [0, 1, 2, 3],
-            currentNumber           : null,
-            getNumberMainText       : num => {
+            getTitleText         : () => getText(TextType.B0567),
+            availableNumberArray : [0, 1, 2, 3],
+            currentNumber        : null,
+            getNumberMainText    : num => {
                 switch (num) {
                     case 0  : return getText(TextType.B0198);
                     case 1  : return getText(TextType.B0199);
@@ -144,7 +144,7 @@ export class Panel extends UiPanel<OpenData> {
                     default : return UndefinedError;
                 }
             },
-            callbackOnConfirm       : async num => {
+            callbackOnConfirm : async num => {
                 const userIdAndScoreArray: { userId: number, score: number }[] = [];
                 {
                     const promiseArray: Promise<void>[] = [];
@@ -156,21 +156,21 @@ export class Panel extends UiPanel<OpenData> {
                         if (num === 0) {
                             promiseArray.push((async (): Promise<void> => {
                                 const info = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2);
-                                userIdAndScoreArray.push({ userId, score: info?.getCurrentScore() ?? MultiRankedWar.InitialScore });
+                                userIdAndScoreArray.push({ userId, score : info?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore });
                             })());
                         } else if (num === 1) {
                             promiseArray.push((async (): Promise<void> => {
                                 const info = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2);
-                                userIdAndScoreArray.push({ userId, score: info?.getCurrentScore() ?? MultiRankedWar.InitialScore });
+                                userIdAndScoreArray.push({ userId, score : info?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore });
                             })());
                         } else if (num === 2) {
                             promiseArray.push((async (): Promise<void> => {
-                                const score1 = (await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2))?.getCurrentScore() ?? MultiRankedWar.InitialScore;
-                                const score2 = (await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2))?.getCurrentScore() ?? MultiRankedWar.InitialScore;
-                                userIdAndScoreArray.push({ userId, score: score1 + score2 });
+                                const score1 = (await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2))?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore;
+                                const score2 = (await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2))?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore;
+                                userIdAndScoreArray.push({ userId, score : score1 + score2 });
                             })());
                         } else {
-                            userIdAndScoreArray.push({ userId, score: Math.random() });
+                            userIdAndScoreArray.push({ userId, score : Math.random() });
                         }
                     }
                     await Promise.all(promiseArray);
@@ -207,8 +207,8 @@ export class Panel extends UiPanel<OpenData> {
         const dataArray: InitialBracket[] = [];
         for (const data of this._dataArrayForListBracket) {
             dataArray.push(InitialBracket.fromJson({
-                bracketGameId   : data.bracketGameId,
-                userIdArray     : getNonNullElements(data.userIdArray),
+                bracketGameId : data.bracketGameId,
+                userIdArray   : getNonNullElements(data.userIdArray),
             }));
         }
 
@@ -254,9 +254,9 @@ export class Panel extends UiPanel<OpenData> {
             }
 
             dataArray.push({
-                bracketGameId   : bracketInfo.getBracketGameId() ?? 0,
-                userIdArray     : userIdArray,
-                panel           : this,
+                bracketGameId : bracketInfo.getBracketGameId() ?? 0,
+                userIdArray   : userIdArray,
+                panel         : this,
             });
         }
 
@@ -297,8 +297,8 @@ class BracketRenderer extends UiListItemRenderer<DataForBracketRenderer> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupName1,     callback: this._onTouchedGroupName1 },
-            { ui: this._groupName2,     callback: this._onTouchedGroupName2 },
+            { ui : this._groupName1,     callback : this._onTouchedGroupName1 },
+            { ui : this._groupName2,     callback : this._onTouchedGroupName2 },
         ]);
     }
 
@@ -357,7 +357,7 @@ class BracketRenderer extends UiListItemRenderer<DataForBracketRenderer> {
         } else {
             const info1 = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2);
             const info2 = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2);
-            label.setText(`${info1?.getCurrentScore() ?? MultiRankedWar.InitialScore}, ${info2?.getCurrentScore() ?? MultiRankedWar.InitialScore}`);
+            label.setText(`${info1?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore}, ${info2?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore}`);
         }
     }
 

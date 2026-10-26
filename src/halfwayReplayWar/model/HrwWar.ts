@@ -1,6 +1,6 @@
 import type { ReplayCheckpointData } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { removeUnitOnMap } from "../../destructions/Utils.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import type { IHrwWar } from "../interface/IHrwWar.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";
 import { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";

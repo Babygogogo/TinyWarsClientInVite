@@ -2,7 +2,7 @@ import type { IBwCommonSettingManager } from "../../baseWar/interface/IBwCommonS
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
 import type { IBwWarStatisticsManager } from "../../baseWar/interface/IBwWarStatisticsManager.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import type { IPlayerManager } from "../../players/IPlayerManager.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";

@@ -1,6 +1,6 @@
 import { showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getLatestConfigVersion, getPreviousConfigVersion, getNextConfigVersion, getGameConfig } from "../../gameConfig/GcModel.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
+import { getLatestConfigVersion, getPreviousConfigVersion, getNextConfigVersion, getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getUserAvatar, getMedal } from "../../helpers/ImageSource.ts";

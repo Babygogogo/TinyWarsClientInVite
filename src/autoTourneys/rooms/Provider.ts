@@ -5,8 +5,7 @@ import { DefaultParams, TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import type { OpenData as CommonViewCommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import type { OpenData as CommonViewCommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { BasicSettingsType } from "../../gameConfig/GcWar.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getExisted, checkIsAnyPromiseTrue, newError } from "../../helpers/Misc.ts";
 import { warn } from "../../Logger.ts";
@@ -28,6 +27,7 @@ import { DataForPlayerInRoom } from "../../proto/schema/CommonProto/Structure/Da
 import { getSelfUserId } from "../../users/Model.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { getPlayerRule, getPlayersCountUnneutral } from "../../warRules/utils/CommonData.ts";
+import {BasicSettingsTypeId} from "../../wars/Constants.ts";
 
 type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
 type OpenDataForCommonWarAdvancedSettingsPage   = OpenData;
@@ -227,7 +227,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     const openData          : OpenDataForCommonWarBasicSettingsPage = {
         dataArrayForListSettings    : [
             {
-                settingsType    : BasicSettingsType.NormalMapId,
+                settingsType    : BasicSettingsTypeId.NormalMapId,
                 currentValue    : normalMapId,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -235,7 +235,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType    : BasicSettingsType.WarRuleTitle,
+                settingsType    : BasicSettingsTypeId.WarRuleTitle,
                 currentValue    : null,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -243,7 +243,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType    : BasicSettingsType.HasFog,
+                settingsType    : BasicSettingsTypeId.HasFog,
                 currentValue    : null,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -251,7 +251,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType    : BasicSettingsType.Weather,
+                settingsType    : BasicSettingsTypeId.Weather,
                 currentValue    : null,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -259,7 +259,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType        : BasicSettingsType.TileTheme,
+                settingsType        : BasicSettingsTypeId.TileTheme,
                 currentValue        : null,
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
@@ -267,7 +267,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify    : null,
             },
             {
-                settingsType    : BasicSettingsType.WarEvent,
+                settingsType    : BasicSettingsTypeId.WarEvent,
                 currentValue    : null,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -275,7 +275,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType    : BasicSettingsType.TurnsAndWarOperationsLimit,
+                settingsType    : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                 currentValue    : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -283,7 +283,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
                 callbackOnModify: null,
             },
             {
-                settingsType    : BasicSettingsType.TimerType,
+                settingsType    : BasicSettingsTypeId.TimerType,
                 currentValue    : timerType,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
@@ -294,7 +294,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     };
     if (timerType === TimerTypeId.Regular) {
         openData.dataArrayForListSettings.push({
-            settingsType    : BasicSettingsType.TimerRegularParam,
+            settingsType    : BasicSettingsTypeId.TimerRegularParam,
             currentValue    : bootTimerParams[1],
             instanceWarRule : instanceWarRule,
             gameConfig      : gameConfig,
@@ -304,7 +304,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     } else if (timerType === TimerTypeId.Incremental) {
         openData.dataArrayForListSettings.push(
             {
-                settingsType    : BasicSettingsType.TimerIncrementalParams,
+                settingsType    : BasicSettingsTypeId.TimerIncrementalParams,
                 currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,

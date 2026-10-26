@@ -11,8 +11,8 @@ import {
 } from "../model/CommonModel.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
 import { getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
 import { createLazyFunc, getExisted, newError } from "../../helpers/Misc.ts";
 import { getNormalMapId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";

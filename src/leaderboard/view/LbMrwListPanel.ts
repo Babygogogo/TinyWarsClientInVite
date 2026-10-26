@@ -1,16 +1,15 @@
 import { getMrwRankList } from "../../common/model/CommonModel.ts";
 import { reqGetRankList } from "../../common/model/CommonProxy.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
-import { MultiRankedWar } from "../../gameConfig/GcWar.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getUserAvatar, getMedal } from "../../helpers/ImageSource.ts";
+import { getMedal, getUserAvatar } from "../../helpers/ImageSource.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { format } from "../../helpers/Text.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { getMrwRankIndex } from "../model/LeaderboardModel.ts";
+import { Common as MultiRankedWarConstants } from "../../multiRankedWars/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -24,8 +23,9 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiListItemRenderer } from "../../ui/interfaces/IUiListItemRenderer.ts";
 import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
-import { getSelfUserId, getSelfInfo, getUserPublicInfo } from "../../users/Model.ts";
+import { getSelfInfo, getSelfUserId, getUserPublicInfo } from "../../users/Model.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
+import { getMrwRankIndex } from "../model/LeaderboardModel.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {
@@ -61,13 +61,13 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,        callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgCommonGetRankList,   callback: this._onMsgCommonGetRankList },
+            { type : TypeId.LanguageChanged,        callback : this._onNotifyLanguageChanged },
+            { type : TypeId.MsgCommonGetRankList,   callback : this._onMsgCommonGetRankList },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnSwitch,      callback: this._onTouchedBtnSwitch },
-            { ui: this._groupMyInfo,    callback: this._onTouchedGroupMyInfo },
-            { ui: this._btnClose,       callback: this.closePanel },
+            { ui : this._btnSwitch,      callback : this._onTouchedBtnSwitch },
+            { ui : this._groupMyInfo,    callback : this._onTouchedGroupMyInfo },
+            { ui : this._btnClose,       callback : this.closePanel },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -111,7 +111,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedGroupMyInfo(): void {
         const userId = getSelfUserId();
         if (userId != null) {
-            openPanel(getDict().UserPanel, { userId: userId });
+            openPanel(getDict().UserPanel, { userId : userId });
             playShortSfx(ShortSfxCode.ButtonNeutral01);
         }
     }
@@ -147,12 +147,12 @@ export class Panel extends UiPanel<OpenData> {
                 }
 
                 dataList.push({
-                    gameConfig      : gameConfig,
-                    rank            : dataList.length + 1,
-                    userId          : userId,
-                    warType         : warType,
-                    playersCount    : playersCount,
-                    isLast          : false,
+                    gameConfig   : gameConfig,
+                    rank         : dataList.length + 1,
+                    userId       : userId,
+                    warType      : warType,
+                    playersCount : playersCount,
+                    isLast       : false,
                 });
             }
         }
@@ -173,7 +173,6 @@ export class Panel extends UiPanel<OpenData> {
 
         const isStd         = this._isStd;
         const warType       = isStd ? WarTypeId.MrwStd : WarTypeId.MrwFog;
-        const gameConfig    = await getLatestGameConfig();
         const rankIndex     = await getMrwRankIndex(warType, userInfo.getUserId() ?? 0);
         if (isStd !== this._isStd) {
             return;
@@ -194,7 +193,7 @@ export class Panel extends UiPanel<OpenData> {
         this._imgMyAvatar.loadSource(getUserAvatar(userComplexInfo?.getAvatarId() ?? 1));
         this._labelMyNickname.setText(userInfo.getNickname() ?? UndefinedError);
         this._imgMyMedal.loadSource(medalId == null ? `` : getMedal(medalId));
-        this._labelMyScore.setText(`${rankInfo?.getCurrentScore() ?? MultiRankedWar.InitialScore}`);
+        this._labelMyScore.setText(`${rankInfo?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore}`);
         this._labelMyWin.setText(`${winCount}`);
         this._labelMyLose.setText(`${loseCount}`);
         this._labelMyDraw.setText(`${drawCount}`);
@@ -214,8 +213,7 @@ interface DataForMrwUserRenderer extends UiListItemData {
 }
 class MrwUserRenderer
     extends     UiListItemRenderer<DataForMrwUserRenderer>
-    implements  IUiListItemRenderer<DataForMrwUserRenderer>
-{
+    implements  IUiListItemRenderer<DataForMrwUserRenderer> {
     private readonly _group!            : IUiContainer;
     private readonly _imgBottom!        : IUiImage;
     private readonly _labelIndex!       : IUiLabel;
@@ -240,7 +238,7 @@ class MrwUserRenderer
     }
 
     public onItemTapEvent(): void {
-        openPanel(getDict().UserPanel, { userId: this.getOpenData()?.userId });
+        openPanel(getDict().UserPanel, { userId : this.getOpenData()?.userId });
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -290,7 +288,7 @@ class MrwUserRenderer
         imgAvatar.loadSource(getUserAvatar(userInfo.getAvatarId() ?? 1));
         labelNickname.setText(userInfo.getNickname() ?? UndefinedError);
         imgMedal.loadSource(medalId == null ? `` : getMedal(medalId));
-        labelScore.setText(`${rankInfo?.getCurrentScore() ?? MultiRankedWar.InitialScore}`);
+        labelScore.setText(`${rankInfo?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore}`);
         labelWin.setText(`${winCount}`);
         labelLose.setText(`${loseCount}`);
         labelDraw.setText(`${drawCount}`);

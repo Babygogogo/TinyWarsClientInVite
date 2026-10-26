@@ -1,4 +1,4 @@
-import { getLatestConfigVersion } from "../../gameConfig/GcModel.ts";
+import { getLatestConfigVersion } from "../../gameConfigs/Provider.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getSuffixForRankIndex } from "../../helpers/Text.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";

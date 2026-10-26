@@ -13,7 +13,7 @@ import {
     Page as CommonViewCommonWarPlayerInfoPage,
 } from "../../common/view/CommonWarPlayerInfoPage.ts";
 import { showLang } from "../../FloatText.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
 import { gotoMultiPlayerWar } from "../../helpers/GameFlow.ts";

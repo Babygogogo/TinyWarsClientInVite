@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { pickRandomCo } from "../../cos/Utils.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getFinalMfwHumanCoIdSet } from "../../playerRules/Utils.ts";

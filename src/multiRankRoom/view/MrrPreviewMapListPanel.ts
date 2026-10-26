@@ -9,8 +9,7 @@ import {
     type OpenData as CommonViewCommonWarMapInfoPageOpenData,
     Page as CommonViewCommonWarMapInfoPage,
 } from "../../common/view/CommonWarMapInfoPage.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
-import { BasicSettingsType } from "../../gameConfig/GcWar.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -40,6 +39,7 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { Common } from "../../warOperations/Constants.ts";
 import { create } from "../../warRules/utils/Instance.ts";
+import {BasicSettingsTypeId} from "../../wars/Constants.ts";
 
 export interface OpenData {
     hasFog: boolean;
@@ -309,7 +309,7 @@ export class Panel extends UiPanel<OpenData> {
         const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
             dataArrayForListSettings    : [
                 {
-                    settingsType    : BasicSettingsType.NormalMapId,
+                    settingsType    : BasicSettingsTypeId.NormalMapId,
                     currentValue    : normalMapId,
                     instanceWarRule,
                     gameConfig,
@@ -317,7 +317,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsType.WarRuleTitle,
+                    settingsType    : BasicSettingsTypeId.WarRuleTitle,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -325,7 +325,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsType.HasFog,
+                    settingsType    : BasicSettingsTypeId.HasFog,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -333,7 +333,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsType.Weather,
+                    settingsType    : BasicSettingsTypeId.Weather,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -341,7 +341,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType        : BasicSettingsType.TileTheme,
+                    settingsType        : BasicSettingsTypeId.TileTheme,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -349,7 +349,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify    : null,
                 },
                 {
-                    settingsType    : BasicSettingsType.WarEvent,
+                    settingsType    : BasicSettingsTypeId.WarEvent,
                     currentValue    : null,
                     instanceWarRule,
                     gameConfig,
@@ -357,7 +357,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsType.TurnsAndWarOperationsLimit,
+                    settingsType    : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                     currentValue    : `${TurnIndex.DefaultLimit}, ${Common.DefaultLimit}`,
                     instanceWarRule,
                     gameConfig,
@@ -365,7 +365,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify: null,
                 },
                 {
-                    settingsType    : BasicSettingsType.TimerType,
+                    settingsType    : BasicSettingsTypeId.TimerType,
                     currentValue    : timerType,
                     instanceWarRule,
                     gameConfig,
@@ -376,7 +376,7 @@ export class Panel extends UiPanel<OpenData> {
         };
         if (timerType === TimerTypeId.Regular) {
             openData.dataArrayForListSettings.push({
-                settingsType    : BasicSettingsType.TimerRegularParam,
+                settingsType    : BasicSettingsTypeId.TimerRegularParam,
                 currentValue    : bootTimerParams[1],
                 instanceWarRule,
                 gameConfig,
@@ -386,7 +386,7 @@ export class Panel extends UiPanel<OpenData> {
         } else if (timerType === TimerTypeId.Incremental) {
             openData.dataArrayForListSettings.push(
                 {
-                    settingsType    : BasicSettingsType.TimerIncrementalParams,
+                    settingsType    : BasicSettingsTypeId.TimerIncrementalParams,
                     currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                     instanceWarRule,
                     gameConfig,

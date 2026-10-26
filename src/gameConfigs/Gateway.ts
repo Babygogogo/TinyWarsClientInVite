@@ -1,4 +1,3 @@
-import { setLatestConfigVersion } from "./GcModel.ts";
 import { getExisted } from "../helpers/Misc.ts";
 import { addListeners, send } from "../networks/Manager.ts";
 import { MessageCodes } from "../networks/MessageCodes.ts";
@@ -6,16 +5,17 @@ import { dispatch } from "../notifications/Dispatcher.ts";
 import { TypeId } from "../notifications/TypeId.ts";
 import type { S } from "../proto/schema/CommonProto/NetMessage/MsgCommonLatestConfigVersion/S.ts";
 import type { Event } from "../vendor/egret/Egret.ts";
+import { setLatestConfigVersion } from "./Provider.ts";
 
 export function init(): void {
     addListeners([
-        { msgCode: MessageCodes.MsgCommonLatestConfigVersion,    callback: _onMsgCommonLatestConfigVersion },
+        { msgCode : MessageCodes.MsgCommonLatestConfigVersion,    callback : _onMsgCommonLatestConfigVersion },
     ], null);
 }
 
 export function reqCommonLatestConfigVersion(): void {
     send({
-        MsgCommonLatestConfigVersion: { c: {} },
+        MsgCommonLatestConfigVersion : { c : {} },
     });
 }
 function _onMsgCommonLatestConfigVersion(e: Event): void {

@@ -8,7 +8,7 @@ import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { checkIsEffective } from "../coSkills/utils/persistent/SelfTileEnabledForUnitProduction.ts";
 import { getTotalMultiplier } from "../coSkills/utils/persistent/SelfTileIncome.ts";
 import { getRawOverridingSkinId } from "../forceSkins/Utils.ts";
-import { GcData } from "../gameConfig/GcData.ts";
+import { GcData } from "../gameConfigs/GcData.ts";
 import { Common } from "../maps/Constants.ts";
 import { getTileViewClass, getRwWarClass } from "../gameHelpers/GhFactory.ts";
 import { deleteElementFromList } from "../helpers/Collection.ts";

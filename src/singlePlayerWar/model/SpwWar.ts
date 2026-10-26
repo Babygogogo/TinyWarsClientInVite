@@ -1,6 +1,5 @@
 import type { IBwWarEventManager } from "../../baseWar/interface/IBwWarEventManager.ts";
 import { BwWar } from "../../baseWar/model/BwWar.ts";
-import { SinglePlayerWar } from "../../gameConfig/GcWar.ts";
 import { getBwWarEventManagerClass, getSpwRetractManagerClass } from "../../gameHelpers/GhFactory.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import type { IPlayer } from "../../players/IPlayer.ts";
@@ -8,7 +7,8 @@ import { SpmWarSaveSlotExtraData } from "../../proto/schema/CommonProto/SinglePl
 import type { SerialWar } from "../../proto/schema/CommonProto/WarSerialization/SerialWar.ts";
 import type { ISpwRetractManager } from "../interface/ISpwRetractManager.ts";
 import type { ISpwWar } from "../interface/ISpwWar.ts";
-import { getAllUnitsOnMapVisibleToTeams, getAllTilesVisibleToTeams } from "../../visibilities/Utils.ts";
+import { getAllTilesVisibleToTeams, getAllUnitsOnMapVisibleToTeams } from "../../visibilities/Utils.ts";
+import { PlayerScore } from "../../singlePlayerWars/Constants.ts";
 
 export abstract class SpwWar extends BwWar implements ISpwWar {
     private readonly _warEventManager       = new (getBwWarEventManagerClass())();
@@ -79,7 +79,7 @@ export abstract class SpwWar extends BwWar implements ISpwWar {
 
     public setSaveSlotExtraData(extraData: SpmWarSaveSlotExtraData | null): void {
         this._saveSlotExtraData.loadJson(extraData?.toJson() ?? {
-            overridingSkinIdArray   : [],
+            overridingSkinIdArray : [],
         });
     }
     public getSaveSlotExtraData(): SpmWarSaveSlotExtraData {
@@ -95,10 +95,10 @@ export abstract class SpwWar extends BwWar implements ISpwWar {
 
     public calculateTotalScore(): number {
         return getValueInRange({
-            minValue    : SinglePlayerWar.PlayerScore.MinScore,
-            maxValue    : SinglePlayerWar.PlayerScore.MaxScore,
-            rawValue    : Math.floor(
-                SinglePlayerWar.PlayerScore.BaseScore
+            minValue : PlayerScore.MinScore,
+            maxValue : PlayerScore.MaxScore,
+            rawValue : Math.floor(
+                PlayerScore.BaseScore
                 - (this.getTurnManager().getTurnIndex() - 1) * 1000
                 - this.getExecutedOperationManager().getExecutedOperationsCount()
                 + this.getTaskObjectiveManager().getScore()

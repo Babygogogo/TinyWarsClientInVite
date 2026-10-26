@@ -1,4 +1,4 @@
-import { GcData } from "../../../gameConfig/GcData.ts";
+import { GcData } from "../../../gameConfigs/GcData.ts";
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { Tile } from "../../../expressionParsers/contexts/Tile.ts";

@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getHrwWarClass } from "../../gameHelpers/GhFactory.ts";
 import type { IHrwWar } from "../interface/IHrwWar.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";

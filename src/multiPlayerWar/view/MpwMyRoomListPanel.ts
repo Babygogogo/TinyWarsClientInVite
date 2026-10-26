@@ -31,7 +31,7 @@ import {
 } from "../../coopCustomRoom/model/CcrModel.ts";
 import { reqCcrGetJoinedRoomIdArray } from "../../coopCustomRoom/model/CcrProxy.ts";
 import { showLang } from "../../FloatText.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";

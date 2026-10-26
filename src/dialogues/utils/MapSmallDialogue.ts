@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { Common, SmallDialogueSideId } from "../Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { UndefinedError, TextType } from "../../lang/Constants.ts";
 import { checkIsValidLanguageTextArray, getFormattedText, getText } from "../../lang/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";

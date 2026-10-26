@@ -1,6 +1,6 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { show, showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, getRunningPanel } from "../../gamePanels/Manager.ts";
 import { deleteElementFromList } from "../../helpers/Collection.ts";

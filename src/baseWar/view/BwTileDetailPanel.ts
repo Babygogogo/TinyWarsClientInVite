@@ -3,7 +3,7 @@ import type { IBwWar } from "../interface/IBwWar.ts";
 import { getUnitAnimationTickCount } from "../../common/model/CommonModel.ts";
 import { showLang } from "../../FloatText.ts";
 import { getFinalSkinIdArray, getRawOverridingSkinId, getDefaultSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import {
     getTileViewClass,
     getMpwWarClass,

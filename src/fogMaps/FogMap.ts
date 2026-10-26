@@ -5,7 +5,6 @@ import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import { ForcedFogCode } from "./Constants.ts";
 import type { IFogMap } from "./IFogMap.ts";
-import { VisibilityTypeId } from "../gameConfig/GcWar.ts";
 import { getHrwWarClass, getMeWarClass, getMpwWarClass, getRwWarClass, getSpwWarClass, getTwWarClass } from "../gameHelpers/GhFactory.ts";
 import { createEmptyMap } from "../helpers/Collection.ts";
 import { newError, getExisted, getDefined } from "../helpers/Misc.ts";
@@ -21,6 +20,7 @@ import {
     getVisibilityArrayWithMapFromPath,
 } from "../visibilities/Utils.ts";
 import { FogType } from "../weathers/Constants.ts";
+import {VisibilityTypeId} from "../visibilities/Constants.ts";
 
 export class FogMap implements IFogMap {
     private _forceFogCode?              : ForcedFogCode;

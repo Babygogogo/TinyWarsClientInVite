@@ -1,5 +1,4 @@
 import { ContextType } from "../../expressionParsers/Enums.ts";
-import { TaskObjectives } from "../../gameConfig/GcWar.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
@@ -13,7 +12,7 @@ import type { TaskObjectiveFullData } from "../../proto/schema/CommonProto/TaskO
 import type { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
-import { ExpressionInfoDict } from "../../taskObjectives/Constants.ts";
+import {ExpressionInfoDict, Common} from "../../taskObjectives/Constants.ts";
 import { getErrorText } from "../../taskObjectives/Utils.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -124,7 +123,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputLanguageTextPanel, {
             getTitle            : () => getText(TextType.B1215),
             currentTextArray    : taskObjective.getDesc(),
-            maxLength           : TaskObjectives.MaxDescLength,
+            maxLength           : Common.MaxDescLength,
             callback            : newValue => {
                 taskObjective.setDesc(newValue);
                 dispatch(TypeId.MeTaskObjectiveFullDataChanged, this.getOpenData()?.fullData);

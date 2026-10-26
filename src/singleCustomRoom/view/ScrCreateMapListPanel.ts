@@ -2,7 +2,7 @@ import type { Undefinable, MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes
 import type { MapFilter } from "../../auxiliaryTypes/MapFilter.ts";
 import { showLang } from "../../FloatText.ts";
 import { SortType } from "../../maps/Constants.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted } from "../../helpers/Misc.ts";

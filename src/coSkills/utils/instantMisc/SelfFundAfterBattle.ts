@@ -1,5 +1,5 @@
 import { AreaTypeId } from "../../Constants.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { GcData } from "../../../gameConfigs/GcData.ts";
 import type { SelfFundAfterBattle } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/InstantMisc/SelfFundAfterBattle.ts";
 
 export function getTotalOffset({

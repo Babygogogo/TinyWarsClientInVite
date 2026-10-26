@@ -2,7 +2,6 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GridIndex } from "../../auxiliaryTypes/GridIndex.ts";
 import { FixedAreaDamageTargetTypeId } from "../Constants.ts";
 import { destroyUnitOnMap } from "../../destructions/Utils.ts";
-import { VisibilityTypeId } from "../../gameConfig/GcWar.ts";
 import { getUnitClass } from "../../gameHelpers/GhFactory.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { encodeTeamIndex } from "../../helpers/Team.ts";
@@ -20,6 +19,7 @@ import { Hp, ActionStateId } from "../../units/Constants.ts";
 import { create as UnitsUtilsSerializationCreate } from "../../units/utils/Serialization.ts";
 import { ClientErrorCode } from "../../utils/ClientErrorCode.ts";
 import { getObserverTeamIndexListForUnitOnMap } from "../../visibilities/Utils.ts";
+import {VisibilityTypeId} from "../../visibilities/Constants.ts";
 
 type IBwPlayer                      = IPlayer;
 

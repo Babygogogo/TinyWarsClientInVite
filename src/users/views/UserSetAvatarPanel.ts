@@ -1,6 +1,6 @@
 import { getAvailableUserAvatarIdArray } from "../../avatars/Utils.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getUserAvatar } from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";

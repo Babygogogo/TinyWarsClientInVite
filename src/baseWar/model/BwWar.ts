@@ -15,7 +15,7 @@ import type { IBwWarView } from "../interface/IBwWarView.ts";
 import { TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { IField } from "../../fields/IField.ts";
 import type { IFogMap } from "../../fogMaps/IFogMap.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import {
     getBwWeatherManagerClass,
     getTurnManagerClass,

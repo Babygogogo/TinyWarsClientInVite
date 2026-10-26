@@ -15,23 +15,15 @@ import {
 import { CategoryId, CoId } from "../../cos/Constants.ts";
 import { show, showLang } from "../../FloatText.ts";
 import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { MultiRankedWar } from "../../gameConfig/GcWar.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getSkinCircle, getCoEye } from "../../helpers/ImageSource.ts";
+import { getCoEye, getSkinCircle } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getPlayerTeamName, getTimeDurationText2 } from "../../lang/Utils.ts";
-import {
-    getRoomInfo,
-    getSelfSettings,
-    createDataForCommonWarPlayerInfoPage,
-    createDataForCommonWarBasicSettingsPage,
-    createDataForCommonWarAdvancedSettingsPage,
-} from "../model/MrrModel.ts";
-import { reqMrrGetRoomPublicInfo, reqMrrSetBannedCoIdArray, reqMrrSetSelfSettings } from "../model/MrrProxy.ts";
+import { getFormattedText, getPlayerTeamName, getText, getTimeDurationText2 } from "../../lang/Utils.ts";
+import { Common as MultiRankedWarConstants } from "../../multiRankedWars/Constants.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgMrrDeleteRoomByServer/S.ts";
@@ -61,6 +53,14 @@ import { getSelfUserId } from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { getPlayerRule } from "../../warRules/utils/CommonData.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
+import {
+    createDataForCommonWarAdvancedSettingsPage,
+    createDataForCommonWarBasicSettingsPage,
+    createDataForCommonWarPlayerInfoPage,
+    getRoomInfo,
+    getSelfSettings,
+} from "../model/MrrModel.ts";
+import { reqMrrGetRoomPublicInfo, reqMrrSetBannedCoIdArray, reqMrrSetSelfSettings } from "../model/MrrProxy.ts";
 
 export interface OpenData {
     roomId  : number;
@@ -108,21 +108,21 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnBack,                callback: this._onTouchedBtnBack },
-            { ui: this._btnBanCo,               callback: this._onTouchedBtnBanCo },
-            { ui: this._btnChooseCo,            callback: this._onTouchedBtnChooseCo },
-            { ui: this._btnChoosePlayerIndex,   callback: this._onTouchedBtnChoosePlayerIndex },
-            { ui: this._btnChooseSkinId,        callback: this._onTouchedBtnChooseSkinId },
-            { ui: this._btnChooseReady,         callback: this._onTouchedBtnChooseReady },
+            { ui : this._btnBack,                callback : this._onTouchedBtnBack },
+            { ui : this._btnBanCo,               callback : this._onTouchedBtnBanCo },
+            { ui : this._btnChooseCo,            callback : this._onTouchedBtnChooseCo },
+            { ui : this._btnChoosePlayerIndex,   callback : this._onTouchedBtnChoosePlayerIndex },
+            { ui : this._btnChooseSkinId,        callback : this._onTouchedBtnChooseSkinId },
+            { ui : this._btnChooseReady,         callback : this._onTouchedBtnChooseReady },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                     callback: this._onNotifyLanguageChanged },
-            { type: TypeId.TimeTick,                            callback: this._onNotifyTimeTick },
-            { type: TypeId.RoomSelfSettingsCoIdChanged,         callback: this._onNotifyMrrSelfSettingsCoIdChanged },
-            { type: TypeId.MsgMrrGetRoomPublicInfo,             callback: this._onNotifyMsgMrrGetRoomPublicInfo },
-            { type: TypeId.MsgMrrSetSelfSettings,               callback: this._onNotifyMsgMrrSetSelfSettings },
-            { type: TypeId.MsgMrrSetBannedCoIdArray,            callback: this._onNotifyMsgMrrSetBannedCoIdArray },
-            { type: TypeId.MsgMrrDeleteRoomByServer,            callback: this._onNotifyMsgMrrDeleteRoomByServer },
+            { type : TypeId.LanguageChanged,                     callback : this._onNotifyLanguageChanged },
+            { type : TypeId.TimeTick,                            callback : this._onNotifyTimeTick },
+            { type : TypeId.RoomSelfSettingsCoIdChanged,         callback : this._onNotifyMrrSelfSettingsCoIdChanged },
+            { type : TypeId.MsgMrrGetRoomPublicInfo,             callback : this._onNotifyMsgMrrGetRoomPublicInfo },
+            { type : TypeId.MsgMrrSetSelfSettings,               callback : this._onNotifyMsgMrrSetSelfSettings },
+            { type : TypeId.MsgMrrSetBannedCoIdArray,            callback : this._onNotifyMsgMrrSetBannedCoIdArray },
+            { type : TypeId.MsgMrrDeleteRoomByServer,            callback : this._onNotifyMsgMrrDeleteRoomByServer },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             playShortSfx(ShortSfxCode.ButtonCancel01);
@@ -198,19 +198,19 @@ export class Panel extends UiPanel<OpenData> {
             }
         }
         openPanel(getDict().CommonChooseMultiCoCategoryIdPanel, {
-            gameConfig                      : gcData,
-            availableCoCategoryIdArray      : gcData
+            gameConfig                 : gcData,
+            availableCoCategoryIdArray : gcData
                 .getEnabledCoCategoryIdArray(warType)
                 .filter(coCategoryId =>
                     (coCategoryId !== CategoryId.Random)                                            &&
                     ((!bannedCoCategoryIdSets.length) || (bannedCoCategoryIdSets.some(v => !v.has(coCategoryId))))
                 ),
-            currentCoCategoryIdArray        : [],
-            forceUnchosenCoCategoryIdArray  : null,
-            maxChooseCount                  : gcData.getSystemCfg().getMaxBanCoNumber() ?? 0,
-            isBan                           : true,
-            getTitleText                    : () => getText(TextType.B0590),
-            getBpRates                      : coCategoryId => {
+            currentCoCategoryIdArray       : [],
+            forceUnchosenCoCategoryIdArray : null,
+            maxChooseCount                 : gcData.getSystemCfg().getMaxBanCoNumber() ?? 0,
+            isBan                          : true,
+            getTitleText                   : () => getText(TextType.B0590),
+            getBpRates                     : coCategoryId => {
                 if (totalGamesCount <= 0) {
                     return [];
                 }
@@ -248,7 +248,7 @@ export class Panel extends UiPanel<OpenData> {
 
                 return [banCount / totalGamesCount, pickCount / totalGamesCount];
             },
-            getWlRates                      : coCategoryId => {
+            getWlRates : coCategoryId => {
                 if (totalGamesCount <= 0) {
                     return [];
                 }
@@ -294,16 +294,16 @@ export class Panel extends UiPanel<OpenData> {
                     return [winCount / gamesCount, loseCount / gamesCount];
                 }
             },
-            callbackOnMap                   : mapRawData == null
+            callbackOnMap : mapRawData == null
                 ? null
                 : () => openPanel(getDict().CommonShowMapPanel, {
                     mapInfo : {
-                        mapRawData          : mapRawData,
-                        gameConfig          : gcData,
-                        overridingPlayers   : null,
+                        mapRawData        : mapRawData,
+                        gameConfig        : gcData,
+                        overridingPlayers : null,
                     },
                 }),
-            callbackOnConfirm               : bannedCoCategoryIdArray => {
+            callbackOnConfirm : bannedCoCategoryIdArray => {
                 openPanel(getDict().CommonConfirmPanel, {
                     getContent : () => bannedCoCategoryIdArray.length <= 0
                         ? getText(TextType.A0139)
@@ -311,7 +311,7 @@ export class Panel extends UiPanel<OpenData> {
                             TextType.F0185,
                             bannedCoCategoryIdArray.map(v => gcData.getCoIdByCategoryId(v)).map(v => gcData.getCoNameAndTierText(v) ?? UndefinedError).join(`, `)
                         ),
-                    callback: () => reqMrrSetBannedCoIdArray(
+                    callback : () => reqMrrSetBannedCoIdArray(
                         roomId,
                         bannedCoCategoryIdArray.map(v => getExisted(gcData.getEnabledCoIdByCategoryId(v) ?? gcData.getCoIdByCategoryId(v)))
                     ),
@@ -340,11 +340,11 @@ export class Panel extends UiPanel<OpenData> {
             } else {
                 const currentCoId = roomSelfSettings.getCoId();
                 openPanel(getDict().CommonChooseSingleCoIdPanel, {
-                    gameConfig          : await getGameConfig(getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
-                    currentCoId         : currentCoId,
-                    availableCoIdArray  : getExisted(roomSelfSettings.getAvailableCoIdArray()),
-                    isBan               : false,
-                    callbackOnConfirm   : newCoId => {
+                    gameConfig         : await getGameConfig(getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                    currentCoId        : currentCoId,
+                    availableCoIdArray : getExisted(roomSelfSettings.getAvailableCoIdArray()),
+                    isBan              : false,
+                    callbackOnConfirm  : newCoId => {
                         if (newCoId !== currentCoId) {
                             roomSelfSettings.setCoId(newCoId);
                         }
@@ -389,9 +389,9 @@ export class Panel extends UiPanel<OpenData> {
         const availableSkinIdArray  = getAllSkinIdArray(false).filter(v => usedSkinIdArray.indexOf(v) < 0);
         const selfSkinId            = selfPlayerData.getUnitAndTileSkinId();
         openPanel(getDict().CommonChooseSingleSkinIdPanel, {
-            currentSkinId           : selfSkinId ?? availableSkinIdArray[0],
-            availableSkinIdArray    : availableSkinIdArray,
-            callback                : skinId => {
+            currentSkinId        : selfSkinId ?? availableSkinIdArray[0],
+            availableSkinIdArray : availableSkinIdArray,
+            callback             : skinId => {
                 roomSelfSettings.setUnitAndTileSkinId(skinId);
                 this._updateImgSkinId();
             },
@@ -428,7 +428,7 @@ export class Panel extends UiPanel<OpenData> {
         const callback  = () => {
             openPanel(getDict().CommonConfirmPanel, {
                 getContent : () => getText(TextType.A0206),
-                callback: () => {
+                callback   : () => {
                     reqMrrSetSelfSettings(roomId, coId, skinId);
                 },
             });
@@ -502,22 +502,22 @@ export class Panel extends UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: getText(TextType.B0298) },
+                tabItemData : { name : getText(TextType.B0298) },
                 pageClass   : CommonViewCommonWarMapInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: getText(TextType.B0224) },
+                tabItemData : { name : getText(TextType.B0224) },
                 pageClass   : CommonViewCommonWarPlayerInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: getText(TextType.B0002) },
+                tabItemData : { name : getText(TextType.B0002) },
                 pageClass   : CommonViewCommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: getText(TextType.B0003) },
+                tabItemData : { name : getText(TextType.B0003) },
                 pageClass   : Page,
                 pageData    : null,
             },
@@ -692,10 +692,10 @@ export class Panel extends UiPanel<OpenData> {
         const currentTime                   = getServerTimestamp();
         if (timeForStartSetSelfSettings != null) {
             labelCountdownTitle.setLangText(TextType.B0593);
-            labelCountdown.setText(getTimeDurationText2(Math.max(0, timeForStartSetSelfSettings + MultiRankedWar.RoomPhaseTime - currentTime)));
+            labelCountdown.setText(getTimeDurationText2(Math.max(0, timeForStartSetSelfSettings + MultiRankedWarConstants.RoomPhaseTime - currentTime)));
         } else {
             labelCountdownTitle.setLangText(TextType.B0592);
-            labelCountdown.setText(getTimeDurationText2(Math.max(0, getExisted(roomInfo.getTimeForCreateRoom()) + MultiRankedWar.RoomPhaseTime - currentTime)));
+            labelCountdown.setText(getTimeDurationText2(Math.max(0, getExisted(roomInfo.getTimeForCreateRoom()) + MultiRankedWarConstants.RoomPhaseTime - currentTime)));
         }
         this._layoutCountdown.arrangeItems();
         this._groupState.arrangeItems();
@@ -770,10 +770,10 @@ export class Panel extends UiPanel<OpenData> {
             const settingsForCommon = roomInfo?.getSettingsForCommon();
             return {
                 mapInfo : {
-                    hasFog              : !!settingsForCommon?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                    mapRawData          : getExisted(await getRawData(normalMapId)),
-                    gameConfig          : await getGameConfig(getExisted(settingsForCommon?.getConfigVersion())),
-                    overridingPlayers   : null,
+                    hasFog            : !!settingsForCommon?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
+                    mapRawData        : getExisted(await getRawData(normalMapId)),
+                    gameConfig        : await getGameConfig(getExisted(settingsForCommon?.getConfigVersion())),
+                    overridingPlayers : null,
                 },
             };
         }
@@ -796,68 +796,68 @@ export class Panel extends UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     protected async _showOpenAnimation(): Promise<void> {
         Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Executor.reset({
-            obj         : this._groupBanCo,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupBanCo,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Executor.reset({
-            obj         : this._groupSettings,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupSettings,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Executor.reset({
-            obj         : this._groupState,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupState,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0, },
-            endProps    : { customAlpha: 1, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0, },
+            endProps   : { customAlpha : 1, },
         });
 
         await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Executor.reset({
-            obj         : this._groupBanCo,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupBanCo,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Executor.reset({
-            obj         : this._groupSettings,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupSettings,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Executor.reset({
-            obj         : this._groupState,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupState,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1, },
-            endProps    : { customAlpha: 0, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1, },
+            endProps   : { customAlpha : 0, },
         });
 
         await wait();

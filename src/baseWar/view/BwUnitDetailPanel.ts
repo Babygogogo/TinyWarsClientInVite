@@ -10,7 +10,7 @@ import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { show, showLang } from "../../FloatText.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
 import { getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getMpwWarClass, getSpwWarClass, getUnitClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, closePanel } from "../../gamePanels/Manager.ts";

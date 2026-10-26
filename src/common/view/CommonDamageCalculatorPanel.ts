@@ -12,8 +12,8 @@ import {
 import { getDamageMultiplierForDefenseBonus } from "../../damageCalculators/Utils.ts";
 import { show } from "../../FloatText.ts";
 import { getDefaultSkinId, getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
-import { GcData } from "../../gameConfig/GcData.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { GcData } from "../../gameConfigs/GcData.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
 import { getCoEye } from "../../helpers/ImageSource.ts";

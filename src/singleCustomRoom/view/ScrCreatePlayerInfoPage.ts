@@ -1,6 +1,6 @@
 import { CoId } from "../../cos/Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";

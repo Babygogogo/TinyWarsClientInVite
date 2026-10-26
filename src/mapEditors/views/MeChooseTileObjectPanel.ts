@@ -1,5 +1,5 @@
-import { GcData } from "../../gameConfig/GcData.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { GcData } from "../../gameConfigs/GcData.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextureVersionId } from "../../graphics/Constants.ts";

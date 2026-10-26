@@ -22,8 +22,7 @@ import {
 } from "../../coopCustomRoom/model/CcrModel.ts";
 import { reqCcrGetJoinableRoomIdArray, reqCcrJoinRoom } from "../../coopCustomRoom/model/CcrProxy.ts";
 import { show, showLang } from "../../FloatText.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { Misc } from "../../gameConfig/GcWar.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
@@ -84,6 +83,7 @@ import type { IUiScrollList } from "../../ui/interfaces/IUiScrollList.ts";
 import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
+import {Misc} from "../../wars/Constants.ts";
 
 export interface OpenData {
     preferredRoomType   : MultiPlayerRoomType;

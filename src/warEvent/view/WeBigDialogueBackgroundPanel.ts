@@ -1,5 +1,5 @@
 import { Common } from "../../dialogues/Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getBigDialogueBackgroundImage } from "../../helpers/ImageSource.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";

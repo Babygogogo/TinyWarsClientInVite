@@ -1,6 +1,6 @@
 import { reqCampaignCreateWar } from "../mains/Gateway.ts";
 import { getCampaignMapRawData } from "../mains/Provider.ts";
-import { getLatestConfigVersion, getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getLatestConfigVersion, getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel, openPanel } from "../../gamePanels/Manager.ts";
 import { gotoSinglePlayerWar } from "../../helpers/GameFlow.ts";

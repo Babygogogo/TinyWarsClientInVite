@@ -2,16 +2,16 @@ import type { PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { showLang } from "../../FloatText.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { MultiRankedWar } from "../../gameConfig/GcWar.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
+import { getCoHead, getCoHeadFrame } from "../../helpers/ImageSource.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { getSuffixForRankIndex } from "../../helpers/Text.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getFormattedText, getPlayerForceName, getPlayerTeamName, getTimeDurationText2 } from "../../lang/Utils.ts";
+import { getFormattedText, getPlayerForceName, getPlayerTeamName, getText, getTimeDurationText2 } from "../../lang/Utils.ts";
 import { getMrwRankIndex } from "../../leaderboard/model/LeaderboardModel.ts";
+import { Common as MultiRankedWarConstants } from "../../multiRankedWars/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -29,7 +29,7 @@ import { UiHorizontalAlign } from "../../ui/types/UiHorizontalAlign.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { UiVerticalAlign } from "../../ui/types/UiVerticalAlign.ts";
 import { loadSkinByPath } from "../../ui/utils/UiSkinHelpers.ts";
-import { getSelfUserId, getUserNickname, getUserPublicInfo, getSelfSettingsIsReplayResultVisible } from "../../users/Model.ts";
+import { getSelfSettingsIsReplayResultVisible, getSelfUserId, getUserNickname, getUserPublicInfo } from "../../users/Model.ts";
 import { checkIsDummy } from "../../users/Utils.ts";
 import { WarTypeId } from "../../warTypes/Constants.ts";
 
@@ -57,10 +57,10 @@ export class Page extends UiOpenableComponent<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this.checkAndInitSizerInfo().addSizerOptions({
-            verticalAlign   : { align       : UiVerticalAlign.Middle },
-            horizontalAlign : { align       : UiHorizontalAlign.Center },
-            width           : { percentage  : 100 },
-            height          : { percentage  : 100 },
+            verticalAlign   : { align : UiVerticalAlign.Middle },
+            horizontalAlign : { align : UiHorizontalAlign.Center },
+            width           : { percentage : 100 },
+            height          : { percentage : 100 },
         });
 
         this._listPlayer.setItemRendererClass(PlayerRenderer);
@@ -103,15 +103,15 @@ export class Page extends UiOpenableComponent<OpenData> {
             }
 
             dataArray.push({
-                gameConfig              : gameConfig,
-                isRoomOwnedBySelf       : isRoomOwnedBySelf,
-                playerInfo              : playerInfo,
-                enterTurnTime           : enterTurnTime,
-                isReplay                : isReplay,
-                callbackOnAddDummy      : callbackOnAddDummy,
-                callbackOnChangeDummy   : callbackOnChangeDummy,
-                callbackOnExitRoom      : callbackOnExitRoom,
-                callbackOnDeletePlayer  : callbackOnDeletePlayer,
+                gameConfig             : gameConfig,
+                isRoomOwnedBySelf      : isRoomOwnedBySelf,
+                playerInfo             : playerInfo,
+                enterTurnTime          : enterTurnTime,
+                isReplay               : isReplay,
+                callbackOnAddDummy     : callbackOnAddDummy,
+                callbackOnChangeDummy  : callbackOnChangeDummy,
+                callbackOnExitRoom     : callbackOnExitRoom,
+                callbackOnDeletePlayer : callbackOnDeletePlayer,
             });
         }
 
@@ -163,17 +163,17 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._groupCo,        callback: this._onTouchedGroupCo },
-            { ui: this._btnChat,        callback: this._onTouchedBtnChat },
-            { ui: this._btnInfo,        callback: this._onTouchedBtnInfo },
-            { ui: this._btnDelete,      callback: this._onTouchedBtnDelete },
-            { ui: this._btnAddDummy,    callback: this._onTouchedBtnAddDummy },
-            { ui: this._btnChangeDummy, callback: this._onTouchedBtnChangeDummy },
+            { ui : this._groupCo,        callback : this._onTouchedGroupCo },
+            { ui : this._btnChat,        callback : this._onTouchedBtnChat },
+            { ui : this._btnInfo,        callback : this._onTouchedBtnInfo },
+            { ui : this._btnDelete,      callback : this._onTouchedBtnDelete },
+            { ui : this._btnAddDummy,    callback : this._onTouchedBtnAddDummy },
+            { ui : this._btnChangeDummy, callback : this._onTouchedBtnChangeDummy },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.TimeTick,                                    callback: this._onNotifyTimeTick },
-            { type: TypeId.UserSettingsIsReplayResultVisibleChanged,    callback: this._onNotifyUserSettingsIsReplayResultVisibleChanged },
+            { type : TypeId.LanguageChanged,                             callback : this._onNotifyLanguageChanged },
+            { type : TypeId.TimeTick,                                    callback : this._onNotifyTimeTick },
+            { type : TypeId.UserSettingsIsReplayResultVisibleChanged,    callback : this._onNotifyUserSettingsIsReplayResultVisibleChanged },
         ]);
 
         this._updateComponentsForLanguage();
@@ -190,7 +190,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const coId  = openData.playerInfo.coId;
         if ((coId != null) && (coId !== CoId.Empty)) {
             openPanel(getDict().CommonCoInfoPanel, {
-                gameConfig  : openData.gameConfig,
+                gameConfig : openData.gameConfig,
                 coId,
             });
         }
@@ -199,7 +199,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
     private _onTouchedBtnChat(): void {
         const userId = this.getOpenData()?.playerInfo.userId;
         if (userId != null) {
-            openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({ toUserId: userId }) });
+            openPanel(getDict().ChatPanel, { toTarget : new ChatToTarget({ toUserId : userId }) });
         }
     }
 
@@ -235,8 +235,8 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
             const callback = openData.callbackOnDeletePlayer;
             if ((callback) && (openData.isRoomOwnedBySelf)) {
                 openPanel(getDict().CommonDeletePlayerPanel, {
-                    content : getFormattedText(TextType.F0029, await getUserNickname(userId)),
-                    callback: (forbidReentrance: boolean) => {
+                    content  : getFormattedText(TextType.F0029, await getUserNickname(userId)),
+                    callback : (forbidReentrance: boolean) => {
                         callback(playerInfo.playerIndex, forbidReentrance);
                     },
                 });
@@ -424,12 +424,12 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const stdRankIndex      = await getMrwRankIndex(WarTypeId.MrwStd, userId);
         const fogRankIndex      = await getMrwRankIndex(WarTypeId.MrwFog, userId);
         labelRankStd.setText(stdRankInfo
-            ? `${stdRankInfo?.getCurrentScore() ?? MultiRankedWar.InitialScore} (${stdRankIndex == null ? `--` : `${stdRankIndex}${getSuffixForRankIndex(stdRankIndex)}`})`
-            : `${MultiRankedWar.InitialScore} (--)`
+            ? `${stdRankInfo?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore} (${stdRankIndex == null ? `--` : `${stdRankIndex}${getSuffixForRankIndex(stdRankIndex)}`})`
+            : `${MultiRankedWarConstants.InitialScore} (--)`
         );
         labelRankFog.setText(fogRankInfo
-            ? `${fogRankInfo?.getCurrentScore() ?? MultiRankedWar.InitialScore} (${fogRankIndex == null ? `--` : `${fogRankIndex}${getSuffixForRankIndex(fogRankIndex)}`})`
-            : `${MultiRankedWar.InitialScore} (--)`
+            ? `${fogRankInfo?.getCurrentScore() ?? MultiRankedWarConstants.InitialScore} (${fogRankIndex == null ? `--` : `${fogRankIndex}${getSuffixForRankIndex(fogRankIndex)}`})`
+            : `${MultiRankedWarConstants.InitialScore} (--)`
         );
 
         this._layoutStd.arrangeItems();

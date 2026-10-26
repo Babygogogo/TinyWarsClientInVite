@@ -25,7 +25,7 @@ import {
     getTotalOffsetPct as CoSkillsUtilsPersistentSelfUnitOffenseGetTotalOffsetPct,
 } from "../coSkills/utils/persistent/SelfUnitOffense.ts";
 import { getTotalRangeOffset, checkCanSeeThrough } from "../coSkills/utils/persistent/SelfUnitVision.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import { getUnitViewClass, getUnitClass } from "../gameHelpers/GhFactory.ts";
 import { deleteElementFromList } from "../helpers/Collection.ts";
 import { newError, getExisted, createLazyFunc, createLazyFunc2 } from "../helpers/Misc.ts";

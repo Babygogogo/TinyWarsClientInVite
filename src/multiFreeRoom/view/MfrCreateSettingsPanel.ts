@@ -11,7 +11,6 @@ import {
 import { pickRandomCo } from "../../cos/Utils.ts";
 import { showLang, show } from "../../FloatText.ts";
 import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
-import { BasicSettingsType } from "../../gameConfig/GcWar.ts";
 import { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
@@ -45,6 +44,7 @@ import type { IUiTab } from "../../ui/interfaces/IUiTab.ts";
 import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { setTimeout, clearTimeout } from "../../vendor/egret/Egret.ts";
 import { getPlayerRule, getPlayersCountUnneutral, tickDefaultWeatherType } from "../../warRules/utils/CommonData.ts";
+import {BasicSettingsTypeId} from "../../wars/Constants.ts";
 
 type OpenDataForCommonWarBasicSettingsPage      = CommonViewCommonWarBasicSettingsPageOpenData;
 type OpenDataForCommonWarMapInfoPage            = CommonViewCommonWarMapInfoPageOpenData;
@@ -382,7 +382,7 @@ export class Panel extends UiPanel<OpenData> {
         const openDataForPage   : OpenDataForCommonWarBasicSettingsPage = {
             dataArrayForListSettings: [
                 {
-                    settingsType    : BasicSettingsType.WarName,
+                    settingsType    : BasicSettingsTypeId.WarName,
                     currentValue    : roomCreator.getWarName() ?? null,
                     instanceWarRule: instanceWarRule,
                     gameConfig,
@@ -396,7 +396,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : BasicSettingsType.WarPassword,
+                    settingsType    : BasicSettingsTypeId.WarPassword,
                     currentValue    : roomCreator.getWarPassword() ?? null,
                     instanceWarRule: instanceWarRule,
                     gameConfig,
@@ -410,7 +410,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : BasicSettingsType.WarComment,
+                    settingsType    : BasicSettingsTypeId.WarComment,
                     currentValue    : roomCreator.getWarComment() ?? null,
                     instanceWarRule: instanceWarRule,
                     gameConfig,
@@ -424,7 +424,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType        : BasicSettingsType.WarRuleTitle,
+                    settingsType        : BasicSettingsTypeId.WarRuleTitle,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -432,7 +432,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify    : null,
                 },
                 {
-                    settingsType        : BasicSettingsType.HasFog,
+                    settingsType        : BasicSettingsTypeId.HasFog,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -444,7 +444,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType        : BasicSettingsType.Weather,
+                    settingsType        : BasicSettingsTypeId.Weather,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -455,7 +455,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType        : BasicSettingsType.TileTheme,
+                    settingsType        : BasicSettingsTypeId.TileTheme,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -473,7 +473,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType        : BasicSettingsType.WarEvent,
+                    settingsType        : BasicSettingsTypeId.WarEvent,
                     currentValue        : null,
                     instanceWarRule     : instanceWarRule,
                     gameConfig          : gameConfig,
@@ -481,7 +481,7 @@ export class Panel extends UiPanel<OpenData> {
                     callbackOnModify    : null,
                 },
                 {
-                    settingsType    : BasicSettingsType.TurnsAndWarOperationsLimit,
+                    settingsType    : BasicSettingsTypeId.TurnsAndWarOperationsLimit,
                     currentValue    : `${settingsForCommon.getTurnsLimit()}, ${settingsForCommon.getWarOperationsLimit()}`,
                     instanceWarRule: instanceWarRule,
                     gameConfig,
@@ -498,7 +498,7 @@ export class Panel extends UiPanel<OpenData> {
                     },
                 },
                 {
-                    settingsType    : BasicSettingsType.TimerType,
+                    settingsType    : BasicSettingsTypeId.TimerType,
                     currentValue    : timerType,
                     instanceWarRule: instanceWarRule,
                     gameConfig,
@@ -512,7 +512,7 @@ export class Panel extends UiPanel<OpenData> {
         };
         if (timerType === TimerTypeId.Regular) {
             openDataForPage.dataArrayForListSettings.push({
-                settingsType    : BasicSettingsType.TimerRegularParam,
+                settingsType    : BasicSettingsTypeId.TimerRegularParam,
                 currentValue    : bootTimerParams[1],
                 instanceWarRule: instanceWarRule,
                 gameConfig,
@@ -525,7 +525,7 @@ export class Panel extends UiPanel<OpenData> {
         } else if (timerType === TimerTypeId.Incremental) {
             openDataForPage.dataArrayForListSettings.push(
                 {
-                    settingsType    : BasicSettingsType.TimerIncrementalParams,
+                    settingsType    : BasicSettingsTypeId.TimerIncrementalParams,
                     currentValue    : `${bootTimerParams[1]}, ${bootTimerParams[2]}, ${bootTimerParams[3] ?? 0}`,
                     instanceWarRule: instanceWarRule,
                     gameConfig,

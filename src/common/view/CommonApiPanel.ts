@@ -1,6 +1,6 @@
 import { ContextType } from "../../expressionParsers/Enums.ts";
 import { getVariableInfoDict, getFunctionInfoDict } from "../../expressionParsers/Utils.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";

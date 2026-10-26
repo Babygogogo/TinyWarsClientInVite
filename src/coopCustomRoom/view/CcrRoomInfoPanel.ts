@@ -12,27 +12,18 @@ import {
     type OpenData as CommonViewCommonWarPlayerInfoPageOpenData,
     Page as CommonViewCommonWarPlayerInfoPage,
 } from "../../common/view/CommonWarPlayerInfoPage.ts";
-import {
-    getRoomStaticInfo,
-    getRoomPlayerInfo,
-    checkCanStartGame,
-    createDataForCommonWarPlayerInfoPage,
-    createDataForCommonWarBasicSettingsPage,
-    createDataForCommonWarAdvancedSettingsPage,
-} from "../model/CcrModel.ts";
-import { reqCcrSetSelfSettings, reqCcrSetReady, reqCcrStartWar, reqCcrDeleteRoom, reqCcrInvite } from "../model/CcrProxy.ts";
+import { Common } from "../../coopCustomWars/Constants.ts";
 import { pickRandomCo } from "../../cos/Utils.ts";
 import { show } from "../../FloatText.ts";
 import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
-import { CoopCustomWar } from "../../gameConfig/GcWar.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
-import { getSkinCircle, getCoEye } from "../../helpers/ImageSource.ts";
+import { getCoEye, getSkinCircle } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerTeamName } from "../../lang/Utils.ts";
+import { getPlayerTeamName, getText } from "../../lang/Utils.ts";
 import { ExitRoomType } from "../../multiPlayerRooms/Constants.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -62,6 +53,15 @@ import type { UiListItemData } from "../../ui/types/UiListItemData.ts";
 import { getSelfUserId } from "../../users/Model.ts";
 import type { Event } from "../../vendor/egret/Egret.ts";
 import { getPlayerRule, getPlayersCountUnneutral } from "../../warRules/utils/CommonData.ts";
+import {
+    checkCanStartGame,
+    createDataForCommonWarAdvancedSettingsPage,
+    createDataForCommonWarBasicSettingsPage,
+    createDataForCommonWarPlayerInfoPage,
+    getRoomPlayerInfo,
+    getRoomStaticInfo,
+} from "../model/CcrModel.ts";
+import { reqCcrDeleteRoom, reqCcrInvite, reqCcrSetReady, reqCcrSetSelfSettings, reqCcrStartWar } from "../model/CcrProxy.ts";
 
 export interface OpenData {
     roomId  : number;
@@ -106,22 +106,22 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setUiListenerArray([
-            { ui: this._btnBack,                callback: this._onTouchedBtnBack },
-            { ui: this._btnChooseCo,            callback: this._onTouchedBtnChooseCo },
-            { ui: this._btnChoosePlayerIndex,   callback: this._onTouchedBtnChoosePlayerIndex },
-            { ui: this._btnChooseSkinId,        callback: this._onTouchedBtnChooseSkinId },
-            { ui: this._btnChooseReady,         callback: this._onTouchedBtnChooseReady },
-            { ui: this._btnStartGame,           callback: this._onTouchedBtnStartGame },
-            { ui: this._btnDeleteRoom,          callback: this._onTouchedBtnDeleteRoom },
-            { ui: this._btnChat,                callback: this._onTouchedBtnChat },
-            { ui: this._btnInvite,              callback: this._onTouchedBtnInvite },
+            { ui : this._btnBack,                callback : this._onTouchedBtnBack },
+            { ui : this._btnChooseCo,            callback : this._onTouchedBtnChooseCo },
+            { ui : this._btnChoosePlayerIndex,   callback : this._onTouchedBtnChoosePlayerIndex },
+            { ui : this._btnChooseSkinId,        callback : this._onTouchedBtnChooseSkinId },
+            { ui : this._btnChooseReady,         callback : this._onTouchedBtnChooseReady },
+            { ui : this._btnStartGame,           callback : this._onTouchedBtnStartGame },
+            { ui : this._btnDeleteRoom,          callback : this._onTouchedBtnDeleteRoom },
+            { ui : this._btnChat,                callback : this._onTouchedBtnChat },
+            { ui : this._btnInvite,              callback : this._onTouchedBtnInvite },
         ]);
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgCcrGetRoomStaticInfo,     callback: this._onNotifyMsgCcrGetRoomStaticInfo },
-            { type: TypeId.MsgCcrGetRoomPlayerInfo,     callback: this._onNotifyMsgCcrGetRoomPlayerInfo },
-            { type: TypeId.MsgCcrExitRoom,              callback: this._onNotifyMsgCcrExitRoom },
-            { type: TypeId.MsgCcrInvite,                callback: this._onNotifyMsgCcrInvite },
+            { type : TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : TypeId.MsgCcrGetRoomStaticInfo,     callback : this._onNotifyMsgCcrGetRoomStaticInfo },
+            { type : TypeId.MsgCcrGetRoomPlayerInfo,     callback : this._onNotifyMsgCcrGetRoomPlayerInfo },
+            { type : TypeId.MsgCcrExitRoom,              callback : this._onNotifyMsgCcrExitRoom },
+            { type : TypeId.MsgCcrInvite,                callback : this._onNotifyMsgCcrInvite },
         ]);
         this._enableKeyEscapeToClosePanel(() => {
             playShortSfx(ShortSfxCode.ButtonCancel01);
@@ -185,22 +185,22 @@ export class Panel extends UiPanel<OpenData> {
                 const gameConfig        = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));
                 const warRuleCommonData = getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
                 openPanel(getDict().CommonChooseSingleCoIdPanel, {
-                    gameConfig          : gameConfig,
-                    currentCoId         : currentCoId,
-                    availableCoIdArray  : [...getFinalCcwHumanCoIdSet({
+                    gameConfig         : gameConfig,
+                    currentCoId        : currentCoId,
+                    availableCoIdArray : [...getFinalCcwHumanCoIdSet({
                         playerRule      : getPlayerRule(warRuleCommonData, playerIndex),
                         gameConfig      : gameConfig,
                         hasFogByDefault : warRuleCommonData.getHasFogByDefault(),
                         includeRandom   : true,
                     })],
-                    isBan               : false,
-                    callbackOnConfirm   : newCoId => {
+                    isBan             : false,
+                    callbackOnConfirm : newCoId => {
                         if (newCoId !== currentCoId) {
                             reqCcrSetSelfSettings(C.fromJson({
-                                roomId              : roomId,
-                                playerIndex         : playerIndex,
-                                coId                : newCoId,
-                                unitAndTileSkinId   : selfPlayerData.getUnitAndTileSkinId(),
+                                roomId            : roomId,
+                                playerIndex       : playerIndex,
+                                coId              : newCoId,
+                                unitAndTileSkinId : selfPlayerData.getUnitAndTileSkinId(),
                             }));
                         }
                     },
@@ -249,12 +249,12 @@ export class Panel extends UiPanel<OpenData> {
         const selfPlayerIndex   = selfPlayerData.getPlayerIndex() ?? 0;
         const warRuleCommonData = getExisted(warRule.getWarRuleCommonData());
         openPanel(getDict().CommonChooseSingleNumberPanel, {
-            currentNumber           : selfPlayerIndex,
-            availableNumberArray    : createRange(PlayerIndex.First, getPlayersCountUnneutral(warRuleCommonData) + 1, 1)
+            currentNumber        : selfPlayerIndex,
+            availableNumberArray : createRange(PlayerIndex.First, getPlayersCountUnneutral(warRuleCommonData) + 1, 1)
                 .filter(playerIndex => (playerIndex === selfPlayerIndex) || (!playerDataList.some(v => v.getPlayerIndex() === playerIndex))),
-            getTitleText            : () => getText(TextType.B0168),
-            getNumberMainText       : playerIndex => `P${playerIndex}, ${getPlayerTeamName(getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) ?? UndefinedError}`,
-            callbackOnConfirm       : newPlayerIndex => {
+            getTitleText      : () => getText(TextType.B0168),
+            getNumberMainText : playerIndex => `P${playerIndex}, ${getPlayerTeamName(getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) ?? UndefinedError}`,
+            callbackOnConfirm : newPlayerIndex => {
                 if (newPlayerIndex !== selfPlayerIndex) {
                     const currCoId              = selfPlayerData.getCoId() ?? 0;
                     const availableCoIdArray    = [...getFinalCcwHumanCoIdSet({
@@ -264,10 +264,10 @@ export class Panel extends UiPanel<OpenData> {
                         includeRandom   : true,
                     })];
                     reqCcrSetSelfSettings(C.fromJson({
-                        roomId              : roomId,
-                        playerIndex         : newPlayerIndex,
-                        unitAndTileSkinId   : selfPlayerData.getUnitAndTileSkinId(),
-                        coId                : availableCoIdArray.indexOf(currCoId) >= 0 ? currCoId : pickRandomCo(availableCoIdArray),
+                        roomId            : roomId,
+                        playerIndex       : newPlayerIndex,
+                        unitAndTileSkinId : selfPlayerData.getUnitAndTileSkinId(),
+                        coId              : availableCoIdArray.indexOf(currCoId) >= 0 ? currCoId : pickRandomCo(availableCoIdArray),
                     }));
                 }
             },
@@ -300,15 +300,15 @@ export class Panel extends UiPanel<OpenData> {
         const availableSkinIdArray  = getAllSkinIdArray(false).filter(v => usedSkinIdArray.indexOf(v) < 0);
         const selfSkinId            = selfPlayerData.getUnitAndTileSkinId();
         openPanel(getDict().CommonChooseSingleSkinIdPanel, {
-            currentSkinId           : selfSkinId ?? availableSkinIdArray[0],
-            availableSkinIdArray    : availableSkinIdArray,
-            callback                : newSkinId => {
+            currentSkinId        : selfSkinId ?? availableSkinIdArray[0],
+            availableSkinIdArray : availableSkinIdArray,
+            callback             : newSkinId => {
                 if (newSkinId !== selfSkinId) {
                     reqCcrSetSelfSettings(C.fromJson({
-                        roomId              : roomId,
-                        playerIndex         : selfPlayerData.getPlayerIndex(),
-                        unitAndTileSkinId   : newSkinId,
-                        coId                : selfPlayerData.getCoId() ?? 0,
+                        roomId            : roomId,
+                        playerIndex       : selfPlayerData.getPlayerIndex(),
+                        unitAndTileSkinId : newSkinId,
+                        coId              : selfPlayerData.getCoId() ?? 0,
                     }));
                 }
             },
@@ -340,7 +340,7 @@ export class Panel extends UiPanel<OpenData> {
         if (roomId != null) {
             openPanel(getDict().CommonConfirmPanel, {
                 getContent : () => getText(TextType.A0149),
-                callback: () => {
+                callback   : () => {
                     reqCcrDeleteRoom(roomId);
                 },
             });
@@ -348,9 +348,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _onTouchedBtnChat(): void {
-        openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({
-            toCcrRoomId: this.getOpenData()?.roomId,
-        }) });
+        openPanel(getDict().ChatPanel, {
+            toTarget : new ChatToTarget({
+                toCcrRoomId : this.getOpenData()?.roomId,
+            })
+        });
     }
 
     private async _onTouchedBtnInvite(): Promise<void> {
@@ -375,10 +377,10 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         openPanel(getDict().CommonSearchMultiUserPanel, {
-            maxChooseCount      : CoopCustomWar.MaxInviteCount,
-            minChooseCount      : 1,
-            getTitleText        : () => getText(TextType.B1003),
-            callbackOnConfirm   : userIdArray => {
+            maxChooseCount    : Common.MaxInviteCount,
+            minChooseCount    : 1,
+            getTitleText      : () => getText(TextType.B1003),
+            callbackOnConfirm : userIdArray => {
                 reqCcrInvite(roomId, userIdArray);
             },
         });
@@ -520,22 +522,22 @@ export class Panel extends UiPanel<OpenData> {
         this._isTabInitialized = false;
         await this._tabSettings.bindData([
             {
-                tabItemData : { name: getText(TextType.B0298) },
+                tabItemData : { name : getText(TextType.B0298) },
                 pageClass   : CommonViewCommonWarMapInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: getText(TextType.B0224) },
+                tabItemData : { name : getText(TextType.B0224) },
                 pageClass   : CommonViewCommonWarPlayerInfoPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: getText(TextType.B0002) },
+                tabItemData : { name : getText(TextType.B0002) },
                 pageClass   : CommonViewCommonWarBasicSettingsPage,
                 pageData    : null,
             },
             {
-                tabItemData : { name: getText(TextType.B0003) },
+                tabItemData : { name : getText(TextType.B0003) },
                 pageClass   : Page,
                 pageData    : null,
             },
@@ -587,8 +589,11 @@ export class Panel extends UiPanel<OpenData> {
         {
             const groupButton = this._groupButton;
             groupButton.removeAllItems(false);
-            (isSelfOwner) && (groupButton.addItem(this._btnDeleteRoom, false));
-            (isSelfOwner) && (groupButton.addItem(btnStartGame, false));
+            if (isSelfOwner) {
+                groupButton.addItem(this._btnDeleteRoom, false);
+                groupButton.addItem(btnStartGame, false);
+            }
+
             groupButton.arrangeItems();
         }
     }
@@ -629,10 +634,10 @@ export class Panel extends UiPanel<OpenData> {
             ? null
             : {
                 mapInfo : {
-                    gameConfig          : await getGameConfig(getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
-                    hasFog              : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
-                    mapRawData          : getExisted(await getRawData(normalMapId)),
-                    overridingPlayers   : null,
+                    gameConfig        : await getGameConfig(getExisted(roomInfo?.getSettingsForCommon()?.getConfigVersion())),
+                    hasFog            : !!roomInfo?.getSettingsForCommon()?.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
+                    mapRawData        : getExisted(await getRawData(normalMapId)),
+                    overridingPlayers : null,
                 },
             };
     }
@@ -654,68 +659,68 @@ export class Panel extends UiPanel<OpenData> {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     protected async _showOpenAnimation(): Promise<void> {
         Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Executor.reset({
-            obj         : this._groupTopRightButtons,
-            beginProps  : { customAlpha: 0, customY: 16 - 40 },
-            endProps    : { customAlpha: 1, customY: 16 },
+            obj        : this._groupTopRightButtons,
+            beginProps : { customAlpha : 0, customY : 16 - 40 },
+            endProps   : { customAlpha : 1, customY : 16 },
         });
         Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 0, customY: -20 },
-            endProps    : { customAlpha: 1, customY: 20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 0, customY : -20 },
+            endProps   : { customAlpha : 1, customY : 20 },
         });
         Executor.reset({
-            obj         : this._groupSettings,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupSettings,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Executor.reset({
-            obj         : this._groupButton,
-            beginProps  : { customAlpha: 0, customX: -20 },
-            endProps    : { customAlpha: 1, customX: 20 },
+            obj        : this._groupButton,
+            beginProps : { customAlpha : 0, customX : -20 },
+            endProps   : { customAlpha : 1, customX : 20 },
         });
         Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 0, },
-            endProps    : { customAlpha: 1, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 0, },
+            endProps   : { customAlpha : 1, },
         });
 
         await wait();
     }
     protected async _showCloseAnimation(): Promise<void> {
         Executor.reset({
-            obj         : this._groupNavigator,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._groupNavigator,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Executor.reset({
-            obj         : this._groupTopRightButtons,
-            beginProps  : { customAlpha: 1, customY: 16 },
-            endProps    : { customAlpha: 0, customY: 16 - 40 },
+            obj        : this._groupTopRightButtons,
+            beginProps : { customAlpha : 1, customY : 16 },
+            endProps   : { customAlpha : 0, customY : 16 - 40 },
         });
         Executor.reset({
-            obj         : this._btnBack,
-            beginProps  : { customAlpha: 1, customY: 20 },
-            endProps    : { customAlpha: 0, customY: -20 },
+            obj        : this._btnBack,
+            beginProps : { customAlpha : 1, customY : 20 },
+            endProps   : { customAlpha : 0, customY : -20 },
         });
         Executor.reset({
-            obj         : this._groupSettings,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupSettings,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Executor.reset({
-            obj         : this._groupButton,
-            beginProps  : { customAlpha: 1, customX: 20 },
-            endProps    : { customAlpha: 0, customX: -20 },
+            obj        : this._groupButton,
+            beginProps : { customAlpha : 1, customX : 20 },
+            endProps   : { customAlpha : 0, customX : -20 },
         });
         Executor.reset({
-            obj         : this._groupTab,
-            beginProps  : { customAlpha: 1, },
-            endProps    : { customAlpha: 0, },
+            obj        : this._groupTab,
+            beginProps : { customAlpha : 1, },
+            endProps   : { customAlpha : 0, },
         });
 
         await wait();

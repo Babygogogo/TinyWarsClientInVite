@@ -13,7 +13,7 @@ import type { IBwWarView } from "./IBwWarView.ts";
 import type { DamagePreviewSettings } from "../model/BwTypes.ts";
 import type { IField } from "../../fields/IField.ts";
 import type { IFogMap } from "../../fogMaps/IFogMap.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import type { IPlayer } from "../../players/IPlayer.ts";
 import type { IPlayerManager } from "../../players/IPlayerManager.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";

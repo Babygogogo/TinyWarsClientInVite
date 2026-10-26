@@ -6,7 +6,7 @@ import {
     getCachedTileDecorationImageSource,
 } from "../../common/model/CommonModel.ts";
 import { SkinId } from "../../forceSkins/Constants.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { getCurrentTextureResolutionConfig } from "../../graphics/Utils.ts";
 import { createLazyFunc, getExisted } from "../../helpers/Misc.ts";
 import { ThemeTypeId } from "../../tiles/constants/Common.ts";

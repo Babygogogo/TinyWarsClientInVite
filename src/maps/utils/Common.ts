@@ -1,4 +1,4 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import { Common } from "../Constants.ts";
 import { LanguageType } from "../../lang/Constants.ts";
 import { PlayerIndex } from "../../players/Constants.ts";

@@ -4,9 +4,9 @@ import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
 import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { ForcedFogCode } from "./Constants.ts";
-import type { VisibilityTypeId } from "../gameConfig/GcWar.ts";
 import type { SerialFogMap } from "../proto/schema/CommonProto/WarSerialization/SerialFogMap.ts";
 import type { IUnit } from "../units/IUnit.ts";
+import {VisibilityTypeId} from "../visibilities/Constants.ts";
 
 type VisibilityType = VisibilityTypeId;
 type ForceFogCode   = ForcedFogCode;

@@ -1,14 +1,14 @@
 import { UserWarHistoryType, type Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { ChatToTarget } from "../../auxiliaryTypes/ChatToTarget.ts";
 import { show } from "../../FloatText.ts";
-import { MultiRankedWar } from "../../gameConfig/GcWar.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getUserAvatar, getUserOnlineState, getMedal } from "../../helpers/ImageSource.ts";
-import { getSuffixForRankIndex, format } from "../../helpers/Text.ts";
+import { getMedal, getUserAvatar, getUserOnlineState } from "../../helpers/ImageSource.ts";
+import { format, getSuffixForRankIndex } from "../../helpers/Text.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getMedalDesc, getFormattedText, getTimeDurationText2, getTimestampShortText } from "../../lang/Utils.ts";
+import { getFormattedText, getMedalDesc, getText, getTimeDurationText2, getTimestampShortText } from "../../lang/Utils.ts";
 import { getMrwRankIndex, getSpmOverallRankInfo } from "../../leaderboard/model/LeaderboardModel.ts";
+import { Common as MultiRankedWarConstants } from "../../multiRankedWars/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -19,16 +19,16 @@ import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import { getUiLayoutBaseClass } from "../../ui/utils/UiFactory.ts";
+import { WarTypeId } from "../../warTypes/Constants.ts";
 import {
     getSelfUserId,
+    getSelfUserPrivilege,
+    getUserMrwRankScoreInfo,
     getUserNickname,
     getUserPublicInfo,
     getUserOnlineState as UsersModelGetUserOnlineState,
-    getSelfUserPrivilege,
-    getUserMrwRankScoreInfo,
 } from "../Model.ts";
 import { reqUserGetPublicInfo } from "../Proxy.ts";
-import { WarTypeId } from "../../warTypes/Constants.ts";
 
 export interface OpenData {
     userId  : number;
@@ -90,25 +90,25 @@ export class Panel extends UiPanel<OpenData> {
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,             callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgUserGetPublicInfo,        callback: this._onNotifyMsgUserGetPublicInfo },
-            { type: TypeId.MsgUserSetNickname,          callback: this._onNotifyMsgUserSetNickname },
-            { type: TypeId.MsgUserSetAvatarId,          callback: this._onNotifyMsgUserSetAvatarId },
+            { type : TypeId.LanguageChanged,             callback : this._onNotifyLanguageChanged },
+            { type : TypeId.MsgUserGetPublicInfo,        callback : this._onNotifyMsgUserGetPublicInfo },
+            { type : TypeId.MsgUserSetNickname,          callback : this._onNotifyMsgUserSetNickname },
+            { type : TypeId.MsgUserSetAvatarId,          callback : this._onNotifyMsgUserSetAvatarId },
         ]);
         this._setUiListenerArray([
-            { ui: this._labelTitle,             callback: this._onTouchedLabelTitle },
-            { ui: this._btnChat,                callback: this._onTouchedBtnChat },
-            { ui: this._btnSetProfile,          callback: this._onTouchedBtnSetProfile },
-            { ui: this._btnSetRelation,         callback: this._onTouchedBtnSetRelation },
-            { ui: this._btnSetPrivilege,        callback: this._onTouchedBtnSetPrivilege },
-            { ui: this._btnMedal,               callback: this._onTouchedBtnMedal },
-            { ui: this._btnRankStdHistory,      callback: this._onTouchedBtnRankStdHistory },
-            { ui: this._btnStdStatistics,       callback: this._onTouchedBtnStdStatistics },
-            { ui: this._btnRankFogHistory,      callback: this._onTouchedBtnRankFogHistory },
-            { ui: this._btnFogStatistics,       callback: this._onTouchedBtnFogStatistics },
-            { ui: this._btnMyWarRoomRecord,     callback: this._onTouchedBtnMyWarRoomRecord },
-            { ui: this._btnClose,               callback: this.closePanel },
-            { ui: this._btnSwitch,              callback: this._onTouchedBtnSwitch },
+            { ui : this._labelTitle,             callback : this._onTouchedLabelTitle },
+            { ui : this._btnChat,                callback : this._onTouchedBtnChat },
+            { ui : this._btnSetProfile,          callback : this._onTouchedBtnSetProfile },
+            { ui : this._btnSetRelation,         callback : this._onTouchedBtnSetRelation },
+            { ui : this._btnSetPrivilege,        callback : this._onTouchedBtnSetPrivilege },
+            { ui : this._btnMedal,               callback : this._onTouchedBtnMedal },
+            { ui : this._btnRankStdHistory,      callback : this._onTouchedBtnRankStdHistory },
+            { ui : this._btnStdStatistics,       callback : this._onTouchedBtnStdStatistics },
+            { ui : this._btnRankFogHistory,      callback : this._onTouchedBtnRankFogHistory },
+            { ui : this._btnFogStatistics,       callback : this._onTouchedBtnFogStatistics },
+            { ui : this._btnMyWarRoomRecord,     callback : this._onTouchedBtnMyWarRoomRecord },
+            { ui : this._btnClose,               callback : this.closePanel },
+            { ui : this._btnSwitch,              callback : this._onTouchedBtnSwitch },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -170,7 +170,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnChat(): void {
         const userId = this.getOpenData()?.userId;
         this.closePanel();
-        openPanel(getDict().ChatPanel, { toTarget: new ChatToTarget({ toUserId: userId }) });
+        openPanel(getDict().ChatPanel, { toTarget : new ChatToTarget({ toUserId : userId }) });
     }
     private _onTouchedBtnSetProfile(): void {
         openPanel(getDict().UserProfileSettingsPanel, void 0);
@@ -181,7 +181,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().UserSetRelationPanel, { userId: userId });
+        openPanel(getDict().UserSetRelationPanel, { userId : userId });
     }
     private _onTouchedBtnSetPrivilege(): void {
         const userId = this.getOpenData()?.userId;
@@ -189,7 +189,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        openPanel(getDict().GmSetUserFullPrivilegePanel, { userId: userId });
+        openPanel(getDict().GmSetUserFullPrivilegePanel, { userId : userId });
         this.closePanel();
     }
     private async _onTouchedBtnMedal(): Promise<void> {
@@ -214,7 +214,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         openPanel(getDict().UserMpwStatisticsPanel, {
-            userId  : userId,
+            userId : userId,
         });
     }
     private _onTouchedBtnRankStdHistory(): void {
@@ -235,7 +235,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         openPanel(getDict().UserMpwStatisticsPanel, {
-            userId  : userId,
+            userId : userId,
         });
     }
     private _onTouchedBtnRankFogHistory(): void {
@@ -255,9 +255,9 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnSwitch(): void {
         this.closePanel();
         openPanel(getDict().CommonSearchSingleUserPanel, {
-            getTitleText        : null,
-            callbackOnConfirm   : userId => openPanel(getDict().UserPanel, {
-                userId  : userId,
+            getTitleText      : null,
+            callbackOnConfirm : userId => openPanel(getDict().UserPanel, {
+                userId : userId,
             }),
         });
     }
@@ -403,7 +403,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const data          = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwStd, 2);
         const rawScore      = data?.getCurrentScore();
-        const score         = rawScore != null ? rawScore : MultiRankedWar.InitialScore;
+        const score         = rawScore != null ? rawScore : MultiRankedWarConstants.InitialScore;
         // const rankName   = `(${Lang.getRankName(score, await GameConfig.GameConfigurationManager.getLatestGameConfig()) ?? Lang.ErrorTextForUndefined})`;
         const rankIndex     = await getMrwRankIndex(WarTypeId.MrwStd, userId);
         const textForRank   = rankIndex == null ? getText(TextType.B0435) : `${rankIndex}${getSuffixForRankIndex(rankIndex)}`;
@@ -418,7 +418,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const data          = await getUserMrwRankScoreInfo(userId, WarTypeId.MrwFog, 2);
         const rawScore      = data?.getCurrentScore();
-        const score         = rawScore != null ? rawScore : MultiRankedWar.InitialScore;
+        const score         = rawScore != null ? rawScore : MultiRankedWarConstants.InitialScore;
         // const rankName   = `(${Lang.getRankName(score, await GameConfig.GameConfigurationManager.getLatestGameConfig()) ?? Lang.ErrorTextForUndefined})`;
         const rankIndex     = await getMrwRankIndex(WarTypeId.MrwFog, userId);
         const textForRank   = rankIndex == null ? getText(TextType.B0435) : `${rankIndex}${getSuffixForRankIndex(rankIndex)}`;
@@ -458,8 +458,8 @@ function updateLabelsForTime(time: Undefinable<number>, label1: IUiLabel, label2
         label1.setText(UndefinedError);
         label2.setText(UndefinedError);
     } else {
-        label1.setText(getTimestampShortText(time, { hour: false, minute: false, second: false }));
-        label2.setText(getTimestampShortText(time, { year: false, month: false, date: false }));
+        label1.setText(getTimestampShortText(time, { hour : false, minute : false, second : false }));
+        label2.setText(getTimestampShortText(time, { year : false, month : false, date : false }));
     }
 
     const parent = label1.getParent();

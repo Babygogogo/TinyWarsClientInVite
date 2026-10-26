@@ -1,4 +1,4 @@
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { GcData } from "../../../gameConfigs/GcData.ts";
 import type { SelfUnitCost } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCost.ts";
 
 export function getTotalMultiplier({ cfg, gameConfig, unitTypeId }: {

@@ -5,7 +5,7 @@ import {
     type OpenData as CommonViewCommonWarPlayerInfoPageOpenData,
     Page as CommonViewCommonWarPlayerInfoPage,
 } from "../../common/view/CommonWarPlayerInfoPage.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getEnum } from "../../gameModes/Utils.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, closePanel } from "../../gamePanels/Manager.ts";

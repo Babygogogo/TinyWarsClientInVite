@@ -1,5 +1,5 @@
-import type { GcData } from "../../gameConfig/GcData.ts";
-import { getLatestGameConfig } from "../../gameConfig/GcModel.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
+import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getUnitViewClass, getUnitClass } from "../../gameHelpers/GhFactory.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";

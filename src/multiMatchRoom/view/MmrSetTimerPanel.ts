@@ -1,11 +1,9 @@
 import { showLang } from "../../FloatText.ts";
-import { MultiRankedWar } from "../../gameConfig/GcWar.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
-import { getBootTimerDaysRange } from "../model/MmrModel.ts";
-import { reqMmrSetBootTimerDaysRange } from "../model/MmrProxy.ts";
+import { BootTimer } from "../../multiRankedWars/Constants.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -13,6 +11,8 @@ import type { IUiContainer } from "../../ui/interfaces/IUiContainer.ts";
 import type { IUiImage } from "../../ui/interfaces/IUiImage.ts";
 import type { IUiLabel } from "../../ui/interfaces/IUiLabel.ts";
 import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
+import { getBootTimerDaysRange } from "../model/MmrModel.ts";
+import { reqMmrSetBootTimerDaysRange } from "../model/MmrProxy.ts";
 
 export type OpenData = void;
 export class Panel extends UiPanel<OpenData> {
@@ -31,24 +31,24 @@ export class Panel extends UiPanel<OpenData> {
     private readonly _btnFog!           : IUiButton;
     private readonly _labelFog!         : IUiLabel;
 
-    private _selectedDaysForStdLower    = MultiRankedWar.BootTimer.DefaultDays;
-    private _selectedDaysForStdUpper    = MultiRankedWar.BootTimer.DefaultDays;
-    private _selectedDaysForFogLower    = MultiRankedWar.BootTimer.DefaultDays;
-    private _selectedDaysForFogUpper    = MultiRankedWar.BootTimer.DefaultDays;
+    private _selectedDaysForStdLower    = BootTimer.DefaultDays;
+    private _selectedDaysForStdUpper    = BootTimer.DefaultDays;
+    private _selectedDaysForFogLower    = BootTimer.DefaultDays;
+    private _selectedDaysForFogUpper    = BootTimer.DefaultDays;
 
     public updateOnLoadedSkin(): void {
         this._setNotifyListenerArray([
-            { type: TypeId.LanguageChanged,                 callback: this._onNotifyLanguageChanged },
-            { type: TypeId.MsgMmrGetBootTimerDaysRange,     callback: this._onMsgMmrGetBootTimerDaysRange },
-            { type: TypeId.MsgMmrSetBootTimerDaysRange,     callback: this._onMsgMmrSetBootTimerDaysRange },
+            { type : TypeId.LanguageChanged,                 callback : this._onNotifyLanguageChanged },
+            { type : TypeId.MsgMmrGetBootTimerDaysRange,     callback : this._onMsgMmrGetBootTimerDaysRange },
+            { type : TypeId.MsgMmrSetBootTimerDaysRange,     callback : this._onMsgMmrSetBootTimerDaysRange },
         ]);
         this._setUiListenerArray([
-            { ui: this._btnClose,       callback: this.closePanel },
-            { ui: this._btnConfirm,     callback: this._onTouchedBtnConfirm },
+            { ui : this._btnClose,       callback : this.closePanel },
+            { ui : this._btnConfirm,     callback : this._onTouchedBtnConfirm },
 
-            { ui: this._btnHelp,        callback: this._onTouchedBtnHelp },
-            { ui: this._btnStd,         callback: this._onTouchedBtnStd },
-            { ui: this._btnFog,         callback: this._onTouchedBtnFog },
+            { ui : this._btnHelp,        callback : this._onTouchedBtnHelp },
+            { ui : this._btnStd,         callback : this._onTouchedBtnStd },
+            { ui : this._btnFog,         callback : this._onTouchedBtnFog },
         ]);
         this._setIsTouchMaskEnabled();
         this._setIsCloseOnTouchedMask();
@@ -75,13 +75,13 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnStd(): void {
         openPanel(getDict().CommonDoubleSliderPanel, {
-            getTitleText        : () => getText(TextType.B0548),
-            getHelpText         : () => getText(TextType.A0443),
-            minNumber           : MultiRankedWar.BootTimer.MinDays,
-            maxNumber           : MultiRankedWar.BootTimer.MaxDays,
-            currentLowerNumber  : this._selectedDaysForStdLower,
-            currentUpperNumber  : this._selectedDaysForStdUpper,
-            callback            : (minNumber, maxNumber) => {
+            getTitleText       : () => getText(TextType.B0548),
+            getHelpText        : () => getText(TextType.A0443),
+            minNumber          : BootTimer.MinDays,
+            maxNumber          : BootTimer.MaxDays,
+            currentLowerNumber : this._selectedDaysForStdLower,
+            currentUpperNumber : this._selectedDaysForStdUpper,
+            callback           : (minNumber, maxNumber) => {
                 this._selectedDaysForStdLower   = minNumber;
                 this._selectedDaysForStdUpper   = maxNumber;
                 this._updateLabelStd();
@@ -91,13 +91,13 @@ export class Panel extends UiPanel<OpenData> {
 
     private _onTouchedBtnFog(): void {
         openPanel(getDict().CommonDoubleSliderPanel, {
-            getTitleText        : () => getText(TextType.B0549),
-            getHelpText         : () => getText(TextType.A0443),
-            minNumber           : MultiRankedWar.BootTimer.MinDays,
-            maxNumber           : MultiRankedWar.BootTimer.MaxDays,
-            currentLowerNumber  : this._selectedDaysForFogLower,
-            currentUpperNumber  : this._selectedDaysForFogUpper,
-            callback            : (minNumber, maxNumber) => {
+            getTitleText       : () => getText(TextType.B0549),
+            getHelpText        : () => getText(TextType.A0443),
+            minNumber          : BootTimer.MinDays,
+            maxNumber          : BootTimer.MaxDays,
+            currentLowerNumber : this._selectedDaysForFogLower,
+            currentUpperNumber : this._selectedDaysForFogUpper,
+            callback           : (minNumber, maxNumber) => {
                 this._selectedDaysForFogLower   = minNumber;
                 this._selectedDaysForFogUpper   = maxNumber;
                 this._updateLabelFog();

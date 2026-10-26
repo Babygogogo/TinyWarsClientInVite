@@ -4,7 +4,7 @@ import type { GridIndexAndWeight } from "../auxiliaryTypes/GridIndexAndWeight.ts
 import type { UnitVisionInfo } from "../auxiliaryTypes/UnitVisionInfo.ts";
 import type { IBwWar } from "../baseWar/interface/IBwWar.ts";
 import type { SkillTypeId } from "../coSkills/Constants.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import type { LanguageType } from "../lang/Constants.ts";
 import type { IPlayer } from "../players/IPlayer.ts";
 import type { BuildableTileCfg } from "../proto/schema/CommonProto/Config/BuildableTileCfg.ts";

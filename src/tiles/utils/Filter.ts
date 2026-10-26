@@ -1,5 +1,5 @@
 import type { MapSize } from "../../auxiliaryTypes/MapSize.ts";
-import type { GcData } from "../../gameConfig/GcData.ts";
+import type { GcData } from "../../gameConfigs/GcData.ts";
 import {
     checkIsMeet as GridIndexArrayAndPredicatesUtilsCheckIsMeet,
     getDesc as GridIndexArrayAndPredicatesUtilsGetDesc,

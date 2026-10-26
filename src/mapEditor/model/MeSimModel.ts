@@ -1,5 +1,5 @@
 import { pickRandomCo } from "../../cos/Utils.ts";
-import { getGameConfig } from "../../gameConfig/GcModel.ts";
+import { getGameConfig } from "../../gameConfigs/Provider.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getFinalSfwHumanCoIdSet } from "../../playerRules/Utils.ts";

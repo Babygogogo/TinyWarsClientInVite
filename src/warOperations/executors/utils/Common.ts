@@ -2,7 +2,7 @@ import type { BattleInfo } from "../../../auxiliaryTypes/BattleInfo.ts";
 import { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getTotalOffset } from "../../../coSkills/utils/instantMisc/SelfUnitHpAfterWait.ts";
-import type { GcData } from "../../../gameConfig/GcData.ts";
+import type { GcData } from "../../../gameConfigs/GcData.ts";
 import { getUnitClass } from "../../../gameHelpers/GhFactory.ts";
 import { getExisted, newError, createLazyFunc } from "../../../helpers/Misc.ts";
 import { getValidFund } from "../../../players/utils/Common.ts";

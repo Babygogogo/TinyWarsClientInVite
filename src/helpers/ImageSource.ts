@@ -1,5 +1,5 @@
 import type { Undefinable, UserOnlineState } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import type { GcData } from "../gameConfig/GcData.ts";
+import type { GcData } from "../gameConfigs/GcData.ts";
 import { getCurrentGameEssentialConfig } from "../gameVersions/Utils.ts";
 import { TextureVersionId } from "../graphics/Constants.ts";
 import { newError, getExisted, createLazyFunc } from "./Misc.ts";
