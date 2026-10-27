@@ -12,7 +12,7 @@ import { checkCanCoBoard } from "../coSkills/utils/persistent/SelfCanCoBoard.ts"
 import { getTotalUpperOffset } from "../coSkills/utils/persistent/SelfUnitAttackRange.ts";
 import { getTotalOffsetPct } from "../coSkills/utils/persistent/SelfUnitCaptureAmount.ts";
 import {
-    getTotalOffsetPct as CoSkillsUtilsPersistentSelfUnitDefenseGetTotalOffsetPct,
+    getTotalDefensePercentOffset as CoSkillsUtilsPersistentSelfUnitDefenseGetTotalOffsetPct,
 } from "../coSkills/utils/persistent/SelfUnitDefense.ts";
 import { getTotalOffset } from "../coSkills/utils/persistent/SelfUnitFuelConsumption.ts";
 import {
@@ -102,10 +102,10 @@ export class Unit implements IUnit {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public init(unitData: SerialUnit, gameConfig: GameConfig): void {
         const validationError = getErrorCodeForUnitDataIgnoringUnitId({
-            unitData                : unitData,
-            gameConfig              : gameConfig,
-            mapSize                 : null,
-            playersCountUnneutral   : null,
+            unitData              : unitData,
+            gameConfig            : gameConfig,
+            mapSize               : null,
+            playersCountUnneutral : null,
         });
         if (validationError) {
             throw newError(`ValidationError: ${validationError}`, validationError);
@@ -163,31 +163,31 @@ export class Unit implements IUnit {
 
     public serialize(): SerialUnit {
         return create({
-            gridIndex                       : this.getGridIndex().toProto().toJson(),
-            playerIndex                     : this.getPlayerIndex(),
-            unitType                        : this.getUnitType(),
-            unitId                          : this.getUnitId(),
+            gridIndex   : this.getGridIndex().toProto().toJson(),
+            playerIndex : this.getPlayerIndex(),
+            unitType    : this.getUnitType(),
+            unitId      : this.getUnitId(),
 
-            actionState                     : this.getActionState(),
-            currentHp                       : this.getCurrentHp(),
-            aiMode                          : this.getAiMode(),
-            groupedTagId                    : this.getGroupedTagId(),
-            customNameId                    : this.getCustomNameId() ?? null,
+            actionState  : this.getActionState(),
+            currentHp    : this.getCurrentHp(),
+            aiMode       : this.getAiMode(),
+            groupedTagId : this.getGroupedTagId(),
+            customNameId : this.getCustomNameId() ?? null,
 
-            currentPromotion                : this.getCurrentPromotion(),
-            isDiving                        : this.getIsDiving(),
-            isCoOnboard                     : this.getIsCoOnboard(),
-            currentBuildMaterial            : this.getCurrentBuildMaterial(),
+            currentPromotion     : this.getCurrentPromotion(),
+            isDiving             : this.getIsDiving(),
+            isCoOnboard          : this.getIsCoOnboard(),
+            currentBuildMaterial : this.getCurrentBuildMaterial(),
 
             aiWeightedDestination           : this.getAiWeightedDestination()?.toProto().toJson() ?? null,
             forbiddenGroupedLocationIdArray : this.getForbiddenGroupedLocationIdArray(),
             buffArray                       : this.getBuffList().map(v => v.toJson()),
 
-            primaryWeaponCurrentAmmo        : this.getPrimaryWeaponCurrentAmmo(),
-            currentFuel                     : this.getCurrentFuel(),
-            flareCurrentAmmo                : this.getFlareCurrentAmmo(),
-            currentProduceMaterial          : this.getCurrentProduceMaterial(),
-            loaderUnitId                    : this.getLoaderUnitId() ?? null,
+            primaryWeaponCurrentAmmo : this.getPrimaryWeaponCurrentAmmo(),
+            currentFuel              : this.getCurrentFuel(),
+            flareCurrentAmmo         : this.getFlareCurrentAmmo(),
+            currentProduceMaterial   : this.getCurrentProduceMaterial(),
+            loaderUnitId             : this.getLoaderUnitId() ?? null,
         });
     }
     public serializeForCreateSfw(): SerialUnit {
@@ -256,7 +256,9 @@ export class Unit implements IUnit {
         aiming              : GridIndex | null;
         updateViewAfterMove : boolean;
     }): Promise<void> {
-        return this.getView().moveAlongPath({ path: pathNodes, isDiving, isBlocked, aiming, updateViewAfterMove });
+        return this.getView().moveAlongPath({
+            path : pathNodes, isDiving, isBlocked, aiming, updateViewAfterMove
+        });
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -379,9 +381,9 @@ export class Unit implements IUnit {
             ((offset < 0) && (currentAmmo > minAmmo))
         ) {
             this.setAndValidatePrimaryWeaponCurrentAmmo(getValueInRange({
-                minValue    : minAmmo,
-                maxValue    : maxAmmo,
-                rawValue    : currentAmmo + offset,
+                minValue : minAmmo,
+                maxValue : maxAmmo,
+                rawValue : currentAmmo + offset,
             }));
         }
     }
@@ -464,23 +466,23 @@ export class Unit implements IUnit {
         let modifier = 0;
         for (const skillId of player.getCoCurrentSkills()) {
             modifier += CoSkillsUtilsPersistentSelfUnitOffenseGetTotalOffsetPct({
-                cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitOffense(),
-                gameConfig                  : gameConfig,
-                unitTypeId                  : unitTypeId,
-                tileTypeId                  : selfTileTypeId,
-                weatherTypeId               : weatherTypeId,
-                isCoOnboard                 : isCoOnboard,
-                isInCozByPreviewSettings    : isInCozByPreviewSettings,
-                gridIndex                   : selfGridIndex,
-                coZoneRadius                : coZoneRadius,
-                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
-                fund                        : fund,
-                promotion                   : promotion,
-                hp                          : selfHp,
-                isCounter                   : isCounter,
-                tileDefenseAmount           : selfTileDefenseAmount,
-                canTileDefendUnit           : canSelfTileDefendUnit,
-                getOwnTilesCount            : getOwnTilesCount,
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+                gameConfig               : gameConfig,
+                unitTypeId               : unitTypeId,
+                tileTypeId               : selfTileTypeId,
+                weatherTypeId            : weatherTypeId,
+                isCoOnboard              : isCoOnboard,
+                isInCozByPreviewSettings : isInCozByPreviewSettings,
+                gridIndex                : selfGridIndex,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                fund                     : fund,
+                promotion                : promotion,
+                hp                       : selfHp,
+                isCounter                : isCounter,
+                tileDefenseAmount        : selfTileDefenseAmount,
+                canTileDefendUnit        : canSelfTileDefendUnit,
+                getOwnTilesCount         : getOwnTilesCount,
             });
         }
 
@@ -527,9 +529,9 @@ export class Unit implements IUnit {
                 (gameConfig.checkIsTileTypeInCategory(selfTileType, cfg.getTileCategoryId() ?? 0))         &&
                 (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId() ?? 0))    &&
                 ((isCoOnboard) || (isInCozByPreviewSettings) || (selfGridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-                    coZoneRadius                : coZoneRadius,
-                    getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coZoneRadius             : coZoneRadius,
+                    getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                 })))
             ) {
                 return 0;
@@ -561,9 +563,9 @@ export class Unit implements IUnit {
                 if ((cfg)                                                                           &&
                     (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))  &&
                     ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-                        coZoneRadius                : coZoneRadius,
-                        getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                        coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                        coZoneRadius             : coZoneRadius,
+                        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                     })))
                 ) {
                     result[0] += cfg.getPierceTilePct() ?? 0;
@@ -628,23 +630,23 @@ export class Unit implements IUnit {
         let modifier = 0;
         for (const skillId of player.getCoCurrentSkills()) {
             modifier += CoSkillsUtilsPersistentSelfUnitDefenseGetTotalOffsetPct({
-                cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitDefense(),
-                gameConfig                  : gameConfig,
-                unitTypeId1                 : attackerUnitTypeId,
-                unitTypeId2                 : selfUnitTypeId,
-                tileTypeId2                 : selfTileTypeId,
-                weatherTypeId               : weatherTypeId,
-                isCoOnboard                 : isCoOnboard,
-                isInCozByPreviewSettings    : isInCozByPreviewSettings,
-                gridIndex                   : selfGridIndex,
-                coZoneRadius                : coZoneRadius,
-                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
-                getOwnTilesCount            : getOwnTilesCount,
-                fund                        : fund,
-                promotion                   : promotion,
-                hp                          : selfHp,
-                tileDefenseAmount           : selfTileDefenseAmount,
-                canTileDefendUnit           : canSelfTileDefendUnit,
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
+                gameConfig               : gameConfig,
+                unitTypeId1              : attackerUnitTypeId,
+                unitTypeId2              : selfUnitTypeId,
+                tileTypeId2              : selfTileTypeId,
+                weatherTypeId            : weatherTypeId,
+                isCoOnboard              : isCoOnboard,
+                isInCozByPreviewSettings : isInCozByPreviewSettings,
+                gridIndex                : selfGridIndex,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                getOwnTilesCount         : getOwnTilesCount,
+                fund                     : fund,
+                promotion                : promotion,
+                hp                       : selfHp,
+                tileDefenseAmount        : selfTileDefenseAmount,
+                canTileDefendUnit        : canSelfTileDefendUnit,
             });
         }
 
@@ -672,9 +674,9 @@ export class Unit implements IUnit {
                     (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))   &&
                     (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId() ?? 0))   &&
                     ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-                        coZoneRadius                : coZoneRadius,
-                        getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                        coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                        coZoneRadius             : coZoneRadius,
+                        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                     })))
                 ) {
                     return false;
@@ -705,9 +707,9 @@ export class Unit implements IUnit {
                     (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))   &&
                     (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId() ?? 0))   &&
                     ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-                        coZoneRadius                : coZoneRadius,
-                        getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                        coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                        coZoneRadius             : coZoneRadius,
+                        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                     })))
                 ) {
                     return false;
@@ -729,21 +731,21 @@ export class Unit implements IUnit {
         let upperModifier               = 0;
         for (const skillId of player.getCoCurrentSkills()) {
             const offset = CoSkillsUtilsPersistentSelfUnitLuckRangeGetTotalOffset({
-                cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitLuckRange(),
-                gameConfig                  : gameConfig,
-                unitTypeId                  : selfUnitType,
-                gridIndex                   : selfGridIndex,
-                coZoneRadius                : coZoneRadius,
-                isCoOnboard                 : isCoOnboard,
-                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitLuckRange(),
+                gameConfig               : gameConfig,
+                unitTypeId               : selfUnitType,
+                gridIndex                : selfGridIndex,
+                coZoneRadius             : coZoneRadius,
+                isCoOnboard              : isCoOnboard,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
             });
             lowerModifier += offset.lower;
             upperModifier += offset.upper;
         }
 
         return {
-            lower   : lowerModifier,
-            upper   : upperModifier,
+            lower : lowerModifier,
+            upper : upperModifier,
         };
     }
 
@@ -802,13 +804,13 @@ export class Unit implements IUnit {
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills() || []) {
             modifier += getTotalUpperOffset({
-                cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitAttackRange(),
-                gameConfig                  : gameConfig,
-                unitTypeId                  : selfUnitTypeId,
-                isCoOnboard                 : isCoOnboard,
-                coZoneRadius                : coZoneRadius,
-                gridIndex                   : selfOldGridIndex,
-                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitAttackRange(),
+                gameConfig               : gameConfig,
+                unitTypeId               : selfUnitTypeId,
+                isCoOnboard              : isCoOnboard,
+                coZoneRadius             : coZoneRadius,
+                gridIndex                : selfOldGridIndex,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
             });
         }
 
@@ -1003,13 +1005,13 @@ export class Unit implements IUnit {
         let modifier                    = 100;
         for (const skillId of player.getCoCurrentSkills()) {
             modifier += getTotalOffsetPct({
-                cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCaptureAmount(),
-                unitTypeId                  : selfUnitTypeId,
-                gridIndex                   : selfGridIndex,
-                gameConfig                  : gameConfig,
-                coZoneRadius                : coZoneRadius,
-                isCoOnboard                 : isCoOnboard,
-                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCaptureAmount(),
+                unitTypeId               : selfUnitTypeId,
+                gridIndex                : selfGridIndex,
+                gameConfig               : gameConfig,
+                coZoneRadius             : coZoneRadius,
+                isCoOnboard              : isCoOnboard,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
             });
         }
 
@@ -1062,9 +1064,9 @@ export class Unit implements IUnit {
                     (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))   &&
                     (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId() ?? 0))   &&
                     ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-                        getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
-                        coZoneRadius                : coZoneRadius
+                        coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                        getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
+                        coZoneRadius             : coZoneRadius
                     })))
                 ) {
                     return true;
@@ -1122,13 +1124,13 @@ export class Unit implements IUnit {
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills()) {
             modifier += getTotalOffset({
-                cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitFuelConsumption(),
-                gameConfig                  : gameConfig,
-                unitTypeId                  : selfUnitTypeId,
-                gridIndex                   : selfGridIndex,
-                isCoOnboard                 : isCoOnboard,
-                coZoneRadius                : coZoneRadius,
-                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitFuelConsumption(),
+                gameConfig               : gameConfig,
+                unitTypeId               : selfUnitTypeId,
+                gridIndex                : selfGridIndex,
+                isCoOnboard              : isCoOnboard,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
             });
         }
         return modifier;
@@ -1154,9 +1156,9 @@ export class Unit implements IUnit {
         return cfgRadius == null
             ? null
             : getValueInRange({
-                minValue    : 0,
-                maxValue    : MaxInt32,
-                rawValue    : Math.floor(cfgRadius + this.getWar().getWarEventManager().getOpaFlareRadiusModifier(this, gridIndex))
+                minValue : 0,
+                maxValue : MaxInt32,
+                rawValue : Math.floor(cfgRadius + this.getWar().getWarEventManager().getOpaFlareRadiusModifier(this, gridIndex))
             });
     }
 
@@ -1165,9 +1167,9 @@ export class Unit implements IUnit {
         return cfgMaxRange == null
             ? null
             : getValueInRange({
-                minValue    : 0,
-                maxValue    : MaxInt32,
-                rawValue    : Math.floor(cfgMaxRange + this.getWar().getWarEventManager().getOpaFlareRangeModifier(this, gridIndex))
+                minValue : 0,
+                maxValue : MaxInt32,
+                rawValue : Math.floor(cfgMaxRange + this.getWar().getWarEventManager().getOpaFlareRangeModifier(this, gridIndex))
             });
     }
 
@@ -1293,9 +1295,9 @@ export class Unit implements IUnit {
             ((offset < 0) && (currentMaterial > minMaterial))
         ) {
             this.setAndValidateCurrentProduceMaterial(getValueInRange({
-                minValue    : minMaterial,
-                maxValue    : maxMaterial,
-                rawValue    : currentMaterial + offset,
+                minValue : minMaterial,
+                maxValue : maxMaterial,
+                rawValue : currentMaterial + offset,
             }));
         }
     }
@@ -1327,9 +1329,9 @@ export class Unit implements IUnit {
         } else {
             const war = this.getWar();
             return getValueInRange({
-                minValue    : 0,
-                maxValue    : currentFuel,
-                rawValue    : Math.floor(this.getCfgMoveRange()
+                minValue : 0,
+                maxValue : currentFuel,
+                rawValue : Math.floor(this.getCfgMoveRange()
                     + war.getCommonSettingManager().getPlayerRule(this.getPlayerIndex()).getMoveRangeModifier()
                     + war.getWarEventManager().getOpaMoveRangeModifier(this)
                     + this._getMoveRangeModifierByCo()
@@ -1356,15 +1358,15 @@ export class Unit implements IUnit {
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills()) {
             modifier += CoSkillsUtilsPersistentSelfUnitMoveRangeGetTotalOffset({
-                cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitMoveRange(),
-                gameConfig                  : gameConfig,
-                unitTypeId                  : selfUnitTypeId,
-                tileTypeId                  : selfTileTypeId,
-                weatherTypeId               : weatherTypeId,
-                isCoOnboard                 : isCoOnboard,
-                gridIndex                   : selfGridIndex,
-                coZoneRadius                : coZoneRadius,
-                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitMoveRange(),
+                gameConfig               : gameConfig,
+                unitTypeId               : selfUnitTypeId,
+                tileTypeId               : selfTileTypeId,
+                weatherTypeId            : weatherTypeId,
+                isCoOnboard              : isCoOnboard,
+                gridIndex                : selfGridIndex,
+                coZoneRadius             : coZoneRadius,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
             });
         }
 
@@ -1402,9 +1404,9 @@ export class Unit implements IUnit {
                 (gameConfig.checkIsTileTypeInCategory(selfTileType, cfg.getTileCategoryId() ?? 0))         &&
                 (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId() ?? 0))    &&
                 ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-                    coZoneRadius                : coZoneRadius,
-                    getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coZoneRadius             : coZoneRadius,
+                    getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                 })))
             ) {
                 return 0;
@@ -1451,9 +1453,9 @@ export class Unit implements IUnit {
     }
     public addAndReviseCurrentPromotion(offset: number): void {
         this.setCurrentPromotion(getValueInRange({
-            minValue    : 0,
-            maxValue    : this.getMaxPromotion(),
-            rawValue    : this.getCurrentPromotion() + offset,
+            minValue : 0,
+            maxValue : this.getMaxPromotion(),
+            rawValue : this.getCurrentPromotion() + offset,
         }));
     }
 
@@ -1626,9 +1628,9 @@ export class Unit implements IUnit {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfRepairAmountBonus();
             if ((cfg)                                               &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
-                    coZoneRadius                : coZoneRadius,
-                    getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coZoneRadius             : coZoneRadius,
+                    getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                 }))
             ) {
                 amountModifier      += cfg.getRepairOffsetFromUnit() ?? 0;
@@ -1679,8 +1681,8 @@ export class Unit implements IUnit {
                     : Number.MAX_SAFE_INTEGER,
             );
             return {
-                hp  : (normalizedRepairHp + normalizedCurrentHp) * Hp.Normalizer - unit.getCurrentHp(),
-                cost: Math.floor(normalizedRepairHp * productionCost / normalizedMaxHp),
+                hp   : (normalizedRepairHp + normalizedCurrentHp) * Hp.Normalizer - unit.getCurrentHp(),
+                cost : Math.floor(normalizedRepairHp * productionCost / normalizedMaxHp),
             };
         }
     }
@@ -1786,15 +1788,15 @@ export class Unit implements IUnit {
                         && (gameConfig.checkIsTileTypeInCategory(tileType, skillCfg.getTileCategoryId() ?? 0))
                         && (gameConfig.checkIsWeatherTypeInCategory(weatherType, skillCfg.getWeatherCategoryId() ?? 0))
                         && ((isCoOnboard) || (gridIndex.checkIsInsideCoSkillArea({
-                            coSkillAreaType             : skillCfg.getCoSkillAreaTypeId() ?? 0,
-                            coZoneRadius                : coZoneRadius,
-                            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                            coSkillAreaType          : skillCfg.getCoSkillAreaTypeId() ?? 0,
+                            coZoneRadius             : coZoneRadius,
+                            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                         })));
                 })) {
                     return new UnitVisionInfo({
-                        baseRange       : unitVisionFixedCfg[2] + modifierByCo,
-                        isFixed         : true,
-                        isPenetrating   : this._checkVisionCanSeeThrough(),
+                        baseRange     : unitVisionFixedCfg[2] + modifierByCo,
+                        isFixed       : true,
+                        isPenetrating : this._checkVisionCanSeeThrough(),
                     });
                 }
             }
@@ -1803,9 +1805,9 @@ export class Unit implements IUnit {
         const modifierBySettings    = war.getCommonSettingManager().getPlayerRule(this.getPlayerIndex()).getUnitVisionRangeModifier();
         const modifierByOpa         = war.getWarEventManager().getOpaUnitVisionRangeModifier(this, gridIndex);
         return new UnitVisionInfo({
-            baseRange       : this.getCfgVisionRange() + modifierByCo + modifierBySettings + modifierByOpa,
-            isFixed         : false,
-            isPenetrating    : this._checkVisionCanSeeThrough(),
+            baseRange     : this.getCfgVisionRange() + modifierByCo + modifierBySettings + modifierByOpa,
+            isFixed       : false,
+            isPenetrating : this._checkVisionCanSeeThrough(),
         });
     }
     public getFinalVisionRange(visionInfo: UnitVisionInfo, gridIndex: GridIndex): number {
@@ -1813,9 +1815,9 @@ export class Unit implements IUnit {
         const tileMap   = this.getWar().getTileMap();
         const mapSize   = tileMap.getMapSize();
         return getValueInRange({
-            minValue    : 1,
-            maxValue    : mapSize.getWidth() + mapSize.getHeight(),
-            rawValue    : Math.floor(visionInfo.isFixed
+            minValue : 1,
+            maxValue : mapSize.getWidth() + mapSize.getHeight(),
+            rawValue : Math.floor(visionInfo.isFixed
                 ? baseRange
                 : baseRange + this.getVisionRangeBonusOnTile(tileMap.getTile(gridIndex).getTileTypeId())
             ),
@@ -1836,13 +1838,13 @@ export class Unit implements IUnit {
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills() || []) {
             modifier += getTotalRangeOffset({
-                cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitVision(),
-                gameConfig                  : gameConfig,
-                gridIndex                   : selfGridIndex,
-                unitTypeId                  : selfUnitTypeId,
-                coZoneRadius                : coZoneRadius,
-                isCoOnboard                 : isCoOnboard,
-                getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitVision(),
+                gameConfig               : gameConfig,
+                gridIndex                : selfGridIndex,
+                unitTypeId               : selfUnitTypeId,
+                coZoneRadius             : coZoneRadius,
+                isCoOnboard              : isCoOnboard,
+                getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
             });
         }
 
@@ -1869,13 +1871,13 @@ export class Unit implements IUnit {
         const isCoOnboard               = this.getIsCoOnboard();
         const selfGridIndex             = this.getGridIndex();
         return player.getCoCurrentSkills().some(skillId => checkCanSeeThrough({
-            cfg                         : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitVision(),
-            gameConfig                  : gameConfig,
-            gridIndex                   : selfGridIndex,
-            unitTypeId                  : selfUnitTypeId,
-            coZoneRadius                : coZoneRadius,
-            isCoOnboard                 : isCoOnboard,
-            getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
+            cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitVision(),
+            gameConfig               : gameConfig,
+            gridIndex                : selfGridIndex,
+            unitTypeId               : selfUnitTypeId,
+            coZoneRadius             : coZoneRadius,
+            isCoOnboard              : isCoOnboard,
+            getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
         }));
     }
 
@@ -1953,11 +1955,11 @@ export class Unit implements IUnit {
                 const cfg = skillCfg.getPersistent()?.getSelfCanCoBoard();
                 if (cfg != null) {
                     const canCoBoard = checkCanCoBoard({
-                        cfg         : cfg,
-                        gameConfig  : gameConfig,
-                        unitTypeId  : unitTypeId,
-                        tileTypeId  : tileTypeId,
-                        isOwnTile   : isOwnTile,
+                        cfg        : cfg,
+                        gameConfig : gameConfig,
+                        unitTypeId : unitTypeId,
+                        tileTypeId : tileTypeId,
+                        isOwnTile  : isOwnTile,
                     });
                     if (canCoBoard != null) {
                         return canCoBoard;
@@ -1971,10 +1973,10 @@ export class Unit implements IUnit {
         }
 
         return TilesUtilsCommonCheckCanCoBoard({
-            gameConfig          : gameConfig,
-            templateCfg         : tile.getTemplateCfg(),
-            customBuildingData  : tile.getCustomBuildingData(),
-            unitType            : unitTypeId,
+            gameConfig         : gameConfig,
+            templateCfg        : tile.getTemplateCfg(),
+            customBuildingData : tile.getCustomBuildingData(),
+            unitType           : unitTypeId,
         });
     }
 
@@ -2132,10 +2134,10 @@ export class Unit implements IUnit {
             const selfTeamIndex         = this.getTeamIndex();
             const canAttackAfterMoving  = this.getFinalCanAttackAfterMoving();
             const movableArea           = MovableArea.create({
-                gridIndex       : selfGridIndex,
-                maxMoveCost     : this.getFinalMoveRange(),
-                mapSize         : mapSize,
-                moveCostGetter  : gridIndex => {
+                gridIndex      : selfGridIndex,
+                maxMoveCost    : this.getFinalMoveRange(),
+                mapSize        : mapSize,
+                moveCostGetter : gridIndex => {
                     if (!gridIndex.checkIsInsideMap(mapSize)) {
                         return null;
                     } else {
@@ -2149,11 +2151,11 @@ export class Unit implements IUnit {
                 },
             });
             const attackableArea = AttackableArea.create({
-                movableArea         : movableArea,
-                mapSize             : mapSize,
-                minAttackRange      : minAttackRange,
-                maxAttackRange      : maxAttackRange,
-                checkCanAttack      : (moveGridIndex: GridIndex, targetGridIndex: GridIndex): boolean => {
+                movableArea    : movableArea,
+                mapSize        : mapSize,
+                minAttackRange : minAttackRange,
+                maxAttackRange : maxAttackRange,
+                checkCanAttack : (moveGridIndex: GridIndex, targetGridIndex: GridIndex): boolean => {
                     const hasMoved = !moveGridIndex.checkIsEqual(selfGridIndex);
                     if (((this.getLoaderUnitId() == null) || (hasMoved))    &&
                         ((canAttackAfterMoving) || (!hasMoved))
@@ -2236,7 +2238,7 @@ export class Unit implements IUnit {
                 this.updateView();
             }
             dispatch(TypeId.BwUnitBuffChanged, {
-                unit    : this,
+                unit : this,
             } as BwUnitBuffChanged);
         }
 
@@ -2255,7 +2257,7 @@ export class Unit implements IUnit {
         }
         if (needNotify) {
             dispatch(TypeId.BwUnitBuffChanged, {
-                unit    : this,
+                unit : this,
             } as BwUnitBuffChanged);
         }
     }
@@ -2273,7 +2275,7 @@ export class Unit implements IUnit {
             this.updateView();
         }
         dispatch(TypeId.BwUnitBuffChanged, {
-            unit    : this,
+            unit : this,
         } as BwUnitBuffChanged);
 
         return true;
@@ -2305,9 +2307,9 @@ export class Unit implements IUnit {
     public getCustomName(languageType = getCurrentLanguageType()): Undefinable<string> {
         const nameId = this.getCustomNameId();
         return getLanguageText({
-            textArray       : this.getWar().getUnitMap().getUnitCustomNameArray()?.find(v => (v.getNameId() ?? 0) === nameId)?.getNameTextArray(),
-            languageType    : languageType,
-            useAlternate    : false,
+            textArray    : this.getWar().getUnitMap().getUnitCustomNameArray()?.find(v => (v.getNameId() ?? 0) === nameId)?.getNameTextArray(),
+            languageType : languageType,
+            useAlternate : false,
         });
     }
 }

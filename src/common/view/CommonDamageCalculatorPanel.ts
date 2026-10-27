@@ -3,11 +3,9 @@ import { DamageCalculatorPlayerData } from "../../auxiliaryTypes/DamageCalculato
 import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import { CoId } from "../../cos/Constants.ts";
 import { SkillTypeId } from "../../coSkills/Constants.ts";
-import { getTotalOffsetPctForDamageCalculatorPanel } from "../../coSkills/utils/persistent/SelfUnitDefense.ts";
+import { getTotalDefensePercentOffsetForDamageCalculatorPanel } from "../../coSkills/utils/persistent/SelfUnitDefense.ts";
 import { getTotalOffsetForDamageCalculatorPanel } from "../../coSkills/utils/persistent/SelfUnitLuckRange.ts";
-import {
-    getTotalOffsetPctForDamageCalculatorPanel as CoSkillsUtilsPersistentSelfUnitOffenseGetTotalOffsetPctForDamageCalculatorPanel,
-} from "../../coSkills/utils/persistent/SelfUnitOffense.ts";
+import { getTotalOffsetPctForDamageCalculatorPanel } from "../../coSkills/utils/persistent/SelfUnitOffense.ts";
 import { getDamageMultiplierForDefenseBonus } from "../../damageCalculators/Utils.ts";
 import { show } from "../../FloatText.ts";
 import { getDefaultSkinId, getRawOverridingSkinId } from "../../forceSkins/Utils.ts";
@@ -1158,8 +1156,8 @@ function getAttackModifierByCo({ isCounter, calculatorData }: {
     const getOwnTilesCount                  = createLazyFunc2(() => attackerData.citiesCount);  // TODO: 这里做了简化处理（因为只有kindle有这个技能），以后如果有类似的新技能，就需要完整实现地形计数逻辑
     let modifier                            = 0;
     for (const skillId of getCoSkillIdArray(gameConfig, attackerCoId, attackerCoSkillType)) {
-        modifier += CoSkillsUtilsPersistentSelfUnitOffenseGetTotalOffsetPctForDamageCalculatorPanel({
-            cfg               : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitOffense(),
+        modifier += getTotalOffsetPctForDamageCalculatorPanel({
+            cfg               : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
             gameConfig        : gameConfig,
             unitTypeId        : attackerUnitTypeId,
             tileTypeId        : attackerTileTypeId,
@@ -1289,8 +1287,8 @@ function getDefenseModifierByCo(calculatorData: CalculatorData): number {
     });
     let modifier                            = 0;
     for (const skillId of getCoSkillIdArray(gameConfig, defenderCoId, defenderCoSkillType)) {
-        modifier += getTotalOffsetPctForDamageCalculatorPanel({
-            cfg               : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitDefense(),
+        modifier += getTotalDefensePercentOffsetForDamageCalculatorPanel({
+            cfg               : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
             gameConfig        : gameConfig,
             unitTypeId1       : calculatorData.attackerData.unitType,
             unitTypeId2       : defenderUnitTypeId,

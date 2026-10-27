@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GridIndex } from "../../../auxiliaryTypes/GridIndex.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import type { SelfUnitDefense } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitDefense.ts";
+import type { SelfUnitCommonAttributes } from "../../../proto/schema/CommonProto/Config/CoSkillCfg/Persistent/SelfUnitCommonAttributes";
 import { getNormalizedHp } from "../../../units/utils/Common.ts";
 
 function getTotalPctFromOwnTiles(cfg: Undefinable<number[]>, getOwnTilesCount: (tileCategoryId: number) => number): number {
@@ -27,7 +27,7 @@ function getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig: GameConfig, cfg: 
         : 0;
 }
 
-export function getTotalOffsetPct({
+export function getTotalDefensePercentOffset({
     cfg,
     gameConfig,
     unitTypeId1,
@@ -46,7 +46,7 @@ export function getTotalOffsetPct({
     tileDefenseAmount,
     canTileDefendUnit,
 }: {
-    cfg                         : SelfUnitDefense | null | undefined;
+    cfg                         : SelfUnitCommonAttributes | null | undefined;
     gameConfig                  : GameConfig;
     unitTypeId1                 : number | null;
     unitTypeId2                 : number;
@@ -109,7 +109,7 @@ export function getTotalOffsetPct({
         + (unitTypeId1 != unitTypeId2 ? 0 : defensePercentOffsetFrom.getOffsetPctAgainstSameEnemy());
 }
 
-export function getTotalOffsetPctForDamageCalculatorPanel({
+export function getTotalDefensePercentOffsetForDamageCalculatorPanel({
     cfg,
     gameConfig,
     unitTypeId1,
@@ -123,7 +123,7 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
     canTileDefendUnit,
     getOwnTilesCount,
 }: {
-    cfg                 : SelfUnitDefense | null | undefined;
+    cfg                 : SelfUnitCommonAttributes | null | undefined;
     gameConfig          : GameConfig;
     unitTypeId1         : number;
     unitTypeId2         : number;

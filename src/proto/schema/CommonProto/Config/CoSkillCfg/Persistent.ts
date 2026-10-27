@@ -13,19 +13,17 @@ import { SelfTileEnabledForUnitProduction as $Message$CommonProto$Config$CoSkill
 import { SelfTileIncome as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome, type SelfTileIncomeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome } from "./Persistent/SelfTileIncome.js";
 import { SelfUnitAttackRange as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange, type SelfUnitAttackRangeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange } from "./Persistent/SelfUnitAttackRange.js";
 import { SelfUnitCaptureAmount as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount, type SelfUnitCaptureAmountJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount } from "./Persistent/SelfUnitCaptureAmount.js";
+import { SelfUnitCommonAttributes as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes, type SelfUnitCommonAttributesJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes } from "./Persistent/SelfUnitCommonAttributes.js";
 import { SelfUnitCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost, type SelfUnitCostJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost } from "./Persistent/SelfUnitCost.js";
-import { SelfUnitDefense as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitDefense, type SelfUnitDefenseJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitDefense } from "./Persistent/SelfUnitDefense.js";
 import { SelfUnitFuelConsumption as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitFuelConsumption, type SelfUnitFuelConsumptionJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitFuelConsumption } from "./Persistent/SelfUnitFuelConsumption.js";
 import { SelfUnitIgnoreWeather as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather, type SelfUnitIgnoreWeatherJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather } from "./Persistent/SelfUnitIgnoreWeather.js";
 import { SelfUnitLuckRange as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange, type SelfUnitLuckRangeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange } from "./Persistent/SelfUnitLuckRange.js";
 import { SelfUnitMoveCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveCost, type SelfUnitMoveCostJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveCost } from "./Persistent/SelfUnitMoveCost.js";
 import { SelfUnitMoveRange as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange, type SelfUnitMoveRangeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange } from "./Persistent/SelfUnitMoveRange.js";
-import { SelfUnitOffense as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitOffense, type SelfUnitOffenseJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitOffense } from "./Persistent/SelfUnitOffense.js";
 import { SelfUnitVision as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision, type SelfUnitVisionJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision } from "./Persistent/SelfUnitVision.js";
 
 export interface PersistentJson extends $ProtoSchemaJsonBase {
-    selfUnitOffense?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitOffense | null | undefined;
-    selfUnitDefense?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitDefense | null | undefined;
+    selfUnitCommonAttributes?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
     selfUnitMoveRange?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange | null | undefined;
     selfUnitAttackRange?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange | null | undefined;
     selfUnitVision?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision | null | undefined;
@@ -49,8 +47,7 @@ export interface PersistentJson extends $ProtoSchemaJsonBase {
 }
 
 export class Persistent extends $ProtoSchemaBase {
-    private _selfUnitOffense?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitOffense | null | undefined;
-    private _selfUnitDefense?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitDefense | null | undefined;
+    private _selfUnitCommonAttributes?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
     private _selfUnitMoveRange?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange | null | undefined;
     private _selfUnitAttackRange?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange | null | undefined;
     private _selfUnitVision?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision | null | undefined;
@@ -76,8 +73,7 @@ export class Persistent extends $ProtoSchemaBase {
         return new Persistent().loadJson(obj);
     }
     public override loadJson(obj: PersistentJson): this {
-        this.setSelfUnitOffense(obj.selfUnitOffense != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitOffense.fromJson(obj.selfUnitOffense) : null);
-        this.setSelfUnitDefense(obj.selfUnitDefense != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitDefense.fromJson(obj.selfUnitDefense) : null);
+        this.setSelfUnitCommonAttributes(obj.selfUnitCommonAttributes != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes.fromJson(obj.selfUnitCommonAttributes) : null);
         this.setSelfUnitMoveRange(obj.selfUnitMoveRange != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange.fromJson(obj.selfUnitMoveRange) : null);
         this.setSelfUnitAttackRange(obj.selfUnitAttackRange != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange.fromJson(obj.selfUnitAttackRange) : null);
         this.setSelfUnitVision(obj.selfUnitVision != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision.fromJson(obj.selfUnitVision) : null);
@@ -104,13 +100,8 @@ export class Persistent extends $ProtoSchemaBase {
         obj ??= ({} as PersistentJson);
 
         {
-            const value = this.getSelfUnitOffense();
-            (value != null) && (obj.selfUnitOffense = value.toJson());
-        }
-
-        {
-            const value = this.getSelfUnitDefense();
-            (value != null) && (obj.selfUnitDefense = value.toJson());
+            const value = this.getSelfUnitCommonAttributes();
+            (value != null) && (obj.selfUnitCommonAttributes = value.toJson());
         }
 
         {
@@ -217,156 +208,149 @@ export class Persistent extends $ProtoSchemaBase {
 
     public override toWriter(writer = protobuf.Writer.create()): protobuf.Writer {
         {
-            const value = this.getSelfUnitOffense();
+            const value = this.getSelfUnitCommonAttributes();
             if (value != null) {
-                value.toWriter(writer.uint32(82).fork()).ldelim();
-            }
-        }
-
-        {
-            const value = this.getSelfUnitDefense();
-            if (value != null) {
-                value.toWriter(writer.uint32(90).fork()).ldelim();
+                value.toWriter(writer.uint32(10).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfUnitMoveRange();
             if (value != null) {
-                value.toWriter(writer.uint32(98).fork()).ldelim();
+                value.toWriter(writer.uint32(18).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfUnitAttackRange();
             if (value != null) {
-                value.toWriter(writer.uint32(106).fork()).ldelim();
+                value.toWriter(writer.uint32(26).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfUnitVision();
             if (value != null) {
-                value.toWriter(writer.uint32(114).fork()).ldelim();
+                value.toWriter(writer.uint32(34).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfUnitFuelConsumption();
             if (value != null) {
-                value.toWriter(writer.uint32(162).fork()).ldelim();
+                value.toWriter(writer.uint32(42).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfUnitLuckRange();
             if (value != null) {
-                value.toWriter(writer.uint32(170).fork()).ldelim();
+                value.toWriter(writer.uint32(50).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfUnitCost();
             if (value != null) {
-                value.toWriter(writer.uint32(178).fork()).ldelim();
+                value.toWriter(writer.uint32(58).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfUnitCaptureAmount();
             if (value != null) {
-                value.toWriter(writer.uint32(194).fork()).ldelim();
+                value.toWriter(writer.uint32(66).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfTileIncome();
             if (value != null) {
-                value.toWriter(writer.uint32(202).fork()).ldelim();
+                value.toWriter(writer.uint32(74).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfTileEnabledForUnitProduction();
             if (value != null) {
-                value.toWriter(writer.uint32(218).fork()).ldelim();
+                value.toWriter(writer.uint32(82).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfUnitIgnoreWeather();
             if (value != null) {
-                value.toWriter(writer.uint32(226).fork()).ldelim();
+                value.toWriter(writer.uint32(90).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfUnitMoveCost();
             if (value != null) {
-                value.toWriter(writer.uint32(234).fork()).ldelim();
+                value.toWriter(writer.uint32(98).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfRepairAmountBonus();
             if (value != null) {
-                value.toWriter(writer.uint32(258).fork()).ldelim();
+                value.toWriter(writer.uint32(106).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfPromotionBonusByProduce();
             if (value != null) {
-                value.toWriter(writer.uint32(282).fork()).ldelim();
+                value.toWriter(writer.uint32(114).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfOffensePierce();
             if (value != null) {
-                value.toWriter(writer.uint32(298).fork()).ldelim();
+                value.toWriter(writer.uint32(122).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfDefenseBonusByTileIgnoreHp();
             if (value != null) {
-                value.toWriter(writer.uint32(306).fork()).ldelim();
+                value.toWriter(writer.uint32(130).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfInvisible();
             if (value != null) {
-                value.toWriter(writer.uint32(314).fork()).ldelim();
+                value.toWriter(writer.uint32(138).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfCannotBeCounterAttacked();
             if (value != null) {
-                value.toWriter(writer.uint32(322).fork()).ldelim();
+                value.toWriter(writer.uint32(146).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfCannotCounterAttack();
             if (value != null) {
-                value.toWriter(writer.uint32(330).fork()).ldelim();
+                value.toWriter(writer.uint32(154).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfCoBoardingCost();
             if (value != null) {
-                value.toWriter(writer.uint32(338).fork()).ldelim();
+                value.toWriter(writer.uint32(162).fork()).ldelim();
             }
         }
 
         {
             const value = this.getSelfCanCoBoard();
             if (value != null) {
-                value.toWriter(writer.uint32(346).fork()).ldelim();
+                value.toWriter(writer.uint32(170).fork()).ldelim();
             }
         }
 
@@ -383,91 +367,87 @@ export class Persistent extends $ProtoSchemaBase {
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
-                case 10:
-                    msg.setSelfUnitOffense($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitOffense.decode(reader, reader.uint32()));
+                case 1:
+                    msg.setSelfUnitCommonAttributes($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes.decode(reader, reader.uint32()));
                     break;
 
-                case 11:
-                    msg.setSelfUnitDefense($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitDefense.decode(reader, reader.uint32()));
-                    break;
-
-                case 12:
+                case 2:
                     msg.setSelfUnitMoveRange($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange.decode(reader, reader.uint32()));
                     break;
 
-                case 13:
+                case 3:
                     msg.setSelfUnitAttackRange($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange.decode(reader, reader.uint32()));
                     break;
 
-                case 14:
+                case 4:
                     msg.setSelfUnitVision($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision.decode(reader, reader.uint32()));
                     break;
 
-                case 20:
+                case 5:
                     msg.setSelfUnitFuelConsumption($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitFuelConsumption.decode(reader, reader.uint32()));
                     break;
 
-                case 21:
+                case 6:
                     msg.setSelfUnitLuckRange($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange.decode(reader, reader.uint32()));
                     break;
 
-                case 22:
+                case 7:
                     msg.setSelfUnitCost($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCost.decode(reader, reader.uint32()));
                     break;
 
-                case 24:
+                case 8:
                     msg.setSelfUnitCaptureAmount($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCaptureAmount.decode(reader, reader.uint32()));
                     break;
 
-                case 25:
+                case 9:
                     msg.setSelfTileIncome($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileIncome.decode(reader, reader.uint32()));
                     break;
 
-                case 27:
+                case 10:
                     msg.setSelfTileEnabledForUnitProduction($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfTileEnabledForUnitProduction.decode(reader, reader.uint32()));
                     break;
 
-                case 28:
+                case 11:
                     msg.setSelfUnitIgnoreWeather($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather.decode(reader, reader.uint32()));
                     break;
 
-                case 29:
+                case 12:
                     msg.setSelfUnitMoveCost($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveCost.decode(reader, reader.uint32()));
                     break;
 
-                case 32:
+                case 13:
                     msg.setSelfRepairAmountBonus($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfRepairAmountBonus.decode(reader, reader.uint32()));
                     break;
 
-                case 35:
+                case 14:
                     msg.setSelfPromotionBonusByProduce($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfPromotionBonusByProduce.decode(reader, reader.uint32()));
                     break;
 
-                case 37:
+                case 15:
                     msg.setSelfOffensePierce($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfOffensePierce.decode(reader, reader.uint32()));
                     break;
 
-                case 38:
+                case 16:
                     msg.setSelfDefenseBonusByTileIgnoreHp($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfDefenseBonusByTileIgnoreHp.decode(reader, reader.uint32()));
                     break;
 
-                case 39:
+                case 17:
                     msg.setSelfInvisible($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfInvisible.decode(reader, reader.uint32()));
                     break;
 
-                case 40:
+                case 18:
                     msg.setSelfCannotBeCounterAttacked($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotBeCounterAttacked.decode(reader, reader.uint32()));
                     break;
 
-                case 41:
+                case 19:
                     msg.setSelfCannotCounterAttack($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCannotCounterAttack.decode(reader, reader.uint32()));
                     break;
 
-                case 42:
+                case 20:
                     msg.setSelfCoBoardingCost($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCoBoardingCost.decode(reader, reader.uint32()));
                     break;
 
-                case 43:
+                case 21:
                     msg.setSelfCanCoBoard($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfCanCoBoard.decode(reader, reader.uint32()));
                     break;
 
@@ -488,30 +468,17 @@ export class Persistent extends $ProtoSchemaBase {
         return "Persistent";
     }
 
-    public checkHasSelfUnitOffense(): boolean {
-        return this._selfUnitOffense != null;
+    public checkHasSelfUnitCommonAttributes(): boolean {
+        return this._selfUnitCommonAttributes != null;
     }
-    public getSelfUnitOffense(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitOffense | null | undefined {
-        return this._selfUnitOffense;
+    public getSelfUnitCommonAttributes(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined {
+        return this._selfUnitCommonAttributes;
     }
-    public setSelfUnitOffense(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitOffense | null | undefined): void {
-        this._selfUnitOffense = value;
+    public setSelfUnitCommonAttributes(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined): void {
+        this._selfUnitCommonAttributes = value;
     }
-    public createIfNotExistsSelfUnitOffense(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitOffense {
-        return this._selfUnitOffense ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitOffense();
-    }
-
-    public checkHasSelfUnitDefense(): boolean {
-        return this._selfUnitDefense != null;
-    }
-    public getSelfUnitDefense(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitDefense | null | undefined {
-        return this._selfUnitDefense;
-    }
-    public setSelfUnitDefense(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitDefense | null | undefined): void {
-        this._selfUnitDefense = value;
-    }
-    public createIfNotExistsSelfUnitDefense(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitDefense {
-        return this._selfUnitDefense ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitDefense();
+    public createIfNotExistsSelfUnitCommonAttributes(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes {
+        return this._selfUnitCommonAttributes ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes();
     }
 
     public checkHasSelfUnitMoveRange(): boolean {
