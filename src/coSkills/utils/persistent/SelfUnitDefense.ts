@@ -68,9 +68,9 @@ export function getTotalDefensePercentOffset({
         return 0;
     }
 
-    const conditions                = cfg.getConditions();
-    const defensePercentOffsetFrom  = cfg.getDefensePercentOffsetFrom();
-    if ((conditions == null) || (defensePercentOffsetFrom == null)) {
+    const conditions            = cfg.getConditions();
+    const defensePercentOffsets = cfg.getDefensePercentOffsets();
+    if ((conditions == null) || (defensePercentOffsets == null)) {
         return 0;
     }
 
@@ -99,14 +99,14 @@ export function getTotalDefensePercentOffset({
         }
     }
 
-    return (defensePercentOffsetFrom.getOffsetPct() ?? 0)
-        + (defensePercentOffsetFrom.getFundConversion() ?? 0) * fund / 10000
-        + ((defensePercentOffsetFrom.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
-        + getTotalPctFromTileDefense(defensePercentOffsetFrom.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (defensePercentOffsetFrom.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0)
-        + getTotalPctFromOwnTiles(defensePercentOffsetFrom.getOffsetPctFromOwnTile(), getOwnTilesCount)
-        + getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig, defensePercentOffsetFrom.getOffsetPctAgainstSpecificEnemy(), unitTypeId1)
-        + (unitTypeId1 != unitTypeId2 ? 0 : defensePercentOffsetFrom.getOffsetPctAgainstSameEnemy());
+    return (defensePercentOffsets.getOffsetPct() ?? 0)
+        + (defensePercentOffsets.getFundConversion() ?? 0) * fund / 10000
+        + ((defensePercentOffsets.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
+        + getTotalPctFromTileDefense(defensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
+        + (hp > 0 ? (defensePercentOffsets.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0)
+        + getTotalPctFromOwnTiles(defensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
+        + getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig, defensePercentOffsets.getOffsetPctAgainstSpecificEnemy(), unitTypeId1)
+        + (unitTypeId1 != unitTypeId2 ? 0 : defensePercentOffsets.getOffsetPctAgainstSameEnemy());
 }
 
 export function getTotalDefensePercentOffsetForDamageCalculatorPanel({
@@ -140,9 +140,9 @@ export function getTotalDefensePercentOffsetForDamageCalculatorPanel({
         return 0;
     }
 
-    const conditions                = cfg.getConditions();
-    const defensePercentOffsetFrom  = cfg.getDefensePercentOffsetFrom();
-    if ((conditions == null) || (defensePercentOffsetFrom == null)) {
+    const conditions            = cfg.getConditions();
+    const defensePercentOffsets = cfg.getDefensePercentOffsets();
+    if ((conditions == null) || (defensePercentOffsets == null)) {
         return 0;
     }
 
@@ -160,12 +160,12 @@ export function getTotalDefensePercentOffsetForDamageCalculatorPanel({
         }
     }
 
-    return (defensePercentOffsetFrom.getOffsetPct() ?? 0)
-        + (defensePercentOffsetFrom.getFundConversion() ?? 0) * fund / 10000
-        + ((defensePercentOffsetFrom.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
-        + getTotalPctFromTileDefense(defensePercentOffsetFrom.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (defensePercentOffsetFrom.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0)
-        + getTotalPctFromOwnTiles(defensePercentOffsetFrom.getOffsetPctFromOwnTile(), getOwnTilesCount)
-        + getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig, defensePercentOffsetFrom.getOffsetPctAgainstSpecificEnemy(), unitTypeId1)
-        + (unitTypeId1 != unitTypeId2 ? 0 : defensePercentOffsetFrom.getOffsetPctAgainstSameEnemy());
+    return (defensePercentOffsets.getOffsetPct() ?? 0)
+        + (defensePercentOffsets.getFundConversion() ?? 0) * fund / 10000
+        + ((defensePercentOffsets.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
+        + getTotalPctFromTileDefense(defensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
+        + (hp > 0 ? (defensePercentOffsets.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0)
+        + getTotalPctFromOwnTiles(defensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
+        + getTotalOffsetPctFromAgainstSpecificEnemy(gameConfig, defensePercentOffsets.getOffsetPctAgainstSpecificEnemy(), unitTypeId1)
+        + (unitTypeId1 != unitTypeId2 ? 0 : defensePercentOffsets.getOffsetPctAgainstSameEnemy());
 }

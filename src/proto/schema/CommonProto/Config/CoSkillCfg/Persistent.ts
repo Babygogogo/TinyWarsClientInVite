@@ -19,12 +19,10 @@ import { SelfUnitFuelConsumption as $Message$CommonProto$Config$CoSkillCfg$Persi
 import { SelfUnitIgnoreWeather as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather, type SelfUnitIgnoreWeatherJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitIgnoreWeather } from "./Persistent/SelfUnitIgnoreWeather.js";
 import { SelfUnitLuckRange as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange, type SelfUnitLuckRangeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitLuckRange } from "./Persistent/SelfUnitLuckRange.js";
 import { SelfUnitMoveCost as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveCost, type SelfUnitMoveCostJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveCost } from "./Persistent/SelfUnitMoveCost.js";
-import { SelfUnitMoveRange as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange, type SelfUnitMoveRangeJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange } from "./Persistent/SelfUnitMoveRange.js";
 import { SelfUnitVision as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision, type SelfUnitVisionJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision } from "./Persistent/SelfUnitVision.js";
 
 export interface PersistentJson extends $ProtoSchemaJsonBase {
     selfUnitCommonAttributes?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
-    selfUnitMoveRange?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange | null | undefined;
     selfUnitAttackRange?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange | null | undefined;
     selfUnitVision?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision | null | undefined;
     selfUnitFuelConsumption?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitFuelConsumption | null | undefined;
@@ -48,7 +46,6 @@ export interface PersistentJson extends $ProtoSchemaJsonBase {
 
 export class Persistent extends $ProtoSchemaBase {
     private _selfUnitCommonAttributes?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes | null | undefined;
-    private _selfUnitMoveRange?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange | null | undefined;
     private _selfUnitAttackRange?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange | null | undefined;
     private _selfUnitVision?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision | null | undefined;
     private _selfUnitFuelConsumption?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitFuelConsumption | null | undefined;
@@ -74,7 +71,6 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public override loadJson(obj: PersistentJson): this {
         this.setSelfUnitCommonAttributes(obj.selfUnitCommonAttributes != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes.fromJson(obj.selfUnitCommonAttributes) : null);
-        this.setSelfUnitMoveRange(obj.selfUnitMoveRange != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange.fromJson(obj.selfUnitMoveRange) : null);
         this.setSelfUnitAttackRange(obj.selfUnitAttackRange != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange.fromJson(obj.selfUnitAttackRange) : null);
         this.setSelfUnitVision(obj.selfUnitVision != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitVision.fromJson(obj.selfUnitVision) : null);
         this.setSelfUnitFuelConsumption(obj.selfUnitFuelConsumption != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitFuelConsumption.fromJson(obj.selfUnitFuelConsumption) : null);
@@ -102,11 +98,6 @@ export class Persistent extends $ProtoSchemaBase {
         {
             const value = this.getSelfUnitCommonAttributes();
             (value != null) && (obj.selfUnitCommonAttributes = value.toJson());
-        }
-
-        {
-            const value = this.getSelfUnitMoveRange();
-            (value != null) && (obj.selfUnitMoveRange = value.toJson());
         }
 
         {
@@ -211,13 +202,6 @@ export class Persistent extends $ProtoSchemaBase {
             const value = this.getSelfUnitCommonAttributes();
             if (value != null) {
                 value.toWriter(writer.uint32(10).fork()).ldelim();
-            }
-        }
-
-        {
-            const value = this.getSelfUnitMoveRange();
-            if (value != null) {
-                value.toWriter(writer.uint32(18).fork()).ldelim();
             }
         }
 
@@ -371,10 +355,6 @@ export class Persistent extends $ProtoSchemaBase {
                     msg.setSelfUnitCommonAttributes($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes.decode(reader, reader.uint32()));
                     break;
 
-                case 2:
-                    msg.setSelfUnitMoveRange($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange.decode(reader, reader.uint32()));
-                    break;
-
                 case 3:
                     msg.setSelfUnitAttackRange($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitAttackRange.decode(reader, reader.uint32()));
                     break;
@@ -479,19 +459,6 @@ export class Persistent extends $ProtoSchemaBase {
     }
     public createIfNotExistsSelfUnitCommonAttributes(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes {
         return this._selfUnitCommonAttributes ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes();
-    }
-
-    public checkHasSelfUnitMoveRange(): boolean {
-        return this._selfUnitMoveRange != null;
-    }
-    public getSelfUnitMoveRange(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange | null | undefined {
-        return this._selfUnitMoveRange;
-    }
-    public setSelfUnitMoveRange(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange | null | undefined): void {
-        this._selfUnitMoveRange = value;
-    }
-    public createIfNotExistsSelfUnitMoveRange(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange {
-        return this._selfUnitMoveRange ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitMoveRange();
     }
 
     public checkHasSelfUnitAttackRange(): boolean {

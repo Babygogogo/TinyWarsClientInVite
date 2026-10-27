@@ -1358,7 +1358,7 @@ export class Unit implements IUnit {
         let modifier                    = 0;
         for (const skillId of player.getCoCurrentSkills()) {
             modifier += CoSkillsUtilsPersistentSelfUnitMoveRangeGetTotalOffset({
-                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitMoveRange(),
+                cfg                      : gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitCommonAttributes(),
                 gameConfig               : gameConfig,
                 unitTypeId               : selfUnitTypeId,
                 tileTypeId               : selfTileTypeId,

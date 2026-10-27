@@ -1,27 +1,31 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../$runtime.js";
 import { Conditions as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions, type ConditionsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions } from "./SelfUnitCommonAttributes/Conditions.js";
-import { DefensePercentOffsetFrom as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsetFrom, type DefensePercentOffsetFromJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsetFrom } from "./SelfUnitCommonAttributes/DefensePercentOffsetFrom.js";
-import { OffensePercentOffsetFrom as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsetFrom, type OffensePercentOffsetFromJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsetFrom } from "./SelfUnitCommonAttributes/OffensePercentOffsetFrom.js";
+import { DefensePercentOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets, type DefensePercentOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets } from "./SelfUnitCommonAttributes/DefensePercentOffsets.js";
+import { MoveRangeOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets, type MoveRangeOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets } from "./SelfUnitCommonAttributes/MoveRangeOffsets.js";
+import { OffensePercentOffsets as $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets, type OffensePercentOffsetsJson as $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets } from "./SelfUnitCommonAttributes/OffensePercentOffsets.js";
 
 export interface SelfUnitCommonAttributesJson extends $ProtoSchemaJsonBase {
     conditions?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions | null | undefined;
-    offensePercentOffsetFrom?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsetFrom | null | undefined;
-    defensePercentOffsetFrom?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsetFrom | null | undefined;
+    offensePercentOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets | null | undefined;
+    defensePercentOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets | null | undefined;
+    moveRangeOffsets?: $Json$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets | null | undefined;
 }
 
 export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
     private _conditions?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions | null | undefined;
-    private _offensePercentOffsetFrom?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsetFrom | null | undefined;
-    private _defensePercentOffsetFrom?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsetFrom | null | undefined;
+    private _offensePercentOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets | null | undefined;
+    private _defensePercentOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets | null | undefined;
+    private _moveRangeOffsets?: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets | null | undefined;
 
     public static fromJson(obj: SelfUnitCommonAttributesJson): SelfUnitCommonAttributes {
         return new SelfUnitCommonAttributes().loadJson(obj);
     }
     public override loadJson(obj: SelfUnitCommonAttributesJson): this {
         this.setConditions(obj.conditions != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions.fromJson(obj.conditions) : null);
-        this.setOffensePercentOffsetFrom(obj.offensePercentOffsetFrom != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsetFrom.fromJson(obj.offensePercentOffsetFrom) : null);
-        this.setDefensePercentOffsetFrom(obj.defensePercentOffsetFrom != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsetFrom.fromJson(obj.defensePercentOffsetFrom) : null);
+        this.setOffensePercentOffsets(obj.offensePercentOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets.fromJson(obj.offensePercentOffsets) : null);
+        this.setDefensePercentOffsets(obj.defensePercentOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets.fromJson(obj.defensePercentOffsets) : null);
+        this.setMoveRangeOffsets(obj.moveRangeOffsets != null ? $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets.fromJson(obj.moveRangeOffsets) : null);
         return this;
     }
     public override toJson(obj?: SelfUnitCommonAttributesJson): SelfUnitCommonAttributesJson {
@@ -33,13 +37,18 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getOffensePercentOffsetFrom();
-            (value != null) && (obj.offensePercentOffsetFrom = value.toJson());
+            const value = this.getOffensePercentOffsets();
+            (value != null) && (obj.offensePercentOffsets = value.toJson());
         }
 
         {
-            const value = this.getDefensePercentOffsetFrom();
-            (value != null) && (obj.defensePercentOffsetFrom = value.toJson());
+            const value = this.getDefensePercentOffsets();
+            (value != null) && (obj.defensePercentOffsets = value.toJson());
+        }
+
+        {
+            const value = this.getMoveRangeOffsets();
+            (value != null) && (obj.moveRangeOffsets = value.toJson());
         }
         return obj;
     }
@@ -53,16 +62,23 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         }
 
         {
-            const value = this.getOffensePercentOffsetFrom();
+            const value = this.getOffensePercentOffsets();
             if (value != null) {
                 value.toWriter(writer.uint32(18).fork()).ldelim();
             }
         }
 
         {
-            const value = this.getDefensePercentOffsetFrom();
+            const value = this.getDefensePercentOffsets();
             if (value != null) {
                 value.toWriter(writer.uint32(26).fork()).ldelim();
+            }
+        }
+
+        {
+            const value = this.getMoveRangeOffsets();
+            if (value != null) {
+                value.toWriter(writer.uint32(34).fork()).ldelim();
             }
         }
 
@@ -84,11 +100,15 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
                     break;
 
                 case 2:
-                    msg.setOffensePercentOffsetFrom($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsetFrom.decode(reader, reader.uint32()));
+                    msg.setOffensePercentOffsets($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets.decode(reader, reader.uint32()));
                     break;
 
                 case 3:
-                    msg.setDefensePercentOffsetFrom($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsetFrom.decode(reader, reader.uint32()));
+                    msg.setDefensePercentOffsets($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets.decode(reader, reader.uint32()));
+                    break;
+
+                case 4:
+                    msg.setMoveRangeOffsets($Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets.decode(reader, reader.uint32()));
                     break;
 
                 default:
@@ -121,29 +141,42 @@ export class SelfUnitCommonAttributes extends $ProtoSchemaBase {
         return this._conditions ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$Conditions();
     }
 
-    public checkHasOffensePercentOffsetFrom(): boolean {
-        return this._offensePercentOffsetFrom != null;
+    public checkHasOffensePercentOffsets(): boolean {
+        return this._offensePercentOffsets != null;
     }
-    public getOffensePercentOffsetFrom(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsetFrom | null | undefined {
-        return this._offensePercentOffsetFrom;
+    public getOffensePercentOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets | null | undefined {
+        return this._offensePercentOffsets;
     }
-    public setOffensePercentOffsetFrom(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsetFrom | null | undefined): void {
-        this._offensePercentOffsetFrom = value;
+    public setOffensePercentOffsets(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets | null | undefined): void {
+        this._offensePercentOffsets = value;
     }
-    public createIfNotExistsOffensePercentOffsetFrom(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsetFrom {
-        return this._offensePercentOffsetFrom ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsetFrom();
+    public createIfNotExistsOffensePercentOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets {
+        return this._offensePercentOffsets ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$OffensePercentOffsets();
     }
 
-    public checkHasDefensePercentOffsetFrom(): boolean {
-        return this._defensePercentOffsetFrom != null;
+    public checkHasDefensePercentOffsets(): boolean {
+        return this._defensePercentOffsets != null;
     }
-    public getDefensePercentOffsetFrom(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsetFrom | null | undefined {
-        return this._defensePercentOffsetFrom;
+    public getDefensePercentOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets | null | undefined {
+        return this._defensePercentOffsets;
     }
-    public setDefensePercentOffsetFrom(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsetFrom | null | undefined): void {
-        this._defensePercentOffsetFrom = value;
+    public setDefensePercentOffsets(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets | null | undefined): void {
+        this._defensePercentOffsets = value;
     }
-    public createIfNotExistsDefensePercentOffsetFrom(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsetFrom {
-        return this._defensePercentOffsetFrom ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsetFrom();
+    public createIfNotExistsDefensePercentOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets {
+        return this._defensePercentOffsets ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$DefensePercentOffsets();
+    }
+
+    public checkHasMoveRangeOffsets(): boolean {
+        return this._moveRangeOffsets != null;
+    }
+    public getMoveRangeOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets | null | undefined {
+        return this._moveRangeOffsets;
+    }
+    public setMoveRangeOffsets(value: $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets | null | undefined): void {
+        this._moveRangeOffsets = value;
+    }
+    public createIfNotExistsMoveRangeOffsets(): $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets {
+        return this._moveRangeOffsets ??= new $Message$CommonProto$Config$CoSkillCfg$Persistent$SelfUnitCommonAttributes$MoveRangeOffsets();
     }
 }

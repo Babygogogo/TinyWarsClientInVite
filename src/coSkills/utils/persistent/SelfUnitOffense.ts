@@ -60,9 +60,9 @@ export function getTotalOffsetPct({
         return 0;
     }
 
-    const conditions                = cfg.getConditions();
-    const offensePercentOffsetFrom  = cfg.getOffensePercentOffsetFrom();
-    if ((conditions == null) || (offensePercentOffsetFrom == null)) {
+    const conditions            = cfg.getConditions();
+    const offensePercentOffsets = cfg.getOffensePercentOffsets();
+    if ((conditions == null) || (offensePercentOffsets == null)) {
         return 0;
     }
 
@@ -91,14 +91,14 @@ export function getTotalOffsetPct({
         }
     }
 
-    return (offensePercentOffsetFrom.getOffsetPct() ?? 0)
-        + (offensePercentOffsetFrom.getFundConversion() ?? 0) * fund / 10000
-        + (isCoOnboard ? offensePercentOffsetFrom.getOffsetPctFromCoUnit() ?? 0 : 0)
-        + ((offensePercentOffsetFrom.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
-        + (isCounter ? offensePercentOffsetFrom.getOffsetPctOnCounter() ?? 0 : 0)
-        + getTotalPctFromOwnTiles(offensePercentOffsetFrom.getOffsetPctFromOwnTile(), getOwnTilesCount)
-        + getTotalPctFromTileDefense(offensePercentOffsetFrom.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (offensePercentOffsetFrom.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0);
+    return (offensePercentOffsets.getOffsetPct() ?? 0)
+        + (offensePercentOffsets.getFundConversion() ?? 0) * fund / 10000
+        + (isCoOnboard ? offensePercentOffsets.getOffsetPctFromCoUnit() ?? 0 : 0)
+        + ((offensePercentOffsets.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
+        + (isCounter ? offensePercentOffsets.getOffsetPctOnCounter() ?? 0 : 0)
+        + getTotalPctFromOwnTiles(offensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
+        + getTotalPctFromTileDefense(offensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
+        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0);
 }
 
 export function getTotalOffsetPctForDamageCalculatorPanel({
@@ -134,9 +134,9 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
         return 0;
     }
 
-    const conditions                = cfg.getConditions();
-    const offensePercentOffsetFrom  = cfg.getOffensePercentOffsetFrom();
-    if ((conditions == null) || (offensePercentOffsetFrom == null)) {
+    const conditions            = cfg.getConditions();
+    const offensePercentOffsets = cfg.getOffensePercentOffsets();
+    if ((conditions == null) || (offensePercentOffsets == null)) {
         return 0;
     }
 
@@ -154,12 +154,12 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
         }
     }
 
-    return (offensePercentOffsetFrom.getOffsetPct() ?? 0)
-        + (offensePercentOffsetFrom.getFundConversion() ?? 0) * fund / 10000
-        + (isCoOnboard ? offensePercentOffsetFrom.getOffsetPctFromCoUnit() ?? 0 : 0)
-        + ((offensePercentOffsetFrom.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
-        + (isCounter ? offensePercentOffsetFrom.getOffsetPctOnCounter() ?? 0 : 0)
-        + getTotalPctFromOwnTiles(offensePercentOffsetFrom.getOffsetPctFromOwnTile(), getOwnTilesCount)
-        + getTotalPctFromTileDefense(offensePercentOffsetFrom.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (offensePercentOffsetFrom.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0);
+    return (offensePercentOffsets.getOffsetPct() ?? 0)
+        + (offensePercentOffsets.getFundConversion() ?? 0) * fund / 10000
+        + (isCoOnboard ? offensePercentOffsets.getOffsetPctFromCoUnit() ?? 0 : 0)
+        + ((offensePercentOffsets.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
+        + (isCounter ? offensePercentOffsets.getOffsetPctOnCounter() ?? 0 : 0)
+        + getTotalPctFromOwnTiles(offensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
+        + getTotalPctFromTileDefense(offensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
+        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0);
 }

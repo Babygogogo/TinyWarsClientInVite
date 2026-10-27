@@ -1,7 +1,7 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../../$runtime.js";
 
-export interface DefensePercentOffsetFromJson extends $ProtoSchemaJsonBase {
+export interface DefensePercentOffsetsJson extends $ProtoSchemaJsonBase {
     offsetPct?: number | null | undefined;
     fundConversion?: number | null | undefined;
     offsetPctFromHp: number[];
@@ -12,7 +12,7 @@ export interface DefensePercentOffsetFromJson extends $ProtoSchemaJsonBase {
     offsetPctAgainstSameEnemy?: number | null | undefined;
 }
 
-export class DefensePercentOffsetFrom extends $ProtoSchemaBase {
+export class DefensePercentOffsets extends $ProtoSchemaBase {
     private _offsetPct?: number | null | undefined;
     private _fundConversion?: number | null | undefined;
     private _offsetPctFromHp: number[] = [];
@@ -22,10 +22,10 @@ export class DefensePercentOffsetFrom extends $ProtoSchemaBase {
     private _offsetPctFromOwnTile: number[] = [];
     private _offsetPctAgainstSameEnemy?: number | null | undefined;
 
-    public static fromJson(obj: DefensePercentOffsetFromJson): DefensePercentOffsetFrom {
-        return new DefensePercentOffsetFrom().loadJson(obj);
+    public static fromJson(obj: DefensePercentOffsetsJson): DefensePercentOffsets {
+        return new DefensePercentOffsets().loadJson(obj);
     }
-    public override loadJson(obj: DefensePercentOffsetFromJson): this {
+    public override loadJson(obj: DefensePercentOffsetsJson): this {
         this.setOffsetPct(obj.offsetPct);
         this.setFundConversion(obj.fundConversion);
         this.setOffsetPctFromHp(obj.offsetPctFromHp?.concat() ?? []);
@@ -36,8 +36,8 @@ export class DefensePercentOffsetFrom extends $ProtoSchemaBase {
         this.setOffsetPctAgainstSameEnemy(obj.offsetPctAgainstSameEnemy);
         return this;
     }
-    public override toJson(obj?: DefensePercentOffsetFromJson): DefensePercentOffsetFromJson {
-        obj ??= ({} as DefensePercentOffsetFromJson);
+    public override toJson(obj?: DefensePercentOffsetsJson): DefensePercentOffsetsJson {
+        obj ??= ({} as DefensePercentOffsetsJson);
 
         {
             const value = this.getOffsetPct();
@@ -161,13 +161,13 @@ export class DefensePercentOffsetFrom extends $ProtoSchemaBase {
         return writer;
     }
 
-    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): DefensePercentOffsetFrom {
+    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): DefensePercentOffsets {
         if (!(reader instanceof protobuf.Reader)) {
             reader = protobuf.Reader.create(reader);
         }
 
         const end = length == null ? reader.len : reader.pos + length;
-        const msg = new DefensePercentOffsetFrom();
+        const msg = new DefensePercentOffsets();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -262,12 +262,12 @@ export class DefensePercentOffsetFrom extends $ProtoSchemaBase {
         return msg;
     }
 
-    public override clone(): DefensePercentOffsetFrom {
-        return DefensePercentOffsetFrom.decode(this.encode());
+    public override clone(): DefensePercentOffsets {
+        return DefensePercentOffsets.decode(this.encode());
     }
 
-    public override getSchemaName(): "DefensePercentOffsetFrom" {
-        return "DefensePercentOffsetFrom";
+    public override getSchemaName(): "DefensePercentOffsets" {
+        return "DefensePercentOffsets";
     }
 
     public checkHasOffsetPct(): boolean {

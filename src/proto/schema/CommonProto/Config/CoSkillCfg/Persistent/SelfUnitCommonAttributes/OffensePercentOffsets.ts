@@ -1,7 +1,7 @@
 import protobuf from "protobufjs/minimal.js";
 import { ProtoSchemaBase as $ProtoSchemaBase, type ProtoSchemaJsonBase as $ProtoSchemaJsonBase } from "../../../../../$runtime.js";
 
-export interface OffensePercentOffsetFromJson extends $ProtoSchemaJsonBase {
+export interface OffensePercentOffsetsJson extends $ProtoSchemaJsonBase {
     offsetPct?: number | null | undefined;
     fundConversion?: number | null | undefined;
     offsetPctOnCounter?: number | null | undefined;
@@ -12,7 +12,7 @@ export interface OffensePercentOffsetFromJson extends $ProtoSchemaJsonBase {
     offsetPctFromCoUnit?: number | null | undefined;
 }
 
-export class OffensePercentOffsetFrom extends $ProtoSchemaBase {
+export class OffensePercentOffsets extends $ProtoSchemaBase {
     private _offsetPct?: number | null | undefined;
     private _fundConversion?: number | null | undefined;
     private _offsetPctOnCounter?: number | null | undefined;
@@ -22,10 +22,10 @@ export class OffensePercentOffsetFrom extends $ProtoSchemaBase {
     private _offsetPctFromPromotion: number[] = [];
     private _offsetPctFromCoUnit?: number | null | undefined;
 
-    public static fromJson(obj: OffensePercentOffsetFromJson): OffensePercentOffsetFrom {
-        return new OffensePercentOffsetFrom().loadJson(obj);
+    public static fromJson(obj: OffensePercentOffsetsJson): OffensePercentOffsets {
+        return new OffensePercentOffsets().loadJson(obj);
     }
-    public override loadJson(obj: OffensePercentOffsetFromJson): this {
+    public override loadJson(obj: OffensePercentOffsetsJson): this {
         this.setOffsetPct(obj.offsetPct);
         this.setFundConversion(obj.fundConversion);
         this.setOffsetPctOnCounter(obj.offsetPctOnCounter);
@@ -36,8 +36,8 @@ export class OffensePercentOffsetFrom extends $ProtoSchemaBase {
         this.setOffsetPctFromCoUnit(obj.offsetPctFromCoUnit);
         return this;
     }
-    public override toJson(obj?: OffensePercentOffsetFromJson): OffensePercentOffsetFromJson {
-        obj ??= ({} as OffensePercentOffsetFromJson);
+    public override toJson(obj?: OffensePercentOffsetsJson): OffensePercentOffsetsJson {
+        obj ??= ({} as OffensePercentOffsetsJson);
 
         {
             const value = this.getOffsetPct();
@@ -157,13 +157,13 @@ export class OffensePercentOffsetFrom extends $ProtoSchemaBase {
         return writer;
     }
 
-    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): OffensePercentOffsetFrom {
+    public static decode(reader: Uint8Array | protobuf.Reader, length?: number): OffensePercentOffsets {
         if (!(reader instanceof protobuf.Reader)) {
             reader = protobuf.Reader.create(reader);
         }
 
         const end = length == null ? reader.len : reader.pos + length;
-        const msg = new OffensePercentOffsetFrom();
+        const msg = new OffensePercentOffsets();
         while (reader.pos < end) {
             const tag = reader.uint32();
             switch (tag >>> 3) {
@@ -248,12 +248,12 @@ export class OffensePercentOffsetFrom extends $ProtoSchemaBase {
         return msg;
     }
 
-    public override clone(): OffensePercentOffsetFrom {
-        return OffensePercentOffsetFrom.decode(this.encode());
+    public override clone(): OffensePercentOffsets {
+        return OffensePercentOffsets.decode(this.encode());
     }
 
-    public override getSchemaName(): "OffensePercentOffsetFrom" {
-        return "OffensePercentOffsetFrom";
+    public override getSchemaName(): "OffensePercentOffsets" {
+        return "OffensePercentOffsets";
     }
 
     public checkHasOffsetPct(): boolean {
