@@ -16,7 +16,7 @@ export function checkIsValid(data: ValueSetAndRelation): boolean {
 }
 
 export function getDesc(data: ValueSetAndRelation, valueName: string, getValueText: (v: number) => Undefinable<string>): string {
-    const textForValue = data.getValueArray()?.map(v => getValueText(v)).join(`, `) ?? UndefinedError;
+    const textForValue = data.getValueArray()?.map(v => getValueText(v)).join(`, `);
     switch (data.getSetRelation()) {
         case SetRelationId.EqualTo          : return getFormattedText(TextType.F0237, valueName, textForValue);
         case SetRelationId.NotEqualTo       : return getFormattedText(TextType.F0238, valueName, textForValue);

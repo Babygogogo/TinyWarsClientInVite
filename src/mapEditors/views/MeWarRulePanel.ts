@@ -211,7 +211,7 @@ export class Panel extends UiPanel<OpenData> {
                 openPanel(getDict().CommonConfirmPanel, {
                     getContent : () => getText(TextType.A0097),
                     callback: () => {
-                        war.deleteTemplateWarRule(getExisted(selectedRule.getRuleId()));
+                        war.deleteTemplateWarRule(selectedRule.getRuleId());
                         this._resetView();
                     },
                 });
@@ -588,8 +588,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0314));
-        this._labelRuleNameTitle.setText(getText(TextType.B0315));
+        this._labelTitle.setLangText(TextType.B0314);
+        this._labelRuleNameTitle.setLangText(TextType.B0315);
         this._labelHasFogTitle.setText(`${getText(TextType.B0549)} ?`);
         this._labelWeatherTitle.setText(`${getText(TextType.Weather)} ?`);
         this._labelTileThemeTitle.setText(`${getText(TextType.B1113)} ?`);
@@ -654,7 +654,7 @@ export class Panel extends UiPanel<OpenData> {
         const fixedTileTheme    = templateWarRule?.getWarRuleCommonData()?.getFixedTileTheme();
         const label             = this._labelTileTheme;
         if (fixedTileTheme == null) {
-            label.setText(getText(TextType.B0890));
+            label.setLangText(TextType.B0890);
         } else {
             label.setText(getTileThemeName(fixedTileTheme) ?? UndefinedError);
         }
@@ -662,7 +662,7 @@ export class Panel extends UiPanel<OpenData> {
     private _updateLabelRuleAvailability(templateWarRule: TemplateWarRule | null): void {
         const label = this._labelRuleAvailability;
         if (this.getOpenData()?.war.getCampaignMapData()) {
-            label.setText(getText(TextType.B1135));
+            label.setLangText(TextType.B1135);
         } else {
             const availability = templateWarRule?.getRuleAvailability();
             let count           = 0;

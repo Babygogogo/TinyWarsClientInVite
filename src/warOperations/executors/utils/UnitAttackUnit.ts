@@ -114,10 +114,10 @@ async function normalExeUnitAttackUnit(war: IBwWar, action: WoUnitAttackUnit): P
             isFastExecute       : false,
         });
 
-        const movingUnitId  = movingUnitData ? movingUnitData.getUnitId() ?? 0 : null;
+        const movingUnitId  = movingUnitData ? movingUnitData.getUnitId() : null;
         const lastNode      = movingPath ? movingPath[movingPath.length - 1] : null;
         if ((movingUnitId != null)                                      &&
-            ((destroyedUnitIdArray?? []).indexOf(movingUnitId) >= 0)    &&
+            ((destroyedUnitIdArray).indexOf(movingUnitId) >= 0)    &&
             (lastNode?.getIsVisible())
         ) {
             gridVisualEffect.showEffectExplosion(getExisted(GridIndex.convertGridIndex(lastNode.getGridIndex()), ClientErrorCode.WarOperationExecutor_NormalExeUnitAttackUnit_01));

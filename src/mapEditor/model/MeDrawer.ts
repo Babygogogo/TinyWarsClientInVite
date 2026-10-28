@@ -933,8 +933,8 @@ export class MeDrawer implements IMeDrawer {
         const gameConfig        = war.getGcData();
         const unitMap           = war.getUnitMap();
         const srcTileData       = getExisted(this.getDataForPasteTile());
-        const srcBaseType       = srcTileData.getBaseType() ?? 0;
-        const srcObjectType     = srcTileData.getObjectType() ?? 0;
+        const srcBaseType       = srcTileData.getBaseType();
+        const srcObjectType     = srcTileData.getObjectType();
         const tileMap           = war.getTileMap();
         const isRealTileAdjust  = this.getIsRealTimeAdjust();
         const mapSize           = tileMap.getMapSize();
@@ -975,10 +975,10 @@ export class MeDrawer implements IMeDrawer {
                 const newTileData = srcTileData.clone();
                 newTileData.setGridIndex(symGridIndex.toProto());
                 newTileData.setBaseType(newBaseType);
-                newTileData.setBaseShapeId(getSymmetricalTileBaseShapeId(srcBaseType, newTileData.getBaseShapeId() ?? 0, symmetryType));
+                newTileData.setBaseShapeId(getSymmetricalTileBaseShapeId(srcBaseType, newTileData.getBaseShapeId(), symmetryType));
                 newTileData.setObjectType(newObjectType);
-                newTileData.setObjectShapeId(getSymmetricalTileObjectShapeId(srcObjectType, newTileData.getObjectShapeId() ?? 0, symmetryType));
-                newTileData.setDecorationShapeId(getSymmetricalTileDecorationShapeId(newTileData.getDecorationType() ?? 0, newTileData.getDecorationShapeId() ?? 0, symmetryType));
+                newTileData.setObjectShapeId(getSymmetricalTileObjectShapeId(srcObjectType, newTileData.getObjectShapeId(), symmetryType));
+                newTileData.setDecorationShapeId(getSymmetricalTileDecorationShapeId(newTileData.getDecorationType(), newTileData.getDecorationShapeId(), symmetryType));
                 if (newTileType != gameConfig.getTileType(srcBaseType, srcObjectType)) {
                     newTileData.setCustomBuildingData(null);
                     newTileData.setCustomCannonData(null);
@@ -1024,7 +1024,7 @@ export class MeDrawer implements IMeDrawer {
         const addedUnits: IUnit[] = [];
         for (const rawUnit of this.getDataForPasteUnit() ?? []) {
             const unitData = rawUnit.serialize();
-            unitData.setUnitId(getRevisedUnitIdDict(getExisted(unitData.getUnitId())));
+            unitData.setUnitId(getRevisedUnitIdDict(unitData.getUnitId()));
             unitData.setGridIndex(gridIndex.toProto());
 
             const rawLoaderUnitId = unitData.getLoaderUnitId();

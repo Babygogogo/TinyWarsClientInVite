@@ -106,8 +106,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1136));
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelTitle.setLangText(TextType.B1136);
+        this._labelNoData.setLangText(TextType.B0278);
     }
 
     private _updateTopButtons(): void {
@@ -187,7 +187,7 @@ class CampaignRenderer extends UiListItemRenderer<DataForCampaignRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDelete.setText(getText(TextType.B0220));
+        this._btnDelete.setLangText(TextType.B0220);
         this._updateLabelName();
     }
 

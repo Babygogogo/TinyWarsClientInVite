@@ -157,7 +157,7 @@ export class ActionPlannerView implements IActionPlannerView {
         return getExisted(this._imgsForAttackableGrids);
     }
     private _getImgForMoveDestination(): IUiImage {
-        return getExisted(this._imgForMoveDestination);
+        return this._imgForMoveDestination;
     }
     private _getImgsForVisibleGrids(): IUiImage[][] {
         return getExisted(this._imgsForVisibleGrids);

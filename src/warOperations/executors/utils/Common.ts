@@ -13,7 +13,6 @@ import { ShortSfxCode } from "../../../sounds/Constants.ts";
 import { playShortSfx } from "../../../sounds/SoundPlayer.ts";
 import { TeamIndex } from "../../../teams/Constants.ts";
 import { BuffTypeId } from "../../../tileBuffs/Constants.ts";
-import { Hp } from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
@@ -45,7 +44,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
     const gameConfig                = war.getGcData();
     const playerArrayAfterAction    = commonExtraData.getPlayerArrayAfterAction();
     for (const playerData of playerArrayAfterAction) {
-        const player = war.getPlayer(playerData.getPlayerIndex() ?? 0);
+        const player = war.getPlayer(playerData.getPlayerIndex());
         player.init(playerData, gameConfig);
         player.startRunning(war);
     }
@@ -55,13 +54,13 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
 
     const unitArrayAfterAction  = commonExtraData.getUnitArrayAfterAction();
     const destroyedUnitIdArray  = commonExtraData.getDestroyedUnitIdArray();
-    if (unitArrayAfterAction.some(v => destroyedUnitIdArray.includes(v.getUnitId() ?? 0))) {
+    if (unitArrayAfterAction.some(v => destroyedUnitIdArray.includes(v.getUnitId()))) {
         throw newError(`WarCommonHelpers.handleCommonExtraDataForWarOperations() unitArrayAfterAction and destroyedUnitIdArray overlapped!`, ClientErrorCode.WarCommonHelpers_HandleCommonExtraDataForWarOperation_03);
     }
 
     const movingUnitAndPath     = commonExtraData.getMovingUnitAndPath();
     const movingUnitData        = movingUnitAndPath ? getExisted(movingUnitAndPath.getUnit()) : null;
-    const movingUnitId          = movingUnitData ? movingUnitData.getUnitId() ?? 0 : null;
+    const movingUnitId          = movingUnitData ? movingUnitData.getUnitId() : null;
     // const movingUnit            = movingUnitId == null ? null : unitMap.getUnitById(movingUnitId);
     const gridVisualEffect      = war.getGridVisualEffect();
     let isShownExplosionEffect  = false;
@@ -135,7 +134,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
         // }
     }
     for (const unitData of unitArrayAfterAction) {
-        const unitId    = unitData.getUnitId() ?? 0;
+        const unitId    = unitData.getUnitId();
         const unit      = unitMap.getUnitById(unitId);
         if (unit) {
             unitMap.removeUnitById(unitId, true)?.stopRunning();
@@ -167,7 +166,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
 
     const updatedViewUnits = new Set<IUnit>();
     for (const unitData of unitArrayAfterAction) {
-        const unitId        = unitData.getUnitId() ?? 0;
+        const unitId        = unitData.getUnitId();
         const existingUnit  = tempRemovedUnits.get(unitId);
         if (existingUnit) {
             const existingUnitData = existingUnit.serialize();
@@ -270,7 +269,7 @@ export function handleCommonExtraData({ war, commonExtraData, isFastExecute, isU
     {
         const warEventManager = war.getWarEventManager();
         for (const data of commonExtraData.getCustomCounterArray()) {
-            warEventManager.setCustomCounter(data.getCustomCounterId() ?? 0, data.getValue() ?? 0);
+            warEventManager.setCustomCounter(data.getCustomCounterId(), data.getValue());
         }
     }
 
@@ -314,18 +313,17 @@ function checkIsUnitRepaired(oldUnitData: SerialUnit, newUnitData: SerialUnit): 
         return false;
     }
 
-    return (newUnitData.getCurrentHp() ?? Hp.MaxHp) > (oldUnitData.getCurrentHp() ?? Hp.MaxHp);
+    return (newUnitData.getCurrentHp()) > (oldUnitData.getCurrentHp());
 }
 function checkIsUnitSupplied(oldUnitData: SerialUnit, newUnitData: SerialUnit, gameConfig: GameConfig): boolean {
-    const unitType = newUnitData.getUnitType() ?? 0;
+    const unitType = newUnitData.getUnitType();
     if (oldUnitData.getUnitType() != unitType) {
         return false;
     }
 
     const unitCfg = getExisted(gameConfig.getUnitTemplateCfg(unitType), ClientErrorCode.WarCommonHelpers_CheckIsUnitSupplied_00);
     {
-        const maxFuel = unitCfg.getMaxFuel();
-        if ((newUnitData.getCurrentFuel() ?? maxFuel) > (oldUnitData.getCurrentFuel() ?? maxFuel)) {
+        if ((newUnitData.getCurrentFuel()) > (oldUnitData.getCurrentFuel())) {
             return true;
         }
     }
@@ -333,7 +331,7 @@ function checkIsUnitSupplied(oldUnitData: SerialUnit, newUnitData: SerialUnit, g
     {
         const maxAmmo = unitCfg.getPrimaryWeaponMaxAmmo();
         if ((maxAmmo != null)                                                                                       &&
-            ((newUnitData.getPrimaryWeaponCurrentAmmo() ?? maxAmmo) > (oldUnitData.getPrimaryWeaponCurrentAmmo() ?? maxAmmo))
+            ((newUnitData.getPrimaryWeaponCurrentAmmo()) > (oldUnitData.getPrimaryWeaponCurrentAmmo()))
         ) {
             return true;
         }
@@ -342,7 +340,7 @@ function checkIsUnitSupplied(oldUnitData: SerialUnit, newUnitData: SerialUnit, g
     {
         const maxAmmo = unitCfg.getFlareMaxAmmo();
         if ((maxAmmo != null)                                                                       &&
-            ((newUnitData.getFlareCurrentAmmo() ?? maxAmmo) > (oldUnitData.getFlareCurrentAmmo() ?? maxAmmo))
+            ((newUnitData.getFlareCurrentAmmo()) > (oldUnitData.getFlareCurrentAmmo()))
         ) {
             return true;
         }
@@ -351,7 +349,7 @@ function checkIsUnitSupplied(oldUnitData: SerialUnit, newUnitData: SerialUnit, g
     {
         const maxMaterial = unitCfg.getMaxProduceMaterial();
         if ((maxMaterial != null)                                                                                       &&
-            ((newUnitData.getCurrentProduceMaterial() ?? maxMaterial) > (oldUnitData.getCurrentProduceMaterial() ?? maxMaterial))
+            ((newUnitData.getCurrentProduceMaterial()) > (oldUnitData.getCurrentProduceMaterial()))
         ) {
             return true;
         }
@@ -360,7 +358,7 @@ function checkIsUnitSupplied(oldUnitData: SerialUnit, newUnitData: SerialUnit, g
     {
         const maxMaterial = unitCfg.getMaxBuildMaterial();
         if ((maxMaterial != null)                                                                                   &&
-            ((newUnitData.getCurrentBuildMaterial() ?? maxMaterial) > (oldUnitData.getCurrentBuildMaterial() ?? maxMaterial))
+            ((newUnitData.getCurrentBuildMaterial()) > (oldUnitData.getCurrentBuildMaterial()))
         ) {
             return true;
         }
@@ -373,7 +371,7 @@ function checkIsUnitDamaged(oldUnitData: SerialUnit, newUnitData: SerialUnit): b
         return false;
     }
 
-    return (newUnitData.getCurrentHp() ?? Hp.MaxHp) < (oldUnitData.getCurrentHp() ?? Hp.MaxHp);
+    return (newUnitData.getCurrentHp()) < (oldUnitData.getCurrentHp());
 }
 
 export function handleViewForBattle(battleInfo: BattleInfo, war: IBwWar, allVisibleUnits: Set<IBwUnit>): void {
@@ -467,7 +465,7 @@ export function handleSelfUnitHpAfterWait(focusUnit: IBwUnit, isFastExecute: boo
         }
 
         if ((!isCoOnboard) && (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : skillCfg.getCoSkillAreaTypeId() ?? 0,
+            coSkillAreaType             : skillCfg.getCoSkillAreaTypeId(),
             coZoneRadius                : focusCoZoneRadius,
             getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap
         }))) {
@@ -521,7 +519,7 @@ export function handlePostOperationPlunder(focusUnit: IBwUnit, isFastExecute: bo
             continue;
         }
 
-        const multiple = skillCfg.getMultiple() ?? 0;
+        const multiple = skillCfg.getMultiple();
         if (multiple <= 0) {
             continue;
         }
@@ -534,15 +532,15 @@ export function handlePostOperationPlunder(focusUnit: IBwUnit, isFastExecute: bo
             continue;
         }
 
-        if (!gameConfig.checkIsUnitTypeInCategory(focusUnitType, skillCfg.getUnitCategoryId() ?? 0)) {
+        if (!gameConfig.checkIsUnitTypeInCategory(focusUnitType, skillCfg.getUnitCategoryId())) {
             continue;
         }
-        if (!gameConfig.checkIsTileTypeInCategory(tileType, skillCfg.getTargetTileCategoryId() ?? 0)) {
+        if (!gameConfig.checkIsTileTypeInCategory(tileType, skillCfg.getTargetTileCategoryId())) {
             continue;
         }
 
         if ((!isCoOnboard) && (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : skillCfg.getCoSkillAreaTypeId() ?? 0,
+            coSkillAreaType             : skillCfg.getCoSkillAreaTypeId(),
             coZoneRadius                : focusCoZoneRadius,
             getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
         }))) {

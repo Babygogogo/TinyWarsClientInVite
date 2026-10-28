@@ -55,6 +55,6 @@ export class MfwWar extends MpwWar implements IMfwWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return getExisted(this.getSettingsForMfw().getBootTimerParams());
+        return this.getSettingsForMfw().getBootTimerParams();
     }
 }

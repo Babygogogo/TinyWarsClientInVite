@@ -1,7 +1,7 @@
 import type { MapSorter } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { SortType } from "../../maps/Constants.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getMapSortTypeName } from "../../lang/Utils.ts";
+import { getMapSortTypeName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -101,9 +101,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1049));
-        this._labelIsAscending.setText(getText(TextType.B1106));
-        this._btnConfirm.setText(getText(TextType.B0026));
+        this._labelTitle.setLangText(TextType.B1049);
+        this._labelIsAscending.setLangText(TextType.B1106);
+        this._btnConfirm.setLangText(TextType.B0026);
         this._groupIsAscending.arrangeItems();
     }
 

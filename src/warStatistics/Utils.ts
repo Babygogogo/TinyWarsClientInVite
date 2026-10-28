@@ -1,19 +1,19 @@
 import type { WsUnitStatistics } from "../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
 
 export function checkCanMerge(data1: WsUnitStatistics, data2: WsUnitStatistics): boolean {
-    return ((data1.getUnitType() ?? 0) === (data2.getUnitType() ?? 0))
-        && ((data1.getDstPlayerIndex() ?? 0) === (data2.getDstPlayerIndex() ?? 0))
-        && ((data1.getGroupedObserverTeamIndexes() ?? 0) === (data2.getGroupedObserverTeamIndexes() ?? 0));
+    return ((data1.getUnitType()) === (data2.getUnitType()))
+        && ((data1.getDstPlayerIndex()) === (data2.getDstPlayerIndex()))
+        && ((data1.getGroupedObserverTeamIndexes()) === (data2.getGroupedObserverTeamIndexes()));
 }
 export function checkAndMergeTo(src: WsUnitStatistics, dst: WsUnitStatistics): boolean {
     if (!checkCanMerge(src, dst)) {
         return false;
     }
 
-    dst.setUnitGain((dst.getUnitGain() ?? 0) + (src.getUnitGain() ?? 0));
-    dst.setUnitLoss((dst.getUnitLoss() ?? 0) + (src.getUnitLoss() ?? 0));
-    dst.setNormalizedHpGain((dst.getNormalizedHpGain() ?? 0) + (src.getNormalizedHpGain() ?? 0));
-    dst.setNormalizedHpLoss((dst.getNormalizedHpLoss() ?? 0) + (src.getNormalizedHpLoss() ?? 0));
+    dst.setUnitGain((dst.getUnitGain()) + (src.getUnitGain()));
+    dst.setUnitLoss((dst.getUnitLoss()) + (src.getUnitLoss()));
+    dst.setNormalizedHpGain((dst.getNormalizedHpGain()) + (src.getNormalizedHpGain()));
+    dst.setNormalizedHpLoss((dst.getNormalizedHpLoss()) + (src.getNormalizedHpLoss()));
 
     return true;
 }

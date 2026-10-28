@@ -219,7 +219,7 @@ export class Unit implements IUnit {
     }
 
     public getUnitType(): number {
-        return getExisted(this.getTemplateCfg().getUnitTypeId());
+        return this.getTemplateCfg().getUnitTypeId();
     }
     private _getDamageChartCfg(): { [armorType: number]: { [weaponType: number]: DamageChartCfg } } {
         return getExisted(this.getGcData().getDamageChartCfgs(this.getUnitType()));
@@ -335,7 +335,7 @@ export class Unit implements IUnit {
     }
 
     public getArmorType(): number {
-        return getExisted(this.getTemplateCfg()?.getArmorTypeId());
+        return this.getTemplateCfg()?.getArmorTypeId();
     }
 
     public checkIsArmorAffectByLuck(): boolean {
@@ -525,11 +525,11 @@ export class Unit implements IUnit {
         for (const skillId of this.getPlayer().getCoCurrentSkills()) {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
             if ((cfg)                                                                               &&
-                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))             &&
-                (gameConfig.checkIsTileTypeInCategory(selfTileType, cfg.getTileCategoryId() ?? 0))         &&
-                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId() ?? 0))    &&
+                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))             &&
+                (gameConfig.checkIsTileTypeInCategory(selfTileType, cfg.getTileCategoryId()))         &&
+                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))    &&
                 ((isCoOnboard) || (isInCozByPreviewSettings) || (selfGridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                     coZoneRadius             : coZoneRadius,
                     getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                 })))
@@ -561,19 +561,19 @@ export class Unit implements IUnit {
             {
                 const cfg = skillCfg.getPersistent()?.getSelfOffensePierce();
                 if ((cfg)                                                                           &&
-                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))  &&
+                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))  &&
                     ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                         coZoneRadius             : coZoneRadius,
                         getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                     })))
                 ) {
-                    result[0] += cfg.getPierceTilePct() ?? 0;
-                    result[1] += cfg.getPiercePromotionPct() ?? 0;
-                    result[2] += cfg.getPierceCoPct() ?? 0;
-                    result[3] += cfg.getPierceGlobalTilePct() ?? 0;
-                    result[4] += cfg.getPierceRulePct() ?? 0;
-                    result[5] += cfg.getPierceWarEventPct() ?? 0;
+                    result[0] += cfg.getPierceTilePct();
+                    result[1] += cfg.getPiercePromotionPct();
+                    result[2] += cfg.getPierceCoPct();
+                    result[3] += cfg.getPierceGlobalTilePct();
+                    result[4] += cfg.getPierceRulePct();
+                    result[5] += cfg.getPierceWarEventPct();
                 }
             }
         }
@@ -671,10 +671,10 @@ export class Unit implements IUnit {
             {
                 const cfg = skillCfg.getPersistent()?.getSelfCannotBeCounterAttacked();
                 if ((cfg)                                                                       &&
-                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))   &&
-                    (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId() ?? 0))   &&
+                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))   &&
+                    (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId()))   &&
                     ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                         coZoneRadius             : coZoneRadius,
                         getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                     })))
@@ -704,10 +704,10 @@ export class Unit implements IUnit {
             {
                 const cfg = skillCfg.getPersistent()?.getSelfCannotCounterAttack();
                 if ((cfg)                                                                       &&
-                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))   &&
-                    (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId() ?? 0))   &&
+                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))   &&
+                    (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId()))   &&
                     ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                         coZoneRadius             : coZoneRadius,
                         getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                     })))
@@ -974,7 +974,7 @@ export class Unit implements IUnit {
 
         const tile = this.getWar().getTileMap().getTile(this.getGridIndex());
         return (tile.getMaxCapturePoint() != null)
-            && ((tile.getCurrentCapturePoint() ?? 0) > 0);
+            && ((tile.getCurrentCapturePoint()) > 0);
     }
 
     public checkIsCapturer(): boolean {
@@ -1061,10 +1061,10 @@ export class Unit implements IUnit {
             {
                 const cfg = skillCfg.getPersistent()?.getSelfInvisible();
                 if ((cfg)                                                                       &&
-                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))   &&
-                    (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId() ?? 0))   &&
+                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))   &&
+                    (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId()))   &&
                     ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                         getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                         coZoneRadius             : coZoneRadius
                     })))
@@ -1189,7 +1189,7 @@ export class Unit implements IUnit {
     }
     public addFlareCurrentAmmo(offsetAmmo: number): void {
         if (offsetAmmo !== 0) {
-            this.setFlareCurrentAmmo(getExisted(this.getFlareCurrentAmmo()) + offsetAmmo);
+            this.setFlareCurrentAmmo(this.getFlareCurrentAmmo() + offsetAmmo);
         }
     }
 
@@ -1400,11 +1400,11 @@ export class Unit implements IUnit {
         for (const skillId of this.getPlayer().getCoCurrentSkills()) {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
             if ((cfg)                                                                               &&
-                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))             &&
-                (gameConfig.checkIsTileTypeInCategory(selfTileType, cfg.getTileCategoryId() ?? 0))         &&
-                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId() ?? 0))    &&
+                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))             &&
+                (gameConfig.checkIsTileTypeInCategory(selfTileType, cfg.getTileCategoryId()))         &&
+                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))    &&
                 ((isCoOnboard) || (selfGridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                     coZoneRadius             : coZoneRadius,
                     getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                 })))
@@ -1486,7 +1486,7 @@ export class Unit implements IUnit {
 
         const tile = this.getWar().getTileMap().getTile(this.getGridIndex());
         return (tile.getMaxBuildPoint() != null)
-            && ((tile.getCurrentBuildPoint() ?? 0) > 0);
+            && ((tile.getCurrentBuildPoint()) > 0);
     }
 
     public checkIsTileBuilder(): boolean {
@@ -1628,13 +1628,13 @@ export class Unit implements IUnit {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfRepairAmountBonus();
             if ((cfg)                                               &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                     coZoneRadius             : coZoneRadius,
                     getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                 }))
             ) {
-                amountModifier      += cfg.getRepairOffsetFromUnit() ?? 0;
-                costMultiplierPct   = costMultiplierPct * (cfg.getCostMultiplierPct() ?? 0) / 100;
+                amountModifier      += cfg.getRepairOffsetFromUnit();
+                costMultiplierPct   = costMultiplierPct * (cfg.getCostMultiplierPct()) / 100;
             }
         }
 
@@ -1784,11 +1784,11 @@ export class Unit implements IUnit {
                 if (!player.getCoCurrentSkills().some(skillId => {
                     const skillCfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
                     return (skillCfg != null)
-                        && (gameConfig.checkIsUnitTypeInCategory(unitType, skillCfg.getUnitCategoryId() ?? 0))
-                        && (gameConfig.checkIsTileTypeInCategory(tileType, skillCfg.getTileCategoryId() ?? 0))
-                        && (gameConfig.checkIsWeatherTypeInCategory(weatherType, skillCfg.getWeatherCategoryId() ?? 0))
+                        && (gameConfig.checkIsUnitTypeInCategory(unitType, skillCfg.getUnitCategoryId()))
+                        && (gameConfig.checkIsTileTypeInCategory(tileType, skillCfg.getTileCategoryId()))
+                        && (gameConfig.checkIsWeatherTypeInCategory(weatherType, skillCfg.getWeatherCategoryId()))
                         && ((isCoOnboard) || (gridIndex.checkIsInsideCoSkillArea({
-                            coSkillAreaType          : skillCfg.getCoSkillAreaTypeId() ?? 0,
+                            coSkillAreaType          : skillCfg.getCoSkillAreaTypeId(),
                             coZoneRadius             : coZoneRadius,
                             getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                         })));
@@ -2021,7 +2021,7 @@ export class Unit implements IUnit {
     public getCoBoardCost(): number {
         const player        = this.getPlayer();
         const gameConfig    = this.getGcData();
-        let percentage      = player.getCoBasicCfg().getBoardCostPercentage() ?? 0;
+        let percentage      = player.getCoBasicCfg().getBoardCostPercentage();
         for (const skillId of player.getCoCurrentSkills()) {
             const skillCfg = gameConfig.getCoSkillCfg(skillId);
             if (skillCfg == null) {
@@ -2031,7 +2031,7 @@ export class Unit implements IUnit {
             {
                 const cfg = skillCfg.getPersistent()?.getSelfCoBoardingCost();
                 if (cfg) {
-                    percentage *= (cfg.getMultiplierPct() ?? 0) / 100;
+                    percentage *= (cfg.getMultiplierPct()) / 100;
                 }
             }
         }
@@ -2282,7 +2282,7 @@ export class Unit implements IUnit {
     }
 
     public checkHasBuff(buffTypeId: number): boolean {
-        return this.getBuffList()?.some(buff => buff.getBuffTypeId() === buffTypeId) ?? false;
+        return this.getBuffList()?.some(buff => buff.getBuffTypeId() === buffTypeId);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -2307,7 +2307,7 @@ export class Unit implements IUnit {
     public getCustomName(languageType = getCurrentLanguageType()): Undefinable<string> {
         const nameId = this.getCustomNameId();
         return getLanguageText({
-            textArray    : this.getWar().getUnitMap().getUnitCustomNameArray()?.find(v => (v.getNameId() ?? 0) === nameId)?.getNameTextArray(),
+            textArray    : this.getWar().getUnitMap().getUnitCustomNameArray()?.find(v => (v.getNameId()) === nameId)?.getNameTextArray(),
             languageType : languageType,
             useAlternate : false,
         });

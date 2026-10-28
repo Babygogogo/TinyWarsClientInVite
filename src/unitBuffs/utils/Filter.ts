@@ -31,7 +31,7 @@ export function checkIsMeet(data: UnitBuffFilter, buff: UnitBuff, war: IBwWar): 
     {
         const con = data.getConBuffTypeId();
         if ((con != null) &&
-            (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, buff.getBuffTypeId() ?? 0))
+            (!ValueArrayAndPredicatesUtilsCheckIsMeet(con, buff.getBuffTypeId()))
         ) {
             return false;
         }

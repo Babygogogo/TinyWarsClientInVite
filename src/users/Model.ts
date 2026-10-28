@@ -382,7 +382,7 @@ export function getSelfCawHighScoreInfo(campaignId: number, campaignMapId: numbe
     return getSelfUserComplexInfo()
         ?.getUserWarStatistics()
         ?.getCawArray()
-        ?.find(v => ((v.getCampaignId() ?? 0) == campaignId) && ((v.getCampaignMapId() ?? 0) == campaignMapId));
+        ?.find(v => ((v.getCampaignId()) == campaignId) && ((v.getCampaignMapId()) == campaignMapId));
 }
 function setSelfCawHighScore({ configVersion, campaignId, campaignMapId, campaignMapRevision, highScore }: {
     configVersion       : string;
@@ -397,10 +397,10 @@ function setSelfCawHighScore({ configVersion, campaignId, campaignMapId, campaig
     }
 
     const cawArray      = userComplexInfo.createIfNotExistsUserWarStatistics().getCawArray();
-    const existingInfo  = cawArray.find(v => ((v.getCampaignId() ?? 0) == campaignId) && ((v.getCampaignMapId() ?? 0) == campaignMapId));
+    const existingInfo  = cawArray.find(v => ((v.getCampaignId()) == campaignId) && ((v.getCampaignMapId()) == campaignMapId));
     if (existingInfo != null) {
         const existingConfigVersion = existingInfo.getConfigVersion() ?? ``;
-        const existingMapRevision   = existingInfo.getCampaignMapRevision() ?? 0;
+        const existingMapRevision   = existingInfo.getCampaignMapRevision();
         if ((existingConfigVersion == configVersion) && (existingMapRevision == campaignMapRevision)) {
             if ((highScore != null) && (highScore >= (existingInfo.getHighScore() ?? 0))) {
                 existingInfo.setHighScore(highScore);

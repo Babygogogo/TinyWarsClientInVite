@@ -156,7 +156,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         this._labelTitle.setText(openData.getTitle());
-        this._labelKeyboardTips.setText(getText(TextType.A0827));
+        this._labelKeyboardTips.setLangText(TextType.A0827);
         this._btnHelp.setIsVisible(!!openData.getHelpText);
         this._groupNumber.setIsVisible(true);
         this._groupOperator.setIsVisible(false);
@@ -404,8 +404,8 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         this._labelTips.setText(`${getText(TextType.B0319)}: [${openData.minValue}, ${openData.maxValue}]`);
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnEmpty.setText(getText(TextType.B0022));
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnEmpty.setLangText(TextType.B0022);
         this._btnClear.setText(`C`);
         this._groupValue.arrangeItems();
     }

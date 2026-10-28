@@ -6,7 +6,6 @@ import { getCurrentGameEssentialConfig } from "../../gameVersions/Utils.ts";
 import { TextureResolutionId } from "../../graphics/Constants.ts";
 import { getNumText } from "../../helpers/Text.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { MapRawData } from "../../proto/schema/CommonProto/Map/MapRawData.ts";
 import type { SerialPlayer } from "../../proto/schema/CommonProto/WarSerialization/SerialPlayer.ts";
@@ -122,8 +121,8 @@ export class Page
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(getText(TextType.A0150));
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelLoading.setLangText(TextType.A0150);
+        this._labelNoData.setLangText(TextType.B0278);
     }
     private async _updateComponentsForRoomInfo(): Promise<void> {
         const zoomMap       = this._zoomMap;

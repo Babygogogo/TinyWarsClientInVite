@@ -120,7 +120,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateLabelSelected();
     }
     private _onTouchedBtnConfirm(): void {
-        this.getOpenData()?.callbackOnConfirm([...this._selectedNumberSet].sort((v1, v2) => v1 - v2) ?? []);
+        this.getOpenData()?.callbackOnConfirm([...this._selectedNumberSet].sort((v1, v2) => v1 - v2));
         this.closePanel();
     }
     private _onTouchedBtnHelp(): void {
@@ -159,10 +159,10 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(this.getOpenData()?.getTitleText?.() ?? getFormattedText(TextType.F0092, getText(TextType.B0525)));
-        this._labelSelectAll.setText(getText(TextType.B0761));
-        this._labelNoData.setText(getText(TextType.B0278));
-        this._labelSelectedTitle.setText(getText(TextType.B1274));
-        this._btnConfirm.setText(getText(TextType.B0026));
+        this._labelSelectAll.setLangText(TextType.B0761);
+        this._labelNoData.setLangText(TextType.B0278);
+        this._labelSelectedTitle.setLangText(TextType.B1274);
+        this._btnConfirm.setLangText(TextType.B0026);
 
         this._groupSelected.arrangeItems();
     }

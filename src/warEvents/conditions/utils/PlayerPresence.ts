@@ -30,7 +30,7 @@ export function getBriefDesc(data: Undefinable<WecPlayerPresence>): string | nul
         TextType.F0098,
         getText(TextType.Players),
         comparator == null ? UndefinedError : (getComparatorName(comparator) ?? UndefinedError),
-        con == null ? UndefinedError : (con.getValue() ?? UndefinedError)
+        con == null ? UndefinedError : (con.getValue())
     );
 }
 export function getDetailedDesc(data: Undefinable<WecPlayerPresence>): string | null {
@@ -75,7 +75,7 @@ export function getDetailedDesc(data: Undefinable<WecPlayerPresence>): string | 
         getText(TextType.Players),
         subTextArray.join(`\n`),
         comparator == null ? UndefinedError : (getComparatorName(comparator) ?? UndefinedError),
-        con == null ? UndefinedError : (con.getValue() ?? UndefinedError)
+        con == null ? UndefinedError : (con.getValue())
     );
 }
 export function getErrorTip(data: WecPlayerPresence, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GameConfig): string | null {

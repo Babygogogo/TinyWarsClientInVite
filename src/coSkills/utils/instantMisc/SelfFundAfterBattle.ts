@@ -24,7 +24,7 @@ export function getTotalOffset({
     if ((cfg == null) || (enemyNormalizedLostHp === 0) || (enemyFinalProductionCost === 0)) {
         return 0;
     }
-    if ((!isSelfInCoZone) && ((cfg.getCoSkillAreaTypeId() ?? 0) !== AreaTypeId.Halo)) {
+    if ((!isSelfInCoZone) && ((cfg.getCoSkillAreaTypeId()) !== AreaTypeId.Halo)) {
         return 0;
     }
 
@@ -42,5 +42,5 @@ export function getTotalOffset({
         }
     }
 
-    return enemyFinalProductionCost / enemyNormalizedMaxHp * enemyNormalizedLostHp * (cfg.getConversionPctFromDamageDealt() ?? 0) / 100;
+    return enemyFinalProductionCost / enemyNormalizedMaxHp * enemyNormalizedLostHp * (cfg.getConversionPctFromDamageDealt()) / 100;
 }

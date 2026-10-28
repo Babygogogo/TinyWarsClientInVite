@@ -32,7 +32,7 @@ export function create({ templateWarRule, warEventFullData, allMapSimpleDialogue
 
         warRuleCommonData       : templateWarRule.getWarRuleCommonData()?.clone().toJson(),
         warEventFullData        : trimWarEventFullData(warEventFullData, templateWarRule.getWarEventIdArray(), true).toJson(),
-        mapSimpleDialogueArray  : templateWarRule.getMapSimpleDialogueIdArray().map(id => getExisted(allMapSimpleDialogueArray?.find(v => (v.getDialogueId() ?? 0) === id))).map(v => v.clone().toJson()),
+        mapSimpleDialogueArray  : templateWarRule.getMapSimpleDialogueIdArray().map(id => getExisted(allMapSimpleDialogueArray?.find(v => (v.getDialogueId()) === id))).map(v => v.clone().toJson()),
         taskObjectiveFullData   : trimAndClone(taskObjectiveFullData, templateWarRule.getTaskObjectiveIdArray())?.toJson(),
     });
 }
@@ -124,7 +124,7 @@ export function getErrorCode({ instanceWarRule, gameConfig, playersCountUnneutra
 
     {
         const mapSimpleDialogueArray    = instanceWarRule.getMapSimpleDialogueArray();
-        const simpleDialogueIdArray     = mapSimpleDialogueArray.map(v => v.getDialogueId() ?? 0);
+        const simpleDialogueIdArray     = mapSimpleDialogueArray.map(v => v.getDialogueId());
         if (mapSimpleDialogueArray.length != new Set(simpleDialogueIdArray).size) {
             return ClientErrorCode.WarRuleHelpers_GetErrorCodeForInstanceWarRule_03;
         }

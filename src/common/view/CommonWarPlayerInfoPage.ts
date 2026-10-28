@@ -397,11 +397,11 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
 
         const playerInfo = openData.playerInfo;
         if (playerInfo.isReady) {
-            label.setText(getText(TextType.B0402));
+            label.setLangText(TextType.B0402);
         } else if (playerInfo.isInTurn) {
-            label.setText(getText(TextType.B0086));
+            label.setLangText(TextType.B0086);
         } else if (playerInfo.isDefeat != null) {
-            label.setText(getText(playerInfo.isDefeat ? TextType.B0472 : TextType.B0471));
+            label.setLangText(playerInfo.isDefeat ? TextType.B0472 : TextType.B0471);
         } else {
             // TODO
             label.setText(``);

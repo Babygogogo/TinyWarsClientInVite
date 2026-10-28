@@ -238,7 +238,7 @@ export class Panel extends UiPanel<OpenData> {
             currentNumberArray      : getDecodedMapTagIdList(filter.mapTagIdFlags ?? 0),
             showNumber              : true,
             getTitleText            : () => getFormattedText(TextType.F0092, getText(TextType.B0445)),
-            getNumberMainText       : mapTagId => getLanguageText({ textArray: mapTagData?.getMapTagDataArray()?.find(v => (v.getMapTagId() ?? 0) === mapTagId)?.getNameArray() }) ?? UndefinedError,
+            getNumberMainText       : mapTagId => getLanguageText({ textArray: mapTagData?.getMapTagDataArray()?.find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? UndefinedError,
             callbackOnConfirm       : newMapTagIdArray => {
                 filter.mapTagIdFlags = getEncodedMapTagId(newMapTagIdArray);
                 this._updateLabelMapTag();
@@ -351,18 +351,18 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0447));
-        this._labelMapNameTitle.setText(getText(TextType.B0225));
-        this._labelMapDesignerTitle.setText(getText(TextType.B0251));
-        this._labelPlayersCountTitle.setText(getText(TextType.B0922));
-        this._labelPlayedTimesTitle.setText(getText(TextType.B0565));
-        this._labelMinRatingTitle.setText(getText(TextType.B0364));
-        this._labelMapTagTitle.setText(getText(TextType.B0445));
+        this._labelTitle.setLangText(TextType.B0447);
+        this._labelMapNameTitle.setLangText(TextType.B0225);
+        this._labelMapDesignerTitle.setLangText(TextType.B0251);
+        this._labelPlayersCountTitle.setLangText(TextType.B0922);
+        this._labelPlayedTimesTitle.setLangText(TextType.B0565);
+        this._labelMinRatingTitle.setLangText(TextType.B0364);
+        this._labelMapTagTitle.setLangText(TextType.B0445);
         this._labelMapWidthTitle.setLangText(TextType.B0034);
         this._labelMapHeightTitle.setLangText(TextType.B0035);
 
-        this._btnReset.setText(getText(TextType.B0391));
-        this._btnSearch.setText(getText(TextType.B0228));
+        this._btnReset.setLangText(TextType.B0391);
+        this._btnSearch.setLangText(TextType.B0228);
 
         this._updateLabelMapTag();
         this._updateLabelMapWidth();

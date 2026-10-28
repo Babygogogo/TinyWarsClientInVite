@@ -197,10 +197,10 @@ export class Panel extends UiPanel<OpenData> {
         const playerDataArray           = roomCreator.getInitialWarData().getPlayerManager()?.getPlayers() ?? [];
         const availablePlayerIndexArray : number[] = [];
         for (let playerIndex = PlayerIndex.First; playerIndex <= playersCountUnneutral; ++playerIndex) {
-            const playerData = playerDataArray.find(v => (v.getPlayerIndex() ?? 0) === playerIndex);
+            const playerData = playerDataArray.find(v => (v.getPlayerIndex()) === playerIndex);
             if ((playerData != null)                                                            &&
                 (playerData.getUserId() != null)                                                &&
-                ((playerData.getAliveState() ?? 0) !== AliveStateId.Dead)
+                ((playerData.getAliveState()) !== AliveStateId.Dead)
             ) {
                 availablePlayerIndexArray.push(playerIndex);
             }

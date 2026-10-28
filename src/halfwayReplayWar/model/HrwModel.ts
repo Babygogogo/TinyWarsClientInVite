@@ -91,7 +91,7 @@ export function generateExecutedActions(warData: SerialWar): WoContainer[] {
     for (let i = 0; i < actionsCount; ++i) {
         const actionArrayForTeams: WoContainer[] = new Array(teamsCount);
         for (let j = 0; j < teamsCount; ++j) {
-            actionArrayForTeams[j] = getExisted(halfwayReplayActionArray[j].getOperationArray(), ClientErrorCode.HrwModel_GenerateExecutedActions_00)[i];
+            actionArrayForTeams[j] = halfwayReplayActionArray[j].getOperationArray()[i];
         }
         rearrangedHalfwayActionArray[i] = actionArrayForTeams;
     }
@@ -527,8 +527,8 @@ function mergeDestroyedUnitIdArray(src: Undefinable<number[]>, dst: number[]): v
 }
 function mergeCustomCounterArray(src: Undefinable<CustomCounter[]>, dst: CustomCounter[]): void {
     for (const srcData of src ?? []) {
-        const id            = srcData.getCustomCounterId() ?? 0;
-        const existingData  = dst.find(v => (v.getCustomCounterId() ?? 0) === id);
+        const id            = srcData.getCustomCounterId();
+        const existingData  = dst.find(v => (v.getCustomCounterId()) === id);
         if (existingData) {
             existingData.setValue(srcData.getValue());
         } else {
@@ -605,8 +605,8 @@ function mergeMovingUnitAndPathArray(array: MovingUnitAndPath[]): MovingUnitAndP
         return array[0] ?? null;
     } else {
         array.sort((v1, v2) => {
-            const path1     = getExisted(v1.getPath(), ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_00);
-            const path2     = getExisted(v2.getPath(), ClientErrorCode.HrwModel_MergeMovingUnitAndPathArray_01);
+            const path1     = v1.getPath();
+            const path2     = v2.getPath();
             const lastNode1 = path1[path1.length - 1];
             const lastNode2 = path2[path2.length - 1];
             if (lastNode1.getIsVisible()) {

@@ -107,7 +107,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedNormalMapId(normalMapId: number, needScroll: boolean): Promise<void> {
         const listMap   = this._listMap;
-        const index     = getExisted(listMap.getRevisedFirstIndex(v => v?.normalMapId === normalMapId), ClientErrorCode.MmrPreviewMapListPanel_SetSelectedNormalMapId_00);
+        const index     = listMap.getRevisedFirstIndex(v => v?.normalMapId === normalMapId);
         listMap.setSelectedItemIndex(index);
 
         if (needScroll) {
@@ -172,14 +172,14 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(getText(TextType.A0040));
-        this._labelRankMatch.setText(getText(TextType.B1012));
-        this._labelPreviewMap.setText(getText(TextType.B0594));
-        this._labelMapType.setText(getText(this.getOpenData()?.hasFog ? TextType.B0596 : TextType.B0595));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._labelNoMap.setText(getText(TextType.B0582));
-        this._btnBanMap.setText(getText(TextType.B0084));
-        this._btnSwitch.setText(getText(TextType.B0520));
+        this._labelLoading.setLangText(TextType.A0040);
+        this._labelRankMatch.setLangText(TextType.B1012);
+        this._labelPreviewMap.setLangText(TextType.B0594);
+        this._labelMapType.setLangText(this.getOpenData()?.hasFog ? TextType.B0596 : TextType.B0595);
+        this._btnBack.setLangText(TextType.B0146);
+        this._labelNoMap.setLangText(TextType.B0582);
+        this._btnBanMap.setLangText(TextType.B0084);
+        this._btnSwitch.setLangText(TextType.B0520);
 
         this._layoutNavName.arrangeItems();
         this._groupNavigator.arrangeItems();
@@ -253,7 +253,7 @@ export class Panel extends UiPanel<OpenData> {
                 return (v.getRuleAvailability()?.getCanMrw()) && (hasFog === v.getWarRuleCommonData()?.getHasFogByDefault());
             })) {
                 dataArray.push({
-                    normalMapId   : getExisted(mapRawData.getNormalMapId()),
+                    normalMapId   : mapRawData.getNormalMapId(),
                     mapName : getLanguageText({ textArray: mapRawData.getMapNameArray() }) || UndefinedError,
                     panel   : this,
                 });

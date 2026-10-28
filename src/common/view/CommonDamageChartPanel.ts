@@ -8,7 +8,7 @@ import { TypeName } from "../../gameVersions/Constants.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getUnitName, getSecondaryLanguageType, getText, getMoveTypeName, getUnitCategoryName } from "../../lang/Utils.ts";
+import { getUnitName, getSecondaryLanguageType, getMoveTypeName, getUnitCategoryName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { UnitTemplateCfg } from "../../proto/schema/CommonProto/Config/UnitTemplateCfg.ts";
@@ -676,7 +676,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.Fuel);
         this._labelValue.setText(`${currentValue} / ${maxValue}`);
 
-        const fuelConsumption   = getExisted(unit.getFuelConsumptionPerTurn());
+        const fuelConsumption   = unit.getFuelConsumptionPerTurn();
         const groupExtra        = this._groupExtra;
         if (fuelConsumption == 0) {
             groupExtra.setIsVisible(false);
@@ -700,7 +700,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
     private _updateViewAsIsDiver(): void {
         const unit = this.getOpenData()?.unitTemplateCfg;
         this._labelTitle.setLangText(TextType.B0371);
-        this._labelValue.setText(unit?.getDiveCfg() != null ? getText(TextType.Yes) : getText(TextType.No));
+        this._labelValue.setLangText(unit?.getDiveCfg() != null ? TextType.Yes : TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsMovement(): void {
@@ -714,7 +714,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         this._labelTitle.setLangText(TextType.B0340);
         this._labelValue.setText(`${currentValue}`);
         this._groupExtra.setIsVisible(true);
-        this._labelExtraInfo.setText(getMoveTypeName(getExisted(unit.getMoveTypeId()), data.gameConfig) ?? UndefinedError);
+        this._labelExtraInfo.setText(getMoveTypeName(unit.getMoveTypeId(), data.gameConfig) ?? UndefinedError);
     }
     private _updateViewAsPrimaryWeaponAmmo(): void {
         const unit = this.getOpenData()?.unitTemplateCfg;
@@ -765,7 +765,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
 
         const energy    = openData.unitTemplateCfg.getEnergyPerNormalizedHp();
         const gcData    = openData.gameConfig;
-        this._labelTitle.setText(`${getText(TextType.B1474)}`);
+        this._labelTitle.setLangText(TextType.B1474);
         this._labelValue.setText(`${energy * gcData.getTrilogyEnergyGainRateForAttacker() / 100} / ${energy * gcData.getTrilogyEnergyGainRateForDefender() / 100}`);
         this._groupExtra.setIsVisible(false);
     }

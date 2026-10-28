@@ -17,6 +17,7 @@
     /* Legacy UI skins bind fields by name; retain unused bindings and callback parameters. */
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "strict": true,
     /* Vite also compiles the migrated modules' enums and internal namespaces. */
     "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true

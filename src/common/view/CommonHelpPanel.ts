@@ -49,7 +49,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateLabelTips(): void {
         const labelTips = this._labelTips;
-        labelTips.setText(getText(TextType.A0379));
+        labelTips.setLangText(TextType.A0379);
         labelTips.setIsVisible(this._labelContent.getScaledHeight() >= Dimension.DesignMinHeight - 80);
     }
 }

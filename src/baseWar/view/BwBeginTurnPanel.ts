@@ -1,7 +1,7 @@
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getPlayerForceName, getPlayerTeamName, getText } from "../../lang/Utils.ts";
+import { getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
 import { wait } from "../../timer/TimerModel.ts";
@@ -57,7 +57,7 @@ export class Panel extends UiPanel<OpenData> {
 
         this._labelPlayerIndex.setText(`${getPlayerForceName(openData.playerIndex)} (${getPlayerTeamName(openData.teamIndex)})`);
         this._labelNickname.setText(openData.nickname);
-        this._labelTurnStart.setText(getText(TextType.B0679));
+        this._labelTurnStart.setLangText(TextType.B0679);
         this._imgSkin.loadSource(getCoHeadFrame(openData.unitAndTileSkinId));
         this._imgCo.loadSource(getCoHead(openData.gameConfig, openData.coId) ?? UndefinedError);
         this._layoutName.arrangeItems();

@@ -35,7 +35,7 @@ export async function resetData(mapRawData: MapRawData, warData: SerialWar): Pro
 export function checkIsValidWarData(): boolean {
     const teamIndexSet = new Set<number>();
     for (const player of getExisted(getInstanceWarRule().getWarRuleCommonData()?.getPlayerRuleList())) {
-        teamIndexSet.add(getExisted(player.getTeamIndex()));
+        teamIndexSet.add(player.getTeamIndex());
     }
     return teamIndexSet.size > 1;
 }
@@ -47,7 +47,7 @@ export function getInstanceWarRule(): InstanceWarRule {
 async function resetDataByTemplateWarRuleId(templateWarRuleId: number | null): Promise<void> {
     const settingsForCommon = getExisted(getWarData().getSettingsForCommon());
     const mapRawData        = getMapRawData();
-    const playersCount      = getExisted(mapRawData.getPlayersCountUnneutral());
+    const playersCount      = mapRawData.getPlayersCountUnneutral();
     const gameConfig        = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));
 
     if (templateWarRuleId == null) {
@@ -84,9 +84,9 @@ export function getTemplateWarRuleId(): number | null {
 }
 export async function tickTemplateWarRuleId(): Promise<void> {
     const currTemplateWarRuleId = getTemplateWarRuleId();
-    const templateWarRuleArray  = getExisted(getMapRawData().getTemplateWarRuleArray());
+    const templateWarRuleArray  = getMapRawData().getTemplateWarRuleArray();
     if (currTemplateWarRuleId == null) {
-        await resetDataByTemplateWarRuleId(getExisted(templateWarRuleArray[0].getRuleId()));
+        await resetDataByTemplateWarRuleId(templateWarRuleArray[0].getRuleId());
     } else {
         const newTemplateWarRuleId = getNonNullElements(templateWarRuleArray.map(v => v.getRuleId())).sort((v1, v2) => {
             if (v1 > currTemplateWarRuleId) {

@@ -176,18 +176,18 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0460));
-        this._btnSearchUser.setText(getText(TextType.B0228));
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
-        this._labelCanChat.setText(getText(TextType.B0383));
-        this._labelCanLogin.setText(getText(TextType.B0173));
-        this._labelIsAdmin.setText(getText(TextType.B1116));
-        this._labelChatManager.setText(getText(TextType.B1117));
-        this._labelIsChangeLogEditor.setText(getText(TextType.B1118));
-        this._labelIsMapCommittee.setText(getText(TextType.B1119));
-        this._labelAutoTourneyCommittee.setText(getText(TextType.B1120));
-        this._labelIsCampaignManager.setText(getText(TextType.B1132));
+        this._labelTitle.setLangText(TextType.B0460);
+        this._btnSearchUser.setLangText(TextType.B0228);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
+        this._labelCanChat.setLangText(TextType.B0383);
+        this._labelCanLogin.setLangText(TextType.B0173);
+        this._labelIsAdmin.setLangText(TextType.B1116);
+        this._labelChatManager.setLangText(TextType.B1117);
+        this._labelIsChangeLogEditor.setLangText(TextType.B1118);
+        this._labelIsMapCommittee.setLangText(TextType.B1119);
+        this._labelAutoTourneyCommittee.setLangText(TextType.B1120);
+        this._labelIsCampaignManager.setLangText(TextType.B1132);
         this._updateLabelUserName();
     }
     private async _updateLabelUserName(): Promise<void> {

@@ -1,11 +1,9 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { checkIsValidForcedFogCode } from "../../../fogMaps/Utils.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
 import { UndefinedError, TextType } from "../../../lang/Constants.ts";
 import { getForceFogCodeName, getFormattedText, getText } from "../../../lang/Utils.ts";
 import type { WeaSetForceFogCodeSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetForceFogCodeSimple.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
 export function checkIsValid(action: Undefinable<WeaSetForceFogCodeSimple>): boolean {
     if (action == null) {
@@ -23,8 +21,8 @@ export function getBriefDesc(data: Undefinable<WeaSetForceFogCodeSimple>): strin
         return null;
     }
 
-    const turnsCount            = getExisted(data.getTurnsCount(), ClientErrorCode.WarEventHelper_GetDescForWeaSetHasFog_00);
-    const textForForceFogCode   = getForceFogCodeName(getExisted(data.getForceFogCode(), ClientErrorCode.WarEventHelper_GetDescForWeaSetHasFog_01)) ?? UndefinedError;
+    const turnsCount            = data.getTurnsCount();
+    const textForForceFogCode   = getForceFogCodeName(data.getForceFogCode()) ?? UndefinedError;
     return (turnsCount == 0)
         ? getFormattedText(TextType.F0109, textForForceFogCode)
         : getFormattedText(TextType.F0108, textForForceFogCode, turnsCount);
@@ -55,9 +53,9 @@ export function applyWithoutExtraData(action: WeaSetForceFogCodeSimple, war: IBw
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function apply(action: WeaSetForceFogCodeSimple, war: IBwWar, isFast: boolean): Promise<void> {
     const fogMap = war.getFogMap();
-    fogMap.setForceFogCode(getExisted(action.getForceFogCode()));
+    fogMap.setForceFogCode(action.getForceFogCode());
 
-    const turnsCount = getExisted(action.getTurnsCount());
+    const turnsCount = action.getTurnsCount();
     if (turnsCount == 0) {
         fogMap.setForceExpirePlayerIndex(null);
         fogMap.setForceExpireTurnIndex(null);

@@ -157,7 +157,7 @@ class NameRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
         const nameId        = openData.nameId;
         const tileMap       = war.getTileMap();
         const nameArray     = tileMap.getTileCustomNameArray() ?? [];
-        const index         = nameArray.findIndex(v => (v.getNameId() ?? 0) === nameId);
+        const index         = nameArray.findIndex(v => (v.getNameId()) === nameId);
         const nameData      = nameArray[index];
         openPanel(getDict().CommonInputShortLangTextPanel, {
             getTitleText        : () => `${getText(TextType.B1430)} #${nameId}`,
@@ -202,7 +202,7 @@ class NameRenderer extends UiListItemRenderer<DataForCustomCounterRenderer> {
 
         const nameId        = openData.nameId;
         const tileMap       = openData.war.getTileMap();
-        const nameTextArray = tileMap.getTileCustomNameArray()?.find(v => (v.getNameId() ?? 0) === nameId)?.getNameTextArray();
+        const nameTextArray = tileMap.getTileCustomNameArray()?.find(v => (v.getNameId()) === nameId)?.getNameTextArray();
         const languageType1 = getCurrentLanguageType();
         const languageType2 = getSecondaryLanguageType();
         this._labelName1.setText(getLanguageText({

@@ -179,8 +179,8 @@ export class Panel extends UiPanel<OpenData> {
             if (selfPlayerData.getIsReady()) {
                 show(getText(TextType.A0128));
             } else {
-                const playerIndex       = getExisted(selfPlayerData.getPlayerIndex());
-                const currentCoId       = selfPlayerData.getCoId() ?? 0;
+                const playerIndex       = selfPlayerData.getPlayerIndex();
+                const currentCoId       = selfPlayerData.getCoId();
                 const settingsForCommon = getExisted(roomStaticInfo.getSettingsForCommon());
                 const gameConfig        = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));
                 const warRuleCommonData = getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
@@ -246,7 +246,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const selfPlayerIndex   = selfPlayerData.getPlayerIndex() ?? 0;
+        const selfPlayerIndex   = selfPlayerData.getPlayerIndex();
         const warRuleCommonData = getExisted(warRule.getWarRuleCommonData());
         openPanel(getDict().CommonChooseSingleNumberPanel, {
             currentNumber        : selfPlayerIndex,
@@ -256,7 +256,7 @@ export class Panel extends UiPanel<OpenData> {
             getNumberMainText : playerIndex => `P${playerIndex}, ${getPlayerTeamName(getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) ?? UndefinedError}`,
             callbackOnConfirm : newPlayerIndex => {
                 if (newPlayerIndex !== selfPlayerIndex) {
-                    const currCoId              = selfPlayerData.getCoId() ?? 0;
+                    const currCoId              = selfPlayerData.getCoId();
                     const availableCoIdArray    = [...getFinalCcwHumanCoIdSet({
                         playerRule      : getPlayerRule(warRuleCommonData, newPlayerIndex),
                         gameConfig      : gameConfig,
@@ -296,11 +296,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const usedSkinIdArray       = getNonNullElements(playerDataList?.filter(v => v.getUserId() !== selfUserId).map(v => v.getUnitAndTileSkinId()) ?? []);
+        const usedSkinIdArray       = getNonNullElements(playerDataList?.filter(v => v.getUserId() !== selfUserId).map(v => v.getUnitAndTileSkinId()));
         const availableSkinIdArray  = getAllSkinIdArray(false).filter(v => usedSkinIdArray.indexOf(v) < 0);
         const selfSkinId            = selfPlayerData.getUnitAndTileSkinId();
         openPanel(getDict().CommonChooseSingleSkinIdPanel, {
-            currentSkinId        : selfSkinId ?? availableSkinIdArray[0],
+            currentSkinId        : selfSkinId,
             availableSkinIdArray : availableSkinIdArray,
             callback             : newSkinId => {
                 if (newSkinId !== selfSkinId) {
@@ -308,7 +308,7 @@ export class Panel extends UiPanel<OpenData> {
                         roomId            : roomId,
                         playerIndex       : selfPlayerData.getPlayerIndex(),
                         unitAndTileSkinId : newSkinId,
-                        coId              : selfPlayerData.getCoId() ?? 0,
+                        coId              : selfPlayerData.getCoId(),
                     }));
                 }
             },
@@ -474,7 +474,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const playerIndex   = selfPlayerData.getPlayerIndex() ?? 0;
+        const playerIndex   = selfPlayerData.getPlayerIndex();
         const teamIndex     = getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex();
         label.setText(`P${playerIndex}${`\n`}${getPlayerTeamName(teamIndex) ?? UndefinedError}`);
     }
@@ -570,7 +570,7 @@ export class Panel extends UiPanel<OpenData> {
         const selfPlayerData    = roomPlayerInfo?.getPlayerDataList().find(v => v.getUserId() === selfUserId);
         this._imgCo.loadSource(((gameConfig == null) || (selfPlayerData == null))
             ? ``
-            : getCoEye(gameConfig, selfPlayerData.getCoId() ?? 0, true) ?? ``
+            : getCoEye(gameConfig, selfPlayerData.getCoId(), true) ?? ``
         );
     }
 

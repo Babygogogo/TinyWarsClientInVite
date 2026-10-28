@@ -124,7 +124,7 @@ export class Player extends Base {
         return new Num(this.getWar(), this._player.getCoZoneRadius());
     }
     private resolveCoZoneRadius0(): Num {
-        return new Num(this.getWar(), this._player.getCoBasicCfg().getZoneRadius() ?? 0);
+        return new Num(this.getWar(), this._player.getCoBasicCfg().getZoneRadius());
     }
     private resolveCoZoneRadius1(): Num {
         const player    = this._player;
@@ -132,7 +132,7 @@ export class Player extends Base {
         const energy    = player.getCoCurrentEnergy();
         return new Num(
             this.getWar(),
-            (cfg.getZoneRadius() ?? 0) + (cfg.getZoneExpansionEnergyList()?.filter(v => energy >= v).length ?? 0)
+            (cfg.getZoneRadius()) + (cfg.getZoneExpansionEnergyList()?.filter(v => energy >= v).length)
         );
     }
 

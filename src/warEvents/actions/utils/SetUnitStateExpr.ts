@@ -939,7 +939,7 @@ function createNewUnitData(action: WeaSetUnitStateExpr, unit: IUnit): SerialUnit
         currentBuildMaterial            : currentBuildMaterial,
 
         aiWeightedDestination           : aiWeightedDestination?.toJson() ?? null,
-        forbiddenGroupedLocationIdArray : forbiddenGroupedLocationIdArray ?? [],
+        forbiddenGroupedLocationIdArray : forbiddenGroupedLocationIdArray,
         buffArray                       : unit.getBuffList().map(buff => buff.toJson()),
 
         primaryWeaponCurrentAmmo        : primaryWeaponCurrentAmmo,

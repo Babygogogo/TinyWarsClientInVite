@@ -25,7 +25,7 @@ export async function getScoreAndActionUnitLaunchSilo(commonParams: CommonParams
     const unitValueMap                              = createEmptyMap<number>(mapWidth, mapHeight);
     const teamIndex                                 = unit.getTeamIndex();
     const unitMap                                   = war.getUnitMap();
-    const launchSiloParams                          = getExisted(tile.getTemplateCfg().getLaunchSiloParams(), ClientErrorCode.SpwRobot_GetScoreAndActionUnitLaunchSilo_00);
+    const launchSiloParams                          = tile.getTemplateCfg().getLaunchSiloParams();
     const siloDamage                                = getExisted(launchSiloParams[3], ClientErrorCode.SpwRobot_GetScoreAndActionUnitLaunchSilo_01);
         for (let x = 0; x < mapWidth; ++x) {
         for (let y = 0; y < mapHeight; ++y) {

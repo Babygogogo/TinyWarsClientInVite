@@ -15,7 +15,6 @@ import { show, showLang } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getFormattedText, getWarTypeName } from "../../lang/Utils.ts";
 import { getWarSettings } from "../../multiPlayerWar/model/MpwModel.ts";
@@ -113,7 +112,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedWarId(warId: number, needScroll: boolean): Promise<void> {
         const listMap   = this._listWar;
-        const index     = getExisted(listMap.getRevisedFirstIndex(v => v?.warId === warId));
+        const index     = listMap.getRevisedFirstIndex(v => v?.warId === warId);
         listMap.setSelectedItemIndex(index);
         if (needScroll) {
             listMap.scrollToItem(index);
@@ -230,13 +229,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(getText(TextType.A0040));
-        this._labelWatchWar.setText(getText(TextType.B0206));
-        this._labelHandleRequest.setText(getText(TextType.B0208));
-        this._labelChooseWar.setText(getText(TextType.B0589));
-        this._labelNoWar.setText(getText(TextType.B0209));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._btnNextStep.setText(getText(TextType.B0566));
+        this._labelLoading.setLangText(TextType.A0040);
+        this._labelWatchWar.setLangText(TextType.B0206);
+        this._labelHandleRequest.setLangText(TextType.B0208);
+        this._labelChooseWar.setLangText(TextType.B0589);
+        this._labelNoWar.setLangText(TextType.B0209);
+        this._btnBack.setLangText(TextType.B0146);
+        this._btnNextStep.setLangText(TextType.B0566);
 
         this._groupNavigator.arrangeItems();
     }
@@ -454,7 +453,7 @@ class WarRenderer
                 if (warName) {
                     labelName.setText(warName);
                 } else {
-                    const normalMapId   = settingsForMcw.getNormalMapId() ?? 0;
+                    const normalMapId   = settingsForMcw.getNormalMapId();
                     labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
                 }
 
@@ -463,20 +462,20 @@ class WarRenderer
                 if (warName) {
                     labelName.setText(warName);
                 } else {
-                    const normalMapId   = settingsForCcw.getNormalMapId() ?? 0;
+                    const normalMapId   = settingsForCcw.getNormalMapId();
                     labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
                 }
 
             } else if (settingsForMrw) {
-                const normalMapId   = settingsForMrw.getNormalMapId() ?? 0;
+                const normalMapId   = settingsForMrw.getNormalMapId();
                 labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
 
             } else if (settingsForMmw) {
-                const normalMapId   = settingsForMmw.getNormalMapId() ?? 0;
+                const normalMapId   = settingsForMmw.getNormalMapId();
                 labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
 
             } else if (settingsForAtw) {
-                const normalMapId   = settingsForAtw.getNormalMapId() ?? 0;
+                const normalMapId   = settingsForAtw.getNormalMapId();
                 labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
             }
         }

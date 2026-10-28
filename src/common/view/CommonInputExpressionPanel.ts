@@ -133,10 +133,10 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         this._labelTitle.setText(expressionInfo.getTitleText());
-        this._btnIdentifier.setText(getText(TextType.B0131));
-        this._btnCustomCounter.setText(getText(TextType.B1143));
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
+        this._btnIdentifier.setLangText(TextType.B0131);
+        this._btnCustomCounter.setLangText(TextType.B1143);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
         this._input.setPromptText(getText(expressionInfo.isRequired ? TextType.B1310 : TextType.B1311));
         this._updateLabelError();
     }

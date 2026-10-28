@@ -175,7 +175,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public setAndReviseSelectedRoomId(newRoomId: number | null, needScroll: boolean): void {
         const listRoom  = this._listRoom;
-        const index     = getExisted(listRoom.getRevisedFirstIndex(v => v?.roomId == newRoomId));
+        const index     = listRoom.getRevisedFirstIndex(v => v?.roomId == newRoomId);
         listRoom.setSelectedItemIndex(index);
         this._updateComponentsForTargetRoomInfo();
 
@@ -420,13 +420,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(getText(TextType.A0040));
-        this._labelMultiPlayer.setText(getText(TextType.B0137));
-        this._labelChooseRoom.setText(getText(TextType.B0580));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._labelNoRoom.setText(getText(TextType.B0582));
-        this._btnNextStep.setText(getText(TextType.B0583));
-        this._btnSearch.setText(getText(TextType.B0228));
+        this._labelLoading.setLangText(TextType.A0040);
+        this._labelMultiPlayer.setLangText(TextType.B0137);
+        this._labelChooseRoom.setLangText(TextType.B0580);
+        this._btnBack.setLangText(TextType.B0146);
+        this._labelNoRoom.setLangText(TextType.B0582);
+        this._btnNextStep.setLangText(TextType.B0583);
+        this._btnSearch.setLangText(TextType.B0228);
 
         this._groupNavigator.arrangeItems();
     }
@@ -768,7 +768,7 @@ class RoomRenderer extends UiListItemRenderer<DataForRoomRenderer> {
         if (roomType === MultiPlayerRoomType.Mcr) {
             const settingsForMcw = (await MultiCustomRoomModelMcrModelGetRoomStaticInfo(roomId))?.getSettingsForMcw();
             if ((settingsForMcw) && (roomId === this.getOpenData()?.roomId) && (roomType === this.getOpenData()?.roomType)) {
-                const mapRawData = await getRawData(settingsForMcw.getNormalMapId() ?? 0);
+                const mapRawData = await getRawData(settingsForMcw.getNormalMapId());
                 openPanel(getDict().CommonHelpPanel, {
                     getContent : () => getLanguageText({ textArray: mapRawData?.getMapExtraText()?.getMapDescription() }) ?? UndefinedError,
                 });
@@ -776,7 +776,7 @@ class RoomRenderer extends UiListItemRenderer<DataForRoomRenderer> {
         } else if (roomType === MultiPlayerRoomType.Ccr) {
             const settingsForCcw = (await getRoomStaticInfo(roomId))?.getSettingsForCcw();
             if ((settingsForCcw) && (roomId === this.getOpenData()?.roomId) && (roomType === this.getOpenData()?.roomType)) {
-                const mapRawData = await getRawData(settingsForCcw.getNormalMapId() ?? 0);
+                const mapRawData = await getRawData(settingsForCcw.getNormalMapId());
                 openPanel(getDict().CommonHelpPanel, {
                     getContent : () => getLanguageText({ textArray: mapRawData?.getMapExtraText()?.getMapDescription() }) ?? UndefinedError,
                 });
@@ -814,7 +814,7 @@ class RoomRenderer extends UiListItemRenderer<DataForRoomRenderer> {
                 if (warName) {
                     labelName.setText(warName);
                 } else {
-                    const mapName = await getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId() ?? 0);
+                    const mapName = await getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId());
                     if ((roomId === this.getOpenData()?.roomId) && (roomType === this.getOpenData()?.roomType)) {
                         labelName.setText(mapName ?? UndefinedError);
                     }
@@ -830,7 +830,7 @@ class RoomRenderer extends UiListItemRenderer<DataForRoomRenderer> {
                 if (warName) {
                     labelName.setText(warName);
                 } else {
-                    const mapName = await getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId() ?? 0);
+                    const mapName = await getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId());
                     if ((roomId === this.getOpenData()?.roomId) && (roomType === this.getOpenData()?.roomType)) {
                         labelName.setText(mapName ?? UndefinedError);
                     }
@@ -862,12 +862,12 @@ class RoomRenderer extends UiListItemRenderer<DataForRoomRenderer> {
         if (roomType === MultiPlayerRoomType.Mcr) {
             const settingsForMcw = (await MultiCustomRoomModelMcrModelGetRoomStaticInfo(roomId))?.getSettingsForMcw();
             if ((settingsForMcw) && (roomId === this.getOpenData()?.roomId) && (roomType === this.getOpenData()?.roomType)) {
-                this._btnHelp.setIsVisible(!!(await getBriefData(settingsForMcw.getNormalMapId() ?? 0))?.getHasDescription());
+                this._btnHelp.setIsVisible(!!(await getBriefData(settingsForMcw.getNormalMapId()))?.getHasDescription());
             }
         } else if (roomType === MultiPlayerRoomType.Ccr) {
             const settingsForCcw = (await getRoomStaticInfo(roomId))?.getSettingsForCcw();
             if ((settingsForCcw) && (roomId === this.getOpenData()?.roomId) && (roomType === this.getOpenData()?.roomType)) {
-                this._btnHelp.setIsVisible(!!(await getBriefData(settingsForCcw.getNormalMapId() ?? 0))?.getHasDescription());
+                this._btnHelp.setIsVisible(!!(await getBriefData(settingsForCcw.getNormalMapId()))?.getHasDescription());
             }
         } else if (roomType === MultiPlayerRoomType.Mfr) {
             const settingsForMfw = (await MultiFreeRoomModelMfrModelGetRoomStaticInfo(roomId))?.getSettingsForMfw();

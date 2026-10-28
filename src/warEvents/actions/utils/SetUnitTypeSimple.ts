@@ -18,7 +18,6 @@ import {
     checkIsValid as TilesUtilsFilterCheckIsValid,
     checkIsMeet as TilesUtilsFilterCheckIsMeet,
 } from "../../../tiles/utils/Filter.ts";
-import { Hp } from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import { getNormalizedHp } from "../../../units/utils/Common.ts";
 import {
@@ -128,7 +127,7 @@ export async function applyWithExtraData(_action: WeaSetUnitTypeSimple): Promise
 export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
     const targetUnitArray       : IUnit[] = [];
     const unitMap               = war.getUnitMap();
-    const newUnitType           = getExisted(data.getActUnitType());
+    const newUnitType           = data.getActUnitType();
     {
         const tileMap               = war.getTileMap();
         const conUnitFilter         = data.getConUnitFilter();
@@ -224,8 +223,8 @@ export async function applyWithoutExtraData(data: WeaSetUnitTypeSimple, isFastEx
 
                     warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                         unitType                    : newUnitType,
-                        dstPlayerIndex              : newUnitData.getPlayerIndex() ?? 0,
-                        normalizedHpGain            : getNormalizedHp(newUnitData.getCurrentHp() ?? Hp.MaxHp),
+                        dstPlayerIndex              : newUnitData.getPlayerIndex(),
+                        normalizedHpGain            : getNormalizedHp(newUnitData.getCurrentHp()),
                         normalizedHpLoss            : 0,
                         unitGain                    : 1,
                         unitLoss                    : 0,

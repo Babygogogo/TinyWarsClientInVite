@@ -3,7 +3,6 @@ import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getUserAvatar } from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -77,8 +76,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0707));
-        this._btnConfirm.setText(getText(TextType.B0026));
+        this._labelTitle.setLangText(TextType.B0707);
+        this._btnConfirm.setLangText(TextType.B0026);
     }
 
     private _updateImgAvatar(): void {

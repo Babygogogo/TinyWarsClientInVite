@@ -125,7 +125,7 @@ export class Panel extends UiPanel<OpenData> {
         this._updateLabelSelected();
     }
     private _onTouchedBtnConfirm(): void {
-        this.getOpenData()?.callbackOnConfirm([...this._selectedNumberSet].sort((v1, v2) => v1 - v2) ?? []);
+        this.getOpenData()?.callbackOnConfirm([...this._selectedNumberSet].sort((v1, v2) => v1 - v2));
         this.closePanel();
     }
     private _onTouchedBtnHelp(): void {

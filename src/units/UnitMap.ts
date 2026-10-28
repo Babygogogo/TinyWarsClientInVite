@@ -36,14 +36,14 @@ export class UnitMap implements IUnitMap {
             throw newError(`Empty data.`, ClientErrorCode.BwUnitMap_Init_00);
         }
 
-        const nextUnitId = data.getNextUnitId() ?? 0;
+        const nextUnitId = data.getNextUnitId();
         if (!mapSize.checkIsValid()) {
             throw newError(`Invalid mapSize.`, ClientErrorCode.BwUnitMap_Init_02);
         }
 
         const unitCustomNameArray = data.getUnitCustomNameArray();
         {
-            const errorCode = getErrorCodeForUnitCustomNameArray(unitCustomNameArray ?? []);
+            const errorCode = getErrorCodeForUnitCustomNameArray(unitCustomNameArray);
             if (errorCode) {
                 throw newError(`Invalid unitCustomNameArray.`, errorCode);
             }

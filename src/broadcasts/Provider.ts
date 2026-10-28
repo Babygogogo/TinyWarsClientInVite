@@ -2,7 +2,6 @@ import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../auxiliaryTypes/CachedDataAccessor.ts";
 import { reqBroadcastGetMessageData } from "./Gateway.ts";
 import { getNonNullElements } from "../helpers/Collection.ts";
-import { getExisted } from "../helpers/Misc.ts";
 import type { BroadcastMessage } from "../proto/schema/CommonProto/Broadcast/BroadcastMessage.ts";
 import type { S } from "../proto/schema/CommonProto/NetMessage/MsgBroadcastGetMessageData/S.ts";
 import { getServerTimestamp } from "../timer/TimerModel.ts";
@@ -34,8 +33,8 @@ export async function getOngoingMessageIdArray(): Promise<number[]> {
         promiseArray.push((async () => {
             const messageData = await getMessageData(messageId);
             if ((messageData)                                                           &&
-                (getExisted(messageData.getStartTime()) <= currTime)   &&
-                (getExisted(messageData.getEndTime()) >= currTime)
+                (messageData.getStartTime() <= currTime)   &&
+                (messageData.getEndTime() >= currTime)
             ) {
                 return messageId;
             } else {

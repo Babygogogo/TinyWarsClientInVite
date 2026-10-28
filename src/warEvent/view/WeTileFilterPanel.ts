@@ -37,7 +37,7 @@ import type { IUiLayout } from "../../ui/interfaces/IUiLayout.ts";
 import type { IUiScroller } from "../../ui/interfaces/IUiScroller.ts";
 import { AllComparatorIdArray } from "../../valueAndComparators/Constants.ts";
 import { getBriefDesc } from "../../valueAndComparators/Utils.ts";
-import { SetRelationId, AllSetRelationIdArray } from "../../valueSetAndRelations/Constants.ts";
+import { AllSetRelationIdArray } from "../../valueSetAndRelations/Constants.ts";
 
 export interface OpenData {
     gameConfig              : GameConfig;
@@ -509,7 +509,7 @@ export class Panel extends UiPanel<OpenData> {
                 } else {
                     const con = filter.createIfNotExistsConGridIndex();
                     con.setGridIndexArray(valueArray.map(v => v.toProto()));
-                    con.setIsOneOf(con.getIsOneOf() ?? true);
+                    con.setIsOneOf(con.getIsOneOf());
                 }
                 this._updateView();
             },
@@ -533,7 +533,7 @@ export class Panel extends UiPanel<OpenData> {
                 } else {
                     const con = filter.createIfNotExistsConLocationId();
                     con.setValueArray(valueArray);
-                    con.setSetRelation(con.getSetRelation() ?? SetRelationId.EqualTo);
+                    con.setSetRelation(con.getSetRelation());
                 }
                 this._updateView();
             },
@@ -545,7 +545,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitleText            : () => getText(TextType.Location),
             availableNumberArray    : AllSetRelationIdArray,
             currentNumber           : filter.getConLocationId()?.getSetRelation(),
-            getNumberMainText       : num => getSetRelationName(num) ?? UndefinedError,
+            getNumberMainText       : num => getSetRelationName(num),
             callbackOnConfirm       : setRelation => {
                 filter.createIfNotExistsConLocationId().setSetRelation(setRelation);
                 this._updateView();
@@ -567,7 +567,7 @@ export class Panel extends UiPanel<OpenData> {
                 } else {
                     const con = filter.createIfNotExistsConBuffTypeId();
                     con.setValueArray(valueArray);
-                    con.setSetRelation(con.getSetRelation() ?? SetRelationId.EqualTo);
+                    con.setSetRelation(con.getSetRelation());
                 }
                 this._updateView();
             },
@@ -579,7 +579,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitleText            : () => getText(TextType.AbnormalStateTypeId),
             availableNumberArray    : AllSetRelationIdArray,
             currentNumber           : filter.getConBuffTypeId()?.getSetRelation(),
-            getNumberMainText       : num => getSetRelationName(num) ?? UndefinedError,
+            getNumberMainText       : num => getSetRelationName(num),
             callbackOnConfirm       : setRelation => {
                 filter.createIfNotExistsConBuffTypeId().setSetRelation(setRelation);
                 this._updateView();

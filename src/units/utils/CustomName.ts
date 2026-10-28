@@ -10,7 +10,7 @@ export function checkIsValid(data: ProtoUnitCustomName): boolean {
 }
 export function getErrorCode(data: ProtoUnitCustomName): ClientErrorCode {
     {
-        const nameId = data.getNameId() ?? 0;
+        const nameId = data.getNameId();
         if ((nameId > CustomName.MaxId) ||
             (nameId < CustomName.MinId)
         ) {
@@ -39,7 +39,7 @@ export function getErrorCodeForUnitCustomNameArray(names: ProtoUnitCustomName[])
             return ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomNameArray_00;
         }
 
-        const nameId = nameData.getNameId() ?? 0;
+        const nameId = nameData.getNameId();
         if (idSet.has(nameId)) {
             return ClientErrorCode.PhStructureUnitCustomNames_GetErrorCodeForUnitCustomNameArray_01;
         }

@@ -14,7 +14,7 @@ import { gotoSinglePlayerWar } from "../../helpers/GameFlow.ts";
 import { getCoEyeBackground, getCoEye } from "../../helpers/ImageSource.ts";
 import { getExisted, newError } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTextForYesOrNo } from "../../lang/Utils.ts";
+import { getText } from "../../lang/Utils.ts";
 import type { BwCoIdChanged, BwPlayerFundChanged } from "../../notifications/DataTypes.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { AliveStateId, PlayerIndex } from "../../players/Constants.ts";
@@ -494,7 +494,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const labelPauseAi  = this._labelPauseAi;
         const isPaused      = war.getIsAiPaused();
-        labelPauseAi.setText(getTextForYesOrNo(isPaused));
+        labelPauseAi.setLangText(isPaused ? TextType.Yes : TextType.No);
         labelPauseAi.setTextColor(isPaused ? ColorValue.Yellow : ColorValue.White);
 
         this._layoutPauseAi.arrangeItems();

@@ -5,7 +5,7 @@ import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts
 import { getExisted } from "../../helpers/Misc.ts";
 import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getFormattedText, getText } from "../../lang/Utils.ts";
+import { getFormattedText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -188,10 +188,10 @@ export class Panel extends UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelAvailableCoTitle.setText(getText(this.getOpenData()?.maxChooseCount === 1 ? TextType.B0145 : TextType.B0898));
-        this._labelSelectedTitle.setText(getText(TextType.B1274));
-        this._labelSelectAll.setText(getText(TextType.B0761));
-        this._btnConfirm.setText(getText(TextType.B0026));
+        this._labelAvailableCoTitle.setLangText(this.getOpenData()?.maxChooseCount === 1 ? TextType.B0145 : TextType.B0898);
+        this._labelSelectedTitle.setLangText(TextType.B1274);
+        this._labelSelectAll.setLangText(TextType.B0761);
+        this._btnConfirm.setLangText(TextType.B0026);
 
         this._groupSelectAll.arrangeItems();
         this._groupSelected.arrangeItems();

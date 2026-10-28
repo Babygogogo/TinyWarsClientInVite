@@ -207,7 +207,7 @@ export class Panel extends UiPanel<OpenData> {
                 ),
             currentCoCategoryIdArray       : [],
             forceUnchosenCoCategoryIdArray : null,
-            maxChooseCount                 : gcData.getSystemCfg().getMaxBanCoNumber() ?? 0,
+            maxChooseCount                 : gcData.getSystemCfg().getMaxBanCoNumber(),
             isBan                          : true,
             getTitleText                   : () => getText(TextType.B0590),
             getBpRates                     : coCategoryId => {
@@ -313,7 +313,7 @@ export class Panel extends UiPanel<OpenData> {
                         ),
                     callback : () => reqMrrSetBannedCoIdArray(
                         roomId,
-                        bannedCoCategoryIdArray.map(v => getExisted(gcData.getEnabledCoIdByCategoryId(v) ?? gcData.getCoIdByCategoryId(v)))
+                        bannedCoCategoryIdArray.map(v => (gcData.getEnabledCoIdByCategoryId(v) ?? gcData.getCoIdByCategoryId(v)))
                     ),
                 });
             },
@@ -375,7 +375,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const selfUserId        = getSelfUserId();
-        const playerDataList    = roomInfo.getPlayerDataList() ?? [];
+        const playerDataList    = roomInfo.getPlayerDataList();
         const selfPlayerData    = playerDataList.find(v => v.getUserId() === selfUserId);
         if (selfPlayerData == null) {
             return;
@@ -385,11 +385,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const usedSkinIdArray       = getNonNullElements(playerDataList?.filter(v => v.getUserId() !== selfUserId).map(v => v.getUnitAndTileSkinId()) ?? []);
+        const usedSkinIdArray       = getNonNullElements(playerDataList?.filter(v => v.getUserId() !== selfUserId).map(v => v.getUnitAndTileSkinId()));
         const availableSkinIdArray  = getAllSkinIdArray(false).filter(v => usedSkinIdArray.indexOf(v) < 0);
         const selfSkinId            = selfPlayerData.getUnitAndTileSkinId();
         openPanel(getDict().CommonChooseSingleSkinIdPanel, {
-            currentSkinId        : selfSkinId ?? availableSkinIdArray[0],
+            currentSkinId        : selfSkinId,
             availableSkinIdArray : availableSkinIdArray,
             callback             : skinId => {
                 roomSelfSettings.setUnitAndTileSkinId(skinId);
@@ -695,7 +695,7 @@ export class Panel extends UiPanel<OpenData> {
             labelCountdown.setText(getTimeDurationText2(Math.max(0, timeForStartSetSelfSettings + MultiRankedWarConstants.RoomPhaseTime - currentTime)));
         } else {
             labelCountdownTitle.setLangText(TextType.B0592);
-            labelCountdown.setText(getTimeDurationText2(Math.max(0, getExisted(roomInfo.getTimeForCreateRoom()) + MultiRankedWarConstants.RoomPhaseTime - currentTime)));
+            labelCountdown.setText(getTimeDurationText2(Math.max(0, roomInfo.getTimeForCreateRoom() + MultiRankedWarConstants.RoomPhaseTime - currentTime)));
         }
         this._layoutCountdown.arrangeItems();
         this._groupState.arrangeItems();
@@ -719,15 +719,9 @@ export class Panel extends UiPanel<OpenData> {
         const playerData    = getExisted(roomInfo.getPlayerDataList().find(v => v.getUserId() === userId));
         const playerIndex   = playerData.getPlayerIndex();
         if (roomInfo.getTimeForStartSetSelfSettings() == null) {
-            labelState.setText(roomInfo.getSettingsForMrw()?.getDataArrayForBanCo().some(v => v.getSrcPlayerIndex() === playerIndex)
-                ? getText(TextType.A0133)
-                : getText(TextType.A0210)
-            );
+            labelState.setLangText(roomInfo.getSettingsForMrw()?.getDataArrayForBanCo().some(v => v.getSrcPlayerIndex() === playerIndex) ? TextType.A0133 : TextType.A0210);
         } else {
-            labelState.setText(playerData.getIsReady()
-                ? getText(TextType.A0134)
-                : getText(TextType.A0211)
-            );
+            labelState.setLangText(playerData.getIsReady() ? TextType.A0134 : TextType.A0211);
         }
         groupState.arrangeItems();
     }

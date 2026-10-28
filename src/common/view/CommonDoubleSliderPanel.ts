@@ -1,9 +1,7 @@
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
 import { UndefinedError, TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -182,8 +180,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? UndefinedError);
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
     }
 
     private _updateGroupBar(): void {
@@ -195,9 +193,9 @@ export class Panel extends UiPanel<OpenData> {
         const minNumber     = openData.minNumber;
         const maxNumber     = openData.maxNumber;
         const barWidth      = this._groupBar.getScaledWidth();
-        const lowerCount    = getExisted(this._selectedLowerNum);
+        const lowerCount    = this._selectedLowerNum;
         const lowerPos      = barWidth * (lowerCount - minNumber) / (maxNumber - minNumber);
-        const upperCount    = getExisted(this._selectedUpperNum);
+        const upperCount    = this._selectedUpperNum;
         const upperPos      = barWidth * (upperCount - minNumber) / (maxNumber - minNumber);
         const imgBar        = this._imgBar;
         imgBar.setX(lowerPos);

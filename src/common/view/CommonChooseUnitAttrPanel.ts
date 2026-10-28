@@ -8,7 +8,7 @@ import { ColorValue } from "../../graphics/Constants.ts";
 import { createRange } from "../../helpers/Collection.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getFormattedText, getText, getUnitAiModeName, getTextForYesOrNo, getUnitActionStateText } from "../../lang/Utils.ts";
+import { getFormattedText, getText, getUnitAiModeName, getUnitActionStateText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { GridIndex } from "../../proto/schema/CommonProto/Structure/GridIndex.ts";
@@ -180,7 +180,7 @@ export class Panel extends UiPanel<OpenData> {
     private _onTouchedBtnUnitTag(): void {
         const unitData = this._getUnitData();
         openPanel(getDict().CommonChooseMultiIntegerPanel, {
-            currentIntegerArray     : getTagIdList(unitData.getGroupedTagId() ?? 0, true),
+            currentIntegerArray     : getTagIdList(unitData.getGroupedTagId(), true),
             availableIntegerArray   : AllTagIdArray,
             getTitleText            : () => getFormattedText(TextType.F0092, getText(TextType.Tags)),
             callbackOnConfirm       : tagIdArray => {
@@ -270,9 +270,9 @@ export class Panel extends UiPanel<OpenData> {
 
         openPanel(getDict().CommonChooseUnitAndPlayerIndexPanel, {
             gameConfig          : gameConfig,
-            currentUnitType     : unitData.getUnitType() ?? undefined,
+            currentUnitType     : unitData.getUnitType(),
             unitTypeArray       : gameConfig.getAllUnitTypeArray(),
-            currentSkinId       : unitData.getPlayerIndex() ?? undefined,
+            currentSkinId       : unitData.getPlayerIndex(),
             playerIndexArray    : createRange(PlayerIndex.First, war.getPlayersCountUnneutral() + 1, 1),
             finalSkinIdArray    : getFinalSkinIdArray(war, false),
             callback            : (unitType, skinId) => {
@@ -300,7 +300,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle           : () => getText(TextType.Hp),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getCurrentHp() ?? defaultValue,
+            currentValue    : unitData.getCurrentHp(),
             callback        : value => {
                 unitData.setCurrentHp(value === defaultValue ? null : value);
                 this._updateComponentsForHp();
@@ -321,7 +321,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle           : () => getText(TextType.Fuel),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getCurrentFuel() ?? defaultValue,
+            currentValue    : unitData.getCurrentFuel(),
             callback        : value => {
                 unitData.setCurrentFuel(value === defaultValue ? null : value);
                 this._updateComponentsForFuel();
@@ -342,7 +342,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle           : () => getText(TextType.Promotion),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getCurrentPromotion() ?? defaultValue,
+            currentValue    : unitData.getCurrentPromotion(),
             callback        : value => {
                 unitData.setCurrentPromotion(value === defaultValue ? null : value);
                 this._updateComponentsForPromotion();
@@ -363,7 +363,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle           : () => getText(TextType.PrimaryWeaponAmmo),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getPrimaryWeaponCurrentAmmo() ?? defaultValue,
+            currentValue    : unitData.getPrimaryWeaponCurrentAmmo(),
             callback        : value => {
                 unitData.setPrimaryWeaponCurrentAmmo(value === defaultValue ? null : value);
                 this._updateComponentsForPrimaryAmmo();
@@ -384,7 +384,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle           : () => getText(TextType.FlareAmmo),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getFlareCurrentAmmo() ?? defaultValue,
+            currentValue    : unitData.getFlareCurrentAmmo(),
             callback        : value => {
                 unitData.setFlareCurrentAmmo(value === defaultValue ? null : value);
                 this._updateComponentsForFlareAmmo();
@@ -405,7 +405,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle           : () => getText(TextType.BuildMaterial),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getCurrentBuildMaterial() ?? defaultValue,
+            currentValue    : unitData.getCurrentBuildMaterial(),
             callback        : value => {
                 unitData.setCurrentBuildMaterial(value === defaultValue ? null : value);
                 this._updateComponentsForBuildMaterial();
@@ -426,7 +426,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle           : () => getText(TextType.ProductionMaterial),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getCurrentProduceMaterial() ?? defaultValue,
+            currentValue    : unitData.getCurrentProduceMaterial(),
             callback        : value => {
                 unitData.setCurrentProduceMaterial(value === defaultValue ? null : value);
                 this._updateComponentsForProduceMaterial();
@@ -501,10 +501,10 @@ export class Panel extends UiPanel<OpenData> {
         label.setTextColor(errorTips ? ColorValue.Red : ColorValue.Green);
     }
     private _updateComponentsForAiMode(): void {
-        this._labelAiMode.setText(getUnitAiModeName(this._getUnitData().getAiMode() ?? AiModeId.Normal) ?? UndefinedError);
+        this._labelAiMode.setText(getUnitAiModeName(this._getUnitData().getAiMode()) ?? UndefinedError);
     }
     private _updateComponentsForUnitTag(): void {
-        const tagIdArray        = getTagIdList(this._getUnitData().getGroupedTagId() ?? 0, true);
+        const tagIdArray        = getTagIdList(this._getUnitData().getGroupedTagId(), true);
         this._labelUnitTag.setText(tagIdArray.length <= 0 ? `--` : tagIdArray.join(`/`));
     }
     private _updateComponentsForIsDiving(): void {
@@ -520,11 +520,11 @@ export class Panel extends UiPanel<OpenData> {
             group.setIsVisible(false);
         } else {
             group.setIsVisible(true);
-            this._labelIsDiving.setText(getTextForYesOrNo(unitData.getIsDiving()));
+            this._labelIsDiving.setLangText(unitData.getIsDiving() ? TextType.Yes : TextType.No);
         }
     }
     private _updateComponentsForIsCoOnboard(): void {
-        this._labelHasLoadedCo.setText(getTextForYesOrNo(this._getUnitData().getIsCoOnboard()));
+        this._labelHasLoadedCo.setLangText(this._getUnitData().getIsCoOnboard() ? TextType.Yes : TextType.No);
     }
     private _updateComponentsForActionState(): void {
         const label = this._labelActionState;
@@ -758,7 +758,7 @@ function getErrorTipsForAddUnit({ unitData, war }: {
 
     // unitData.hasLoadedCo的值不需要检查
 
-    if (!checkIsValidEncodedTagId(unitData.getGroupedTagId() ?? 0)) {
+    if (!checkIsValidEncodedTagId(unitData.getGroupedTagId())) {
         return getFormattedText(TextType.F0091, getText(TextType.Tags));
     }
 

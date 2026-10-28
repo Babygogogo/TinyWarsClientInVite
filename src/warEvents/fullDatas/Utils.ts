@@ -310,7 +310,7 @@ export function checkAndDeleteUnusedComponents(fullData: WarEventFullData): {
 } {
     let deletedNodesCount = 0;
     for (const node of fullData.getConditionNodeArray().concat()) {
-        deletedNodesCount += checkAndDeleteUnusedNode(fullData, getExisted(node.getNodeId()), true);
+        deletedNodesCount += checkAndDeleteUnusedNode(fullData, node.getNodeId(), true);
     }
 
     let deletedConditionsCount = 0;

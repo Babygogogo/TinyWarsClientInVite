@@ -125,10 +125,10 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0461));
-        this._labelNoEvent.setText(getText(TextType.B0278));
-        this._btnDeleteAll.setText(getText(TextType.B0931));
-        this._btnDeleteRedundancy.setText(getText(TextType.B0498));
+        this._labelTitle.setLangText(TextType.B0461);
+        this._labelNoEvent.setLangText(TextType.B0278);
+        this._btnDeleteAll.setLangText(TextType.B0931);
+        this._btnDeleteRedundancy.setLangText(TextType.B0498);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();
@@ -148,7 +148,7 @@ export class Panel extends UiPanel<OpenData> {
                 gameConfig              : gameConfig,
                 selectedEventId         : selectedEventId,
                 templateWarRuleArray    : templateWarRuleArray,
-                eventId                 : getExisted(eventData?.getEventId()),
+                eventId                 : eventData?.getEventId(),
                 fullData                : fullData,
                 panel                   : this,
             });

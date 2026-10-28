@@ -81,7 +81,7 @@ export class Panel extends UiPanel<OpenData> {
         const data              = dataArray[dataIndex];
         data.normalMapId        = normalMapId;
         data.instanceWarRule    = create({
-            templateWarRule             : getExisted(mapRawData.getTemplateWarRuleArray())[0],
+            templateWarRule             : mapRawData.getTemplateWarRuleArray()[0],
             warEventFullData            : mapRawData.getWarEventFullData(),
             allMapSimpleDialogueArray   : mapRawData.getMapSimpleDialogueArray(),
             taskObjectiveFullData       : mapRawData.getTaskObjectiveFullData(),
@@ -97,14 +97,14 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const templateWarRuleArray  = mapRawData?.getTemplateWarRuleArray() ?? [];
+        const templateWarRuleArray  = mapRawData?.getTemplateWarRuleArray();
         const rulesCount            = templateWarRuleArray.length;
         if (rulesCount == 0) {
             return;
         }
 
         const ruleId            = data.instanceWarRule.getTemplateWarRuleId() ?? 0;
-        const templateWarRule   = templateWarRuleArray[(templateWarRuleArray.findIndex(v => (v.getRuleId() ?? 0) === ruleId) + 1) % rulesCount];
+        const templateWarRule   = templateWarRuleArray[(templateWarRuleArray.findIndex(v => (v.getRuleId()) === ruleId) + 1) % rulesCount];
         data.instanceWarRule    = create({
             templateWarRule             : templateWarRule,
             warEventFullData            : mapRawData.getWarEventFullData(),
@@ -219,7 +219,7 @@ export class Panel extends UiPanel<OpenData> {
         for (const mapInfo of (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? []) {
             dataArray.push({
                 mapIndex        : index++,
-                normalMapId     : mapInfo.getNormalMapId() ?? 0,
+                normalMapId     : mapInfo.getNormalMapId(),
                 instanceWarRule : getExisted(mapInfo.getInstanceWarRule()),
                 panel           : this,
             });

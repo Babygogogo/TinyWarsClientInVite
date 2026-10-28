@@ -68,14 +68,14 @@ export class FogMap implements IFogMap {
         const allMapsFromPath   = createEmptyMaps<VisibilityTypeId>(mapSize, playersCountUnneutral);
         const playerIndexSet    = new Set<number>();
         for (const d of data.getMapsFromPath()) {
-            const playerIndex = getExisted(d.getPlayerIndex(), ClientErrorCode.BwFogMap_Init_05);
+            const playerIndex = d.getPlayerIndex();
             if (playerIndexSet.has(playerIndex)) {
                 throw newError(`Duplicated playerIndex: ${playerIndex}`, ClientErrorCode.BwFogMap_Init_06);
             }
             playerIndexSet.add(playerIndex);
 
             const mapFromPath = getExisted(allMapsFromPath.get(playerIndex), ClientErrorCode.BwFogMap_Init_07);
-            resetMapFromPath(mapFromPath, mapSize, d.getVisibilityArray() ?? null);
+            resetMapFromPath(mapFromPath, mapSize, d.getVisibilityArray());
         }
 
         this._setMapSize(mapSize.clone());

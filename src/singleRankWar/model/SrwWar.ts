@@ -77,7 +77,7 @@ export class SrwWar extends SpwWar implements ISrwWar {
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getNormalMapId(): number {
-        return getExisted(this._getSettingsForSrw().getNormalMapId());
+        return this._getSettingsForSrw().getNormalMapId();
     }
 
     public getCanCheat(): boolean {

@@ -1,4 +1,3 @@
-import { DefaultParams } from "../../bootTimers/Constants.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getWarTypeId } from "../../helpers/protoSchema/warSerialization/SerialWar.ts";
@@ -32,7 +31,7 @@ export class MmwWar extends MpwWar implements IMmwWar {
         return false;
     }
     public getNormalMapId(): number {
-        return this.getSettingsForMmw().getNormalMapId() ?? 0;
+        return this.getSettingsForMmw().getNormalMapId();
     }
 
     private _setSettingsForMmw(settings: SettingsForMmw): void {
@@ -46,6 +45,6 @@ export class MmwWar extends MpwWar implements IMmwWar {
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getSettingsBootTimerParams(): number[] {
-        return this.getSettingsForMmw().getBootTimerParams() ?? DefaultParams.concat();
+        return this.getSettingsForMmw().getBootTimerParams();
     }
 }

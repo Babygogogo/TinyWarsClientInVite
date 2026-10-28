@@ -514,7 +514,7 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
 
         const languageType      = getCurrentLanguageType();
         const textArray         = getExisted(dataForDialogue.getDataForAside()?.getTextArray() || dataForDialogue.getDataForCoDialogue()?.getTextArray());
-        const textData          = textArray.find(v => (v.getLanguageType() ?? 0) === languageType);
+        const textData          = textArray.find(v => (v.getLanguageType()) === languageType);
         const currentText       = textData?.getText();
 
         openPanel(getDict().CommonInputPanel, {
@@ -556,7 +556,7 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
 
         const languageType      = getCurrentLanguageType();
         const textArray         = getExisted(dataForDialogue.getDataForAside()?.getTextArray() || dataForDialogue.getDataForCoDialogue()?.getTextArray());
-        const index             = textArray.findIndex(v => (v.getLanguageType() ?? 0) === languageType);
+        const index             = textArray.findIndex(v => (v.getLanguageType()) === languageType);
         const textData          = textArray[index];
         if (textData?.getText() != null) {
             openPanel(getDict().CommonConfirmPanel, {
@@ -577,7 +577,7 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
 
         const languageType      = getSecondaryLanguageType();
         const textArray         = getExisted(dataForDialogue.getDataForAside()?.getTextArray() || dataForDialogue.getDataForCoDialogue()?.getTextArray());
-        const textData          = textArray.find(v => (v.getLanguageType() ?? 0) === languageType);
+        const textData          = textArray.find(v => (v.getLanguageType()) === languageType);
         const currentText       = textData?.getText();
 
         openPanel(getDict().CommonInputPanel, {
@@ -619,7 +619,7 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
 
         const languageType  = getSecondaryLanguageType();
         const textArray     = getExisted(dataForDialogue.getDataForAside()?.getTextArray() || dataForDialogue.getDataForCoDialogue()?.getTextArray());
-        const index         = textArray.findIndex(v => (v.getLanguageType() ?? 0) === languageType);
+        const index         = textArray.findIndex(v => (v.getLanguageType()) === languageType);
         const textData      = textArray[index];
         if (textData?.getText() != null) {
             openPanel(getDict().CommonConfirmPanel, {
@@ -813,8 +813,8 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
 
         {
             const nameArray = dataForCoDialogue?.getNameArray();
-            const name1     = nameArray?.find(v => (v.getLanguageType() ?? 0) === languageType1)?.getText() ?? `--`;
-            const name2     = nameArray?.find(v => (v.getLanguageType() ?? 0) === languageType2)?.getText() ?? `--`;
+            const name1     = nameArray?.find(v => (v.getLanguageType()) === languageType1)?.getText() ?? `--`;
+            const name2     = nameArray?.find(v => (v.getLanguageType()) === languageType2)?.getText() ?? `--`;
             this._labelCustomName.setText(`${name1}\n${name2}`);
         }
 

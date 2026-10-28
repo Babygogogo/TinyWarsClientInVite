@@ -112,10 +112,10 @@ export class Panel extends UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1277));
-        this._btnClose.setText(getText(TextType.B0154));
-        this._btnConfirm.setText(getText(TextType.B0520));
-        this._btnDownload.setText(getText(TextType.B1179));
+        this._labelTitle.setLangText(TextType.B1277);
+        this._btnClose.setLangText(TextType.B0154);
+        this._btnConfirm.setLangText(TextType.B0520);
+        this._btnDownload.setLangText(TextType.B1179);
     }
 
     private async _initListVersion(): Promise<void> {

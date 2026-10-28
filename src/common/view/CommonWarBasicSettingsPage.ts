@@ -195,7 +195,7 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
 
         } else if (settingsType === BasicSettingsTypeId.WarEvent) {
             const warEventFullData  = openData.warEventFullData;
-            const warEventIdArray   = openData.instanceWarRule.getWarEventFullData()?.getEventArray().map(v => getExisted(v.getEventId())) ?? [];
+            const warEventIdArray   = openData.instanceWarRule.getWarEventFullData()?.getEventArray().map(v => v.getEventId()) ?? [];
             if ((warEventFullData) && (warEventIdArray?.length)) {
                 openPanel(getDict().CommonWarEventListPanel, {
                     warEventFullData,
@@ -308,7 +308,7 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         const labelValue        = this._labelValue;
         const templateWarRuleId = instanceWarRule?.getTemplateWarRuleId();
         if (templateWarRuleId == null) {
-            labelValue.setText(getText(TextType.B0321));
+            labelValue.setLangText(TextType.B0321);
             labelValue.setTextColor(0xFFFF00);
         } else {
             labelValue.setText(`(#${templateWarRuleId}) ${getLanguageText({ textArray : instanceWarRule?.getRuleNameArray() }) ?? UndefinedError}`);
@@ -320,7 +320,7 @@ class SettingsRenderer extends UiListItemRenderer<DataForSettingsRenderer> {
         const openData          = this.getOpenData();
         const hasFog            = openData?.instanceWarRule.getWarRuleCommonData()?.getHasFogByDefault();
         const labelValue        = this._labelValue;
-        labelValue.setText(getText(hasFog ? TextType.Yes : TextType.No));
+        labelValue.setLangText(hasFog ? TextType.Yes : TextType.No);
         labelValue.setTextColor(hasFog ? 0xFFFF00 : 0xFFFFFF);
         this._btnHelp.setIsVisible(true);
     }

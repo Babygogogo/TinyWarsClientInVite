@@ -46,7 +46,7 @@ export function getBriefDesc(data: Undefinable<WeaAddUnitBuffSimple>): string | 
     return getFormattedText(
         TextType.F0260,
         getText(TextType.Units),
-        getUnitBuffName(data.getActBuffType() ?? 0)
+        getUnitBuffName(data.getActBuffType())
     );
 }
 export function getDetailDesc(data: Undefinable<WeaAddUnitBuffSimple>): string | null {
@@ -83,7 +83,7 @@ export function getDetailDesc(data: Undefinable<WeaAddUnitBuffSimple>): string |
     const actTextArray: string[] = [];
     {
         {
-            const act = data.getActBuffType() ?? 0;
+            const act = data.getActBuffType();
             actTextArray.push(`- ${getText(TextType.AbnormalStateTypeId)}: ${getUnitBuffName(act)}`);
         }
         {
@@ -150,7 +150,7 @@ export function getErrorTip(
         }
     }
 
-    const actBuffTypeId = data.getActBuffType() ?? 0;
+    const actBuffTypeId = data.getActBuffType();
     {
         if ((actBuffTypeId != null)                                     &&
             (!checkIsValidTypeId(actBuffTypeId))

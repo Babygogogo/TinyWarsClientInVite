@@ -115,7 +115,7 @@ export function openMultiPlayerModePanel(currentMode: ModeId): void {
         ],
         currentNumber           : currentMode,
         keepOrder               : true,
-        getTitleText            : () => getText(TextType.B1013) ?? UndefinedError,
+        getTitleText            : () => getText(TextType.B1013),
         getNumberMainText           : mode => getGameModeName(mode) ?? UndefinedError,
         getNumberHelpText       : mode => getGameModeHelpText(mode) ?? UndefinedError,
         checkIsNumberRed        : mode => {

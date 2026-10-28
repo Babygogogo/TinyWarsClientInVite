@@ -388,7 +388,7 @@ export class Panel extends UiPanel<OpenData> {
         const label = this._labelTitle;
         if (war instanceof getRwWarClass()) {
             if (war.getSettingsForSrw()) {
-                label.setText(`${getText(TextType.B1115)}`);
+                label.setLangText(TextType.B1115);
             } else {
                 label.setText(`${getText(TextType.B0710)} #${war.getReplayId()}`);
             }
@@ -1052,28 +1052,28 @@ function getBannedCoCategoryIdArray(war: IBwWar, playerIndex: number): number[] 
 }
 function getBannedCoIdArray(war: IBwWar, playerIndex: number): number[] | null {
     if (war instanceof getAtwWarClass()) {
-        return war.getSettingsForAtw().getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex() ?? 0) === playerIndex)?.getBannedCoIdArray() ?? [];
+        return war.getSettingsForAtw().getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex()) === playerIndex)?.getBannedCoIdArray() ?? [];
     } else if (war instanceof getMrwWarClass()) {
-        return war.getSettingsForMrw().getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex() ?? 0) === playerIndex)?.getBannedCoIdArray() ?? [];
+        return war.getSettingsForMrw().getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex()) === playerIndex)?.getBannedCoIdArray() ?? [];
     } else if (war instanceof getMmwWarClass()) {
-        return war.getSettingsForMmw().getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex() ?? 0) === playerIndex)?.getBannedCoIdArray() ?? [];
+        return war.getSettingsForMmw().getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex()) === playerIndex)?.getBannedCoIdArray() ?? [];
     } else if (war instanceof getRwWarBaseClass()) {
         {
             const settingsForAtw = war.getSettingsForAtw();
             if (settingsForAtw) {
-                return settingsForAtw.getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex() ?? 0) === playerIndex)?.getBannedCoIdArray() ?? [];
+                return settingsForAtw.getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex()) === playerIndex)?.getBannedCoIdArray() ?? [];
             }
         }
         {
             const settingsForMrw = war.getSettingsForMrw();
             if (settingsForMrw) {
-                return settingsForMrw.getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex() ?? 0) === playerIndex)?.getBannedCoIdArray() ?? [];
+                return settingsForMrw.getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex()) === playerIndex)?.getBannedCoIdArray() ?? [];
             }
         }
         {
             const settingsForMmw = war.getSettingsForMmw();
             if (settingsForMmw) {
-                return settingsForMmw.getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex() ?? 0) === playerIndex)?.getBannedCoIdArray() ?? [];
+                return settingsForMmw.getDataArrayForBanCo().find(v => (v.getSrcPlayerIndex()) === playerIndex)?.getBannedCoIdArray() ?? [];
             }
         }
         return null;

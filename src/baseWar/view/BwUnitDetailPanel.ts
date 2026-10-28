@@ -227,7 +227,7 @@ export class Panel extends UiPanel<OpenData> {
                 if (num === 0) {
                     return `(${getText(TextType.B0391)})`;
                 } else {
-                    return getLanguageText({ textArray: arr?.find(v => (v.getNameId() ?? 0) === num)?.getNameTextArray() ?? [] }) ?? `----`;
+                    return getLanguageText({ textArray: arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() ?? [] }) ?? `----`;
                 }
             },
             callbackForSettings     : () => {
@@ -1179,7 +1179,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         this._labelTitle.setLangText(TextType.CoOnboard);
-        this._labelValue.setText(openData.unit.getIsCoOnboard() ? getText(TextType.Yes) : getText(TextType.No));
+        this._labelValue.setLangText(openData.unit.getIsCoOnboard() ? TextType.Yes : TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible(checkCanCheatInWar(openData.war.getWarType()));
     }
@@ -1205,7 +1205,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
 
         const unit = openData.unit;
         this._labelTitle.setText(`${getText(TextType.B0371)} ?`);
-        this._labelValue.setText(unit.getIsDiving() ? getText(TextType.Yes) : getText(TextType.No));
+        this._labelValue.setLangText(unit.getIsDiving() ? TextType.Yes : TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((checkCanCheatInWar(openData.war.getWarType())) && (unit.checkIsDiver()));
     }
@@ -1381,7 +1381,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
             return;
         }
 
-        const locationIdArray       = decode(openData.unit.getForbiddenGroupedLocationIdArray() ?? []);
+        const locationIdArray       = decode(openData.unit.getForbiddenGroupedLocationIdArray());
         this._labelTitle.setLangText(TextType.NoEntryLocations);
         this._labelValue.setText(!locationIdArray.length ? `--` : locationIdArray.join(`/`));
         this._groupTouchModify.setIsVisible(checkCanCheatInWar(openData.war.getWarType()));
@@ -1393,7 +1393,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
             return;
         }
 
-        const buffsCount            = openData.unit.getBuffList()?.length ?? 0;
+        const buffsCount            = openData.unit.getBuffList()?.length;
         this._labelTitle.setLangText(TextType.AbnormalStates);
         this._labelValue.setText(`${buffsCount > 0 ? buffsCount : `--`}`);
         this._groupTouchModify.setIsVisible(checkCanCheatInWar(openData.war.getWarType()));
@@ -1518,7 +1518,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const minValue  = 0;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.BuildMaterial),
-            currentValue    : unit.getCurrentBuildMaterial() ?? 0,
+            currentValue    : unit.getCurrentBuildMaterial(),
             minValue,
             maxValue,
             callback        : value => {
@@ -1545,7 +1545,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const minValue      = 0;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.FlareAmmo),
-            currentValue    : unit.getFlareCurrentAmmo() ?? 0,
+            currentValue    : unit.getFlareCurrentAmmo(),
             minValue,
             maxValue,
             callback        : value => {
@@ -1681,7 +1681,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const minValue  = 0;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle        : () => getText(TextType.PrimaryWeaponAmmo),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : minValue,
             maxValue        : maxValue,
             callback        : value => {
@@ -1709,7 +1709,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const minValue  = 0;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle        : () => getText(TextType.ProductionMaterial),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : minValue,
             maxValue        : maxValue,
             callback        : value => {
@@ -1743,7 +1743,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const minValue  = 0;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.Promotion),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue,
             maxValue,
             callback        : value => {

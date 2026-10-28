@@ -86,7 +86,7 @@ function runPhaseHandleUnitBuffEffect(turnManager: ITurnManager, isFastExecute: 
         }
 
         let isModified = false;
-        for (const buff of unit.getBuffList() ?? []) {
+        for (const buff of unit.getBuffList()) {
             const buffTypeId = buff.getBuffTypeId();
             if (buffTypeId === BuffTypeId.Fire) {
                 isModified = true;
@@ -158,8 +158,8 @@ function runPhaseRecoverUnitByCo(turnManager: ITurnManager, isFastExecute: boole
 
             {
                 const recoverCfg = skillCfg?.getInstantPeriodic()?.getSelfHpRecovery();
-                if ((recoverCfg) && ((recoverCfg.getTiming() ?? 0) === timing)) {
-                    const loadedState       = recoverCfg.getUnitLoadedStateId() ?? 0;
+                if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
+                    const loadedState       = recoverCfg.getUnitLoadedStateId();
                     const unitActionStateId = recoverCfg.getUnitActionStateId();
                     const tileCategoryId    = recoverCfg.getTileCategoryId();
                     const conNeedOwnTile    = recoverCfg.getConNeedOwnTile();
@@ -168,11 +168,11 @@ function runPhaseRecoverUnitByCo(turnManager: ITurnManager, isFastExecute: boole
                         const unitType      = unit.getUnitType();
                         const unitGridIndex = unit.getGridIndex();
                         if ((unit.getPlayerIndex() !== playerIndex)                                                 ||
-                            (!gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId() ?? 0))  ||
+                            (!gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))  ||
                             (!unit.checkIsMeetLoadedState(loadedState))                                             ||
                             ((unitActionStateId != null) && (unit.getActionState() !== unitActionStateId))          ||
                             (!unitGridIndex.checkIsInsideCoSkillArea({
-                                coSkillAreaType             : recoverCfg.getCoSkillAreaTypeId() ?? 0,
+                                coSkillAreaType             : recoverCfg.getCoSkillAreaTypeId(),
                                 coZoneRadius                : coZoneRadius,
                                 getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
                             }))
@@ -190,8 +190,8 @@ function runPhaseRecoverUnitByCo(turnManager: ITurnManager, isFastExecute: boole
                         targetUnits.push(unit);
                     }
 
-                    const recoverAmount         = recoverCfg.getHpGain() ?? 0;
-                    const recoverCostModifier   = (recoverCfg.getCostMultiplierPct() ?? 0) / 100;
+                    const recoverAmount         = recoverCfg.getHpGain();
+                    const recoverCostModifier   = (recoverCfg.getCostMultiplierPct()) / 100;
                     for (const unit of targetUnits.sort(sorterForRepairUnits)) {
                         const normalizedMaxHp       = unit.getNormalizedMaxHp();
                         const normalizedCurrentHp   = unit.getNormalizedCurrentHp();
@@ -242,23 +242,23 @@ function runPhaseRecoverUnitByCo(turnManager: ITurnManager, isFastExecute: boole
 
             {
                 const recoverCfg = skillCfg?.getInstantPeriodic()?.getSelfFuelRecovery();
-                if ((recoverCfg) && ((recoverCfg.getTiming() ?? 0) === timing)) {
-                    const loadedState   = recoverCfg.getUnitLoadedStateId() ?? 0;
+                if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
+                    const loadedState   = recoverCfg.getUnitLoadedStateId();
                     for (const unit of unitMap.getAllUnits()) {
                         const unitType      = unit.getUnitType();
                         const unitGridIndex = unit.getGridIndex();
                         if ((unit.getPlayerIndex() === playerIndex)                                                 &&
-                            (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId() ?? 0))   &&
+                            (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))   &&
                             (unit.checkIsMeetLoadedState(loadedState))                                              &&
                             (unitGridIndex.checkIsInsideCoSkillArea({
-                                coSkillAreaType             : recoverCfg.getCoSkillAreaTypeId() ?? 0,
+                                coSkillAreaType             : recoverCfg.getCoSkillAreaTypeId(),
                                 coZoneRadius                : coZoneRadius,
                                 getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
                             }))
                         ) {
                             const maxFuel       = unit.getMaxFuel();
                             const currentFuel   = unit.getCurrentFuel();
-                            const offsetFuel    = Math.min(Math.floor(maxFuel * (recoverCfg.getFuelGainPct() ?? 0) / 100), maxFuel - currentFuel);
+                            const offsetFuel    = Math.min(Math.floor(maxFuel * (recoverCfg.getFuelGainPct()) / 100), maxFuel - currentFuel);
                             unit.addCurrentFuel(offsetFuel);
 
                             if ((!isFastExecute) && (visibleUnits?.has(unit))) {
@@ -273,24 +273,24 @@ function runPhaseRecoverUnitByCo(turnManager: ITurnManager, isFastExecute: boole
 
             {
                 const recoverCfg = skillCfg?.getInstantPeriodic()?.getSelfPrimaryAmmoRecovery();
-                if ((recoverCfg) && ((recoverCfg.getTiming() ?? 0) === timing)) {
-                    const loadedState   = recoverCfg.getUnitLoadedStateId() ?? 0;
+                if ((recoverCfg) && ((recoverCfg.getTiming()) === timing)) {
+                    const loadedState   = recoverCfg.getUnitLoadedStateId();
                     for (const unit of unitMap.getAllUnits()) {
                         const unitType      = unit.getUnitType();
                         const unitGridIndex = unit.getGridIndex();
                         if ((unit.getPlayerIndex() === playerIndex)                                                 &&
-                            (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId() ?? 0))   &&
+                            (gameConfig.checkIsUnitTypeInCategory(unitType, recoverCfg.getUnitCategoryId()))   &&
                             (unit.checkIsMeetLoadedState(loadedState))                                              &&
                             (unitGridIndex.checkIsInsideCoSkillArea({
-                                coSkillAreaType             : recoverCfg.getCoSkillAreaTypeId() ?? 0,
+                                coSkillAreaType             : recoverCfg.getCoSkillAreaTypeId(),
                                 coZoneRadius                : coZoneRadius,
                                 getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
                             }))
                         ) {
                             const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
                             if (maxAmmo) {
-                                const currentAmmo               = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.BwTurnManager_RunPhaseRecoverUnitByCoWithoutExtraData_00);
-                                const offsetPrimaryWeaponAmmo   = Math.min(Math.floor(maxAmmo * (recoverCfg.getAmmoGainPct() ?? 0) / 100), maxAmmo - currentAmmo);
+                                const currentAmmo               = unit.getPrimaryWeaponCurrentAmmo();
+                                const offsetPrimaryWeaponAmmo   = Math.min(Math.floor(maxAmmo * (recoverCfg.getAmmoGainPct()) / 100), maxAmmo - currentAmmo);
                                 unit.addAndValidatePrimaryWeaponCurrentAmmo(offsetPrimaryWeaponAmmo);
 
                                 if ((!isFastExecute) && (visibleUnits?.has(unit))) {
@@ -632,7 +632,7 @@ function runPhaseHandleUnitBuffEffect2(turnManager: ITurnManager, isFastExecute:
         }
 
         let isModified = false;
-        for (const buff of unit.getBuffList() ?? []) {
+        for (const buff of unit.getBuffList()) {
             const buffTypeId = buff.getBuffTypeId();
             if (buffTypeId === BuffTypeId.Disease) {
                 isModified = true;
@@ -826,7 +826,7 @@ async function handleMapWeaponTileCrystal(war: IBwWar, tile: IBwTile, isFastExec
                     if (deltaPrimaryAmmoPercentage) {
                         const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
                         if (maxAmmo != null) {
-                            const currentAmmo = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileCrystal_02);
+                            const currentAmmo = unit.getPrimaryWeaponCurrentAmmo();
                             if (deltaPrimaryAmmoPercentage < 0) {
                                 unit.addAndValidatePrimaryWeaponCurrentAmmo(currentAmmo * deltaPrimaryAmmoPercentage / 100);
                             } else {
@@ -951,7 +951,7 @@ async function handleMapWeaponTileCannon(war: IBwWar, tile: IBwTile, isFastExecu
             if (deltaPrimaryAmmoPercentage) {
                 const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
                 if (maxAmmo != null) {
-                    const currentAmmo = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileCannon_01);
+                    const currentAmmo = unit.getPrimaryWeaponCurrentAmmo();
                     if (deltaPrimaryAmmoPercentage < 0) {
                         unit.addAndValidatePrimaryWeaponCurrentAmmo(currentAmmo * deltaPrimaryAmmoPercentage / 100);
                     } else {
@@ -1112,7 +1112,7 @@ async function handleMapWeaponTileLaserTurret(war: IBwWar, tile: IBwTile, isFast
                 if (deltaPrimaryAmmoPercentage) {
                     const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
                     if (maxAmmo != null) {
-                        const currentAmmo = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.BwTurnManager_HandleMapWeaponTileCrystal_01);
+                        const currentAmmo = unit.getPrimaryWeaponCurrentAmmo();
                         if (deltaPrimaryAmmoPercentage < 0) {
                             unit.addAndValidatePrimaryWeaponCurrentAmmo(currentAmmo * deltaPrimaryAmmoPercentage / 100);
                         } else {

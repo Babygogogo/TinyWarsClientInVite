@@ -89,7 +89,7 @@ export class Panel extends UiPanel<OpenData>{
         for (const dialogueData of war.getInstanceWarRule().getMapSimpleDialogueArray()) {
             dataArrayForListRepeatable.push({
                 war         : war,
-                dialogueId  : dialogueData.getDialogueId() ?? 0,
+                dialogueId  : dialogueData.getDialogueId(),
                 actionId    : null,
             });
         }

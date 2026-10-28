@@ -120,7 +120,7 @@ export class Panel extends UiPanel<OpenData> {
                 if (num === 0) {
                     return `(${getText(TextType.B0391)})`;
                 } else {
-                    return getLanguageText({ textArray: arr?.find(v => (v.getNameId() ?? 0) === num)?.getNameTextArray() }) ?? `----`;
+                    return getLanguageText({ textArray: arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() }) ?? `----`;
                 }
             },
             callbackOnConfirm       : num => {
@@ -170,7 +170,7 @@ export class Panel extends UiPanel<OpenData> {
             label.setText(`(${getText(TextType.B0391)})`);
         } else {
             label.setText(getLanguageText({
-                textArray   : this.getOpenData()?.war.getUnitMap().getUnitCustomNameArray()?.find(v => (v.getNameId() ?? 0) === customNameId)?.getNameTextArray(),
+                textArray   : this.getOpenData()?.war.getUnitMap().getUnitCustomNameArray()?.find(v => (v.getNameId()) === customNameId)?.getNameTextArray(),
             }) ?? `----`);
         }
     }

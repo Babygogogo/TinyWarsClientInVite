@@ -267,7 +267,7 @@ export class Panel extends UiPanel<OpenData> {
             const newDataArray          = dataArray?.filter(v => {
                 const existingData = v?.dataForDrawTileBase;
                 return (existingData == null) || (existingData.baseType !== dataForDrawTileBase.baseType) || (existingData.shapeId !== dataForDrawTileBase.shapeId);
-            }) ?? [];
+            });
             newDataArray.splice(0, 0, {
                 war                         : war,
                 dataForDrawTileBase         : dataForDrawTileBase,
@@ -284,7 +284,7 @@ export class Panel extends UiPanel<OpenData> {
             const newDataArray              = dataArray?.filter(v => {
                 const existingData  = v.dataForDrawTileDecoration;
                 return (existingData == null) || (existingData.decorationType !== dataForDrawTileDecoration.decorationType) || (existingData.shapeId !== dataForDrawTileDecoration.shapeId);
-            }) ?? [];
+            });
             newDataArray.splice(0, 0, {
                 war                         : war,
                 dataForDrawTileBase         : null,
@@ -304,7 +304,7 @@ export class Panel extends UiPanel<OpenData> {
                     || (existingData.objectType !== dataForDrawTileObject.objectType)
                     || (existingData.shapeId !== dataForDrawTileObject.shapeId)
                     || (existingData.playerIndex !== dataForDrawTileObject.playerIndex);
-            }) ?? [];
+            });
             newDataArray.splice(0, 0, {
                 war                         : war,
                 dataForDrawTileBase         : null,
@@ -323,7 +323,7 @@ export class Panel extends UiPanel<OpenData> {
             const newDataArray  = dataArray?.filter(v => {
                 const existingData = v.dataForDrawUnit;
                 return (existingData == null) || (existingData.playerIndex !== playerIndex) || (existingData.unitType !== unitType);
-            }) ?? [];
+            });
             newDataArray.splice(0, 0, {
                 war                         : war,
                 dataForDrawTileBase         : null,
@@ -869,13 +869,13 @@ export class Panel extends UiPanel<OpenData> {
 
             const data = getExisted(drawer.getDataForPasteTile());
             tileView.init({
-                tileBaseShapeId         : data.getBaseShapeId() ?? 0,
-                tileBaseType            : data.getBaseType() ?? 0,
-                tileDecorationType      : data.getDecorationType() ?? 0,
-                tileDecorationShapeId   : data.getDecorationShapeId() ?? 0,
-                tileObjectShapeId       : data.getObjectShapeId() ?? 0,
-                tileObjectType          : data.getObjectType() ?? 0,
-                skinId                  : getDefaultSkinId(data.getPlayerIndex() ?? 0),
+                tileBaseShapeId         : data.getBaseShapeId(),
+                tileBaseType            : data.getBaseType(),
+                tileDecorationType      : data.getDecorationType(),
+                tileDecorationShapeId   : data.getDecorationShapeId(),
+                tileObjectShapeId       : data.getObjectShapeId(),
+                tileObjectType          : data.getObjectType(),
+                skinId                  : getDefaultSkinId(data.getPlayerIndex()),
                 overridingSkinId        : undefined,
                 gameConfig              : gameConfig,
             });

@@ -235,7 +235,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
         minValue    : MinValue,
         maxValue    : MaxValue,
         rawValue    : (
-            ((war.getFogMap().checkHasFogCurrently() ? aiProductionScoreCfg.getBaseFog() : aiProductionScoreCfg.getBaseStd()) ?? 0)       +
+            ((war.getFogMap().checkHasFogCurrently() ? aiProductionScoreCfg.getBaseFog() : aiProductionScoreCfg.getBaseStd()))       +
             war.getWarEventManager().getOpaAiUnitProductionBonusScore(playerIndexInTurn, producingUnitType, producingGridIndex)
         ) || 0,
     });
@@ -276,7 +276,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
     producingUnit.startRunning(war);
 
     const productionCost = producingUnit.getProductionFinalCost(
-        (effectiveCoSkill == null ? 1 : ((effectiveCoSkill.getCostMultiplierPct() ?? 0) / 100)) *
+        (effectiveCoSkill == null ? 1 : ((effectiveCoSkill.getCostMultiplierPct()) / 100)) *
         getNormalizedHp(producingUnitHp)                                                 /
         getNormalizedHp(Hp.MaxHp)
     );
@@ -365,7 +365,7 @@ async function getScoreForActionPlayerProduceUnit({ commonParams, producingGridI
     }
 
     {
-        const cfg = aiProductionScoreCfg.getBonusForTooFewHp() ?? [];
+        const cfg = aiProductionScoreCfg.getBonusForTooFewHp();
         if ((cfg.length === 2) && (existingTotalHp < cfg[1])) {
             score += cfg[0];
         }

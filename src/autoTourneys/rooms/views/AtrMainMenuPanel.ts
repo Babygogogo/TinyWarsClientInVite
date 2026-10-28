@@ -118,7 +118,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().SpmMainMenuPanel, void 0);
     }
     private async _onTouchedBtnRegister(): Promise<void> {
-        const tourneyIdArray = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
+        const tourneyIdArray = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId());
         if (tourneyIdArray.length <= 0) {
             showLang(TextType.A0403);
         } else {
@@ -143,7 +143,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().MpwMyWarListPanel, void 0);
     }
     private async _onTouchedBtnPreviewMaps(): Promise<void> {
-        const tourneyIdArray = (await getAtPhaseInfo())?.infoArray.map(v => v.getTourneyId() ?? 0) ?? [];
+        const tourneyIdArray = (await getAtPhaseInfo())?.infoArray.map(v => v.getTourneyId()) ?? [];
         if (tourneyIdArray.length <= 0) {
             showLang(TextType.B0278);
             return;
@@ -207,16 +207,16 @@ export class Panel extends UiPanel<OpenData> {
         const languageType2 = getSecondaryLanguageType();
         this._labelMode1.setText(`${getText(TextType.B1378)}\n${getText(TextType.B1379)}: ${getText(TextType.B1022)}`);
         this._labelMode2.setText(`${getText(TextType.B1378, languageType2)}\n${getText(TextType.B1379, languageType2)}: ${getText(TextType.B1022, languageType2)}`);
-        this._labelRegister1.setText(getText(TextType.B1380));
-        this._labelRegister2.setText(getText(TextType.B1380, languageType2));
-        this._labelMyRoom1.setText(getText(TextType.B0410));
-        this._labelMyRoom2.setText(getText(TextType.B0410, languageType2));
-        this._labelContinueWar1.setText(getText(TextType.B0024));
-        this._labelContinueWar2.setText(getText(TextType.B0024, languageType2));
-        this._labelPreviewMaps1.setText(getText(TextType.B0594));
-        this._labelPreviewMaps2.setText(getText(TextType.B0594, languageType2));
-        this._labelTourneyInfo1.setText(getText(TextType.B1381));
-        this._labelTourneyInfo2.setText(getText(TextType.B1381, languageType2));
+        this._labelRegister1.setLangText(TextType.B1380);
+        this._labelRegister2.setLangText(TextType.B1380, languageType2);
+        this._labelMyRoom1.setLangText(TextType.B0410);
+        this._labelMyRoom2.setLangText(TextType.B0410, languageType2);
+        this._labelContinueWar1.setLangText(TextType.B0024);
+        this._labelContinueWar2.setLangText(TextType.B0024, languageType2);
+        this._labelPreviewMaps1.setLangText(TextType.B0594);
+        this._labelPreviewMaps2.setLangText(TextType.B0594, languageType2);
+        this._labelTourneyInfo1.setLangText(TextType.B1381);
+        this._labelTourneyInfo2.setLangText(TextType.B1381, languageType2);
 
         this._layoutMode.arrangeItems();
         this._layoutRegister.arrangeItems();

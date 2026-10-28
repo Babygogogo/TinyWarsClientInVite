@@ -1,5 +1,5 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
-import { TextType, UndefinedError } from "../lang/Constants.ts";
+import { TextType } from "../lang/Constants.ts";
 import { getFormattedText } from "../lang/Utils.ts";
 import type { ValueArrayAndPredicate } from "../proto/schema/CommonProto/Structure/ValueArrayAndPredicate.ts";
 
@@ -7,7 +7,7 @@ export function getDesc(data: ValueArrayAndPredicate, valueName: string, getValu
     return getFormattedText(
         data.getIsOneOf() ? TextType.F0228 : TextType.F0229,
         valueName,
-        data.getValueArray()?.map(v => getValueText(v)).join(`, `) ?? UndefinedError
+        data.getValueArray()?.map(v => getValueText(v)).join(`, `)
     );
 }
 

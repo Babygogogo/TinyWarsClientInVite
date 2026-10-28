@@ -39,8 +39,8 @@ export function getBriefDesc(data: Undefinable<WecCustomCounter>): string | null
         TextType.F0111,
         textForCounterIdArray,
         textArrayForSubConditions.length ? textArrayForSubConditions.map(v => `${getText(TextType.B0783)}${v}`).join(``) : ``,
-        getComparatorName(getExisted(data.getCounterCountComparator())),
-        data.getCounterCount() ?? UndefinedError,
+        getComparatorName(data.getCounterCountComparator()),
+        data.getCounterCount(),
     );
 }
 export function getDetailedDesc(data: Undefinable<WecCustomCounter>): string | null {
@@ -144,7 +144,7 @@ export function checkIsValid(condition: Undefinable<WecCustomCounter>): boolean 
 }
 
 export function checkIsMeet(condition: WecCustomCounter, war: IBwWar): boolean {
-    const counterIdArray        = condition.getCounterIdArray() ?? [];
+    const counterIdArray        = condition.getCounterIdArray();
     const targetValue           = condition.getValue();
     const valueComparator       = getExisted(condition.getValueComparator(), ClientErrorCode.BwWarEventManager_CheckIsMeetConCustomCounter_00);
     const valueDivider          = condition.getValueDivider();
@@ -183,8 +183,8 @@ export function checkIsMeet(condition: WecCustomCounter, war: IBwWar): boolean {
     }
 
     return checkIsMeet1({
-        comparator  : getExisted(condition.getCounterCountComparator(), ClientErrorCode.BwWarEventManager_CheckIsMeetConCustomCounter_02),
-        targetValue : getExisted(condition.getCounterCount(), ClientErrorCode.BwWarEventManager_CheckIsMeetConCustomCounter_03),
+        comparator  : condition.getCounterCountComparator(),
+        targetValue : condition.getCounterCount(),
         actualValue : counter,
     });
 }

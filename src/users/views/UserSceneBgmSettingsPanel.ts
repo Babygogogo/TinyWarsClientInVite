@@ -3,7 +3,7 @@ import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getBgmSfxName } from "../../lang/Utils.ts";
+import { getBgmSfxName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -116,9 +116,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1286));
-        this._labelLobby.setText(getText(TextType.B1288));
-        this._labelMapEditor.setText(getText(TextType.B0271));
+        this._labelTitle.setLangText(TextType.B1286);
+        this._labelLobby.setLangText(TextType.B1288);
+        this._labelMapEditor.setLangText(TextType.B0271);
 
         this._layoutLobby.arrangeItems();
         this._layoutMapEditor.arrangeItems();

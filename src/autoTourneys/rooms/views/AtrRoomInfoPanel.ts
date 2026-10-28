@@ -200,7 +200,7 @@ export class Panel extends UiPanel<OpenData> {
                 ),
             currentCoCategoryIdArray       : [],
             forceUnchosenCoCategoryIdArray : null,
-            maxChooseCount                 : gcData.getSystemCfg().getMaxBanCoNumber() ?? 0,
+            maxChooseCount                 : gcData.getSystemCfg().getMaxBanCoNumber(),
             isBan                          : true,
             getTitleText                   : () => getText(TextType.B0590),
             callbackOnConfirm              : bannedCoCategoryIdArray => {
@@ -213,7 +213,7 @@ export class Panel extends UiPanel<OpenData> {
                         ),
                     callback : () => reqAtrSetBannedCoIdArray(
                         roomId,
-                        bannedCoCategoryIdArray.map(v => getExisted(gcData.getEnabledCoIdByCategoryId(v) ?? gcData.getCoIdByCategoryId(v)))
+                        bannedCoCategoryIdArray.map(v => (gcData.getEnabledCoIdByCategoryId(v) ?? gcData.getCoIdByCategoryId(v)))
                     ),
                 });
             },
@@ -590,7 +590,7 @@ export class Panel extends UiPanel<OpenData> {
             labelCountdown.setText(getTimeDurationText2(Math.max(0, timeForStartSetSelfSettings + MultiRankedWarConstants.RoomPhaseTime - currentTime)));
         } else {
             labelCountdownTitle.setLangText(TextType.B0592);
-            labelCountdown.setText(getTimeDurationText2(Math.max(0, getExisted(roomInfo.getTimeForCreateRoom()) + MultiRankedWarConstants.RoomPhaseTime - currentTime)));
+            labelCountdown.setText(getTimeDurationText2(Math.max(0, roomInfo.getTimeForCreateRoom() + MultiRankedWarConstants.RoomPhaseTime - currentTime)));
         }
         this._layoutCountdown.arrangeItems();
         this._groupState.arrangeItems();
@@ -614,15 +614,9 @@ export class Panel extends UiPanel<OpenData> {
         const playerData    = getExisted(roomInfo.getPlayerDataList().find(v => v.getUserId() === userId));
         const playerIndex   = playerData.getPlayerIndex();
         if (roomInfo.getTimeForStartSetSelfSettings() == null) {
-            labelState.setText(roomInfo.getSettingsForAtw()?.getDataArrayForBanCo().some(v => v.getSrcPlayerIndex() === playerIndex)
-                ? getText(TextType.A0133)
-                : getText(TextType.A0210)
-            );
+            labelState.setLangText(roomInfo.getSettingsForAtw()?.getDataArrayForBanCo().some(v => v.getSrcPlayerIndex() === playerIndex) ? TextType.A0133 : TextType.A0210);
         } else {
-            labelState.setText(playerData.getIsReady()
-                ? getText(TextType.A0134)
-                : getText(TextType.A0211)
-            );
+            labelState.setLangText(playerData.getIsReady() ? TextType.A0134 : TextType.A0211);
         }
         groupState.arrangeItems();
     }

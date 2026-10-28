@@ -32,7 +32,7 @@ export function getTotalOffset({
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
+            coSkillAreaType             : cfg.getCoSkillAreaTypeId(),
             coZoneRadius                : coZoneRadius,
             getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
         }))
@@ -40,7 +40,7 @@ export function getTotalOffset({
         return { lower: 0, upper: 0 };
     }
 
-    return { lower: cfg.getLowerOffset() ?? 0, upper: cfg.getUpperOffset() ?? 0 };
+    return { lower: cfg.getLowerOffset(), upper: cfg.getUpperOffset() };
 }
 export function getTotalOffsetForDamageCalculatorPanel({
     cfg,
@@ -62,5 +62,5 @@ export function getTotalOffsetForDamageCalculatorPanel({
         }
     }
 
-    return { lower: cfg.getLowerOffset() ?? 0, upper: cfg.getUpperOffset() ?? 0 };
+    return { lower: cfg.getLowerOffset(), upper: cfg.getUpperOffset() };
 }

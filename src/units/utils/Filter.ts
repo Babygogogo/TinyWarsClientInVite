@@ -190,7 +190,7 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
 
     {
         const con = data.getConForbiddenLocationId();
-        if ((con != null) && (!ValueSetAndRelationsUtilsCheckIsMeet(con, unit.getForbiddenLocationIdArray() ?? []))) {
+        if ((con != null) && (!ValueSetAndRelationsUtilsCheckIsMeet(con, unit.getForbiddenLocationIdArray()))) {
             return false;
         }
     }
@@ -230,7 +230,7 @@ export function checkIsMeet(data: UnitFilter, unit: IUnit): boolean {
     {
         const con = data.getConBuffTypeId();
         if ((con != null)                                                                                       &&
-            (!ValueSetAndRelationsUtilsCheckIsMeet(con, unit.getBuffList()?.map(v => v.getBuffTypeId()) ?? []))
+            (!ValueSetAndRelationsUtilsCheckIsMeet(con, unit.getBuffList()?.map(v => v.getBuffTypeId())))
         ) {
             return false;
         }

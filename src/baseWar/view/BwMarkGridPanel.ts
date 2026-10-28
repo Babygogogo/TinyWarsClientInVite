@@ -549,24 +549,24 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateLabelPositionFilter(): void {
-        this._labelPositionFilter.setText(getText(this._positionFilter ? TextType.Yes : TextType.No));
+        this._labelPositionFilter.setLangText(this._positionFilter ? TextType.Yes : TextType.No);
     }
 
     private _updateLabelUnitFilter(): void {
-        this._labelUnitFilter.setText(getText(this._unitFilter ? TextType.Yes : TextType.No));
+        this._labelUnitFilter.setLangText(this._unitFilter ? TextType.Yes : TextType.No);
     }
 
     private _updateLabelTileFilter(): void {
-        this._labelTileFilter.setText(getText(this._tileFilter ? TextType.Yes : TextType.No));
+        this._labelTileFilter.setLangText(this._tileFilter ? TextType.Yes : TextType.No);
     }
 
     private _updateLabelInVision(): void {
         const label         = this._labelInVision;
         const isInVision    = this._isInVision;
         if (isInVision == null) {
-            label.setText(getText(TextType.B0776));
+            label.setLangText(TextType.B0776);
         } else {
-            label.setText(getText(isInVision ? TextType.Yes : TextType.No));
+            label.setLangText(isInVision ? TextType.Yes : TextType.No);
         }
     }
 

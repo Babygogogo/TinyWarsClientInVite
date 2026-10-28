@@ -954,12 +954,12 @@ export async function checkAndCreateSimulation(mapRawData: MapRawData, gridMarkD
     } else {
         openPanel(getDict().CommonChooseSingleNumberPanel, {
             currentNumber           : null,
-            availableNumberArray    : templateWarRuleArray.map(v => v.getRuleId() ?? 0),
+            availableNumberArray    : templateWarRuleArray.map(v => v.getRuleId()),
             showNumber              : true,
             getTitleText            : () => getText(TextType.B1242),
-            getNumberMainText       : ruleId => getLanguageText({ textArray: templateWarRuleArray.find(v => (v.getRuleId() ?? 0) === ruleId)?.getRuleNameArray() }) ?? UndefinedError,
+            getNumberMainText       : ruleId => getLanguageText({ textArray: templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? UndefinedError,
             callbackOnConfirm       : ruleId => {
-                const warRule = templateWarRuleArray.find(v => (v.getRuleId() ?? 0) === ruleId);
+                const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
                 if (warRule) {
                     MapEditorModelMeSimModelResetData(mapRawData, war.serializeForCreateSfwWithTemplateWarRule(warRule));
                     war.stopRunning();
@@ -1002,12 +1002,12 @@ export async function checkAndCreateMultiFreeWar(mapRawData: MapRawData): Promis
     } else {
         openPanel(getDict().CommonChooseSingleNumberPanel, {
             currentNumber           : null,
-            availableNumberArray    : templateWarRuleArray.map(v => v.getRuleId() ?? 0),
+            availableNumberArray    : templateWarRuleArray.map(v => v.getRuleId()),
             showNumber              : true,
             getTitleText            : () => getText(TextType.B1242),
-            getNumberMainText       : ruleId => getLanguageText({ textArray: templateWarRuleArray.find(v => (v.getRuleId() ?? 0) === ruleId)?.getRuleNameArray() }) ?? UndefinedError,
+            getNumberMainText       : ruleId => getLanguageText({ textArray: templateWarRuleArray.find(v => (v.getRuleId()) === ruleId)?.getRuleNameArray() }) ?? UndefinedError,
             callbackOnConfirm       : ruleId => {
-                const warRule = templateWarRuleArray.find(v => (v.getRuleId() ?? 0) === ruleId);
+                const warRule = templateWarRuleArray.find(v => (v.getRuleId()) === ruleId);
                 if (warRule) {
                     resetData(mapRawData, war.serializeForCreateMfrWithTemplateWarRule(warRule));
                     war.stopRunning();

@@ -595,16 +595,16 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTurnTitle.setText(getText(TextType.Turns));
-        this._labelActionTitle.setText(getText(TextType.B0090));
-        this._labelPauseTimeTitle.setText(getText(TextType.B0846));
-        this._labelVisionTeamTitle.setText(getText(TextType.B0891));
-        this._btnRewindAction.setText(getText(TextType.B0616));
-        this._btnRewindTurn.setText(getText(TextType.B0191));
-        this._btnForwardTurn.setText(getText(TextType.B0191));
-        this._btnForwardAction.setText(getText(TextType.B0616));
-        this._btnInfo.setText(getText(TextType.B0223));
-        this._btnMenu.setText(getText(TextType.B0155));
+        this._labelTurnTitle.setLangText(TextType.Turns);
+        this._labelActionTitle.setLangText(TextType.B0090);
+        this._labelPauseTimeTitle.setLangText(TextType.B0846);
+        this._labelVisionTeamTitle.setLangText(TextType.B0891);
+        this._btnRewindAction.setLangText(TextType.B0616);
+        this._btnRewindTurn.setLangText(TextType.B0191);
+        this._btnForwardTurn.setLangText(TextType.B0191);
+        this._btnForwardAction.setLangText(TextType.B0616);
+        this._btnInfo.setLangText(TextType.B0223);
+        this._btnMenu.setLangText(TextType.B0155);
 
         this._layoutPauseTime.arrangeItems();
         this._layoutVisionTeam.arrangeItems();

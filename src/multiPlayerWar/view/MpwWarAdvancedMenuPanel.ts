@@ -416,10 +416,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateBtnSetDraw(): void {
-        this._btnSetDraw.setText(!this.getOpenData()?.war.getDrawVoteManager().checkHasOngoingVote()
-            ? getText(TextType.B0690)
-            : getText(TextType.B0841)
-        );
+        this._btnSetDraw.setLangText(!this.getOpenData()?.war.getDrawVoteManager().checkHasOngoingVote() ? TextType.B0690 : TextType.B0841);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////

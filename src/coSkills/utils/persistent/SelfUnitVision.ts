@@ -23,7 +23,7 @@ export function getTotalRangeOffset({
         return 0;
     }
 
-    const rangeOffset = cfg.getRangeOffset() ?? 0;
+    const rangeOffset = cfg.getRangeOffset();
     if (rangeOffset === 0) {
         return 0;
     }
@@ -37,7 +37,7 @@ export function getTotalRangeOffset({
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
+            coSkillAreaType             : cfg.getCoSkillAreaTypeId(),
             coZoneRadius                : coZoneRadius,
             getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
         }))
@@ -82,7 +82,7 @@ export function checkCanSeeThrough({
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
+            coSkillAreaType             : cfg.getCoSkillAreaTypeId(),
             coZoneRadius                : coZoneRadius,
             getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
         }))

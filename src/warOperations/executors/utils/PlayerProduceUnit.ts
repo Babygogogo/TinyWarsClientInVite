@@ -94,7 +94,7 @@ function handlePlayerProduceUnit(war: IBwWar, action: WoPlayerProduceUnit, isFas
         const cfgCost           = unitTemplateCfg.getProductionCost();
         const cost              = Math.floor(
             cfgCost
-            * (skillCfg ? (skillCfg.getCostMultiplierPct() ?? 0) : 100)
+            * (skillCfg ? (skillCfg.getCostMultiplierPct()) : 100)
             * getNormalizedHp(unitHp)
             * playerInTurn.getUnitCostModifier(unitType)
             / 100
@@ -204,14 +204,14 @@ function getPromotionForPlayerProduceUnit(war: IBwWar, gridIndex: GridIndex, uni
     for (const skillId of war.getPlayerInTurn().getCoCurrentSkills()) {
         const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfPromotionBonusByProduce();
         if ((cfg)                                                                       &&
-            (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))   &&
+            (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))   &&
             (gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                 getCoGridIndexArrayOnMap,
                 coZoneRadius,
             }))
         ) {
-            promotion += cfg.getBonus() ?? 0;
+            promotion += cfg.getBonus();
         }
     }
 

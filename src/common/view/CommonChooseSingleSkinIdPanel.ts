@@ -2,7 +2,6 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel, closePanel } from "../../gamePanels/Manager.ts";
 import { getSkinCircle } from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -94,8 +93,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0573));
-        this._labelTips.setText(getText(TextType.B1249));
+        this._labelTitle.setLangText(TextType.B0573);
+        this._labelTips.setLangText(TextType.B1249);
     }
 
     private _createDataForList(): DataForItemRenderer[] {

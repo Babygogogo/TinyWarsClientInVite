@@ -300,19 +300,19 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0132));
-        this._labelNormalMapIdTitle.setText(getText(TextType.B0225));
-        this._labelGameModeTitle.setText(getText(TextType.B0153));
-        this._labelMinTurnIndexTitle.setText(getText(TextType.B0611));
-        this._labelMaxTurnIndexTitle.setText(getText(TextType.B0621));
-        this._labelMinRankScoreTitle.setText(getText(TextType.B0687));
-        this._labelMaxRankScoreTitle.setText(getText(TextType.B0863));
-        this._labelHasFogTitle.setText(getText(TextType.B0438));
-        this._labelIncludeMirrorGameTitle.setText(getText(TextType.B0941));
-        this._labelShowDeprecatedCoTitle.setText(getText(TextType.B0948));
+        this._labelTitle.setLangText(TextType.B0132);
+        this._labelNormalMapIdTitle.setLangText(TextType.B0225);
+        this._labelGameModeTitle.setLangText(TextType.B0153);
+        this._labelMinTurnIndexTitle.setLangText(TextType.B0611);
+        this._labelMaxTurnIndexTitle.setLangText(TextType.B0621);
+        this._labelMinRankScoreTitle.setLangText(TextType.B0687);
+        this._labelMaxRankScoreTitle.setLangText(TextType.B0863);
+        this._labelHasFogTitle.setLangText(TextType.B0438);
+        this._labelIncludeMirrorGameTitle.setLangText(TextType.B0941);
+        this._labelShowDeprecatedCoTitle.setLangText(TextType.B0948);
 
-        this._btnReset.setText(getText(TextType.B0391));
-        this._btnSearch.setText(getText(TextType.B0228));
+        this._btnReset.setLangText(TextType.B0391);
+        this._btnSearch.setLangText(TextType.B0228);
         this._updateLabelMaxRankScore();
     }
 
@@ -344,10 +344,10 @@ export class Panel extends UiPanel<OpenData> {
         this._labelHasFog.setText(hasFog == null ? `` : getTextForYesOrNo(hasFog));
     }
     private _updateLabelIncludeMirrorGame(): void {
-        this._labelIncludeMirrorGame.setText(getTextForYesOrNo(this._filter.includeMirrorGame));
+        this._labelIncludeMirrorGame.setLangText(this._filter.includeMirrorGame ? TextType.Yes : TextType.No);
     }
     private _updateLabelShowDeprecatedCo(): void {
-        this._labelShowDeprecatedCo.setText(getTextForYesOrNo(this._filter.showDeprecatedCo));
+        this._labelShowDeprecatedCo.setLangText(this._filter.showDeprecatedCo ? TextType.Yes : TextType.No);
     }
 }
 

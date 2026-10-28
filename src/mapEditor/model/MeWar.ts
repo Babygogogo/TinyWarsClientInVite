@@ -63,13 +63,13 @@ export class MeWar extends BwWar implements IMeWar {
 
         this.setSrcNormalMapIdForAddEvent(srcNormalMapIdForAddEvent);
         this.setMapSlotIndex(slotIndex);
-        this.setMapModifiedTime(mapRawData.getModifiedTime() ?? getServerTimestamp());
+        this.setMapModifiedTime(mapRawData.getModifiedTime());
         this.setMapDesignerUserId(mapRawData.getDesignerUserId() ?? getSelfUserId() ?? 0);
         this.setMapDesignerName(mapRawData.getDesignerName() ?? `??`);
         this.setMapNameArray(mapRawData.getMapNameArray());
         this.setMapDescArray(mapRawData.getMapExtraText()?.getMapDescription() ?? []);
         this._setTemplateWarRuleArray(createRevisedTemplateWarRuleArrayForMeWar(mapRawData.getTemplateWarRuleArray(), gameConfig));
-        this.setGroupedMapTagId(mapRawData.getMapTagIdFlags() ?? null);
+        this.setGroupedMapTagId(mapRawData.getMapTagIdFlags());
         this.setMapSimpleDialogueArray(mapRawData.getMapSimpleDialogueArray());
         this._setCampaignMapData(mapRawData.getCampaignMapData() ?? null);
         this.setTaskObjectiveFullData(mapRawData.getTaskObjectiveFullData() ?? null);
@@ -96,8 +96,8 @@ export class MeWar extends BwWar implements IMeWar {
         const playerRuleDataArray   = warRule.getWarRuleCommonData()?.getPlayerRuleList();
         const gameConfig            = this.getGcData();
         for (const player of playerManagerData.getPlayers()) {
-            const playerIndex   = player.getPlayerIndex() ?? 0;
-            const playerRule    = playerRuleDataArray?.find(v => (v.getPlayerIndex() ?? 0) === playerIndex);
+            const playerIndex   = player.getPlayerIndex();
+            const playerRule    = playerRuleDataArray?.find(v => (v.getPlayerIndex()) === playerIndex);
             if (playerRule != null) {
                 const campaignAiCoId = playerRule.getCampaignAiCoId();
                 if (campaignAiCoId != null) {
@@ -325,12 +325,12 @@ export class MeWar extends BwWar implements IMeWar {
             warRuleCommonData.setPlayerRuleList(
                 warRuleCommonData.getPlayerRuleList()
                     .filter(v => {
-                        const playerIndex = getExisted(v.getPlayerIndex());
+                        const playerIndex = v.getPlayerIndex();
                         return (playerIndex <= playersCountUnneutral)
                             && (playerIndex >= PlayerIndex.First);
                     })
                     .sort((v1, v2) =>
-                        getExisted(v1.getPlayerIndex()) - getExisted(v2.getPlayerIndex())
+                        v1.getPlayerIndex() - v2.getPlayerIndex()
                     )
             );
             revisedTemplateWarRuleArray.push(revisedRule);
@@ -381,7 +381,7 @@ export class MeWar extends BwWar implements IMeWar {
     public addDefaultMapSimpleDialogue(): number {
         const dialogueArray = this.getMapSimpleDialogueArray();
         for (let dialogueId = 1; ; ++dialogueId) {
-            if (!dialogueArray.some(v => (v.getDialogueId() ?? 0) === dialogueId)) {
+            if (!dialogueArray.some(v => (v.getDialogueId()) === dialogueId)) {
                 dialogueArray.push(MapSimpleDialogue.fromJson({
                     dialogueId              : dialogueId,
                     dialogueNameArray       : [
@@ -392,7 +392,7 @@ export class MeWar extends BwWar implements IMeWar {
                         getDefaultSimpleCoDialogueData().toJson(),
                     ],
                 }));
-                dialogueArray.sort((v1, v2) => (v1.getDialogueId() ?? 0) - (v2.getDialogueId() ?? 0));
+                dialogueArray.sort((v1, v2) => (v1.getDialogueId()) - (v2.getDialogueId()));
 
                 return dialogueId;
             }
@@ -406,11 +406,11 @@ export class MeWar extends BwWar implements IMeWar {
         }
 
         for (let newDialogueId = 1; ; ++newDialogueId) {
-            if (!dialogueArray.some(v => (v.getDialogueId() ?? 0) === newDialogueId)) {
+            if (!dialogueArray.some(v => (v.getDialogueId()) === newDialogueId)) {
                 const dstDialogue = srcDialogue.clone();
                 dstDialogue.setDialogueId(newDialogueId);
                 dialogueArray.push(dstDialogue);
-                dialogueArray.sort((v1, v2) => (v1.getDialogueId() ?? 0) - (v2.getDialogueId() ?? 0));
+                dialogueArray.sort((v1, v2) => (v1.getDialogueId()) - (v2.getDialogueId()));
                 return newDialogueId;
             }
         }
@@ -419,7 +419,7 @@ export class MeWar extends BwWar implements IMeWar {
         {
             const array = this.getMapSimpleDialogueArray();
             for (let i = 0; i < array.length; ++i) {
-                if (dialogueIdArray.includes(array[i].getDialogueId() ?? 0)) {
+                if (dialogueIdArray.includes(array[i].getDialogueId())) {
                     array.splice(i--, 1);
                 }
             }

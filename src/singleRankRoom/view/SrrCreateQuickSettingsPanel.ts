@@ -7,7 +7,7 @@ import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { getSuffixForRankIndex } from "../../helpers/Text.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getLanguageText, getText, getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
+import { getLanguageText, getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
 import type { WarCreator_PlayerInfoChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -147,7 +147,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const warCreator = openData.warCreator;
-        this._btnModifyWarRule.setIsVisible(((await warCreator.getMapRawData()).getTemplateWarRuleArray().filter(v => v.getRuleAvailability()?.getCanSrw()).length ?? 0) > 1);
+        this._btnModifyWarRule.setIsVisible(((await warCreator.getMapRawData()).getTemplateWarRuleArray().filter(v => v.getRuleAvailability()?.getCanSrw()).length) > 1);
     }
     private async _updateLabelWarRule(): Promise<void> {
         const openData = this.getOpenData();
@@ -202,7 +202,7 @@ export class Panel extends UiPanel<OpenData> {
         const warCreator    = openData.warCreator;
         const mapRawData    = await warCreator.getMapRawData();
         const listPlayer    = this._listPlayer;
-        const dataArray     = mapRawData ? this._createDataForListPlayer(getExisted(mapRawData.getPlayersCountUnneutral())) : [];
+        const dataArray     = mapRawData ? this._createDataForListPlayer(mapRawData.getPlayersCountUnneutral()) : [];
         await listPlayer.bindData(dataArray);
 
         const count = dataArray.length;
@@ -286,7 +286,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
 
         const warCreator    = openData.warCreator;
         const playerData    = warCreator.getPlayerInfo(openData.playerIndex);
-        const coId          = playerData ? playerData.getCoId() ?? 0 : null;
+        const coId          = playerData ? playerData.getCoId() : null;
         if ((coId != null) && (coId !== CoId.Empty)) {
             openPanel(getDict().CommonCoInfoPanel, {
                 gameConfig  : warCreator.getGcData(),
@@ -347,8 +347,8 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnChangeCo.setText(getText(TextType.B0230));
-        this._btnChangeSkinId.setText(getText(TextType.B0609));
+        this._btnChangeCo.setLangText(TextType.B0230);
+        this._btnChangeSkinId.setLangText(TextType.B0609);
     }
 
     private async _updateComponentsForSettings(): Promise<void> {
@@ -365,10 +365,10 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         this._labelTeamIndex.setText(getPlayerTeamName(getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) || UndefinedError);
 
         const playerData = warCreator.getPlayerInfo(openData.playerIndex);
-        this._imgSkin.loadSource(getCoHeadFrame(getExisted(playerData.getUnitAndTileSkinId())));
-        this._labelPlayerType.setText(getText(playerData.getUserId() == null ? TextType.B0607 : TextType.B0031));
+        this._imgSkin.loadSource(getCoHeadFrame(playerData.getUnitAndTileSkinId()));
+        this._labelPlayerType.setLangText(playerData.getUserId() == null ? TextType.B0607 : TextType.B0031);
 
-        const coId          = playerData.getCoId() ?? 0;
+        const coId          = playerData.getCoId();
         const gameConfig    = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));
         const coCfg         = gameConfig.getCoBasicCfg(coId);
         this._labelCo.setText(coCfg ? coCfg.getName() : `??`);

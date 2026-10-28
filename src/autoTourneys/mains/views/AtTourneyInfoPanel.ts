@@ -135,7 +135,7 @@ export class Panel extends UiPanel<OpenData> {
     private async _onTouchedBtnPreviousBracket(): Promise<void> {
         const bracketInfoArray  = (await getAtFullBracketInfo(this._tourneyId))?.getSingleBracketInfoArray() ?? [];
         const bracketRoundId    = this._bracketRoundId - 1;
-        if (bracketInfoArray.some(v => (v.getBracketRoundId() ?? 0) == bracketRoundId)) {
+        if (bracketInfoArray.some(v => (v.getBracketRoundId()) == bracketRoundId)) {
             this._bracketRoundId = bracketRoundId;
             this._updateView();
         } else {
@@ -153,7 +153,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const mapInfoArray  = (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? [];
-        const mapRawData    = await getRawData(mapInfoArray[(this._bracketRoundId - 1) % mapInfoArray.length].getNormalMapId() ?? 0);
+        const mapRawData    = await getRawData(mapInfoArray[(this._bracketRoundId - 1) % mapInfoArray.length].getNormalMapId());
         if (mapRawData != null) {
             playShortSfx(ShortSfxCode.ButtonNeutral01);
             openPanel(getDict().CommonShowMapPanel, {
@@ -168,7 +168,7 @@ export class Panel extends UiPanel<OpenData> {
     private async _onTouchedBtnNextBracket(): Promise<void> {
         const bracketInfoArray  = (await getAtFullBracketInfo(this._tourneyId))?.getSingleBracketInfoArray() ?? [];
         const bracketRoundId    = this._bracketRoundId + 1;
-        if (bracketInfoArray.some(v => (v.getBracketRoundId() ?? 0) == bracketRoundId)) {
+        if (bracketInfoArray.some(v => (v.getBracketRoundId()) == bracketRoundId)) {
             this._bracketRoundId = bracketRoundId;
             this._updateView();
         } else {
@@ -219,8 +219,8 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const bracketInfoArray = (await getAtFullBracketInfo(tourneyId))?.getSingleBracketInfoArray() ?? [];
-        this._btnNextBracket.setIsVisible(bracketInfoArray.some(v => (v.getBracketRoundId() ?? 0) === bracketRoundId + 1));
-        this._btnPreviousBracket.setIsVisible(bracketInfoArray.some(v => (v.getBracketRoundId() ?? 0) === bracketRoundId - 1));
+        this._btnNextBracket.setIsVisible(bracketInfoArray.some(v => (v.getBracketRoundId()) === bracketRoundId + 1));
+        this._btnPreviousBracket.setIsVisible(bracketInfoArray.some(v => (v.getBracketRoundId()) === bracketRoundId - 1));
 
         const allTourneyIdArray = await getAllTourneyIdArray();
         this._btnPreviousTourney.setIsVisible(allTourneyIdArray.indexOf(tourneyId - 1) >= 0);
@@ -235,7 +235,7 @@ export class Panel extends UiPanel<OpenData> {
         const firstRoundBracketsCount   = bracketInfoArray.filter(v => v.getBracketRoundId() == 1).length;
         const maxBracketRound           = firstRoundBracketsCount > 0 ? Math.log2(firstRoundBracketsCount) + 1 : -1;
         let index                       = 0;
-        for (const bracketInfo of bracketInfoArray.filter(v => v.getBracketRoundId() === bracketRoundId).sort((v1, v2) => (v1.getBracketGameId() ?? 0) - (v2.getBracketGameId() ?? 0))) {
+        for (const bracketInfo of bracketInfoArray.filter(v => v.getBracketRoundId() === bracketRoundId).sort((v1, v2) => (v1.getBracketGameId()) - (v2.getBracketGameId()))) {
             dataArray.push({
                 index           : index++,
                 bracketInfo     : bracketInfo,
@@ -298,7 +298,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const mapInfoArray  = (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? [];
-        label.setText(await getMapNameInCurrentLanguage(mapInfoArray[(this._bracketRoundId - 1) % mapInfoArray.length].getNormalMapId() ?? 0) ?? UndefinedError);
+        label.setText(await getMapNameInCurrentLanguage(mapInfoArray[(this._bracketRoundId - 1) % mapInfoArray.length].getNormalMapId()) ?? UndefinedError);
     }
     private async _updateLabelPhase(): Promise<void> {
         const info  = (await getAtTourneyInfo(this._tourneyId));
@@ -322,10 +322,10 @@ export class Panel extends UiPanel<OpenData> {
 
         const phase = getTourneyInfoPhase(info);
         if (phase === PhaseId.Registration) {
-            label.setText(`  (${getTimeDurationText2((info.getRegistrationDuration() ?? 0) + (info.getRegistrationTimestamp() ?? 0) - getServerTimestamp())})`);
+            label.setText(`  (${getTimeDurationText2((info.getRegistrationDuration()) + (info.getRegistrationTimestamp()) - getServerTimestamp())})`);
 
         } else if (phase === PhaseId.Adjustment) {
-            label.setText(`  (${getTimeDurationText2((info.getAdjustmentDuration() ?? 0) + (info.getAdjustmentTimestamp() ?? 0) - getServerTimestamp())})`);
+            label.setText(`  (${getTimeDurationText2((info.getAdjustmentDuration()) + (info.getAdjustmentTimestamp() ?? 0) - getServerTimestamp())})`);
 
         } else {
             label.setText(``);
@@ -388,7 +388,7 @@ class BracketRenderer extends UiListItemRenderer<DataForBracketRenderer> {
         this._btnReplay.setIsVisible(bracketInfo.getReplayId() != null);
         this._updateBtnSpectate();
 
-        const userIdArray   = bracketInfo.getUserIdArray() ?? [];
+        const userIdArray   = bracketInfo.getUserIdArray();
         const userId1       = userIdArray[0];
         const userId2       = userIdArray[1];
         const winnerUserId  = bracketInfo.getWinnerUserId() ?? null;
@@ -432,7 +432,7 @@ class BracketRenderer extends UiListItemRenderer<DataForBracketRenderer> {
 
                     const data = await getReplayData(replayId);
                     if (data) {
-                        gotoReplayWar(data, getExisted(replayId));
+                        gotoReplayWar(data, replayId);
                     } else {
                         closePanel(getDict().CommonBlockPanel);
                     }
@@ -468,8 +468,8 @@ class BracketRenderer extends UiListItemRenderer<DataForBracketRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnReplay.setText(getText(TextType.B0710));
-        this._btnSpectateRequest.setText(getText(TextType.B0872));
+        this._btnReplay.setLangText(TextType.B0710);
+        this._btnSpectateRequest.setLangText(TextType.B0872);
     }
 
     private async _updateBtnSpectate(): Promise<void> {

@@ -501,49 +501,49 @@ export function getCoSkillDescArray({ coId, skillType, gameConfig, languageType,
     if (skillType === SkillTypeId.Passive) {
         if (isExtra) {
             switch (languageType) {
-                case LanguageType.Chinese   : return cfg.getD2dExtra0() ?? null;
-                case LanguageType.English   : return cfg.getD2dExtra1() ?? null;
-                case LanguageType.Spanish   : return cfg.getD2dExtra2() ?? null;
-                default                     : return cfg.getD2dExtra1() ?? null;
+                case LanguageType.Chinese   : return cfg.getD2dExtra0();
+                case LanguageType.English   : return cfg.getD2dExtra1();
+                case LanguageType.Spanish   : return cfg.getD2dExtra2();
+                default                     : return cfg.getD2dExtra1();
             }
         } else {
             switch (languageType) {
-                case LanguageType.Chinese   : return cfg.getD2d0() ?? null;
-                case LanguageType.English   : return cfg.getD2d1() ?? null;
-                case LanguageType.Spanish   : return cfg.getD2d2() ?? null;
-                default                     : return cfg.getD2d1() ?? null;
+                case LanguageType.Chinese   : return cfg.getD2d0();
+                case LanguageType.English   : return cfg.getD2d1();
+                case LanguageType.Spanish   : return cfg.getD2d2();
+                default                     : return cfg.getD2d1();
             }
         }
     } else if (skillType === SkillTypeId.Power) {
         if (isExtra) {
             switch (languageType) {
-                case LanguageType.Chinese   : return cfg.getPExtra0() ?? null;
-                case LanguageType.English   : return cfg.getPExtra1() ?? null;
-                case LanguageType.Spanish   : return cfg.getPExtra2() ?? null;
-                default                     : return cfg.getPExtra1() ?? null;
+                case LanguageType.Chinese   : return cfg.getPExtra0();
+                case LanguageType.English   : return cfg.getPExtra1();
+                case LanguageType.Spanish   : return cfg.getPExtra2();
+                default                     : return cfg.getPExtra1();
             }
         } else {
             switch (languageType) {
-                case LanguageType.Chinese   : return cfg.getP0() ?? null;
-                case LanguageType.English   : return cfg.getP1() ?? null;
-                case LanguageType.Spanish   : return cfg.getP2() ?? null;
-                default                     : return cfg.getP1() ?? null;
+                case LanguageType.Chinese   : return cfg.getP0();
+                case LanguageType.English   : return cfg.getP1();
+                case LanguageType.Spanish   : return cfg.getP2();
+                default                     : return cfg.getP1();
             }
         }
     } else if (skillType === SkillTypeId.SuperPower) {
         if (isExtra) {
             switch (languageType) {
-                case LanguageType.Chinese   : return cfg.getSpExtra0() ?? null;
-                case LanguageType.English   : return cfg.getSpExtra1() ?? null;
-                case LanguageType.Spanish   : return cfg.getSpExtra2() ?? null;
-                default                     : return cfg.getSpExtra1() ?? null;
+                case LanguageType.Chinese   : return cfg.getSpExtra0();
+                case LanguageType.English   : return cfg.getSpExtra1();
+                case LanguageType.Spanish   : return cfg.getSpExtra2();
+                default                     : return cfg.getSpExtra1();
             }
         } else {
             switch (languageType) {
-                case LanguageType.Chinese   : return cfg.getSp0() ?? null;
-                case LanguageType.English   : return cfg.getSp1() ?? null;
-                case LanguageType.Spanish   : return cfg.getSp2() ?? null;
-                default                     : return cfg.getSp1() ?? null;
+                case LanguageType.Chinese   : return cfg.getSp0();
+                case LanguageType.English   : return cfg.getSp1();
+                case LanguageType.Spanish   : return cfg.getSp2();
+                default                     : return cfg.getSp1();
             }
         }
     } else {
@@ -922,7 +922,7 @@ export function getLanguageText({ textArray, languageType = getCurrentLanguageTy
         return null;
     }
 
-    const data = textArray.find(v => (v.getLanguageType() ?? 0) === languageType);
+    const data = textArray.find(v => (v.getLanguageType()) === languageType);
     if (data) {
         return data.getText() ?? null;
     }

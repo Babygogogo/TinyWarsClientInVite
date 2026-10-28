@@ -3,7 +3,7 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getComparatorName, getTextForYesOrNo } from "../../lang/Utils.ts";
+import { getText, getComparatorName } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -271,7 +271,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle        : () => getText(TextType.B1035),
             minValue        : Common.MinInterval,
             maxValue        : Common.MaxInterval,
-            currentValue    : action.getActInterval() ?? Common.DefaultInterval,
+            currentValue    : action.getActInterval(),
             callback        : interval => {
                 if (interval === Common.DefaultInterval) {
                     action.setActInterval(null);
@@ -349,11 +349,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateLabelActNeedFocusEffect(): void {
-        this._labelActNeedFocusEffect.setText(getTextForYesOrNo(this._getAction()?.getActNeedFocusEffect()));
+        this._labelActNeedFocusEffect.setLangText(this._getAction()?.getActNeedFocusEffect() ? TextType.Yes : TextType.No);
     }
 
     private _updateLabelActIsOneByOne(): void {
-        this._labelActIsOneByOne.setText(getTextForYesOrNo(this._getAction()?.getActIsOneByOne()));
+        this._labelActIsOneByOne.setLangText(this._getAction()?.getActIsOneByOne() ? TextType.Yes : TextType.No);
     }
 
     private _updateLabelActInterval(): void {

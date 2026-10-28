@@ -225,9 +225,9 @@ export class Tile implements ITile {
         this.setPlayerIndex(playerIndex);
         this.setCustomBuildingData(customBuildingData?.clone());
 
-        this.setBaseShapeId(baseShapeId ?? 0);
+        this.setBaseShapeId(baseShapeId);
         this.setDecorationShapeId(decorationShapeId);
-        this.setObjectShapeId(objectShapeId ?? 0);
+        this.setObjectShapeId(objectShapeId);
         this.setCurrentHp(data.getCurrentHp());
         this.setCurrentBuildPoint(data.getCurrentBuildPoint());
         this.setCurrentCapturePoint(data.getCurrentCapturePoint());
@@ -363,42 +363,42 @@ export class Tile implements ITile {
         this._baseType = baseType;
     }
     public getBaseType(): number {
-        return getExisted(this._baseType);
+        return this._baseType;
     }
 
     public setObjectType(objectType: number): void {
         this._objectType = objectType;
     }
     public getObjectType(): number {
-        return getExisted(this._objectType);
+        return this._objectType;
     }
 
     public setDecorationType(decorationType: number): void {
         this._decorationType = decorationType;
     }
     public getDecorationType(): number {
-        return getExisted(this._decorationType, ClientErrorCode.BwTile_GetDecorationType_00);
+        return this._decorationType;
     }
 
     public setBaseShapeId(id: number): void {
         this._baseShapeId = id;
     }
     public getBaseShapeId(): number {
-        return getExisted(this._baseShapeId);
+        return this._baseShapeId;
     }
 
     public setObjectShapeId(id: number): void {
         this._objectShapeId = id;
     }
     public getObjectShapeId(): number {
-        return getExisted(this._objectShapeId);
+        return this._objectShapeId;
     }
 
     public setDecorationShapeId(id: number): void {
         this._decorationShapeId = id;
     }
     public getDecorationShapeId(): number {
-        return getExisted(this._decorationShapeId, ClientErrorCode.BwTile_GetDecorationShapeId_00);
+        return this._decorationShapeId;
     }
 
     public getSkinId(): number {
@@ -471,7 +471,7 @@ export class Tile implements ITile {
         const maxCapturePoint = this.getMaxCapturePoint();
         return maxCapturePoint == null
             ? null
-            : maxCapturePoint - (this.getCurrentCapturePoint() ?? 0);
+            : maxCapturePoint - (this.getCurrentCapturePoint());
     }
 
     public getIsDefeatedOnCapture(): boolean {
@@ -550,7 +550,7 @@ export class Tile implements ITile {
     // Functions for highlight.
     ////////////////////////////////////////////////////////////////////////////////
     public getIsHighlighted(): boolean {
-        return getExisted(this._isHighlighted);
+        return this._isHighlighted;
     }
     public setIsHighlighted(isHighlighted: boolean): void {
         if (this._isHighlighted !== isHighlighted) {
@@ -637,7 +637,7 @@ export class Tile implements ITile {
     }
 
     public checkHasUnfixedBuff(buffTypeId: number): boolean {
-        return this.getUnfixedBuffList().some(v => v.getBuffTypeId() === buffTypeId) ?? false;
+        return this.getUnfixedBuffList().some(v => v.getBuffTypeId() === buffTypeId);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -679,9 +679,9 @@ export class Tile implements ITile {
             {
                 const cfg = skillCfg.getPersistent()?.getSelfDefenseBonusByTileIgnoreHp();
                 if ((cfg)                                                                                   &&
-                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))               &&
+                    (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))               &&
                     ((isCoOnboard) || (isInCozByPreviewSettings) || (gridIndex.checkIsInsideCoSkillArea({
-                        coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                        coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                         getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                         coZoneRadius             : coZoneRadius
                     })))
@@ -713,14 +713,14 @@ export class Tile implements ITile {
         this._gridX = x;
     }
     public getGridX(): number {
-        return getExisted(this._gridX);
+        return this._gridX;
     }
 
     private _setGridY(y: number): void {
         this._gridY = y;
     }
     public getGridY(): number {
-        return getExisted(this._gridY);
+        return this._gridY;
     }
 
     public getGridIndex(): GridIndex {
@@ -865,7 +865,7 @@ export class Tile implements ITile {
         this._playerIndex = index;
     }
     public getPlayerIndex(): number {
-        return getExisted(this._playerIndex);
+        return this._playerIndex;
     }
 
     public getPlayer(): IPlayer {
@@ -923,16 +923,16 @@ export class Tile implements ITile {
         for (const skillId of player.getCoCurrentSkills() || []) {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitMoveCost();
             if ((cfg)                                                                                   &&
-                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))          &&
-                (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId() ?? 0))          &&
-                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId() ?? 0)) &&
+                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))          &&
+                (gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId()))          &&
+                (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId())) &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                     coZoneRadius             : coZoneRadius,
                 }))
             ) {
-                return Math.min(rawCost, cfg.getFixedCost() ?? 0);
+                return Math.min(rawCost, cfg.getFixedCost());
             }
         }
 
@@ -958,13 +958,13 @@ export class Tile implements ITile {
             const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfRepairAmountBonus();
             if ((cfg)                                               &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType          : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType          : cfg.getCoSkillAreaTypeId(),
                     coZoneRadius             : coZoneRadius,
                     getCoGridIndexArrayOnMap : getCoGridIndexArrayOnMap,
                 }))
             ) {
-                amountModifier      += cfg.getRepairOffsetFromTile() ?? 0;
-                costMultiplierPct   = costMultiplierPct * (cfg.getCostMultiplierPct() ?? 0) / 100;
+                amountModifier      += cfg.getRepairOffsetFromTile();
+                costMultiplierPct   = costMultiplierPct * (cfg.getCostMultiplierPct()) / 100;
             }
         }
 
@@ -1169,7 +1169,7 @@ export class Tile implements ITile {
     public getCustomName(languageType = getCurrentLanguageType()): Undefinable<string> {
         const nameId = this.getCustomNameId();
         return getLanguageText({
-            textArray    : this.getWar().getTileMap().getTileCustomNameArray()?.find(v => (v.getNameId() ?? 0) === nameId)?.getNameTextArray(),
+            textArray    : this.getWar().getTileMap().getTileCustomNameArray()?.find(v => (v.getNameId()) === nameId)?.getNameTextArray(),
             languageType : languageType,
             useAlternate : false,
         });

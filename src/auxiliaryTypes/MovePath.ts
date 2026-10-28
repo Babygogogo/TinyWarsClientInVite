@@ -19,7 +19,7 @@ export class MovePath {
             nodes.push(getExisted(GridIndex.convertGridIndex(node)));
         }
 
-        return new MovePath(nodes, movePath.getFuelConsumption() ?? 0, !!movePath.getIsBlocked());
+        return new MovePath(nodes, movePath.getFuelConsumption(), !!movePath.getIsBlocked());
     }
 
     public toProto(): ProtoSchemaCommonProtoStructureMovePath {

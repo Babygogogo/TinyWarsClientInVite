@@ -1218,8 +1218,8 @@ export function getAttackAndCounterDamage({ battleDamageInfoArray, attackerUnitI
     let attackDamage    : number | null = null;
     let counterDamage   : number | null = null;
     for (const info of battleDamageInfoArray) {
-        const damage                = getExisted(info.getDamage(), ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_00);
-        const infoAttackerUnitId    = getExisted(info.getAttackerUnitId(), ClientErrorCode.DamageCalculator_GetAttackAndCounterDamage_01);
+        const damage                = info.getDamage();
+        const infoAttackerUnitId    = info.getAttackerUnitId();
         const infoTargetUnitId      = info.getTargetUnitId();
         const targetTileGridIndex   = GridIndex.convertGridIndex(info.getTargetTileGridIndex());
         if (attackerUnitId === infoAttackerUnitId) {

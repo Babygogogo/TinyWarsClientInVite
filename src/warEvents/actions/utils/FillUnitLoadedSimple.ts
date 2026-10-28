@@ -153,7 +153,7 @@ export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFas
     const playerFilterDict  = new Map<IPlayer, boolean>();
     const conTileFilter     = data.getConTileFilter();
     const loaderUnitsDict   = new Map<IUnit, number>();
-    const actLoadCount      = data.getActLoadCount() ?? 0;
+    const actLoadCount      = data.getActLoadCount();
     for (const unit of unitMap.getAllUnits()) {
         const remainingCount = (unit.getMaxLoadUnitsCount() ?? 0) - unit.getLoadedUnitsCount();
         if (remainingCount <= 0) {
@@ -176,7 +176,7 @@ export async function applyWithoutExtraData(data: WeaFillUnitLoadedSimple, isFas
     }
 
     const rawUnitData           = getExisted(data.getActUnitData());
-    const unitType              = rawUnitData.getUnitType() ?? 0;
+    const unitType              = rawUnitData.getUnitType();
     const gameConfig            = war.getGcData();
     const warStatisticsManager  = war.getWarStatisticsManager();
     for (const [loaderUnit, loadCount] of loaderUnitsDict) {

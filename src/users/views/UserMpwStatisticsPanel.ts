@@ -1,6 +1,6 @@
 import { format } from "../../helpers/Text.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getFormattedText } from "../../lang/Utils.ts";
+import { getFormattedText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -85,16 +85,16 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelHistoryStd.setText(getText(TextType.B0548));
-        this._labelHistoryStdWin.setText(getText(TextType.B0550));
-        this._labelHistoryStdLose.setText(getText(TextType.B0551));
-        this._labelHistoryStdDraw.setText(getText(TextType.B0552));
-        this._labelHistoryStdRatio.setText(getText(TextType.B0553));
-        this._labelHistoryFog.setText(getText(TextType.B0549));
-        this._labelHistoryFogWin.setText(getText(TextType.B0550));
-        this._labelHistoryFogLose.setText(getText(TextType.B0551));
-        this._labelHistoryFogDraw.setText(getText(TextType.B0552));
-        this._labelHistoryFogRatio.setText(getText(TextType.B0553));
+        this._labelHistoryStd.setLangText(TextType.B0548);
+        this._labelHistoryStdWin.setLangText(TextType.B0550);
+        this._labelHistoryStdLose.setLangText(TextType.B0551);
+        this._labelHistoryStdDraw.setLangText(TextType.B0552);
+        this._labelHistoryStdRatio.setLangText(TextType.B0553);
+        this._labelHistoryFog.setLangText(TextType.B0549);
+        this._labelHistoryFogWin.setLangText(TextType.B0550);
+        this._labelHistoryFogLose.setLangText(TextType.B0551);
+        this._labelHistoryFogDraw.setLangText(TextType.B0552);
+        this._labelHistoryFogRatio.setLangText(TextType.B0553);
 
         this._updateLabelTitle();
         this._updateSclHistoryStd();
@@ -191,7 +191,7 @@ class HistoryRenderer extends UiListItemRenderer<DataForHistoryRenderer> {
         const playersCount  = openData.playersCount;
         const labelType     = this._labelType;
         if ((warType === WarTypeId.MrwFog) || (warType === WarTypeId.MrwStd)) {
-            labelType.setText(getText(TextType.B1075));
+            labelType.setLangText(TextType.B1075);
         } else {
             labelType.setText(`${playersCount}P`);
         }

@@ -10,7 +10,6 @@ import { getFormattedText } from "../../../lang/Utils.ts";
 import type { WeaSetUnitTypeExpr } from "../../../proto/schema/CommonProto/WarEvent/WeaSetUnitTypeExpr.ts";
 import type { SerialUnit } from "../../../proto/schema/CommonProto/WarSerialization/SerialUnit.ts";
 import { WsUnitStatistics } from "../../../proto/schema/CommonProto/WarSerialization/WsUnitStatistics.ts";
-import { Hp } from "../../../units/Constants.ts";
 import type { IUnit } from "../../../units/IUnit.ts";
 import { getNormalizedHp } from "../../../units/utils/Common.ts";
 import { createNewUnitDataForChangeType } from "../../../units/utils/Serialization.ts";
@@ -213,11 +212,11 @@ function applyNewUnitDataDict(dict: Map<IUnit, SerialUnit>, war: IBwWar, isFast:
                     groupedObserverTeamIndexes  : groupedObserverTeamIndexes,
                 }));
 
-                const newUnitType = unitData.getUnitType() ?? 0;
+                const newUnitType = unitData.getUnitType();
                 warStatisticsManager.addUnitStatistics(WsUnitStatistics.fromJson({
                     unitType                    : newUnitType,
-                    dstPlayerIndex              : unitData.getPlayerIndex() ?? 0,
-                    normalizedHpGain            : getNormalizedHp(unitData.getCurrentHp() ?? Hp.MaxHp),
+                    dstPlayerIndex              : unitData.getPlayerIndex(),
+                    normalizedHpGain            : getNormalizedHp(unitData.getCurrentHp()),
                     normalizedHpLoss            : 0,
                     unitGain                    : 1,
                     unitLoss                    : 0,

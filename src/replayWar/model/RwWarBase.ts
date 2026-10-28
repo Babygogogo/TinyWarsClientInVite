@@ -118,37 +118,37 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
     public getNormalMapId(): number | null {
         const settingsForMcw = this.getSettingsForMcw();
         if (settingsForMcw) {
-            return settingsForMcw.getNormalMapId() ?? 0;
+            return settingsForMcw.getNormalMapId();
         }
 
         const settingsForMrw = this.getSettingsForMrw();
         if (settingsForMrw) {
-            return settingsForMrw.getNormalMapId() ?? 0;
+            return settingsForMrw.getNormalMapId();
         }
 
         const settingsForMmw = this.getSettingsForMmw();
         if (settingsForMmw) {
-            return settingsForMmw.getNormalMapId() ?? 0;
+            return settingsForMmw.getNormalMapId();
         }
 
         const settingsForAtw = this.getSettingsForAtw();
         if (settingsForAtw) {
-            return settingsForAtw.getNormalMapId() ?? 0;
+            return settingsForAtw.getNormalMapId();
         }
 
         const settingsForScw = this.getSettingsForScw();
         if (settingsForScw) {
-            return settingsForScw.getNormalMapId() ?? 0;
+            return settingsForScw.getNormalMapId();
         }
 
         const settingsForSrw = this.getSettingsForSrw();
         if (settingsForSrw) {
-            return settingsForSrw.getNormalMapId() ?? 0;
+            return settingsForSrw.getNormalMapId();
         }
 
         const settingsForCcw = this.getSettingsForCcw();
         if (settingsForCcw) {
-            return settingsForCcw.getNormalMapId() ?? 0;
+            return settingsForCcw.getNormalMapId();
         }
 
         return null;
@@ -319,8 +319,8 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
     public getAllCheckpointInfoArray(): ReplayCheckpointInfo[] {
         const turnManager   = getExisted(SerialWar.decode(getExisted(this._getCheckpointData(0)?.warData)).getTurnManager(), ClientErrorCode.HrwWar_GetAllCheckpointInfoArray_00);
         let checkpointId    = 0;
-        let turnIndex       = turnManager.getTurnIndex() ?? 0;
-        let playerIndex     = turnManager.getPlayerIndex() ?? 0;
+        let turnIndex       = turnManager.getTurnIndex();
+        let playerIndex     = turnManager.getPlayerIndex();
         const infoArray     : ReplayCheckpointInfo[] = [{
             checkpointId        : checkpointId,
             nextOperationId     : this._getFirstOperationId(),
@@ -544,8 +544,8 @@ export abstract class RwWarBase extends BwWar implements IRwWarBase {
             return getExisted(dict.get(checkpointId));
         } else {
             const turnData      = getExisted(SerialWar.decode(getExisted(this._getCheckpointData(checkpointId)).warData).getTurnManager());
-            const turnIndex     = turnData.getTurnIndex() ?? 0;
-            const playerIndex   = turnData.getPlayerIndex() ?? 0;
+            const turnIndex     = turnData.getTurnIndex();
+            const playerIndex   = turnData.getPlayerIndex();
             const data          : TurnIndexAndPlayerIndex = {
                 turnIndex   : turnIndex,
                 playerIndex : playerIndex,

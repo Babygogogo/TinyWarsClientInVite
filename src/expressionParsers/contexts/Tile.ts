@@ -445,7 +445,7 @@ export class Tile extends Base {
         }
 
         const rawMaxValue   = this._tile.getMaxCapturePoint();
-        const currentValue  = this._tile.getCurrentCapturePoint() ?? 0;
+        const currentValue  = this._tile.getCurrentCapturePoint();
         const argNum        = arg.num;
 
         if (argNum === 1) {
@@ -539,7 +539,7 @@ export class Tile extends Base {
         const tile = this._tile;
         return new TileBuffArray(
             this.getWar(),
-            tile.getUnfixedBuffList()?.map(v => new TileBuff(v, tile)) ?? []
+            tile.getUnfixedBuffList()?.map(v => new TileBuff(v, tile))
         );
     }
     private callCanHideUnitType(arg: ExpressionParsersResultsBase): Num {

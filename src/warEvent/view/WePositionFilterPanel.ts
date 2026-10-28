@@ -149,7 +149,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const condition = this._getPositionFilter();
         openPanel(getDict().CommonChooseGridIndexPanel, {
-            currentGridIndexArray   : getNonNullElements(condition.getConGridIndexArray().map(v => GridIndex.convertGridIndex(v)) ?? []),
+            currentGridIndexArray   : getNonNullElements(condition.getConGridIndexArray().map(v => GridIndex.convertGridIndex(v))),
             mapSize                 : mapSize,
             callbackOnConfirm       : gridIndexArray => {
                 condition.setConGridIndexArray(gridIndexArray.map(v => v.toProto()));
@@ -358,7 +358,7 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _updateInputConLocationMinDistance(): void {
         const con = this._getPositionFilter().getConLocationMinDistance();
-        this._labelConLocationMinDistance.setText(`${con == null ? `` : (con.getValue() ?? ``)}`);
+        this._labelConLocationMinDistance.setText(`${con == null ? `` : (con.getValue())}`);
     }
 
     private _updateLabelConGridIndexMinDistanceComparator(): void {
@@ -368,7 +368,7 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _updateInputConGridIndexMinDistance(): void {
         const con = this._getPositionFilter().getConGridIndexMinDistance();
-        this._labelConGridIndexMinDistance.setText(`${con == null ? `` : (con.getValue() ?? ``)}`);
+        this._labelConGridIndexMinDistance.setText(`${con == null ? `` : (con.getValue())}`);
     }
 
     private _getPositionFilter(): PositionFilter {

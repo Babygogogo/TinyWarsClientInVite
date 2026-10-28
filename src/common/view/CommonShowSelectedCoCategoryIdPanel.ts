@@ -7,7 +7,6 @@ import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts"
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
-import { MaxValue } from "../../numbers/Constants.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -97,7 +96,7 @@ export class Panel extends UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(this.getOpenData()?.isBan ? TextType.B0403 : TextType.B1346));
+        this._labelTitle.setLangText(this.getOpenData()?.isBan ? TextType.B0403 : TextType.B1346);
     }
 
     private _initGroupCoCategory(): void {
@@ -138,8 +137,8 @@ export class Panel extends UiPanel<OpenData> {
                         return -1;
                     }
 
-                    const force1    = cfg1.getForce() ?? MaxValue;
-                    const force2    = cfg2.getForce() ?? MaxValue;
+                    const force1    = cfg1.getForce();
+                    const force2    = cfg2.getForce();
                     if (force1 !== force2) {
                         return force1 - force2;
                     } else {
@@ -182,8 +181,8 @@ export class Panel extends UiPanel<OpenData> {
                     return -1;
                 }
 
-                const force1    = cfg1.getForce() ?? MaxValue;
-                const force2    = cfg2.getForce() ?? MaxValue;
+                const force1    = cfg1.getForce();
+                const force2    = cfg2.getForce();
                 if (force1 !== force2) {
                     return force1 - force2;
                 } else {

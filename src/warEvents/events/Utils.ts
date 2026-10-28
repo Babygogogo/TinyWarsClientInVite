@@ -40,7 +40,7 @@ export function checkIsValidWarEvent({ warEvent, nodeDict, actionDict }: { // DO
             return false;
         }
 
-        const canBeTriggeredRightAfterAnyEvent = warEvent.getCanBeTriggeredRightAfterAnyEvent() ?? true;
+        const canBeTriggeredRightAfterAnyEvent = warEvent.getCanBeTriggeredRightAfterAnyEvent();
         if (((canBeTriggeredRightAfterAnyEvent) && (count > Event.MaxCallCountInPlayerTurn))    ||
             ((!canBeTriggeredRightAfterAnyEvent) && (count > Event.MaxCallCountTotal))
         ) {
@@ -133,7 +133,7 @@ export function getErrorTipForEventCallCountInPlayerTurn(event: WarEvent): strin
         return getText(TextType.A0181);
     }
 
-    const canBeTriggeredRightAfterAnyEvent = event.getCanBeTriggeredRightAfterAnyEvent() ?? true;
+    const canBeTriggeredRightAfterAnyEvent = event.getCanBeTriggeredRightAfterAnyEvent();
     if (((canBeTriggeredRightAfterAnyEvent) && (count > Event.MaxCallCountInPlayerTurn))    ||
         ((!canBeTriggeredRightAfterAnyEvent) && (count > Event.MaxCallCountTotal))
     ) {
@@ -168,13 +168,13 @@ export function addEvent(fullData: WarEventFullData): number | null {
                 ],
                 deprecatedActionIdArray             : [],
             }));
-            eventArray.sort((v1, v2) => getExisted(v1.getEventId()) - getExisted(v2.getEventId()));
+            eventArray.sort((v1, v2) => v1.getEventId() - v2.getEventId());
             return eventId;
         }
     }
 }
 export function cloneEvent(fullData: WarEventFullData, srcEventId: number, isShallowClone: boolean): number {
-    const eventArray    = getExisted(fullData.getEventArray());
+    const eventArray    = fullData.getEventArray();
     const srcEvent      = getExisted(eventArray.find(v => v.getEventId() === srcEventId));
     for (let eventId = 1; ; ++eventId) {
         if (eventArray.some(v => v.getEventId() === eventId)) {
@@ -187,7 +187,7 @@ export function cloneEvent(fullData: WarEventFullData, srcEventId: number, isSha
                 eventId                             : eventId,
                 eventNameArray                      : srcEvent.getEventNameArray().map(v => v.toJson()),
                 maxCallCountInPlayerTurn            : srcEvent.getMaxCallCountInPlayerTurn(),
-                canBeTriggeredRightAfterAnyEvent    : srcEvent.getCanBeTriggeredRightAfterAnyEvent() ?? true,
+                canBeTriggeredRightAfterAnyEvent    : srcEvent.getCanBeTriggeredRightAfterAnyEvent(),
                 maxCallCountTotal                   : srcEvent.getMaxCallCountTotal(),
                 rootNodeAndActionsArray             : srcRootNodeAndActionsArray.map(v => v.toJson()),
                 deprecatedActionIdArray             : [],
@@ -197,7 +197,7 @@ export function cloneEvent(fullData: WarEventFullData, srcEventId: number, isSha
                 eventId                             : eventId,
                 eventNameArray                      : srcEvent.getEventNameArray().map(v => v.clone().toJson()),
                 maxCallCountInPlayerTurn            : srcEvent.getMaxCallCountInPlayerTurn(),
-                canBeTriggeredRightAfterAnyEvent    : srcEvent.getCanBeTriggeredRightAfterAnyEvent() ?? true,
+                canBeTriggeredRightAfterAnyEvent    : srcEvent.getCanBeTriggeredRightAfterAnyEvent(),
                 maxCallCountTotal                   : srcEvent.getMaxCallCountTotal(),
                 // actionIdArray                       : srcEvent.getActionIdArray().map(v => GhWarEventAction.cloneAction(fullData, v)),
                 // rootConditionNodeIdAndFlags         : srcRootNodeAndActionsArray == null
@@ -222,7 +222,7 @@ export function cloneEvent(fullData: WarEventFullData, srcEventId: number, isSha
             }));
         }
 
-        eventArray.sort((v1, v2) => getExisted(v1.getEventId()) - getExisted(v2.getEventId()));
+        eventArray.sort((v1, v2) => v1.getEventId() - v2.getEventId());
         return eventId;
     }
 }

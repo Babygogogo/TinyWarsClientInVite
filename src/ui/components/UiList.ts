@@ -328,7 +328,7 @@ export class UiList<DataForRenderer extends UiListItemData>
         const item = (e.data as PointerUnifiedEventData).dispatcher;
         if ((item instanceof getUiListItemRendererClass()) && (item.getSkinInfo())) {
             loadSkinStateRecursively(
-                getExisted(item),
+                item,
                 UiSkinState.Down
             );
         }

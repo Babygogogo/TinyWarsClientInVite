@@ -1688,13 +1688,13 @@ export class War extends Base {
         const resultArray   : UnitStatistic[] = [];
         for (const rawData of war.getWarStatisticsManager().getUnitStatisticsArray()) {
             const data      = new UnitStatistic(war, {
-                playerIndexArray                : [rawData.getDstPlayerIndex() ?? 0],
-                unitTypeArray                   : [rawData.getUnitType() ?? 0],
-                groupedObserverTeamIndexesArray : [rawData.getGroupedObserverTeamIndexes() ?? 0],
-                unitGain                        : rawData.getUnitGain() ?? 0,
-                unitLoss                        : rawData.getUnitLoss() ?? 0,
-                normalizedHpGain                : rawData.getNormalizedHpGain() ?? 0,
-                normalizedHpLoss                : rawData.getNormalizedHpLoss() ?? 0,
+                playerIndexArray                : [rawData.getDstPlayerIndex()],
+                unitTypeArray                   : [rawData.getUnitType()],
+                groupedObserverTeamIndexesArray : [rawData.getGroupedObserverTeamIndexes()],
+                unitGain                        : rawData.getUnitGain(),
+                unitLoss                        : rawData.getUnitLoss(),
+                normalizedHpGain                : rawData.getNormalizedHpGain(),
+                normalizedHpLoss                : rawData.getNormalizedHpLoss(),
             });
             const result    = node.evalLambda(rootCtx, [data], null, localVariableDict, isRestricted);
             if (!(result instanceof Num)) {

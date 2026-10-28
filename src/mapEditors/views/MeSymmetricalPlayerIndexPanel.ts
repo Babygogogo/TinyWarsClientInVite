@@ -110,9 +110,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1155));
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
+        this._labelTitle.setLangText(TextType.B1155);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
     }
 
     private async _updateListSkin(): Promise<void> {

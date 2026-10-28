@@ -91,7 +91,7 @@ export class Page extends UiOpenableComponent<OpenData> {
         }
 
         const coIdArray: number[] = [];
-        for (const playerRule of getExisted(mapData.getTemplateWarRuleArray())[0].getWarRuleCommonData()?.getPlayerRuleList() ?? []) {
+        for (const playerRule of mapData.getTemplateWarRuleArray()[0].getWarRuleCommonData()?.getPlayerRuleList() ?? []) {
             const campaignHumanCoIdArray = playerRule.getCampaignHumanCoIdArray();
             if (campaignHumanCoIdArray?.length) {
                 coIdArray.push(pickRandomElement(campaignHumanCoIdArray));
@@ -127,7 +127,7 @@ export class Page extends UiOpenableComponent<OpenData> {
         }
 
         const coIdArray: number[] = [];
-        for (const playerRule of getExisted(mapData.getTemplateWarRuleArray())[0].getWarRuleCommonData()?.getPlayerRuleList() ?? []) {
+        for (const playerRule of mapData.getTemplateWarRuleArray()[0].getWarRuleCommonData()?.getPlayerRuleList() ?? []) {
             const campaignAiCoId = playerRule.getCampaignAiCoId();
             if (campaignAiCoId != null) {
                 coIdArray.push(campaignAiCoId);

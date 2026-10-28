@@ -23,7 +23,7 @@ export function getErrorTip(data: WeightedGridIndex, mapSize: MapSize): string |
         }
     }
     {
-        const weight = data.getWeight() ?? 0;
+        const weight = data.getWeight();
         if ((weight > AiDestination.MaxWeight) ||
             (weight < AiDestination.MinWeight)
         ) {
@@ -38,5 +38,5 @@ export function toGridIndexAndWeight(data: WeightedGridIndex): GridIndexAndWeigh
     const gridIndex = GridIndex.convertGridIndex(data.getGridIndex());
     return gridIndex == null
         ? null
-        : new GridIndexAndWeight(gridIndex, data.getWeight() ?? 0);
+        : new GridIndexAndWeight(gridIndex, data.getWeight());
 }

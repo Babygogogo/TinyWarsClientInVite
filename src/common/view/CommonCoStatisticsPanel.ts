@@ -133,7 +133,7 @@ export class Panel extends UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private async _updateComponentsForLanguage(): Promise<void> {
-        this._labelTitle.setText(getText(TextType.B1076));
+        this._labelTitle.setLangText(TextType.B1076);
 
         const gameDataArray     = (await getCoStatistics())?.getGameDataArray();
         let rankedReplaysCount  = 0;
@@ -386,8 +386,8 @@ class CoRenderer
 
     private _updateComponentsForLanguage(): void {
         this._labelCountTitle.setText(`${getText(TextType.B1074)}\n${getText(TextType.B0606)}\n${getText(TextType.B0550)}\n${getText(TextType.B0551)}\n${getText(TextType.B0552)}`);
-        this._labelRankedTitle.setText(getText(TextType.B1075));
-        this._labelAllTitle.setText(getText(TextType.B0120));
+        this._labelRankedTitle.setLangText(TextType.B1075);
+        this._labelAllTitle.setLangText(TextType.B0120);
     }
 }
 

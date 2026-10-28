@@ -138,22 +138,22 @@ export class Panel extends UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1148));
-        this._btnSwitch.setText(getText(TextType.B0520));
-        this._btnPreviousPlayer.setText(getText(TextType.B1029));
-        this._btnNextPlayer.setText(getText(TextType.B1030));
-        this._labelNormalizedHpGain0.setText(getText(IsShowHp ? TextType.B1149 : TextType.B1171));
-        this._labelNormalizedHpLoss0.setText(getText(IsShowHp ? TextType.B1150 : TextType.B1172));
-        this._labelNormalizedHpRemain0.setText(getText(IsShowHp ? TextType.B1153 : TextType.B1173));
-        this._labelUnitGain0.setText(getText(TextType.B1151));
-        this._labelUnitLoss0.setText(getText(TextType.B1152));
-        this._labelUnitRemain0.setText(getText(TextType.B1154));
-        this._labelNormalizedHpGain1.setText(getText(IsShowHp ? TextType.B1149 : TextType.B1171));
-        this._labelNormalizedHpLoss1.setText(getText(IsShowHp ? TextType.B1150 : TextType.B1172));
-        this._labelNormalizedHpRemain1.setText(getText(IsShowHp ? TextType.B1153 : TextType.B1173));
-        this._labelUnitGain1.setText(getText(TextType.B1151));
-        this._labelUnitLoss1.setText(getText(TextType.B1152));
-        this._labelUnitRemain1.setText(getText(TextType.B1154));
+        this._labelTitle.setLangText(TextType.B1148);
+        this._btnSwitch.setLangText(TextType.B0520);
+        this._btnPreviousPlayer.setLangText(TextType.B1029);
+        this._btnNextPlayer.setLangText(TextType.B1030);
+        this._labelNormalizedHpGain0.setLangText(IsShowHp ? TextType.B1149 : TextType.B1171);
+        this._labelNormalizedHpLoss0.setLangText(IsShowHp ? TextType.B1150 : TextType.B1172);
+        this._labelNormalizedHpRemain0.setLangText(IsShowHp ? TextType.B1153 : TextType.B1173);
+        this._labelUnitGain0.setLangText(TextType.B1151);
+        this._labelUnitLoss0.setLangText(TextType.B1152);
+        this._labelUnitRemain0.setLangText(TextType.B1154);
+        this._labelNormalizedHpGain1.setLangText(IsShowHp ? TextType.B1149 : TextType.B1171);
+        this._labelNormalizedHpLoss1.setLangText(IsShowHp ? TextType.B1150 : TextType.B1172);
+        this._labelNormalizedHpRemain1.setLangText(IsShowHp ? TextType.B1153 : TextType.B1173);
+        this._labelUnitGain1.setLangText(TextType.B1151);
+        this._labelUnitLoss1.setLangText(TextType.B1152);
+        this._labelUnitRemain1.setLangText(TextType.B1154);
     }
 
     private _updateView(): void {
@@ -207,8 +207,8 @@ export class Panel extends UiPanel<OpenData> {
             }
             if (!IsShowHp) {
                 const cost                      = gameConfig.getUnitTemplateCfg(singleData0.unitType)?.getProductionCost() ?? 0;
-                singleData0.normalizedHpGain    = (singleData0.normalizedHpGain ?? 0) * cost / Hp.MaxNormalizedHp;
-                singleData0.normalizedHpLoss    = (singleData0.normalizedHpLoss ?? 0) * cost / Hp.MaxNormalizedHp;
+                singleData0.normalizedHpGain    = (singleData0.normalizedHpGain) * cost / Hp.MaxNormalizedHp;
+                singleData0.normalizedHpLoss    = (singleData0.normalizedHpLoss) * cost / Hp.MaxNormalizedHp;
             }
 
             let singleData1: SingleData | null = null;
@@ -229,8 +229,8 @@ export class Panel extends UiPanel<OpenData> {
 
                 if (!IsShowHp) {
                 const cost                      = gameConfig.getUnitTemplateCfg(singleData1.unitType)?.getProductionCost() ?? 0;
-                singleData1.normalizedHpGain    = (singleData1.normalizedHpGain ?? 0) * cost / Hp.MaxNormalizedHp;
-                singleData1.normalizedHpLoss    = (singleData1.normalizedHpLoss ?? 0) * cost / Hp.MaxNormalizedHp;
+                singleData1.normalizedHpGain    = (singleData1.normalizedHpGain) * cost / Hp.MaxNormalizedHp;
+                singleData1.normalizedHpLoss    = (singleData1.normalizedHpLoss) * cost / Hp.MaxNormalizedHp;
                 }
             }
 

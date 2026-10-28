@@ -225,15 +225,15 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0228));
-        this._labelRoomIdTitle.setText(getText(TextType.B0814));
-        this._labelMapNameTitle.setText(getText(TextType.B0225));
-        this._labelUserInRoomTitle.setText(getText(TextType.B0023));
-        this._labelUserNotInRoomTitle.setText(getText(TextType.B0027));
-        this._labelCoCategoryTitle.setText(getText(TextType.B0028));
-        this._labelHasFogTitle.setText(getText(TextType.B0020));
-        this._btnReset.setText(getText(TextType.B0567));
-        this._btnSearch.setText(getText(TextType.B0228));
+        this._labelTitle.setLangText(TextType.B0228);
+        this._labelRoomIdTitle.setLangText(TextType.B0814);
+        this._labelMapNameTitle.setLangText(TextType.B0225);
+        this._labelUserInRoomTitle.setLangText(TextType.B0023);
+        this._labelUserNotInRoomTitle.setLangText(TextType.B0027);
+        this._labelCoCategoryTitle.setLangText(TextType.B0028);
+        this._labelHasFogTitle.setLangText(TextType.B0020);
+        this._btnReset.setLangText(TextType.B0567);
+        this._btnSearch.setLangText(TextType.B0228);
 
         this._updateLabelHasFog();
     }
@@ -294,9 +294,9 @@ export class Panel extends UiPanel<OpenData> {
         const hasFog    = this._filter.hasFog;
         const label     = this._labelHasFog;
         if (hasFog === true) {
-            label.setText(getText(TextType.Yes));
+            label.setLangText(TextType.Yes);
         } else if (hasFog === false) {
-            label.setText(getText(TextType.No));
+            label.setLangText(TextType.No);
         } else {
             label.setText(``);
         }

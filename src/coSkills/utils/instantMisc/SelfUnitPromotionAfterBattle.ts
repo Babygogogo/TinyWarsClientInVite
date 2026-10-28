@@ -38,7 +38,7 @@ export function getTotalOffset({
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
+            coSkillAreaType             : cfg.getCoSkillAreaTypeId(),
             coZoneRadius                : coZoneRadius,
             getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
         }))
@@ -46,7 +46,7 @@ export function getTotalOffset({
         return 0;
     }
 
-    const arr = cfg.getOffsetFromDamageDealt() ?? [];
+    const arr = cfg.getOffsetFromDamageDealt();
     return (arr.length ? arr[Math.min(targetLostNormalizedHp, arr.length - 1)] : 0)
-        + (isTargetKilled ? cfg.getOffsetFromKill() ?? 0 : 0);
+        + (isTargetKilled ? cfg.getOffsetFromKill() : 0);
 }

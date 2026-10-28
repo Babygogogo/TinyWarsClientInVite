@@ -62,7 +62,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0140));
+        this._labelTitle.setLangText(TextType.B0140);
     }
     private async _updateUiCoInfo(): Promise<void> {
         const openData = this.getOpenData();

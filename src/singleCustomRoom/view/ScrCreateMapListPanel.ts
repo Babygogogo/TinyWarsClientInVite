@@ -127,7 +127,7 @@ export class Panel extends UiPanel<OpenData> {
         _selectedNormalMapId = newNormalMapId;
 
         const listMap   = this._listMap;
-        const index     = getExisted(listMap.getRevisedFirstIndex(data => data?.normalMapId === newNormalMapId));
+        const index     = listMap.getRevisedFirstIndex(data => data?.normalMapId === newNormalMapId);
         listMap.setSelectedItemIndex(index);
         if (needScroll) {
             callLater(() => listMap.scrollToItem(Math.max(0, index - 1)), undefined); // callLater是为了防止sizer延迟导致的scroll失效；index-1是为了让玩家看到上面还有选项
@@ -274,16 +274,16 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSinglePlayer.setText(getText(TextType.B0603));
-        this._labelCustomMode.setText(getText(TextType.B1372));
-        this._labelChooseMap.setText(getText(TextType.B0227));
-        this._labelLoading.setText(getText(TextType.A0150));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._btnSearch.setText(getText(TextType.B0228));
-        this._btnSort.setText(getText(TextType.B1049));
-        this._btnNextStep.setText(getText(TextType.B1383));
-        this._btnPrevPage.setText(getText(TextType.B1384));
-        this._btnNextPage.setText(getText(TextType.B1385));
+        this._labelSinglePlayer.setLangText(TextType.B0603);
+        this._labelCustomMode.setLangText(TextType.B1372);
+        this._labelChooseMap.setLangText(TextType.B0227);
+        this._labelLoading.setLangText(TextType.A0150);
+        this._btnBack.setLangText(TextType.B0146);
+        this._btnSearch.setLangText(TextType.B0228);
+        this._btnSort.setLangText(TextType.B1049);
+        this._btnNextStep.setLangText(TextType.B1383);
+        this._btnPrevPage.setLangText(TextType.B1384);
+        this._btnNextPage.setLangText(TextType.B1385);
         this._updateLabelPageTitle();
 
         this._layoutPage.arrangeItems();
@@ -307,7 +307,7 @@ export class Panel extends UiPanel<OpenData> {
         const mapFilter = this._mapFilter;
         if ((mapFilter == null) || (mapFilter.checkIsEmpty())) {
             label.setTextColor(0xCCCCCC);
-            label.setText(getText(TextType.B1386));
+            label.setLangText(TextType.B1386);
         } else {
             label.setTextColor(0xFFFF00);
             label.setText(`${getText(TextType.B1386)}(${getText(TextType.B1387)})`);

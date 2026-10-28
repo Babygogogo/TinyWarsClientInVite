@@ -119,7 +119,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(`${getText(TextType.B0407)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelNoData.setLangText(TextType.B0278);
         this._updateBtnBatch();
     }
     private _updateBtnBatch(): void {

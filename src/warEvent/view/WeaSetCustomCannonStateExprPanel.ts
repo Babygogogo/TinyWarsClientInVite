@@ -3,7 +3,6 @@ import { ContextType } from "../../expressionParsers/Enums.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
@@ -220,7 +219,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getConTileFilter(),
             expressionInfo  : ExpressionInfoDict.ConTileFilter,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getConTileFilter() != text) {
@@ -251,7 +250,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActRangeForUp(),
             expressionInfo  : ExpressionInfoDict.ActRangeForUp,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActRangeForUp() != text) {
@@ -282,7 +281,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActRangeForDown(),
             expressionInfo  : ExpressionInfoDict.ActRangeForDown,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActRangeForDown() != text) {
@@ -313,7 +312,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActRangeForLeft(),
             expressionInfo  : ExpressionInfoDict.ActRangeForLeft,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActRangeForLeft() != text) {
@@ -344,7 +343,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActRangeForRight(),
             expressionInfo  : ExpressionInfoDict.ActRangeForRight,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActRangeForRight() != text) {
@@ -375,7 +374,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActPriority(),
             expressionInfo  : ExpressionInfoDict.ActPriority,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActPriority() != text) {
@@ -406,7 +405,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanAffectSelf(),
             expressionInfo  : ExpressionInfoDict.ActCanAffectSelf,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanAffectSelf() != text) {
@@ -437,7 +436,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanAffectAlly(),
             expressionInfo  : ExpressionInfoDict.ActCanAffectAlly,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanAffectAlly() != text) {
@@ -468,7 +467,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanAffectEnemy(),
             expressionInfo  : ExpressionInfoDict.ActCanAffectEnemy,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanAffectEnemy() != text) {
@@ -499,7 +498,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActMaxTargetCount(),
             expressionInfo  : ExpressionInfoDict.ActMaxTargetCount,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActMaxTargetCount() != text) {
@@ -530,7 +529,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetHp(),
             expressionInfo  : ExpressionInfoDict.ActOffsetHp,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetHp() != text) {
@@ -561,7 +560,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanBeFatal(),
             expressionInfo  : ExpressionInfoDict.ActCanBeFatal,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanBeFatal() != text) {
@@ -592,7 +591,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetFuelPercentage(),
             expressionInfo  : ExpressionInfoDict.ActOffsetFuelPercentage,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetFuelPercentage() != text) {
@@ -623,7 +622,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActOffsetPrimaryAmmoPercentage(),
             expressionInfo  : ExpressionInfoDict.ActOffsetPrimaryAmmoPercentage,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActOffsetPrimaryAmmoPercentage() != text) {
@@ -645,9 +644,9 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnClose.setText(getText(TextType.B0146));
-        this._btnType.setText(getText(TextType.B0516));
-        this._btnIdentifier.setText(getText(TextType.B0131));
+        this._btnClose.setLangText(TextType.B0146);
+        this._btnType.setLangText(TextType.B0516);
+        this._btnIdentifier.setLangText(TextType.B0131);
 
         this._btnConTileFilter.setText(ExpressionInfoDict.ConTileFilter.getTitleText());
         this._btnActRangeForUp.setText(ExpressionInfoDict.ActRangeForUp.getTitleText());

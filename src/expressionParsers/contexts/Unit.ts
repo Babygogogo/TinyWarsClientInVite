@@ -734,7 +734,7 @@ export class Unit extends Base {
             throw newError(`Unexpected arg.`);
         }
 
-        const currentValue = unit.getPrimaryWeaponCurrentAmmo() ?? 0;
+        const currentValue = unit.getPrimaryWeaponCurrentAmmo();
         switch (arg.num) {
             case 1  : return new Num(war, maxValue);
             case 2  : return new Num(war, maxValue - currentValue);
@@ -759,7 +759,7 @@ export class Unit extends Base {
             throw newError(`Unexpected arg.`);
         }
 
-        const currentValue  = unit.getFlareCurrentAmmo() ?? 0;
+        const currentValue  = unit.getFlareCurrentAmmo();
         switch (arg.num) {
             case 1  : return new Num(war, maxValue);
             case 2  : return new Num(war, maxValue - currentValue);
@@ -784,7 +784,7 @@ export class Unit extends Base {
             throw newError(`Unexpected arg.`);
         }
 
-        const currentValue  = unit.getCurrentBuildMaterial() ?? 0;
+        const currentValue  = unit.getCurrentBuildMaterial();
         switch (arg.num) {
             case 1  : return new Num(war, maxValue);
             case 2  : return new Num(war, maxValue - currentValue);
@@ -809,7 +809,7 @@ export class Unit extends Base {
             throw newError(`Unexpected arg.`);
         }
 
-        const currentValue = unit.getCurrentProduceMaterial() ?? 0;
+        const currentValue = unit.getCurrentProduceMaterial();
         switch (arg.num) {
             case 1  : return new Num(war, maxValue);
             case 2  : return new Num(war, maxValue - currentValue);

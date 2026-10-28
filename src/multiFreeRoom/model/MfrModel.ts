@@ -229,7 +229,7 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<n
             teamIndex           : getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
             isAi                : (userId == null) && (!!isReady),
             userId              : userId,
-            coId                : playerData ? playerData.getCoId() ?? 0 : null,
+            coId                : playerData ? playerData.getCoId() : null,
             unitAndTileSkinId   : playerData?.getUnitAndTileSkinId() ?? null,
             isReady             : isReady,
             isInTurn            : null,
@@ -311,8 +311,8 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     const settingsForMfw    = getExisted(roomInfo.getSettingsForMfw());
     const settingsForCommon = getExisted(settingsForMfw.getInitialWarData()?.getSettingsForCommon());
     const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule());
-    const bootTimerParams   = getExisted(settingsForMfw.getBootTimerParams());
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const bootTimerParams   = settingsForMfw.getBootTimerParams();
+    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
     const warPassword       = settingsForMfw.getWarPassword();
     const timerType         = bootTimerParams[0] as TimerTypeId;
     const warEventFullData  = instanceWarRule.getWarEventFullData() ?? null;
@@ -504,7 +504,7 @@ async function checkIsMeetFilter({ roomId, roomPlayerInfo, roomStaticInfo, filte
                 return false;
             }
 
-            if (!playerDataList.some(v => gameConfig.getCoBasicCfg(v.getCoId() ?? 0)?.getCoCategoryId() === filterCoCategoryId)) {
+            if (!playerDataList.some(v => gameConfig.getCoBasicCfg(v.getCoId())?.getCoCategoryId() === filterCoCategoryId)) {
                 return false;
             }
         }

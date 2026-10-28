@@ -136,7 +136,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const arr               = [...this._selectedNumberSet].sort((v1, v2) => v1 - v2) ?? [];
+        const arr               = [...this._selectedNumberSet].sort((v1, v2) => v1 - v2);
         const maxChooseCount    = openData.maxChooseCount;
         if ((maxChooseCount != null) && (arr.length > maxChooseCount)) {
             show(getFormattedText(TextType.A0148, maxChooseCount));

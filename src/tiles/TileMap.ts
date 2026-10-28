@@ -41,7 +41,7 @@ export class TileMap implements ITileMap {
             throw newError(`Empty data.`, ClientErrorCode.BwTileMap_Init_00);
         }
 
-        const tiles     = getExisted(data.getTiles(), ClientErrorCode.BwTileMap_Init_01);
+        const tiles     = data.getTiles();
         const mapWidth  = mapSize.getWidth();
         const mapHeight = mapSize.getHeight();
         if ((!mapSize.checkIsValid()) ||
@@ -52,7 +52,7 @@ export class TileMap implements ITileMap {
 
         const tileCustomNameArray = data.getTileCustomNameArray();
         {
-            const errorCode = getErrorCodeForTileCustomNameArray(tileCustomNameArray ?? []);
+            const errorCode = getErrorCodeForTileCustomNameArray(tileCustomNameArray);
             if (errorCode) {
                 throw newError(`Invalid tileCustomNameArray.`, errorCode);
             }
@@ -297,13 +297,13 @@ export class TileMap implements ITileMap {
         if (observerTeamIndexSet == null) {
             this.forEachTile(tile => {
                 if (tile.getPlayerIndex() === playerIndex) {
-                    bonus += tile.getGlobalAttackBonus() ?? 0;
+                    bonus += tile.getGlobalAttackBonus();
                 }
             });
         } else {
             for (const tile of getAllTilesVisibleToTeams(this.getWar(), observerTeamIndexSet)) {
                 if (tile.getPlayerIndex() === playerIndex) {
-                    bonus += tile.getGlobalAttackBonus() ?? 0;
+                    bonus += tile.getGlobalAttackBonus();
                 }
             }
         }
@@ -323,13 +323,13 @@ export class TileMap implements ITileMap {
         if (observerTeamIndexSet == null) {
             this.forEachTile(tile => {
                 if (tile.getPlayerIndex() === playerIndex) {
-                    bonus += tile.getGlobalDefenseBonus() ?? 0;
+                    bonus += tile.getGlobalDefenseBonus();
                 }
             });
         } else {
             for (const tile of getAllTilesVisibleToTeams(this.getWar(), observerTeamIndexSet)) {
                 if (tile.getPlayerIndex() === playerIndex) {
-                    bonus += tile.getGlobalDefenseBonus() ?? 0;
+                    bonus += tile.getGlobalDefenseBonus();
                 }
             }
         }

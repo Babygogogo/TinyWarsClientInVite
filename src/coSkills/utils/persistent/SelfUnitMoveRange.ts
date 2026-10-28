@@ -57,5 +57,5 @@ export function getTotalOffset({
         }
     }
 
-    return moveRangeOffsets.getOffset() ?? 0;
+    return moveRangeOffsets.getOffset();
 }

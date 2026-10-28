@@ -4,7 +4,7 @@ import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getUnitName } from "../../lang/Utils.ts";
+import { getUnitName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -110,8 +110,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0525));
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelTitle.setLangText(TextType.B0525);
+        this._labelNoData.setLangText(TextType.B0278);
     }
 
     private async _resetList(): Promise<void> {

@@ -1,10 +1,8 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText, getComparatorName, getText } from "../../../lang/Utils.ts";
 import type { WecOngoingPersistentActionPresence } from "../../../proto/schema/CommonProto/WarEvent/WecOngoingPersistentActionPresence.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 import { checkIsValidValueComparatorId, checkIsMeet1 } from "../../../valueAndComparators/Utils.ts";
 import { checkIsValidWarEventActionIdSubset } from "../../actions/utils/Common.ts";
 
@@ -15,8 +13,8 @@ export function getBriefDesc(data: Undefinable<WecOngoingPersistentActionPresenc
 
     return getFormattedText(
         TextType.F0135,
-        getComparatorName(getExisted(data.getOngoingActionsCountComparator())),
-        data.getOngoingActionsCount() ?? UndefinedError,
+        getComparatorName(data.getOngoingActionsCountComparator()),
+        data.getOngoingActionsCount(),
     );
 }
 export function getDetailedDesc(data: Undefinable<WecOngoingPersistentActionPresence>): string | null {
@@ -42,8 +40,8 @@ export function getDetailedDesc(data: Undefinable<WecOngoingPersistentActionPres
     return [
         getFormattedText(
             TextType.F0225,
-            getComparatorName(getExisted(data.getOngoingActionsCountComparator())),
-            data.getOngoingActionsCount() ?? UndefinedError,
+            getComparatorName(data.getOngoingActionsCountComparator()),
+            data.getOngoingActionsCount(),
         ),
         ...subTextArray
     ].join(`\n`);
@@ -112,8 +110,8 @@ export function checkIsMeet(condition: WecOngoingPersistentActionPresence, war: 
     }
 
     return checkIsMeet1({
-        comparator  : getExisted(condition.getOngoingActionsCountComparator(), ClientErrorCode.BwWarEventManager_CheckIsMeetConOngoingPersistentActionPresence_00),
-        targetValue : getExisted(condition.getOngoingActionsCount(), ClientErrorCode.BwWarEventManager_CheckIsMeetConOngoingPersistentActionPresence_01),
+        comparator  : condition.getOngoingActionsCountComparator(),
+        targetValue : condition.getOngoingActionsCount(),
         actualValue : counter,
     });
 }

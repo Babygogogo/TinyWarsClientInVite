@@ -3,7 +3,6 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
 import { getMedal } from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getMedalDesc, getTimestampShortText } from "../../lang/Utils.ts";
 import { Common } from "../../medals/Constants.ts";
@@ -105,12 +104,12 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1018));
-        this._labelNoMedal.setText(getText(TextType.A0401));
-        this._labelObtainTitle.setText(getText(TextType.B1020));
-        this._labelExpireTitle.setText(getText(TextType.B1021));
-        this._labelShow.setText(getText(TextType.B1019));
-        this._btnConfirm.setText(getText(TextType.B0026));
+        this._labelTitle.setLangText(TextType.B1018);
+        this._labelNoMedal.setLangText(TextType.A0401);
+        this._labelObtainTitle.setLangText(TextType.B1020);
+        this._labelExpireTitle.setLangText(TextType.B1021);
+        this._labelShow.setLangText(TextType.B1019);
+        this._btnConfirm.setLangText(TextType.B0026);
 
         this._layoutExpireTime.arrangeItems();
         this._layoutObtainTime.arrangeItems();
@@ -140,7 +139,7 @@ export class Panel extends UiPanel<OpenData> {
 
                 const expireTimestamp   = medalInfo.getExpireTimestamp();
                 this._labelExpire.setText(expireTimestamp == null ? `--` : getTextForTimestamp(expireTimestamp));
-                this._labelObtain.setText(getTextForTimestamp(medalInfo.getObtainTimestamp() ?? 0));
+                this._labelObtain.setText(getTextForTimestamp(medalInfo.getObtainTimestamp()));
                 this._labelDesc.setText(getMedalDesc(medalId) ?? UndefinedError);
 
                 this._layoutExpireTime.arrangeItems();
@@ -157,7 +156,7 @@ export class Panel extends UiPanel<OpenData> {
             const expireTimestamp = medalInfo.getExpireTimestamp();
             if ((expireTimestamp == null) || (expireTimestamp >= timestamp)) {
                 dataArray.push({
-                    medalId : getExisted(medalInfo.getMedalId()),
+                    medalId : medalInfo.getMedalId(),
                     panel   : this,
                 });
             }
@@ -175,7 +174,7 @@ export class Panel extends UiPanel<OpenData> {
             await listMedal.bindData(dataArray);
 
             const showMedalId = getSelfShowMedalIdArray()[0];
-            listMedal.setSelectedItemIndexes([getExisted(listMedal.getRevisedFirstIndex(v => v?.medalId == showMedalId))]);
+            listMedal.setSelectedItemIndexes([listMedal.getRevisedFirstIndex(v => v?.medalId == showMedalId)]);
         }
     }
 }

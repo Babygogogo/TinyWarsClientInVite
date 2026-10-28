@@ -245,7 +245,7 @@ export class Panel extends UiPanel<OpenData> {
         const bracketInfoArray  = (await getAtFullBracketInfo(tourneyId))?.getSingleBracketInfoArray() ?? [];
         const userIdSet         = new Set<number>();
         const dataArray         : DataForBracketRenderer[] = [];
-        for (const bracketInfo of bracketInfoArray.filter(v => v.getBracketRoundId() === 1).sort((v1, v2) => (v1.getBracketGameId() ?? 0) - (v2.getBracketGameId() ?? 0))) {
+        for (const bracketInfo of bracketInfoArray.filter(v => v.getBracketRoundId() === 1).sort((v1, v2) => (v1.getBracketGameId()) - (v2.getBracketGameId()))) {
             const userIdArray = bracketInfo.getUserIdArray();
             for (const userId of userIdArray) {
                 if (!checkHasUserPublicInfo(userId)) {
@@ -254,7 +254,7 @@ export class Panel extends UiPanel<OpenData> {
             }
 
             dataArray.push({
-                bracketGameId : bracketInfo.getBracketGameId() ?? 0,
+                bracketGameId : bracketInfo.getBracketGameId(),
                 userIdArray   : userIdArray,
                 panel         : this,
             });
@@ -270,9 +270,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1046));
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
+        this._labelTitle.setLangText(TextType.B1046);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
     }
 }
 

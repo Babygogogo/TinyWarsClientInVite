@@ -96,9 +96,9 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._updateListMessageAndLabelNoMessage();
-        this._labelTitle.setText(getText(TextType.B0457));
-        this._labelNoMessage.setText(getText(TextType.B0278));
-        this._btnAddMessage.setText(getText(TextType.B0454));
+        this._labelTitle.setLangText(TextType.B0457);
+        this._labelNoMessage.setLangText(TextType.B0278);
+        this._btnAddMessage.setLangText(TextType.B0454);
     }
     private async _updateListMessageAndLabelNoMessage(): Promise<void> {
         const dataArray: DataForMessageRenderer[] = getAllMessageList()?.map(v => ({ data : v })) ?? [];
@@ -146,7 +146,7 @@ class MessageRenderer extends UiListItemRenderer<DataForMessageRenderer> {
         this.setUnscaledManualHeight(labelContent.getScaledHeight() + 38);
 
         const btnModify = this._btnModify;
-        btnModify.setText(getText(TextType.B0317));
+        btnModify.setLangText(TextType.B0317);
         btnModify.setIsVisible(false);
         btnModify.setIsVisible(checkCanSelfEditChangeLog());
     }

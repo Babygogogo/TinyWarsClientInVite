@@ -132,8 +132,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(getFormattedText(TextType.F0092, getText(TextType.B0531)));
-        this._btnAdd.setText(getText(TextType.B0320));
-        this._btnDeleteAll.setText(getText(TextType.B0762));
+        this._btnAdd.setLangText(TextType.B0320);
+        this._btnDeleteAll.setLangText(TextType.B0762);
         this._layoutTitle.arrangeItems();
 
         this._updateLabelMapSize();
@@ -200,7 +200,7 @@ class GridIndexRenderer extends UiListItemRenderer<DataForLocationRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDelete.setText(getText(TextType.B0220));
+        this._btnDelete.setLangText(TextType.B0220);
     }
 }
 

@@ -84,7 +84,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const objectiveIdSet = new Set(taskObjectiveArray.map(v => v.getObjectiveId() ?? 0));
+        const objectiveIdSet = new Set(taskObjectiveArray.map(v => v.getObjectiveId()));
         for (let objectiveId = 0; ; ++objectiveId) {
             if (!objectiveIdSet.has(objectiveId)) {
                 taskObjectiveArray.push(TaskObjective.fromJson({
@@ -94,7 +94,7 @@ export class Panel extends UiPanel<OpenData> {
                 break;
             }
         }
-        taskObjectiveArray.sort((v1, v2) => (v1.getObjectiveId() ?? 0) - (v2.getObjectiveId() ?? 0));
+        taskObjectiveArray.sort((v1, v2) => (v1.getObjectiveId()) - (v2.getObjectiveId()));
         war.setTaskObjectiveFullData(fullData);
         dispatch(TypeId.MeTaskObjectiveFullDataChanged, fullData);
     }
@@ -112,8 +112,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1214));
-        this._labelNoTaskObjective.setText(getText(TextType.B0278));
+        this._labelTitle.setLangText(TextType.B1214);
+        this._labelNoTaskObjective.setLangText(TextType.B0278);
     }
     private async _updateComponentsForTaskObjective(): Promise<void> {
         const war = this.getOpenData()?.war;
@@ -233,9 +233,9 @@ class TaskObjectiveRenderer extends UiListItemRenderer<DataForTaskObjectiveRende
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDesc.setText(getText(TextType.B1258));
-        this._btnDelete.setText(getText(TextType.B0220));
-        this._btnEdit.setText(getText(TextType.B0465));
+        this._btnDesc.setLangText(TextType.B1258);
+        this._btnDelete.setLangText(TextType.B0220);
+        this._btnEdit.setLangText(TextType.B0465);
         this._labelDescTitle.setText([
             getText(TextType.B1215),
             ``,
@@ -258,7 +258,7 @@ class TaskObjectiveRenderer extends UiListItemRenderer<DataForTaskObjectiveRende
         const labelError        = this._labelError;
         const taskObjective     = openData.taskObjective;
         const errorText         = getErrorText(taskObjective, openData.customCounterNameSet);
-        labelError.setText(`#${taskObjective.getObjectiveId() ?? 0} ${errorText ?? getText(TextType.B0493)}`);
+        labelError.setText(`#${taskObjective.getObjectiveId()} ${errorText ?? getText(TextType.B0493)}`);
         labelError.setTextColor(errorText ? ColorValue.Yellow : ColorValue.Green);
 
         const updaterForCurrentProgress = taskObjective.getUpdaterForCurrentProgress() ?? `----`;
@@ -266,8 +266,8 @@ class TaskObjectiveRenderer extends UiListItemRenderer<DataForTaskObjectiveRende
             getJoinedShortLanguageText(taskObjective.getDesc(), 40),
             getTextForYesOrNo(taskObjective.getIsMain()),
             `${taskObjective.getMaxProgress() ?? `----`}`,
-            `${taskObjective.getScoreForCompletion() ?? 0}`,
-            `${taskObjective.getScoreForProgress() ?? 0}`,
+            `${taskObjective.getScoreForCompletion()}`,
+            `${taskObjective.getScoreForProgress()}`,
             `${updaterForCurrentProgress.length <= 40 ? updaterForCurrentProgress : `${updaterForCurrentProgress.substring(0, 40)}...`}`,
         ].join(`\n`));
     }

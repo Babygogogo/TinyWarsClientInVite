@@ -511,7 +511,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const mode = action.getActEndTurnIndexMode() ?? 0;
+        const mode = action.getActEndTurnIndexMode();
         this._labelActEndTurnIndexMode.setText(getBuffEndTimeModificationModeName(mode) || UndefinedError);
     }
 
@@ -521,7 +521,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const mode = action.getActEndPlayerIndexMode() ?? 0;
+        const mode = action.getActEndPlayerIndexMode();
         this._labelActEndPlayerIndexMode.setText(getBuffEndTimeModificationModeName(mode) || UndefinedError);
     }
 

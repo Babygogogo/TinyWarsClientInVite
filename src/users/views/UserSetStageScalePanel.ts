@@ -1,7 +1,6 @@
 import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
 import { format } from "../../helpers/Text.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { setStageScale } from "../../localData/Storage.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -114,11 +113,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0558));
-        this._labelScaleTitle.setText(getText(TextType.B0559));
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnDefault.setText(getText(TextType.B0543));
-        this._btnClose.setText(getText(TextType.B0154));
+        this._labelTitle.setLangText(TextType.B0558);
+        this._labelScaleTitle.setLangText(TextType.B0559);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnDefault.setLangText(TextType.B0543);
+        this._btnClose.setLangText(TextType.B0154);
 
         this._layoutContent.arrangeItems();
     }

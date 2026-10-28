@@ -154,14 +154,14 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0301));
-        this._labelTileAndUnit.setText(getText(TextType.B1244));
-        this._labelTileBase.setText(getText(TextType.TileBase));
-        this._labelTileDecoration.setText(getText(TextType.TileDecoration));
-        this._labelTileObject.setText(getText(TextType.TileObject));
-        this._labelUnit.setText(getText(TextType.Units));
-        this._labelLocation.setText(getText(TextType.Location));
-        this._labelShowAllLocation.setText(getText(TextType.B0761));
+        this._labelTitle.setLangText(TextType.B0301);
+        this._labelTileAndUnit.setLangText(TextType.B1244);
+        this._labelTileBase.setLangText(TextType.TileBase);
+        this._labelTileDecoration.setLangText(TextType.TileDecoration);
+        this._labelTileObject.setLangText(TextType.TileObject);
+        this._labelUnit.setLangText(TextType.Units);
+        this._labelLocation.setLangText(TextType.Location);
+        this._labelShowAllLocation.setLangText(TextType.B0761);
         // this._btnShowAllLocations.label = Lang.getText(LangTextType.B0757);
         // this._btnHideAllLocations.label = Lang.getText(LangTextType.B0758);
 

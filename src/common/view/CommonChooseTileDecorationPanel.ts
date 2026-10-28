@@ -60,7 +60,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedPlayerIndex(newType: number | null, needScroll: boolean): Promise<void> {
         const listType  = this._listType;
-        const index     = getExisted(listType.getRevisedFirstIndex(v => v?.decorationType === newType));
+        const index     = listType.getRevisedFirstIndex(v => v?.decorationType === newType);
         listType.setSelectedItemIndex(index);
         if (needScroll) {
             listType.scrollToItem(index);

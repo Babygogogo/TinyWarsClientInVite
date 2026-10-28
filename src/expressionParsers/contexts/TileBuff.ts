@@ -64,7 +64,7 @@ export class TileBuff extends Base {
         } else if (identifierName == TileBuff.VnExpiringTurnIndex) {
             return new Num(war, buff.getExpiringTurnIndex() ?? -1);
         } else if (identifierName == TileBuff.VnExtraParams) {
-            return new NumArray(war, buff.getExtraParamArray() ?? []);
+            return new NumArray(war, buff.getExtraParamArray());
         } else if (identifierName == TileBuff.VnTile) {
             return new Tile(this._tile);
         } else if (identifierName == TileBuff.VnWar) {

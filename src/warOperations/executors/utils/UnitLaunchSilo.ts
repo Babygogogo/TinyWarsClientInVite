@@ -62,7 +62,7 @@ function fastExeUnitLaunchSilo(war: IBwWar, action: WoUnitLaunchSilo): void {
             const warStatisticsManager  = war.getWarStatisticsManager();
             const targetGridIndex       = getExisted(GridIndex.convertGridIndex(action.getTargetGridIndex()));
             const tile                  = war.getTileMap().getTile(pathNodes[pathNodes.length - 1]);
-            const launchSiloParams      = getExisted(tile.getTemplateCfg().getLaunchSiloParams());
+            const launchSiloParams      = tile.getTemplateCfg().getLaunchSiloParams();
             tile.resetByTypeAndPlayerIndex({
                 baseType        : tile.getBaseType(),
                 objectType      : getExisted(launchSiloParams[1]),
@@ -157,7 +157,7 @@ async function normalExeUnitLaunchSilo(war: IBwWar, action: WoUnitLaunchSilo): P
 
         } else {
             const tile              = war.getTileMap().getTile(pathNodes[pathNodes.length - 1]);
-            const launchSiloParams  = getExisted(tile.getTemplateCfg().getLaunchSiloParams());
+            const launchSiloParams  = tile.getTemplateCfg().getLaunchSiloParams();
             tile.resetByTypeAndPlayerIndex({
                 baseType    : tile.getBaseType(),
                 objectType  : getExisted(launchSiloParams[1]),

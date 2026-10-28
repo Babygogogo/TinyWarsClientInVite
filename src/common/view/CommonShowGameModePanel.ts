@@ -2,7 +2,7 @@ import type { ModeId } from "../../gameModes/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getGameModeHelpText, getGameModeName } from "../../lang/Utils.ts";
+import { getGameModeHelpText, getGameModeName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -82,8 +82,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1013));
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelTitle.setLangText(TextType.B1013);
+        this._labelNoData.setLangText(TextType.B0278);
     }
 
     private async _updateComponentsForList(): Promise<void> {

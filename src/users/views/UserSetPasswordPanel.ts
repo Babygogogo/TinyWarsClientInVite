@@ -71,11 +71,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateOnLanguageChanged(): void {
-        this._labelTitle.setText(getText(TextType.B0426));
-        this._labelOldPasswordTitle.setText(getText(TextType.B0427));
-        this._labelNewPasswordTitle0.setText(getText(TextType.B0428));
-        this._labelNewPasswordTitle1.setText(getText(TextType.B0429));
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnClose.setText(getText(TextType.B0154));
+        this._labelTitle.setLangText(TextType.B0426);
+        this._labelOldPasswordTitle.setLangText(TextType.B0427);
+        this._labelNewPasswordTitle0.setLangText(TextType.B0428);
+        this._labelNewPasswordTitle1.setLangText(TextType.B0429);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnClose.setLangText(TextType.B0154);
     }
 }

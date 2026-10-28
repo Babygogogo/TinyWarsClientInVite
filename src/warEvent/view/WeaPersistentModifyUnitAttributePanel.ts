@@ -3,9 +3,8 @@ import { ContextType } from "../../expressionParsers/Enums.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getTextForYesOrNo } from "../../lang/Utils.ts";
+import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -228,7 +227,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getConUnitFilter(),
             expressionInfo  : ExpressionInfoDict.ConUnitFilter,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getConUnitFilter() != text) {
@@ -259,7 +258,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActAttackPowerModifier(),
             expressionInfo  : ExpressionInfoDict.ActAttackPowerModifier,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActAttackPowerModifier() != text) {
@@ -290,7 +289,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActDefenseModifier(),
             expressionInfo  : ExpressionInfoDict.ActDefenseModifier,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActDefenseModifier() != text) {
@@ -321,7 +320,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActMaxAttackRangeModifier(),
             expressionInfo  : ExpressionInfoDict.ActMaxAttackRangeModifier,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActMaxAttackRangeModifier() != text) {
@@ -352,7 +351,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActCanAttackAfterMoving(),
             expressionInfo  : ExpressionInfoDict.ActCanAttackAfterMoving,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActCanAttackAfterMoving() != text) {
@@ -383,7 +382,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActMoveRangeModifier(),
             expressionInfo  : ExpressionInfoDict.ActMoveRangeModifier,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActMoveRangeModifier() != text) {
@@ -414,7 +413,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActLuckLowerLimitModifier(),
             expressionInfo  : ExpressionInfoDict.ActLuckLowerLimitModifier,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActLuckLowerLimitModifier() != text) {
@@ -445,7 +444,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActLuckUpperLimitModifier(),
             expressionInfo  : ExpressionInfoDict.ActLuckUpperLimitModifier,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActLuckUpperLimitModifier() != text) {
@@ -476,7 +475,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActVisionRangeModifier(),
             expressionInfo  : ExpressionInfoDict.ActVisionRangeModifier,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActVisionRangeModifier() != text) {
@@ -507,7 +506,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActIsPenetratingVision(),
             expressionInfo  : ExpressionInfoDict.ActIsPenetratingVision,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActIsPenetratingVision() != text) {
@@ -538,7 +537,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActFlareRangeModifier(),
             expressionInfo  : ExpressionInfoDict.ActFlareRangeModifier,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActFlareRangeModifier() != text) {
@@ -569,7 +568,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActFlareRadiusModifier(),
             expressionInfo  : ExpressionInfoDict.ActFlareRadiusModifier,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActFlareRadiusModifier() != text) {
@@ -629,7 +628,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateLabelConIsEffectiveInMpw(): void {
-        this._labelConIsEffectiveInMpw.setText(getTextForYesOrNo(this.getAction()?.getIsEffectiveInMpw()));
+        this._labelConIsEffectiveInMpw.setLangText(this.getAction()?.getIsEffectiveInMpw() ? TextType.Yes : TextType.No);
         this._layoutConIsEffectiveInMpw.arrangeItems();
     }
 

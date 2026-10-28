@@ -77,7 +77,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const warEventArray             = openData.warEventArray;
         const templateWarRule           = openData.templateWarRule;
-        const allWarEventIdSet          = new Set(warEventArray.map(v => v.getEventId() ?? 0));
+        const allWarEventIdSet          = new Set(warEventArray.map(v => v.getEventId()));
         const currentWarEventIdArray    = templateWarRule.getWarEventIdArray();
         for (const warEventId of currentWarEventIdArray) {
             allWarEventIdSet.delete(warEventId);
@@ -130,7 +130,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(`${getText(TextType.B0461)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoEvent.setText(getText(TextType.B0278));
+        this._labelNoEvent.setLangText(TextType.B0278);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();

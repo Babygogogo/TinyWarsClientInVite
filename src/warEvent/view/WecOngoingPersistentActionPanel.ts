@@ -96,7 +96,7 @@ export class Panel extends UiPanel<OpenData> {
         const gameConfig        = openData.war.getGcData();
         openPanel(getDict().CommonChooseMultiNumberPanel, {
             currentNumberArray      : condition.getOngoingActionIdArray(),
-            availableNumberArray    : warEventFullData.getActionArray().filter(v => checkIsPersistentAction(v)).map(v => getExisted(v.getWeaCommonData()?.getActionId())) ?? [],
+            availableNumberArray    : warEventFullData.getActionArray().filter(v => checkIsPersistentAction(v)).map(v => getExisted(v.getWeaCommonData()?.getActionId())),
             showNumber              : true,
             getNumberMainText       : actionId => getBriefDescForAction(getExisted(getAction(warEventFullData, actionId)), gameConfig) ?? UndefinedError,
             getTitleText            : () => getFormattedText(TextType.F0092, getText(TextType.B0889)),
@@ -112,7 +112,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle        : () => getText(TextType.B0902),
             minValue        : 0,
             maxValue        : MaxCounts.PerMap,
-            currentValue    : condition.getOngoingActionsCount() ?? 0,
+            currentValue    : condition.getOngoingActionsCount(),
             callback        : value => {
                 condition.setOngoingActionsCount(value);
                 dispatch(TypeId.WarEventFullDataChanged);
@@ -169,7 +169,7 @@ export class Panel extends UiPanel<OpenData> {
         this._labelActionCount.setText(value == null ? `` : `${value}`);
     }
     private _updateLabelActionCountComparator(): void {
-        const comparator = getExisted(this._getCondition().getOngoingActionsCountComparator());
+        const comparator = this._getCondition().getOngoingActionsCountComparator();
         this._labelActionCountComparator.setText(getComparatorName(comparator) ?? UndefinedError);
     }
 

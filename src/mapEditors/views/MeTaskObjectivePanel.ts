@@ -3,7 +3,7 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getTextForYesOrNo } from "../../lang/Utils.ts";
+import { getText } from "../../lang/Utils.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { MaxInt32, MinInt32 } from "../../numbers/Constants.ts";
@@ -198,7 +198,7 @@ export class Panel extends UiPanel<OpenData> {
 
         playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        const currentValue  = taskObjective.getScoreForCompletion() ?? 0;
+        const currentValue  = taskObjective.getScoreForCompletion();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle        : () => getText(TextType.B1218),
             minValue        : MinInt32,
@@ -230,7 +230,7 @@ export class Panel extends UiPanel<OpenData> {
 
         playShortSfx(ShortSfxCode.ButtonNeutral01);
 
-        const currentValue = taskObjective.getScoreForProgress() ?? 0;
+        const currentValue = taskObjective.getScoreForProgress();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle        : () => getText(TextType.B1219),
             minValue        : MinInt32,
@@ -324,7 +324,7 @@ export class Panel extends UiPanel<OpenData> {
         }
         {
             const label = this._labelIsMain;
-            label.setText(getTextForYesOrNo(taskObjective?.getIsMain()));
+            label.setLangText(taskObjective?.getIsMain() ? TextType.Yes : TextType.No);
             this._groupIsMain.setUnscaledManualHeight(Math.max(30, label.getScaledHeight()));
         }
         {

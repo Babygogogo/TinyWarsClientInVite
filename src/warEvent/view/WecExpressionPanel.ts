@@ -118,7 +118,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : condition.getExpression(),
             expressionInfo  : ExpressionInfo,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (condition.getExpression() != text) {

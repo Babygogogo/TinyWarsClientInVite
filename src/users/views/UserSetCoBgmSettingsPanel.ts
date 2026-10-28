@@ -1,4 +1,3 @@
-import { SkillTypeId } from "../../coSkills/Constants.ts";
 import { showLang } from "../../FloatText.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
@@ -6,7 +5,7 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getCoSkillTypeName, getBgmSfxName } from "../../lang/Utils.ts";
+import { getText, getBgmSfxName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserSetCoBgmSettings/S.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -136,7 +135,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const coCategoryCfg = getExisted(gameConfig.getCoCategoryCfg(coCategoryId));
-        const bgmCodeArray  = getExisted(getSelfSettings()?.getCoBgmSettings()?.find(v => v.getCoCategoryId() === coCategoryId)?.getBgmCodeArray() ?? coCategoryCfg.getBgmCodeArray());
+        const bgmCodeArray  = (getSelfSettings()?.getCoBgmSettings()?.find(v => v.getCoCategoryId() === coCategoryId)?.getBgmCodeArray() ?? coCategoryCfg.getBgmCodeArray());
         openPanel(getDict().SoundsChooseSingleBgmPanel, {
             gameConfig          : gameConfig,
             currentBgmCode      : bgmCodeArray[0],
@@ -157,7 +156,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const coCategoryCfg = getExisted(gameConfig.getCoCategoryCfg(coCategoryId));
-        const bgmCodeArray  = getExisted(getSelfSettings()?.getCoBgmSettings()?.find(v => v.getCoCategoryId() === coCategoryId)?.getBgmCodeArray() ?? coCategoryCfg.getBgmCodeArray());
+        const bgmCodeArray  = (getSelfSettings()?.getCoBgmSettings()?.find(v => v.getCoCategoryId() === coCategoryId)?.getBgmCodeArray() ?? coCategoryCfg.getBgmCodeArray());
         openPanel(getDict().SoundsChooseSingleBgmPanel, {
             gameConfig          : gameConfig,
             currentBgmCode      : bgmCodeArray[1],
@@ -178,7 +177,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const coCategoryCfg = getExisted(gameConfig.getCoCategoryCfg(coCategoryId));
-        const bgmCodeArray  = getExisted(getSelfSettings()?.getCoBgmSettings()?.find(v => v.getCoCategoryId() === coCategoryId)?.getBgmCodeArray() ?? coCategoryCfg.getBgmCodeArray());
+        const bgmCodeArray  = (getSelfSettings()?.getCoBgmSettings()?.find(v => v.getCoCategoryId() === coCategoryId)?.getBgmCodeArray() ?? coCategoryCfg.getBgmCodeArray());
         openPanel(getDict().SoundsChooseSingleBgmPanel, {
             gameConfig          : gameConfig,
             currentBgmCode      : bgmCodeArray[2],
@@ -192,12 +191,12 @@ export class Panel extends UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0992));
-        this._btnCo.setText(getText(TextType.B0425));
-        this._btnReset.setText(getText(TextType.B0567));
-        this._btnPassive.setText(getCoSkillTypeName(SkillTypeId.Passive) ?? UndefinedError);
-        this._btnPower.setText(getCoSkillTypeName(SkillTypeId.Power) ?? UndefinedError);
-        this._btnSuperPower.setText(getCoSkillTypeName(SkillTypeId.SuperPower) ?? UndefinedError);
+        this._labelTitle.setLangText(TextType.B0992);
+        this._btnCo.setLangText(TextType.B0425);
+        this._btnReset.setLangText(TextType.B0567);
+        this._btnPassive.setLangText(TextType.B0576);
+        this._btnPower.setLangText(TextType.B0577);
+        this._btnSuperPower.setLangText(TextType.B0578);
     }
 
     private _updateComponentsForCoAndBgm(): void {

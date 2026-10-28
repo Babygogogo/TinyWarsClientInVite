@@ -238,8 +238,8 @@ export function getErrorTip(
         }
     }
     {
-        const actEndTurnIndexMode   = data.getActEndTurnIndexMode() ?? 0;
-        const actEndPlayerIndexMode = data.getActEndPlayerIndexMode() ?? 0;
+        const actEndTurnIndexMode   = data.getActEndTurnIndexMode();
+        const actEndPlayerIndexMode = data.getActEndPlayerIndexMode();
         if ((!checkIsValidBuffEndTimeModificationMode(actEndTurnIndexMode)) ||
             (!checkIsValidBuffEndTimeModificationMode(actEndPlayerIndexMode))
         ) {
@@ -446,7 +446,7 @@ function calculateExpiringTime(
     playersCountNeutral : number
 ): (number | null)[] {
     let turnIndex = calculateExpiringTimePart(
-        action.getActEndTurnIndexMode() ?? 0,
+        action.getActEndTurnIndexMode(),
         action.getActEndTurnIndex() ?? 0,
         buffEndTurnIndex,
         warTurnIndex
@@ -456,7 +456,7 @@ function calculateExpiringTime(
     }
 
     let playerIndex = calculateExpiringTimePart(
-        action.getActEndPlayerIndexMode() ?? 0,
+        action.getActEndPlayerIndexMode(),
         action.getActEndPlayerIndex() ?? 0,
         buffEndPlayerIndex,
         warPlayerIndex

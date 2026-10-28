@@ -270,14 +270,14 @@ function getPromotionForUnitProduceUnit(war: IBwWar, producerUnit: IBwUnit, targ
     for (const skillId of war.getPlayerInTurn().getCoCurrentSkills()) {
         const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfPromotionBonusByProduce();
         if ((cfg)                                                                           &&
-            (gameConfig.checkIsUnitTypeInCategory(targetUnitType, cfg.getUnitCategoryId() ?? 0)) &&
+            (gameConfig.checkIsUnitTypeInCategory(targetUnitType, cfg.getUnitCategoryId())) &&
             ((isCoOnboard) || (gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                 getCoGridIndexArrayOnMap,
                 coZoneRadius,
             })))
         ) {
-            promotion += cfg.getBonus() ?? 0;
+            promotion += cfg.getBonus();
         }
     }
 

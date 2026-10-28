@@ -6,7 +6,6 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { getMedal, getUserAvatar } from "../../helpers/ImageSource.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { S } from "../../proto/schema/CommonProto/NetMessage/MsgUserGetOnlineUserIdArray/S.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
@@ -133,10 +132,10 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0236));
-        this._labelLoading.setText(getText(TextType.A0040));
-        this._labelNameTitle1.setText(getText(TextType.B0175));
-        this._labelNameTitle2.setText(getText(TextType.B0175));
+        this._labelTitle.setLangText(TextType.B0236);
+        this._labelLoading.setLangText(TextType.A0040);
+        this._labelNameTitle1.setLangText(TextType.B0175);
+        this._labelNameTitle2.setLangText(TextType.B0175);
         this._layoutTitle.arrangeItems();
     }
 }

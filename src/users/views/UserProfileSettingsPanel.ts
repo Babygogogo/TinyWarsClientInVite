@@ -127,12 +127,12 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0560));
-        this._btnChangeAvatar.setText(getText(TextType.B0707));
-        this._btnChangeNickname.setText(getText(TextType.B0175));
-        this._btnChangePassword.setText(getText(TextType.B0171));
-        this._btnChangeDiscordId.setText(getText(TextType.B0150));
-        this._btnChangeMedal.setText(getText(TextType.B1018));
-        this._btnChangeEmail.setText(getText(TextType.B1332));
+        this._labelTitle.setLangText(TextType.B0560);
+        this._btnChangeAvatar.setLangText(TextType.B0707);
+        this._btnChangeNickname.setLangText(TextType.B0175);
+        this._btnChangePassword.setLangText(TextType.B0171);
+        this._btnChangeDiscordId.setLangText(TextType.B0150);
+        this._btnChangeMedal.setLangText(TextType.B1018);
+        this._btnChangeEmail.setLangText(TextType.B1332);
     }
 }

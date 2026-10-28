@@ -202,13 +202,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(getText(TextType.A0040));
-        this._labelMultiPlayer.setText(getText(TextType.B0137));
-        this._labelMyWar.setText(getText(TextType.B0024));
-        this._labelChooseWar.setText(getText(TextType.B0589));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._labelNoWar.setText(getText(TextType.B0210));
-        this._btnNextStep.setText(getText(TextType.B0024));
+        this._labelLoading.setLangText(TextType.A0040);
+        this._labelMultiPlayer.setLangText(TextType.B0137);
+        this._labelMyWar.setLangText(TextType.B0024);
+        this._labelChooseWar.setLangText(TextType.B0589);
+        this._btnBack.setLangText(TextType.B0146);
+        this._labelNoWar.setLangText(TextType.B0210);
+        this._btnNextStep.setLangText(TextType.B0024);
 
         this._groupNavigator.arrangeItems();
     }

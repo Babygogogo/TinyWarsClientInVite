@@ -30,7 +30,7 @@ export class CcwWar extends MpwWar {
         return false;
     }
     public getNormalMapId(): number {
-        return this.getSettingsForCcw().getNormalMapId() ?? 0;
+        return this.getSettingsForCcw().getNormalMapId();
     }
 
     private _setSettingsForCcw(settings: SettingsForCcw): void {
@@ -54,6 +54,6 @@ export class CcwWar extends MpwWar {
     }
 
     public getSettingsBootTimerParams(): number[] {
-        return getExisted(this.getSettingsForCcw().getBootTimerParams());
+        return this.getSettingsForCcw().getBootTimerParams();
     }
 }

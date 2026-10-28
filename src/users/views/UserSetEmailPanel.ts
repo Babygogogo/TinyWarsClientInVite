@@ -134,13 +134,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1332));
-        this._labelEmail.setText(getText(TextType.B1333));
-        this._labelVerificationCode.setText(getText(TextType.B1334));
-        this._btnRequest.setText(getText(TextType.B0382));
-        this._btnVerify.setText(getText(TextType.B1335));
-        this._labelStep1.setText(getText(TextType.A0860));
-        this._labelStep2.setText(getText(TextType.A0861));
+        this._labelTitle.setLangText(TextType.B1332);
+        this._labelEmail.setLangText(TextType.B1333);
+        this._labelVerificationCode.setLangText(TextType.B1334);
+        this._btnRequest.setLangText(TextType.B0382);
+        this._btnVerify.setLangText(TextType.B1335);
+        this._labelStep1.setLangText(TextType.A0860);
+        this._labelStep2.setLangText(TextType.A0861);
         this._updateLabelEmailState();
 
         this._groupStep1.arrangeItems();
@@ -172,13 +172,13 @@ export class Panel extends UiPanel<OpenData> {
         const label     = this._labelEmailState;
         const selfInfo  = getSelfInfo();
         if ((text) && (text === selfInfo?.getEmailAddress())) {
-            label.setText(getText(TextType.A0864));
+            label.setLangText(TextType.A0864);
             label.setTextColor(ColorValue.Green);
         } else if ((text) && (text === selfInfo?.getUserComplexInfo()?.getUnverifiedEmailAddress())) {
-            label.setText(getText(TextType.A0866));
+            label.setLangText(TextType.A0866);
             label.setTextColor(ColorValue.Yellow);
         } else {
-            label.setText(getText(TextType.A0865));
+            label.setLangText(TextType.A0865);
             label.setTextColor(ColorValue.Dark);
         }
     }

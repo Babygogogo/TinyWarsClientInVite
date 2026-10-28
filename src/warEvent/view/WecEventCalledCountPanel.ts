@@ -108,7 +108,7 @@ export class Panel extends UiPanel<OpenData> {
         const condition = this._getCondition();
         openPanel(getDict().CommonChooseMultiNumberPanel, {
             currentNumberArray          : condition.getEventIdArray(),
-            availableNumberArray        : getNonNullElements(fullData.getEventArray()?.map(v => v.getEventId()) ?? []),
+            availableNumberArray        : getNonNullElements(fullData.getEventArray()?.map(v => v.getEventId())),
             showNumber                  : true,
             getTitleText                : () => getFormattedText(TextType.F0092, getText(TextType.B0461)),
             getNumberMainText           : warEventId => getTruncatedText(
@@ -165,7 +165,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle        : () => getText(TextType.B0788),
             minValue        : 0,
             maxValue        : Event.MaxEventsPerMap,
-            currentValue    : condition.getEventsCount() ?? 0,
+            currentValue    : condition.getEventsCount(),
             callback        : value => {
                 condition.setEventsCount(value);
                 dispatch(TypeId.WarEventFullDataChanged);
@@ -245,7 +245,7 @@ export class Panel extends UiPanel<OpenData> {
         this._labelEventsCount.setText(eventsCount == null ? `` : `${eventsCount}`);
     }
     private _updateEventsCountComparator(): void {
-        const comparator = getExisted(this._getCondition().getEventsCountComparator());
+        const comparator = this._getCondition().getEventsCountComparator();
         this._labelEventsCountComparator.setText(getComparatorName(comparator) ?? UndefinedError);
     }
 

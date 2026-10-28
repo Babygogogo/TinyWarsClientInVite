@@ -73,7 +73,7 @@ export class SrrWarCreator extends WarCreatorBase {
                 includeRandom   : false,
             });
             if (existingPlayerInfo) {
-                const coId = existingPlayerInfo.getCoId() ?? 0;
+                const coId = existingPlayerInfo.getCoId();
                 newPlayerInfoList.push(DataForPlayerInRoom.fromJson({
                     playerIndex         : playerIndex,
                     isReady             : true,
@@ -115,7 +115,7 @@ export class SrrWarCreator extends WarCreatorBase {
     public tickUnitAndTileSkinId(playerIndex: number): void {
         const playerInfoList        = this._getPlayerInfoList();
         const targetPlayerData      = getExisted(playerInfoList.find(v => v.getPlayerIndex() === playerIndex));
-        const oldSkinId             = getExisted(targetPlayerData.getUnitAndTileSkinId());
+        const oldSkinId             = targetPlayerData.getUnitAndTileSkinId();
         const newSkinId             = oldSkinId % SkinId.Last + 1;
         // const existingPlayerData    = playerInfoList.find(v => v.unitAndTileSkinId === newSkinId);
         // if (existingPlayerData) {

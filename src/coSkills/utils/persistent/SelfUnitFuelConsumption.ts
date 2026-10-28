@@ -32,7 +32,7 @@ export function getTotalOffset({
 
     if ((!isCoOnboard)                                                  &&
         (!gridIndex.checkIsInsideCoSkillArea({
-            coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
+            coSkillAreaType             : cfg.getCoSkillAreaTypeId(),
             coZoneRadius                : coZoneRadius,
             getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
         }))
@@ -40,5 +40,5 @@ export function getTotalOffset({
         return 0;
     }
 
-    return cfg.getOffset() ?? 0;
+    return cfg.getOffset();
 }

@@ -229,16 +229,16 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0228));
-        this._labelMapNameTitle.setText(getText(TextType.B0225));
-        this._labelPlayerNameTitle.setText(getText(TextType.B0031));
-        this._labelPlayersCountTitle.setText(getText(TextType.B0922));
-        this._labelCoNameTitle.setText(getText(TextType.B0394));
-        this._labelWarIdTitle.setText(getText(TextType.B0226));
-        this._labelWarNameTitle.setText(getText(TextType.B0185));
+        this._labelTitle.setLangText(TextType.B0228);
+        this._labelMapNameTitle.setLangText(TextType.B0225);
+        this._labelPlayerNameTitle.setLangText(TextType.B0031);
+        this._labelPlayersCountTitle.setLangText(TextType.B0922);
+        this._labelCoNameTitle.setLangText(TextType.B0394);
+        this._labelWarIdTitle.setLangText(TextType.B0226);
+        this._labelWarNameTitle.setLangText(TextType.B0185);
 
-        this._btnReset.setText(getText(TextType.B0567));
-        this._btnSearch.setText(getText(TextType.B0228));
+        this._btnReset.setLangText(TextType.B0567);
+        this._btnSearch.setLangText(TextType.B0228);
     }
 
     private _updateComponentsForFilter(): void {

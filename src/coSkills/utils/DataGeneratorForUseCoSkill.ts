@@ -51,7 +51,7 @@ export function generate({ war, player, skillType, skillIndex }: {
     {
         const cfg = skillCfg?.getInstantManual()?.getChangeWeather();
         if (cfg) {
-            dataForUseCoSkill.setNewWeatherType(pickRandomElement(cfg.getWeatherTypeIdArray() ?? [], war.getRandomNumberManager().getAndTickNextNumber()));
+            dataForUseCoSkill.setNewWeatherType(pickRandomElement(cfg.getWeatherTypeIdArray(), war.getRandomNumberManager().getAndTickNextNumber()));
         }
     }
 
@@ -59,9 +59,9 @@ export function generate({ war, player, skillType, skillIndex }: {
 }
 
 function getFixedAreaDamageCenter(war: IBwWar, player: IBwPlayer, cfg: FixedAreaDamage): GridIndex | null {
-    const targetType        = cfg.getTargetTypeId() ?? 0;
-    const radius            = cfg.getRadius() ?? 0;
-    const hpDamage          = cfg.getDamage() ?? 0;
+    const targetType        = cfg.getTargetTypeId();
+    const radius            = cfg.getRadius();
+    const hpDamage          = cfg.getDamage();
     const isIndiscriminate  = !!cfg.getIsIndiscriminate();
     if (targetType === FixedAreaDamageTargetTypeId.Hp) { // HP
         const valueMaps = getValueMap(war.getUnitMap(), player.getTeamIndex());

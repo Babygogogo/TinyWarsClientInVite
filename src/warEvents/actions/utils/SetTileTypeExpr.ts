@@ -502,7 +502,7 @@ function checkShouldDestroyUnit(
         case UnitHandler.NoAction                : return false;
         case UnitHandler.DestroyAlways           : return evalActUnitFilter(action, unit);
         case UnitHandler.DestroyIfTileAttackable : return (cfg.getMaxHp() != null) && (evalActUnitFilter(action, unit));
-        case UnitHandler.DestroyIfUnitCantMove   : return ((unit.getGcData().getMoveCostCfg(cfg.getTileTypeId() ?? 0) ?? {})[unit.getMoveTypeId()]?.getCost() == null) && (evalActUnitFilter(action, unit));
+        case UnitHandler.DestroyIfUnitCantMove   : return ((unit.getGcData().getMoveCostCfg(cfg.getTileTypeId()) ?? {})[unit.getMoveTypeId()]?.getCost() == null) && (evalActUnitFilter(action, unit));
         default                                  : throw newError(`Invalid unitHandler: ${unitHandler}`);
     }
 }

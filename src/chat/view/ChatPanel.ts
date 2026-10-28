@@ -163,7 +163,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async updateOnSelectMainCategory(mainCategory: MainCategoryId): Promise<void> {
         const listMainCategory = this._listMainCategory;
-        listMainCategory.setSelectedItemIndex(getExisted(listMainCategory.getRevisedFirstIndex(v => v?.mainCategory === mainCategory)));
+        listMainCategory.setSelectedItemIndex(listMainCategory.getRevisedFirstIndex(v => v?.mainCategory === mainCategory));
 
         await this._updateGroupContent();
 
@@ -182,7 +182,7 @@ export class Panel extends UiPanel<OpenData> {
                     return v.toTarget === (toTarget ?? (getCurrentLanguageType() === LanguageType.Chinese ? PublicChannelId.PublicCn : PublicChannelId.PublicEn));
                 }
             }
-        }) ?? -1;
+        });
         listTarget.setSelectedItemIndex(newSelectedIndex);
         this._updateComponentsForMessage(true);
 
@@ -215,14 +215,14 @@ export class Panel extends UiPanel<OpenData> {
 
     private async _onNotifyMsgChatAddMessage(e: Event): Promise<void> {
         const message       = getExisted((e.data as S).getMessage());
-        const msgFromUserId = getExisted(message.getFromUserId());
+        const msgFromUserId = message.getFromUserId();
         const selfUserId    = getExisted(getSelfUserId());
         if (msgFromUserId === selfUserId) {
             this._inputMessage.setInputText(``);
         }
 
-        const msgToCategory     = getExisted(message.getToCategory()) as ToCategoryId;
-        const rawMsgToTarget    = getExisted(message.getToTarget());
+        const msgToCategory     = message.getToCategory() as ToCategoryId;
+        const rawMsgToTarget    = message.getToTarget();
         if (!checkIsMessageInMainCategory({
             mainCategory    : getExisted(this._listMainCategory.getFirstSelectedData()?.mainCategory),
             toCategory      : msgToCategory,
@@ -317,10 +317,10 @@ export class Panel extends UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0383));
-        this._labelNoContent.setText(getText(TextType.B0278));
-        this._labelNoMessage.setText(getText(TextType.B0381));
-        this._btnClose.setText(getText(TextType.B0146));
+        this._labelTitle.setLangText(TextType.B0383);
+        this._labelNoContent.setLangText(TextType.B0278);
+        this._labelNoMessage.setLangText(TextType.B0381);
+        this._btnClose.setLangText(TextType.B0146);
     }
     private async _updateGroupContent(): Promise<void> {
         const dataArray         = await this._createDataForListTarget();
@@ -713,7 +713,7 @@ export class Panel extends UiPanel<OpenData> {
 function getLatestTimestamp(index: number, msgList: ChatMessage[] | null): { index: number, timestamp: number } {
     let timestamp = 0;
     for (const msg of msgList || []) {
-        timestamp = Math.max(timestamp, getExisted(msg.getTimestamp()));
+        timestamp = Math.max(timestamp, msg.getTimestamp());
     }
     return {
         index,
@@ -774,7 +774,7 @@ class MainCategoryRenderer
 
         const data          = e.data as S;
         const message       = getExisted(data.getMessage());
-        const toCategory    = getExisted(message.getToCategory()) as ToCategoryId;
+        const toCategory    = message.getToCategory() as ToCategoryId;
         if (mainCategory === MainCategoryId.PublicChannel) {
             if (toCategory === ToCategoryId.PublicChannel) {
                 this._updateImgRed();
@@ -820,8 +820,8 @@ class MainCategoryRenderer
         const progress  = getExisted(data.getProgress());
         if (checkIsMessageInMainCategory({
             mainCategory    : mainCategory,
-            toCategory      : getExisted(progress.getToCategory()),
-            toTarget        : getExisted(progress.getToTarget()),
+            toCategory      : progress.getToCategory(),
+            toTarget        : progress.getToTarget(),
             fromUserId      : getSelfUserId(),
         })) {
             this._updateImgRed();
@@ -841,22 +841,22 @@ class MainCategoryRenderer
 
         const labelType = this._labelName;
         if (category === MainCategoryId.PublicChannel) {
-            labelType.setText(getText(TextType.B0376));
+            labelType.setLangText(TextType.B0376);
 
         } else if (category === MainCategoryId.War) {
-            labelType.setText(getText(TextType.B0719));
+            labelType.setLangText(TextType.B0719);
 
         } else if (category === MainCategoryId.Room) {
-            labelType.setText(getText(TextType.B0405));
+            labelType.setLangText(TextType.B0405);
 
         } else if (category === MainCategoryId.Following) {
-            labelType.setText(getText(TextType.B0997));
+            labelType.setLangText(TextType.B0997);
 
         } else if (category === MainCategoryId.Stranger) {
-            labelType.setText(getText(TextType.B0998));
+            labelType.setLangText(TextType.B0998);
 
         } else if (category === MainCategoryId.MapReview) {
-            labelType.setText(getText(TextType.B0892));
+            labelType.setLangText(TextType.B0892);
 
         } else {
             labelType.setText(UndefinedError);
@@ -944,7 +944,7 @@ class TargetRenderer
                     ? LanguageType.English
                     : getCurrentLanguageType()
                 );
-            labelType.setText(getText(TextType.B0376, languageType));
+            labelType.setLangText(TextType.B0376, languageType);
             labelName.setText(getChatChannelName(toTarget, languageType) ?? UndefinedError);
             imgOnlineState.setIsVisible(false);
 
@@ -964,7 +964,7 @@ class TargetRenderer
                 labelType.setTextColor(0x00FF00);
 
                 if (teamIndex === 0) {
-                    labelName.setText(getText(TextType.B0379));
+                    labelName.setLangText(TextType.B0379);
                 } else {
                     if ((war instanceof getMpwWarClass())                                      &&
                         (teamIndex === war.getPlayerManager().getPlayerLoggedIn()?.getTeamIndex())
@@ -981,7 +981,7 @@ class TargetRenderer
             const warId             = Math.floor(toTarget / Common.TeamDivider);
             const warType           = await getWarType(warId);
             imgOnlineState.setIsVisible(false);
-            labelName.setText(getText(TextType.B1367) ?? UndefinedError);
+            labelName.setLangText(TextType.B1367);
             labelName.setTextColor(0x00FF00);
 
             if (getOngoingWar()?.getWarId() !== warId) {
@@ -992,7 +992,7 @@ class TargetRenderer
             }
 
         } else if (toCategory === ToCategoryId.Private) {
-            labelType.setText(getText(TextType.B0378));
+            labelType.setLangText(TextType.B0378);
             labelName.setText(``);
             imgOnlineState.setIsVisible(true);
             imgOnlineState.loadSource(getUserOnlineState(await UsersModelGetUserOnlineState(toTarget)));
@@ -1013,7 +1013,7 @@ class TargetRenderer
                 if (warName) {
                     labelName.setText(warName);
                 } else {
-                    labelName.setText(await getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId() ?? 0) ?? UndefinedError);
+                    labelName.setText(await getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId()) ?? UndefinedError);
                 }
             }
 
@@ -1032,7 +1032,7 @@ class TargetRenderer
                 if (warName) {
                     labelName.setText(warName);
                 } else {
-                    labelName.setText(await getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId() ?? 0) ?? UndefinedError);
+                    labelName.setText(await getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId()) ?? UndefinedError);
                 }
             }
 
@@ -1050,7 +1050,7 @@ class TargetRenderer
             }
 
         } else if (toCategory === ToCategoryId.MapReview) {
-            labelType.setText(`${getText(TextType.B0892)}`);
+            labelType.setLangText(TextType.B0892);
             labelName.setText((await getUserBriefInfo(toTarget))?.getNickname() ?? UndefinedError);
             imgOnlineState.setIsVisible(false);
 
@@ -1110,7 +1110,7 @@ class MessageRenderer
 
         const message       = openData.message;
         const labelContent  = this._labelContent;
-        if (checkIsBlockingUser(getExisted(message.getFromUserId()))) {
+        if (checkIsBlockingUser(message.getFromUserId())) {
             labelContent.setText(`(${getText(TextType.B1301)})`);
             labelContent.setTextColor(0xAAAAAA);
         } else {
@@ -1126,9 +1126,9 @@ class MessageRenderer
         }
 
         const message       = openData.message;
-        const fromUserId    = getExisted(message.getFromUserId());
+        const fromUserId    = message.getFromUserId();
         this._labelName.setTextColor(fromUserId === getSelfUserId() ? 0x00FF00 : 0xFFFFFF);
-        this._labelTime.setText(getTimestampShortText(getExisted(message.getTimestamp())));
+        this._labelTime.setText(getTimestampShortText(message.getTimestamp()));
         this._imgMedal.loadSource(``);
 
         const userInfo = getExisted(await getUserPublicInfo(fromUserId));
@@ -1151,7 +1151,7 @@ class MessageRenderer
         }
 
         openPanel(getDict().ChatCommandPanel, {
-            messageId   : getExisted(message.getMessageId()),
+            messageId   : message.getMessageId(),
             userId      : message.getFromUserId(),
         });
     }

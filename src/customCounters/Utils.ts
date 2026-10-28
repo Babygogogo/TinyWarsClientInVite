@@ -17,7 +17,7 @@ export function checkIsValidCustomCounterArray(customCounterArray: CustomCounter
     const counterIdSet = new Set<number>();
     for (const data of customCounterArray) {
         const counterId     = data.getCustomCounterId();
-        const counterValue  = data.getValue() ?? 0;
+        const counterValue  = data.getValue();
         if ((counterId == null)                 ||
             (!checkIsValidId(counterId))        ||
             (!checkIsValidValue(counterValue))  ||

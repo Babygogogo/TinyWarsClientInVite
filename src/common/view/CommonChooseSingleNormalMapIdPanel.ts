@@ -182,10 +182,10 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? UndefinedError);
-        this._labelNoData.setText(getText(TextType.B0278));
-        this._labelTips.setText(getText(TextType.B1249));
-        this._btnPrevPage.setText(getText(TextType.B1384));
-        this._btnNextPage.setText(getText(TextType.B1385));
+        this._labelNoData.setLangText(TextType.B0278);
+        this._labelTips.setLangText(TextType.B1249);
+        this._btnPrevPage.setLangText(TextType.B1384);
+        this._btnNextPage.setLangText(TextType.B1385);
         this._updateLabelPageTitle();
 
         this._layoutPage.arrangeItems();
@@ -195,7 +195,7 @@ export class Panel extends UiPanel<OpenData> {
         const mapFilter = this._mapFilter;
         if ((mapFilter == null) || (mapFilter.checkIsEmpty())) {
             label.setTextColor(0xCCCCCC);
-            label.setText(getText(TextType.B1386));
+            label.setLangText(TextType.B1386);
         } else {
             label.setTextColor(0xFFFF00);
             label.setText(`${getText(TextType.B1386)}(${getText(TextType.B1387)})`);

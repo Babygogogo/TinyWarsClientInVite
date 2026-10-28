@@ -29,12 +29,12 @@ export function getTotalMultiplier({
     }
 
     if (!gridIndex.checkIsInsideCoSkillArea({
-        coSkillAreaType             : cfg.getCoSkillAreaTypeId() ?? 0,
+        coSkillAreaType             : cfg.getCoSkillAreaTypeId(),
         coZoneRadius                : coZoneRadius,
         getCoGridIndexArrayOnMap    : getCoGridIndexArrayOnMap,
     })) {
         return 1;
     }
 
-    return (cfg.getMultiplierPct() ?? 0) / 100;
+    return (cfg.getMultiplierPct()) / 100;
 }

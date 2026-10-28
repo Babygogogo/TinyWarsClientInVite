@@ -78,7 +78,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedPlayerIndex(newPlayerIndex: number, needScroll: boolean): Promise<void> {
         const listPlayerIndex   = this._listPlayerIndex;
-        const index             = getExisted(listPlayerIndex.getRevisedFirstIndex(v => v?.playerIndex === newPlayerIndex));
+        const index             = listPlayerIndex.getRevisedFirstIndex(v => v?.playerIndex === newPlayerIndex);
         listPlayerIndex.setSelectedItemIndex(index);
         if (needScroll) {
             listPlayerIndex.scrollToItem(index);
@@ -133,7 +133,7 @@ export class Panel extends UiPanel<OpenData> {
     // Private functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0281));
+        this._labelTitle.setLangText(TextType.B0281);
         this._labelRecentTitle.setText(`${getText(TextType.B0372)}:`);
     }
 
@@ -155,7 +155,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const list = this._listPlayerIndex;
         await list.bindData(dataArray);
-        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.playerIndex === selectedPlayerIndex) ?? (dataArray.length ? 0 : -1));
+        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.playerIndex === selectedPlayerIndex));
     }
 
     private async _updateListUnit(): Promise<void> {

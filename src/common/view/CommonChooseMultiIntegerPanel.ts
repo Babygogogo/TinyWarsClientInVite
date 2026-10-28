@@ -1,6 +1,5 @@
 import { createRange, getNonNullElements } from "../../helpers/Collection.ts";
 import { UndefinedError, TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { getValueInRange } from "../../numbers/Utils.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -103,10 +102,10 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? UndefinedError);
-        this._labelSelectAll.setText(getText(TextType.B0761));
-        this._labelNoData.setText(getText(TextType.B0278));
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._labelSelectedTitle.setText(getText(TextType.B1274));
+        this._labelSelectAll.setLangText(TextType.B0761);
+        this._labelNoData.setLangText(TextType.B0278);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._labelSelectedTitle.setLangText(TextType.B1274);
 
         this._layoutSelected.arrangeItems();
     }

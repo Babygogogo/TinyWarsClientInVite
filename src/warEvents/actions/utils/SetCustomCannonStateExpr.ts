@@ -373,7 +373,7 @@ function checkIsMeetConditionForTile(action: WeaSetCustomCannonStateExpr, tile: 
     }
 }
 function evalActRangeForUp(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
-    const defaultValue  = customCannonData.getRangeForUp() ?? 0;
+    const defaultValue  = customCannonData.getRangeForUp();
     const act           = action.getActRangeForUp();
     if (!act) {
         return defaultValue;
@@ -395,7 +395,7 @@ function evalActRangeForUp(action: WeaSetCustomCannonStateExpr, tile: ITile, cus
     }
 }
 function evalActRangeForDown(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
-    const defaultValue  = customCannonData.getRangeForDown() ?? 0;
+    const defaultValue  = customCannonData.getRangeForDown();
     const act           = action.getActRangeForDown();
     if (!act) {
         return defaultValue;
@@ -417,7 +417,7 @@ function evalActRangeForDown(action: WeaSetCustomCannonStateExpr, tile: ITile, c
     }
 }
 function evalActRangeForLeft(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
-    const defaultValue  = customCannonData.getRangeForLeft() ?? 0;
+    const defaultValue  = customCannonData.getRangeForLeft();
     const act           = action.getActRangeForLeft();
     if (!act) {
         return defaultValue;
@@ -439,7 +439,7 @@ function evalActRangeForLeft(action: WeaSetCustomCannonStateExpr, tile: ITile, c
     }
 }
 function evalActRangeForRight(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
-    const defaultValue  = customCannonData.getRangeForRight() ?? 0;
+    const defaultValue  = customCannonData.getRangeForRight();
     const act           = action.getActRangeForRight();
     if (!act) {
         return defaultValue;
@@ -461,7 +461,7 @@ function evalActRangeForRight(action: WeaSetCustomCannonStateExpr, tile: ITile, 
     }
 }
 function evalActPriority(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
-    const defaultValue  = customCannonData.getPriority() ?? 0;
+    const defaultValue  = customCannonData.getPriority();
     const act           = action.getActPriority();
     if (!act) {
         return defaultValue;
@@ -483,7 +483,7 @@ function evalActPriority(action: WeaSetCustomCannonStateExpr, tile: ITile, custo
     }
 }
 function evalActCanAffectSelf(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): boolean {
-    const defaultValue  = customCannonData.getCanAffectSelf() ?? false;
+    const defaultValue  = customCannonData.getCanAffectSelf();
     const act           = action.getActCanAffectSelf();
     if (!act) {
         return defaultValue;
@@ -501,7 +501,7 @@ function evalActCanAffectSelf(action: WeaSetCustomCannonStateExpr, tile: ITile, 
     }
 }
 function evalActCanAffectAlly(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): boolean {
-    const defaultValue  = customCannonData.getCanAffectAlly() ?? false;
+    const defaultValue  = customCannonData.getCanAffectAlly();
     const act           = action.getActCanAffectAlly();
     if (!act) {
         return defaultValue;
@@ -519,7 +519,7 @@ function evalActCanAffectAlly(action: WeaSetCustomCannonStateExpr, tile: ITile, 
     }
 }
 function evalActCanAffectEnemy(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): boolean {
-    const defaultValue  = customCannonData.getCanAffectEnemy() ?? false;
+    const defaultValue  = customCannonData.getCanAffectEnemy();
     const act           = action.getActCanAffectEnemy();
     if (!act) {
         return defaultValue;
@@ -537,7 +537,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomCannonStateExpr, tile: ITile,
     }
 }
 function evalActMaxTargetCount(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
-    const defaultValue  = customCannonData.getMaxTargetCount() ?? 0;
+    const defaultValue  = customCannonData.getMaxTargetCount();
     const act           = action.getActMaxTargetCount();
     if (!act) {
         return defaultValue;
@@ -559,7 +559,7 @@ function evalActMaxTargetCount(action: WeaSetCustomCannonStateExpr, tile: ITile,
     }
 }
 function evalActOffsetHp(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
-    const defaultValue  = customCannonData.getOffsetHp() ?? 0;
+    const defaultValue  = customCannonData.getOffsetHp();
     const act           = action.getActOffsetHp();
     if (!act) {
         return defaultValue;
@@ -599,7 +599,7 @@ function evalActCanBeFatal(action: WeaSetCustomCannonStateExpr, tile: ITile, cus
     }
 }
 function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
-    const defaultValue  = customCannonData.getOffsetFuelPercentage() ?? 0;
+    const defaultValue  = customCannonData.getOffsetFuelPercentage();
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
         return defaultValue;
@@ -621,7 +621,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCannonStateExpr, tile: 
     }
 }
 function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCannonStateExpr, tile: ITile, customCannonData: TileCustomCannonData): number {
-    const defaultValue  = customCannonData.getOffsetPrimaryAmmoPercentage() ?? 0;
+    const defaultValue  = customCannonData.getOffsetPrimaryAmmoPercentage();
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
         return defaultValue;

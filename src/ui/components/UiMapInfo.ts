@@ -235,11 +235,11 @@ export class UiMapInfo extends UiOpenableComponent<UiMapInfoData> implements IUi
         {
             const campaignMapData = openData.mapInfo?.mapRawData?.getCampaignMapData();
             if (campaignMapData) {
-                const campaignId    = campaignMapData.getCampaignId() ?? 0;
-                const campaignMapId = campaignMapData.getCampaignMapId() ?? 0;
+                const campaignId    = campaignMapData.getCampaignId();
+                const campaignMapId = campaignMapData.getCampaignMapId();
                 const mapRawData    = await getCampaignMapRawData(campaignId, campaignMapId);
                 if ((mapRawData == null)                                                            ||
-                    (mapRawData?.getCampaignMapData()?.getRevision() ?? 0) !== (campaignMapData.getRevision() ?? 0)
+                    (mapRawData?.getCampaignMapData()?.getRevision() ?? 0) !== (campaignMapData.getRevision())
                 ) {
                     imgSetMyRating.setIsVisible(false);
                     imgWarStatistics.setIsVisible(false);
@@ -320,7 +320,7 @@ export class UiMapInfo extends UiOpenableComponent<UiMapInfoData> implements IUi
 function generateDataForListTile(tileDataArray: SerialTile[], gameConfig: GameConfig): DataForTileRenderer[] {
     const tileCountDict = new Map<number, number>();
     for (const tile of tileDataArray || []) {
-        const tileType = gameConfig.getTileType(tile.getBaseType() ?? 0, tile.getObjectType() ?? 0);
+        const tileType = gameConfig.getTileType(tile.getBaseType(), tile.getObjectType());
         if (tileType != null) {
             tileCountDict.set(tileType, (tileCountDict.get(tileType) || 0) + 1);
         }

@@ -470,8 +470,8 @@ export class Panel extends UiPanel<OpenData> {
             labelArray.setText(``);
             labelPredicate.setText(``);
         } else {
-            labelArray.setText(con.getValueArray()?.map(v => `P${v}`).join(`, `) ?? ``);
-            labelPredicate.setText(getTextForYesOrNo(con.getIsOneOf()));
+            labelArray.setText(con.getValueArray()?.map(v => `P${v}`).join(`, `));
+            labelPredicate.setLangText(con.getIsOneOf() ? TextType.Yes : TextType.No);
         }
     }
     private _updateLabelsForTeamIndex(): void {
@@ -482,8 +482,8 @@ export class Panel extends UiPanel<OpenData> {
             labelArray.setText(``);
             labelPredicate.setText(``);
         } else {
-            labelArray.setText(con.getValueArray()?.map(v => getPlayerTeamName(v)).join(`, `) ?? ``);
-            labelPredicate.setText(getTextForYesOrNo(con.getIsOneOf()));
+            labelArray.setText(con.getValueArray()?.map(v => getPlayerTeamName(v)).join(`, `));
+            labelPredicate.setLangText(con.getIsOneOf() ? TextType.Yes : TextType.No);
         }
     }
     private _updateLabelsForAliveState(): void {
@@ -494,8 +494,8 @@ export class Panel extends UiPanel<OpenData> {
             labelArray.setText(``);
             labelPredicate.setText(``);
         } else {
-            labelArray.setText(con.getValueArray().map(v => getPlayerAliveStateName(v)).join(`, `) ?? ``);
-            labelPredicate.setText(getTextForYesOrNo(con.getIsOneOf()));
+            labelArray.setText(con.getValueArray().map(v => getPlayerAliveStateName(v)).join(`, `));
+            labelPredicate.setLangText(con.getIsOneOf() ? TextType.Yes : TextType.No);
         }
     }
     private _updateLabelsForCoUsingSkillType(): void {
@@ -506,8 +506,8 @@ export class Panel extends UiPanel<OpenData> {
             labelArray.setText(``);
             labelPredicate.setText(``);
         } else {
-            labelArray.setText(con.getValueArray()?.map(v => getCoSkillTypeName(v)).join(`, `) ?? ``);
-            labelPredicate.setText(getTextForYesOrNo(con.getIsOneOf()));
+            labelArray.setText(con.getValueArray()?.map(v => getCoSkillTypeName(v)).join(`, `));
+            labelPredicate.setLangText(con.getIsOneOf() ? TextType.Yes : TextType.No);
         }
     }
     private _updateLabelsForCoCategoryId(): void {
@@ -523,8 +523,8 @@ export class Panel extends UiPanel<OpenData> {
             labelArray.setText(``);
             labelPredicate.setText(``);
         } else {
-            labelArray.setText(con.getValueArray().map(v => gameConfig.getCoCategoryCfg(v)?.getName()).join(`, `) ?? ``);
-            labelPredicate.setText(getTextForYesOrNo(con.getIsOneOf()));
+            labelArray.setText(con.getValueArray().map(v => gameConfig.getCoCategoryCfg(v)?.getName()).join(`, `));
+            labelPredicate.setLangText(con.getIsOneOf() ? TextType.Yes : TextType.No);
         }
     }
     private _updateLabelIsInTurn(): void {

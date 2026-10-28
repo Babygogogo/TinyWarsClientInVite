@@ -153,7 +153,7 @@ export class Panel extends UiPanel<OpenData> {
     }
     private _updateLabelHasFogCurrently(): void {
         const hasFogCurrently           = this._getCondition().getHasFogCurrently();
-        this._labelHasFogCurrently.setText(hasFogCurrently != null ? getText(hasFogCurrently ? TextType.B0431 : TextType.B0432) : getText(TextType.B0776));
+        this._labelHasFogCurrently.setLangText(hasFogCurrently != null ? hasFogCurrently ? TextType.B0431 : TextType.B0432 : TextType.B0776);
     }
 
     private _getCondition(): WecWeatherAndFog {

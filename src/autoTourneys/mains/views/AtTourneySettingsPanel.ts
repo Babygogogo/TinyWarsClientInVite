@@ -96,7 +96,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const minValue      = RegistrationConstants.MinDuration;
         const maxValue      = RegistrationConstants.MaxDuration;
-        const currentValue  = tourneyInfo.getRegistrationDuration() ?? 0;
+        const currentValue  = tourneyInfo.getRegistrationDuration();
         openPanel(getDict().CommonInputDurationPanel, {
             title           : getText(TextType.B1043),
             minValue        : minValue,
@@ -107,7 +107,7 @@ export class Panel extends UiPanel<OpenData> {
                 if (interval !== currentValue) {
                     openPanel(getDict().CommonConfirmPanel, {
                         getContent     : () => getTourneyInfoPhase(tourneyInfo) === PhaseId.Registration
-                            ? getFormattedText(TextType.F0164, getTimeDurationText2((tourneyInfo.getRegistrationTimestamp() ?? 0) + interval - getServerTimestamp()))
+                            ? getFormattedText(TextType.F0164, getTimeDurationText2((tourneyInfo.getRegistrationTimestamp()) + interval - getServerTimestamp()))
                             : getText(TextType.AreYouSureYouWantToContinue),
                         callback    : () => reqAtSetRegistrationDuration(tourneyId, interval),
                     });
@@ -129,7 +129,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const minValue      = AdjustmentConstants.MinDuration;
         const maxValue      = AdjustmentConstants.MaxDuration;
-        const currentValue  = tourneyInfo.getAdjustmentDuration() ?? 0;
+        const currentValue  = tourneyInfo.getAdjustmentDuration();
         openPanel(getDict().CommonInputDurationPanel, {
             title           : getText(TextType.B1044),
             minValue        : minValue,
@@ -405,7 +405,7 @@ export class Panel extends UiPanel<OpenData> {
         if (info == null) {
             label.setText(UndefinedError);
         } else {
-            label.setText(getTimeDurationText2(info.getRegistrationDuration() ?? 0));
+            label.setText(getTimeDurationText2(info.getRegistrationDuration()));
         }
     }
 
@@ -420,7 +420,7 @@ export class Panel extends UiPanel<OpenData> {
         if (info == null) {
             label.setText(UndefinedError);
         } else {
-            label.setText(getTimeDurationText2(info.getAdjustmentDuration() ?? 0));
+            label.setText(getTimeDurationText2(info.getAdjustmentDuration()));
         }
     }
 

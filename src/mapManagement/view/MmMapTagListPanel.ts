@@ -252,7 +252,7 @@ class MapTagRenderer extends UiListItemRenderer<DataForMapTagRenderer> {
 
         const isEnabled         = !!mapTagData?.getIsEnabled();
         const labelIsEnabled    = this._labelIsEnabled;
-        labelIsEnabled.setText(getText(isEnabled ? TextType.B0431 : TextType.B0432));
+        labelIsEnabled.setLangText(isEnabled ? TextType.B0431 : TextType.B0432);
         labelIsEnabled.setTextColor(isEnabled ? 0x00FF00 : 0xC9D3DF);
         this._labelMapTagName.setText(getLanguageText({ textArray: mapTagData?.getNameArray() }) ?? '--');
         this._layoutName.arrangeItems();

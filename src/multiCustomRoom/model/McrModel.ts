@@ -228,7 +228,7 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<n
             teamIndex           : getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
             isAi                : false,
             userId              : playerData?.getUserId() ?? null,
-            coId                : playerData ? playerData.getCoId() ?? 0 : null,
+            coId                : playerData ? playerData.getCoId() : null,
             unitAndTileSkinId   : playerData?.getUnitAndTileSkinId() ?? null,
             isReady             : playerData?.getIsReady() ?? null,
             isInTurn            : null,
@@ -310,9 +310,9 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     const settingsForCommon = getExisted(roomInfo.getSettingsForCommon());
     const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule());
     const settingsForMcw    = getExisted(roomInfo.getSettingsForMcw());
-    const bootTimerParams   = getExisted(settingsForMcw.getBootTimerParams());
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
-    const normalMapId       = settingsForMcw.getNormalMapId() ?? 0;
+    const bootTimerParams   = settingsForMcw.getBootTimerParams();
+    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const normalMapId       = settingsForMcw.getNormalMapId();
     const warEventFullData  = (await getRawData(normalMapId))?.getWarEventFullData() ?? null;
     const warPassword       = settingsForMcw.getWarPassword();
     const timerType         = bootTimerParams[0] as TimerTypeId;
@@ -320,7 +320,7 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
         dataArrayForListSettings    : [
             {
                 settingsType    : BasicSettingsTypeId.NormalMapId,
-                currentValue    : settingsForMcw.getNormalMapId() ?? 0,
+                currentValue    : settingsForMcw.getNormalMapId(),
                 instanceWarRule : instanceWarRule,
                 gameConfig      : gameConfig,
                 warEventFullData: warEventFullData,
@@ -512,7 +512,7 @@ async function checkIsMeetFilter({ roomId, roomPlayerInfo, roomStaticInfo, filte
                 return false;
             }
 
-            if (!playerDataList.some(v => gameConfig.getCoBasicCfg(v.getCoId() ?? 0)?.getCoCategoryId() === filterCoCategoryId)) {
+            if (!playerDataList.some(v => gameConfig.getCoBasicCfg(v.getCoId())?.getCoCategoryId() === filterCoCategoryId)) {
                 return false;
             }
         }

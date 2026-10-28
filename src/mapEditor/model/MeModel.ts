@@ -6,8 +6,6 @@ import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getMeWarClass } from "../../gameHelpers/GhFactory.ts";
 import { getExisted } from "../../helpers/Misc.ts";
-import { TextType } from "../../lang/Constants.ts";
-import { getCurrentLanguageType, getSecondaryLanguageType, getText } from "../../lang/Utils.ts";
 import { StoreMeFullData } from "../../localData/Storage.ts";
 import { warn } from "../../Logger.ts";
 import { SlotConstants } from "../../mapEditors/Constants.ts";
@@ -27,13 +25,10 @@ import type {
     S as ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataTimestampS,
 } from "../../proto/schema/CommonProto/NetMessage/MsgMeGetMapDataTimestamp/S.ts";
 import type { GridMarkData } from "../../proto/schema/CommonProto/Structure/GridMarkData.ts";
-import { LanguageText } from "../../proto/schema/CommonProto/Structure/LanguageText.ts";
 import { WarEventFullData } from "../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
-import { getDefaultTileBaseType } from "../../tileBases/Utils.ts";
-import { getServerTimestamp } from "../../timer/TimerModel.ts";
 import { getIsSelfMapCommittee, getSelfNickname, getSelfUserId } from "../../users/Model.ts";
 import type { IMeWar } from "../interface/IMeWar.ts";
-import { createDefaultMapRawData, createDefaultTileDataArray } from "./MeHelpers.ts";
+import { createDefaultMapRawData } from "./MeHelpers.ts";
 import { reqMeGetAllMapDataTimestamps, reqMeGetMapData, reqMeGetMapDataArray } from "./MeProxy.ts";
 
 const _allDataTimestampsAccessor    = new CachedDataAccessor<null, Map<number, number | null>>({
@@ -122,7 +117,7 @@ export function updateOnFailedMsgMeGetAllMapDataTimestamps(data: ProtoSchemaComm
 export async function updateOnMsgMeGetMapDataArray(data: ProtoSchemaCommonProtoNetMessageMsgMeGetMapDataArrayS): Promise<void> {
     const promiseArray: Promise<void>[] = [];
     for (const d of data.getDataArray()) {
-        promiseArray.push(setMapEditorData(d.getSlotIndex() ?? 0, await convertMapEditorData(d)));
+        promiseArray.push(setMapEditorData(d.getSlotIndex(), await convertMapEditorData(d)));
     }
     await Promise.all(promiseArray);
 
@@ -217,9 +212,9 @@ async function convertMapEditorData(data: MapEditorData | null): Promise<Decoded
     }
 
     const encodedMapRawData         = data.getEncodedMapRawData();
-    const reviewStatus              = data.getReviewStatus() ?? ReviewStatus.None;
+    const reviewStatus              = data.getReviewStatus();
     const srcNormalMapIdForAddEvent = data.getSrcNormalMapIdForAddEvent() ?? null;
-    const slotIndex                 = data.getSlotIndex() ?? 0;
+    const slotIndex                 = data.getSlotIndex();
     if (srcNormalMapIdForAddEvent == null) {
         return {
             slotIndex                 : slotIndex,
@@ -227,7 +222,7 @@ async function convertMapEditorData(data: MapEditorData | null): Promise<Decoded
             reviewComment             : data.getReviewComment() ?? null,
             mapRawData                : await handleDeprecatedData(encodedMapRawData),
             srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
-            dataTimestamp             : data.getDataTimestamp() ?? 0,
+            dataTimestamp             : data.getDataTimestamp(),
             gridMarkData              : data.getGridMarkData(),
         };
     } else {
@@ -249,12 +244,12 @@ async function convertMapEditorData(data: MapEditorData | null): Promise<Decoded
         mapRawData.setUnitCustomNameArray(srcMapRawData.getUnitCustomNameArray());
 
         {
-            const newRuleArray = srcMapRawData.getTemplateWarRuleArray() ?? [];
+            const newRuleArray = srcMapRawData.getTemplateWarRuleArray();
             for (const newRule of newRuleArray) {
                 newRule.createIfNotExistsRuleAvailability().setCanMcw(true);
 
-                const ruleId        = newRule.getRuleId() ?? 0;
-                const existingRule  = mapRawData.getTemplateWarRuleArray().find(v => (v.getRuleId() ?? 0) === ruleId);
+                const ruleId        = newRule.getRuleId();
+                const existingRule  = mapRawData.getTemplateWarRuleArray().find(v => (v.getRuleId()) === ruleId);
                 if (existingRule) {
                     newRule.setMapSimpleDialogueIdArray(existingRule.getMapSimpleDialogueIdArray());
                 }
@@ -306,7 +301,7 @@ async function convertMapEditorData(data: MapEditorData | null): Promise<Decoded
             reviewComment             : data.getReviewComment() ?? null,
             mapRawData                : mapRawData,
             srcNormalMapIdForAddEvent : srcNormalMapIdForAddEvent,
-            dataTimestamp             : data.getDataTimestamp() ?? 0,
+            dataTimestamp             : data.getDataTimestamp(),
             gridMarkData              : data.getGridMarkData(),
         };
     }
@@ -318,32 +313,17 @@ async function handleDeprecatedData(encodedMapRawData: Undefinable<Uint8Array>):
     }
 
     if ((!mapRawData.getMapWidth()) && (mapRawData.getCampaignMapData())) {
-        const mapWidth          = 20;
-        const mapHeight         = 15;
-        const campaignMapData   = mapRawData.getCampaignMapData();
-        const languageType1     = getCurrentLanguageType();
-        const languageType2     = getSecondaryLanguageType();
-        const gameConfig        = await getLatestGameConfig();
+        await getLatestGameConfig();
 
         mapRawData.setDesignerName(mapRawData.getDesignerName() ?? getSelfNickname());
         mapRawData.setDesignerUserId(mapRawData.getDesignerUserId() ?? getSelfUserId());
-        mapRawData.setMapWidth(mapRawData.getMapWidth() ?? mapWidth);
-        mapRawData.setMapHeight(mapRawData.getMapHeight() ?? mapHeight);
-        mapRawData.setPlayersCountUnneutral(mapRawData.getPlayersCountUnneutral() ?? 2);
-        mapRawData.setModifiedTime(mapRawData.getModifiedTime() ?? getServerTimestamp());
-        mapRawData.setMapNameArray(mapRawData.getMapNameArray() ?? [
-            LanguageText.fromJson({
-                languageType : languageType1,
-                text         : `${getText(TextType.B1135, languageType1)} ${campaignMapData?.getCampaignId() ?? 0}-${campaignMapData?.getCampaignMapId() ?? 0}`,
-            }),
-            LanguageText.fromJson({
-                languageType : languageType2,
-                text         : `${getText(TextType.B1135, languageType2)} ${campaignMapData?.getCampaignId() ?? 0}-${campaignMapData?.getCampaignMapId() ?? 0}`,
-            }),
-        ]);
+        mapRawData.setMapWidth(mapRawData.getMapWidth());
+        mapRawData.setMapHeight(mapRawData.getMapHeight());
+        mapRawData.setPlayersCountUnneutral(mapRawData.getPlayersCountUnneutral());
+        mapRawData.setModifiedTime(mapRawData.getModifiedTime());
+        mapRawData.setMapNameArray(mapRawData.getMapNameArray());
         mapRawData.setTileDataArray(
-            mapRawData.getTileDataArray() ??
-            createDefaultTileDataArray(mapWidth, mapHeight, getDefaultTileBaseType(), gameConfig)
+            mapRawData.getTileDataArray()
         );
         mapRawData.setWarEventFullData(mapRawData.getWarEventFullData() ?? new WarEventFullData());
     }

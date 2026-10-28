@@ -3,7 +3,7 @@ import { getUnitAnimationTickCount } from "../model/CommonModel.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getSkinCircle } from "../../helpers/ImageSource.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getUnitName } from "../../lang/Utils.ts";
+import { getUnitName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiListItemRenderer } from "../../ui/components/UiListItemRenderer.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
@@ -95,8 +95,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0913));
-        this._btnConfirm.setText(getText(TextType.B0026));
+        this._labelTitle.setLangText(TextType.B0913);
+        this._btnConfirm.setLangText(TextType.B0026);
     }
     private async _updateListSkin(selectedSkinId: Undefinable<number>): Promise<void> {
         const openData = this.getOpenData();

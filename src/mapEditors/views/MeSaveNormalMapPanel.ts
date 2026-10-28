@@ -150,10 +150,10 @@ export class Panel extends UiPanel<OpenData> {
         const newWarEventFullData       = war.getWarEventManager().getWarEventFullData() ?? new WarEventFullData();
         const oldActionIdSet            = new Set(oldWarEventFullData.getActionArray().map(v => getExisted(v.getWeaCommonData()?.getActionId())));
         const incrementalActionArray    = newWarEventFullData.getActionArray().filter(v => !oldActionIdSet.has(getExisted(v.getWeaCommonData()?.getActionId())));
-        const oldEventIdSet             = new Set(oldWarEventFullData.getEventArray().map(v => getExisted(v.getEventId())));
-        const incrementalEventArray     = newWarEventFullData.getEventArray().filter(v => !oldEventIdSet.has(getExisted(v.getEventId())));
-        const oldNodeIdSet              = new Set(oldWarEventFullData.getConditionNodeArray().map(v => getExisted(v.getNodeId())));
-        const incrementalNodeArray      = newWarEventFullData.getConditionNodeArray().filter(v => !oldNodeIdSet.has(getExisted(v.getNodeId())));
+        const oldEventIdSet             = new Set(oldWarEventFullData.getEventArray().map(v => v.getEventId()));
+        const incrementalEventArray     = newWarEventFullData.getEventArray().filter(v => !oldEventIdSet.has(v.getEventId()));
+        const oldNodeIdSet              = new Set(oldWarEventFullData.getConditionNodeArray().map(v => v.getNodeId()));
+        const incrementalNodeArray      = newWarEventFullData.getConditionNodeArray().filter(v => !oldNodeIdSet.has(v.getNodeId()));
         const oldConditionIdSet         = new Set(oldWarEventFullData.getConditionArray().map(v => getExisted(v.getWecCommonData()?.getConditionId())));
         const incrementalConditionArray = newWarEventFullData.getConditionArray().filter(v => !oldConditionIdSet.has(getExisted(v.getWecCommonData()?.getConditionId())));
         if ((!incrementalActionArray?.length)   &&
@@ -215,7 +215,7 @@ export class Panel extends UiPanel<OpenData> {
                 const warRuleDialogueInfoArray  : WarRuleDialogueInfo[] = [];
                 for (const warRule of mapRawData.getTemplateWarRuleArray()) {
                     warRuleDialogueInfoArray.push(WarRuleDialogueInfo.fromJson({
-                        templateWarRuleId           : warRule.getRuleId() ?? 0,
+                        templateWarRuleId           : warRule.getRuleId(),
                         mapSimpleDialogueIdArray    : warRule.getMapSimpleDialogueIdArray(),
                     }));
                 }
@@ -310,11 +310,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSave.setText(getText(TextType.B0844));
-        this._btnAddWarEvent.setText(getText(TextType.B1007));
-        this._btnSubmitDialogue.setText(getText(TextType.B1100));
-        this._btnSaveAndSubmit.setText(getText(TextType.B0921));
-        this._labelTitle.setText(getText(TextType.B0155));
+        this._btnSave.setLangText(TextType.B0844);
+        this._btnAddWarEvent.setLangText(TextType.B1007);
+        this._btnSubmitDialogue.setLangText(TextType.B1100);
+        this._btnSaveAndSubmit.setLangText(TextType.B0921);
+        this._labelTitle.setLangText(TextType.B0155);
     }
 
     private async _initDataAndUpdateGroupCommand(): Promise<void> {
@@ -338,7 +338,7 @@ export class Panel extends UiPanel<OpenData> {
             this._canSubmitForReview        = false;
             this._mapErrorCode              = criticalErrorCode;
             this._mapRawData                = null;
-            labelReviewDescTitle.setText(getText(TextType.A0433));
+            labelReviewDescTitle.setLangText(TextType.A0433);
             labelReviewDescTitle.setTextColor(ColorValue.Yellow);
             labelReviewDesc.setText(getErrorText(criticalErrorCode));
             return;
@@ -353,20 +353,20 @@ export class Panel extends UiPanel<OpenData> {
         this._mapRawData    = mapRawData;
         if (mapRawData.getTemplateWarRuleArray().some(v => !checkIsValidAvailability(v.getRuleAvailability()))) {
             this._canSubmitForReview        = false;
-            labelReviewDescTitle.setText(getText(TextType.A0083));
+            labelReviewDescTitle.setLangText(TextType.A0083);
             labelReviewDescTitle.setTextColor(ColorValue.Yellow);
-            labelReviewDesc.setText(getText(TextType.A0298));
+            labelReviewDesc.setLangText(TextType.A0298);
             return;
         }
 
         if (errorCode) {
             this._canSubmitForReview        = false;
-            labelReviewDescTitle.setText(getText(TextType.A0083));
+            labelReviewDescTitle.setLangText(TextType.A0083);
             labelReviewDescTitle.setTextColor(ColorValue.Yellow);
             labelReviewDesc.setText(getErrorText(errorCode));
         } else {
             this._canSubmitForReview        = true;
-            labelReviewDescTitle.setText(getText(TextType.A0786));
+            labelReviewDescTitle.setLangText(TextType.A0786);
             labelReviewDescTitle.setTextColor(ColorValue.Green);
             labelReviewDesc.setText(``);
         }

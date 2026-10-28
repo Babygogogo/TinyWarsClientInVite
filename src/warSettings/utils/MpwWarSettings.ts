@@ -9,7 +9,7 @@ export function getNormalMapIdForMpwWarSettings(warSettings: MpwWarSettingsSchem
         ?? warSettings.getSettingsForMcw()
         ?? warSettings.getSettingsForMmw()
         ?? warSettings.getSettingsForMrw();
-    return settings ? settings.getNormalMapId() ?? 0 : null;
+    return settings ? settings.getNormalMapId() : null;
 }
 
 export function getWarTypeByMpwWarSettings(warInfo: MpwWarSettingsSchema): WarTypeId {

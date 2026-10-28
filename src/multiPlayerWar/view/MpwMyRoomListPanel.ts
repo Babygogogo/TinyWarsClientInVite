@@ -573,12 +573,12 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(getText(TextType.A0040));
-        this._labelMultiPlayer.setText(getText(TextType.B0137));
-        this._labelMyRoom.setText(getText(TextType.B0410));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._labelNoRoom.setText(getText(TextType.B0582));
-        this._btnNextStep.setText(getText(TextType.B1383));
+        this._labelLoading.setLangText(TextType.A0040);
+        this._labelMultiPlayer.setLangText(TextType.B0137);
+        this._labelMyRoom.setLangText(TextType.B0410);
+        this._btnBack.setLangText(TextType.B0146);
+        this._labelNoRoom.setLangText(TextType.B0582);
+        this._btnNextStep.setLangText(TextType.B1383);
 
         this._groupNavigator.arrangeItems();
     }
@@ -993,7 +993,7 @@ class RoomRenderer
                 : ``
             );
             labelName.setText(settingsForCcw
-                ? settingsForCcw.getWarName() || (await getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId() ?? 0) ?? UndefinedError)
+                ? settingsForCcw.getWarName() || (await getMapNameInCurrentLanguage(settingsForCcw.getNormalMapId()) ?? UndefinedError)
                 : ``
             );
 
@@ -1006,7 +1006,7 @@ class RoomRenderer
                 : ``
             );
             labelName.setText(settingsForMcw
-                ? settingsForMcw.getWarName() || (await getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId() ?? 0) ?? UndefinedError)
+                ? settingsForMcw.getWarName() || (await getMapNameInCurrentLanguage(settingsForMcw.getNormalMapId()) ?? UndefinedError)
                 : ``
             );
 

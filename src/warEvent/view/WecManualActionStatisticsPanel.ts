@@ -193,13 +193,13 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(`${getText(TextType.B0501)} C${this.getOpenData()?.condition.getWecCommonData()?.getConditionId()}`);
-        this._btnClose.setText(getText(TextType.B0146));
-        this._btnType.setText(getText(TextType.B0516));
-        this._btnPlayerIndex.setText(getText(TextType.PlayerIndex));
-        this._btnIsPlayerInTurn.setText(getText(TextType.B0086));
-        this._btnRecentTurnsCount.setText(getText(TextType.B0930));
-        this._btnActionsCount.setText(getText(TextType.B0090));
-        this._btnActionsCountComparator.setText(getText(TextType.Comparator));
+        this._btnClose.setLangText(TextType.B0146);
+        this._btnType.setLangText(TextType.B0516);
+        this._btnPlayerIndex.setLangText(TextType.PlayerIndex);
+        this._btnIsPlayerInTurn.setLangText(TextType.B0086);
+        this._btnRecentTurnsCount.setLangText(TextType.B0930);
+        this._btnActionsCount.setLangText(TextType.B0090);
+        this._btnActionsCountComparator.setLangText(TextType.Comparator);
 
         this._updateLabelDescAndLabelError();
     }
@@ -229,7 +229,7 @@ export class Panel extends UiPanel<OpenData> {
         if (isPlayerInTurn == null) {
             label.setText(`--`);
         } else {
-            label.setText(getText(isPlayerInTurn ? TextType.Yes : TextType.No));
+            label.setLangText(isPlayerInTurn ? TextType.Yes : TextType.No);
         }
     }
     private _updateInputRecentTurnsCount(): void {

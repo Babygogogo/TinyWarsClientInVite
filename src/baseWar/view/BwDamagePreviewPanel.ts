@@ -459,8 +459,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelAttackTitle.setText(getText(TextType.B0077));
-        this._labelCounterTitle.setText(getText(TextType.B0078));
+        this._labelAttackTitle.setLangText(TextType.B0077);
+        this._labelCounterTitle.setLangText(TextType.B0078);
 
         this._layoutAttack.arrangeItems();
         this._layoutCounter.arrangeItems();

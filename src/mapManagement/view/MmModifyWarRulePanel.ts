@@ -5,7 +5,6 @@ import { getEnumArray, getRuleAvailability } from "../../gameModes/Utils.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { getNonNullElements } from "../../helpers/Collection.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getGameModeName, getGameModeHelpText, getErrorText, getTileThemeName } from "../../lang/Utils.ts";
 import { getRawData } from "../../normalMap/model/NormalMapModel.ts";
@@ -82,7 +81,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const ruleId            = openData.templateWarRuleId;
-        const existingWarRule   = mapRawData.getTemplateWarRuleArray().find(v => (v.getRuleId() ?? 0) === ruleId);
+        const existingWarRule   = mapRawData.getTemplateWarRuleArray().find(v => (v.getRuleId()) === ruleId);
         if (existingWarRule == null) {
             return;
         }
@@ -116,12 +115,12 @@ export class Panel extends UiPanel<OpenData> {
 
                 const errorCode = getErrorCode({
                     templateWarRule             : warRule,
-                    playersCountUnneutral       : getExisted(mapRawData.getPlayersCountUnneutral()),
+                    playersCountUnneutral       : mapRawData.getPlayersCountUnneutral(),
                     gameConfig                  : gameConfig,
                     allWarEventIdArray          : getNonNullElements(mapRawData.getWarEventFullData()?.getEventArray().map(v => v.getEventId()) ?? []),
-                    allMapSimpleDialogueIdArray : mapRawData.getMapSimpleDialogueArray().map(v => v.getDialogueId() ?? 0) ?? [],
+                    allMapSimpleDialogueIdArray : mapRawData.getMapSimpleDialogueArray().map(v => v.getDialogueId()),
                     isCampaignMap               : false,
-                    allTaskObjectiveIdSet       : new Set(mapRawData.getTaskObjectiveFullData()?.getTaskObjectiveArray().map(v => v.getObjectiveId() ?? 0)),
+                    allTaskObjectiveIdSet       : new Set(mapRawData.getTaskObjectiveFullData()?.getTaskObjectiveArray().map(v => v.getObjectiveId())),
                 });
                 if (errorCode) {
                     show(getErrorText(errorCode));
@@ -144,12 +143,12 @@ export class Panel extends UiPanel<OpenData> {
 
         const ruleId            = openData.templateWarRuleId;
         const normalMapId       = openData.normalMapId;
-        const templateWarRule   = (await getRawData(normalMapId))?.getTemplateWarRuleArray().find(v => (v.getRuleId() ?? 0) === ruleId);
+        const templateWarRule   = (await getRawData(normalMapId))?.getTemplateWarRuleArray().find(v => (v.getRuleId()) === ruleId);
         if (templateWarRule == null) {
             showLang(TextType.YouCanNotDoThisRightNow);
         } else {
             openPanel(getDict().CommonInputShortLangTextPanel, {
-                currentTextArray    : templateWarRule.getRuleNameArray() ?? [],
+                currentTextArray    : templateWarRule.getRuleNameArray(),
                 maxTextLength       : Constants.MaxNameLength,
                 callback            : textArray => reqMmSetWarRuleName(normalMapId, ruleId, textArray),
             });
@@ -164,7 +163,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const normalMapId       = openData.normalMapId;
         const templateWarRuleId = openData.templateWarRuleId;
-        const templateWarRule   = (await getRawData(normalMapId))?.getTemplateWarRuleArray().find(v => (v.getRuleId() ?? 0) === templateWarRuleId);
+        const templateWarRule   = (await getRawData(normalMapId))?.getTemplateWarRuleArray().find(v => (v.getRuleId()) === templateWarRuleId);
         if (templateWarRule == null) {
             showLang(TextType.YouCanNotDoThisRightNow);
         } else {

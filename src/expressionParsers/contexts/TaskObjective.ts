@@ -54,8 +54,8 @@ export class TaskObjective extends Base {
     public constructor(war: IBwWar, objectiveId: number) {
         super(war);
 
-        this._taskObjective = war.getInstanceWarRule()?.getTaskObjectiveFullData()?.getTaskObjectiveArray().find(v => (v.getObjectiveId() ?? 0) === objectiveId) ?? null;
-        this._state         = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId() ?? 0) === objectiveId) ?? null;
+        this._taskObjective = war.getInstanceWarRule()?.getTaskObjectiveFullData()?.getTaskObjectiveArray().find(v => (v.getObjectiveId()) === objectiveId) ?? null;
+        this._state         = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) === objectiveId) ?? null;
     }
 
     public getContextType(): ContextType {
@@ -70,7 +70,7 @@ export class TaskObjective extends Base {
                 war,
                 taskObjective == null
                     ? -2
-                    : (taskObjective.getObjectiveId() ?? 0)
+                    : (taskObjective.getObjectiveId())
             );
         } else if (identifierName == TaskObjective.VnMain) {
             return new Num(
@@ -90,12 +90,12 @@ export class TaskObjective extends Base {
             if (taskObjective == null) {
                 throw newError(`Invalid objectiveId.`);
             }
-            return new Num(war, taskObjective.getScoreForCompletion() ?? 0);
+            return new Num(war, taskObjective.getScoreForCompletion());
         } else if (identifierName == TaskObjective.VnProgressScore) {
             if (taskObjective == null) {
                 throw newError(`Invalid objectiveId.`);
             }
-            return new Num(war, taskObjective.getScoreForProgress() ?? 0);
+            return new Num(war, taskObjective.getScoreForProgress());
         } else if (identifierName == TaskObjective.VnHidden) {
             return new Num(
                 war,

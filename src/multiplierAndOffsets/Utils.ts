@@ -11,38 +11,38 @@ export function checkIsValid(data: MultiplierAndOffsetSchema): boolean {
 }
 
 export function checkIsDefault(data: MultiplierAndOffsetSchema): boolean {
-    return ((data.getMultiplierPct() ?? 100) === 100)
-        && ((data.getOffset() ?? 0) === 0);
+    return ((data.getMultiplierPct()) === 100)
+        && ((data.getOffset()) === 0);
 }
 
 export function getResultValue(data: MultiplierAndOffsetSchema, rawValue: number): number {
-    return getValueInInt32(rawValue * (data.getMultiplierPct() ?? 100) / 100 + (data.getOffset() ?? 0));
+    return getValueInInt32(rawValue * (data.getMultiplierPct()) / 100 + (data.getOffset()));
 }
 
 export function getBriefDesc(data: MultiplierAndOffsetSchema): string {
-    const multiplierPct         = data.getMultiplierPct() ?? 100;
+    const multiplierPct         = data.getMultiplierPct();
     const textForMultiplierPct  = multiplierPct >= 0 ? `* ${multiplierPct}%` : `* (${multiplierPct})%`;
-    const offset                = data.getOffset() ?? 0;
+    const offset                = data.getOffset();
     const textForOffset         = offset >= 0 ? `+ ${offset}` : `- ${-offset}`;
 
     return `${textForMultiplierPct} ${textForOffset}`;
 }
 export function getDesc(data: MultiplierAndOffsetSchema, name: string): string {
-    const multiplierPct         = data.getMultiplierPct() ?? 100;
+    const multiplierPct         = data.getMultiplierPct();
     const textForMultiplierPct  = multiplierPct >= 0 ? `* ${multiplierPct}%` : `* (${multiplierPct})%`;
-    const offset                = data.getOffset() ?? 0;
+    const offset                = data.getOffset();
     const textForOffset         = offset >= 0 ? `+ ${offset}` : `- ${-offset}`;
 
     return `${getText(TextType.B0317)} ${name}: ${textForMultiplierPct} ${textForOffset}`;
 }
 
 export function getErrorTip(data: MultiplierAndOffsetSchema): string | null {
-    const multiplierPct = data.getMultiplierPct() ?? 100;
+    const multiplierPct = data.getMultiplierPct();
     if (Math.abs(multiplierPct) > Event.MaxMultiplier) {
         return getText(TextType.Multiplier);
     }
 
-    const offset = data.getOffset() ?? 0;
+    const offset = data.getOffset();
     if (Math.abs(offset) > Event.MaxOffset) {
         return getText(TextType.Offset);
     }

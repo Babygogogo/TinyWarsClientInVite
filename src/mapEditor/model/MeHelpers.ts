@@ -253,7 +253,7 @@ export async function createISerialWar(rawMapRawData: MapRawData): Promise<Seria
             },
             unitMap : {
                 units               : unitDataArray.map(v => v.toJson()),
-                nextUnitId          : unitDataArray.length ? Math.max(...unitDataArray.map(v => v.getUnitId() ?? 0)) + 1 : 0,
+                nextUnitId          : unitDataArray.length ? Math.max(...unitDataArray.map(v => v.getUnitId())) + 1 : 0,
                 unitCustomNameArray : mapRawData.getUnitCustomNameArray().map(v => v.toJson()),
             },
         },
@@ -392,8 +392,8 @@ function getNewTileDataListForResize({ mapRawData, newWidth, newHeight, gameConf
         }
     }
 
-    const oldWidth      = getExisted(mapRawData.getMapWidth());
-    const oldHeight     = getExisted(mapRawData.getMapHeight());
+    const oldWidth      = mapRawData.getMapWidth();
+    const oldHeight     = mapRawData.getMapHeight();
     const tileBaseType  = getDefaultTileBaseType();
     for (let x = 0; x < newWidth; ++x) {
         for (let y = 0; y < newHeight; ++y) {
@@ -422,7 +422,7 @@ function getNewUnitDataListForResize(mapRawData: MapRawData, newWidth: number, n
     const allUnitsDict  = new Map<number, { unit: SerialUnit, newUnitId: number }>();
     let nextUnitId      = 0;
     for (const unit of unitDataArray) {
-        allUnitsDict.set(unit.getUnitId() ?? 0, { unit, newUnitId : nextUnitId } );
+        allUnitsDict.set(unit.getUnitId(), { unit, newUnitId : nextUnitId } );
         ++nextUnitId;
     }
     for (const [, value] of allUnitsDict) {
@@ -475,10 +475,10 @@ function getNewTileDataListForOffset({ mapRawData, offsetX, offsetY, gameConfig 
     offsetY     : number;
     gameConfig  : GameConfig;
 }): SerialTile[] {
-    const width         = getExisted(mapRawData.getMapWidth());
-    const height        = getExisted(mapRawData.getMapHeight());
+    const width         = mapRawData.getMapWidth();
+    const height        = mapRawData.getMapHeight();
     const tileDataList  : SerialTile[] = [];
-    for (const tileData of getExisted(mapRawData.getTileDataArray())) {
+    for (const tileData of mapRawData.getTileDataArray()) {
         const gridIndex = getExisted(GridIndex.convertGridIndex(tileData.getGridIndex()));
         const newX      = gridIndex.getX() + offsetX;
         const newY      = gridIndex.getY() + offsetY;
@@ -510,8 +510,8 @@ function getNewTileDataListForOffset({ mapRawData, offsetX, offsetY, gameConfig 
     return tileDataList;
 }
 function getNewUnitDataListForOffset(mapRawData: MapRawData, offsetX: number, offsetY: number): SerialUnit[] {
-    const width         = getExisted(mapRawData.getMapWidth());
-    const height        = getExisted(mapRawData.getMapHeight());
+    const width         = mapRawData.getMapWidth();
+    const height        = mapRawData.getMapHeight();
     const unitDataArray : SerialUnit[] = [];
     for (const unitData of mapRawData.getUnitDataArray()) {
         const gridIndex = getExisted(GridIndex.convertGridIndex(unitData.getGridIndex()));
@@ -527,7 +527,7 @@ function getNewUnitDataListForOffset(mapRawData: MapRawData, offsetX: number, of
     const allUnitsDict  = new Map<number, { unit: SerialUnit, newUnitId: number }>();
     let nextUnitId      = 0;
     for (const unit of unitDataArray) {
-        allUnitsDict.set(unit.getUnitId() ?? 0, { unit, newUnitId : nextUnitId } );
+        allUnitsDict.set(unit.getUnitId(), { unit, newUnitId : nextUnitId } );
         ++nextUnitId;
     }
     for (const [, value] of allUnitsDict) {

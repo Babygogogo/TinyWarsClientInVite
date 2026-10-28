@@ -139,7 +139,7 @@ export class Panel extends UiPanel<OpenData> {
             this._resetTimeoutForBtnConfirm();
         };
 
-        if (await checkIsEmpty(getExisted(warCreator.getSaveSlotIndex()))) {
+        if (await checkIsEmpty(warCreator.getSaveSlotIndex())) {
             callback();
         } else {
             openPanel(getDict().CommonConfirmPanel, {
@@ -372,7 +372,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const warCreator        = openData.warCreator;
-        const settingsForCommon = getExisted(warCreator.getSettingsForCommon());
+        const settingsForCommon = warCreator.getSettingsForCommon();
         const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule());
         return {
             canModify       : false,

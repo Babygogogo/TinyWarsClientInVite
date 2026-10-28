@@ -670,7 +670,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         }
 
         this._labelTitle.setLangText(TextType.DefeatIfCaptured);
-        this._labelValue.setText(openData.tileTemplateCfg.getIsDefeatedOnCapture() ? getText(TextType.Yes) : getText(TextType.No));
+        this._labelValue.setLangText(openData.tileTemplateCfg.getIsDefeatedOnCapture() ? TextType.Yes : TextType.No);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsProduceUnitCategory(): void {
@@ -696,7 +696,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const offenseBonus  = tileTemplateCfg.getGlobalAttackBonus();
         const defenseBonus  = tileTemplateCfg.getGlobalDefenseBonus();
         this._labelTitle.setLangText(TextType.B0359);
-        this._labelValue.setText(`${offenseBonus ?? `--`} / ${defenseBonus ?? `--`}`);
+        this._labelValue.setText(`${offenseBonus} / ${defenseBonus}`);
         this._groupExtra.setIsVisible(false);
     }
     private _updateViewAsRepairUnitCategory(): void {
@@ -1246,7 +1246,7 @@ class MoveCostRenderer extends UiListItemRenderer<DataForMoveCostRenderer> {
 
         const gameConfig    = openData.gameConfig;
         const unitType      = openData.unitType;
-        const moveCostCfg   = getExisted(gameConfig.getMoveCostCfg(getExisted(openData.tileCfg.getTileTypeId())));
+        const moveCostCfg   = getExisted(gameConfig.getMoveCostCfg(openData.tileCfg.getTileTypeId()));
         const moveCost      = moveCostCfg[getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveTypeId())].getCost();
         const playerIndex   = PlayerIndex.First;
         this._imgBg.setIsVisible(openData.index % 4 === 2);

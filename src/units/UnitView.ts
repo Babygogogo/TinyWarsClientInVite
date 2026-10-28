@@ -696,7 +696,7 @@ export class UnitView extends UiContainer implements IUnitView {
     }
     private _addFrameForBuff(): void {
         const arr = this._framesForStateAnimation;
-        for (const buff of getExisted(this.getUnit()).getBuffList() ?? []) {
+        for (const buff of getExisted(this.getUnit()).getBuffList()) {
             arr.push(getUnitBuff({
                 version     : getSelfSettingsTextureVersion(),
                 isDark      : this._isDark,

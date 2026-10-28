@@ -38,7 +38,7 @@ export function getBriefDesc(data: Undefinable<WecTilePresence>): string | null 
         TextType.F0098,
         getText(TextType.Tiles),
         comparator == null ? UndefinedError : (getComparatorName(comparator) ?? UndefinedError),
-        con == null ? UndefinedError : (con.getValue() ?? UndefinedError)
+        con == null ? UndefinedError : (con.getValue())
     );
 }
 export function getDetailedDesc(data: Undefinable<WecTilePresence>): string | null {
@@ -80,7 +80,7 @@ export function getDetailedDesc(data: Undefinable<WecTilePresence>): string | nu
         getText(TextType.Tiles),
         subTextArray.join(`\n`),
         comparator == null ? UndefinedError : (getComparatorName(comparator) ?? UndefinedError),
-        con == null ? UndefinedError : (con.getValue() ?? UndefinedError)
+        con == null ? UndefinedError : (con.getValue())
     );
 }
 export function getErrorTip(data: WecTilePresence, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GameConfig): string | null {

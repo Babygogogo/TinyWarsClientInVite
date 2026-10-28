@@ -4,7 +4,6 @@ import { getErrorCode as DialoguesUtilsMapSmallDialogueGetErrorCode } from "../.
 import { Common } from "../Constants.ts";
 import { getLatestGameConfig } from "../../gameConfigs/Provider.ts";
 import { getTwWarClass } from "../../gameHelpers/GhFactory.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { getLanguageText, checkIsValidLanguageTextArray } from "../../lang/Utils.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
 import type { MapExtraText } from "../../proto/schema/CommonProto/Map/MapExtraText.ts";
@@ -90,12 +89,12 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
     const warEventFullData  = mapRawData.getWarEventFullData();
     const warRuleError      = getErrorCodeForTemplateWarRuleArray({
         templateWarRuleArray        : templateWarRuleArray,
-        playersCountUnneutral       : getExisted(mapRawData.getPlayersCountUnneutral()),
+        playersCountUnneutral       : mapRawData.getPlayersCountUnneutral(),
         allWarEventIdArray          : getAllWarEventIdArray(warEventFullData),
         gameConfig                  : gameConfig,
-        allMapSimpleDialogueIdArray : mapRawData.getMapSimpleDialogueArray()?.map(v => v.getDialogueId() ?? 0) ?? [],
+        allMapSimpleDialogueIdArray : mapRawData.getMapSimpleDialogueArray()?.map(v => v.getDialogueId()),
         isCampaignMap               : isCampaignMap,
-        allTaskObjectiveIdSet       : new Set(mapRawData.getTaskObjectiveFullData()?.getTaskObjectiveArray()?.map(v => v.getObjectiveId() ?? 0)),
+        allTaskObjectiveIdSet       : new Set(mapRawData.getTaskObjectiveFullData()?.getTaskObjectiveArray()?.map(v => v.getObjectiveId())),
     });
     if (warRuleError) {
         return warRuleError;
@@ -117,7 +116,7 @@ export async function getErrorCode({ mapRawData, allowRedundantWarEvents, allowR
 
     {
         const mapSimpleDialogueArray    = mapRawData.getMapSimpleDialogueArray();
-        const simpleDialogueIdArray     = mapSimpleDialogueArray.map(v => v.getDialogueId() ?? 0);
+        const simpleDialogueIdArray     = mapSimpleDialogueArray.map(v => v.getDialogueId());
         if (mapSimpleDialogueArray.length != new Set(simpleDialogueIdArray).size) {
             return ClientErrorCode.MeHelpers_GetErrorCodeForMapRawData_07;
         }
@@ -202,7 +201,7 @@ function getErrorCodeForPlayersCountUnneutral(mapRawData: MapRawDataSchema): Cli
 
     const playerIndexSet = new Set<number>();
     for (const tileData of mapRawData.getTileDataArray()) {
-        const playerIndex = tileData.getPlayerIndex() ?? 0;
+        const playerIndex = tileData.getPlayerIndex();
         if ((playerIndex < PlayerIndex.Neutral)   ||
             (playerIndex > playersCountUnneutral)
         ) {
@@ -211,7 +210,7 @@ function getErrorCodeForPlayersCountUnneutral(mapRawData: MapRawDataSchema): Cli
         playerIndexSet.add(playerIndex);
     }
     for (const unitData of mapRawData.getUnitDataArray()) {
-        const playerIndex = unitData.getPlayerIndex() ?? 0;
+        const playerIndex = unitData.getPlayerIndex();
         if ((playerIndex < PlayerIndex.First)     ||
             (playerIndex > playersCountUnneutral)
         ) {
@@ -239,7 +238,7 @@ function checkIsEveryWarEventInUse(warEventFullData: Undefinable<WarEventFullDat
     return (!eventArray?.length)
         || (eventArray.every(warEvent => {
             const eventId = warEvent.getEventId();
-            return (eventId != null) && (templateWarRuleArray.some(v => (v.getWarEventIdArray().indexOf(eventId) ?? -1) >= 0));
+            return (eventId != null) && (templateWarRuleArray.some(v => (v.getWarEventIdArray().indexOf(eventId)) >= 0));
         }));
 }
 function getErrorCodeForUnitArray(unitArray: Undefinable<SerialUnit[]>): ClientErrorCode {

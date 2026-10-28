@@ -10,7 +10,7 @@ export class UiLayout extends UiLayoutBase implements IUiLayout {
         return (this.getChildAt(index) ?? undefined) as unknown as IUiComponent | undefined;
     }
     public getAllItems(): IUiComponent[] {
-        return (this.$children ?? []) as unknown as IUiComponent[];
+        return (this.$children) as unknown as IUiComponent[];
     }
 
     public addItem(item: IUiComponent, needArrange: boolean): IUiComponent {

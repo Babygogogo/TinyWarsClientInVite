@@ -121,7 +121,7 @@ export function getTileBase({ version, themeType, skinId, baseType, isDark, shap
     tickCount   : number;
 }): string {
     const cfg               = getExisted(BaseCfgDict.get(baseType));
-    const cfgForFrame       = getExisted(version === TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
+    const cfgForFrame       = (version === TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
     const ticksPerFrame     = cfgForFrame[1];
     const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
     const textForDark       = isDark ? `state01` : `state00`;
@@ -149,7 +149,7 @@ export function getTileDecoration({version, themeType, skinId, tileDecorationTyp
     }
 
     const cfg               = getExisted(DecorationCfgDict.get(tileDecorationType));
-    const cfgForFrame       = getExisted(version === TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
+    const cfgForFrame       = (version === TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
     const ticksPerFrame     = cfgForFrame[1];
     const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
     const textForDark       = isDark ? `state01` : `state00`;
@@ -173,7 +173,7 @@ export function getTileObject({ version, themeType, skinId, objectType, isDark, 
     tickCount   : number;
 }): string {
     const cfg               = getExisted(ObjectCfgDict.get(objectType));
-    const cfgForFrame       = getExisted(version === TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
+    const cfgForFrame       = (version === TextureVersionId.V0 ? cfg.animParamsForV0 : cfg.animParams);
     const ticksPerFrame     = cfgForFrame[1];
     const textForResolution = `res${getNumText(getCurrentGameEssentialConfig().textureResolutionTypeId)}`;
     const textForDark       = isDark ? `state01` : `state00`;
@@ -459,7 +459,7 @@ export function getUserOnlineState(state: Undefinable<UserOnlineState>): string 
     if ((state == null) || (!state.isOnline)) {
         return `uncompressedColorRed0000`;
     } else {
-        return (getServerTimestamp() - (state.lastActivityTimestamp ?? 0) > 60)
+        return (getServerTimestamp() - (state.lastActivityTimestamp) > 60)
             ? `uncompressedColorYellow0000`
             : `uncompressedColorGreen0000`;
     }

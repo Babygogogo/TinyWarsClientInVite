@@ -142,7 +142,7 @@ export function getUnitTypeSetForCoSkillSetUnitIdle(player: IPlayer, coSkillType
     for (const skillId of player.getCoSkills(coSkillType)) {
         const cfg = gameConfig.getCoSkillCfg(skillId)?.getInstantManual()?.getSelfUnitActionState();
         if ((cfg) && (cfg.getUnitActionStateId() === ActionStateId.Idle)) {
-            for (const unitType of gameConfig.getUnitTypesByCategory(cfg.getUnitCategoryId() ?? 0) ?? []) {
+            for (const unitType of gameConfig.getUnitTypesByCategory(cfg.getUnitCategoryId()) ?? []) {
                 unitTypeSet.add(unitType);
             }
         }
@@ -755,7 +755,7 @@ async function getScoreForPosition({ commonParams, unit, gridIndex, damageMap, s
         {
             const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
             if ((maxAmmo) && (unit.checkIsPrimaryWeaponAmmoInShort())) {
-                const currentAmmo   = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.SpwRobot_GetScoreForPosition_00);
+                const currentAmmo   = unit.getPrimaryWeaponCurrentAmmo();
                 totalScore          += ((maxAmmo - currentAmmo) / maxAmmo * 10 + (currentAmmo <= 0 ? 40 : 0)) * passiveScaler;
             }
         }
@@ -768,7 +768,7 @@ async function getScoreForPosition({ commonParams, unit, gridIndex, damageMap, s
         if (IsNeedVisibility) {
             const maxAmmo = unit.getFlareMaxAmmo();
             if ((maxAmmo) && (war.getFogMap().checkHasFogCurrently())) {
-                const currentAmmo   = getExisted(unit.getFlareCurrentAmmo(), ClientErrorCode.SpwRobot_GetScoreForPosition_01);
+                const currentAmmo   = unit.getFlareCurrentAmmo();
                 totalScore          += ((maxAmmo - currentAmmo) / maxAmmo * 10 + (currentAmmo <= 0 ? 40 : 0)) * passiveScaler;
             }
         }

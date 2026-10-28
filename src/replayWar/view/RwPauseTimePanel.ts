@@ -1,7 +1,7 @@
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getTextForYesOrNo } from "../../lang/Utils.ts";
+import { getText } from "../../lang/Utils.ts";
 import { getReplayPauseTime, setReplayPauseTime } from "../../localData/Storage.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import type { IRwWarBase } from "../interface/IRwWarBase.ts";
@@ -79,9 +79,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0846));
-        this._labelPauseTimeTitle.setText(getText(TextType.B0846));
-        this._labelTurnStartTitle.setText(getText(TextType.B1337));
+        this._labelTitle.setLangText(TextType.B0846);
+        this._labelPauseTimeTitle.setLangText(TextType.B0846);
+        this._labelTurnStartTitle.setLangText(TextType.B1337);
     }
     private _updateComponentsForFilter(): void {
         this._updateLabelPauseTime();
@@ -93,6 +93,6 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateLabelTurnStart(): void {
-        this._labelTurnStart.setText(getTextForYesOrNo(this.getOpenData()?.war.getIsShowTurnStartPopUp()));
+        this._labelTurnStart.setLangText(this.getOpenData()?.war.getIsShowTurnStartPopUp() ? TextType.Yes : TextType.No);
     }
 }

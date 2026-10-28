@@ -8,7 +8,7 @@ import { gotoMyWarListPanel } from "../../helpers/GameFlow.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getSecondaryLanguageType, getText, getGameVersionName } from "../../lang/Utils.ts";
+import { getSecondaryLanguageType, getGameVersionName } from "../../lang/Utils.ts";
 import { checkIsRedForStartButton } from "../model/LobbyModel.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
@@ -109,13 +109,13 @@ export class Panel extends UiPanel<OpenData> {
     private _updateComponentsForLanguage(): void {
         const languageType2 = getSecondaryLanguageType();
         this._labelProfile1.setLangText(TextType.B1375);
-        this._labelProfile2.setText(getText(TextType.B1375, languageType2));
+        this._labelProfile2.setLangText(TextType.B1375, languageType2);
         this._labelChat1.setLangText(TextType.B1376);
-        this._labelChat2.setText(getText(TextType.B1376, languageType2));
+        this._labelChat2.setLangText(TextType.B1376, languageType2);
         this._labelMapEditor1.setLangText(TextType.B1377);
-        this._labelMapEditor2.setText(getText(TextType.B1377, languageType2));
+        this._labelMapEditor2.setLangText(TextType.B1377, languageType2);
         this._labelGameChart1.setLangText(TextType.B0900);
-        this._labelGameChart2.setText(getText(TextType.B0900, languageType2));
+        this._labelGameChart2.setLangText(TextType.B0900, languageType2);
         this._labelVersion.setText(getGameVersionName(window.GAME_VERSION) ?? UndefinedError);
 
         this._imgChatRed.setX(this._layoutChat.getX() + this._labelChat1.getScaledWidth());

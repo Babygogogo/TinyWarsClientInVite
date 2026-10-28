@@ -245,8 +245,8 @@ class NodeRenderer extends UiListItemRenderer<DataForNodeRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCopy.setText(getText(TextType.B0487));
-        this._btnSelect.setText(getText(TextType.B0492));
+        this._btnCopy.setLangText(TextType.B0487);
+        this._btnSelect.setLangText(TextType.B0492);
 
         this._updateLabelNodeId();
         this._updateLabelSubNode();
@@ -272,7 +272,7 @@ class NodeRenderer extends UiListItemRenderer<DataForNodeRenderer> {
         const node  = openData.fullData.getConditionNodeArray().find(v => v.getNodeId() === openData.candidateNodeId);
         const label = this._labelSubNode;
         if (node == null) {
-            label.setText(getText(TextType.A0160));
+            label.setLangText(TextType.A0160);
         } else {
             const textArray: string[] = [];
             for (const subNodeIdAndFlags of node.getSubNodeIdAndFlagsArray().concat().sort((v1, v2) => v1.getNodeId() - v2.getNodeId())) {
@@ -376,7 +376,7 @@ function cloneAndReplaceNodeInParentNode({ fullData, parentNodeId, nodeIdForDele
         if (!nodeArray.some(v => v.getNodeId() === nodeId)) {
             newNode.setNodeId(nodeId);
             nodeArray.push(newNode);
-            nodeArray.sort((v1, v2) => getExisted(v1.getNodeId()) - getExisted(v2.getNodeId()));
+            nodeArray.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
 
             const arr = parentNode.getSubNodeIdAndFlagsArray();
             deleteElementFromList2(arr, v => v.getNodeId() === nodeIdForDelete);

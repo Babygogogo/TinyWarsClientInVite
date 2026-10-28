@@ -170,7 +170,7 @@ export class Panel extends UiPanel<OpenData> {
 
         openPanel(getDict().CommonConfirmPanel, {
             getContent  : () => getText(TextType.A0282),
-            callback    : () => reqMmAddWarRule(openData.mapRawData.getNormalMapId() ?? 0, openData.templateWarRule),
+            callback    : () => reqMmAddWarRule(openData.mapRawData.getNormalMapId(), openData.templateWarRule),
         });
     }
 
@@ -463,7 +463,7 @@ export class Panel extends UiPanel<OpenData> {
         const fixedTileTheme    = this.getOpenData()?.templateWarRule.getWarRuleCommonData()?.getFixedTileTheme();
         const label             = this._labelTileTheme;
         if (fixedTileTheme == null) {
-            label.setText(getText(TextType.B0890));
+            label.setLangText(TextType.B0890);
         } else {
             label.setText(getTileThemeName(fixedTileTheme) ?? UndefinedError);
         }
@@ -476,7 +476,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const label = this._labelRuleAvailability;
         if (openData.mapRawData.getCampaignMapData()) {
-            label.setText(getText(TextType.B1135));
+            label.setLangText(TextType.B1135);
         } else {
             const availability = openData.templateWarRule.getRuleAvailability();
             let count           = 0;

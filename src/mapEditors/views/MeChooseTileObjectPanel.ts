@@ -4,7 +4,6 @@ import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { TextureVersionId } from "../../graphics/Constants.ts";
 import { getSkinButtonBackground } from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText, getTileObjectName } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
@@ -92,7 +91,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedPlayerIndex(newPlayerIndex: number | null, needScroll: boolean): Promise<void> {
         const listWarEventId    = this._listPlayerIndex;
-        const index             = getExisted(listWarEventId.getRevisedFirstIndex(v => v?.playerIndex === newPlayerIndex));
+        const index             = listWarEventId.getRevisedFirstIndex(v => v?.playerIndex === newPlayerIndex);
         listWarEventId.setSelectedItemIndex(index);
         if (needScroll) {
             listWarEventId.scrollToItem(index);
@@ -208,7 +207,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const list = this._listPlayerIndex;
         await list.bindData(dataArray);
-        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.playerIndex === selectedPlayerIndex) ?? (dataArray.length ? 0 : -1));
+        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.playerIndex === selectedPlayerIndex));
     }
 
     private async _updateListTileObject(): Promise<void> {
@@ -239,10 +238,9 @@ export class Panel extends UiPanel<OpenData> {
                 continue;
             }
 
-            const shapesCount = getExisted(getSelfSettingsTextureVersion() === TextureVersionId.V0
-                ? (cfg.shapesCountInEditorForV0 ?? cfg.shapesCountForV0)
-                : (cfg.shapesCountInEditor ?? cfg.shapesCount)
-            );
+            const shapesCount = (getSelfSettingsTextureVersion() === TextureVersionId.V0
+                ? (cfg.shapesCountInEditorForV0)
+                : (cfg.shapesCountInEditor));
             for (let shapeId = 0; shapeId < shapesCount; ++shapeId) {
                 dataArray.push({
                     panel                 : this,

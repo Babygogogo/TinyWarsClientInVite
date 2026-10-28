@@ -14,7 +14,7 @@ export function getTotalOffset({
     maxHp       : number;
     currentHp   : number;
 }): number {
-    const realHpOffset  = cfg.getRealHpOffset() ?? 0;
+    const realHpOffset  = cfg.getRealHpOffset();
     let newHp           = getValueInRange({
         maxValue    : maxHp,
         minValue    : 1,

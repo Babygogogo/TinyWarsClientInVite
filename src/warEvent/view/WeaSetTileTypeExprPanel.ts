@@ -3,7 +3,6 @@ import { ContextType } from "../../expressionParsers/Enums.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
@@ -180,7 +179,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getConTileFilter(),
             expressionInfo  : ExpressionInfoDict.ConTileFilter,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getConTileFilter() != text) {
@@ -211,7 +210,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActBaseType(),
             expressionInfo  : ExpressionInfoDict.ActBaseType,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActBaseType() != text) {
@@ -242,7 +241,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActBaseShapeId(),
             expressionInfo  : ExpressionInfoDict.ActBaseShapeId,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActBaseShapeId() != text) {
@@ -273,7 +272,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActObjectType(),
             expressionInfo  : ExpressionInfoDict.ActObjectType,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActObjectType() != text) {
@@ -304,7 +303,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActObjectShapeId(),
             expressionInfo  : ExpressionInfoDict.ActObjectShapeId,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActObjectShapeId() != text) {
@@ -335,7 +334,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActDecorationType(),
             expressionInfo  : ExpressionInfoDict.ActDecorationType,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActDecorationType() != text) {
@@ -366,7 +365,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActDecorationShapeId(),
             expressionInfo  : ExpressionInfoDict.ActDecorationShapeId,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActDecorationShapeId() != text) {
@@ -397,7 +396,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActUnitHandler(),
             expressionInfo  : ExpressionInfoDict.ActUnitHandler,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActUnitHandler() != text) {
@@ -428,7 +427,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getActUnitFilter(),
             expressionInfo  : ExpressionInfoDict.ActUnitFilter,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getActUnitFilter() != text) {

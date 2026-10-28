@@ -233,20 +233,20 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnClose.setText(getText(TextType.B0146));
-        this._btnModify.setText(getText(TextType.B0320));
-        this._labelChinese.setText(getText(TextType.B0455));
-        this._labelEnglish.setText(getText(TextType.B0456));
-        this._labelTip.setText(getText(TextType.A0156));
-        this._labelTitle.setText(getText(TextType.B0454));
-        this._btnStartTime.setText(getText(TextType.B0882));
-        this._btnDuration.setText(getText(TextType.B0883));
-        this._btnStartTimeYear.setText(getText(TextType.B0059));
-        this._btnStartTimeMonth.setText(getText(TextType.B0058));
-        this._btnStartTimeDay.setText(getText(TextType.B0057));
-        this._btnStartTimeHour.setText(getText(TextType.B0884));
-        this._btnStartTimeMinute.setText(getText(TextType.B0885));
-        this._btnStartTimeSecond.setText(getText(TextType.B0886));
+        this._btnClose.setLangText(TextType.B0146);
+        this._btnModify.setLangText(TextType.B0320);
+        this._labelChinese.setLangText(TextType.B0455);
+        this._labelEnglish.setLangText(TextType.B0456);
+        this._labelTip.setLangText(TextType.A0156);
+        this._labelTitle.setLangText(TextType.B0454);
+        this._btnStartTime.setLangText(TextType.B0882);
+        this._btnDuration.setLangText(TextType.B0883);
+        this._btnStartTimeYear.setLangText(TextType.B0059);
+        this._btnStartTimeMonth.setLangText(TextType.B0058);
+        this._btnStartTimeDay.setLangText(TextType.B0057);
+        this._btnStartTimeHour.setLangText(TextType.B0884);
+        this._btnStartTimeMinute.setLangText(TextType.B0885);
+        this._btnStartTimeSecond.setLangText(TextType.B0886);
     }
 
     private _updateLabelStartTime(): void {

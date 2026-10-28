@@ -1,6 +1,6 @@
 import type { Undefinable } from "../auxiliaryTypes/AuxiliaryTypes.ts";
 import { Parser } from "../expressionParsers/Parser.ts";
-import { TextType, UndefinedError } from "../lang/Constants.ts";
+import { TextType } from "../lang/Constants.ts";
 import { checkIsValidLanguageTextArray, getFormattedText, getText, getTextForYesOrNo } from "../lang/Utils.ts";
 import type { TaskObjective } from "../proto/schema/CommonProto/TaskObjectives/TaskObjective.ts";
 import { TaskObjectiveFullData } from "../proto/schema/CommonProto/TaskObjectives/TaskObjectiveFullData.ts";
@@ -12,7 +12,7 @@ export function checkIsValid(data: TaskObjective, customCounterNameSet: Set<stri
     return getErrorCode(data, customCounterNameSet) === ClientErrorCode.NoError;
 }
 export function getErrorCode(data: TaskObjective, customCounterNameSet: Set<string>): ClientErrorCode {
-    if ((data.getObjectiveId() ?? 0) < 0) {
+    if ((data.getObjectiveId()) < 0) {
         return ClientErrorCode.PhTaskObjective_GetErrorCode_00;
     }
 
@@ -43,7 +43,7 @@ export function getErrorCode(data: TaskObjective, customCounterNameSet: Set<stri
     return ClientErrorCode.NoError;
 }
 export function getErrorText(data: TaskObjective, customCounterNameSet: Set<string>): string | null {
-    if ((data.getObjectiveId() ?? 0) < 0) {
+    if ((data.getObjectiveId()) < 0) {
         return getFormattedText(TextType.F0091, getText(TextType.B0792));
     }
 
@@ -77,11 +77,11 @@ export function getErrorText(data: TaskObjective, customCounterNameSet: Set<stri
 }
 export function getFullDesc(data: TaskObjective): string {
     return [
-        `${getText(TextType.B1215)}: ${data.getDesc()?.map(v => v.getText()).join(`\n${getText(TextType.B1215)}: `) ?? UndefinedError}`,
+        `${getText(TextType.B1215)}: ${data.getDesc()?.map(v => v.getText()).join(`\n${getText(TextType.B1215)}: `)}`,
         `${getText(TextType.B1217)}: ${getTextForYesOrNo(data.getIsMain())}`,
         `${getText(TextType.B1216)}: ${data.getMaxProgress() ?? `--`}`,
-        `${getText(TextType.B1218)}: ${data.getScoreForCompletion() ?? 0}`,
-        `${getText(TextType.B1219)}: ${data.getScoreForProgress() ?? 0}`,
+        `${getText(TextType.B1218)}: ${data.getScoreForCompletion()}`,
+        `${getText(TextType.B1219)}: ${data.getScoreForProgress()}`,
         `${getText(TextType.B1226)}: ${data.getUpdaterForCurrentProgress() ?? `--`}`,
     ].join(`\n`);
 }
@@ -103,7 +103,7 @@ export function getErrorCodeForFullData(data: TaskObjectiveFullData, customCount
             return errorCode;
         }
 
-        const objectiveId = taskObjective.getObjectiveId() ?? 0;
+        const objectiveId = taskObjective.getObjectiveId();
         if (objectiveIdSet.has(objectiveId)) {
             return ClientErrorCode.PhTaskObjectiveFullData_GetErrorCode_01;
         }
@@ -121,7 +121,7 @@ export function trimAndClone(srcData: Undefinable<TaskObjectiveFullData>, object
     const dstTaskObjectiveArray   : TaskObjective[] = [];
     const srcTaskObjectiveArray   = srcData.getTaskObjectiveArray();
     for (const objectiveId of objectiveIds) {
-        const taskObjective = srcTaskObjectiveArray.find(v => (v.getObjectiveId() ?? 0) === objectiveId);
+        const taskObjective = srcTaskObjectiveArray.find(v => (v.getObjectiveId()) === objectiveId);
         if (taskObjective) {
             dstTaskObjectiveArray.push(taskObjective.clone());
         }
@@ -137,7 +137,7 @@ export function checkIsValidState(data: TaskObjectiveState, fullData: Undefinabl
     return getErrorCodeForState(data, fullData) === ClientErrorCode.NoError;
 }
 export function getErrorCodeForState(data: TaskObjectiveState, fullData: Undefinable<TaskObjectiveFullData>): ClientErrorCode {
-    const objectiveId = data.getObjectiveId() ?? 0;
+    const objectiveId = data.getObjectiveId();
     if (objectiveId < 0) {
         return ClientErrorCode.PhTaskObjectiveState_GetErrorCode_00;
     }
@@ -147,7 +147,7 @@ export function getErrorCodeForState(data: TaskObjectiveState, fullData: Undefin
     //     return ClientErrorCode.PhTaskObjectiveState_GetErrorCode_01;
     // }
 
-    const taskObjective = fullData?.getTaskObjectiveArray().find(v => (v.getObjectiveId() ?? 0) === objectiveId);
+    const taskObjective = fullData?.getTaskObjectiveArray().find(v => (v.getObjectiveId()) === objectiveId);
     if (taskObjective == null) {
         return ClientErrorCode.PhTaskObjectiveState_GetErrorCode_02;
     }

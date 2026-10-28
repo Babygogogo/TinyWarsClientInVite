@@ -266,8 +266,8 @@ export class Panel extends UiPanel<OpenData> {
 
 function handleUnsupportedCoId(mapRawData: MapRawData, gcData: GameConfig): void {
     {
-        for (const data1 of mapRawData.getMapSimpleDialogueArray() ?? []) {
-            for (const data2 of data1.getDataArray() ?? []) {
+        for (const data1 of mapRawData.getMapSimpleDialogueArray()) {
+            for (const data2 of data1.getDataArray()) {
                 const data = data2.getDataForCoDialogue();
                 if (data) {
                     if (checkShouldModifyCoId(data.getCoId(), gcData)) {

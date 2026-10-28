@@ -12,7 +12,6 @@ import {
     type OpenData as CommonViewCommonWarPlayerInfoPageOpenData,
     Page as CommonViewCommonWarPlayerInfoPage,
 } from "../../common/view/CommonWarPlayerInfoPage.ts";
-import { CoId } from "../../cos/Constants.ts";
 import { pickRandomCo } from "../../cos/Utils.ts";
 import { show } from "../../FloatText.ts";
 import { getAllSkinIdArray } from "../../forceSkins/Utils.ts";
@@ -183,12 +182,12 @@ export class Panel extends UiPanel<OpenData> {
                 show(getText(TextType.A0128));
             } else {
                 const settingsForCommon = getExisted(roomStaticInfo.getSettingsForCommon());
-                const playerIndex       = getExisted(selfPlayerData.getPlayerIndex());
+                const playerIndex       = selfPlayerData.getPlayerIndex();
                 const gameConfig        = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));
                 const warRuleCommonData = getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
                 openPanel(getDict().CommonChooseSingleCoIdPanel, {
                     gameConfig         : gameConfig,
-                    currentCoId        : selfPlayerData.getCoId() ?? 0,
+                    currentCoId        : selfPlayerData.getCoId(),
                     availableCoIdArray : [...getFinalMcwHumanCoIdSet({
                         playerRule        : getPlayerRule(warRuleCommonData, playerIndex),
                         gameConfiguration : gameConfig,
@@ -197,7 +196,7 @@ export class Panel extends UiPanel<OpenData> {
                     })],
                     isBan             : false,
                     callbackOnConfirm : newCoId => {
-                        if (newCoId !== (selfPlayerData.getCoId() ?? 0)) {
+                        if (newCoId !== (selfPlayerData.getCoId())) {
                             reqMcrSetSelfSettings(C.fromJson({
                                 roomId            : roomId,
                                 playerIndex       : playerIndex,
@@ -248,7 +247,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const selfPlayerIndex   = selfPlayerData.getPlayerIndex() ?? 0;
+        const selfPlayerIndex   = selfPlayerData.getPlayerIndex();
         const warRuleCommonData = getExisted(instanceWarRule.getWarRuleCommonData());
         openPanel(getDict().CommonChooseSingleNumberPanel, {
             currentNumber        : selfPlayerIndex,
@@ -258,7 +257,7 @@ export class Panel extends UiPanel<OpenData> {
             getNumberMainText : playerIndex => `P${playerIndex}, ${getPlayerTeamName(getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) ?? UndefinedError}`,
             callbackOnConfirm : newPlayerIndex => {
                 if (newPlayerIndex !== selfPlayerIndex) {
-                    const currCoId              = selfPlayerData.getCoId() ?? 0;
+                    const currCoId              = selfPlayerData.getCoId();
                     const availableCoIdArray    = [...getFinalMcwHumanCoIdSet({
                         playerRule        : getPlayerRule(warRuleCommonData, newPlayerIndex),
                         gameConfiguration : gameConfig,
@@ -298,11 +297,11 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const usedSkinIdArray       = getNonNullElements(playerDataList?.filter(v => v.getUserId() !== selfUserId).map(v => v.getUnitAndTileSkinId()) ?? []);
+        const usedSkinIdArray       = getNonNullElements(playerDataList?.filter(v => v.getUserId() !== selfUserId).map(v => v.getUnitAndTileSkinId()));
         const availableSkinIdArray  = getAllSkinIdArray(false).filter(v => usedSkinIdArray.indexOf(v) < 0);
         const selfSkinId            = selfPlayerData.getUnitAndTileSkinId();
         openPanel(getDict().CommonChooseSingleSkinIdPanel, {
-            currentSkinId        : selfSkinId ?? availableSkinIdArray[0],
+            currentSkinId        : selfSkinId,
             availableSkinIdArray : availableSkinIdArray,
             callback             : newSkinId => {
                 if (newSkinId !== selfSkinId) {
@@ -310,7 +309,7 @@ export class Panel extends UiPanel<OpenData> {
                         roomId            : roomId,
                         playerIndex       : selfPlayerData.getPlayerIndex(),
                         unitAndTileSkinId : newSkinId,
-                        coId              : selfPlayerData.getCoId() ?? CoId.Empty,
+                        coId              : selfPlayerData.getCoId(),
                     }));
                 }
             },
@@ -476,7 +475,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const playerIndex   = selfPlayerData.getPlayerIndex() ?? 0;
+        const playerIndex   = selfPlayerData.getPlayerIndex();
         const teamIndex     = getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex();
         label.setText(`P${playerIndex}${`\n`}${getPlayerTeamName(teamIndex) ?? UndefinedError}`);
     }
@@ -572,7 +571,7 @@ export class Panel extends UiPanel<OpenData> {
         const selfPlayerData    = roomPlayerInfo?.getPlayerDataList().find(v => v.getUserId() === selfUserId);
         this._imgCo.loadSource(((gameConfig == null) || (selfPlayerData == null))
             ? ``
-            : getCoEye(gameConfig, selfPlayerData.getCoId() ?? 0, true) ?? ``
+            : getCoEye(gameConfig, selfPlayerData.getCoId(), true) ?? ``
         );
     }
 

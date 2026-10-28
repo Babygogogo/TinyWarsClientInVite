@@ -112,7 +112,7 @@ namespace IndexedDb {
                 request.onsuccess   = () => {
                     this._hasCalledGetAllData = true;
 
-                    for (const storeData of (request.result as { key: KeyType, value: EncodedValueType }[]) ?? []) {
+                    for (const storeData of (request.result as { key: KeyType, value: EncodedValueType }[])) {
                         const key           = storeData.key;
                         const decodedValue  = this._decode(storeData.value);
                         if (!this._cache.has(key)) {
@@ -136,7 +136,7 @@ namespace IndexedDb {
 
                 request.onerror     = () => resolve(allDataDict);
                 request.onsuccess   = () => {
-                    for (const storeData of (request.result as { key: KeyType, value: EncodedValueType }[]) ?? []) {
+                    for (const storeData of (request.result as { key: KeyType, value: EncodedValueType }[])) {
                         allDataDict.set(storeData.key, storeData.value);
                     }
                     resolve(allDataDict);
@@ -265,7 +265,7 @@ namespace IndexedDb {
                 request.onsuccess   = () => {
                     this._hasCalledGetAllData = true;
 
-                    for (const storeData of (request.result as { key1: number, key2: number, value: EncodedValueType }[]) ?? []) {
+                    for (const storeData of (request.result as { key1: number, key2: number, value: EncodedValueType }[])) {
                         const key1          = storeData.key1;
                         const key2          = storeData.key2;
                         const decodedValue  = this._decode(storeData.value);
@@ -299,7 +299,7 @@ namespace IndexedDb {
 
                 request.onerror     = () => resolve(allDataDict);
                 request.onsuccess   = () => {
-                    for (const storeData of (request.result as { key1: number, key2: number, value: EncodedValueType }[]) ?? []) {
+                    for (const storeData of (request.result as { key1: number, key2: number, value: EncodedValueType }[])) {
                         if (storeData.key1 === key1) {
                             const key2          = storeData.key2;
                             const decodedValue  = this._decode(storeData.value);
@@ -322,7 +322,7 @@ namespace IndexedDb {
 
                 request.onerror     = () => resolve(allDataDict);
                 request.onsuccess   = () => {
-                    for (const storeData of (request.result as { key1: number, key2: number, value: EncodedValueType }[]) ?? []) {
+                    for (const storeData of (request.result as { key1: number, key2: number, value: EncodedValueType }[])) {
                         const key1          = storeData.key1;
                         const key2          = storeData.key2;
                         const value         = storeData.value;
@@ -417,11 +417,11 @@ export const StoreMeFullData = new IndexedDb.Store2<DecodedMapEditorData, Uint8A
         const data              = MapEditorData.decode(decompress(encodedData));
         const encodedMapRawData = data.getEncodedMapRawData();
         return {
-            slotIndex                   : data.getSlotIndex() ?? 0,
+            slotIndex                   : data.getSlotIndex(),
             reviewComment               : data.getReviewComment() ?? null,
-            reviewStatus                : data.getReviewStatus() ?? 0,
+            reviewStatus                : data.getReviewStatus(),
             mapRawData                  : encodedMapRawData ? MapRawData.decode(encodedMapRawData) : null,
-            dataTimestamp               : data.getDataTimestamp() ?? 0,
+            dataTimestamp               : data.getDataTimestamp(),
             srcNormalMapIdForAddEvent   : data.getSrcNormalMapIdForAddEvent() ?? null,
             gridMarkData                : data.getGridMarkData(),
         };

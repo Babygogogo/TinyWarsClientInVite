@@ -66,7 +66,7 @@ export function revise(war: IBwWar, rawAction: WoPlayerProduceUnit, requesterUse
     const gameConfig    = war.getGcData();
     const skillCfg      = tile.getEffectiveSelfUnitProductionSkillCfg(playerIndexInTurn);
     if (skillCfg != null) {
-        if ((unitHp > (skillCfg.getHpUpperLimit() ?? 0)) || (unitHp < (skillCfg.getHpLowerLimit() ?? 0))) {
+        if ((unitHp > (skillCfg.getHpUpperLimit())) || (unitHp < (skillCfg.getHpLowerLimit()))) {
             throw newError(`Invalid unitHp: ${unitHp}`, ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_09);
         }
         if ((gameConfig.getUnitCategoryCfg(skillCfg.getUnitCategoryId() ?? CategoryId.All)?.getUnitTypeIds() ?? []).indexOf(unitType) < 0) {
@@ -98,7 +98,7 @@ export function revise(war: IBwWar, rawAction: WoPlayerProduceUnit, requesterUse
     const cfgCost   = getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getProductionCost(), ClientErrorCode.WarOperationReviser_RevisePlayerProduceUnit_14);
     const cost      = Math.floor(
         cfgCost
-        * (skillCfg ? (skillCfg.getCostMultiplierPct() ?? 0) : 100)
+        * (skillCfg ? (skillCfg.getCostMultiplierPct()) : 100)
         * getNormalizedHp(unitHp)
         * playerInTurn.getUnitCostModifier(unitType)
         / 100

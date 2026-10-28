@@ -126,7 +126,7 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
         throw newError(`non-null loaderUnitId.`);
     }
 
-    const playerIndex = action.getActIsInTurn() ? war.getPlayerIndexInTurn() : (rawUnitData.getPlayerIndex() ?? PlayerIndex.Neutral);
+    const playerIndex = action.getActIsInTurn() ? war.getPlayerIndexInTurn() : (rawUnitData.getPlayerIndex());
     if (playerIndex === PlayerIndex.Neutral) {
         return;
     }
@@ -135,9 +135,9 @@ export async function applyWithoutExtraData(action: WeaFillUnitOnMapSimple, isFa
     const unitMap                   = war.getUnitMap();
     const tileMap                   = war.getTileMap();
     const warStatisticsManager      = war.getWarStatisticsManager();
-    const canBeBlockedByUnit        = action.getActCanBeBlockedByUnit() ?? false;
-    const needMovableTile           = action.getActNeedMovableTile() ?? false;
-    const moveType                  = getExisted(gameConfig.getUnitTemplateCfg(getExisted(rawUnitData.getUnitType()))?.getMoveTypeId());
+    const canBeBlockedByUnit        = action.getActCanBeBlockedByUnit();
+    const needMovableTile           = action.getActNeedMovableTile();
+    const moveType                  = getExisted(gameConfig.getUnitTemplateCfg(rawUnitData.getUnitType())?.getMoveTypeId());
     const conTileFilter             = action.getConTileFilter();
     const candidateGridIndexArray   = tileMap.getTiles(t => (conTileFilter == null) || (checkIsMeet(conTileFilter, t))).map(v => v.getGridIndex());
 

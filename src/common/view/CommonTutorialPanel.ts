@@ -1,5 +1,4 @@
 import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { wait } from "../../timer/TimerModel.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -123,8 +122,8 @@ export class Panel extends UiPanel<OpenData> {
 
             const info = list.getFirstSelectedData()?.tutorialInfo;
             if (info) {
-                this._labelTutorialTitle.setText(getText(info.titleTextType));
-                this._labelTutorial.setText(getText(info.contentTextType));
+                this._labelTutorialTitle.setLangText(info.titleTextType);
+                this._labelTutorial.setLangText(info.contentTextType);
                 await this._imgTutorial.loadSource(info.img);
                 this._groupTutorial.arrangeItems();
             }
@@ -185,7 +184,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnBack.setText(getText(TextType.B0146));
+        this._btnBack.setLangText(TextType.B0146);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -220,7 +219,7 @@ class UnitRenderer extends UiListItemRenderer<DataForNameRenderer> {
     protected override _doApplyOpenData(): void {
         const openData = this.getOpenData();
         if (openData) {
-            this._labelName.setText(getText(openData.tutorialInfo.titleTextType));
+            this._labelName.setLangText(openData.tutorialInfo.titleTextType);
         }
     }
 

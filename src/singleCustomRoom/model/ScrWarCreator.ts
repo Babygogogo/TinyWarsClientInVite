@@ -71,7 +71,7 @@ export class ScrWarCreator extends WarCreatorBase {
             });
             const newCoId           = pickRandomCo([...availableCoIdSet]);
             if (oldInfo) {
-                const coId = oldInfo.getCoId() ?? 0;
+                const coId = oldInfo.getCoId();
                 newPlayerInfoList.push(DataForPlayerInRoom.fromJson({
                     playerIndex         : playerIndex,
                     isReady             : true,
@@ -97,7 +97,7 @@ export class ScrWarCreator extends WarCreatorBase {
         const currTemplateWarRuleId = this.getInstanceWarRule().getTemplateWarRuleId();
         const templateWarRuleArray  = this.getMapRawData().getTemplateWarRuleArray();
         if (currTemplateWarRuleId == null) {
-            this.resetDataByTemplateWarRuleId(getExisted(templateWarRuleArray[0].getRuleId()));
+            this.resetDataByTemplateWarRuleId(templateWarRuleArray[0].getRuleId());
         } else {
             const newTemplateWarRuleId = getNonNullElements(templateWarRuleArray.map(v => v.getRuleId())).sort((v1, v2) => {
                 if (v1 > currTemplateWarRuleId) {
@@ -119,7 +119,7 @@ export class ScrWarCreator extends WarCreatorBase {
     public tickUnitAndTileSkinId(playerIndex: number): void {
         const playerInfoList        = this._getPlayerInfoList();
         const targetPlayerData      = getExisted(playerInfoList.find(v => v.getPlayerIndex() === playerIndex));
-        const oldSkinId             = getExisted(targetPlayerData.getUnitAndTileSkinId());
+        const oldSkinId             = targetPlayerData.getUnitAndTileSkinId();
         const newSkinId             = oldSkinId % SkinId.Last + 1;
         const existingPlayerData    = playerInfoList.find(v => v.getUnitAndTileSkinId() === newSkinId);
         if (existingPlayerData) {

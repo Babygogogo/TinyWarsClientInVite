@@ -305,13 +305,13 @@ export abstract class BwWar implements IBwWar {
             tileDataArray           : serialTileMap.getTiles().map(v => v.toJson()),
             unitDataArray           : serialUnitMap.getUnits().map(v => v.toJson()),
             templateWarRuleArray    : [{
-                warEventIdArray             : warEventFullData?.getEventArray()?.map(v => v.getEventId() ?? 0) ?? [],
+                warEventIdArray             : warEventFullData?.getEventArray()?.map(v => v.getEventId()) ?? [],
                 ruleAvailability            : null,
                 ruleId                      : 0,
                 warRuleCommonData           : instanceWarRule.getWarRuleCommonData()?.toJson(),
                 ruleNameArray               : instanceWarRule.getRuleNameArray().map(v => v.toJson()),
                 lastModifiedTimestamp       : timestamp,
-                mapSimpleDialogueIdArray    : mapSimpleDialogueArray?.map(v => v.getDialogueId() ?? 0),
+                mapSimpleDialogueIdArray    : mapSimpleDialogueArray?.map(v => v.getDialogueId()),
                 taskObjectiveIdArray        : [],
             }],
             warEventFullData        : warEventFullData?.toJson(),
@@ -744,12 +744,12 @@ export abstract class BwWar implements IBwWar {
                 }
 
                 const effectiveCoSkill  = tile.getEffectiveSelfUnitProductionSkillCfg(playerIndex);
-                const minNormalizedHp   = effectiveCoSkill ? getNormalizedHp(effectiveCoSkill.getHpUpperLimit() ?? 0) : getNormalizedHp(Hp.MaxHp);
+                const minNormalizedHp   = effectiveCoSkill ? getNormalizedHp(effectiveCoSkill.getHpUpperLimit()) : getNormalizedHp(Hp.MaxHp);
                 for (const unitType of unitTypeArray) {
                     const costModifier  = player.getUnitCostModifier(unitType);
                     const cfgCost       = getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getProductionCost());
                     const minCost       = effectiveCoSkill
-                        ? Math.floor(cfgCost * costModifier * minNormalizedHp * (effectiveCoSkill.getCostMultiplierPct() ?? 0) / Hp.Normalizer / 100)
+                        ? Math.floor(cfgCost * costModifier * minNormalizedHp * (effectiveCoSkill.getCostMultiplierPct()) / Hp.Normalizer / 100)
                         : Math.floor(cfgCost * costModifier);
                     if (minCost <= currentFund) {
                         const tileType = tile.getTileTypeId();

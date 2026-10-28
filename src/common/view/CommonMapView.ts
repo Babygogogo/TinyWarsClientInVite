@@ -60,8 +60,8 @@ export class CommonMapView extends UiContainerBase {
         gameConfig          : GameConfig;
         overridingPlayers   : Undefinable<SerialPlayer[]>;
     }): void {
-        this.setUnscaledManualWidth(getGridWidth()  * getExisted(mapRawData.getMapWidth()));
-        this.setUnscaledManualHeight(getGridHeight() * getExisted(mapRawData.getMapHeight()));
+        this.setUnscaledManualWidth(getGridWidth()  * mapRawData.getMapWidth());
+        this.setUnscaledManualHeight(getGridHeight() * mapRawData.getMapHeight());
         this._tileMapView.showTileMap(gameConfig, mapRawData.getTileDataArray(), overridingPlayers);
         this._unitMapView.showUnitMap({
             unitDataArray   : mapRawData.getUnitDataArray(),
@@ -99,8 +99,8 @@ export class CommonMapView extends UiContainerBase {
         {
             const settingsForCaw = warData.getSettingsForCaw();
             if (settingsForCaw) {
-                const mapRawData = getExisted(await getCampaignMapRawData(settingsForCaw.getCampaignId() ?? 0, settingsForCaw.getCampaignMapId() ?? 0));
-                if ((mapRawData.getCampaignMapData()?.getRevision() ?? 0) === (settingsForCaw.getCampaignMapRevision() ?? 0)) {
+                const mapRawData = getExisted(await getCampaignMapRawData(settingsForCaw.getCampaignId(), settingsForCaw.getCampaignMapId()));
+                if ((mapRawData.getCampaignMapData()?.getRevision() ?? 0) === (settingsForCaw.getCampaignMapRevision())) {
                     this.showMapByMapData({
                         mapRawData  : mapRawData,
                         gameConfig  : gameConfig,
@@ -451,8 +451,8 @@ class TileBaseLayer extends TileLayerBase {
             : getCachedTileBaseImageSource({
                 version     : getSelfSettingsTextureVersion(),
                 themeType   : ThemeTypeId.Normal,
-                baseType    : tileData.getBaseType() ?? 0,
-                shapeId     : tileData.getBaseShapeId() ?? 0,
+                baseType    : tileData.getBaseType(),
+                shapeId     : tileData.getBaseShapeId(),
                 isDark      : false,
                 skinId      : SkinId.Neutral,
                 tickCount,
@@ -471,8 +471,8 @@ class TileDecorationLayer extends TileLayerBase {
             : getCachedTileDecorationImageSource({
                 version             : getSelfSettingsTextureVersion(),
                 themeType           : ThemeTypeId.Normal,
-                tileDecorationType  : tileData.getDecorationType() ?? 0,
-                shapeId             : tileData.getDecorationShapeId() ?? 0,
+                tileDecorationType  : tileData.getDecorationType(),
+                shapeId             : tileData.getDecorationShapeId(),
                 isDark              : false,
                 skinId              : SkinId.Neutral,
                 tickCount,
@@ -491,10 +491,10 @@ class TileObjectLayer extends TileLayerBase {
             : getCachedTileObjectImageSource({
                 version     : getSelfSettingsTextureVersion(),
                 themeType   : ThemeTypeId.Normal,
-                objectType  : tileData.getObjectType() ?? 0,
-                shapeId     : tileData.getObjectShapeId() ?? 0,
+                objectType  : tileData.getObjectType(),
+                shapeId     : tileData.getObjectShapeId(),
                 isDark      : false,
-                skinId      : getExisted(tileData.skinId || tileData.getPlayerIndex()),
+                skinId      : (tileData.skinId || tileData.getPlayerIndex()),
                 tickCount,
             });
     }
@@ -619,7 +619,7 @@ function _createUnitViewDataList({ unitDataArray, players, gameConfig }: {
             if (loaderUnitId == null) {
                 dataArray.push(new UiUnitViewData({
                     gameConfig          : gameConfig,
-                    skinId              : getDefaultSkinId(getExisted(unitData.getPlayerIndex())),
+                    skinId              : getDefaultSkinId(unitData.getPlayerIndex()),
                     overridingSkinId    : undefined,
                     unitData            : unitData.clone(),
                 }));
@@ -635,8 +635,8 @@ function _createUnitViewDataList({ unitDataArray, players, gameConfig }: {
 
             const playerData = players ? players.find(v => v.getPlayerIndex() === unitData.unitData.getPlayerIndex()) : null;
             if (playerData) {
-                unitData.coUsingSkillType   = playerData.getCoUsingSkillType() ?? 0;
-                unitData.skinId             = playerData.getUnitAndTileSkinId() ?? 0;
+                unitData.coUsingSkillType   = playerData.getCoUsingSkillType();
+                unitData.skinId             = playerData.getUnitAndTileSkinId();
             }
         }
     }

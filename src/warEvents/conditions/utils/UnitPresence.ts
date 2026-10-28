@@ -40,7 +40,7 @@ export function getBriefDesc(data: Undefinable<WecUnitPresence>): string | null 
         TextType.F0098,
         getText(TextType.Units),
         comparator == null ? UndefinedError : (getComparatorName(comparator) ?? UndefinedError),
-        con == null ? UndefinedError : (con.getValue() ?? UndefinedError)
+        con == null ? UndefinedError : (con.getValue())
     );
 }
 export function getDetailedDesc(data: Undefinable<WecUnitPresence>): string | null {
@@ -79,7 +79,7 @@ export function getDetailedDesc(data: Undefinable<WecUnitPresence>): string | nu
         getText(TextType.Units),
         subTextArray.join(`\n`),
         comparator == null ? UndefinedError : (getComparatorName(comparator) ?? UndefinedError),
-        con == null ? UndefinedError : (con.getValue() ?? UndefinedError)
+        con == null ? UndefinedError : (con.getValue())
     );
 }
 export function getErrorTip(data: WecUnitPresence, playersCountUnneutral: number, mapSize: MapSize, gameConfig: GameConfig): string | null {

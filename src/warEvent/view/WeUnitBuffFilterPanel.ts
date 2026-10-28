@@ -340,8 +340,8 @@ export class Panel extends UiPanel<OpenData> {
             label1.setText(``);
             label2.setText(``);
         } else {
-            label1.setText(con.getValueArray()?.map(v => getUnitBuffName(v)).join(`, `) ?? ``);
-            label2.setText(getTextForYesOrNo(con.getIsOneOf()));
+            label1.setText(con.getValueArray()?.map(v => getUnitBuffName(v)).join(`, `));
+            label2.setLangText(con.getIsOneOf() ? TextType.Yes : TextType.No);
         }
     }
     private _updateLabelsForConIsEverlasting(): void {
@@ -374,7 +374,7 @@ export class Panel extends UiPanel<OpenData> {
             const textForValue      = `${value}`;
             const textForComparator = getComparatorName(con.getComparator());
             label1.setText(`${textForComparator} ${textForValue}`);
-            label2.setText(getTextForYesOrNo(isRelative));
+            label2.setLangText(isRelative ? TextType.Yes : TextType.No);
         }
     }
     private _updateLabelsForConEndPlayerIndex() {
@@ -395,7 +395,7 @@ export class Panel extends UiPanel<OpenData> {
             const textForValue      = `${value}`;
             const textForComparator = getComparatorName(con.getComparator());
             label1.setText(`${textForComparator} ${textForValue}`);
-            label2.setText(getTextForYesOrNo(isRelative));
+            label2.setLangText(isRelative ? TextType.Yes : TextType.No);
         }
     }
 

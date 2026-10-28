@@ -11,7 +11,7 @@ export function getNormalMapId(warData: SerialWarSchema): number | null {
         ?? warData.getSettingsForScw()
         ?? warData.getSettingsForCcw()
         ?? warData.getSettingsForSrw();
-    return settings ? settings.getNormalMapId() ?? 0 : null;
+    return settings ? settings.getNormalMapId() : null;
 }
 
 export function getWarTypeId(warData: SerialWarSchema): WarTypeId {

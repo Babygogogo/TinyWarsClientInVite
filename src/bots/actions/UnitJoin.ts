@@ -64,6 +64,6 @@ async function getScoreForActionUnitJoin(commonParams: CommonParams, unit: IBwUn
     }
 
     return (Math.min(normalizedMaxHp, rawNormalizedNewHp) >= remainingCapturePoint)
-        ? (tile.getTemplateCfg().getAiScoreForCapture() ?? 0)
+        ? (tile.getTemplateCfg().getAiScoreForCapture())
         : 0;
 }

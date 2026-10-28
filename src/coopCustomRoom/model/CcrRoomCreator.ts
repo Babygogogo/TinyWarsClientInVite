@@ -72,7 +72,7 @@ export class CcrRoomCreator extends RoomCreatorBase {
         const humanPlayerIndexArray : number[] = [];
         const aiPlayerIndexArray    : number[] = [];
         for (const playerRule of warRuleCommonData.getPlayerRuleList()) {
-            const playerIndex = getExisted(playerRule.getPlayerIndex());
+            const playerIndex = playerRule.getPlayerIndex();
             if (playerRule.getCcwAiCoId() == null) {
                 humanPlayerIndexArray.push(playerIndex);
             } else {

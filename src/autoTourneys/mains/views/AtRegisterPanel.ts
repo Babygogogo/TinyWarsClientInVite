@@ -3,7 +3,7 @@ import { reqAtRegister } from "../Gateway.ts";
 import { getSinglePhaseInfoArrayForPhase, getAtRegistrationInfo, getAtTourneyInfo } from "../Provider.ts";
 import { showLang } from "../../../FloatText.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getLanguageText, getTimeDurationText2 } from "../../../lang/Utils.ts";
+import { getLanguageText, getTimeDurationText2 } from "../../../lang/Utils.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
 import type { S } from "../../../proto/schema/CommonProto/NetMessage/MsgAtGetRegistrationInfo/S.ts";
 import { getServerTimestamp } from "../../../timer/TimerModel.ts";
@@ -55,7 +55,7 @@ export class Panel extends UiPanel<OpenData> {
         this._enableDefaultOpenAndCloseAnimation(this._imgMask, this._group, 2);
     }
     protected override async _doApplyOpenData(): Promise<void> {
-        const tourneyIdArray    = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
+        const tourneyIdArray    = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId());
         this._tourneyId         = tourneyIdArray.length > 0 ? Math.max(...tourneyIdArray) : null;
         this._updateView();
     }
@@ -69,7 +69,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const tourneyIdArray    = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
+        const tourneyIdArray    = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId());
         if (tourneyIdArray.length <= 1) {
             return;
         }
@@ -84,7 +84,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const tourneyIdArray    = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
+        const tourneyIdArray    = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId());
         if (tourneyIdArray.length <= 1) {
             return;
         }
@@ -141,9 +141,9 @@ export class Panel extends UiPanel<OpenData> {
             labelRegistered.setText(`----`);
             labelRegisteredPlayers.setText(`----`);
         } else {
-            labelRegistered.setText(getText(registrationInfo.isRegistered ? TextType.Yes : TextType.No));
+            labelRegistered.setLangText(registrationInfo.isRegistered ? TextType.Yes : TextType.No);
             labelRegistered.setTextColor(registrationInfo.isRegistered ? 0x00ff00 : 0xffffff);
-            labelRegisteredPlayers.setText(`${registrationInfo.playersCount ?? 0}`);
+            labelRegisteredPlayers.setText(`${registrationInfo.playersCount}`);
         }
 
         this._updateLabelTourneyId();
@@ -152,13 +152,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1025));
-        this._labelTourneyIdTitle.setText(getText(TextType.B1026));
-        this._labelRegisteredPlayersTitle.setText(getText(TextType.B1027));
-        this._labelRegisteredTitle.setText(getText(TextType.B1028));
-        this._labelRestTimeTitle.setText(getText(TextType.B1032));
-        this._btnRegister.setText(getText(TextType.B0174));
-        this._btnUnregister.setText(getText(TextType.B1031));
+        this._labelTitle.setLangText(TextType.B1025);
+        this._labelTourneyIdTitle.setLangText(TextType.B1026);
+        this._labelRegisteredPlayersTitle.setLangText(TextType.B1027);
+        this._labelRegisteredTitle.setLangText(TextType.B1028);
+        this._labelRestTimeTitle.setLangText(TextType.B1032);
+        this._btnRegister.setLangText(TextType.B0174);
+        this._btnUnregister.setLangText(TextType.B1031);
 
         this._updateLabelTourneyId();
     }

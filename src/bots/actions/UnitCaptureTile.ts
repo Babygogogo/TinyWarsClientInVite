@@ -49,5 +49,5 @@ async function getScoreForActionUnitCaptureTile(commonParams: CommonParams, unit
     const turnsCount = Math.ceil(remainingCapturePoint / captureAmount);
     return turnsCount > 2
         ? 1
-        : (tile.getTemplateCfg().getAiScoreForCapture() ?? 0) / turnsCount;
+        : (tile.getTemplateCfg().getAiScoreForCapture()) / turnsCount;
 }

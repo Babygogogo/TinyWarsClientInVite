@@ -73,11 +73,11 @@ export function getAtPhaseInfo(): Promise<Undefinable<PhaseInfo>> {
     return _phaseInfoAccessor.getData(null);
 }
 export async function getSinglePhaseInfoArrayForPhase(phase: number): Promise<SinglePhaseInfo[]> {
-    return (await getAtPhaseInfo())?.infoArray.filter(v => (v.getPhase() ?? 0) === phase) ?? [];
+    return (await getAtPhaseInfo())?.infoArray.filter(v => (v.getPhase()) === phase) ?? [];
 }
 export async function getAllTourneyIdArray(): Promise<number[]> {
     const phaseInfo = await getAtPhaseInfo();
-    return phaseInfo?.infoArray.map(v => v.getTourneyId() ?? 0) ?? [];
+    return phaseInfo?.infoArray.map(v => v.getTourneyId()) ?? [];
 }
 export async function getLastTourneyId(): Promise<number | null> {
     const tourneyIdArray = await getAllTourneyIdArray();
@@ -177,6 +177,6 @@ export function getTourneyInfoPhase(tourneyInfo: TourneyInfo): number {
 }
 
 export async function checkIsRedForRegistration(): Promise<boolean> {
-    const tourneyIdArray = (await getAtPhaseInfo())?.infoArray.filter(v => v.getPhase() === PhaseId.Registration).map(v => v.getTourneyId() ?? 0) ?? [];
-    return tourneyIdArray.some(v => !getIsNotifiedForRegistration(v)) ?? false;
+    const tourneyIdArray = (await getAtPhaseInfo())?.infoArray.filter(v => v.getPhase() === PhaseId.Registration).map(v => v.getTourneyId()) ?? [];
+    return tourneyIdArray.some(v => !getIsNotifiedForRegistration(v));
 }

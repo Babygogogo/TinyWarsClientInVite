@@ -150,8 +150,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSave.setText(getText(TextType.B0844));
-        this._btnSubmit.setText(getText(TextType.B1139));
+        this._btnSave.setLangText(TextType.B0844);
+        this._btnSubmit.setLangText(TextType.B1139);
         this._updateLabelTitle();
     }
 
@@ -178,7 +178,7 @@ export class Panel extends UiPanel<OpenData> {
             this._canSubmit                 = false;
             this._mapErrorCode              = criticalErrorCode;
             this._mapRawData                = null;
-            labelReviewDescTitle.setText(getText(TextType.A0433));
+            labelReviewDescTitle.setLangText(TextType.A0433);
             labelReviewDescTitle.setTextColor(ColorValue.Yellow);
             labelReviewDesc.setText(getErrorText(criticalErrorCode));
             return;
@@ -194,12 +194,12 @@ export class Panel extends UiPanel<OpenData> {
 
         if (errorCode) {
             this._canSubmit                 = false;
-            labelReviewDescTitle.setText(getText(TextType.A0083));
+            labelReviewDescTitle.setLangText(TextType.A0083);
             labelReviewDescTitle.setTextColor(ColorValue.Yellow);
             labelReviewDesc.setText(getErrorText(errorCode));
         } else {
             this._canSubmit                 = true;
-            labelReviewDescTitle.setText(getText(TextType.A0786));
+            labelReviewDescTitle.setLangText(TextType.A0786);
             labelReviewDescTitle.setTextColor(ColorValue.Green);
             labelReviewDesc.setText(``);
         }

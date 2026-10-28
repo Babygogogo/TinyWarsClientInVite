@@ -3,7 +3,6 @@ import type { MovePathNode } from "../../auxiliaryTypes/MovePathNode.ts";
 import type { CommonParams } from "../CommonParams.ts";
 import type { ScoreAndAction } from "../Types.ts";
 import { getBestScoreAndAction } from "../Utils.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { WoContainer } from "../../proto/schema/CommonProto/WarOperation/WoContainer.ts";
 import { checkAndCallLater } from "../../timer/TimerModel.ts";
 import type { IUnit } from "../../units/IUnit.ts";
@@ -37,7 +36,7 @@ export async function getScoreAndActionUnitRepairUnit(commonParams: CommonParams
         {
             const maxAmmo = targetUnit.getPrimaryWeaponMaxAmmo();
             if ((maxAmmo) && (targetUnit.checkIsPrimaryWeaponAmmoInShort())) {
-                const currentAmmo = getExisted(targetUnit.getPrimaryWeaponCurrentAmmo());
+                const currentAmmo = targetUnit.getPrimaryWeaponCurrentAmmo();
                 totalScore          += ((maxAmmo - currentAmmo) / maxAmmo * 10 + (currentAmmo <= 0 ? 40 : 0)) * passiveScaler;
             }
         }

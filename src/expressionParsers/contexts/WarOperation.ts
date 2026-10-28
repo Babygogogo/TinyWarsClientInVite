@@ -124,7 +124,7 @@ export class WarOperation extends Base {
     }
     private _resolveTargetWarEventId(): Num {
         const data = this._woContainer?.getWoSystemCallWarEvent();
-        return new Num(this.getWar(), data ? data.getWarEventId() ?? 0 : -2);
+        return new Num(this.getWar(), data ? data.getWarEventId() : -2);
     }
     private _resolveTargetPlayerIndex(): Num {
         const container = this._woContainer;
@@ -285,7 +285,7 @@ export class WarOperation extends Base {
             if (operation) {
                 return new PositionArray(
                     war,
-                    operation.getTargetGridIndexArray().map(v => new Position(war, v.getX() ?? 0, v.getY() ?? 0)) ?? [],
+                    operation.getTargetGridIndexArray().map(v => new Position(war, v.getX() ?? 0, v.getY() ?? 0)),
                 );
             }
         }
@@ -294,7 +294,7 @@ export class WarOperation extends Base {
             if (operation) {
                 return new PositionArray(
                     war,
-                    operation.getDropDestinations().map(v => new Position(war, v.getGridIndex()?.getX() ?? 0, v.getGridIndex()?.getY() ?? 0)) ?? [],
+                    operation.getDropDestinations().map(v => new Position(war, v.getGridIndex()?.getX() ?? 0, v.getGridIndex()?.getY() ?? 0)),
                 );
             }
         }
@@ -303,7 +303,7 @@ export class WarOperation extends Base {
             if (operation) {
                 return new PositionArray(
                     war,
-                    operation.getTargetGridIndexArray().map(v => new Position(war, v.getX() ?? 0, v.getY() ?? 0)) ?? [],
+                    operation.getTargetGridIndexArray().map(v => new Position(war, v.getX() ?? 0, v.getY() ?? 0)),
                 );
             }
         }
@@ -708,7 +708,7 @@ export class WarOperation extends Base {
         {
             const operation = container.getWoUnitDropUnit();
             if (operation) {
-                return new NumArray(war, operation.getDropDestinations().map(v => v.getUnitId() ?? 0) ?? []);
+                return new NumArray(war, operation.getDropDestinations().map(v => v.getUnitId() ?? 0));
             }
         }
 

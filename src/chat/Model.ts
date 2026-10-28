@@ -47,7 +47,7 @@ export function updateOnAddMessage(msg: ChatMessage, showFloatText: boolean): vo
         warn(`ChatModel.updateOnAddMessage() invalid msg!`, msg);
     } else {
         const msgToCategory = msg.getToCategory();
-        const msgToTarget   = getExisted(msg.getToTarget());
+        const msgToTarget   = msg.getToTarget();
         const msgContent    = msg.getContent();
         const isSentBySelf  = getSelfUserId() === fromUserId;
 
@@ -130,9 +130,9 @@ export function resetAllReadProgress(list: ChatReadProgress[]): void {
     }
 }
 export function setReadProgress(progress: ChatReadProgress): void {
-    const toCategory    = getExisted(progress.getToCategory());
-    const toTarget      = getExisted(progress.getToTarget());
-    const timestamp     = getExisted(progress.getTimestamp());
+    const toCategory    = progress.getToCategory();
+    const toTarget      = progress.getToTarget();
+    const timestamp     = progress.getTimestamp();
     const subDict       = _allProgressDict.get(toCategory);
     if (subDict) {
         subDict.set(toTarget, timestamp);
@@ -163,7 +163,7 @@ export function checkHasUnreadMessageForTarget(toCategory: ToCategoryId, toTarge
     if (!length) {
         return false;
     } else {
-        return getReadProgressTimestamp(toCategory, toTarget) < getExisted(messages[length - 1].getTimestamp());
+        return getReadProgressTimestamp(toCategory, toTarget) < messages[length - 1].getTimestamp();
     }
 }
 export function checkHasUnreadMessageForMainCategory(mainCategory: MainCategoryId): boolean {

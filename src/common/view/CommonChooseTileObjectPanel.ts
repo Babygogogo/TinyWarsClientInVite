@@ -2,7 +2,6 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { TextureVersionId } from "../../graphics/Constants.ts";
 import { getSkinButtonBackground } from "../../helpers/ImageSource.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getTileObjectName } from "../../lang/Utils.ts";
 import type { DataForDrawTileObject } from "../../mapEditor/model/MeTypes.ts";
@@ -68,7 +67,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedPlayerIndex(newPlayerIndex: number | null, needScroll: boolean): Promise<void> {
         const list  = this._listPlayerIndex;
-        const index = getExisted(list.getRevisedFirstIndex(v => v?.playerIndex === newPlayerIndex));
+        const index = list.getRevisedFirstIndex(v => v?.playerIndex === newPlayerIndex);
         list.setSelectedItemIndex(index);
         if (needScroll) {
             list.scrollToItem(index);
@@ -153,10 +152,9 @@ export class Panel extends UiPanel<OpenData> {
                 continue;
             }
 
-            const shapesCount = getExisted(getSelfSettingsTextureVersion() === TextureVersionId.V0
-                ? (cfg.shapesCountInEditorForV0 ?? cfg.shapesCountForV0)
-                : (cfg.shapesCountInEditor ?? cfg.shapesCount)
-            );
+            const shapesCount = (getSelfSettingsTextureVersion() === TextureVersionId.V0
+                ? (cfg.shapesCountInEditorForV0)
+                : (cfg.shapesCountInEditor));
             for (let shapeId = 0; shapeId < shapesCount; ++shapeId) {
                 dataArray.push({
                     dataForDrawTileObject : {

@@ -1,6 +1,5 @@
 import { showLang } from "../../FloatText.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { UiPanel } from "../../ui/components/UiPanel.ts";
 import type { IUiButton } from "../../ui/interfaces/IUiButton.ts";
@@ -111,7 +110,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
     }
 }

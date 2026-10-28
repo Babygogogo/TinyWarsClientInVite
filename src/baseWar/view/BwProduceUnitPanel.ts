@@ -230,10 +230,10 @@ export class Panel extends UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelNoUnit.setText(getText(TextType.B0896));
+        this._labelNoUnit.setLangText(TextType.B0896);
         this._labelFundTitle.setText(`${getFormattedText(TextType.F0138, getText(TextType.Fund))}`);
-        this._labelTitle.setText(getText(TextType.B0954));
-        this._btnDetail.setText(getText(TextType.B0267));
+        this._labelTitle.setLangText(TextType.B0954);
+        this._btnDetail.setLangText(TextType.B0267);
 
         this._layoutFund.arrangeItems();
     }
@@ -265,7 +265,7 @@ export class Panel extends UiPanel<OpenData> {
         const playerIndex       = player.getPlayerIndex();
         const actionPlanner     = war.getActionPlanner();
         const skillCfg          = tile.getEffectiveSelfUnitProductionSkillCfg(playerIndex) ?? null;
-        const minNormalizedHp   = skillCfg ? getNormalizedHp(skillCfg.getHpLowerLimit() ?? 0) : getNormalizedHp(Hp.MaxHp);
+        const minNormalizedHp   = skillCfg ? getNormalizedHp(skillCfg.getHpLowerLimit()) : getNormalizedHp(Hp.MaxHp);
         const dataList          : DataForUnitRenderer[] = [];
 
         for (const unitType of tile.getProducibleUnitTypeArrayForPlayer(playerIndex) ?? []) {
@@ -291,7 +291,7 @@ export class Panel extends UiPanel<OpenData> {
                 costModifier,
                 unitProductionSkillCfg  : skillCfg,
                 minCost                 : skillCfg
-                    ? Math.floor(cfgCost * costModifier * minNormalizedHp * (skillCfg.getCostMultiplierPct() ?? 0) / Hp.Normalizer / 100)
+                    ? Math.floor(cfgCost * costModifier * minNormalizedHp * (skillCfg.getCostMultiplierPct()) / Hp.Normalizer / 100)
                     : Math.floor(cfgCost * costModifier),
                 panel   : this,
             });
@@ -401,7 +401,7 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
         labelName.setText(getUnitName(unitType, unit.getGcData()) ?? UndefinedError);
         labelName.setTextColor(isFundEnough ? 0xFFFFFF : 0x667A85);
         labelProduce.setTextColor(isFundEnough ? 0x000000 : 0xFFFFFF);
-        labelProduce.setText(getText(TextType.B0691));
+        labelProduce.setLangText(TextType.B0691);
         this._imgProduce.loadSource(isFundEnough ? `uncompressedColorYellow0001` : `uncompressedColorGrey0002`);
         this._imgBottom.loadSource(isFundEnough ? `uncompressedColorYellow0001` : `uncompressedColorGrey0002`);
         this._unitView.init(unit).startRunningView();
@@ -451,8 +451,8 @@ function handleProduce(data: DataForUnitRenderer): void {
     if (!skillCfg) {
         RequestingPlayerProduceUnit.getInstance().doApplyOnChooseAction(actionPlanner, gridIndex, unitType, Hp.MaxHp);
     } else {
-        const rawMinHp = skillCfg.getHpLowerLimit() ?? 0;
-        const rawMaxHp = skillCfg.getHpUpperLimit() ?? 0;
+        const rawMinHp = skillCfg.getHpLowerLimit();
+        const rawMaxHp = skillCfg.getHpUpperLimit();
         if (rawMinHp === rawMaxHp) {
             RequestingPlayerProduceUnit.getInstance().doApplyOnChooseAction(actionPlanner, gridIndex, unitType, rawMinHp);
         } else {
@@ -460,7 +460,7 @@ function handleProduce(data: DataForUnitRenderer): void {
             const minHp         = rawMinHp;
             const maxHp         = Math.min(
                 rawMaxHp,
-                Math.floor(data.currentFund * Hp.MaxHp / (data.cfgCost * data.costModifier * (skillCfg.getCostMultiplierPct() ?? 0) / 100) / normalizer) * normalizer
+                Math.floor(data.currentFund * Hp.MaxHp / (data.cfgCost * data.costModifier * (skillCfg.getCostMultiplierPct()) / 100) / normalizer) * normalizer
             );
             openPanel(getDict().CommonInputIntegerPanel, {
                 getTitle           : () => getText(TextType.Hp),

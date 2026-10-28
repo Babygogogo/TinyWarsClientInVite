@@ -166,7 +166,7 @@ async function getScoreForActionUnitAttack({ commonParams, focusUnit, focusUnitG
 
     let totalScore = 0;
     for (const battleDamageInfo of battleDamageInfoArray) {
-        const damage        = getExisted(battleDamageInfo.getDamage(), ClientErrorCode.SpwRobot_GetScoreForActionUnitAttack_00);
+        const damage        = battleDamageInfo.getDamage();
         const tileGridIndex = GridIndex.convertGridIndex(battleDamageInfo.getTargetTileGridIndex());
         if (tileGridIndex != null) {
             const tile2 = tileMap.getTile(tileGridIndex);

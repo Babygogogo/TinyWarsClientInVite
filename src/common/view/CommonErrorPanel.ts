@@ -33,7 +33,7 @@ export class Panel extends UiPanel<OpenData> {
     }
     protected override async _doApplyOpenData(): Promise<void> {
         const openData = this.getOpenData();
-        this._labelTitle.setText(getText(TextType.A0056));
+        this._labelTitle.setLangText(TextType.A0056);
         this._scrContent.scrollTop();
 
         const labelContent = this._labelContent;
@@ -49,7 +49,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateLabelTips(): void {
         const labelTips = this._labelTips;
-        labelTips.setText(getText(TextType.A0379));
+        labelTips.setLangText(TextType.A0379);
         labelTips.setIsVisible(this._labelContent.getScaledHeight() > Dimension.DesignMinHeight - 130);
     }
 

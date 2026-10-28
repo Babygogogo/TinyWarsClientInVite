@@ -422,7 +422,7 @@ function checkIsMeetConditionForTile(action: WeaSetCustomBuildingStateExpr, tile
     }
 }
 function evalActDefenseAmount(action: WeaSetCustomBuildingStateExpr, tile: ITile, customBuildingData: TileCustomBuildingData): number {
-    const defaultValue  = customBuildingData.getDefenseAmount() ?? 0;
+    const defaultValue  = customBuildingData.getDefenseAmount();
     const act           = action.getActDefenseAmount();
     if (!act) {
         return defaultValue;
@@ -501,7 +501,7 @@ function evalActMaxCapturePoint(action: WeaSetCustomBuildingStateExpr, tile: ITi
     }
 }
 function evalActIsDefeatedOnCapture(action: WeaSetCustomBuildingStateExpr, tile: ITile, customBuildingData: TileCustomBuildingData): boolean {
-    const defaultValue  = customBuildingData.getIsDefeatedOnCapture() ?? false;
+    const defaultValue  = customBuildingData.getIsDefeatedOnCapture();
     const act           = action.getActIsDefeatedOnCapture();
     if (!act) {
         return defaultValue;
@@ -576,7 +576,7 @@ function evalActRepairUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile:
     }
 }
 function evalActIncomePerTurn(action: WeaSetCustomBuildingStateExpr, tile: ITile, customBuildingData: TileCustomBuildingData): number {
-    const defaultValue  = customBuildingData.getIncomePerTurn() ?? 0;
+    const defaultValue  = customBuildingData.getIncomePerTurn();
     const act           = action.getActIncomePerTurn();
     if (!act) {
         return defaultValue;
@@ -598,7 +598,7 @@ function evalActIncomePerTurn(action: WeaSetCustomBuildingStateExpr, tile: ITile
     }
 }
 function evalActVisionRange(action: WeaSetCustomBuildingStateExpr, tile: ITile, customBuildingData: TileCustomBuildingData): number {
-    const defaultValue  = customBuildingData.getVisionRange() ?? 0;
+    const defaultValue  = customBuildingData.getVisionRange();
     const act           = action.getActVisionRange();
     if (!act) {
         return defaultValue;
@@ -620,7 +620,7 @@ function evalActVisionRange(action: WeaSetCustomBuildingStateExpr, tile: ITile, 
     }
 }
 function evalActIsVisionEnabledForAllPlayers(action: WeaSetCustomBuildingStateExpr, tile: ITile, customBuildingData: TileCustomBuildingData): boolean {
-    const defaultValue  = customBuildingData.getIsVisionEnabledForAllPlayers() ?? false;
+    const defaultValue  = customBuildingData.getIsVisionEnabledForAllPlayers();
     const act           = action.getActIsVisionEnabledForAllPlayers();
     if (!act) {
         return defaultValue;
@@ -698,7 +698,7 @@ function evalActProduceUnitTypeArray(action: WeaSetCustomBuildingStateExpr, tile
     }
 }
 function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateExpr, tile: ITile, customBuildingData: TileCustomBuildingData): number {
-    const defaultValue  = customBuildingData.getGlobalAttackBonus() ?? 0;
+    const defaultValue  = customBuildingData.getGlobalAttackBonus();
     const act           = action.getActGlobalAttackBonus();
     if (!act) {
         return defaultValue;
@@ -720,7 +720,7 @@ function evalActGlobalAttackBonus(action: WeaSetCustomBuildingStateExpr, tile: I
     }
 }
 function evalActGlobalDefenseBonus(action: WeaSetCustomBuildingStateExpr, tile: ITile, customBuildingData: TileCustomBuildingData): number {
-    const defaultValue  = customBuildingData.getGlobalDefenseBonus() ?? 0;
+    const defaultValue  = customBuildingData.getGlobalDefenseBonus();
     const act           = action.getActGlobalDefenseBonus();
     if (!act) {
         return defaultValue;

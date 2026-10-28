@@ -142,7 +142,7 @@ class RuleRenderer extends UiListItemRenderer<DataForRuleRenderer> {
         const dataArray     : DataForUserRenderer[] = [];
         for (const rankData of await getCampaignMapLeaderboard(campaignId, campaignMapId) ?? []) {
             const score = rankData.getScore() ?? 0;
-            for (const userId of rankData.getUserIdArray() ?? []) {
+            for (const userId of rankData.getUserIdArray()) {
                 dataArray.push({
                     index       : 0,
                     rank        : 0,

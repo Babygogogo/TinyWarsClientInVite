@@ -391,7 +391,7 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
     private _onTouchedBtnUnitTag(): void {
         const unitData = getExisted(this.getOpenData()?.dataForAddUnit.getUnitData());
         openPanel(getDict().CommonChooseMultiIntegerPanel, {
-            currentIntegerArray     : getTagIdList(unitData.getGroupedTagId() ?? 0, true),
+            currentIntegerArray     : getTagIdList(unitData.getGroupedTagId(), true),
             availableIntegerArray   : AllTagIdArray,
             getTitleText            : () => getFormattedText(TextType.F0092, getText(TextType.Tags)),
             callbackOnConfirm       : tagIdArray => {
@@ -549,13 +549,12 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const unitData      = getExisted(openData.dataForAddUnit.getUnitData());
         const minValue      = 1;
-        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0)?.getMaxHp());
-        const defaultValue  = maxValue;
+        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getMaxHp());
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle        : () => getText(TextType.Hp),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getCurrentHp() ?? defaultValue,
+            currentValue    : unitData.getCurrentHp(),
             callback        : value => {
                 unitData.setCurrentHp(value);
                 dispatch(TypeId.WarEventFullDataChanged);
@@ -571,13 +570,12 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const unitData      = getExisted(openData.dataForAddUnit.getUnitData());
         const minValue      = 0;
-        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0)?.getMaxFuel());
-        const defaultValue  = maxValue;
+        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getMaxFuel());
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.Fuel),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getCurrentFuel() ?? defaultValue,
+            currentValue    : unitData.getCurrentFuel(),
             callback        : value => {
                 unitData.setCurrentFuel(value);
                 dispatch(TypeId.WarEventFullDataChanged);
@@ -594,12 +592,11 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
         const unitData      = getExisted(openData.dataForAddUnit.getUnitData());
         const minValue      = 0;
         const maxValue      = openData.war.getGcData().getUnitMaxPromotion();
-        const defaultValue  = minValue;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.Promotion),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getCurrentPromotion() ?? defaultValue,
+            currentValue    : unitData.getCurrentPromotion(),
             callback        : value => {
                 unitData.setCurrentPromotion(value);
                 dispatch(TypeId.WarEventFullDataChanged);
@@ -625,7 +622,7 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
                 if (num === 0) {
                     return `(${getText(TextType.B0391)})`;
                 } else {
-                    return getLanguageText({ textArray: arr?.find(v => (v.getNameId() ?? 0) === num)?.getNameTextArray() }) ?? `----`;
+                    return getLanguageText({ textArray: arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() }) ?? `----`;
                 }
             },
             callbackOnConfirm       : num => {
@@ -647,13 +644,12 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const unitData      = getExisted(openData.dataForAddUnit.getUnitData());
         const minValue      = 0;
-        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0)?.getPrimaryWeaponMaxAmmo());
-        const defaultValue  = maxValue;
+        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getPrimaryWeaponMaxAmmo());
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.PrimaryWeaponAmmo),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getPrimaryWeaponCurrentAmmo() ?? defaultValue,
+            currentValue    : unitData.getPrimaryWeaponCurrentAmmo(),
             callback        : value => {
                 unitData.setPrimaryWeaponCurrentAmmo(value);
                 dispatch(TypeId.WarEventFullDataChanged);
@@ -669,13 +665,12 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const unitData      = getExisted(openData.dataForAddUnit.getUnitData());
         const minValue      = 0;
-        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0)?.getFlareMaxAmmo());
-        const defaultValue  = maxValue;
+        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getFlareMaxAmmo());
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.FlareAmmo),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getFlareCurrentAmmo() ?? defaultValue,
+            currentValue    : unitData.getFlareCurrentAmmo(),
             callback        : value => {
                 unitData.setFlareCurrentAmmo(value);
                 dispatch(TypeId.WarEventFullDataChanged);
@@ -691,13 +686,12 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const unitData      = getExisted(openData.dataForAddUnit.getUnitData());
         const minValue      = 0;
-        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0)?.getMaxBuildMaterial());
-        const defaultValue  = maxValue;
+        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getMaxBuildMaterial());
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.BuildMaterial),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getCurrentBuildMaterial() ?? defaultValue,
+            currentValue    : unitData.getCurrentBuildMaterial(),
             callback        : value => {
                 unitData.setCurrentBuildMaterial(value);
                 dispatch(TypeId.WarEventFullDataChanged);
@@ -713,13 +707,12 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const unitData      = getExisted(openData.dataForAddUnit.getUnitData());
         const minValue      = 0;
-        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0)?.getMaxProduceMaterial());
-        const defaultValue  = maxValue;
+        const maxValue      = getExisted(openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getMaxProduceMaterial());
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.ProductionMaterial),
             minValue        : minValue,
             maxValue        : maxValue,
-            currentValue    : unitData.getCurrentProduceMaterial() ?? defaultValue,
+            currentValue    : unitData.getCurrentProduceMaterial(),
             callback        : value => {
                 unitData.setCurrentProduceMaterial(value);
                 dispatch(TypeId.WarEventFullDataChanged);
@@ -800,10 +793,10 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
         label.setTextColor(errorTips ? ColorValue.Red : ColorValue.Green);
     }
     private _updateComponentsForCanBeBlockedByUnit(): void {
-        this._labelCanBeBlockedByUnit.setText(getTextForYesOrNo(this.getOpenData()?.dataForAddUnit.getCanBeBlockedByUnit()));
+        this._labelCanBeBlockedByUnit.setLangText(this.getOpenData()?.dataForAddUnit.getCanBeBlockedByUnit() ? TextType.Yes : TextType.No);
     }
     private _updateComponentsForNeedMovableTile(): void {
-        this._labelNeedMovableTile.setText(getTextForYesOrNo(this.getOpenData()?.dataForAddUnit.getNeedMovableTile()));
+        this._labelNeedMovableTile.setLangText(this.getOpenData()?.dataForAddUnit.getNeedMovableTile() ? TextType.Yes : TextType.No);
     }
     private _updateComponentsForAiMode(): void {
         this._labelAiMode.setText(getUnitAiModeName(this.getOpenData()?.dataForAddUnit.getUnitData()?.getAiMode() ?? AiModeId.Normal) ?? UndefinedError);
@@ -820,16 +813,16 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const group     = this._groupIsDiving;
         const unitData  = getExisted(openData.dataForAddUnit.getUnitData());
-        const unitCfg   = openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0);
+        const unitCfg   = openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType());
         if ((!unitCfg) || (unitCfg.getDiveCfg() == null)) {
             group.setIsVisible(false);
         } else {
             group.setIsVisible(true);
-            this._labelIsDiving.setText(getTextForYesOrNo(unitData.getIsDiving()));
+            this._labelIsDiving.setLangText(unitData.getIsDiving() ? TextType.Yes : TextType.No);
         }
     }
     private _updateComponentsForIsCoOnboard(): void {
-        this._labelHasLoadedCo.setText(getTextForYesOrNo(this.getOpenData()?.dataForAddUnit.getUnitData()?.getIsCoOnboard()));
+        this._labelHasLoadedCo.setLangText(this.getOpenData()?.dataForAddUnit.getUnitData()?.getIsCoOnboard() ? TextType.Yes : TextType.No);
     }
     private _updateComponentsForActionState(): void {
         const label = this._labelActionState;
@@ -878,7 +871,7 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const group     = this._groupPrimaryAmmo;
         const unitData  = getExisted(openData.dataForAddUnit.getUnitData());
-        const maxAmmo   = openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0)?.getPrimaryWeaponMaxAmmo();
+        const maxAmmo   = openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getPrimaryWeaponMaxAmmo();
         if (!maxAmmo) {
             group.setIsVisible(false);
         } else {
@@ -894,7 +887,7 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const group     = this._groupFlareAmmo;
         const unitData  = getExisted(openData.dataForAddUnit.getUnitData());
-        const maxAmmo   = openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0)?.getFlareMaxAmmo();
+        const maxAmmo   = openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getFlareMaxAmmo();
         if (!maxAmmo) {
             group.setIsVisible(false);
         } else {
@@ -910,7 +903,7 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const group         = this._groupBuildMaterial;
         const unitData      = getExisted(openData.dataForAddUnit.getUnitData());
-        const maxMaterial   = openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0)?.getMaxBuildMaterial();
+        const maxMaterial   = openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getMaxBuildMaterial();
         if (!maxMaterial) {
             group.setIsVisible(false);
         } else {
@@ -926,7 +919,7 @@ class UnitRenderer extends UiListItemRenderer<DataForUnitRenderer> {
 
         const group         = this._groupProduceMaterial;
         const unitData      = getExisted(openData.dataForAddUnit.getUnitData());
-        const maxMaterial   = openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType() ?? 0)?.getMaxProduceMaterial();
+        const maxMaterial   = openData.war.getGcData().getUnitTemplateCfg(unitData.getUnitType())?.getMaxProduceMaterial();
         if (!maxMaterial) {
             group.setIsVisible(false);
         } else {
@@ -973,7 +966,7 @@ function getErrorTipsForAddUnit({ dataForAddUnit, war }: {
 
     const unitData      = getExisted(dataForAddUnit.getUnitData());
     const gameConfig    = war.getGcData();
-    const unitCfg       = gameConfig.getUnitTemplateCfg(unitData.getUnitType() ?? 0);
+    const unitCfg       = gameConfig.getUnitTemplateCfg(unitData.getUnitType());
     if (unitCfg == null) {
         return getFormattedText(TextType.F0064, getText(TextType.B0525));
     }
@@ -983,7 +976,7 @@ function getErrorTipsForAddUnit({ dataForAddUnit, war }: {
     }
 
     {
-        const playerIndex = unitData.getPlayerIndex() ?? 0;
+        const playerIndex = unitData.getPlayerIndex();
         if ((playerIndex > war.getPlayersCountUnneutral())      ||
             (playerIndex < PlayerIndex.First)
         ) {
@@ -1065,7 +1058,7 @@ function getErrorTipsForAddUnit({ dataForAddUnit, war }: {
 
     // unitData.hasLoadedCo的值不需要检查
 
-    if (!checkIsValidEncodedTagId(unitData.getGroupedTagId() ?? 0)) {
+    if (!checkIsValidEncodedTagId(unitData.getGroupedTagId())) {
         return getFormattedText(TextType.F0091, getText(TextType.Tags));
     }
 

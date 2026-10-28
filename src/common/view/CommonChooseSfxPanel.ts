@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getBgmSfxName } from "../../lang/Utils.ts";
+import { getBgmSfxName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -66,11 +66,11 @@ export class Panel extends UiPanel<OpenData> {
         const list      = this._listSfx;
         const sfxCode   = this.getOpenData()?.currentSfxCode;
         await list.bindData(this._createDataForListSfx());
-        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.sfxCode === sfxCode) ?? -1);
+        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.sfxCode === sfxCode));
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0542));
+        this._labelTitle.setLangText(TextType.B0542);
     }
 
     private _createDataForListSfx(): DataForSfxRenderer[] {
@@ -153,7 +153,7 @@ class SfxRenderer extends UiListItemRenderer<DataForSfxRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSelect.setText(getText(TextType.B0258));
+        this._labelSelect.setLangText(TextType.B0258);
         this._updateLabelName();
     }
 

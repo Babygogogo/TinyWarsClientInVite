@@ -104,7 +104,7 @@ function fastExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): void {
             if (maxBuildMaterial != null) {
                 focusUnit.setCurrentBuildMaterial(Math.min(
                     maxBuildMaterial,
-                    getExisted(focusUnit.getCurrentBuildMaterial()) + getExisted(targetUnit.getCurrentBuildMaterial()),
+                    focusUnit.getCurrentBuildMaterial() + targetUnit.getCurrentBuildMaterial(),
                 ));
             }
 
@@ -121,7 +121,7 @@ function fastExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): void {
                 if (maxAmmo != null) {
                     focusUnit.setFlareCurrentAmmo(Math.min(
                         maxAmmo,
-                        getExisted(focusUnit.getFlareCurrentAmmo()) + getExisted(targetUnit.getFlareCurrentAmmo()),
+                        focusUnit.getFlareCurrentAmmo() + targetUnit.getFlareCurrentAmmo(),
                     ));
                 }
             }
@@ -234,7 +234,7 @@ async function normalExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): Promi
                 if (maxBuildMaterial != null) {
                     focusUnit.setCurrentBuildMaterial(Math.min(
                         maxBuildMaterial,
-                        getExisted(focusUnit.getCurrentBuildMaterial()) + getExisted(targetUnit.getCurrentBuildMaterial())
+                        focusUnit.getCurrentBuildMaterial() + targetUnit.getCurrentBuildMaterial()
                     ));
                 }
             }
@@ -255,7 +255,7 @@ async function normalExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): Promi
                 if (maxAmmo != null) {
                     focusUnit.setFlareCurrentAmmo(Math.min(
                         maxAmmo,
-                        getExisted(focusUnit.getFlareCurrentAmmo()) + getExisted(targetUnit.getFlareCurrentAmmo())
+                        focusUnit.getFlareCurrentAmmo() + targetUnit.getFlareCurrentAmmo()
                     ));
                 }
             }
@@ -265,7 +265,7 @@ async function normalExeUnitJoinUnit(war: IBwWar, action: WoUnitJoinUnit): Promi
             }
 
             {
-                for (const buff of targetUnit.getBuffList() ?? []) {
+                for (const buff of targetUnit.getBuffList()) {
                     focusUnit.addBuff(buff.clone(), false, true);
                 }
             }

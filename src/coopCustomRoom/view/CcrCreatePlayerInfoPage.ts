@@ -71,7 +71,7 @@ export class Page extends UiOpenableComponent<OpenData> {
             return;
         }
 
-        await this._listPlayer.bindData(this._createDataForListPlayer(getExisted((await roomCreator.getMapRawData()).getPlayersCountUnneutral())));
+        await this._listPlayer.bindData(this._createDataForListPlayer((await roomCreator.getMapRawData()).getPlayersCountUnneutral()));
     }
 
     private _createDataForListPlayer(playersCountUnneutral: number): DataForPlayerRenderer[] {
@@ -164,7 +164,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const humanPlayerIndexSet   = new Set<number>();
         const aiPlayerIndexSet      = new Set<number>();
         for (const playerRule of playerRuleArray) {
-            const playerIndex = getExisted(playerRule.getPlayerIndex());
+            const playerIndex = playerRule.getPlayerIndex();
             if (playerRule.getCcwAiCoId() == null) {
                 humanPlayerIndexSet.add(playerIndex);
             } else {
@@ -335,7 +335,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const settingsForCommon = roomCreator.getSettingsForCommon();
         const warRuleCommonData = getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
         const playerRule        = getPlayerRule(warRuleCommonData, playerIndex);
-        this._labelTeamIndex.setText(getPlayerTeamName(getExisted(playerRule.getTeamIndex())) || UndefinedError);
+        this._labelTeamIndex.setText(getPlayerTeamName(playerRule.getTeamIndex()) || UndefinedError);
 
         const isSelfPlayer      = roomCreator.getSelfPlayerIndex() === playerIndex;
         const isHumanPlayer     = playerRule.getCcwAiCoId() == null;
@@ -345,12 +345,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
                 : (isHumanPlayer ? null : roomCreator.getAiSkinId(playerIndex))
         ));
 
-        this._labelPlayerType.setText(isSelfPlayer
-            ? getText(TextType.B0647)
-            : (isHumanPlayer
-                ? getText(TextType.B0648)
-                : getText(TextType.B0607))
-        );
+        this._labelPlayerType.setLangText(isSelfPlayer ? TextType.B0647 : isHumanPlayer ? TextType.B0648 : TextType.B0607);
 
         const coId          = isSelfPlayer ? roomCreator.getSelfCoId() : (playerRule.getCcwAiCoId() ?? null);
         const gameConfig    = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));

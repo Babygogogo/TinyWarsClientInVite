@@ -2,7 +2,6 @@ import type { Undefinable } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getBgmSfxName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -141,8 +140,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0541));
-        this._labelOngoingTitle.setText(getText(TextType.B1281));
+        this._labelTitle.setLangText(TextType.B0541);
+        this._labelOngoingTitle.setLangText(TextType.B1281);
         this._inputFilter.setPromptText(getText(TextType.B0132));
         this._updateLabelOngoing();
     }
@@ -175,7 +174,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const filterText    = this._inputFilter.getInputText()?.toLocaleLowerCase();
         const gameConfig    = openData.gameConfig;
-        const callback      = getExisted(openData.callbackOnConfirm);
+        const callback      = openData.callbackOnConfirm;
         const dataArray     : DataForBgmRenderer[] = [];
         for (const bgmCode of getAllBgmCodeArray()) {
             if ((!filterText) || (getBgmSfxName(bgmCode, gameConfig)?.toLocaleLowerCase().includes(filterText))) {

@@ -173,8 +173,8 @@ class ConditionRenderer extends UiListItemRenderer<DataForConditionRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCopy.setText(getText(TextType.B0487));
-        this._btnSelect.setText(getText(TextType.B0492));
+        this._btnCopy.setLangText(TextType.B0487);
+        this._btnSelect.setLangText(TextType.B0492);
 
         this._updateLabelConditionId();
         this._updateLabelCondition();
@@ -199,7 +199,7 @@ class ConditionRenderer extends UiListItemRenderer<DataForConditionRenderer> {
         const condition = openData.fullData.getConditionArray().find(v => v.getWecCommonData()?.getConditionId() === openData.candidateConditionId);
         const label     = this._labelCondition;
         if (condition == null) {
-            label.setText(getText(TextType.A0160));
+            label.setLangText(TextType.A0160);
         } else {
             label.setText(getBriefDescForCondition(condition, openData.gameConfig) || UndefinedError);
         }

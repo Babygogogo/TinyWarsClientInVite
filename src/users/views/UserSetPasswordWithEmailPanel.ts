@@ -152,15 +152,15 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1336));
-        this._labelAccount.setText(getText(TextType.B0170));
-        this._labelVerificationCode.setText(getText(TextType.B1334));
-        this._labelPassword0.setText(getText(TextType.B0171));
-        this._labelPassword1.setText(getText(TextType.B0429));
-        this._btnRequest.setText(getText(TextType.B0382));
-        this._btnReset.setText(getText(TextType.B0567));
-        this._labelStep1.setText(getText(TextType.A0868));
-        this._labelStep2.setText(getText(TextType.A0869));
+        this._labelTitle.setLangText(TextType.B1336);
+        this._labelAccount.setLangText(TextType.B0170);
+        this._labelVerificationCode.setLangText(TextType.B1334);
+        this._labelPassword0.setLangText(TextType.B0171);
+        this._labelPassword1.setLangText(TextType.B0429);
+        this._btnRequest.setLangText(TextType.B0382);
+        this._btnReset.setLangText(TextType.B0567);
+        this._labelStep1.setLangText(TextType.A0868);
+        this._labelStep2.setLangText(TextType.A0869);
 
         this._layoutStep1.arrangeItems();
         this._layoutStep2.arrangeItems();

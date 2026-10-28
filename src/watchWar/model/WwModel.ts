@@ -52,7 +52,7 @@ export async function getWatchWarData(warId: number): Promise<Undefinable<Serial
     if (userId != null) {
         const cachedData = await StoreMpwWatchWarData.getData(userId, warId);
         if (cachedData != null) {
-            if ((cachedData.getModifiedTime() ?? 0) >= timestamp) {
+            if ((cachedData.getModifiedTime()) >= timestamp) {
                 return cachedData;
             }
             return _watchWarDataAccessor.getData(warId, true);
@@ -215,8 +215,8 @@ export async function createDataForCommonWarPlayerInfoPage(warId: number | null)
 
     const settingsForCommon         = getExisted(warSettings.getSettingsForCommon(), ClientErrorCode.WwModel_CreateDataForCommonWarPlayerInfoPage_01);
     const instanceWarRule           = getExisted(settingsForCommon.getInstanceWarRule(), ClientErrorCode.WwModel_CreateDataForCommonWarPlayerInfoPage_02);
-    const playerProgressInfoArray   = getExisted(warProgressInfo.getPlayerInfoList(), ClientErrorCode.WwModel_CreateDataForCommonWarPlayerInfoPage_03);
-    const playerStaticInfoArray     = getExisted(warSettings.getPlayerInfoArray());
+    const playerProgressInfoArray   = warProgressInfo.getPlayerInfoList();
+    const playerStaticInfoArray     = warSettings.getPlayerInfoArray();
     const warRuleCommonData         = getExisted(instanceWarRule.getWarRuleCommonData());
     const playersCountUnneutral     = getPlayersCountUnneutral(warRuleCommonData);
     const playerInfoArray           : PlayerInfo[] = [];
@@ -264,7 +264,7 @@ export async function createDataForCommonWarBasicSettingsPage(warId: number | nu
 
     const settingsForCommon = getExisted(warSettings.getSettingsForCommon(), ClientErrorCode.WwModel_CreateDataForCommonWarBasicSettingsPage_01);
     const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule(), ClientErrorCode.WwModel_CreateDataForCommonWarBasicSettingsPage_02);
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
     const settingsForMcw    = warSettings.getSettingsForMcw();
     const settingsForMfw    = warSettings.getSettingsForMfw();
     const settingsForCcw    = warSettings.getSettingsForCcw();

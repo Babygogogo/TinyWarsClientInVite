@@ -17,7 +17,7 @@ import { getCoEye } from "../../helpers/ImageSource.ts";
 import { createLazyFunc, createLazyFunc2, getExisted } from "../../helpers/Misc.ts";
 import { format } from "../../helpers/Text.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getCoSkillTypeName, getText, getTextForYesOrNo, getWeatherName } from "../../lang/Utils.ts";
+import { getCoSkillTypeName, getText, getWeatherName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { DefenseModifier, Luck } from "../../playerRules/Constants.ts";
 import { PlayerIndex } from "../../players/Constants.ts";
@@ -733,8 +733,8 @@ export class Panel extends UiPanel<OpenData> {
         this._labelLuck2.setText(`${defenderData.lowerLuck}\n${defenderData.upperLuck}`);
         this._labelFund1.setText(`${attackerData.fund}`);
         this._labelFund2.setText(`${defenderData.fund}`);
-        this._labelCoOnboard1.setText(getTextForYesOrNo(attackerData.coOnboard));
-        this._labelCoOnboard2.setText(getTextForYesOrNo(defenderData.coOnboard));
+        this._labelCoOnboard1.setLangText(attackerData.coOnboard ? TextType.Yes : TextType.No);
+        this._labelCoOnboard2.setLangText(defenderData.coOnboard ? TextType.Yes : TextType.No);
         this._labelCity1.setText(`${attackerData.citiesCount}`);
         this._labelCity2.setText(`${defenderData.citiesCount}`);
         this._labelWeapon1.setText(getWeaponTypeName(attackerData.unitWeaponType));
@@ -1102,7 +1102,7 @@ function getTileDefenseAmountForUnit({ gameConfig, unitType, unitHp, tileType, t
         {
             const cfg = skillCfg.getPersistent()?.getSelfDefenseBonusByTileIgnoreHp();
             if ((cfg)                                                                   &&
-                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId() ?? 0))
+                (gameConfig.checkIsUnitTypeInCategory(unitType, cfg.getUnitCategoryId()))
             ) {
                 return rawDefenseAmount;
             }
@@ -1197,9 +1197,9 @@ function getAttackModifierByWeather(calculatorData: CalculatorData): number {
     for (const skillId of getCoSkillIdArray(gameConfig, attackerData.coId, attackerData.coSkillType)) {
         const cfg = gameConfig.getCoSkillCfg(skillId)?.getPersistent()?.getSelfUnitIgnoreWeather();
         if ((cfg)                                                                                   &&
-            (gameConfig.checkIsUnitTypeInCategory(attackerUnitType, cfg.getUnitCategoryId() ?? 0))  &&
-            (gameConfig.checkIsTileTypeInCategory(attackerTileType, cfg.getTileCategoryId() ?? 0))  &&
-            (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId() ?? 0))
+            (gameConfig.checkIsUnitTypeInCategory(attackerUnitType, cfg.getUnitCategoryId()))  &&
+            (gameConfig.checkIsTileTypeInCategory(attackerTileType, cfg.getTileCategoryId()))  &&
+            (gameConfig.checkIsWeatherTypeInCategory(weatherType, cfg.getWeatherCategoryId()))
         ) {
             return 0;
         }
@@ -1227,14 +1227,14 @@ function getAttackerOffensePierce(calculatorData: CalculatorData): number[] {
         {
             const cfg = skillCfg.getPersistent()?.getSelfOffensePierce();
             if ((cfg)                                                                           &&
-                (gameConfig.checkIsUnitTypeInCategory(attackerUnitType, cfg.getUnitCategoryId() ?? 0))
+                (gameConfig.checkIsUnitTypeInCategory(attackerUnitType, cfg.getUnitCategoryId()))
             ) {
-                result[0] += cfg.getPierceTilePct() ?? 0;
-                result[1] += cfg.getPiercePromotionPct() ?? 0;
-                result[2] += cfg.getPierceCoPct() ?? 0;
-                result[3] += cfg.getPierceGlobalTilePct() ?? 0;
-                result[4] += cfg.getPierceRulePct() ?? 0;
-                result[5] += cfg.getPierceWarEventPct() ?? 0;
+                result[0] += cfg.getPierceTilePct();
+                result[1] += cfg.getPiercePromotionPct();
+                result[2] += cfg.getPierceCoPct();
+                result[3] += cfg.getPierceGlobalTilePct();
+                result[4] += cfg.getPierceRulePct();
+                result[5] += cfg.getPierceWarEventPct();
             }
         }
     }
@@ -1300,7 +1300,7 @@ function getDefenseModifierByCo(calculatorData: CalculatorData): number {
             tileDefenseAmount : defenderTileDefenseAmount,
             canTileDefendUnit : canDefenderTileDefendUnit,
             getOwnTilesCount  : getOwnTilesCount,
-        }) ?? 0;
+        });
     }
     return modifier;
 }

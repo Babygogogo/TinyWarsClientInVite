@@ -249,9 +249,9 @@ export class Panel extends UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._labelSelectedTitle.setText(getText(TextType.B1274));
-        this._labelSelectAll.setText(getText(TextType.B0761));
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._labelSelectedTitle.setLangText(TextType.B1274);
+        this._labelSelectAll.setLangText(TextType.B0761);
         this._labelTitle.setText(this.getOpenData()?.getTitleText() ?? UndefinedError);
 
         this._groupSelected.arrangeItems();

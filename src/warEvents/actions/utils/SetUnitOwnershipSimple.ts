@@ -127,7 +127,7 @@ export async function applyWithExtraData(_action: WeaSetUnitOwnershipSimple): Pr
 export async function applyWithoutExtraData(data: WeaSetUnitOwnershipSimple, isFastExecute: boolean, war: IBwWar): Promise<void> {
     const targetUnitSet     = new Set<IUnit>();
     const unitMap           = war.getUnitMap();
-    const newPlayerIndex    = getExisted(data.getActPlayerIndex());
+    const newPlayerIndex    = data.getActPlayerIndex();
     {
         const tileMap           = war.getTileMap();
         const conUnitFilter     = data.getConUnitFilter();

@@ -167,25 +167,25 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         for (const info of this.getUnitStatisticsArray()) {
             let hasMerged = false;
             for (const existingInfo of resultArray) {
-                if (((existingInfo.getUnitType() ?? 0) === (info.getUnitType() ?? 0))             &&
-                    ((existingInfo.getPlayerIndex() ?? 0) === (info.getDstPlayerIndex() ?? 0))
+                if (((existingInfo.getUnitType() ?? 0) === (info.getUnitType()))             &&
+                    ((existingInfo.getPlayerIndex() ?? 0) === (info.getDstPlayerIndex()))
                 ) {
                     hasMerged = true;
-                    existingInfo.setNormalizedHpGain((existingInfo.getNormalizedHpGain() ?? 0) + (info.getNormalizedHpGain() ?? 0));
-                    existingInfo.setNormalizedHpLoss((existingInfo.getNormalizedHpLoss() ?? 0) + (info.getNormalizedHpLoss() ?? 0));
-                    existingInfo.setUnitGain((existingInfo.getUnitGain() ?? 0) + (info.getUnitGain() ?? 0));
-                    existingInfo.setUnitLoss((existingInfo.getUnitLoss() ?? 0) + (info.getUnitLoss() ?? 0));
+                    existingInfo.setNormalizedHpGain((existingInfo.getNormalizedHpGain() ?? 0) + (info.getNormalizedHpGain()));
+                    existingInfo.setNormalizedHpLoss((existingInfo.getNormalizedHpLoss() ?? 0) + (info.getNormalizedHpLoss()));
+                    existingInfo.setUnitGain((existingInfo.getUnitGain() ?? 0) + (info.getUnitGain()));
+                    existingInfo.setUnitLoss((existingInfo.getUnitLoss() ?? 0) + (info.getUnitLoss()));
                     break;
                 }
             }
             if (!hasMerged) {
                 resultArray.push(Info.fromJson({
-                    unitType            : info.getUnitType() ?? 0,
-                    playerIndex         : info.getDstPlayerIndex() ?? 0,
-                    unitGain            : info.getUnitGain() ?? 0,
-                    unitLoss            : info.getUnitLoss() ?? 0,
-                    normalizedHpGain    : info.getNormalizedHpGain() ?? 0,
-                    normalizedHpLoss    : info.getNormalizedHpLoss() ?? 0,
+                    unitType            : info.getUnitType(),
+                    playerIndex         : info.getDstPlayerIndex(),
+                    unitGain            : info.getUnitGain(),
+                    unitLoss            : info.getUnitLoss(),
+                    normalizedHpGain    : info.getNormalizedHpGain(),
+                    normalizedHpLoss    : info.getNormalizedHpLoss(),
                 }));
             }
         }
@@ -196,7 +196,7 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
         for (let i = 0; i < length; ++i) {
             const unitStatistics = unitStatisticsArray[i];
             {
-                const unitType = unitStatistics.getUnitType() ?? 0;
+                const unitType = unitStatistics.getUnitType();
                 if (!gameConfiguration.checkIsValidUnitType(unitType)) {
                     throw newError(`Invalid unitType: ${unitType}`);
                 }
@@ -208,16 +208,16 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
             //     }
             // }
             {
-                const dstPlayerIndex = unitStatistics.getDstPlayerIndex() ?? 0;
+                const dstPlayerIndex = unitStatistics.getDstPlayerIndex();
                 if (!checkIsValidPlayerIndex(dstPlayerIndex, playersCountUnneutral)) {
                     throw newError(`Invalid dstPlayerIndex: ${dstPlayerIndex}`);
                 }
             }
             {
-                const unitGain          = unitStatistics.getUnitGain() ?? 0;
-                const unitLoss          = unitStatistics.getUnitLoss() ?? 0;
-                const normalizedHpGain  = unitStatistics.getNormalizedHpGain() ?? 0;
-                const normalizedHpLoss  = unitStatistics.getNormalizedHpLoss() ?? 0;
+                const unitGain          = unitStatistics.getUnitGain();
+                const unitLoss          = unitStatistics.getUnitLoss();
+                const normalizedHpGain  = unitStatistics.getNormalizedHpGain();
+                const normalizedHpLoss  = unitStatistics.getNormalizedHpLoss();
                 if ((unitGain === 0)            &&
                     (unitLoss === 0)            &&
                     (normalizedHpGain === 0)    &&
@@ -232,7 +232,7 @@ export class BwWarStatisticsManager implements IBwWarStatisticsManager {
             //         throw Helpers.newError(`Invalid reasonType: ${reasonType}`);
             //     }
             // }
-            if (!checkIsValidTeamIndexSubset(decodeTeamIndex(unitStatistics.getGroupedObserverTeamIndexes() ?? 0), playersCountUnneutral)) {
+            if (!checkIsValidTeamIndexSubset(decodeTeamIndex(unitStatistics.getGroupedObserverTeamIndexes()), playersCountUnneutral)) {
                 throw newError(`Invalid observerPlayerIndexArray.`);
             }
 

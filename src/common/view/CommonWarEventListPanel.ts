@@ -76,7 +76,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedEventId(newEventId: number, needScroll: boolean): Promise<void> {
         const listWarEventId    = this._listWarEventId;
-        const index             = getExisted(listWarEventId.getRevisedFirstIndex(v => v?.eventId === newEventId));
+        const index             = listWarEventId.getRevisedFirstIndex(v => v?.eventId === newEventId);
         listWarEventId.setSelectedItemIndex(index);
         if (needScroll) {
             listWarEventId.scrollToItem(index);
@@ -133,23 +133,23 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelNoEvent.setText(getText(TextType.A0821));
-        this._labelTitle.setText(getText(TextType.B0461));
-        this._btnClose.setText(getText(TextType.B0146));
+        this._labelNoEvent.setLangText(TextType.A0821);
+        this._labelTitle.setLangText(TextType.B0461);
+        this._btnClose.setLangText(TextType.B0146);
     }
 
     private async _resetListWarEventId(eventId: number | null): Promise<void> {
         const dataArray: DataForWarEventIdRenderer[] = [];
         for (const warEvent of (this.getOpenData()?.warEventFullData.getEventArray() ?? [])) {
             dataArray.push({
-                eventId : getExisted(warEvent.getEventId()),
+                eventId : warEvent.getEventId(),
                 panel   : this,
             });
         }
 
         const list = this._listWarEventId;
         await list.bindData(dataArray.sort((v1, v2) => v1.eventId - v2.eventId));
-        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.eventId === eventId) ?? (dataArray.length ? 0 : -1));
+        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.eventId === eventId));
     }
 
     private _updateBtnShowDetail(): void {
@@ -384,7 +384,7 @@ class WarEventDetailRenderer extends UiListItemRenderer<DataForWarEventDetailRen
             // const prefix        = prefixArray.join(`.`);
             this._btnModify.setText(prefixArray[prefixArray.length - 1]);
             labelDesc.setTextColor(ColorValue.Yellow);
-            labelDesc.setText(`${getText(TextType.A0166)}`);
+            labelDesc.setLangText(TextType.A0166);
             this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
         }
     }
@@ -402,7 +402,7 @@ class WarEventDetailRenderer extends UiListItemRenderer<DataForWarEventDetailRen
         const event                 = getExisted(data.fullData.getEventArray().find(v => v.getEventId() === eventId));
         const prefixArray           = data.prefixArray;
         const textForMaxCallCount   = `${getText(TextType.B0476)}: ${event.getMaxCallCountInPlayerTurn()}`;
-        const textForTrigger        = `${getText(TextType.B1400)}: ${getTextForYesOrNo(event.getCanBeTriggeredRightAfterAnyEvent() ?? true)}`;
+        const textForTrigger        = `${getText(TextType.B1400)}: ${getTextForYesOrNo(event.getCanBeTriggeredRightAfterAnyEvent())}`;
         this._btnModify.setText(prefixArray[prefixArray.length - 1]);
         this._labelDesc.setText(`${textForMaxCallCount}, ${textForTrigger}`);
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
@@ -426,7 +426,7 @@ class WarEventDetailRenderer extends UiListItemRenderer<DataForWarEventDetailRen
         this._labelDesc.setText((_isShowDetail
             ? desc
             : (getLanguageText({ textArray: node.getNodeNameArray() }) ?? desc)
-        ) ?? UndefinedError);
+        ));
         this._updatePositionForBtnModifyAndGroupDesc(prefixArray.length);
     }
     private _updateForCondition(data: DataForWarEventDetailRenderer): void {                  // DONE

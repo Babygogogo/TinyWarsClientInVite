@@ -118,12 +118,12 @@ export class Player implements IPlayer {
         this._setUnitAndTileSkinId(unitAndTileSkinId);
         this.setCoId(coId);
         this._setCoCurrentEnergy(coCurrentEnergy);
-        this._setCoPowerActivatedCount(data.getCoPowerActivatedCount() ?? 0);
+        this._setCoPowerActivatedCount(data.getCoPowerActivatedCount());
         this.setWatchOngoingSrcUserIds(data.getWatchOngoingSrcUserIdArray() || []);
         this.setWatchRequestSrcUserIds(data.getWatchRequestSrcUserIdArray() || []);
         this.setGridMarkList(data.getMarkedGridArray());
         this._setHiddenGridMarkTypeIdList(data.getHiddenGridMarkTypeIdArray());
-        this.setIsSkipTurn(data.getIsSkipTurn() ?? false);
+        this.setIsSkipTurn(data.getIsSkipTurn());
     }
 
     public startRunning(war: IBwWar): void {
@@ -444,7 +444,7 @@ export class Player implements IPlayer {
     }
     public getCoZoneExpansionEnergyList(): number[] | null {
         const cfg = this.getCoBasicCfg();
-        return cfg ? cfg.getZoneExpansionEnergyList() ?? null : null;
+        return cfg ? cfg.getZoneExpansionEnergyList() : null;
     }
     public getCoPowerEnergy(): number | null {
         const energyList    = this.getCoBasicCfg().getPowerEnergyList();
@@ -465,12 +465,12 @@ export class Player implements IPlayer {
         }
     }
     private _getCoRevisedRequiredEnergy(rawRequiredEnergy: number): number {
-        const cfg = getExisted(this.getCoBasicCfg().getCoEnergyRequirementParams(), ClientErrorCode.BwPlayer_GetRevisedEnergy_00);
+        const cfg = this.getCoBasicCfg().getCoEnergyRequirementParams();
         return getValueInInt32(rawRequiredEnergy * (Math.min(cfg[1], this.getCoPowerActivatedCount()) * cfg[0] + 100) / 100);
     }
 
     public getCoEnergyType(): EnergyTypeId {
-        return getExisted(this.getCoBasicCfg().getCoEnergyTypeId(), ClientErrorCode.BwPlayer_GetCoEnergyType_00);
+        return this.getCoBasicCfg().getCoEnergyTypeId();
     }
     public getCoPowerActivatedCount(): number {
         return getExisted(this._coPowerActivatedCount, ClientErrorCode.BwPlayer_GetCoPowerActivatedCount_00);
@@ -482,8 +482,8 @@ export class Player implements IPlayer {
     public getCoZoneRadius(): number {
         const cfg       = this.getCoBasicCfg();
         const energy    = this.getCoCurrentEnergy();
-        let radius      = getExisted(cfg.getZoneRadius());
-        for (const e of cfg.getZoneExpansionEnergyList() ?? []) {
+        let radius      = cfg.getZoneRadius();
+        for (const e of cfg.getZoneExpansionEnergyList()) {
             if (energy >= e) {
                 ++radius;
             }
@@ -612,7 +612,7 @@ export class Player implements IPlayer {
     }
 
     public getCoMaxBoardCount(): number {
-        return getExisted(this.getCoBasicCfg().getMaxBoardCount());
+        return this.getCoBasicCfg().getMaxBoardCount();
     }
 
     public getUnitCostModifier(unitTypeId: number): number {

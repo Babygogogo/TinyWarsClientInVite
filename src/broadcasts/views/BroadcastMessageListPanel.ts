@@ -2,7 +2,6 @@ import { reqBroadcastGetAllMessageIdArray, reqBroadcastDeleteMessage } from "../
 import { getAllMessageIdArray, getMessageData } from "../Provider.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, LanguageType } from "../../lang/Constants.ts";
 import { getText, getTimestampShortText, getLanguageText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -74,8 +73,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._updateListMessageAndLabelNoMessage();
-        this._labelTitle.setText(getText(TextType.B0881));
-        this._labelNoMessage.setText(getText(TextType.B0278));
+        this._labelTitle.setLangText(TextType.B0881);
+        this._labelNoMessage.setLangText(TextType.B0278);
     }
     private async _updateListMessageAndLabelNoMessage(): Promise<void> {
         const dataArray: DataForMessageRenderer[] = [];
@@ -125,7 +124,7 @@ class MessageRenderer extends UiListItemRenderer<DataForMessageRenderer> {
             return;
         }
 
-        this._labelIndex.setText(`#${messageId}    ${getTimestampShortText(getExisted(messageData.getStartTime()))} ~ ${getTimestampShortText(getExisted(messageData.getEndTime()))}`);
+        this._labelIndex.setText(`#${messageId}    ${getTimestampShortText(messageData.getStartTime())} ~ ${getTimestampShortText(messageData.getEndTime())}`);
 
         const textArray     = messageData.getTextList();
         const labelContent  = this._labelContent;
@@ -159,6 +158,6 @@ class MessageRenderer extends UiListItemRenderer<DataForMessageRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnDelete.setText(getText(TextType.B0220));
+        this._btnDelete.setLangText(TextType.B0220);
     }
 }

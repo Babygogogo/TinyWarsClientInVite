@@ -5,7 +5,7 @@ import { showLang, show } from "../../../FloatText.ts";
 import { getDict } from "../../../gamePanels/Dict.ts";
 import { openPanel } from "../../../gamePanels/Manager.ts";
 import { TextType } from "../../../lang/Constants.ts";
-import { getText, getTimeDurationText2, getFormattedText, getTimeDurationText, getTextForYesOrNo } from "../../../lang/Utils.ts";
+import { getText, getTimeDurationText2, getFormattedText, getTimeDurationText } from "../../../lang/Utils.ts";
 import { TypeId } from "../../../notifications/TypeId.ts";
 import { getServerTimestamp } from "../../../timer/TimerModel.ts";
 import { UiPanel } from "../../../ui/components/UiPanel.ts";
@@ -147,11 +147,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1022));
-        this._btnIsEnabled.setText(getText(TextType.B1034));
-        this._btnInterval.setText(getText(TextType.B1035));
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
+        this._labelTitle.setLangText(TextType.B1022);
+        this._btnIsEnabled.setLangText(TextType.B1034);
+        this._btnInterval.setLangText(TextType.B1035);
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
 
         this._updateLabelIsEnabled();
     }
@@ -161,6 +161,6 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateLabelIsEnabled(): void {
-        this._labelIsEnabled.setText(getTextForYesOrNo(this._isEnabled));
+        this._labelIsEnabled.setLangText(this._isEnabled ? TextType.Yes : TextType.No);
     }
 }

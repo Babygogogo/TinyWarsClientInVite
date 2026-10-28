@@ -50,8 +50,8 @@ export class SelfSettings {
         this.setAvailableCoIdArray(availableCoIdArray);
 
         if (selfPlayerData.getIsReady()) {
-            this.setCoId(selfPlayerData.getCoId() ?? 0);
-            this.setUnitAndTileSkinId(getExisted(selfPlayerData.getUnitAndTileSkinId()));
+            this.setCoId(selfPlayerData.getCoId());
+            this.setUnitAndTileSkinId(selfPlayerData.getUnitAndTileSkinId());
         } else {
             const availableSkinIdList = generateAvailableSkinIdList(roomInfo);
             if (!availableSkinIdList.length) {
@@ -143,9 +143,9 @@ function getDataArrayForBanCo(roomInfo: RoomInfo): DataForPlayerBanCo[] {
 
 function generateAvailableSkinIdList(roomInfo: RoomInfo): number[] {
     const usedSkinIds = new Set<number>();
-    for (const playerData of getExisted(roomInfo.getPlayerDataList())) {
+    for (const playerData of roomInfo.getPlayerDataList()) {
         if (playerData.getIsReady()) {
-            const skinId = getExisted(playerData.getUnitAndTileSkinId());
+            const skinId = playerData.getUnitAndTileSkinId();
             if (usedSkinIds.has(skinId)) {
                 throw newError(`Duplicated skinId: ${skinId}`);
             }

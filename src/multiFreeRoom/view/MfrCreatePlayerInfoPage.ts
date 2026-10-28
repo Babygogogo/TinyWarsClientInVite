@@ -7,7 +7,7 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getPlayerForceName, getPlayerTeamName, getText } from "../../lang/Utils.ts";
+import { getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
 import type { MfrRoomCreator } from "../model/MfrRoomCreator.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -154,19 +154,19 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
             return;
         }
 
-        const playerData = initialWarData.getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex() ?? 0) === playerIndex);
+        const playerData = initialWarData.getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex()) === playerIndex);
         if (playerData == null) {
             return;
         }
 
         if ((playerData.getUserId() == null)                                                     ||
-            ((playerData.getAliveState() ?? 0) === AliveStateId.Dead)
+            ((playerData.getAliveState()) === AliveStateId.Dead)
         ) {
             playShortSfx(ShortSfxCode.ButtonNeutral01);
 
             openPanel(getDict().CommonCoInfoPanel, {
                 gameConfig  : gameConfig,
-                coId        : playerData.getCoId() ?? 0,
+                coId        : playerData.getCoId(),
             });
         }
     }
@@ -208,7 +208,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
 
         const roomCreator   = openData.roomCreator;
         const playerIndex   = openData.playerIndex;
-        const playerData    = getExisted(roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex() ?? 0) === playerIndex));
+        const playerData    = getExisted(roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex()) === playerIndex));
         playerData.setUserId((playerData.getUserId() == null) ? getSelfUserId() : null);
         this._updateComponentsForSettings();
     }
@@ -222,8 +222,8 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const playerIndex       = openData.playerIndex;
         const gameConfig        = openData.gameConfig;
         const warRuleCommonData = getExisted(roomCreator.getInstanceWarRule().getWarRuleCommonData());
-        const playerData        = getExisted(roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex() ?? 0) === playerIndex));
-        const currentCoId       = playerData.getCoId() ?? 0;
+        const playerData        = getExisted(roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex()) === playerIndex));
+        const currentCoId       = playerData.getCoId();
         openPanel(getDict().CommonChooseSingleCoIdPanel, {
             gameConfig          : gameConfig,
             currentCoId         : currentCoId,
@@ -281,14 +281,14 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const roomCreator       = openData.roomCreator;
         const warRuleCommonData = getExisted(roomCreator.getInstanceWarRule().getWarRuleCommonData());
         const playerRule        = getPlayerRule(warRuleCommonData, playerIndex);
-        this._labelTeamIndex.setText(getPlayerTeamName(getExisted(playerRule.getTeamIndex())) || UndefinedError);
+        this._labelTeamIndex.setText(getPlayerTeamName(playerRule.getTeamIndex()) || UndefinedError);
 
-        const playerData = roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex() ?? 0) === playerIndex);
+        const playerData = roomCreator.getInitialWarData().getPlayerManager()?.getPlayers()?.find(v => (v.getPlayerIndex()) === playerIndex);
         if (playerData == null) {
             return;
         }
 
-        const isDead        = (playerData.getAliveState() ?? 0) === AliveStateId.Dead;
+        const isDead        = (playerData.getAliveState()) === AliveStateId.Dead;
         const isHumanPlayer = (playerData.getUserId() != null) && (!isDead);
         this._btnChangeCo.setIsVisible(!isHumanPlayer);
         this._btnChangeSkinId.setIsVisible(!isHumanPlayer);
@@ -297,17 +297,14 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         const isSelfPlayer = roomCreator.getSelfPlayerIndex() === playerIndex;
         this._imgSkin.loadSource(getCoHeadFrame(isSelfPlayer
             ? roomCreator.getSelfUnitAndTileSkinId()
-            : (isHumanPlayer ? null : (playerData.getUnitAndTileSkinId() ?? 0))
+            : (isHumanPlayer ? null : (playerData.getUnitAndTileSkinId()))
         ));
-        this._labelPlayerType.setText(isSelfPlayer
-            ? getText(TextType.B0647)
-            : (isHumanPlayer ? getText(TextType.B0648) : getText(TextType.B0607))
-        );
+        this._labelPlayerType.setLangText(isSelfPlayer ? TextType.B0647 : isHumanPlayer ? TextType.B0648 : TextType.B0607);
 
         const gameConfig                = openData.gameConfig;
         const coId                      = isSelfPlayer
             ? roomCreator.getSelfCoId()
-            : (isHumanPlayer ? null : (playerData.getCoId() ?? 0));
+            : (isHumanPlayer ? null : (playerData.getCoId()));
         const coCfg                     = coId == null ? null : gameConfig.getCoBasicCfg(coId);
         this._labelCo.setText(coCfg ? coCfg.getName() : `??`);
         this._imgCoHead.loadSource(coId == null ? `` : getCoHead(gameConfig, coId) ?? UndefinedError);

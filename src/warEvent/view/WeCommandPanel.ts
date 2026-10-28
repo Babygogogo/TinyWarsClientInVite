@@ -170,7 +170,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const warEvent = getExisted(openData.war.getWarEventManager().getWarEvent(openData.eventId));
+        const warEvent = openData.war.getWarEventManager().getWarEvent(openData.eventId);
         openPanel(getDict().CommonInputShortLangTextPanel, {
             currentTextArray : warEvent.getEventNameArray(),
             maxTextLength   : Event.MaxNameLength,
@@ -188,8 +188,8 @@ export class Panel extends UiPanel<OpenData> {
 
         const eventData                         = getExisted(openData.war.getWarEventManager().getWarEventFullData()?.getEventArray()?.find(v => v.getEventId() === openData.eventId));
         const minValue                          = 1;
-        const currentValue                      = eventData.getMaxCallCountInPlayerTurn() ?? 1;
-        const canBeTriggeredRightAfterAnyEvent  = eventData.getCanBeTriggeredRightAfterAnyEvent() ?? true;
+        const currentValue                      = eventData.getMaxCallCountInPlayerTurn();
+        const canBeTriggeredRightAfterAnyEvent  = eventData.getCanBeTriggeredRightAfterAnyEvent();
         const textForCurrentOption              = ` (${getText(TextType.B1379)})`;
         openPanel(getDict().CommonConfirmPanel, {
             getTitle               : () => getText(TextType.B1400),
@@ -228,7 +228,7 @@ export class Panel extends UiPanel<OpenData> {
             const eventData = getExisted(data.war.getWarEventManager().getWarEventFullData()?.getEventArray().find(v => v.getEventId() === data.eventId));
             openPanel(getDict().CommonInputIntegerPanel, {
                 getTitle           : () => getText(TextType.B0477),
-                currentValue    : eventData.getMaxCallCountTotal() ?? 1,
+                currentValue    : eventData.getMaxCallCountTotal(),
                 minValue,
                 maxValue,
                 callback        : (value) => {
@@ -616,7 +616,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         if (parentNodeId != null) {
-            const nodeIdAndFlagsArray = fullData.getConditionNodeArray().find(v => (v.getNodeId() ?? 0) === parentNodeId)?.getSubNodeIdAndFlagsArray();
+            const nodeIdAndFlagsArray = fullData.getConditionNodeArray().find(v => (v.getNodeId()) === parentNodeId)?.getSubNodeIdAndFlagsArray();
             if (nodeIdAndFlagsArray == null) {
                 showLang(TextType.YouCanNotDoThisRightNow);
                 return;
@@ -960,7 +960,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const eventId       = openData.eventId;
-        const actionIdArray = fullData.getEventArray().find(v => (v.getEventId() ?? 0) === eventId)?.getRootNodeAndActionsArray().find(v => v.getNodeIdAndFlags()?.getNodeId() === actionBoundNodeId)?.getActionIdArray();
+        const actionIdArray = fullData.getEventArray().find(v => (v.getEventId()) === eventId)?.getRootNodeAndActionsArray().find(v => v.getNodeIdAndFlags()?.getNodeId() === actionBoundNodeId)?.getActionIdArray();
         if (actionIdArray == null) {
             showLang(TextType.YouCanNotDoThisRightNow);
             return;
@@ -1011,8 +1011,8 @@ export class Panel extends UiPanel<OpenData> {
         if ((campaignMapData != null) && (actionId != null)) {
             const action = war.getWarEventManager().getWarEventFullData()?.getActionArray()?.find(v => (v.getWeaCommonData()?.getActionId() ?? 0) === actionId);
             if (action != null) {
-                const campaignId    = campaignMapData.getCampaignId() ?? 0;
-                const campaignMapId = campaignMapData.getCampaignMapId() ?? 0;
+                const campaignId    = campaignMapData.getCampaignId();
+                const campaignMapId = campaignMapData.getCampaignMapId();
                 openPanel(getDict().CommonConfirmPanel, {
                     getContent  : () => getFormattedText(TextType.F0005, actionId, campaignId, campaignMapId),
                     callback    : () => reqCmSetCampaignMapWarEventAction(campaignId, campaignMapId, action),
@@ -1032,7 +1032,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {                              // DONE
-        this._btnClose.setText(getText(TextType.B0146));
+        this._btnClose.setLangText(TextType.B0146);
 
         this._btnShallowCloneEvent.setLangText(TextType.B1478);
         this._btnDeepCloneEvent.setLangText(TextType.B0748);
@@ -1149,7 +1149,7 @@ export class Panel extends UiPanel<OpenData> {
         const event                 = getExisted(fullData.getEventArray().find(v => v.getEventId() === eventId));
         const errorTip              = getErrorTipForEventCallCountInPlayerTurn(event);
         const textForMaxCallCount   = `${getText(TextType.B0476)}: ${event.getMaxCallCountInPlayerTurn()}`;
-        const textForTrigger        = `${getText(TextType.B1400)}: ${getTextForYesOrNo(event.getCanBeTriggeredRightAfterAnyEvent() ?? true)}`;
+        const textForTrigger        = `${getText(TextType.B1400)}: ${getTextForYesOrNo(event.getCanBeTriggeredRightAfterAnyEvent())}`;
         const labelError            = this._labelError;
         labelError.setText(errorTip || getText(TextType.B0493));
         labelError.setTextColor(errorTip ? ColorValue.Red : ColorValue.Green);
@@ -1267,7 +1267,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const campaignMapData = war.getCampaignMapData();
         if ((campaignMapData != null) && (!errorTip)) {
-            const mapRawData        = await getCampaignMapRawData(campaignMapData.getCampaignId() ?? 0, campaignMapData.getCampaignMapId() ?? 0);
+            const mapRawData        = await getCampaignMapRawData(campaignMapData.getCampaignId(), campaignMapData.getCampaignMapId());
             const existingAction    = mapRawData?.getWarEventFullData()?.getActionArray().find(v => (v.getWeaCommonData()?.getActionId() ?? 0) === actionId);
             if ((existingAction != null) && (checkIsInterchangeable(action, existingAction))) {
                 group.addItem(this._btnUpdateCampaignAction, true);
@@ -1302,7 +1302,7 @@ function createSubNodeInParentNode({ fullData, parentNodeId, isNeedAnd, isNeedFa
                 deprecatedSubNodeIdArray    : [],
                 deprecatedConditionIdArray  : [],
             }));
-            nodeArray.sort((v1, v2) => getExisted(v1.getNodeId()) - getExisted(v2.getNodeId()));
+            nodeArray.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
 
             const arr = parentNode.getSubNodeIdAndFlagsArray();
             arr.push(NodeIdAndFlags.fromJson({ nodeId: nodeId }));

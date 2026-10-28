@@ -62,12 +62,12 @@ function fastExeUnitBuildTile(war: IBwWar, action: WoUnitBuildTile): void {
             if (newBuildPoint < maxBuildPoint) {
                 tile.setCurrentBuildPoint(newBuildPoint);
             } else {
-                focusUnit.setCurrentBuildMaterial(getExisted(focusUnit.getCurrentBuildMaterial()) - 1);
+                focusUnit.setCurrentBuildMaterial(focusUnit.getCurrentBuildMaterial() - 1);
 
                 const targetTileCfg = getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseType(), tile.getObjectType()), ClientErrorCode.WarOperationExecutor_FastExeUnitBuildTile_01);
                 tile.resetByTypeAndPlayerIndex({
-                    baseType        : getExisted(targetTileCfg.getDstTileBaseTypeId()),
-                    objectType      : getExisted(targetTileCfg.getDstTileObjectTypeId()),
+                    baseType        : targetTileCfg.getDstTileBaseTypeId(),
+                    objectType      : targetTileCfg.getDstTileObjectTypeId(),
                     playerIndex     : targetTileCfg.getIsDstNeutral() ? PlayerIndex.Neutral : focusUnit.getPlayerIndex(),
                 });
                 tile.setCurrentBuildPoint(0);
@@ -167,12 +167,12 @@ async function normalExeUnitBuildTile(war: IBwWar, action: WoUnitBuildTile): Pro
             if (newBuildPoint < maxBuildPoint) {
                 tile.setCurrentBuildPoint(newBuildPoint);
             } else {
-                focusUnit.setCurrentBuildMaterial(getExisted(focusUnit.getCurrentBuildMaterial()) - 1);
+                focusUnit.setCurrentBuildMaterial(focusUnit.getCurrentBuildMaterial() - 1);
 
                 const targetTileCfg = getExisted(focusUnit.getBuildTargetTileCfg(tile.getBaseType(), tile.getObjectType()), ClientErrorCode.WarOperationExecutor_NormalExeUnitBuildTile_01);
                 tile.resetByTypeAndPlayerIndex({
-                    baseType        : getExisted(targetTileCfg.getDstTileBaseTypeId()),
-                    objectType      : getExisted(targetTileCfg.getDstTileObjectTypeId()),
+                    baseType        : targetTileCfg.getDstTileBaseTypeId(),
+                    objectType      : targetTileCfg.getDstTileObjectTypeId(),
                     playerIndex     : targetTileCfg.getIsDstNeutral() ? PlayerIndex.Neutral : focusUnit.getPlayerIndex(),
                 });
                 tile.setCurrentBuildPoint(0);

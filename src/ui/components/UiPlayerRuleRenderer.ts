@@ -10,7 +10,7 @@ import { getNonNullElements } from "../../helpers/Collection.ts";
 import { newError } from "../../helpers/Misc.ts";
 import { getTextColor } from "../../helpers/Text.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerRuleName, getPlayerTeamName, getTextForYesOrNo, getUnitAndTileSkinName } from "../../lang/Utils.ts";
+import { getText, getPlayerRuleName, getPlayerTeamName, getUnitAndTileSkinName } from "../../lang/Utils.ts";
 import type { RuleEditor_PlayerRuleChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -1329,7 +1329,7 @@ export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRule
     private _updateViewAsCanActivateCoSkill(openData: DataForUiPlayerRuleRenderer): void {
         const canActivateCoSkill    = openData.playerRule.getCanActivateCoSkill();
         const label                 = this._labelValue;
-        label.setText(getTextForYesOrNo(canActivateCoSkill));
+        label.setLangText(canActivateCoSkill ? TextType.Yes : TextType.No);
         label.setTextColor(canActivateCoSkill ? ColorValue.White : ColorValue.Red);
 
         this._applySettingsForWholeTouch(openData.canModify);
@@ -1337,7 +1337,7 @@ export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRule
     private _updateViewAsCanCoBoard(openData: DataForUiPlayerRuleRenderer): void {
         const canCoBoard    = openData.playerRule.getCanCoBoard();
         const label         = this._labelValue;
-        label.setText(getTextForYesOrNo(canCoBoard));
+        label.setLangText(canCoBoard ? TextType.Yes : TextType.No);
         label.setTextColor(canCoBoard ? ColorValue.White : ColorValue.Red);
 
         this._applySettingsForWholeTouch(openData.canModify);
@@ -1345,7 +1345,7 @@ export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRule
     private _updateViewAsCanUnitJoin(openData: DataForUiPlayerRuleRenderer): void {
         const currValue     = openData.playerRule.getCanUnitJoin();
         const label         = this._labelValue;
-        label.setText(getTextForYesOrNo(currValue));
+        label.setLangText(currValue ? TextType.Yes : TextType.No);
         label.setTextColor(currValue ? ColorValue.White : ColorValue.Red);
 
         this._applySettingsForWholeTouch(openData.canModify);
@@ -1378,7 +1378,7 @@ export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRule
         const currentValue  = openData.playerRule.getMcwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(getText(TextType.B0120));
+            label.setLangText(TextType.B0120);
             label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1391,7 +1391,7 @@ export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRule
         const currentValue  = openData.playerRule.getMmwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(getText(TextType.B0120));
+            label.setLangText(TextType.B0120);
             label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1404,7 +1404,7 @@ export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRule
         const currentValue  = openData.playerRule.getMrwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(getText(TextType.B0120));
+            label.setLangText(TextType.B0120);
             label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1417,7 +1417,7 @@ export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRule
         const currentValue  = openData.playerRule.getAtwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(getText(TextType.B0120));
+            label.setLangText(TextType.B0120);
             label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1430,7 +1430,7 @@ export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRule
         const currentValue  = openData.playerRule.getCcwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(getText(TextType.B0120));
+            label.setLangText(TextType.B0120);
             label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1443,7 +1443,7 @@ export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRule
         const currentValue  = openData.playerRule.getSrwHumanCoCategoryIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(getText(TextType.B0120));
+            label.setLangText(TextType.B0120);
             label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);
@@ -1456,7 +1456,7 @@ export class UiPlayerRuleRenderer extends UiListItemRenderer<DataForUiPlayerRule
         const currentValue  = openData.playerRule.getCampaignHumanCoIdArray().length;
         const label         = this._labelValue;
         if (currentValue == 0) {
-            label.setText(getText(TextType.B0120));
+            label.setLangText(TextType.B0120);
             label.setTextColor(ColorValue.White);
         } else {
             label.setText(`${currentValue}`);

@@ -91,7 +91,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedDialogueId(newDialogueId: number, needScroll: boolean): Promise<void> {
         const listDialogueId    = this._listDialogueId;
-        const index             = getExisted(listDialogueId.getRevisedFirstIndex(v => v?.dialogueId === newDialogueId));
+        const index             = listDialogueId.getRevisedFirstIndex(v => v?.dialogueId === newDialogueId);
         listDialogueId.setSelectedItemIndex(index);
         if (needScroll) {
             listDialogueId.scrollToItem(index);
@@ -254,23 +254,23 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelNoData.setText(getText(TextType.B0278));
-        this._labelTitle.setText(getText(TextType.B1095));
-        this._btnRename.setText(getText(TextType.B0162));
+        this._labelNoData.setLangText(TextType.B0278);
+        this._labelTitle.setLangText(TextType.B1095);
+        this._btnRename.setLangText(TextType.B0162);
     }
 
     private async _resetListDialogueId(dialogueId: number | null): Promise<void> {
         const dataArray: DataForDialogueIdRenderer[] = [];
         for (const dialogue of this.getOpenData()?.war.getMapSimpleDialogueArray() ?? []) {
             dataArray.push({
-                dialogueId  : dialogue.getDialogueId() ?? 0,
+                dialogueId  : dialogue.getDialogueId(),
                 panel       : this,
             });
         }
 
         const list = this._listDialogueId;
         await list.bindData(dataArray.sort((v1, v2) => v1.dialogueId - v2.dialogueId));
-        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.dialogueId === dialogueId) ?? (dataArray.length ? 0 : -1));
+        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.dialogueId === dialogueId));
     }
 
     private async _updateGroupDialogueDataAndLabelNoData(): Promise<void> {
@@ -314,7 +314,7 @@ export class Panel extends UiPanel<OpenData> {
             }
 
             const errorTip = getErrorTip(dialogueData, war.getPlayersCountUnneutral(), war.getGcData());
-            labelDialoguesCount.setText(`${getText(TextType.B1097)} #${dialogueData.getDialogueId() ?? 0}, ${getText(TextType.B0675)}: ${dataArray.length} / ${Common.MaxCount}`);
+            labelDialoguesCount.setText(`${getText(TextType.B1097)} #${dialogueData.getDialogueId()}, ${getText(TextType.B0675)}: ${dataArray.length} / ${Common.MaxCount}`);
             labelError.setText(errorTip ?? getText(TextType.A0790));
             labelError.setTextColor(errorTip ? ColorValue.Yellow : ColorValue.Green);
             layoutError.arrangeItems();
@@ -454,7 +454,7 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
         if (openData.war.getIsReviewingMap()) {
             showLang(TextType.YouCanNotDoThisRightNow);
         } else {
-            const dialogueArray = getExisted(openData.dialogue.getDataArray());
+            const dialogueArray = openData.dialogue.getDataArray();
             if (dialogueArray.length > Common.MaxCount) {
                 show(getText(TextType.A0228));
             } else {
@@ -474,7 +474,7 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
         if (openData.war.getIsReviewingMap()) {
             showLang(TextType.YouCanNotDoThisRightNow);
         } else {
-            const dialogueArray = getExisted(openData.dialogue.getDataArray());
+            const dialogueArray = openData.dialogue.getDataArray();
             const index         = dialogueArray.indexOf(openData.dataForDialogue);
             if (index > 0) {
                 [dialogueArray[index - 1], dialogueArray[index]] = [dialogueArray[index], dialogueArray[index - 1]];
@@ -602,12 +602,12 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
         const currentTextArray  = dataForDialogue.getNameArray();
         if (openData.war.getIsReviewingMap()) {
             openPanel(getDict().CommonShowLangTextPanel, {
-                textArray   : currentTextArray ?? [],
+                textArray   : currentTextArray,
             });
 
         } else {
             openPanel(getDict().CommonInputShortLangTextPanel, {
-                currentTextArray    : currentTextArray ?? [],
+                currentTextArray    : currentTextArray,
                 maxTextLength       : Common.MaxNameLength,
                 allowEmpty          : true,
                 getHelpText         : () => getText(TextType.A0791),
@@ -721,7 +721,7 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
             label.setText(errorTips);
         } else {
             label.setTextColor(ColorValue.Green);
-            label.setText(getText(TextType.B0493));
+            label.setLangText(TextType.B0493);
         }
         this._layoutError.arrangeItems();
     }
@@ -734,9 +734,9 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
 
         const label = this._labelDialogueType;
         if (openData.getDataForAside()) {
-            label.setText(getText(TextType.B0670));
+            label.setLangText(TextType.B0670);
         } else if (openData.getDataForCoDialogue()) {
-            label.setText(getText(TextType.B0671));
+            label.setLangText(TextType.B0671);
         } else {
             label.setText(UndefinedError);
         }
@@ -748,7 +748,7 @@ class DialogueRenderer extends UiListItemRenderer<DataForDialogueRenderer> {
             return;
         }
 
-        this._labelDialogueId.setText(`${getText(TextType.B1259)} #${(openData.dialogue.getDataArray().indexOf(openData.dataForDialogue) ?? -1) + 1}`);
+        this._labelDialogueId.setText(`${getText(TextType.B1259)} #${(openData.dialogue.getDataArray().indexOf(openData.dataForDialogue)) + 1}`);
         this._layoutError.arrangeItems();
     }
 

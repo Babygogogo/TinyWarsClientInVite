@@ -99,7 +99,7 @@ export class Panel extends UiPanel<OpenData> {
         const gameConfig        = openData.war.getGcData();
         openPanel(getDict().CommonChooseMultiNumberPanel, {
             currentNumberArray      : action.getActionIdArray(),
-            availableNumberArray    : warEventFullData.getActionArray().filter(v => checkIsPersistentAction(v)).map(v => getExisted(v.getWeaCommonData()?.getActionId())) ?? [],
+            availableNumberArray    : warEventFullData.getActionArray().filter(v => checkIsPersistentAction(v)).map(v => getExisted(v.getWeaCommonData()?.getActionId())),
             showNumber              : true,
             getNumberMainText       : actionId => getBriefDescForAction(getExisted(getAction(warEventFullData, actionId)), gameConfig) ?? UndefinedError,
             getTitleText            : () => getFormattedText(TextType.F0092, getText(TextType.B0889)),

@@ -181,11 +181,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
-        this._labelTitle.setText(getText(TextType.B0084));
-        this._labelStd.setText(getText(TextType.B0548));
-        this._labelFog.setText(getText(TextType.B0549));
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
+        this._labelTitle.setLangText(TextType.B0084);
+        this._labelStd.setLangText(TextType.B0548);
+        this._labelFog.setLangText(TextType.B0549);
 
         this._layoutStd.arrangeItems();
         this._layoutFog.arrangeItems();

@@ -90,7 +90,7 @@ export async function getReplayInfo(replayId: number): Promise<Undefinable<Repla
 
     const cachedData = await StoreMpmFullReplayInfo.getData(replayId);
     if (cachedData != null) {
-        if ((cachedData.getInfoVersion() ?? 0) === dataVersion) {
+        if ((cachedData.getInfoVersion()) === dataVersion) {
             return cachedData;
         }
         return _replayInfoAccessor.getData(replayId, true);
@@ -137,7 +137,7 @@ export async function updateOnMsgReplayGetReplayInfoArray(data: ProtoSchemaCommo
     const promiseArray: Promise<void>[] = [];
     for (const encodedData of data.getEncodedReplayInfoArray()) {
         const replayInfo = ReplayInfo.decode(encodedData);
-        promiseArray.push(setReplayInfo(replayInfo.getReplayId() ?? 0, replayInfo));
+        promiseArray.push(setReplayInfo(replayInfo.getReplayId(), replayInfo));
     }
     await Promise.all(promiseArray);
 

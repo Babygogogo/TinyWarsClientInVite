@@ -15,7 +15,6 @@ import {
 import { show } from "../../FloatText.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getWarTypeName } from "../../lang/Utils.ts";
 import { getWarSettings } from "../../multiPlayerWar/model/MpwModel.ts";
@@ -141,7 +140,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedWarId(warId: number, needScroll: boolean): Promise<void> {
         const listMap   = this._listWar;
-        const index     = getExisted(listMap.getRevisedFirstIndex(v => v?.warId === warId));
+        const index     = listMap.getRevisedFirstIndex(v => v?.warId === warId);
         listMap.setSelectedItemIndex(index);
         this._updateBtnNextStep();
         this._updateGroupTab();
@@ -255,15 +254,15 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(getText(TextType.A0040));
-        this._labelWatchWar.setText(getText(TextType.B0206));
-        this._labelMakeRequest.setText(getText(TextType.B0207));
-        this._labelChooseWar.setText(getText(TextType.B0589));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._labelNoWar.setText(getText(TextType.B0210));
-        this._btnNextStep.setText(getText(TextType.B0566));
-        this._btnPrevPage.setText(getText(TextType.B1384));
-        this._btnNextPage.setText(getText(TextType.B1385));
+        this._labelLoading.setLangText(TextType.A0040);
+        this._labelWatchWar.setLangText(TextType.B0206);
+        this._labelMakeRequest.setLangText(TextType.B0207);
+        this._labelChooseWar.setLangText(TextType.B0589);
+        this._btnBack.setLangText(TextType.B0146);
+        this._labelNoWar.setLangText(TextType.B0210);
+        this._btnNextStep.setLangText(TextType.B0566);
+        this._btnPrevPage.setLangText(TextType.B1384);
+        this._btnNextPage.setLangText(TextType.B1385);
         this._updateLabelPageTitle();
 
         this._layoutPage.arrangeItems();
@@ -274,7 +273,7 @@ export class Panel extends UiPanel<OpenData> {
         const label = this._labelPageTitle;
         if (checkIsFilterEmpty(this._warFilter)) {
             label.setTextColor(0xCCCCCC);
-            label.setText(getText(TextType.B1386));
+            label.setLangText(TextType.B1386);
         } else {
             label.setTextColor(0xFFFF00);
             label.setText(`${getText(TextType.B1386)}(${getText(TextType.B1387)})`);
@@ -522,7 +521,7 @@ class WarRenderer
                 if (warName) {
                     labelName.setText(warName);
                 } else {
-                    const normalMapId   = settingsForMcw.getNormalMapId() ?? 0;
+                    const normalMapId   = settingsForMcw.getNormalMapId();
                     labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
                 }
 
@@ -531,20 +530,20 @@ class WarRenderer
                 if (warName) {
                     labelName.setText(warName);
                 } else {
-                    const normalMapId   = settingsForCcw.getNormalMapId() ?? 0;
+                    const normalMapId   = settingsForCcw.getNormalMapId();
                     labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
                 }
 
             } else if (settingsForMrw) {
-                const normalMapId   = settingsForMrw.getNormalMapId() ?? 0;
+                const normalMapId   = settingsForMrw.getNormalMapId();
                 labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
 
             } else if (settingsForMmw) {
-                const normalMapId   = settingsForMmw.getNormalMapId() ?? 0;
+                const normalMapId   = settingsForMmw.getNormalMapId();
                 labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
 
             } else if (settingsForAtw) {
-                const normalMapId   = settingsForAtw.getNormalMapId() ?? 0;
+                const normalMapId   = settingsForAtw.getNormalMapId();
                 labelName.setText((normalMapId == null ? null : await getMapNameInCurrentLanguage(normalMapId)) || UndefinedError);
             }
         }

@@ -140,7 +140,7 @@ export function getErrorCodeForUnitDataIgnoringUnitId({ unitData, mapSize, playe
         return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_16;
     }
 
-    const groupedTagId = unitData.getGroupedTagId() ?? 0;
+    const groupedTagId = unitData.getGroupedTagId();
     if (!checkIsValidEncodedTagId(groupedTagId)) {
         return ClientErrorCode.WarCommonHelpers_GetErrorCodeForUnitDataIgnoringUnitId_17;
     }
@@ -180,7 +180,7 @@ export function fillNonTrivialDefaultValues(unitData: SerialUnit, gcData: GameCo
     unitData.setPrimaryWeaponCurrentAmmo(cfg.getPrimaryWeaponMaxAmmo() ?? null);
     unitData.setFlareCurrentAmmo(cfg.getFlareMaxAmmo() ?? null);
     unitData.setCurrentProduceMaterial(cfg.getMaxProduceMaterial() ?? null);
-    unitData.setCurrentFuel(cfg.getMaxFuel() ?? null);
+    unitData.setCurrentFuel(cfg.getMaxFuel());
 }
 
 export function create(json: Required<SerialUnitJson>): SerialUnit {

@@ -329,7 +329,7 @@ export function reqAtGetUserArray(tourneyId: number): void {
 function _onMsgAtGetUserArray(e: Event): void {
     const data = e.data as ProtoSchemaCommonProtoNetMessageMsgAtGetUserArrayS;
     if (!data.getErrorCode()) {
-        setAtUserArray(data.getTourneyId() ?? 0, data.getUserIdArray() ?? null);
+        setAtUserArray(data.getTourneyId() ?? 0, data.getUserIdArray());
         dispatch(TypeId.MsgAtGetUserArray, data);
     }
 }

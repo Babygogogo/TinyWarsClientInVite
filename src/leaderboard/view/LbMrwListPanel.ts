@@ -120,14 +120,14 @@ export class Panel extends UiPanel<OpenData> {
     // Functions for view.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelStdNoData.setText(getText(TextType.B0278));
-        this._labelStdRank.setText(getText(TextType.B0904));
-        this._labelStdNickname.setText(getText(TextType.B0175));
-        this._labelStdScore.setText(getText(TextType.B0579));
-        this._labelStdWin.setText(getText(TextType.B0550));
-        this._labelStdLose.setText(getText(TextType.B0551));
-        this._labelStdDraw.setText(getText(TextType.B0552));
-        this._labelStdWinRate.setText(getText(TextType.B0553));
+        this._labelStdNoData.setLangText(TextType.B0278);
+        this._labelStdRank.setLangText(TextType.B0904);
+        this._labelStdNickname.setLangText(TextType.B0175);
+        this._labelStdScore.setLangText(TextType.B0579);
+        this._labelStdWin.setLangText(TextType.B0550);
+        this._labelStdLose.setLangText(TextType.B0551);
+        this._labelStdDraw.setLangText(TextType.B0552);
+        this._labelStdWinRate.setLangText(TextType.B0553);
 
         this._updateLabelTitle();
     }

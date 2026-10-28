@@ -108,7 +108,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public setAndReviseSelectedSlotIndex(newSlotIndex: number, needScroll: boolean): void {
         const listWar   = this._listWar;
-        const index     = listWar.getRevisedFirstIndex(v => v?.slotIndex === newSlotIndex) ?? -1;
+        const index     = listWar.getRevisedFirstIndex(v => v?.slotIndex === newSlotIndex);
         listWar.setSelectedItemIndex(index);
         this._updateComponentsForPreviewingWarInfo();
 
@@ -190,13 +190,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(getText(TextType.A0040));
-        this._labelSinglePlayer.setText(getText(TextType.B0138));
-        this._labelContinue.setText(getText(TextType.B0024));
-        this._labelChooseWar.setText(getText(TextType.B0589));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._labelNoWar.setText(getText(TextType.B0210));
-        this._btnNextStep.setText(getText(TextType.B0024));
+        this._labelLoading.setLangText(TextType.A0040);
+        this._labelSinglePlayer.setLangText(TextType.B0138);
+        this._labelContinue.setLangText(TextType.B0024);
+        this._labelChooseWar.setLangText(TextType.B0589);
+        this._btnBack.setLangText(TextType.B0146);
+        this._labelNoWar.setLangText(TextType.B0210);
+        this._btnNextStep.setLangText(TextType.B0024);
 
         this._groupNavigator.arrangeItems();
     }
@@ -337,7 +337,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const settingsForCommon = getExisted(warData.getSettingsForCommon());
         const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule());
-        const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+        const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
         const warEventFullData  = instanceWarRule.getWarEventFullData() ?? null;
         const normalMapId       = getNormalMapId(warData);
         return {

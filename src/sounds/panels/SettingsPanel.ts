@@ -4,7 +4,7 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { getOngoingWar } from "../../helpers/GameFlow.ts";
 import { PointerEventType, type PointerUnifiedEventData } from "../../helpers/PointerInput.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText, getBgmSfxName } from "../../lang/Utils.ts";
+import { getBgmSfxName } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../Constants.ts";
 import {
@@ -252,14 +252,14 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0540));
-        this._labelMainTitle.setText(getText(TextType.B1325));
-        this._labelBgmTitle.setText(getText(TextType.B0541));
-        this._labelEffectTitle.setText(getText(TextType.B0542));
-        this._labelSwitchBgm.setText(getText(TextType.B1281));
-        this._labelCoBgmSettings.setText(getText(TextType.B1286));
-        this._btnCoBgmSettings.setText(getText(TextType.B0425));
-        this._btnSceneBgmSettings.setText(getText(TextType.B1287));
+        this._labelTitle.setLangText(TextType.B0540);
+        this._labelMainTitle.setLangText(TextType.B1325);
+        this._labelBgmTitle.setLangText(TextType.B0541);
+        this._labelEffectTitle.setLangText(TextType.B0542);
+        this._labelSwitchBgm.setLangText(TextType.B1281);
+        this._labelCoBgmSettings.setLangText(TextType.B1286);
+        this._btnCoBgmSettings.setLangText(TextType.B0425);
+        this._btnSceneBgmSettings.setLangText(TextType.B1287);
 
         this._layoutMain.arrangeItems();
         this._layoutBgm.arrangeItems();

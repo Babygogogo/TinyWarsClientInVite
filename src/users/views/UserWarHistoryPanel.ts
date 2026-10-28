@@ -120,15 +120,15 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0201));
-        this._labelMapName.setText(getText(TextType.B0225));
-        this._labelTimestamp.setText(getText(TextType.EndTime));
-        this._labelRankScore.setText(getText(TextType.B0060));
-        this._labelWarType.setText(getText(TextType.B0599));
-        this._labelNoData.setText(getText(TextType.B0278));
-        this._btnRankFow.setText(getText(TextType.B0416));
-        this._btnRankStd.setText(getText(TextType.B0415));
-        this._btnUnranked.setText(getText(TextType.B0912));
+        this._labelTitle.setLangText(TextType.B0201);
+        this._labelMapName.setLangText(TextType.B0225);
+        this._labelTimestamp.setLangText(TextType.EndTime);
+        this._labelRankScore.setLangText(TextType.B0060);
+        this._labelWarType.setLangText(TextType.B0599);
+        this._labelNoData.setLangText(TextType.B0278);
+        this._btnRankFow.setLangText(TextType.B0416);
+        this._btnRankStd.setLangText(TextType.B0415);
+        this._btnUnranked.setLangText(TextType.B0912);
     }
 
     private async _updateComponentsForHistory(): Promise<void> {
@@ -293,7 +293,7 @@ class UnrankedRenderer extends UiListItemRenderer<DataForUnrankedRenderer> {
 
             const data = await getReplayData(replayId);
             if (data) {
-                gotoReplayWar(data, getExisted(replayId));
+                gotoReplayWar(data, replayId);
             } else {
                 closePanel(getDict().CommonBlockPanel);
             }
@@ -356,7 +356,7 @@ class RankedRenderer extends UiListItemRenderer<DataForRankedRenderer> {
 
             const data = await getReplayData(replayId);
             if (data) {
-                gotoReplayWar(data, getExisted(replayId));
+                gotoReplayWar(data, replayId);
             } else {
                 closePanel(getDict().CommonBlockPanel);
             }

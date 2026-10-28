@@ -92,7 +92,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSkip.setText(getText(TextType.B0665));
+        this._btnSkip.setLangText(TextType.B0665);
 
         this._updateComponentsForDialogue();
     }
@@ -188,7 +188,7 @@ export class Panel extends UiPanel<OpenData> {
         const imgCo1            = this._imgCo1;
         const imgCo2            = this._imgCo2;
         const war               = openData.war;
-        const dialogueData      = getExisted(openData.actionData.getDataArray())[this._dialogueIndex];
+        const dialogueData      = openData.actionData.getDataArray()[this._dialogueIndex];
         const dataForCoDialogue = dialogueData.getDataForCoDialogue();
         const dataForAside      = dialogueData.getDataForAside();
         const dataForMisc       = dialogueData.getDataForMisc();

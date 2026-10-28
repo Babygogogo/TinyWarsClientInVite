@@ -346,7 +346,7 @@ export class Panel extends UiPanel<OpenData> {
                                         commandType     : CommandType.C2_Mp_AutoTourney_Registration,
                                         isExpandVisible : false,
                                         callback        : async () => {
-                                            const tourneyIdArray = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId() ?? 0) ?? [];
+                                            const tourneyIdArray = (await getSinglePhaseInfoArrayForPhase(PhaseId.Registration))?.map(v => v.getTourneyId());
                                             if (tourneyIdArray.length <= 0) {
                                                 showLang(TextType.A0403);
                                                 return;
@@ -378,7 +378,7 @@ export class Panel extends UiPanel<OpenData> {
                                         commandType     : CommandType.C2_Mp_AutoTourney_PreviewMap,
                                         isExpandVisible : false,
                                         callback        : async () => {
-                                            const tourneyIdArray = (await getAtPhaseInfo())?.infoArray.map(v => v.getTourneyId() ?? 0) ?? [];
+                                            const tourneyIdArray = (await getAtPhaseInfo())?.infoArray.map(v => v.getTourneyId()) ?? [];
                                             if (tourneyIdArray.length <= 0) {
                                                 showLang(TextType.B0278);
                                                 return;

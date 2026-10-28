@@ -165,9 +165,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0259));
-        this._labelNoData.setText(getText(TextType.B0278));
-        this._labelTips.setText(getText(TextType.B1249));
+        this._labelTitle.setLangText(TextType.B0259);
+        this._labelNoData.setLangText(TextType.B0278);
+        this._labelTips.setLangText(TextType.B1249);
     }
 
     private _createDataForList(): DataForSlotRenderer[] {

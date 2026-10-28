@@ -132,8 +132,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0207));
-        this._btnConfirm.setText(getText(TextType.B0026));
+        this._labelTitle.setLangText(TextType.B0207);
+        this._btnConfirm.setLangText(TextType.B0026);
     }
 
     private async _generateDataForListPlayer(): Promise<DataForPlayerRenderer[]> {
@@ -249,22 +249,22 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         if (!playerProgressInfo.getIsAlive()) {
             groupAccept.setIsVisible(false);
             labelState.setIsVisible(true);
-            labelState.setText(`${getText(TextType.B0056)}`);
+            labelState.setLangText(TextType.B0056);
         } else {
             if (userId === getSelfUserId()) {
                 groupAccept.setIsVisible(false);
                 labelState.setIsVisible(true);
-                labelState.setText(`${getText(TextType.B0216)}`);
+                labelState.setLangText(TextType.B0216);
             } else {
                 if (openData.isRequested) {
                     groupAccept.setIsVisible(false);
                     labelState.setIsVisible(true);
-                    labelState.setText(`${getText(TextType.B0212)}`);
+                    labelState.setLangText(TextType.B0212);
                 } else {
                     if (openData.isWatching) {
                         groupAccept.setIsVisible(false);
                         labelState.setIsVisible(true);
-                        labelState.setText(`${getText(TextType.B0213)}`);
+                        labelState.setLangText(TextType.B0213);
                     } else {
                         groupAccept.setIsVisible(true);
                         labelState.setIsVisible(false);

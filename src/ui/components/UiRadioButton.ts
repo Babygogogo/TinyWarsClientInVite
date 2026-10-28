@@ -1,5 +1,4 @@
 import { MouseStyleType } from "../../helpers/PointerInput.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -78,14 +77,14 @@ export class UiRadioButton extends UiOpenableComponent<UiRadioButtonData> implem
         {
             const labelLeft = this._labelLeft;
             if (labelLeft) {
-                labelLeft.setText(getText(openData.leftTextType, openData.leftLangType));
+                labelLeft.setLangText(openData.leftTextType, openData.leftLangType);
                 labelLeft.setTextColor(getTextColor(isLeftOn));
             }
         }
         {
             const labelRight = this._labelRight;
             if (labelRight) {
-                labelRight.setText(getText(openData.rightTextType, openData.rightLangType));
+                labelRight.setLangText(openData.rightTextType, openData.rightLangType);
                 labelRight.setTextColor(getTextColor(!isLeftOn));
             }
         }

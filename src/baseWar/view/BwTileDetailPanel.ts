@@ -290,7 +290,7 @@ export class Panel extends UiPanel<OpenData> {
                 if (num === 0) {
                     return `(${getText(TextType.B0391)})`;
                 } else {
-                    return getLanguageText({ textArray: arr?.find(v => (v.getNameId() ?? 0) === num)?.getNameTextArray() ?? [] }) ?? `----`;
+                    return getLanguageText({ textArray: arr?.find(v => (v.getNameId()) === num)?.getNameTextArray() ?? [] }) ?? `----`;
                 }
             },
             callbackForSettings     : () => {
@@ -1108,7 +1108,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
 
         const { tile, war } = openData;
         this._labelTitle.setLangText(TextType.DefeatIfCaptured);
-        this._labelValue.setText(tile.getIsDefeatedOnCapture() ? getText(TextType.Yes) : getText(TextType.No));
+        this._labelValue.setLangText(tile.getIsDefeatedOnCapture() ? TextType.Yes : TextType.No);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((tile.getIsCustomizableBuilding()) && (checkCanCheatInWar(war.getWarType())));
     }
@@ -1145,7 +1145,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const offenseBonus              = tile.getGlobalAttackBonus();
         const defenseBonus              = tile.getGlobalDefenseBonus();
         this._labelTitle.setLangText(TextType.B0359);
-        this._labelValue.setText(`${offenseBonus ?? `--`} / ${defenseBonus ?? `--`}`);
+        this._labelValue.setText(`${offenseBonus} / ${defenseBonus}`);
         this._groupExtra.setIsVisible(false);
         this._groupTouchModify.setIsVisible((checkCanCheatInWar(war.getWarType())) && (tile.getIsCustomizableBuilding()));
     }
@@ -2158,7 +2158,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const data          = tile.getCustomBuildingData() ?? new TileCustomBuildingData();
         const gameConfig    = tile.getGameConfig();
         openPanel(getDict().CommonChooseMultiUnitTypePanel, {
-            currentUnitTypeArray    : data.getDefenseUnitTypeArray() ?? [],
+            currentUnitTypeArray    : data.getDefenseUnitTypeArray(),
             availableUnitTypeArray  : gameConfig.getAllUnitTypeArray(),
             gameConfig              : gameConfig,
             callbackOnConfirm       : newUnitTypeArray => {
@@ -2458,7 +2458,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
                     } else {
                         openPanel(getDict().CommonInputIntegerPanel, {
                             getTitle        : () => getText(TextType.CapturePoint),
-                            currentValue    : currentValue ?? 0,
+                            currentValue    : currentValue,
                             minValue        : 0,
                             maxValue        : newMaxCapturePoint,
                             callback        : newCurrentCapturePoint => {
@@ -2475,7 +2475,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         } else {
             openPanel(getDict().CommonInputIntegerPanel, {
                 getTitle        : () => getText(TextType.CapturePoint),
-                currentValue    : currentValue ?? 0,
+                currentValue    : currentValue,
                 minValue        : 0,
                 maxValue        : tile.getMaxCapturePoint() ?? 0,
                 callback        : newCurrentCapturePoint => {
@@ -2555,7 +2555,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const maxValue  = Crystal.Radius.MaxValue;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.EffectiveRadius),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : minValue,
             maxValue        : maxValue,
             callback        : value => {
@@ -2582,7 +2582,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const maxValue  = Crystal.Priority.MaxValue;
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.Priority),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : minValue,
             maxValue        : maxValue,
             callback        : value => {
@@ -2658,7 +2658,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCrystalData()).getOffsetFund();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.FundOffset),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Crystal.OffsetFund.MinValue,
             maxValue        : Crystal.OffsetFund.MaxValue,
             callback        : value => {
@@ -2683,7 +2683,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCrystalData()).getOffsetEnergyPercentage();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.CoEnergyOffset$),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Crystal.OffsetEnergyPercentage.MinValue,
             maxValue        : Crystal.OffsetEnergyPercentage.MaxValue,
             callback        : value => {
@@ -2746,7 +2746,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCrystalData()).getOffsetFuelPercentage();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.UnitsFuelOffset$),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Crystal.OffsetFuelPercentage.MinValue,
             maxValue        : Crystal.OffsetFuelPercentage.MaxValue,
             callback        : value => {
@@ -2771,7 +2771,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCrystalData()).getOffsetPrimaryAmmoPercentage();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.UnitsPriAmmoOffset$),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Crystal.OffsetPrimaryAmmoPercentage.MinValue,
             maxValue        : Crystal.OffsetPrimaryAmmoPercentage.MaxValue,
             callback        : value => {
@@ -2796,7 +2796,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCannonData()).getRangeForUp();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.RangeUp),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Cannon.RangeForUp.MinValue,
             maxValue        : Cannon.RangeForUp.MaxValue,
             callback        : value => {
@@ -2821,7 +2821,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCannonData()).getRangeForRight();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.RangeRight),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Cannon.RangeForRight.MinValue,
             maxValue        : Cannon.RangeForRight.MaxValue,
             callback        : value => {
@@ -2846,7 +2846,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCannonData()).getRangeForDown();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.RangeDown),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Cannon.RangeForDown.MinValue,
             maxValue        : Cannon.RangeForDown.MaxValue,
             callback        : value => {
@@ -2871,7 +2871,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCannonData()).getRangeForLeft();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.RangeLeft),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Cannon.RangeForLeft.MinValue,
             maxValue        : Cannon.RangeForLeft.MaxValue,
             callback        : value => {
@@ -2921,7 +2921,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCannonData()).getMaxTargetCount();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.MaxTargets),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Cannon.MaxTargetCount.MinValue,
             maxValue        : Cannon.MaxTargetCount.MaxValue,
             callback        : value => {
@@ -3035,7 +3035,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCannonData()).getOffsetFuelPercentage();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.UnitsFuelOffset$),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Cannon.OffsetFuelPercentage.MinValue,
             maxValue        : Cannon.OffsetFuelPercentage.MaxValue,
             callback        : value => {
@@ -3060,7 +3060,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalCannonData()).getOffsetPrimaryAmmoPercentage();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.UnitsPriAmmoOffset$),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : Cannon.OffsetPrimaryAmmoPercentage.MinValue,
             maxValue        : Cannon.OffsetPrimaryAmmoPercentage.MaxValue,
             callback        : value => {
@@ -3085,7 +3085,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalLaserTurretData()).getRangeForUp();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.RangeUp),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : LaserTurret.RangeForUp.MinValue,
             maxValue        : LaserTurret.RangeForUp.MaxValue,
             callback        : value => {
@@ -3110,7 +3110,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalLaserTurretData()).getRangeForRight();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.RangeRight),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : LaserTurret.RangeForRight.MinValue,
             maxValue        : LaserTurret.RangeForRight.MaxValue,
             callback        : value => {
@@ -3135,7 +3135,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalLaserTurretData()).getRangeForDown();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.RangeDown),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : LaserTurret.RangeForDown.MinValue,
             maxValue        : LaserTurret.RangeForDown.MaxValue,
             callback        : value => {
@@ -3160,7 +3160,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalLaserTurretData()).getRangeForLeft();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.RangeLeft),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : LaserTurret.RangeForLeft.MinValue,
             maxValue        : LaserTurret.RangeForLeft.MaxValue,
             callback        : value => {
@@ -3185,7 +3185,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalLaserTurretData()).getPriority();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.Priority),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : LaserTurret.Priority.MinValue,
             maxValue        : LaserTurret.Priority.MaxValue,
             callback        : value => {
@@ -3299,7 +3299,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalLaserTurretData()).getOffsetFuelPercentage();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.UnitsFuelOffset$),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : LaserTurret.OffsetFuelPercentage.MinValue,
             maxValue        : LaserTurret.OffsetFuelPercentage.MaxValue,
             callback        : value => {
@@ -3324,7 +3324,7 @@ class InfoRenderer extends UiListItemRenderer<DataForInfoRenderer> {
         const currValue = getExisted(tile.getFinalLaserTurretData()).getOffsetPrimaryAmmoPercentage();
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle           : () => getText(TextType.UnitsPriAmmoOffset$),
-            currentValue    : currValue ?? 0,
+            currentValue    : currValue,
             minValue        : LaserTurret.OffsetPrimaryAmmoPercentage.MinValue,
             maxValue        : LaserTurret.OffsetPrimaryAmmoPercentage.MaxValue,
             callback        : value => {
@@ -3386,7 +3386,7 @@ class MoveCostRenderer extends UiListItemRenderer<DataForMoveCostRenderer> {
 
         const gameConfig    = openData.gameConfig;
         const unitType      = openData.unitType;
-        const moveCostCfg   = getExisted(gameConfig.getMoveCostCfg(getExisted(openData.tileCfg.getTileTypeId())));
+        const moveCostCfg   = getExisted(gameConfig.getMoveCostCfg(openData.tileCfg.getTileTypeId()));
         const moveCost      = moveCostCfg[getExisted(gameConfig.getUnitTemplateCfg(unitType)?.getMoveTypeId())].getCost();
         this._imgBg.setIsVisible(openData.index % 4 === 2);
         this._labelMoveCost.setText(moveCost != null ? `${moveCost}` : `--`);

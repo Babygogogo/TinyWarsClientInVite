@@ -143,10 +143,10 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnLogin.setText(getText(TextType.B0173));
+        this._btnLogin.setLangText(TextType.B0173);
         this._btnRegister.setText(`${getText(TextType.B0174)}*`);
-        this._btnForgetPassword.setText(getText(TextType.B0626));
-        this._labelRememberPassword.setText(getText(TextType.B0172));
+        this._btnForgetPassword.setLangText(TextType.B0626);
+        this._labelRememberPassword.setLangText(TextType.B0172);
         this._labelAccount.setText(`${getText(TextType.B0170)}:`);
         this._labelPassword.setText(`${getText(TextType.B0171)}:`);
     }

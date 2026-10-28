@@ -118,8 +118,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1045));
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelTitle.setLangText(TextType.B1045);
+        this._labelNoData.setLangText(TextType.B0278);
     }
 
     private async _updateTopButtons(): Promise<void> {
@@ -300,14 +300,14 @@ class CampaignMapRenderer extends UiListItemRenderer<DataForCampaignMapRenderer>
             callback    : () => reqCmSetCampaignMapEnabled(
                 campaignId,
                 campaignMapId,
-                (campaignInfo.getEnabledCampaignMapIdArray().indexOf(campaignMapId) ?? -1) < 0,
+                (campaignInfo.getEnabledCampaignMapIdArray().indexOf(campaignMapId)) < 0,
             ),
         });
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnModify.setText(getText(TextType.B0317));
-        this._btnImport.setText(getText(TextType.B0128));
+        this._btnModify.setLangText(TextType.B0317);
+        this._btnImport.setLangText(TextType.B0128);
         this._updateLabelName();
         this._updateBtnEnable();
         this._updateBtnModifyAndImport();
@@ -348,7 +348,7 @@ class CampaignMapRenderer extends UiListItemRenderer<DataForCampaignMapRenderer>
             (campaignMapId === this.getOpenData()?.campaignMapId)
         ) {
             btn.setIsVisible(true);
-            btn.setText(`${getText(TextType.B1140)}: ${getTextForYesOrNo((campaignInfo.getEnabledCampaignMapIdArray().indexOf(campaignMapId) ?? -1) >= 0)}`);
+            btn.setText(`${getText(TextType.B1140)}: ${getTextForYesOrNo((campaignInfo.getEnabledCampaignMapIdArray().indexOf(campaignMapId)) >= 0)}`);
         }
     }
 

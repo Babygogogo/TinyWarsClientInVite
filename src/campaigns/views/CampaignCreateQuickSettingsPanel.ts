@@ -142,9 +142,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0560));
-        this._labelHighScoreTitle.setText(getText(TextType.B0907));
-        this._btnStart.setText(getText(TextType.B0026));
+        this._labelTitle.setLangText(TextType.B0560);
+        this._labelHighScoreTitle.setLangText(TextType.B0907);
+        this._btnStart.setLangText(TextType.B0026);
 
         this._layoutHighScore.arrangeItems();
     }
@@ -175,7 +175,7 @@ export class Panel extends UiPanel<OpenData> {
                 (cawHighScoreInfo.getConfigVersion() !== configVersion)                                         ||
                 (highScore == null)
             ) {
-                label.setText(getText(TextType.B1300));
+                label.setLangText(TextType.B1300);
             } else {
                 label.setText(`${highScore}`);
             }
@@ -191,7 +191,7 @@ export class Panel extends UiPanel<OpenData> {
         const mapRawData    = await getCampaignMapRawData(openData.campaignId, openData.campaignMapId);
         const listPlayer    = this._listPlayer;
         if (mapRawData) {
-            await listPlayer.bindData(await this._createDataForListPlayer(getExisted(mapRawData.getPlayersCountUnneutral())));
+            await listPlayer.bindData(await this._createDataForListPlayer(mapRawData.getPlayersCountUnneutral()));
         } else {
             await listPlayer.removeAllItems();
         }
@@ -247,7 +247,7 @@ export class Panel extends UiPanel<OpenData> {
         for (const playerRule of playerRuleDataArray) {
             const coIdArray = playerRule.getCampaignHumanCoIdArray();
             if (coIdArray?.length) {
-                dict.set(playerRule.getPlayerIndex() ?? 0, coIdArray[0]);
+                dict.set(playerRule.getPlayerIndex(), coIdArray[0]);
             }
         }
     }
@@ -338,16 +338,16 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
             return;
         }
 
-        const playerRule = mapRawData.getTemplateWarRuleArray()[0].getWarRuleCommonData()?.getPlayerRuleList().find(v => (v.getPlayerIndex() ?? 0) === playerIndex);
+        const playerRule = mapRawData.getTemplateWarRuleArray()[0].getWarRuleCommonData()?.getPlayerRuleList().find(v => (v.getPlayerIndex()) === playerIndex);
         if (playerRule == null) {
             return;
         }
 
         const isAi = playerRule.getCampaignAiCoId() != null;
         this._labelPlayerIndex.setText(getPlayerForceName(playerIndex));
-        this._labelTeamIndex.setText(getPlayerTeamName(playerRule.getTeamIndex() ?? 0) || UndefinedError);
+        this._labelTeamIndex.setText(getPlayerTeamName(playerRule.getTeamIndex()) || UndefinedError);
         this._imgSkin.loadSource(getCoHeadFrame(playerRule.getCampaignSkinId() ?? 0));
-        this._labelPlayerType.setText(getText(isAi ? TextType.B0607 : TextType.B0031));
+        this._labelPlayerType.setLangText(isAi ? TextType.B0607 : TextType.B0031);
 
         const coCfg = gameConfig.getCoBasicCfg(coId);
         this._labelCo.setText(coCfg ? coCfg.getName() : `??`);

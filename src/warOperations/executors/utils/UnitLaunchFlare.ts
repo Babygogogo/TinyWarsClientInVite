@@ -50,7 +50,7 @@ function fastExeUnitLaunchFlare(war: IBwWar, action: WoUnitLaunchFlare): void {
         focusUnit.setActionState(ActionStateId.Acted);
 
         if (!path.isBlocked) {
-            focusUnit.setFlareCurrentAmmo(getExisted(focusUnit.getFlareCurrentAmmo()) - 1);
+            focusUnit.setFlareCurrentAmmo(focusUnit.getFlareCurrentAmmo() - 1);
             fogMap.updateMapFromPathsByFlare(
                 focusUnit.getPlayerIndex(),
                 getExisted(GridIndex.convertGridIndex(action.getTargetGridIndex())),
@@ -112,7 +112,7 @@ async function normalExeUnitLaunchFlare(war: IBwWar, action: WoUnitLaunchFlare):
                 throw newError(`Empty targetGridIndex.`, ClientErrorCode.WarOperationExecutor_NormalExeUnitLaunchFlare_02);
             }
 
-            focusUnit.setFlareCurrentAmmo(getExisted(focusUnit.getFlareCurrentAmmo()) - 1);
+            focusUnit.setFlareCurrentAmmo(focusUnit.getFlareCurrentAmmo() - 1);
             fogMap.updateMapFromPathsByFlare(playerIndexInTurn, targetGridIndex, flareRadius);
         }
 

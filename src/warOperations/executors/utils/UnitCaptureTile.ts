@@ -59,7 +59,7 @@ function fastExeUnitCaptureTile(war: IBwWar, action: WoUnitCaptureTile): void {
             const tile              = war.getTileMap().getTile(destination);
             const captureAmount     = getExisted(focusUnit.getFinalCaptureAmount(destination));
             const maxCapturePoint   = getExisted(tile.getMaxCapturePoint());
-            const newCapturePoint   = (tile.getCurrentCapturePoint() ?? 0) + captureAmount;
+            const newCapturePoint   = (tile.getCurrentCapturePoint()) + captureAmount;
 
             if (newCapturePoint < maxCapturePoint) {
                 tile.setCurrentCapturePoint(newCapturePoint);
@@ -165,7 +165,7 @@ async function normalExeUnitCaptureTile(war: IBwWar, action: WoUnitCaptureTile):
             const tile                  = war.getTileMap().getTile(destination);
             const captureAmount         = getExisted(focusUnit.getFinalCaptureAmount(destination));
             const maxCapturePoint       = getExisted(tile.getMaxCapturePoint());
-            const currentCapturePoint   = tile.getCurrentCapturePoint() ?? 0;
+            const currentCapturePoint   = tile.getCurrentCapturePoint();
             const newCapturePoint       = currentCapturePoint + captureAmount;
 
             if (newCapturePoint < maxCapturePoint) {

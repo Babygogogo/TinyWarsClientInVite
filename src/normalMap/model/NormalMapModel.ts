@@ -125,7 +125,7 @@ export async function getBriefData(normalMapId: number): Promise<Undefinable<Nor
 
     const cachedData = await StoreNormalMapBriefData.getData(normalMapId);
     if (cachedData != null) {
-        if ((cachedData.getDataVersion() ?? 0) === dataVersion) {
+        if ((cachedData.getDataVersion()) === dataVersion) {
             return cachedData;
         }
         return _briefDataAccessor.getData(normalMapId, true);
@@ -146,7 +146,7 @@ export async function getRawData(normalMapId: number): Promise<Undefinable<MapRa
 
     const cachedData = await StoreNormalMapRawData.getData(normalMapId);
     if (cachedData != null) {
-        if ((cachedData.getModifiedTime() ?? 0) === (mapBriefData.getMapModifiedTime() ?? 0)) {
+        if ((cachedData.getModifiedTime()) === (mapBriefData.getMapModifiedTime())) {
             return cachedData;
         }
         return _rawDataAccessor.getData(normalMapId, true);
@@ -239,7 +239,7 @@ export function updateOnFailedMsgMapGetRawData(data: S): void {
 
 export async function updateOnMsgMmSetMapName(data: ProtoSchemaCommonProtoNetMessageMsgMmSetMapNameS): Promise<void> {
     const normalMapId   = getExisted(data.getNormalMapId(), ClientErrorCode.WarMapModel_UpdateOnSetMapName_00);
-    const mapNameArray  = getExisted(data.getMapNameArray(), ClientErrorCode.WarMapModel_UpdateOnSetMapName_01);
+    const mapNameArray  = data.getMapNameArray();
     const mapBriefData  = await getBriefData(normalMapId);
     (mapBriefData) && (mapBriefData.setMapNameArray(mapNameArray));
 
@@ -260,12 +260,12 @@ export async function updateOnMsgMmDeleteWarRule(data: ProtoSchemaCommonProtoNet
 }
 export async function updateOnMsgMmSetWarRuleName(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleNameS): Promise<void> {
     const ruleId            = data.getRuleId() ?? 0;
-    const templateWarRule   = (await getRawData(data.getNormalMapId() ?? 0))?.getTemplateWarRuleArray()?.find(v => (v.getRuleId() ?? 0) === ruleId);
+    const templateWarRule   = (await getRawData(data.getNormalMapId() ?? 0))?.getTemplateWarRuleArray()?.find(v => (v.getRuleId()) === ruleId);
     (templateWarRule) && (templateWarRule.setRuleNameArray(data.getRuleNameArray()));
 }
 export async function updateOnMsgMmSetWarRuleFixedTileTheme(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleFixedTileThemeS): Promise<void> {
     const ruleId            = data.getRuleId() ?? 0;
-    const templateWarRule   = (await getRawData(data.getNormalMapId() ?? 0))?.getTemplateWarRuleArray().find(v => (v.getRuleId() ?? 0) === ruleId);
+    const templateWarRule   = (await getRawData(data.getNormalMapId() ?? 0))?.getTemplateWarRuleArray().find(v => (v.getRuleId()) === ruleId);
     (templateWarRule) && (templateWarRule.createIfNotExistsWarRuleCommonData().setFixedTileTheme(data.getTileTheme()));
 }
 export async function updateOnMsgMmSetWarRuleAvailability(data: ProtoSchemaCommonProtoNetMessageMsgMmSetWarRuleAvailabilityS): Promise<void> {
@@ -292,7 +292,7 @@ export async function getTotalPlayedTimes(normalMapId: number): Promise<number> 
     let totalTimes      = 0;
     for (const statisticsForRule of mapBriefData.getNormalMapExtraData()?.getMapWarStatistics()?.getStatisticsForRuleArray() ?? []) {
         for (const info of statisticsForRule.getStatisticsForTurnArray()) {
-            totalTimes += info.getTotalGames() ?? 0;
+            totalTimes += info.getTotalGames();
         }
     }
 
@@ -301,7 +301,7 @@ export async function getTotalPlayedTimes(normalMapId: number): Promise<number> 
 export async function getAverageRating(normalMapId: number): Promise<number | null> {
     const normalMapBriefData    = await getBriefData(normalMapId);
     const normalMapExtraData    = normalMapBriefData ? normalMapBriefData.getNormalMapExtraData() : null;
-    const totalRaters           = normalMapExtraData ? normalMapExtraData.getTotalRaters() ?? 0 : null;
+    const totalRaters           = normalMapExtraData ? normalMapExtraData.getTotalRaters() : null;
     return totalRaters
         ? ((normalMapExtraData?.getTotalRating() ?? 0) / totalRaters)
         : null;
@@ -360,7 +360,7 @@ export async function sortMapArray<T>(dataArray: { normalMapId: number, extraDat
             tempArray.push({
                 normalMapId       : data.normalMapId,
                 extraData   : data.extraData,
-                num         : (await getTotalPlayedTimes(data.normalMapId)) ?? 0,
+                num         : (await getTotalPlayedTimes(data.normalMapId)),
             });
         }
         const result = tempArray.sort((v1, v2) => (v1.num - v2.num) || (v1.normalMapId - v2.normalMapId));
@@ -439,7 +439,7 @@ export async function checkIsMeetFilter(normalMapId: number, filter: Undefinable
     {
         const playersCountRange = filter.playersCountRange;
         if (playersCountRange) {
-            const playersCount = mapBriefData.getPlayersCountUnneutral() ?? 0;
+            const playersCount = mapBriefData.getPlayersCountUnneutral();
             if ((playersCount < playersCountRange[0]) || (playersCount > playersCountRange[1])) {
                 return false;
             }
@@ -448,28 +448,28 @@ export async function checkIsMeetFilter(normalMapId: number, filter: Undefinable
 
     {
         const minMapWidth = filter.minMapWidth;
-        if ((minMapWidth != null) && ((mapBriefData.getMapWidth() ?? 0) < minMapWidth)) {
+        if ((minMapWidth != null) && ((mapBriefData.getMapWidth()) < minMapWidth)) {
             return false;
         }
     }
 
     {
         const maxMapWidth = filter.maxMapWidth;
-        if ((maxMapWidth != null) && ((mapBriefData.getMapWidth() ?? 0) > maxMapWidth)) {
+        if ((maxMapWidth != null) && ((mapBriefData.getMapWidth()) > maxMapWidth)) {
             return false;
         }
     }
 
     {
         const minMapHeight = filter.minMapHeight;
-        if ((minMapHeight != null) && ((mapBriefData.getMapHeight() ?? 0) < minMapHeight)) {
+        if ((minMapHeight != null) && ((mapBriefData.getMapHeight()) < minMapHeight)) {
             return false;
         }
     }
 
     {
         const maxMapHeight = filter.maxMapHeight;
-        if ((maxMapHeight != null) && ((mapBriefData.getMapHeight() ?? 0) > maxMapHeight)) {
+        if ((maxMapHeight != null) && ((mapBriefData.getMapHeight()) > maxMapHeight)) {
             return false;
         }
     }

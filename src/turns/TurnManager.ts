@@ -43,7 +43,7 @@ export class TurnManager implements ITurnManager {
         this.setTurnIndex(data.getTurnIndex());
         this.setPlayerIndexInTurn(playerIndex);
         this.setPhaseCode(turnPhaseCode);
-        this.setEnterTurnTime(data.getEnterTurnTime() ?? 0);
+        this.setEnterTurnTime(data.getEnterTurnTime());
     }
     public fastInit(data: SerialTurnManager, playersCountUnneutral: number): void {
         this.init(data, playersCountUnneutral);

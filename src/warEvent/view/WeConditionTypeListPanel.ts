@@ -1,7 +1,7 @@
 import { getDict } from "../../gamePanels/Dict.ts";
 import { closePanel } from "../../gamePanels/Manager.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getWarEventConditionTypeName } from "../../lang/Utils.ts";
+import { getWarEventConditionTypeName } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -65,8 +65,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0516));
-        this._btnClose.setText(getText(TextType.B0146));
+        this._labelTitle.setLangText(TextType.B0516);
+        this._btnClose.setLangText(TextType.B0146);
     }
     private async _updateListType(): Promise<void> {
         const openData = this.getOpenData();
@@ -138,7 +138,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSwitch.setText(getText(TextType.B0520));
+        this._btnSwitch.setLangText(TextType.B0520);
 
         this._updateLabelType();
     }

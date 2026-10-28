@@ -244,11 +244,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
-        this._labelTitle.setText(getText(TextType.B0290));
-        this._labelCurrSizeTitle.setText(getText(TextType.B0855));
-        this._labelNewSizeTitle.setText(getText(TextType.B0856));
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
+        this._labelTitle.setLangText(TextType.B0290);
+        this._labelCurrSizeTitle.setLangText(TextType.B0855);
+        this._labelNewSizeTitle.setLangText(TextType.B0856);
 
         this._updateBtnDeltaTop();
         this._updateBtnDeltaBottom();
@@ -289,7 +289,7 @@ export class Panel extends UiPanel<OpenData> {
         const btn   = this._btnDeltaTop;
         const value = this._deltaTop;
         if (value === 0) {
-            btn.setText(getText(TextType.B0857));
+            btn.setLangText(TextType.B0857);
         } else {
             btn.setText(value > 0
                 ? getFormattedText(TextType.F0086, value)
@@ -301,7 +301,7 @@ export class Panel extends UiPanel<OpenData> {
         const btn   = this._btnDeltaBottom;
         const value = this._deltaBottom;
         if (value === 0) {
-            btn.setText(getText(TextType.B0858));
+            btn.setLangText(TextType.B0858);
         } else {
             btn.setText(value > 0
                 ? getFormattedText(TextType.F0086, value)
@@ -313,7 +313,7 @@ export class Panel extends UiPanel<OpenData> {
         const btn   = this._btnDeltaLeft;
         const value = this._deltaLeft;
         if (value === 0) {
-            btn.setText(getText(TextType.B0859));
+            btn.setLangText(TextType.B0859);
         } else {
             btn.setText(value > 0
                 ? getFormattedText(TextType.F0089, value)
@@ -326,7 +326,7 @@ export class Panel extends UiPanel<OpenData> {
         const btn   = this._btnDeltaRight;
         const value = this._deltaRight;
         if (value === 0) {
-            btn.setText(getText(TextType.B0860));
+            btn.setLangText(TextType.B0860);
         } else {
             btn.setText(value > 0
                 ? getFormattedText(TextType.F0089, value)

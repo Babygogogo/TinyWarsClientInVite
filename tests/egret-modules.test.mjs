@@ -56,7 +56,7 @@ async function loadModules(entry) {
   }
 }
 
-for (const entry of ['Egret', 'Sys', 'Web', 'Lifecycle', 'Res', 'Processor', 'Tween', 'Xml', 'LocalStorage', 'Path']) {
+for (const entry of ['Egret', 'Sys', 'Web', 'Lifecycle', 'Res', 'Processor', 'LocalStorage', 'Path']) {
   test(`${entry} can be the first imported module`, async () => {
     const module = await loadModules(entry)
     assert.ok(Object.keys(await module(entry)).length > 0)

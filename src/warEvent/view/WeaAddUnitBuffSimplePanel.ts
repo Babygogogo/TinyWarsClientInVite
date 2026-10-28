@@ -383,7 +383,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._labelActBuffType.setText(getUnitBuffName(action.getActBuffType() ?? 0) || ``);
+        this._labelActBuffType.setText(getUnitBuffName(action.getActBuffType()) || ``);
     }
 
     private _updateLabelActExtraParams(): void {

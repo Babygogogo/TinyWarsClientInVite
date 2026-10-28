@@ -3,7 +3,6 @@ import { ContextType } from "../../expressionParsers/Enums.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
 import { ColorValue } from "../../graphics/Constants.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
@@ -123,7 +122,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getConTileFilter(),
             expressionInfo  : ExpressionInfoDict.ConTileFilter,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getConTileFilter() != text) {
@@ -154,7 +153,7 @@ export class Panel extends UiPanel<OpenData> {
         openPanel(getDict().CommonInputExpressionPanel, {
             currentValue    : action.getConTileBuffFilter(),
             expressionInfo  : ExpressionInfoDict.ConTileBuffFilter,
-            fullData        : getExisted(openData.fullData),
+            fullData        : openData.fullData,
             isReviewingMap  : openData.war.getIsReviewingMap(),
             callback        : text => {
                 if (action.getConTileBuffFilter() != text) {
@@ -176,12 +175,12 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(`${getText(TextType.B0533)} A${this.getOpenData()?.action.getWeaCommonData()?.getActionId()}`);
-        this._btnClose.setText(getText(TextType.B0146));
-        this._btnType.setText(getText(TextType.B0516));
-        this._btnIdentifier.setText(getText(TextType.B0131));
+        this._btnClose.setLangText(TextType.B0146);
+        this._btnType.setLangText(TextType.B0516);
+        this._btnIdentifier.setLangText(TextType.B0131);
 
-        this._btnConTileFilter.setText(getText(TextType.TileFilter));
-        this._btnConTileBuffFilter.setText(getText(TextType.B1235));
+        this._btnConTileFilter.setLangText(TextType.TileFilter);
+        this._btnConTileBuffFilter.setLangText(TextType.B1235);
 
         this._updateLabelDescAndLabelError();
     }

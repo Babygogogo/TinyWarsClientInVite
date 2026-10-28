@@ -326,8 +326,8 @@ export class Panel extends UiPanel<OpenData> {
                 const campaignMapData   = mapRawData.getCampaignMapData();
                 const mapName           = getLanguageText({ textArray: mapRawData.getMapNameArray() }) ?? `----`;
                 labelMapName.setText(campaignMapData
-                    ? `${getText(TextType.B1135)} #${campaignMapData.getCampaignId() ?? 0}-${campaignMapData.getCampaignMapId() ?? 0} ${mapName}`
-                    : `#${mapRawData.getNormalMapId() ?? `--`} ${mapName}`
+                    ? `${getText(TextType.B1135)} #${campaignMapData.getCampaignId()}-${campaignMapData.getCampaignMapId()} ${mapName}`
+                    : `#${mapRawData.getNormalMapId()} ${mapName}`
                 );
                 return;
             }
@@ -415,13 +415,13 @@ async function generateRevisedMapRawData(openData: OpenData): Promise<MapRawData
                 tileDataArray           : tileMap?.getTiles().map(v => v.toJson()) ?? [],
                 unitDataArray           : unitMap?.getUnits().map(v => v.toJson()) ?? [],
                 templateWarRuleArray    : [{
-                    warEventIdArray             : warEventFullData?.getEventArray()?.map(v => v.getEventId() ?? 0) ?? [],
+                    warEventIdArray             : warEventFullData?.getEventArray()?.map(v => v.getEventId()) ?? [],
                     ruleAvailability            : null,
                     ruleId                      : 0,
                     warRuleCommonData           : instanceWarRule?.getWarRuleCommonData()?.toJson(),
                     ruleNameArray               : instanceWarRule?.getRuleNameArray().map(v => v.toJson()) ?? [],
                     lastModifiedTimestamp       : timestamp,
-                    mapSimpleDialogueIdArray    : mapSimpleDialogueArray?.map(v => v.getDialogueId() ?? 0) ?? [],
+                    mapSimpleDialogueIdArray    : mapSimpleDialogueArray?.map(v => v.getDialogueId()) ?? [],
                     taskObjectiveIdArray        : [],
                 }],
                 warEventFullData        : warEventFullData?.toJson(),

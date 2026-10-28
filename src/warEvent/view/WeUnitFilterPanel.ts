@@ -587,7 +587,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitleText            : () => getText(TextType.Tags),
             availableNumberArray    : AllSetRelationIdArray,
             currentNumber           : filter.getConTagId()?.getSetRelation(),
-            getNumberMainText       : num => getSetRelationName(num) ?? UndefinedError,
+            getNumberMainText       : num => getSetRelationName(num),
             callbackOnConfirm       : setRelation => {
                 filter.createIfNotExistsConTagId().setSetRelation(setRelation);
                 this._updateView();
@@ -795,7 +795,7 @@ export class Panel extends UiPanel<OpenData> {
                 } else {
                     const con = filter.createIfNotExistsConForbiddenLocationId();
                     con.setValueArray(valueArray);
-                    con.setSetRelation(con.getSetRelation() ?? SetRelationId.EqualTo);
+                    con.setSetRelation(con.getSetRelation());
                 }
                 this._updateView();
             },
@@ -807,7 +807,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitleText            : () => getText(TextType.NoEntryLocations),
             availableNumberArray    : AllSetRelationIdArray,
             currentNumber           : filter.getConForbiddenLocationId()?.getSetRelation(),
-            getNumberMainText       : num => getSetRelationName(num) ?? UndefinedError,
+            getNumberMainText       : num => getSetRelationName(num),
             callbackOnConfirm       : setRelation => {
                 filter.createIfNotExistsConForbiddenLocationId().setSetRelation(setRelation);
                 this._updateView();
@@ -819,7 +819,7 @@ export class Panel extends UiPanel<OpenData> {
         const filter = this._getUnitFilter();
         const oldCon = filter.getConAiMode();
         openPanel(getDict().CommonChooseMultiNumberPanel, {
-            currentNumberArray      : oldCon == null ? [] : (oldCon.getValueArray() ?? []),
+            currentNumberArray      : oldCon == null ? [] : (oldCon.getValueArray()),
             availableNumberArray    : AllAiModeIdArray,
             getTitleText            : () => getText(TextType.AiMode),
             getNumberMainText       : num => getUnitAiModeName(num) ?? UndefinedError,
@@ -829,7 +829,7 @@ export class Panel extends UiPanel<OpenData> {
                 } else {
                     const con = filter.createIfNotExistsConAiMode();
                     con.setValueArray(valueArray);
-                    con.setIsOneOf(con.getIsOneOf() ?? true);
+                    con.setIsOneOf(con.getIsOneOf());
                 }
                 this._updateView();
             },
@@ -857,7 +857,7 @@ export class Panel extends UiPanel<OpenData> {
                 } else {
                     const con = filter.createIfNotExistsConGridIndex();
                     con.setGridIndexArray(valueArray.map(v => v.toProto()));
-                    con.setIsOneOf(con.getIsOneOf() ?? true);
+                    con.setIsOneOf(con.getIsOneOf());
                 }
                 this._updateView();
             },
@@ -881,7 +881,7 @@ export class Panel extends UiPanel<OpenData> {
                 } else {
                     const con = filter.createIfNotExistsConLocationId();
                     con.setValueArray(valueArray);
-                    con.setSetRelation(con.getSetRelation() ?? SetRelationId.EqualTo);
+                    con.setSetRelation(con.getSetRelation());
                 }
                 this._updateView();
             },
@@ -893,7 +893,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitleText            : () => getText(TextType.Location),
             availableNumberArray    : AllSetRelationIdArray,
             currentNumber           : filter.getConLocationId()?.getSetRelation(),
-            getNumberMainText       : num => getSetRelationName(num) ?? UndefinedError,
+            getNumberMainText       : num => getSetRelationName(num),
             callbackOnConfirm       : setRelation => {
                 filter.createIfNotExistsConLocationId().setSetRelation(setRelation);
                 this._updateView();
@@ -915,7 +915,7 @@ export class Panel extends UiPanel<OpenData> {
                 } else {
                     const con = filter.createIfNotExistsConBuffTypeId();
                     con.setValueArray(valueArray);
-                    con.setSetRelation(con.getSetRelation() ?? SetRelationId.EqualTo);
+                    con.setSetRelation(con.getSetRelation());
                 }
                 this._updateView();
             },
@@ -927,7 +927,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitleText            : () => getText(TextType.AbnormalStateTypeId),
             availableNumberArray    : AllSetRelationIdArray,
             currentNumber           : filter.getConBuffTypeId()?.getSetRelation(),
-            getNumberMainText       : num => getSetRelationName(num) ?? UndefinedError,
+            getNumberMainText       : num => getSetRelationName(num),
             callbackOnConfirm       : setRelation => {
                 filter.createIfNotExistsConBuffTypeId().setSetRelation(setRelation);
                 this._updateView();

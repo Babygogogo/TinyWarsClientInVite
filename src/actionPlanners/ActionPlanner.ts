@@ -1000,7 +1000,7 @@ export class ActionPlanner implements IActionPlanner {
         this._unitForPreviewVisible = unit;
         this._areaForPreviewVisible = gridIndex.getGridsWithinDistance({
             minDistance : 0,
-            maxDistance : unit.getFinalVisionRange(unit.getVisionInfo(), gridIndex) ?? 0,
+            maxDistance : unit.getFinalVisionRange(unit.getVisionInfo(), gridIndex),
             mapSize     : this.getMapSize(),
         });
     }
@@ -1518,7 +1518,7 @@ function getActionUnitLaunchSilo(actionPlanner: IActionPlanner): DataForUnitActi
             actionType  : ActionTypeId.LaunchSilo,
             callback    : () => ChoosingUnitSiloDestination.getInstance().doApplyOnChooseAction(
                 actionPlanner,
-                getExisted(tile.getTemplateCfg().getLaunchSiloParams())[2]
+                tile.getTemplateCfg().getLaunchSiloParams()[2]
             ),
         }]
         : [];
@@ -1561,7 +1561,7 @@ function getActionUnitProduceUnit(actionPlanner: IActionPlanner): DataForUnitAct
             .find(v => v.getPlayerIndex() === playerIndex)
             ?.getMaxUnitsCount();
 
-        if (getExisted(focusUnit.getCurrentProduceMaterial()) < 1) {
+        if (focusUnit.getCurrentProduceMaterial() < 1) {
             return [{
                 actionType          : ActionTypeId.ProduceUnit,
                 callback            : () => show(getText(TextType.B0051)),

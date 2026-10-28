@@ -262,14 +262,14 @@ export class Panel extends UiPanel<OpenData> {
         const languageType2 = getSecondaryLanguageType();
         this._labelMode1.setText(`${getText(TextType.B1378)}\n${getText(TextType.B1379)}: ${getText(TextType.B0646)}`);
         this._labelMode2.setText(`${getText(TextType.B1378, languageType2)}\n${getText(TextType.B1379, languageType2)}: ${getText(TextType.B0646, languageType2)}`);
-        this._labelCreateRoom1.setText(getText(TextType.B0000));
-        this._labelCreateRoom2.setText(getText(TextType.B0000, languageType2));
-        this._labelJoinRoom1.setText(getText(TextType.B0580));
-        this._labelJoinRoom2.setText(getText(TextType.B0580, languageType2));
-        this._labelMyRoom1.setText(getText(TextType.B0410));
-        this._labelMyRoom2.setText(getText(TextType.B0410, languageType2));
-        this._labelContinueWar1.setText(getText(TextType.B0024));
-        this._labelContinueWar2.setText(getText(TextType.B0024, languageType2));
+        this._labelCreateRoom1.setLangText(TextType.B0000);
+        this._labelCreateRoom2.setLangText(TextType.B0000, languageType2);
+        this._labelJoinRoom1.setLangText(TextType.B0580);
+        this._labelJoinRoom2.setLangText(TextType.B0580, languageType2);
+        this._labelMyRoom1.setLangText(TextType.B0410);
+        this._labelMyRoom2.setLangText(TextType.B0410, languageType2);
+        this._labelContinueWar1.setLangText(TextType.B0024);
+        this._labelContinueWar2.setLangText(TextType.B0024, languageType2);
 
         this._layoutMode.arrangeItems();
         this._layoutCreateRoom.arrangeItems();

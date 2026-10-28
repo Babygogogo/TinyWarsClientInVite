@@ -112,7 +112,7 @@ export class Page extends UiOpenableComponent<OpenData> {
 
     private async _updateLabelWarType(): Promise<void> {
         const replayBriefInfo = await this._getReplayInfo();
-        this._labelWarType.setText(replayBriefInfo ? getWarTypeName(getExisted(replayBriefInfo.getWarType())) ?? UndefinedError : `??`);
+        this._labelWarType.setText(replayBriefInfo ? getWarTypeName(replayBriefInfo.getWarType()) ?? UndefinedError : `??`);
     }
 
     private async _updateLabelGlobalRating(): Promise<void> {
@@ -146,7 +146,7 @@ export class Page extends UiOpenableComponent<OpenData> {
     private async _updateLabelEndTime(): Promise<void> {
         const replayBriefInfo   = await this._getReplayInfo();
         this._labelEndTime.setText(replayBriefInfo
-            ? getTimestampShortText(getExisted(replayBriefInfo.getWarEndTime()))
+            ? getTimestampShortText(replayBriefInfo.getWarEndTime())
             : `??`
         );
     }

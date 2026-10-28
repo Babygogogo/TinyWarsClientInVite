@@ -47,7 +47,7 @@ function fastExeUnitDropUnit(war: IBwWar, action: WoUnitDropUnit): void {
         });
 
         {
-            for (const data of actionExtraData.getDroppingUnitAndPathArray() ?? []) {
+            for (const data of actionExtraData.getDroppingUnitAndPathArray()) {
                 const unitId = data.getUnit()?.getUnitId() ?? 0;
                 if (unitMap.getUnitLoadedById(unitId) != null) {
                     unitMap.removeUnitLoaded(unitId).stopRunning();

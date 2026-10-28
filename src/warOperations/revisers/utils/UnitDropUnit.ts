@@ -64,7 +64,7 @@ function checkIsDropDestinationsValid(war: IBwWar, action: WoUnitDropUnit): bool
     }
 
     const unitMap       = war.getUnitMap();
-    const pathNodes     = path.getNodes().map(v => getExisted(GridIndex.convertGridIndex(v))) ?? [];
+    const pathNodes     = path.getNodes().map(v => getExisted(GridIndex.convertGridIndex(v)));
     const loaderUnit    = unitMap.getUnit(pathNodes[0], action.getLaunchUnitId());
     if (loaderUnit == null) {
         return false;

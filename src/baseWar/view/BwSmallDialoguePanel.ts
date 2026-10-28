@@ -92,7 +92,7 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnSkip.setText(getText(TextType.B0665));
+        this._btnSkip.setLangText(TextType.B0665);
 
         this._updateComponentsForDialogue();
     }
@@ -185,7 +185,7 @@ export class Panel extends UiPanel<OpenData> {
         const gameConfig        = war.getGcData();
         const groupCo1          = this._groupCo1;
         const groupCo2          = this._groupCo2;
-        const dialogueData      = getExisted(getExisted(openData.actionData.getDataArray())[this._dialogueIndex]);
+        const dialogueData      = getExisted(openData.actionData.getDataArray()[this._dialogueIndex]);
         const dataForCoDialogue = dialogueData.getDataForCoDialogue();
         const dataForAside      = dialogueData.getDataForAside();
 

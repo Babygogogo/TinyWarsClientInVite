@@ -67,7 +67,7 @@ export async function getScoreAndActionUnitProduceUnit(commonParams: CommonParam
         minValue    : MinValue,
         maxValue    : MaxValue,
         rawValue    : (
-            ((war.getFogMap().checkHasFogCurrently() ? aiProductionScoreCfg.getBaseFog() : aiProductionScoreCfg.getBaseStd()) ?? 0) +
+            ((war.getFogMap().checkHasFogCurrently() ? aiProductionScoreCfg.getBaseFog() : aiProductionScoreCfg.getBaseStd())) +
             war.getWarEventManager().getOpaAiUnitProductionBonusScore(
                 playerIndexInTurn,
                 produceUnitType,

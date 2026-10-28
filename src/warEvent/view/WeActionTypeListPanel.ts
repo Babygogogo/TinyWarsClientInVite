@@ -1,6 +1,6 @@
 import { ColorValue } from "../../graphics/Constants.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getWarEventActionCategoryName, getWarEventActionTypeName } from "../../lang/Utils.ts";
+import { getWarEventActionCategoryName, getWarEventActionTypeName } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -129,8 +129,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0516));
-        this._labelTips.setText(getText(TextType.B1249));
+        this._labelTitle.setLangText(TextType.B0516);
+        this._labelTips.setLangText(TextType.B1249);
     }
     private async _initListCategory(): Promise<void> {
         const action        = this.getOpenData()?.action;
@@ -254,7 +254,7 @@ class TypeRenderer extends UiListItemRenderer<DataForTypeRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelUsing.setText(getText(TextType.B0503));
+        this._labelUsing.setLangText(TextType.B0503);
 
         this._updateLabelType();
     }

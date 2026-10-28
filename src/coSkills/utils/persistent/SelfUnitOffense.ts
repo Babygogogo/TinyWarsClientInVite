@@ -91,14 +91,14 @@ export function getTotalOffsetPct({
         }
     }
 
-    return (offensePercentOffsets.getOffsetPct() ?? 0)
-        + (offensePercentOffsets.getFundConversion() ?? 0) * fund / 10000
-        + (isCoOnboard ? offensePercentOffsets.getOffsetPctFromCoUnit() ?? 0 : 0)
-        + ((offensePercentOffsets.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
-        + (isCounter ? offensePercentOffsets.getOffsetPctOnCounter() ?? 0 : 0)
+    return (offensePercentOffsets.getOffsetPct())
+        + (offensePercentOffsets.getFundConversion()) * fund / 10000
+        + (isCoOnboard ? offensePercentOffsets.getOffsetPctFromCoUnit() : 0)
+        + ((offensePercentOffsets.getOffsetPctFromPromotion())[promotion] ?? 0)
+        + (isCounter ? offensePercentOffsets.getOffsetPctOnCounter() : 0)
         + getTotalPctFromOwnTiles(offensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
         + getTotalPctFromTileDefense(offensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0);
+        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp())[getNormalizedHp(hp) - 1] ?? 0 : 0);
 }
 
 export function getTotalOffsetPctForDamageCalculatorPanel({
@@ -154,12 +154,12 @@ export function getTotalOffsetPctForDamageCalculatorPanel({
         }
     }
 
-    return (offensePercentOffsets.getOffsetPct() ?? 0)
-        + (offensePercentOffsets.getFundConversion() ?? 0) * fund / 10000
-        + (isCoOnboard ? offensePercentOffsets.getOffsetPctFromCoUnit() ?? 0 : 0)
-        + ((offensePercentOffsets.getOffsetPctFromPromotion() ?? [])[promotion] ?? 0)
-        + (isCounter ? offensePercentOffsets.getOffsetPctOnCounter() ?? 0 : 0)
+    return (offensePercentOffsets.getOffsetPct())
+        + (offensePercentOffsets.getFundConversion()) * fund / 10000
+        + (isCoOnboard ? offensePercentOffsets.getOffsetPctFromCoUnit() : 0)
+        + ((offensePercentOffsets.getOffsetPctFromPromotion())[promotion] ?? 0)
+        + (isCounter ? offensePercentOffsets.getOffsetPctOnCounter() : 0)
         + getTotalPctFromOwnTiles(offensePercentOffsets.getOffsetPctFromOwnTile(), getOwnTilesCount)
         + getTotalPctFromTileDefense(offensePercentOffsets.getOffsetPctFromTileDefense(), tileDefenseAmount, canTileDefendUnit)
-        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp() ?? [])[getNormalizedHp(hp) - 1] ?? 0 : 0);
+        + (hp > 0 ? (offensePercentOffsets.getOffsetPctFromHp())[getNormalizedHp(hp) - 1] ?? 0 : 0);
 }

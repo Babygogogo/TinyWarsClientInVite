@@ -58,7 +58,7 @@ async function getScoreForActionUnitBeLoaded(commonParams: CommonParams, unit: I
         {
             const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
             if (maxAmmo) {
-                const currentAmmo   = getExisted(unit.getPrimaryWeaponCurrentAmmo(), ClientErrorCode.SpwRobot_GetScoreForActionUnitBeLoaded_02);
+                const currentAmmo   = unit.getPrimaryWeaponCurrentAmmo();
                 totalScore          += ((maxAmmo - currentAmmo) / maxAmmo * 10 + (currentAmmo <= 0 ? 40 : 0)) * passiveScaler;
             }
         }
@@ -71,7 +71,7 @@ async function getScoreForActionUnitBeLoaded(commonParams: CommonParams, unit: I
         if (IsNeedVisibility) {
             const maxAmmo = unit.getFlareMaxAmmo();
             if ((maxAmmo) && (war.getFogMap().checkHasFogCurrently())) {
-                const currentAmmo   = getExisted(unit.getFlareCurrentAmmo(), ClientErrorCode.SpwRobot_GetScoreForActionUnitBeLoaded_03);
+                const currentAmmo   = unit.getFlareCurrentAmmo();
                 totalScore          += ((maxAmmo - currentAmmo) / maxAmmo * 10 + (currentAmmo <= 0 ? 40 : 0)) * passiveScaler;
             }
         }

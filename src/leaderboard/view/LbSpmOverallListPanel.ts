@@ -214,7 +214,7 @@ class SpmUserRenderer
             return;
         }
 
-        const medalId = (userInfo.getShowMedalIdArray() ?? [])[0];
+        const medalId = (userInfo.getShowMedalIdArray())[0];
         imgAvatar.loadSource(getUserAvatar(userInfo.getAvatarId() ?? 1));
         imgMedal.loadSource(medalId == null ? `` : getMedal(medalId));
         labelNickname.setText(userInfo?.getNickname() ?? UndefinedError);

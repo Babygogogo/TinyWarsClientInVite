@@ -163,10 +163,10 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnTypeId.setText(getText(TextType.B1168));
-        this._btnOperator.setText(getText(TextType.B0130));
-        this._btnExpression.setText(getText(TextType.B0129));
-        this._btnSwitch.setText(getText(TextType.B0668));
+        this._btnTypeId.setLangText(TextType.B1168);
+        this._btnOperator.setLangText(TextType.B0130);
+        this._btnExpression.setLangText(TextType.B0129);
+        this._btnSwitch.setLangText(TextType.B0668);
         this._inputFilter.setPromptText(getText(TextType.B0132));
         this._updateLabelTitle();
         this._updateLabelContent();
@@ -248,10 +248,10 @@ class ApiRenderer extends UiListItemRenderer<DataForApiRenderer> {
 
         const labelExtension = this._labelExtension;
         if (openData.isExtension) {
-            labelExtension.setText(getText(TextType.B1161));
+            labelExtension.setLangText(TextType.B1161);
             labelExtension.setTextColor(0xFFFF00);
         } else {
-            labelExtension.setText(getText(TextType.B1160));
+            labelExtension.setLangText(TextType.B1160);
             labelExtension.setTextColor(0x00FF00);
         }
         this._layoutName.arrangeItems();

@@ -242,10 +242,10 @@ function checkAndEndWar(war: ISpwWar): boolean {
                             ),
                             callback : () => {
                                 const settingsForCaw    = war.getSettingsForCaw();
-                                const campaignId        = settingsForCaw.getCampaignId() ?? 0;
-                                const existingInfo      = getSelfCawHighScoreInfo(campaignId, settingsForCaw.getCampaignMapId() ?? 0);
+                                const campaignId        = settingsForCaw.getCampaignId();
+                                const existingInfo      = getSelfCawHighScoreInfo(campaignId, settingsForCaw.getCampaignMapId());
                                 if ((existingInfo == null)                                                                          ||
-                                    ((settingsForCaw.getCampaignMapRevision() ?? 0) > (existingInfo.getCampaignMapRevision() ?? 0)) ||
+                                    ((settingsForCaw.getCampaignMapRevision()) > (existingInfo.getCampaignMapRevision())) ||
                                     (newScore > (existingInfo.getHighScore() ?? 0))                                                 ||
                                     (war.getGcData().getVersion() !== existingInfo.getConfigVersion())
                                 ) {

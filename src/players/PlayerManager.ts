@@ -82,14 +82,14 @@ export class PlayerManager implements IPlayerManager {
     public fastInit(data: SerialPlayerManager, gameConfig: GameConfig): void {
         for (const playerData of data ? data.getPlayers() : []) {
             const playerIndex   = playerData.getPlayerIndex();
-            const player        = getExisted(this.getPlayer(playerIndex), ClientErrorCode.BwPlayerManager_FastInit_01);
+            const player        = this.getPlayer(playerIndex);
             player.init(playerData, gameConfig);
         }
     }
     public initWatcherTeamIndexesForHrw(warData: SerialWar): void {
         const teamIndexes = new Set<number>();
         for (const data of warData.getExecutedOperationManager()?.getHalfwayReplayOperationArray() ?? []) {
-            teamIndexes.add(getExisted(data.getTeamIndex(), ClientErrorCode.HrwPlayerManager_InitWatcherTeamIndexes_00));
+            teamIndexes.add(data.getTeamIndex());
         }
         this._watcherTeamIndexesForHrw = teamIndexes;
     }

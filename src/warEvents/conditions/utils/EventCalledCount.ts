@@ -1,7 +1,7 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import { getExisted } from "../../../helpers/Misc.ts";
-import { TextType, UndefinedError } from "../../../lang/Constants.ts";
+import { TextType } from "../../../lang/Constants.ts";
 import { getFormattedText, getComparatorName, getText } from "../../../lang/Utils.ts";
 import type { WarEventFullData } from "../../../proto/schema/CommonProto/WarEvent/WarEventFullData.ts";
 import type { WecEventCalledCount } from "../../../proto/schema/CommonProto/WarEvent/WecEventCalledCount.ts";
@@ -15,8 +15,8 @@ export function getBriefDesc(data: Undefinable<WecEventCalledCount>): string | n
 
     return getFormattedText(
         TextType.F0096,
-        getComparatorName(getExisted(data.getEventsCountComparator())),
-        data.getEventsCount() ?? UndefinedError
+        getComparatorName(data.getEventsCountComparator()),
+        data.getEventsCount()
     );
 }
 export function getDetailedDesc(data: Undefinable<WecEventCalledCount>): string | null {
@@ -62,8 +62,8 @@ export function getDetailedDesc(data: Undefinable<WecEventCalledCount>): string 
     return [
         getFormattedText(
             TextType.F0104,
-            getComparatorName(getExisted(data.getEventsCountComparator())),
-            data.getEventsCount() ?? UndefinedError
+            getComparatorName(data.getEventsCountComparator()),
+            data.getEventsCount()
         ),
         ...subTextArray
     ].join(`\n`);
@@ -144,7 +144,7 @@ export function checkIsValid(condition: Undefinable<WecEventCalledCount>): boole
 }
 
 export function checkIsMeet(condition: WecEventCalledCount, war: IBwWar): boolean {
-    const eventIdArray          = condition.getEventIdArray() ?? [];
+    const eventIdArray          = condition.getEventIdArray();
     const timesInTurn           = condition.getTimesInTurn();
     const timesTotal            = condition.getTimesTotal();
     const timesInTurnComparator = getExisted(condition.getTimesInTurnComparator(), ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_00);
@@ -153,7 +153,7 @@ export function checkIsMeet(condition: WecEventCalledCount, war: IBwWar): boolea
 
     let eventsCount = 0;
     for (const warEvent of war.getCommonSettingManager().getInstanceWarRule().getWarEventFullData()?.getEventArray() ?? []) {
-        const eventId = getExisted(warEvent.getEventId(), ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_02);
+        const eventId = warEvent.getEventId();
         if ((eventIdArray.length) && (eventIdArray.indexOf(eventId) < 0)) {
             continue;
         }
@@ -182,8 +182,8 @@ export function checkIsMeet(condition: WecEventCalledCount, war: IBwWar): boolea
     }
 
     return checkIsMeet1({
-        comparator  : getExisted(condition.getEventsCountComparator(), ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_03),
-        targetValue : getExisted(condition.getEventsCount(), ClientErrorCode.BwWarEventManager_CheckIsMeetConEventCalledCount_04),
+        comparator  : condition.getEventsCountComparator(),
+        targetValue : condition.getEventsCount(),
         actualValue : eventsCount,
     });
 }

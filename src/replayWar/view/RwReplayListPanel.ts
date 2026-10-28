@@ -164,7 +164,7 @@ export class Panel extends UiPanel<OpenData> {
 
             const data = await getReplayData(replayId);
             if (data) {
-                gotoReplayWar(data, getExisted(replayId));
+                gotoReplayWar(data, replayId);
             } else {
                 closePanel(getDict().CommonBlockPanel);
             }
@@ -385,16 +385,16 @@ export class Panel extends UiPanel<OpenData> {
         for (const playerInfo of replayBriefInfo.getPlayerInfoList()) {
             const userId = playerInfo.getUserId() ?? null;
             playerInfoArray.push({
-                playerIndex         : getExisted(playerInfo.getPlayerIndex()),
-                teamIndex           : getExisted(playerInfo.getTeamIndex()),
+                playerIndex         : playerInfo.getPlayerIndex(),
+                teamIndex           : playerInfo.getTeamIndex(),
                 isAi                : userId == null,
                 userId              : userId,
-                coId                : playerInfo.getCoId() ?? 0,
-                unitAndTileSkinId   : playerInfo.getUnitAndTileSkinId() ?? 0,
+                coId                : playerInfo.getCoId(),
+                unitAndTileSkinId   : playerInfo.getUnitAndTileSkinId(),
                 isReady             : null,
                 isInTurn            : null,
                 isDefeat            : !playerInfo.getIsAlive(),
-                restTimeToBoot      : playerInfo.getRestTimeToBoot() ?? null,
+                restTimeToBoot      : playerInfo.getRestTimeToBoot(),
             });
         }
 
@@ -546,7 +546,7 @@ class ReplayRenderer
         } else {
             const normalMapId = replayBriefInfo.getNormalMapId();
             labelId.setText(`#${replayBriefInfo.getReplayId()}`);
-            labelType.setText(getWarTypeName(getExisted(replayBriefInfo.getWarType())) ?? UndefinedError);
+            labelType.setText(getWarTypeName(replayBriefInfo.getWarType()) ?? UndefinedError);
             labelName.setText(normalMapId == null
                 ? `----`
                 : await getMapNameInCurrentLanguage(normalMapId) ?? UndefinedError
@@ -557,7 +557,7 @@ class ReplayRenderer
 }
 
 async function _checkIsReplayInfoMeetFilter(replayInfo: ReplayInfo, filter: ReplayFilter): Promise<boolean> {
-    const replayId = replayInfo.getReplayId() ?? 0;
+    const replayId = replayInfo.getReplayId();
     {
         if ((filter.replayId != null) && (replayId !== filter.replayId)) {
             return false;
@@ -565,7 +565,7 @@ async function _checkIsReplayInfoMeetFilter(replayInfo: ReplayInfo, filter: Repl
     }
 
     {
-        if ((filter.hasFog != null) && ((replayInfo.getHasFog() ?? false) !== filter.hasFog)) {
+        if ((filter.hasFog != null) && ((replayInfo.getHasFog()) !== filter.hasFog)) {
             return false;
         }
     }
@@ -577,21 +577,21 @@ async function _checkIsReplayInfoMeetFilter(replayInfo: ReplayInfo, filter: Repl
     }
 
     {
-        if ((filter.gameMode != null) && (getEnum(replayInfo.getWarType() ?? 0) !== filter.gameMode)) {
+        if ((filter.gameMode != null) && (getEnum(replayInfo.getWarType()) !== filter.gameMode)) {
             return false;
         }
     }
 
     {
         const minPlayersCountUnneutral = filter.minPlayersCountUnneutral;
-        if ((minPlayersCountUnneutral != null) && ((replayInfo.getPlayerInfoList().length ?? 0) < minPlayersCountUnneutral)) {
+        if ((minPlayersCountUnneutral != null) && ((replayInfo.getPlayerInfoList().length) < minPlayersCountUnneutral)) {
             return false;
         }
     }
 
     {
         const maxPlayersCountUnneutral = filter.maxPlayersCountUnneutral;
-        if ((maxPlayersCountUnneutral != null) && ((replayInfo.getPlayerInfoList().length ?? 0) > maxPlayersCountUnneutral)) {
+        if ((maxPlayersCountUnneutral != null) && ((replayInfo.getPlayerInfoList().length) > maxPlayersCountUnneutral)) {
             return false;
         }
     }
@@ -626,28 +626,28 @@ async function _checkIsReplayInfoMeetFilter(replayInfo: ReplayInfo, filter: Repl
 
     {
         const minTurnsCount = filter.minTurnsCount;
-        if ((minTurnsCount != null) && ((replayInfo.getTurnIndex() ?? 0) < minTurnsCount)) {
+        if ((minTurnsCount != null) && ((replayInfo.getTurnIndex()) < minTurnsCount)) {
             return false;
         }
     }
 
     {
         const maxTurnsCount = filter.maxTurnsCount;
-        if ((maxTurnsCount != null) && ((replayInfo.getTurnIndex() ?? 0) > maxTurnsCount)) {
+        if ((maxTurnsCount != null) && ((replayInfo.getTurnIndex()) > maxTurnsCount)) {
             return false;
         }
     }
 
     {
         const minWarOperationsCount = filter.minWarOperationsCount;
-        if ((minWarOperationsCount != null) && ((replayInfo.getExecutedActionsCount() ?? 0) < minWarOperationsCount)) {
+        if ((minWarOperationsCount != null) && ((replayInfo.getExecutedActionsCount()) < minWarOperationsCount)) {
             return false;
         }
     }
 
     {
         const maxWarOperationsCount = filter.maxWarOperationsCount;
-        if ((maxWarOperationsCount != null) && ((replayInfo.getExecutedActionsCount() ?? 0) > maxWarOperationsCount)) {
+        if ((maxWarOperationsCount != null) && ((replayInfo.getExecutedActionsCount()) > maxWarOperationsCount)) {
             return false;
         }
     }
@@ -718,7 +718,7 @@ async function _checkIsReplayInfoMeetFilter(replayInfo: ReplayInfo, filter: Repl
             }
 
             const coCategoryId = filter.coCategoryId;
-            if (!playerInfoList.some(v => gameConfig.getCoBasicCfg(v.getCoId() ?? 0)?.getCoCategoryId() === coCategoryId)) {
+            if (!playerInfoList.some(v => gameConfig.getCoBasicCfg(v.getCoId())?.getCoCategoryId() === coCategoryId)) {
                 return false;
             }
         }

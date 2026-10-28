@@ -117,7 +117,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(`${getText(TextType.B0407)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelNoData.setLangText(TextType.B0278);
         this._updateBtnBatch();
     }
     private _updateBtnBatch(): void {
@@ -135,7 +135,7 @@ export class Panel extends UiPanel<OpenData> {
         const gcData                = war.getGcData();
         const isReviewing           = war.getIsReviewingMap();
         const warRuleCommonData     = getExisted(templateWarRule.getWarRuleCommonData());
-        const playerRuleArray       = warRuleCommonData.getPlayerRuleList().filter(v => getExisted(v.getPlayerIndex()) <= playersCountUnneutral);
+        const playerRuleArray       = warRuleCommonData.getPlayerRuleList().filter(v => v.getPlayerIndex() <= playersCountUnneutral);
         const playerRulesCount      = playerRuleArray.length;
         const revisedPlayersCount   = Math.max(2, playerRulesCount);
         const widthForListRuleTitle = revisedPlayersCount * 80 + (revisedPlayersCount - 1) + 130;

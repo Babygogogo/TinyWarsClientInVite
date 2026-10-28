@@ -2,7 +2,6 @@ import type { IBwWar } from "../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../gameConfigs/GameConfig.ts";
 import { getSkinButtonBackground, getCoEye } from "../../helpers/ImageSource.ts";
 import { TextType } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { AliveStateId } from "../../players/Constants.ts";
 import { Executor } from "../../tween/Executor.ts";
@@ -84,7 +83,7 @@ export class Panel extends UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0140));
+        this._labelTitle.setLangText(TextType.B0140);
     }
 
     private async _updateListCo(): Promise<void> {

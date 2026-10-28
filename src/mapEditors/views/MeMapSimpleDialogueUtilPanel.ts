@@ -95,7 +95,7 @@ export class Panel extends UiPanel<OpenData> {
             }
         }
         const unusedDialogueIdArray: number[] = [];
-        for (const dialogueId of war.getMapSimpleDialogueArray().map(v => v.getDialogueId() ?? 0)) {
+        for (const dialogueId of war.getMapSimpleDialogueArray().map(v => v.getDialogueId())) {
             if (!usedDialogueIdSet.has(dialogueId)) {
                 unusedDialogueIdArray.push(dialogueId);
             }

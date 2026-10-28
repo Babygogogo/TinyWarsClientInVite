@@ -347,8 +347,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTimerTitle.setText(getText(TextType.B0188));
-        this._labelVisionTeamTitle.setText(getText(TextType.B0891));
+        this._labelTimerTitle.setLangText(TextType.B0188);
+        this._labelVisionTeamTitle.setLangText(TextType.B0891);
 
         this._updateGroupVisionTeam();
         this._updateLabelPlayerState();
@@ -363,16 +363,16 @@ export class Panel extends UiPanel<OpenData> {
         const userId    = this.getOpenData()?.war.getPlayerInTurn().getUserId();
         const label     = this._labelPlayerState;
         if ((userId == null) || (userId === getSelfUserId())) {
-            label.setText(getText(TextType.B0676));
+            label.setLangText(TextType.B0676);
             label.setTextColor(ColorValue.Green);
         } else {
             const userOnlineState = await UsersModelGetUserOnlineState(userId);
             if ((userOnlineState == null) || (!userOnlineState.isOnline)) {
-                label.setText(getText(TextType.B0677));
+                label.setLangText(TextType.B0677);
                 label.setTextColor(ColorValue.Red);
             } else {
-                label.setText(getText(TextType.B0676));
-                label.setTextColor((getServerTimestamp() - getExisted(userOnlineState.lastActivityTimestamp) > 60) ? ColorValue.Yellow : ColorValue.Green);
+                label.setLangText(TextType.B0676);
+                label.setTextColor((getServerTimestamp() - userOnlineState.lastActivityTimestamp > 60) ? ColorValue.Yellow : ColorValue.Green);
             }
         }
         this._groupPlayer.arrangeItems();

@@ -374,8 +374,8 @@ export class BwWarEventManager implements IBwWarEventManager {
         } else {
             const data = calledCountList.find(v => v.getEventId() === eventId);
             if (data) {
-                data.setCalledCountInPlayerTurn((data.getCalledCountInPlayerTurn() ?? 0) + 1);
-                data.setCalledCountTotal((data.getCalledCountTotal() ?? 0) + 1);
+                data.setCalledCountInPlayerTurn((data.getCalledCountInPlayerTurn()) + 1);
+                data.setCalledCountTotal((data.getCalledCountTotal()) + 1);
             } else {
                 calledCountList.push(DataForWarEventCalledCount.fromJson({
                     eventId                 : eventId,
@@ -765,13 +765,13 @@ export class BwWarEventManager implements IBwWarEventManager {
         this._getWar().getIsExecuteActionsWithExtraData()
             ? await this._callWarEventWithExtraData(action, isFastExecute)
             : await this._callWarEventWithoutExtraData(
-                getExisted(action.getWarEventId(), ClientErrorCode.BwWarEventManager_CallWarEvent_00),
-                getExisted(action.getNodeAndActionsIndex(), ClientErrorCode.BwWarEventManager_CallWarEvent_01),
+                action.getWarEventId(),
+                action.getNodeAndActionsIndex(),
                 isFastExecute
             );
     }
     private async _callWarEventWithExtraData(action: WoSystemCallWarEvent, isFastExecute: boolean): Promise<void> {
-        for (const actionId of this.getWarEvent(getExisted(action.getWarEventId())).getRootNodeAndActionsArray()[getExisted(action.getNodeAndActionsIndex())].getActionIdArray()) {
+        for (const actionId of this.getWarEvent(action.getWarEventId()).getRootNodeAndActionsArray()[action.getNodeAndActionsIndex()].getActionIdArray()) {
             await this._callActionWithExtraData(actionId, isFastExecute);
         }
 
@@ -1723,11 +1723,11 @@ export class BwWarEventManager implements IBwWarEventManager {
         // TODO: 此函数返回结果包含了所有已触发过的事件里的不同条件分支的所有对话，但是一个事件被触发过不代表所有条件分支都被触发过，因此如果某个事件的不同条件分支里包含不同对话，结果会出错
         const actionIdArray: number[] = [];
         for (const calledCountInfo of this._getCalledCountList() ?? []) {
-            if ((calledCountInfo.getCalledCountTotal() ?? 0) <= 0) {
+            if ((calledCountInfo.getCalledCountTotal()) <= 0) {
                 continue;
             }
 
-            for (const rootNodeAndActions of this.getWarEvent(calledCountInfo.getEventId() ?? 0).getRootNodeAndActionsArray()) {
+            for (const rootNodeAndActions of this.getWarEvent(calledCountInfo.getEventId()).getRootNodeAndActionsArray()) {
                 for (const actionId of rootNodeAndActions.getActionIdArray()) {
                     const action = this.getWarEventAction(actionId);
                     if ((action.getWeaBigDialogueSimple()) || (action.getWeaSmallDialogueSimple())) {

@@ -1,11 +1,9 @@
 import type { Undefinable } from "../../../auxiliaryTypes/AuxiliaryTypes.ts";
 import type { IBwWar } from "../../../baseWar/interface/IBwWar.ts";
 import type { GameConfig } from "../../../gameConfigs/GameConfig.ts";
-import { getExisted } from "../../../helpers/Misc.ts";
 import { TextType } from "../../../lang/Constants.ts";
 import { getWeatherName, getFormattedText, getText } from "../../../lang/Utils.ts";
 import type { WeaSetWeatherSimple } from "../../../proto/schema/CommonProto/WarEvent/WeaSetWeatherSimple.ts";
-import { ClientErrorCode } from "../../../utils/ClientErrorCode.ts";
 
 export function checkIsValid(action: Undefinable<WeaSetWeatherSimple>, gameConfig: GameConfig): boolean {
     if (action == null) {
@@ -23,8 +21,8 @@ export function getBriefDesc(data: Undefinable<WeaSetWeatherSimple>, gameConfig:
         return null;
     }
 
-    const weatherTurnsCount = getExisted(data.getWeatherTurnsCount(), ClientErrorCode.WarEventHelper_GetDescForDeprecatedWeaSetWeather_00);
-    const weatherName       = getWeatherName(getExisted(data.getWeatherType(), ClientErrorCode.WarEventHelper_GetDescForDeprecatedWeaSetWeather_01), gameConfig);
+    const weatherTurnsCount = data.getWeatherTurnsCount();
+    const weatherName       = getWeatherName(data.getWeatherType(), gameConfig);
     return (weatherTurnsCount == 0)
         ? getFormattedText(TextType.F0077, weatherName)
         : getFormattedText(TextType.F0076, weatherName, weatherTurnsCount);
@@ -51,9 +49,9 @@ export async function applyWithExtraData(action: WeaSetWeatherSimple, isFast: bo
 }
 export async function applyWithoutExtraData(action: WeaSetWeatherSimple, isFast: boolean, war: IBwWar): Promise<void> {
     const weatherManager = war.getWeatherManager();
-    weatherManager.setForceWeatherType(getExisted(action.getWeatherType()));
+    weatherManager.setForceWeatherType(action.getWeatherType());
 
-    const weatherTurnsCount = getExisted(action.getWeatherTurnsCount());
+    const weatherTurnsCount = action.getWeatherTurnsCount();
     if (weatherTurnsCount == 0) {
         weatherManager.setExpirePlayerIndex(null);
         weatherManager.setExpireTurnIndex(null);

@@ -24,7 +24,7 @@ function fastExePlayerUseCoSkill(war: IBwWar, action: WoPlayerUseCoSkill): void 
     if (actionExtraData) {
         const skillType         = getExisted(actionExtraData.getSkillType(), ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_00);
         const skillIdArray      = playerInTurn.getCoSkills(skillType);
-        const skillDataArray    = getExisted(actionExtraData.getSkillDataArray(), ClientErrorCode.WarOperationExecutor_FastExePlayerUseCoSkill_01);
+        const skillDataArray    = actionExtraData.getSkillDataArray();
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
             executeInstantSkill({
                 player              : playerInTurn,
@@ -98,7 +98,7 @@ function normalExePlayerUseCoSkill(war: IBwWar, action: WoPlayerUseCoSkill): voi
     const playerIndex       = playerInTurn.getPlayerIndex();
     if (actionExtraData) {
         const skillType         = getExisted(actionExtraData.getSkillType(), ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_00);
-        const skillDataArray    = getExisted(actionExtraData.getSkillDataArray(), ClientErrorCode.WarOperationExecutor_NormalExePlayerUseCoSkill_01);
+        const skillDataArray    = actionExtraData.getSkillDataArray();
         const skillIdArray      = playerInTurn.getCoSkills(skillType);
         for (let skillIndex = 0; skillIndex < skillIdArray.length; ++skillIndex) {
             executeInstantSkill({

@@ -51,7 +51,7 @@ export class ScwWar extends SpwWar {
     // The other functions.
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     public getNormalMapId(): number {
-        return getExisted(this._getSettingsForScw().getNormalMapId());
+        return this._getSettingsForScw().getNormalMapId();
     }
 
     public getCanCheat(): boolean {

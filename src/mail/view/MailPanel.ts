@@ -118,7 +118,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedMailId(newMailId: number, needScroll: boolean): Promise<void> {
         const listMail  = this._listMail;
-        const newIndex  = getExisted(listMail.getRevisedFirstIndex(v => v?.mailId === newMailId));
+        const newIndex  = listMail.getRevisedFirstIndex(v => v?.mailId === newMailId);
         listMail.setSelectedItemIndex(newIndex);
         this._updateComponentsForMailMainData();
 
@@ -490,7 +490,7 @@ export class Panel extends UiPanel<OpenData> {
                 const templateWarRuleId = data.getTemplateWarRuleId();
                 const mapRawData        = await getRawData(normalMapId);
                 const mapNameArray      = mapRawData?.getMapNameArray();
-                const ruleNameArray     = mapRawData?.getTemplateWarRuleArray().find(v => (v.getRuleId() ?? 0) == templateWarRuleId)?.getRuleNameArray();
+                const ruleNameArray     = mapRawData?.getTemplateWarRuleArray().find(v => (v.getRuleId()) == templateWarRuleId)?.getRuleNameArray();
                 if (data.getIsValid()) {
                     labelContent.setText(getFormattedText(
                         TextType.F0194,

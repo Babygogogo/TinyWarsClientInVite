@@ -127,7 +127,7 @@ export class ChoosingCoActiveSkillTarget implements IState {
         }
 
         const war = actionPlanner.getWar();
-        const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray() ?? [];
+        const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray();
         war.getCursor().getView().setTargetAreaRadius(arr[actionPlanner.getCoActiveSkillTypeId() === SkillTypeId.Power ? 0 : 1] ?? 0);
 
         actionPlanner.setStateId(StateId.ChoosingCoActiveSkillTarget);
@@ -144,7 +144,7 @@ export class ChoosingCoActiveSkillTarget implements IState {
         }
 
         const war = actionPlanner.getWar();
-        const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray() ?? [];
+        const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray();
         war.getCursor().getView().setTargetAreaRadius(arr[actionPlanner.getCoActiveSkillTypeId() === SkillTypeId.Power ? 0 : 1] ?? 0);
 
         actionPlanner.setStateId(StateId.ChoosingCoActiveSkillTarget);
@@ -164,7 +164,7 @@ export class ChoosingCoActiveSkillTarget implements IState {
         }
 
         const war = actionPlanner.getWar();
-        const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray() ?? [];
+        const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray();
         war.getCursor().getView().setTargetAreaRadius(arr[coSkillTypeId === SkillTypeId.Power ? 0 : 1] ?? 0);
 
         actionPlanner.setStateId(StateId.ChoosingCoActiveSkillTarget);
@@ -173,7 +173,7 @@ export class ChoosingCoActiveSkillTarget implements IState {
 
     public doApplyOnTouchButton(actionPlanner: IActionPlanner, coSkillTypeId: SkillTypeId): void {
         const war = actionPlanner.getWar();
-        const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray() ?? [];
+        const arr = war.getPlayerInTurn().getCoBasicCfg().getPowerSkillTargetsRadiusArray();
         war.getCursor().getView().setTargetAreaRadius(arr[coSkillTypeId === SkillTypeId.Power ? 0 : 1] ?? 0);
 
         actionPlanner.setCoActiveSkillSkillType(coSkillTypeId);

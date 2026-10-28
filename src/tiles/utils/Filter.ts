@@ -361,7 +361,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConPlayerIndex();
         if (con != null) {
             if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                                               ||
-                (!checkIsValidPlayerIndexSubset(con.getValueArray() ?? [], playersCountUnneutral))
+                (!checkIsValidPlayerIndexSubset(con.getValueArray(), playersCountUnneutral))
             ) {
                 return getFormattedText(TextType.F0091, getText(TextType.PlayerIndex));
             }
@@ -372,7 +372,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConTeamIndex();
         if (con != null) {
             if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                                                   ||
-                (!checkIsValidTeamIndexSubset(con.getValueArray() ?? [], playersCountUnneutral))
+                (!checkIsValidTeamIndexSubset(con.getValueArray(), playersCountUnneutral))
             ) {
                 return getFormattedText(TextType.F0091, getText(TextType.B0019));
             }
@@ -383,7 +383,7 @@ export function getErrorTip(data: TileFilter, playersCountUnneutral: number, map
         const con = data.getConTileType();
         if (con != null) {
             if ((!ValueArrayAndPredicatesUtilsCheckIsValid(con))                   ||
-                (!gameConfig.checkIsValidTileTypeSubset(con.getValueArray() ?? []))
+                (!gameConfig.checkIsValidTileTypeSubset(con.getValueArray()))
             ) {
                 return getFormattedText(TextType.F0091, getText(TextType.B0718));
             }

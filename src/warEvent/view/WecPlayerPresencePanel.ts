@@ -143,7 +143,7 @@ export class Panel extends UiPanel<OpenData> {
         const con = getExisted(condition.getConPlayerComparator());
         openPanel(getDict().CommonInputIntegerPanel, {
             getTitle        : () => getText(TextType.B0229),
-            currentValue    : con.getValue() ?? 0,
+            currentValue    : con.getValue(),
             minValue        : 0,
             maxValue        : war.getPlayersCountUnneutral() + 1,
             callback        : playersCount => openPanel(getDict().CommonChooseSingleNumberPanel, {

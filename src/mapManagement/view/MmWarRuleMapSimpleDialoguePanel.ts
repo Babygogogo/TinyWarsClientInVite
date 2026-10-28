@@ -82,7 +82,7 @@ export class Panel extends UiPanel<OpenData> {
             showLang(TextType.YouCanNotDoThisRightNow);
         } else {
             const templateWarRule           = openData.templateWarRule;
-            const allDialogueIdSet          = new Set(mapSimpleDialogueArray.map(v => v.getDialogueId() ?? 0));
+            const allDialogueIdSet          = new Set(mapSimpleDialogueArray.map(v => v.getDialogueId()));
             const currentDialogueIdArray    = templateWarRule.getMapSimpleDialogueIdArray();
             for (const dialogueId of currentDialogueIdArray) {
                 allDialogueIdSet.delete(dialogueId);
@@ -94,7 +94,7 @@ export class Panel extends UiPanel<OpenData> {
                 getTitleText                : () => getFormattedText(TextType.F0092, getText(TextType.B1095)),
                 getNumberMainText           : dialogueId => getTruncatedText(
                     getLanguageText({
-                        textArray: mapSimpleDialogueArray.find(v => (v.getDialogueId() ?? 0) === dialogueId)?.getDialogueNameArray()
+                        textArray: mapSimpleDialogueArray.find(v => (v.getDialogueId()) === dialogueId)?.getDialogueNameArray()
                     }) ?? UndefinedError,
                     15
                 ),
@@ -136,7 +136,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(`${getText(TextType.B1095)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoData.setText(getText(TextType.A0842));
+        this._labelNoData.setLangText(TextType.A0842);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();
@@ -241,7 +241,7 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
         this._labelId.setText(`#${dialogueId}`);
         this._labelName.setText(getTruncatedText(
             getLanguageText({
-                textArray: openData.mapRawData.getMapSimpleDialogueArray().find(v => (v.getDialogueId() ?? 0) === dialogueId)?.getDialogueNameArray()
+                textArray: openData.mapRawData.getMapSimpleDialogueArray().find(v => (v.getDialogueId()) === dialogueId)?.getDialogueNameArray()
             }) ?? UndefinedError,
             30
         ));

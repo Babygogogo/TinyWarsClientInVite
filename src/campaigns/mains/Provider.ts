@@ -142,7 +142,7 @@ export async function getCampaignMapRawData(campaignId: number, campaignMapId: n
 
     const cachedData = await StoreCampaignMapRawData.getData(campaignId, campaignMapId);
     if (cachedData != null) {
-        if ((cachedData.getModifiedTime() ?? 0) === timestamp) {
+        if ((cachedData.getModifiedTime()) === timestamp) {
             return cachedData;
         }
         return getCampaignMapRawDataAccessor(campaignId).getData(campaignMapId, true);
@@ -221,7 +221,7 @@ export async function updateOnMsgCmCreateCampaignMap(data: ProtoSchemaCommonProt
             allCampaignMapIdArray.push(campaignMapId);
         }
 
-        campaignInfo.setNextCampaignMapId(Math.max(campaignInfo.getNextCampaignMapId() ?? 0, campaignMapId + 1));
+        campaignInfo.setNextCampaignMapId(Math.max(campaignInfo.getNextCampaignMapId(), campaignMapId + 1));
     }
 }
 

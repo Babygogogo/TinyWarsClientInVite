@@ -98,7 +98,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const buffArray = tile.getUnfixedBuffList();
-        if ((buffArray?.length ?? 0) >= 10) {
+        if ((buffArray?.length) >= 10) {
             showLang(TextType.YouCanNotDoThisRightNow);
             return;
         }
@@ -173,9 +173,9 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.AbnormalStates));
-        this._labelBuffType.setText(getText(TextType.B0805));
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelTitle.setLangText(TextType.AbnormalStates);
+        this._labelBuffType.setLangText(TextType.B0805);
+        this._labelNoData.setLangText(TextType.B0278);
         this._labelExpire.setText(`${getText(TextType.EndTime)} ?`);
         this._labelExtraParams.setText(`${getText(TextType.B1229)} ?`);
     }
@@ -189,7 +189,7 @@ export class Panel extends UiPanel<OpenData> {
         const canModify = openData.canModify;
         const tile      = openData.tile;
         const dataArray : DataForBuffRenderer[] = [];
-        for (const buff of tile.getUnfixedBuffList() ?? []) {
+        for (const buff of tile.getUnfixedBuffList()) {
             const length = dataArray.length;
             dataArray.push({
                 index       : length + 1,

@@ -78,7 +78,7 @@ export class Page
         for (const templateWarRule of mapRawData?.getTemplateWarRuleArray().filter(v => v.getRuleAvailability()?.getCanSrw()) ?? []) {
             dataArray.push({
                 normalMapId : normalMapId,
-                ruleId      : getExisted(templateWarRule.getRuleId()),
+                ruleId      : templateWarRule.getRuleId(),
             });
         }
         await listRule.bindData(dataArray.sort((v1, v2) => v1.ruleId - v2.ruleId));
@@ -134,10 +134,10 @@ class RuleRenderer extends UiListItemRenderer<DataForRuleRenderer> {
 
     private _updateComponentsForLanguage(): void {
         this._labelMyScoreTitle.setText(`${getText(TextType.B0822)}:`);
-        this._labelStdNoData.setText(getText(TextType.B0278));
-        this._labelStdNickname.setText(getText(TextType.B0175));
-        this._labelStdScore.setText(getText(TextType.B0579));
-        this._labelTurnIndex.setText(getText(TextType.Turns));
+        this._labelStdNoData.setLangText(TextType.B0278);
+        this._labelStdNickname.setLangText(TextType.B0175);
+        this._labelStdScore.setLangText(TextType.B0579);
+        this._labelTurnIndex.setLangText(TextType.Turns);
 
         this._layoutMyScore.arrangeItems();
     }
@@ -277,7 +277,7 @@ class UserRenderer extends UiListItemRenderer<DataForUserRenderer> {
 
         const rank                  = openData.rank;
         const labelNickname         = this._labelNickname;
-        labelNickname.setText(getText(TextType.B0029));
+        labelNickname.setLangText(TextType.B0029);
         this._labelIndex.setText(`${rank}${getSuffixForRankIndex(rank)}`);
         this._labelScore.setText(`${openData.score}`);
         this._labelTurnIndex.setText(`${openData.turnIndex}`);

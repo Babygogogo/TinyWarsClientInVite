@@ -108,13 +108,13 @@ export class Panel extends UiPanel<OpenData> {
 
         const newWarEventFullData       = trimWarEventFullData(srcWarEventFullData, [...warEventIdSet], false);
         const newActionIdSet            = new Set(newWarEventFullData.getActionArray().map(v => getExisted(v.getWeaCommonData()?.getActionId())));
-        const redundantActionArray      = srcWarEventFullData.getActionArray().filter(v => !newActionIdSet.has(getExisted(v.getWeaCommonData()?.getActionId()))) ?? [];
-        const newEventIdSet             = new Set(newWarEventFullData.getEventArray().map(v => getExisted(v.getEventId())));
-        const redundantEventArray       = srcWarEventFullData.getEventArray().filter(v => !newEventIdSet.has(getExisted(v.getEventId()))) ?? [];
-        const newNodeIdSet              = new Set(newWarEventFullData.getConditionNodeArray().map(v => getExisted(v.getNodeId())));
-        const redundantNodeArray        = srcWarEventFullData.getConditionNodeArray().filter(v => !newNodeIdSet.has(getExisted(v.getNodeId()))) ?? [];
+        const redundantActionArray      = srcWarEventFullData.getActionArray().filter(v => !newActionIdSet.has(getExisted(v.getWeaCommonData()?.getActionId())));
+        const newEventIdSet             = new Set(newWarEventFullData.getEventArray().map(v => v.getEventId()));
+        const redundantEventArray       = srcWarEventFullData.getEventArray().filter(v => !newEventIdSet.has(v.getEventId()));
+        const newNodeIdSet              = new Set(newWarEventFullData.getConditionNodeArray().map(v => v.getNodeId()));
+        const redundantNodeArray        = srcWarEventFullData.getConditionNodeArray().filter(v => !newNodeIdSet.has(v.getNodeId()));
         const newConditionIdSet         = new Set(newWarEventFullData.getConditionArray()?.map(v => getExisted(v.getWecCommonData()?.getConditionId())));
-        const redundantConditionArray   = srcWarEventFullData.getConditionArray().filter(v => !newConditionIdSet.has(getExisted(v.getWecCommonData()?.getConditionId()))) ?? [];
+        const redundantConditionArray   = srcWarEventFullData.getConditionArray().filter(v => !newConditionIdSet.has(getExisted(v.getWecCommonData()?.getConditionId())));
 
         if ((!redundantActionArray.length)      &&
             (!redundantEventArray.length)       &&
@@ -273,14 +273,14 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        const currentGroupedMapTagId    = mapRawData.getMapTagIdFlags() ?? 0;
+        const currentGroupedMapTagId    = mapRawData.getMapTagIdFlags();
         const mapTag                    = await getMapTag();
         openPanel(getDict().CommonChooseMultiNumberPanel, {
             availableNumberArray    : getNonNullElements(mapTag?.getMapTagDataArray()?.map(v => v.getIsEnabled() ? v.getMapTagId() : null) ?? []).sort((v1, v2) => v1 - v2),
             currentNumberArray      : getDecodedMapTagIdList(currentGroupedMapTagId),
             showNumber              : true,
             getTitleText            : () => getFormattedText(TextType.F0092, getText(TextType.B0445)),
-            getNumberMainText       : mapTagId => getLanguageText({ textArray: mapTag?.getMapTagDataArray()?.find(v => (v.getMapTagId() ?? 0) === mapTagId)?.getNameArray() }) ?? UndefinedError,
+            getNumberMainText       : mapTagId => getLanguageText({ textArray: mapTag?.getMapTagDataArray()?.find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? UndefinedError,
             callbackOnConfirm       : newMapTagIdArray => {
                 const newGroupedMapTagId = getEncodedMapTagId(newMapTagIdArray);
                 if (newGroupedMapTagId !== currentGroupedMapTagId) {

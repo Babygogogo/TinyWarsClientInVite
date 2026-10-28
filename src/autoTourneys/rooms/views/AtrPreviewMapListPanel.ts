@@ -1,5 +1,5 @@
 import { getAtPhaseInfo, getAtFullMapInfo, getAtTourneyInfo } from "../../mains/Provider.ts";
-import { DefaultParams, TimerTypeId } from "../../../bootTimers/Constants.ts";
+import { TimerTypeId } from "../../../bootTimers/Constants.ts";
 import {
     type OpenData as CommonViewCommonWarAdvancedSettingsPageOpenData,
     Page,
@@ -107,7 +107,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedNormalMapId(normalMapId: number, needScroll: boolean): Promise<void> {
         const listMap   = this._listMap;
-        const index     = getExisted(listMap.getRevisedFirstIndex(v => v?.normalMapId === normalMapId));
+        const index     = listMap.getRevisedFirstIndex(v => v?.normalMapId === normalMapId);
         listMap.setSelectedItemIndex(index);
         if (needScroll) {
             listMap.scrollToItem(index);
@@ -132,7 +132,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private async _onTouchedBtnSwitch(): Promise<void> {
         const info          = await getAtPhaseInfo();
-        const tourneyIdSet  = new Set(info?.infoArray.map(v => v.getTourneyId() ?? 0));
+        const tourneyIdSet  = new Set(info?.infoArray.map(v => v.getTourneyId()));
         if (tourneyIdSet.size <= 1) {
             showLang(TextType.B0278);
             return;
@@ -194,13 +194,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelLoading.setText(getText(TextType.A0040));
-        this._labelRankMatch.setText(getText(TextType.B1022));
-        this._labelPreviewMap.setText(getText(TextType.B0594));
+        this._labelLoading.setLangText(TextType.A0040);
+        this._labelRankMatch.setLangText(TextType.B1022);
+        this._labelPreviewMap.setLangText(TextType.B0594);
         this._labelMapType.setText(`#${this.getOpenData()?.tourneyId}`);
-        this._btnBack.setText(getText(TextType.B0146));
-        this._labelNoMap.setText(getText(TextType.B0582));
-        this._btnSwitch.setText(getText(TextType.B0520));
+        this._btnBack.setLangText(TextType.B0146);
+        this._labelNoMap.setLangText(TextType.B0582);
+        this._btnSwitch.setLangText(TextType.B0520);
 
         this._layoutNavName.arrangeItems();
         this._groupNavigator.arrangeItems();
@@ -257,7 +257,7 @@ export class Panel extends UiPanel<OpenData> {
         const dataArray: DataForMapNameRenderer[] = [];
         for (const mapInfo of (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray() ?? []) {
             dataArray.push({
-                normalMapId : mapInfo.getNormalMapId() ?? 0,
+                normalMapId : mapInfo.getNormalMapId(),
                 hasFog      : !!mapInfo.getInstanceWarRule()?.getWarRuleCommonData()?.getHasFogByDefault(),
                 panel       : this,
             });
@@ -291,7 +291,7 @@ export class Panel extends UiPanel<OpenData> {
             return null;
         }
 
-        const mapInfo = (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray().find(v => (v.getNormalMapId() ?? 0) === normalMapId);
+        const mapInfo = (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray().find(v => (v.getNormalMapId()) === normalMapId);
         if (mapInfo == null) {
             return null;
         }
@@ -302,7 +302,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const instanceWarRule   = getExisted(mapInfo.getInstanceWarRule());
-        const bootTimerParams   = tourneyInfo.getBootTimerParams() ?? DefaultParams.concat();
+        const bootTimerParams   = tourneyInfo.getBootTimerParams();
         const timerType         = bootTimerParams[0] as TimerTypeId;
         const gameConfig        = await getLatestGameConfig();
         const warEventFullData  = instanceWarRule.getWarEventFullData() ?? null;
@@ -412,7 +412,7 @@ export class Panel extends UiPanel<OpenData> {
             return null;
         }
 
-        const mapInfo = (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray().find(v => (v.getNormalMapId() ?? 0) === normalMapId);
+        const mapInfo = (await getAtFullMapInfo(tourneyId))?.getSingleMapInfoArray().find(v => (v.getNormalMapId()) === normalMapId);
         if (mapInfo == null) {
             return null;
         }

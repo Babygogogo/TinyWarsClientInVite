@@ -1,6 +1,6 @@
 import { GridIndex } from "../auxiliaryTypes/GridIndex.ts";
 import type { MapSize } from "../auxiliaryTypes/MapSize.ts";
-import { TextType, UndefinedError } from "../lang/Constants.ts";
+import { TextType } from "../lang/Constants.ts";
 import { getFormattedText } from "../lang/Utils.ts";
 import type { GridIndexArrayAndPredicate } from "../proto/schema/CommonProto/Structure/GridIndexArrayAndPredicate.ts";
 
@@ -10,7 +10,7 @@ export function getDesc(data: GridIndexArrayAndPredicateSchema, valueName: strin
     return getFormattedText(
         data.getIsOneOf() ? TextType.F0228 : TextType.F0229,
         valueName,
-        data.getGridIndexArray()?.map(v => `(${v.getX()},${v.getY()})`).join(`, `) ?? UndefinedError
+        data.getGridIndexArray()?.map(v => `(${v.getX()},${v.getY()})`).join(`, `)
     );
 }
 

@@ -115,7 +115,7 @@ export class BwCommonSettingManager implements IBwCommonSettingManager {
                     taskObjectiveFullData       : war.getTaskObjectiveFullData(),
                     allMapSimpleDialogueArray   : getNonNullElements(templateWarRule
                         .getMapSimpleDialogueIdArray()
-                        .map(id => allMapSimpleDialogueArray.find(data => (data.getDialogueId() ?? 0) === id))
+                        .map(id => allMapSimpleDialogueArray.find(data => (data.getDialogueId()) === id))
                     ),
                 }).toJson(),
             });

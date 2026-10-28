@@ -312,7 +312,7 @@ export async function getSlotName(slotIndex: number): Promise<string> {
 
     const settingsForCaw = warData.getSettingsForCaw();
     if (settingsForCaw != null) {
-        const mapRawData = await getCampaignMapRawData(settingsForCaw.getCampaignId() ?? 0, settingsForCaw.getCampaignMapId() ?? 0);
+        const mapRawData = await getCampaignMapRawData(settingsForCaw.getCampaignId(), settingsForCaw.getCampaignMapId());
         return getLanguageText({ textArray : mapRawData?.getMapNameArray() }) ?? UndefinedError;
     }
 

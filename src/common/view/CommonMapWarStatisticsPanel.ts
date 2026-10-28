@@ -77,7 +77,7 @@ export class Panel extends UiPanel<OpenData> {
             return;
         }
 
-        this._templateWarRuleId = (await getNextRuleId(normalMapId, -1)) ?? getExisted(getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray())[0].getRuleId());
+        this._templateWarRuleId = (await getNextRuleId(normalMapId, -1)) ?? getExisted((await getRawData(normalMapId))?.getTemplateWarRuleArray())[0].getRuleId();
         this._warType           = (await getNextWarType(WarTypeId.Undefined, normalMapId, this._templateWarRuleId)) ?? WarTypeId.MrwStd;
         this._updateView();
     }
@@ -146,11 +146,11 @@ export class Panel extends UiPanel<OpenData> {
         this._updateLabelRule();
         this._updateLabelWarType();
 
-        this._btnRule.setText(getText(TextType.B0318));
-        this._btnWarType.setText(getText(TextType.B0599));
+        this._btnRule.setLangText(TextType.B0318);
+        this._btnWarType.setLangText(TextType.B0599);
         this._labelTurnIndexTitle.setText(`${getText(TextType.Turns)}(${getText(TextType.B0877)})`);
         this._labelStatisticsTitle.setText(`${getText(TextType.B0876)} (${getText(TextType.B0550)} / ${getText(TextType.B0551)} / ${getText(TextType.B0552)})`);
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelNoData.setLangText(TextType.B0278);
     }
 
     private async _updateLabelTitle(): Promise<void> {
@@ -186,7 +186,7 @@ export class Panel extends UiPanel<OpenData> {
         }
 
         const statisticsForRuleArray    = (await getBriefData(normalMapId))?.getNormalMapExtraData()?.getMapWarStatistics()?.getStatisticsForRuleArray();
-        const statisticsForTurnArray    = statisticsForRuleArray?.find(v => ((v.getRuleId() ?? 0) === this._templateWarRuleId) && ((v.getWarType() ?? 0) === this._warType))?.getStatisticsForTurnArray();
+        const statisticsForTurnArray    = statisticsForRuleArray?.find(v => ((v.getRuleId()) === this._templateWarRuleId) && ((v.getWarType()) === this._warType))?.getStatisticsForTurnArray();
         const labelNoData               = this._labelNoData;
         const listStatistics            = this._listStatistics;
         if (!statisticsForTurnArray?.length) {
@@ -199,12 +199,12 @@ export class Panel extends UiPanel<OpenData> {
         const fullStatisticsArray   : number[] = [];
         let totalGames              = 0;
         for (const info of statisticsForTurnArray) {
-            const turnGames         = getExisted(info.getTotalGames());
-            const statisticsArray   = getExisted(info.getGameResultArray());
+            const turnGames         = info.getTotalGames();
+            const statisticsArray   = info.getGameResultArray();
             dataArray.push({
                 index           : 0,
                 isLast          : false,
-                turnIndex       : getExisted(info.getTurnIndex()),
+                turnIndex       : info.getTurnIndex(),
                 totalGames      : 0,
                 turnGames,
                 statisticsArray,
@@ -362,7 +362,7 @@ async function getNextRuleId(normalMapId: number, ruleId: number): Promise<numbe
 }
 
 async function getRuleIdArray(normalMapId: number, ruleId: number): Promise<number[]> {
-    const ruleIdFullArray   = (await getRawData(normalMapId))?.getTemplateWarRuleArray()?.map(v => getExisted(v.getRuleId())).sort((v1, v2) => v1 - v2) ?? [];
+    const ruleIdFullArray   = (await getRawData(normalMapId))?.getTemplateWarRuleArray()?.map(v => v.getRuleId()).sort((v1, v2) => v1 - v2) ?? [];
     const ruleIdArray       : number[] = [];
     const index             = ruleIdFullArray.indexOf(ruleId);
     for (let i = index + 1; i < ruleIdFullArray.length; ++i) {
@@ -377,7 +377,7 @@ async function getRuleIdArray(normalMapId: number, ruleId: number): Promise<numb
 async function getNextWarType(warType: WarTypeId, normalMapId: number, ruleId: number): Promise<WarTypeId | null> {
     const statisticsForRuleArray = (await getBriefData(normalMapId))?.getNormalMapExtraData()?.getMapWarStatistics()?.getStatisticsForRuleArray();
     for (const newWarType of getWarTypeArray(warType)) {
-        if (statisticsForRuleArray?.find(v => ((v.getRuleId() ?? 0) === ruleId) && ((v.getWarType() ?? 0) === newWarType))?.getStatisticsForTurnArray()?.length) {
+        if (statisticsForRuleArray?.find(v => ((v.getRuleId()) === ruleId) && ((v.getWarType()) === newWarType))?.getStatisticsForTurnArray()?.length) {
             return newWarType;
         }
     }

@@ -2,7 +2,6 @@ import { show } from "../../FloatText.ts";
 import { Common } from "../../maps/Constants.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType } from "../../lang/Constants.ts";
 import { getText, getFormattedText } from "../../lang/Utils.ts";
 import type { IMeWar } from "../../mapEditor/interface/IMeWar.ts";
@@ -82,8 +81,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private async _onTouchedBtnConfirm(): Promise<void> {
-        const width         = getExisted(this._newWidth);
-        const height        = getExisted(this._newHeight);
+        const width         = this._newWidth;
+        const height        = this._newHeight;
         const gridsCount    = width * height;
         if ((!gridsCount) || (gridsCount <= 0) || (width <= 0) || (height <= 0) || (gridsCount > Common.MaxGridsCount)) {
             show(getText(TextType.A0087));
@@ -150,11 +149,11 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnConfirm.setText(getText(TextType.B0026));
-        this._btnCancel.setText(getText(TextType.B0154));
-        this._labelTitle.setText(getText(TextType.B0391));
-        this._labelCurrSizeTitle.setText(getText(TextType.B0855));
-        this._labelNewSizeTitle.setText(getText(TextType.B0856));
+        this._btnConfirm.setLangText(TextType.B0026);
+        this._btnCancel.setLangText(TextType.B0154);
+        this._labelTitle.setLangText(TextType.B0391);
+        this._labelCurrSizeTitle.setLangText(TextType.B0855);
+        this._labelNewSizeTitle.setLangText(TextType.B0856);
     }
 
     private _updateBtnWidth(): void {

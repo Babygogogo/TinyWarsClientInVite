@@ -327,7 +327,7 @@ function checkIsMeetConditionForTile(action: WeaSetCustomCrystalStateExpr, tile:
     }
 }
 function evalActRadius(action: WeaSetCustomCrystalStateExpr, tile: ITile, customCrystalData: TileCustomCrystalData): number {
-    const defaultValue  = customCrystalData.getRadius() ?? 0;
+    const defaultValue  = customCrystalData.getRadius();
     const act           = action.getActRadius();
     if (!act) {
         return defaultValue;
@@ -349,7 +349,7 @@ function evalActRadius(action: WeaSetCustomCrystalStateExpr, tile: ITile, custom
     }
 }
 function evalActPriority(action: WeaSetCustomCrystalStateExpr, tile: ITile, customCrystalData: TileCustomCrystalData): number {
-    const defaultValue  = customCrystalData.getPriority() ?? 0;
+    const defaultValue  = customCrystalData.getPriority();
     const act           = action.getActPriority();
     if (!act) {
         return defaultValue;
@@ -371,7 +371,7 @@ function evalActPriority(action: WeaSetCustomCrystalStateExpr, tile: ITile, cust
     }
 }
 function evalActCanAffectSelf(action: WeaSetCustomCrystalStateExpr, tile: ITile, customCrystalData: TileCustomCrystalData): boolean {
-    const defaultValue  = customCrystalData.getCanAffectSelf() ?? false;
+    const defaultValue  = customCrystalData.getCanAffectSelf();
     const act           = action.getActCanAffectSelf();
     if (!act) {
         return defaultValue;
@@ -389,7 +389,7 @@ function evalActCanAffectSelf(action: WeaSetCustomCrystalStateExpr, tile: ITile,
     }
 }
 function evalActCanAffectAlly(action: WeaSetCustomCrystalStateExpr, tile: ITile, customCrystalData: TileCustomCrystalData): boolean {
-    const defaultValue  = customCrystalData.getCanAffectAlly() ?? false;
+    const defaultValue  = customCrystalData.getCanAffectAlly();
     const act           = action.getActCanAffectAlly();
     if (!act) {
         return defaultValue;
@@ -407,7 +407,7 @@ function evalActCanAffectAlly(action: WeaSetCustomCrystalStateExpr, tile: ITile,
     }
 }
 function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateExpr, tile: ITile, customCrystalData: TileCustomCrystalData): boolean {
-    const defaultValue  = customCrystalData.getCanAffectEnemy() ?? false;
+    const defaultValue  = customCrystalData.getCanAffectEnemy();
     const act           = action.getActCanAffectEnemy();
     if (!act) {
         return defaultValue;
@@ -425,7 +425,7 @@ function evalActCanAffectEnemy(action: WeaSetCustomCrystalStateExpr, tile: ITile
     }
 }
 function evalActOffsetFund(action: WeaSetCustomCrystalStateExpr, tile: ITile, customCrystalData: TileCustomCrystalData): number {
-    const defaultValue  = customCrystalData.getOffsetFund() ?? 0;
+    const defaultValue  = customCrystalData.getOffsetFund();
     const act           = action.getActOffsetFund();
     if (!act) {
         return defaultValue;
@@ -447,7 +447,7 @@ function evalActOffsetFund(action: WeaSetCustomCrystalStateExpr, tile: ITile, cu
     }
 }
 function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateExpr, tile: ITile, customCrystalData: TileCustomCrystalData): number {
-    const defaultValue  = customCrystalData.getOffsetEnergyPercentage() ?? 0;
+    const defaultValue  = customCrystalData.getOffsetEnergyPercentage();
     const act           = action.getActOffsetEnergyPercentage();
     if (!act) {
         return defaultValue;
@@ -469,7 +469,7 @@ function evalActOffsetEnergyPercentage(action: WeaSetCustomCrystalStateExpr, til
     }
 }
 function evalActOffsetHp(action: WeaSetCustomCrystalStateExpr, tile: ITile, customCrystalData: TileCustomCrystalData): number {
-    const defaultValue  = customCrystalData.getOffsetHp() ?? 0;
+    const defaultValue  = customCrystalData.getOffsetHp();
     const act           = action.getActOffsetHp();
     if (!act) {
         return defaultValue;
@@ -509,7 +509,7 @@ function evalActCanBeFatal(action: WeaSetCustomCrystalStateExpr, tile: ITile, cu
     }
 }
 function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateExpr, tile: ITile, customCrystalData: TileCustomCrystalData): number {
-    const defaultValue  = customCrystalData.getOffsetFuelPercentage() ?? 0;
+    const defaultValue  = customCrystalData.getOffsetFuelPercentage();
     const act           = action.getActOffsetFuelPercentage();
     if (!act) {
         return defaultValue;
@@ -531,7 +531,7 @@ function evalActOffsetFuelPercentage(action: WeaSetCustomCrystalStateExpr, tile:
     }
 }
 function evalActOffsetPrimaryAmmoPercentage(action: WeaSetCustomCrystalStateExpr, tile: ITile, customCrystalData: TileCustomCrystalData): number {
-    const defaultValue  = customCrystalData.getOffsetPrimaryAmmoPercentage() ?? 0;
+    const defaultValue  = customCrystalData.getOffsetPrimaryAmmoPercentage();
     const act           = action.getActOffsetPrimaryAmmoPercentage();
     if (!act) {
         return defaultValue;

@@ -105,7 +105,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const languageType1     = getCurrentLanguageType();
         const textArray         = action.getTextArray();
-        const textData          = textArray.find(v => (v.getLanguageType() ?? 0) === languageType1);
+        const textData          = textArray.find(v => (v.getLanguageType()) === languageType1);
         const currentText       = textData?.getText();
 
         openPanel(getDict().CommonInputPanel, {
@@ -146,7 +146,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const languageType1     = getSecondaryLanguageType();
         const textArray         = action.getTextArray();
-        const textData          = textArray.find(v => (v.getLanguageType() ?? 0) === languageType1);
+        const textData          = textArray.find(v => (v.getLanguageType()) === languageType1);
         const currentText       = textData?.getText();
 
         openPanel(getDict().CommonInputPanel, {

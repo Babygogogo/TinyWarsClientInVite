@@ -1,7 +1,7 @@
 import { reqAtrGetRoomPublicInfo, reqAtrGetJoinedRoomIdArray } from "./Gateway.ts";
 import type { Undefinable, PlayerInfo } from "../../auxiliaryTypes/AuxiliaryTypes.ts";
 import { CachedDataAccessor } from "../../auxiliaryTypes/CachedDataAccessor.ts";
-import { DefaultParams, TimerTypeId } from "../../bootTimers/Constants.ts";
+import { TimerTypeId } from "../../bootTimers/Constants.ts";
 import type { OpenData } from "../../common/view/CommonWarAdvancedSettingsPage.ts";
 import type { OpenData as CommonViewCommonWarBasicSettingsPageOpenData } from "../../common/view/CommonWarBasicSettingsPage.ts";
 import type { OpenData as CommonViewCommonWarPlayerInfoPageOpenData } from "../../common/view/CommonWarPlayerInfoPage.ts";
@@ -181,15 +181,15 @@ export async function createDataForCommonWarPlayerInfoPage(roomId: Undefinable<n
     const warRuleCommonData = getExisted(settingsForCommon.getInstanceWarRule()?.getWarRuleCommonData());
     const playerInfoArray   : PlayerInfo[] = [];
     for (const playerInfo of roomInfo.getPlayerDataList()) {
-        const playerIndex = getExisted(playerInfo.getPlayerIndex());
+        const playerIndex = playerInfo.getPlayerIndex();
         playerInfoArray.push({
             playerIndex         : playerIndex,
             teamIndex           : getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex(),
             isAi                : false,
             userId              : playerInfo.getUserId() ?? null,
-            coId                : playerInfo.getCoId() ?? null,
-            unitAndTileSkinId   : playerInfo.getUnitAndTileSkinId() ?? null,
-            isReady             : playerInfo.getIsReady() ?? false,
+            coId                : playerInfo.getCoId(),
+            unitAndTileSkinId   : playerInfo.getUnitAndTileSkinId(),
+            isReady             : playerInfo.getIsReady(),
             isInTurn            : null,
             isDefeat            : null,
             restTimeToBoot      : null,
@@ -219,10 +219,10 @@ export async function createDataForCommonWarBasicSettingsPage(roomId: Undefinabl
     const settingsForCommon = getExisted(roomInfo.getSettingsForCommon());
     const instanceWarRule   = getExisted(settingsForCommon.getInstanceWarRule());
     const settingsForAtw    = getExisted(roomInfo.getSettingsForAtw());
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
-    const normalMapId       = settingsForAtw.getNormalMapId() ?? 0;
+    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const normalMapId       = settingsForAtw.getNormalMapId();
     const warEventFullData  = (await getRawData(normalMapId))?.getWarEventFullData();
-    const bootTimerParams   = settingsForAtw.getBootTimerParams() ?? DefaultParams.concat();
+    const bootTimerParams   = settingsForAtw.getBootTimerParams();
     const timerType         = bootTimerParams[0] as TimerTypeId;
     const openData          : OpenDataForCommonWarBasicSettingsPage = {
         dataArrayForListSettings    : [

@@ -122,8 +122,8 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B1168));
-        this._btnSort.setText(getText(TextType.B1049));
+        this._labelTitle.setLangText(TextType.B1168);
+        this._btnSort.setLangText(TextType.B1049);
         this._updateLabelContent();
     }
 

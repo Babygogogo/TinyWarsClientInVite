@@ -72,7 +72,7 @@ export class UiUnitView extends UiContainerBase implements IUiUnitView {
         this._isDark    = data.getActionState() === ActionStateId.Acted;
         this.setX(gridIndex.getX() * getGridWidth() - getGridWidth() / 4);
         this.setY(gridIndex.getY() * getGridHeight() - getGridHeight() / 2);
-        this._imgUnit.setScaleX((data.getPlayerIndex() ?? 0) % 2 == 0 ? -1 : 1);
+        this._imgUnit.setScaleX((data.getPlayerIndex()) % 2 == 0 ? -1 : 1);
         this.updateOnAnimationTick(tickCount || getUnitAnimationTickCount());
 
         this._updateImageHp();

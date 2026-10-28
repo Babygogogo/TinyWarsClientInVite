@@ -48,7 +48,7 @@ export function getBriefDesc(data: Undefinable<WeaAddTileBuffSimple>): string | 
     return getFormattedText(
         TextType.F0260,
         getText(TextType.Tiles),
-        getTileBuffName(data.getActBuffType() ?? 0)
+        getTileBuffName(data.getActBuffType())
     );
 }
 export function getDetailDesc(data: Undefinable<WeaAddTileBuffSimple>): string | null {
@@ -88,7 +88,7 @@ export function getDetailDesc(data: Undefinable<WeaAddTileBuffSimple>): string |
     const actTextArray: string[] = [];
     {
         {
-            const act = data.getActBuffType() ?? 0;
+            const act = data.getActBuffType();
             actTextArray.push(`- ${getText(TextType.AbnormalStateTypeId)}: ${getTileBuffName(act)}`);
         }
         {
@@ -166,7 +166,7 @@ export function getErrorTip(
         }
     }
 
-    const actBuffTypeId = data.getActBuffType() ?? 0;
+    const actBuffTypeId = data.getActBuffType();
     {
         if (!checkIsValidTypeId(actBuffTypeId)) {
             return getFormattedText(TextType.F0091, getText(TextType.AbnormalStateTypeId));
@@ -299,7 +299,7 @@ function generateNewBuff(action: WeaAddTileBuffSimple, war: IBwWar): TileBuff | 
     const currentPlayerIndex    = turnManager.getPlayerIndexInTurn();
     const expiringTime          = calculateExpiringTime(action, currentTurnIndex, currentPlayerIndex, war.getPlayerManager().getTotalPlayersCount(true));
     const buff                  = create({
-        buffTypeId          : action.getActBuffType() ?? 0,
+        buffTypeId          : action.getActBuffType(),
         expiringTurnIndex   : expiringTime[0],
         expiringPlayerIndex : expiringTime[1],
         extraParams         : action.getActExtraParams(),

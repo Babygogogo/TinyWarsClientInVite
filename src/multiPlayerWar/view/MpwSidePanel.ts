@@ -567,8 +567,8 @@ function createTaskObjectiveRenderer(data: DataForTaskObjectiveRenderer): TaskOb
 function getDataArrayForTaskObjectiveRenderer(war: IBwWar, allTaskObjectiveArray: TaskObjective[], stateArray: TaskObjectiveState[], isMain: boolean): DataForTaskObjectiveRenderer[] {
     const dataArray: DataForTaskObjectiveRenderer[] = [];
     for (const taskObjective of allTaskObjectiveArray.filter(v => isMain === !!v.getIsMain())) {
-        const objectiveId = taskObjective.getObjectiveId() ?? 0;
-        if (!stateArray.find(v => (v.getObjectiveId() ?? 0) === objectiveId)?.getIsHidden()) {
+        const objectiveId = taskObjective.getObjectiveId();
+        if (!stateArray.find(v => (v.getObjectiveId()) === objectiveId)?.getIsHidden()) {
             dataArray.push({
                 war             : war,
                 taskObjective   : taskObjective,
@@ -617,9 +617,9 @@ class TaskObjectiveRenderer extends UiContainer {
         }
 
         const taskObjective     = data.taskObjective;
-        const objectiveId       = taskObjective.getObjectiveId() ?? 0;
+        const objectiveId       = taskObjective.getObjectiveId();
         const maxProgress       = taskObjective.getMaxProgress();
-        const currentProgress   = data.war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId() ?? 0) == objectiveId)?.getCurrentProgress() ?? 0;
+        const currentProgress   = data.war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) == objectiveId)?.getCurrentProgress() ?? 0;
         const labelDesc         = this._labelDesc;
         labelDesc.setText(`(${currentProgress}${maxProgress == null ? `` : ` / ${maxProgress}`}) ${getLanguageText({ textArray: taskObjective.getDesc() })}`);
         this.setUnscaledManualHeight(labelDesc.getScaledHeight());

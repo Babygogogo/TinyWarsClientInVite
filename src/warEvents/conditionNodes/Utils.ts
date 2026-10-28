@@ -181,7 +181,7 @@ export function cloneNode(fullData: WarEventFullData, srcNodeId: number, isShall
             }
         }
 
-        nodeArray.sort((v1, v2) => getExisted(v1.getNodeId()) - getExisted(v2.getNodeId()));
+        nodeArray.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
         return nodeId;
     }
 }
@@ -217,7 +217,7 @@ export function createAndAddRootNodeInEvent({ fullData, eventId, isNeedAnd, isNe
                 deprecatedSubNodeIdArray    : [],
                 deprecatedConditionIdArray  : [],
             }));
-            nodeArray.sort((v1, v2) => getExisted(v1.getNodeId()) - getExisted(v2.getNodeId()));
+            nodeArray.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
 
             // const oldNodeId         = event.conditionNodeId;
             rootNodeAndActionsArray.push(ConditionNodeAndActions.fromJson({
@@ -265,7 +265,7 @@ export function createAndReplaceRootNodeInEvent({ fullData, eventId, oldRootNode
                 deprecatedSubNodeIdArray    : [],
                 deprecatedConditionIdArray  : [],
             }));
-            nodeArray.sort((v1, v2) => getExisted(v1.getNodeId()) - getExisted(v2.getNodeId()));
+            nodeArray.sort((v1, v2) => v1.getNodeId() - v2.getNodeId());
 
             // const oldNodeId         = event.conditionNodeId;
             existingRootNodeAndActions.getNodeIdAndFlags()?.setNodeId(nodeId);

@@ -26,7 +26,7 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
         const stateArray            = data.getStateArray();
         const taskObjectiveIdSet    = new Set<number>();
         for (const state of stateArray) {
-            const objectiveId = state.getObjectiveId() ?? 0;
+            const objectiveId = state.getObjectiveId();
             if (taskObjectiveIdSet.has(objectiveId)) {
                 throw newError(`Duplicated objectiveId: ${objectiveId}`);
             }
@@ -76,9 +76,9 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
         return this._stateArray;
     }
     public updateState(state: TaskObjectiveState): boolean {
-        const objectiveId   = state.getObjectiveId() ?? 0;
+        const objectiveId   = state.getObjectiveId();
         const array         = this.getStateArray();
-        const existingData  = array.find(v => (v.getObjectiveId() ?? 0) === objectiveId);
+        const existingData  = array.find(v => (v.getObjectiveId()) === objectiveId);
         if (existingData == null) {
             array.push(state.clone());
             return true;
@@ -86,21 +86,21 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
             let isUpdated = false;
             {
                 const isHidden = state.getIsHidden();
-                if ((existingData.getIsHidden() ?? false) !== (isHidden ?? false)) {
+                if ((existingData.getIsHidden()) !== (isHidden)) {
                     isUpdated = true;
                     existingData.setIsHidden(isHidden);
                 }
             }
             {
                 const progress = state.getCurrentProgress();
-                if ((existingData.getCurrentProgress() ?? 0) !== (progress ?? 0)) {
+                if ((existingData.getCurrentProgress()) !== (progress)) {
                     isUpdated = true;
                     existingData.setCurrentProgress(progress);
                 }
             }
             {
                 const isDisabled = state.getIsProgressUpdaterDisabled();
-                if ((existingData.getIsProgressUpdaterDisabled() ?? false) !== (isDisabled ?? false)) {
+                if ((existingData.getIsProgressUpdaterDisabled()) !== (isDisabled)) {
                     isUpdated = true;
                     existingData.setIsProgressUpdaterDisabled(isDisabled);
                 }
@@ -125,8 +125,8 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
                 continue;
             }
 
-            const objectiveId   = taskObjective.getObjectiveId() ?? 0;
-            const state         = stateArray.find(v => (v.getObjectiveId() ?? 0) === objectiveId);
+            const objectiveId   = taskObjective.getObjectiveId();
+            const state         = stateArray.find(v => (v.getObjectiveId()) === objectiveId);
             if (state?.getIsProgressUpdaterDisabled()) {
                 continue;
             }
@@ -150,22 +150,22 @@ export class TaskObjectiveManager implements ITaskObjectiveManager {
         const taskObjectiveArray    = this.getWar().getCommonSettingManager().getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray();
         let score                   = 0;
         for (const state of this.getStateArray()) {
-            const progress = state.getCurrentProgress() ?? 0;
+            const progress = state.getCurrentProgress();
             if (progress == 0) {
                 continue;
             }
 
-            const objectiveId     = state.getObjectiveId() ?? 0;
-            const taskObjective   = taskObjectiveArray?.find(v => (v.getObjectiveId() ?? 0) === objectiveId);
+            const objectiveId     = state.getObjectiveId();
+            const taskObjective   = taskObjectiveArray?.find(v => (v.getObjectiveId()) === objectiveId);
             if (taskObjective == null) {
                 continue;
             }
 
-            score += progress * (taskObjective.getScoreForProgress() ?? 0);
+            score += progress * (taskObjective.getScoreForProgress());
 
             const maxProgress = taskObjective.getMaxProgress();
             if ((maxProgress != null) && (maxProgress <= progress)) {
-                score += (taskObjective.getScoreForCompletion() ?? 0);
+                score += (taskObjective.getScoreForCompletion());
             }
         }
 

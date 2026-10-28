@@ -69,8 +69,8 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(`${getText(TextType.B0615)} A${this.getOpenData()?.oldActionId}`);
-        this._labelNoAction.setText(getText(TextType.B0278));
-        this._btnClose.setText(getText(TextType.B0146));
+        this._labelNoAction.setLangText(TextType.B0278);
+        this._btnClose.setLangText(TextType.B0146);
     }
     private async _updateComponentsForAction(): Promise<void> {
         const openData = this.getOpenData();
@@ -184,8 +184,8 @@ class ActionRenderer extends UiListItemRenderer<DataForActionRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnCopy.setText(getText(TextType.B0487));
-        this._btnSelect.setText(getText(TextType.B0492));
+        this._btnCopy.setLangText(TextType.B0487);
+        this._btnSelect.setLangText(TextType.B0492);
 
         this._updateLabelActionId();
         this._updateLabelAction();
@@ -210,7 +210,7 @@ class ActionRenderer extends UiListItemRenderer<DataForActionRenderer> {
         const action    = openData.fullData.getActionArray().find(v => v.getWeaCommonData()?.getActionId() === openData.candidateActionId);
         const label     = this._labelAction;
         if (action == null) {
-            label.setText(getText(TextType.A0168));
+            label.setLangText(TextType.A0168);
         } else {
             label.setText(getBriefDescForAction(action, openData.war.getGcData()) || UndefinedError);
         }

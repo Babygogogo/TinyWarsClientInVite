@@ -284,20 +284,20 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0306));
-        this._labelTileSymmetry.setText(getText(TextType.B1248));
-        this._labelDirection.setText(getText(TextType.B1247));
+        this._labelTitle.setLangText(TextType.B0306);
+        this._labelTileSymmetry.setLangText(TextType.B1248);
+        this._labelDirection.setLangText(TextType.B1247);
         this._labelStatus.setText(`${getText(TextType.B0367)} ?`);
         this._labelAutoDraw.setText(`${getText(TextType.B0307)} ?`);
-        this._labelUpDownTitle.setText(getText(TextType.B0308));
-        this._labelLeftRightTitle.setText(getText(TextType.B0309));
-        this._labelRotationalTitle.setText(getText(TextType.B0310));
-        this._labelUpLeftDownRightTitle.setText(getText(TextType.B0311));
-        this._labelUpRightDownLeftTitle.setText(getText(TextType.B0312));
-        this._labelColorSymmetry.setText(getText(TextType.B1155));
-        this._btnColorSymmetry.setText(getText(TextType.B0560));
-        this._labelFillTile.setText(getText(TextType.B1245));
-        this._btnFillTile.setText(getText(TextType.B1246));
+        this._labelUpDownTitle.setLangText(TextType.B0308);
+        this._labelLeftRightTitle.setLangText(TextType.B0309);
+        this._labelRotationalTitle.setLangText(TextType.B0310);
+        this._labelUpLeftDownRightTitle.setLangText(TextType.B0311);
+        this._labelUpRightDownLeftTitle.setLangText(TextType.B0312);
+        this._labelColorSymmetry.setLangText(TextType.B1155);
+        this._btnColorSymmetry.setLangText(TextType.B0560);
+        this._labelFillTile.setLangText(TextType.B1245);
+        this._btnFillTile.setLangText(TextType.B1246);
     }
 
     private _updateGroupBoxes(): void {

@@ -95,12 +95,12 @@ function exeSelfFundWithoutExtraData({ skillCfg, player, isFastExecute }: {
         return;
     }
 
-    const offsetByIncome = (cfg.getIncomeConversionPct() ?? 0) == 0
+    const offsetByIncome = (cfg.getIncomeConversionPct()) == 0
         ? 0
-        : player.getWar().getTileMap().getTotalIncomeForPlayer(player.getPlayerIndex()) * (cfg.getIncomeConversionPct() ?? 0) / 100;
+        : player.getWar().getTileMap().getTotalIncomeForPlayer(player.getPlayerIndex()) * (cfg.getIncomeConversionPct()) / 100;
 
     player.setFund(getValidFund(
-        player.getFund() * (cfg.getMultiplierPct() ?? 0) / 100 + (cfg.getOffset() ?? 0) + offsetByIncome)
+        player.getFund() * (cfg.getMultiplierPct()) / 100 + (cfg.getOffset()) + offsetByIncome)
     );
 }
 
@@ -123,7 +123,7 @@ function exeEnemyEnergyWithoutExtraData({ skillCfg, player, isFastExecute }: {
 
     const selfFund      = player.getFund();
     const selfTeamIndex = player.getTeamIndex();
-    const modifier      = (cfg.getFuncConversionPct() ?? 0) * selfFund / 10000 + (cfg.getOffsetPct() ?? 0);
+    const modifier      = (cfg.getFuncConversionPct()) * selfFund / 10000 + (cfg.getOffsetPct());
     for (const p of player.getWar().getPlayerManager().getAllPlayers()) {
         const teamIndex = p.getTeamIndex();
         if ((teamIndex === selfTeamIndex) || (teamIndex === TeamIndex.Neutral)) {
@@ -173,9 +173,9 @@ function exeSelfAddUnitWithoutExtraData({ skillCfg, player, coGridIndexList, isF
         }
 
         const tileType = tile.getTileTypeId();
-        if ((!gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId() ?? 0))   ||
+        if ((!gameConfig.checkIsTileTypeInCategory(tileType, cfg.getTileCategoryId()))   ||
             (!gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                 getCoGridIndexArrayOnMap: () => coGridIndexList,
                 coZoneRadius,
             }))
@@ -256,10 +256,10 @@ function exeSelfHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isFa
         const playerIndex           = player.getPlayerIndex();
         const zoneRadius            = player.getCoZoneRadius();
         const unitCategoryId        = cfg.getUnitCategoryId();
-        const regularHpOffset       = cfg.getRegularHpOffset() ?? 0;
-        const unitLoadedStateId     = cfg.getUnitLoadedStateId() ?? 0;
-        const coSkillAreaTypeId     = cfg.getCoSkillAreaTypeId() ?? 0;
-        const costMultiplier        = (cfg.getCostMultiplierPct() ?? 0) / 100 / 10;
+        const regularHpOffset       = cfg.getRegularHpOffset();
+        const unitLoadedStateId     = cfg.getUnitLoadedStateId();
+        const coSkillAreaTypeId     = cfg.getCoSkillAreaTypeId();
+        const costMultiplier        = (cfg.getCostMultiplierPct()) / 100 / 10;
         const gameConfig            = war.getGcData();
         const warStatisticsManager  = war.getWarStatisticsManager();
         const hpOffset              = regularHpOffset * Hp.Normalizer;
@@ -344,10 +344,10 @@ function exeEnemyHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isF
         const war                   = player.getWar();
         const tileMap               = war.getTileMap();
         const warStatisticsManager  = war.getWarStatisticsManager();
-        const unitCategory          = cfg.getUnitCategoryId() ?? 0;
-        const tileCategory          = cfg.getTileCategoryId() ?? 0;
-        const deltaHp               = cfg.getHpGain() ?? 0;
-        const loadedState           = cfg.getUnitLoadedStateId() ?? 0;
+        const unitCategory          = cfg.getUnitCategoryId();
+        const tileCategory          = cfg.getTileCategoryId();
+        const deltaHp               = cfg.getHpGain();
+        const loadedState           = cfg.getUnitLoadedStateId();
         const gameConfig            = war.getGcData();
         const modifier              = deltaHp * Hp.Normalizer;
         for (const unit of war.getUnitMap().getAllUnits()) {
@@ -361,7 +361,7 @@ function exeEnemyHpGainWithoutExtraData({ skillCfg, player, coGridIndexList, isF
                 (gameConfig.checkIsTileTypeInCategory(tileType, tileCategory))  &&
                 (unit.checkIsMeetLoadedState(loadedState))                      &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap: () => coGridIndexList,
                     coZoneRadius            : zoneRadius,
                 }))
@@ -420,8 +420,8 @@ function exeSelfFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, is
         const playerIndex   = player.getPlayerIndex();
         const zoneRadius    = player.getCoZoneRadius();
         const war           = player.getWar();
-        const category      = cfg.getUnitCategoryId() ?? 0;
-        const modifier      = cfg.getGainPct() ?? 0;
+        const category      = cfg.getUnitCategoryId();
+        const modifier      = cfg.getGainPct();
         const gameConfig    = war.getGcData();
         for (const unit of war.getUnitMap().getAllUnits()) {
             const unitType  = unit.getUnitType();
@@ -429,7 +429,7 @@ function exeSelfFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, is
             if ((unit.getPlayerIndex() === playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap: () => coGridIndexList,
                     coZoneRadius            : zoneRadius,
                 }))
@@ -473,9 +473,9 @@ function exeEnemyFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, i
     const teamIndex     = player.getTeamIndex();
     const zoneRadius    = player.getCoZoneRadius();
     const war           = player.getWar();
-    const category      = cfg.getUnitCategoryId() ?? 0;
-    const modifier      = cfg.getGainPct() ?? 0;
-    const loadedState   = cfg.getUnitLoadedStateId() ?? 0;
+    const category      = cfg.getUnitCategoryId();
+    const modifier      = cfg.getGainPct();
+    const loadedState   = cfg.getUnitLoadedStateId();
     const gameConfig    = war.getGcData();
     for (const unit of war.getUnitMap().getAllUnits()) {
         const unitType  = unit.getUnitType();
@@ -484,7 +484,7 @@ function exeEnemyFuelGainWithoutExtraData({ skillCfg, player, coGridIndexList, i
             (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
             (unit.checkIsMeetLoadedState(loadedState))                  &&
             (gridIndex.checkIsInsideCoSkillArea({
-                coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                 getCoGridIndexArrayOnMap: () => coGridIndexList,
                 coZoneRadius            : zoneRadius
             }))
@@ -524,8 +524,8 @@ function exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList
         const war           = player.getWar();
         const playerIndex   = player.getPlayerIndex();
         const zoneRadius    = player.getCoZoneRadius();
-        const category      = cfg.getUnitCategoryId() ?? 0;
-        const modifier      = cfg.getGainPct() ?? 0;
+        const category      = cfg.getUnitCategoryId();
+        const modifier      = cfg.getGainPct();
         const gameConfig    = war.getGcData();
         for (const unit of war.getUnitMap().getAllUnits()) {
             const maxBuildMaterial      = unit.getMaxBuildMaterial();
@@ -539,13 +539,13 @@ function exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList
             if ((unit.getPlayerIndex() === playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap: () => coGridIndexList,
                     coZoneRadius            : zoneRadius,
                 }))
             ) {
                 if (maxBuildMaterial != null) {
-                    const currentBuildMaterial = getExisted(unit.getCurrentBuildMaterial());
+                    const currentBuildMaterial = unit.getCurrentBuildMaterial();
                     if (modifier > 0) {
                         unit.setCurrentBuildMaterial(Math.min(
                             maxBuildMaterial,
@@ -561,7 +561,7 @@ function exeSelfMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexList
                 }
 
                 if (maxProduceMaterial != null) {
-                    const currentProduceMaterial = getExisted(unit.getCurrentProduceMaterial());
+                    const currentProduceMaterial = unit.getCurrentProduceMaterial();
                     if (modifier > 0) {
                         unit.addAndValidateCurrentProduceMaterial(maxProduceMaterial * modifier / 100);
                     } else {
@@ -591,8 +591,8 @@ function exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexLis
         const playerIndex   = player.getPlayerIndex();
         const zoneRadius    = player.getCoZoneRadius();
         const war           = player.getWar();
-        const category      = cfg.getUnitCategoryId() ?? 0;
-        const modifier      = cfg.getGainPct() ?? 0;
+        const category      = cfg.getUnitCategoryId();
+        const modifier      = cfg.getGainPct();
         const gameConfig    = war.getGcData();
         for (const unit of war.getUnitMap().getAllUnits()) {
             const maxBuildMaterial      = unit.getMaxBuildMaterial();
@@ -606,13 +606,13 @@ function exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexLis
             if ((unit.getPlayerIndex() !== playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap: () => coGridIndexList,
                     coZoneRadius            : zoneRadius,
                 }))
             ) {
                 if (maxBuildMaterial != null) {
-                    const currentBuildMaterial = getExisted(unit.getCurrentBuildMaterial());
+                    const currentBuildMaterial = unit.getCurrentBuildMaterial();
                     if (modifier > 0) {
                         unit.setCurrentBuildMaterial(Math.min(
                             maxBuildMaterial,
@@ -628,7 +628,7 @@ function exeEnemyMaterialGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                 }
 
                 if (maxProduceMaterial != null) {
-                    const currentProduceMaterial = getExisted(unit.getCurrentProduceMaterial());
+                    const currentProduceMaterial = unit.getCurrentProduceMaterial();
                     if (modifier > 0) {
                         unit.addAndValidateCurrentProduceMaterial(maxProduceMaterial * modifier / 100);
                     } else {
@@ -658,8 +658,8 @@ function exeSelfPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexL
         const playerIndex   = player.getPlayerIndex();
         const zoneRadius    = player.getCoZoneRadius();
         const war           = player.getWar();
-        const category      = cfg.getUnitCategoryId() ?? 0;
-        const modifier      = cfg.getGainPct() ?? 0;
+        const category      = cfg.getUnitCategoryId();
+        const modifier      = cfg.getGainPct();
         const gameConfig    = war.getGcData();
         for (const unit of war.getUnitMap().getAllUnits()) {
             const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
@@ -669,11 +669,11 @@ function exeSelfPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexL
 
             const unitType      = unit.getUnitType();
             const gridIndex     = unit.getGridIndex();
-            const currentAmmo   = getExisted(unit.getPrimaryWeaponCurrentAmmo());
+            const currentAmmo   = unit.getPrimaryWeaponCurrentAmmo();
             if ((unit.getPlayerIndex() === playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap: () => coGridIndexList,
                     coZoneRadius            : zoneRadius,
                 }))
@@ -706,8 +706,8 @@ function exeEnemyPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndex
         const war           = player.getWar();
         const playerIndex   = player.getPlayerIndex();
         const zoneRadius    = player.getCoZoneRadius();
-        const category      = cfg.getUnitCategoryId() ?? 0;
-        const modifier      = cfg.getGainPct() ?? 0;
+        const category      = cfg.getUnitCategoryId();
+        const modifier      = cfg.getGainPct();
         const gameConfig    = war.getGcData();
         for (const unit of war.getUnitMap().getAllUnits()) {
             const maxAmmo = unit.getPrimaryWeaponMaxAmmo();
@@ -717,11 +717,11 @@ function exeEnemyPrimaryAmmoGainWithoutExtraData({ skillCfg, player, coGridIndex
 
             const unitType      = unit.getUnitType();
             const gridIndex     = unit.getGridIndex();
-            const currentAmmo   = getExisted(unit.getPrimaryWeaponCurrentAmmo());
+            const currentAmmo   = unit.getPrimaryWeaponCurrentAmmo();
             if ((unit.getPlayerIndex() !== playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap: () => coGridIndexList,
                     coZoneRadius            : zoneRadius,
                 }))
@@ -760,10 +760,10 @@ function exeSelfUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexList
     const turnIndex             = war.getTurnManager().getTurnIndex();
     const gameConfig            = war.getGcData();
     const unitCategoryId        = cfg.getUnitCategoryId();
-    const unitBuffTypeId        = cfg.getUnitBuffTypeId() ?? 0;
-    const unitLoadedStateId     = cfg.getUnitLoadedStateId() ?? 0;
-    const coSkillAreaTypeId     = cfg.getCoSkillAreaTypeId() ?? 0;
-    const turns                 = cfg.getTurns() ?? 0;
+    const unitBuffTypeId        = cfg.getUnitBuffTypeId();
+    const unitLoadedStateId     = cfg.getUnitLoadedStateId();
+    const coSkillAreaTypeId     = cfg.getCoSkillAreaTypeId();
+    const turns                 = cfg.getTurns();
     for (const unit of war.getUnitMap().getAllUnits()) {
         if ((unit.getPlayerIndex() === playerIndex)                                                                     &&
             (unit.checkIsMeetLoadedState(unitLoadedStateId))                                                            &&
@@ -819,10 +819,10 @@ function exeEnemyUnitBuffGainWithoutExtraData({ skillCfg, player, coGridIndexLis
     const turnIndex             = war.getTurnManager().getTurnIndex();
     const gameConfig            = war.getGcData();
     const unitCategoryId        = cfg.getUnitCategoryId();
-    const unitBuffTypeId        = cfg.getUnitBuffTypeId() ?? 0;
-    const unitLoadedStateId     = cfg.getUnitLoadedStateId() ?? 0;
-    const coSkillAreaTypeId     = cfg.getCoSkillAreaTypeId() ?? 0;
-    const turns                 = cfg.getTurns() ?? 0;
+    const unitBuffTypeId        = cfg.getUnitBuffTypeId();
+    const unitLoadedStateId     = cfg.getUnitLoadedStateId();
+    const coSkillAreaTypeId     = cfg.getCoSkillAreaTypeId();
+    const turns                 = cfg.getTurns();
     for (const unit of war.getUnitMap().getAllUnits()) {
         if ((unit.getTeamIndex() !== teamIndex)                                                                         &&
             (unit.checkIsMeetLoadedState(unitLoadedStateId))                                                            &&
@@ -883,7 +883,7 @@ function exeFixedAreaDamageWithExtraData({ skillCfg, player, skillData, targetGr
     for (const center of centerArray) {
         for (const gridIndex of center.getGridsWithinDistance({
             minDistance : 0,
-            maxDistance : cfg.getRadius() ?? 0,
+            maxDistance : cfg.getRadius(),
             mapSize     : player.getWar().getTileMap().getMapSize(),
         })) {
             gridVisualEffect.showEffectExplosion(gridIndex);
@@ -914,15 +914,15 @@ function exeFixedAreaDamageWithoutExtraData({ skillCfg, player, skillData, targe
     const war                   = player.getWar();
     const unitMap               = war.getUnitMap();
     const mapSize               = unitMap.getMapSize();
-    const hpDamage              = (cfg.getDamage() ?? 0) * Hp.Normalizer;
+    const hpDamage              = (cfg.getDamage()) * Hp.Normalizer;
     const isIndiscriminate      = !!cfg.getIsIndiscriminate();
-    const actionState           = cfg.getChangeUnitActionStateId() ?? 0;
+    const actionState           = cfg.getChangeUnitActionStateId();
     const canDestroy            = !!cfg.getCanDestroy();
     const teamIndex             = player.getTeamIndex();
     const warStatisticsManager  = war.getWarStatisticsManager();
     const gridVisualEffect      = war.getGridVisualEffect();
     for (const center of centerArray) {
-        for (const gridIndex of center.getGridsWithinDistance({ minDistance: 0, maxDistance: cfg.getRadius() ?? 0, mapSize })) {
+        for (const gridIndex of center.getGridsWithinDistance({ minDistance: 0, maxDistance: cfg.getRadius(), mapSize })) {
             const unit = unitMap.getUnitOnMap(gridIndex);
             if ((unit)                                                      &&
                 ((isIndiscriminate) || (unit.getTeamIndex() !== teamIndex))
@@ -991,7 +991,7 @@ function exeSelfPromotionGainWithoutExtraData({ skillCfg, player, coGridIndexLis
         const maxPromotion      = gameConfig.getUnitMaxPromotion();
         const unitCategory      = cfg.getUnitCategoryId();
         const conIsCoOnboard    = cfg.getIsCoOnboard();
-        const modifier          = cfg.getGain() ?? 0;
+        const modifier          = cfg.getGain();
         for (const unit of war.getUnitMap().getAllUnits()) {
             const unitType  = unit.getUnitType();
             const gridIndex = unit.getGridIndex();
@@ -999,12 +999,12 @@ function exeSelfPromotionGainWithoutExtraData({ skillCfg, player, coGridIndexLis
                 ((conIsCoOnboard == null) || (conIsCoOnboard === unit.getIsCoOnboard()))                    &&
                 ((unitCategory == null) || (gameConfig.checkIsUnitTypeInCategory(unitType, unitCategory)))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap: () => coGridIndexList,
                     coZoneRadius            : zoneRadius
                 }))
             ) {
-                const currentPromotion = getExisted(unit.getCurrentPromotion());
+                const currentPromotion = unit.getCurrentPromotion();
                 unit.setCurrentPromotion(Math.max(
                     0,
                     Math.min(
@@ -1034,9 +1034,9 @@ function exeSelfUnitActionStateWithoutExtraData({ skillCfg, player, coGridIndexL
     if (cfg) {
         const playerIndex       = player.getPlayerIndex();
         const zoneRadius        = player.getCoZoneRadius();
-        const category          = cfg.getUnitCategoryId() ?? 0;
+        const category          = cfg.getUnitCategoryId();
         const conIsCoOnboard    = cfg.getConIsCoOnboard();
-        const actionState       = cfg.getUnitActionStateId() ?? 0;
+        const actionState       = cfg.getUnitActionStateId();
         if ((actionState !== ActionStateId.Acted) && (actionState !== ActionStateId.Idle)) {
             throw newError(`Invalid actionState: ${actionState}`, ClientErrorCode.WarCoSkillHelpers_ExeSelfUnitActionState_00);
         }
@@ -1050,7 +1050,7 @@ function exeSelfUnitActionStateWithoutExtraData({ skillCfg, player, coGridIndexL
                 ((conIsCoOnboard == null) || (unit.getIsCoOnboard() === conIsCoOnboard))    &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))                  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap: () => coGridIndexList,
                     coZoneRadius            : zoneRadius
                 }))
@@ -1079,8 +1079,8 @@ function exeSelfFlareAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexLis
         const playerIndex   = player.getPlayerIndex();
         const zoneRadius    = player.getCoZoneRadius();
         const war           = player.getWar();
-        const category      = cfg.getUnitCategoryId() ?? 0;
-        const modifier      = cfg.getGainPct() ?? 0;
+        const category      = cfg.getUnitCategoryId();
+        const modifier      = cfg.getGainPct();
         const gameConfig    = war.getGcData();
         for (const unit of war.getUnitMap().getAllUnits()) {
             const maxAmmo = unit.getFlareMaxAmmo();
@@ -1090,11 +1090,11 @@ function exeSelfFlareAmmoGainWithoutExtraData({ skillCfg, player, coGridIndexLis
 
             const unitType      = unit.getUnitType();
             const gridIndex     = unit.getGridIndex();
-            const currentAmmo   = getExisted(unit.getFlareCurrentAmmo(), ClientErrorCode.WarCoSkillHelpers_ExeSelfFlareAmmoGain_00);
+            const currentAmmo   = unit.getFlareCurrentAmmo();
             if ((unit.getPlayerIndex() === playerIndex)                     &&
                 (gameConfig.checkIsUnitTypeInCategory(unitType, category))  &&
                 (gridIndex.checkIsInsideCoSkillArea({
-                    coSkillAreaType         : cfg.getCoSkillAreaTypeId() ?? 0,
+                    coSkillAreaType         : cfg.getCoSkillAreaTypeId(),
                     getCoGridIndexArrayOnMap: () => coGridIndexList,
                     coZoneRadius            : zoneRadius,
                 }))
@@ -1132,7 +1132,7 @@ function exeChangeWeatherWithExtraData({ skillCfg, player, skillData, isFastExec
         const hasFog            = fogMap.checkHasFogCurrently();
         weatherManager.setForceWeatherType(getExisted(skillData.getNewWeatherType(), ClientErrorCode.WarCoSkillHelpers_ExeChangeWeatherWithExtraData_00));
         weatherManager.setExpirePlayerIndex(playerIndex);
-        weatherManager.setExpireTurnIndex(war.getTurnManager().getTurnIndex() + (cfg.getTurns() ?? 0));
+        weatherManager.setExpireTurnIndex(war.getTurnManager().getTurnIndex() + (cfg.getTurns()));
         // war.getFogMap().resetMapFromPathsForPlayer(playerIndex);
         if ((!hasFog) && (fogMap.checkHasFogCurrently()) && (cfg.getKeepVision())) {
             const mapSize           = fogMap.getMapSize();
@@ -1162,7 +1162,7 @@ function exeChangeWeatherWithoutExtraData({ skillCfg, player, skillData, isFastE
         const hasFog            = fogMap.checkHasFogCurrently();
         weatherManager.setForceWeatherType(getExisted(skillData.getNewWeatherType(), ClientErrorCode.WarCoSkillHelpers_ExeChangeWeatherWithoutExtraData_00));
         weatherManager.setExpirePlayerIndex(playerIndex);
-        weatherManager.setExpireTurnIndex(war.getTurnManager().getTurnIndex() + (cfg.getTurns() ?? 0));
+        weatherManager.setExpireTurnIndex(war.getTurnManager().getTurnIndex() + (cfg.getTurns()));
         // war.getFogMap().resetMapFromPathsForPlayer(playerIndex);
         if ((!hasFog) && (fogMap.checkHasFogCurrently()) && (cfg.getKeepVision())) {
             const mapSize           = fogMap.getMapSize();
@@ -1199,7 +1199,7 @@ function exeSelfCoOnboardWithoutExtraData({ skillCfg, player, coGridIndexList, i
     const war                   = player.getWar();
     const gameConfig            = war.getGcData();
     const unitCategoryId        = cfg.getUnitCategoryId();
-    const coSkillAreaTypeId     = cfg.getCoSkillAreaTypeId() ?? 0;
+    const coSkillAreaTypeId     = cfg.getCoSkillAreaTypeId();
     const isCoOnboard           = !!cfg.getIsCoOnboard();
     for (const unit of war.getUnitMap().getAllUnits()) {
         if ((unit.getPlayerIndex() === playerIndex)                                                                     &&

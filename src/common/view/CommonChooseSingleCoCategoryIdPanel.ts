@@ -4,7 +4,6 @@ import { getCoEyeBackgroundByCoId, getCoEye } from "../../helpers/ImageSource.ts
 import { getExisted } from "../../helpers/Misc.ts";
 import { MouseStyleType, PointerEventType } from "../../helpers/PointerInput.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
 import { ShortSfxCode } from "../../sounds/Constants.ts";
 import { playShortSfx } from "../../sounds/SoundPlayer.ts";
@@ -104,8 +103,8 @@ export class Panel extends UiPanel<OpenData> {
     // View functions.
     ////////////////////////////////////////////////////////////////////////////////
     private _updateComponentsForLanguage(): void {
-        this._labelTitle.setText(getText(TextType.B0145));
-        this._labelTips.setText(getText(TextType.B1249));
+        this._labelTitle.setLangText(TextType.B0145);
+        this._labelTips.setLangText(TextType.B1249);
     }
 
     private _initGroupCoCategory(): void {

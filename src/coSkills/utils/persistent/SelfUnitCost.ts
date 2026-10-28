@@ -17,5 +17,5 @@ export function getTotalMultiplier({ cfg, gameConfig, unitTypeId }: {
         }
     }
 
-    return (cfg.getMultiplierPct() ?? 0) / 100;
+    return (cfg.getMultiplierPct()) / 100;
 }

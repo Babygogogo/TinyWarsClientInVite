@@ -115,7 +115,7 @@ export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, is
     }
 
     {
-        const energyAddPctOnCoBoard = playerRule.getEnergyAddPctOnCoBoard() ?? 0;
+        const energyAddPctOnCoBoard = playerRule.getEnergyAddPctOnCoBoard();
         if ((energyAddPctOnCoBoard > EnergyAddPctOnCoBoard.MaxLimit)    ||
             (energyAddPctOnCoBoard < EnergyAddPctOnCoBoard.MinLimit)
         ) {
@@ -163,7 +163,7 @@ export function getErrorCode({ playerRule, gameConfig, playersCountUnneutral, is
     }
 
     {
-        const tileVisionRangeModifier = playerRule.getTileVisionRangeModifier() ?? 0;
+        const tileVisionRangeModifier = playerRule.getTileVisionRangeModifier();
         if ((tileVisionRangeModifier > TileVisionRangeModifier.MaxLimit)    ||
             (tileVisionRangeModifier < TileVisionRangeModifier.MinLimit)
         ) {

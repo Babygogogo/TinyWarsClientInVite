@@ -124,7 +124,7 @@ export class Panel extends UiPanel<OpenData> {
             getTitle        : () => getText(TextType.Turns),
             minValue        : 0,
             maxValue        : TurnIndex.MaxLimit,
-            currentValue    : action.getWeatherTurnsCount() ?? 0,
+            currentValue    : action.getWeatherTurnsCount(),
             callback        : turnsCount => {
                 action.setWeatherTurnsCount(turnsCount);
                 dispatch(TypeId.WarEventFullDataChanged);

@@ -124,7 +124,7 @@ export function getErrorTip(data: WeaSetViewpointSimple, mapSize: MapSize, playe
         const act = data.getActIsOneByOne();
     }
     {
-        const act = data.getActInterval() ?? Common.DefaultInterval;
+        const act = data.getActInterval();
         if (
             (act > Common.MaxInterval)    ||
             (act < Common.MinInterval)
@@ -182,7 +182,7 @@ export async function applyWithoutExtraData(data: WeaSetViewpointSimple, isFastE
         gridIndexArray      : targetGridIndexArray,
         isNeedFocusEffect   : !!data.getActNeedFocusEffect(),
         isOneByOne          : !!data.getActIsOneByOne(),
-        interval            : data.getActInterval() ?? Common.DefaultInterval,
+        interval            : data.getActInterval(),
         war                 : war,
         isFastExecute       : isFastExecute,
     });

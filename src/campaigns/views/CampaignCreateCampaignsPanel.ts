@@ -3,7 +3,6 @@ import { type OpenData as CampaignsViewsCampaignInfoPageOpenData, Page } from ".
 import { type OpenData as CampaignsViewsCampaignRankPageOpenData, Page as CampaignsViewsCampaignRankPage } from "./CampaignRankPage.ts";
 import { getDict } from "../../gamePanels/Dict.ts";
 import { openPanel } from "../../gamePanels/Manager.ts";
-import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
 import { getText, getLanguageText } from "../../lang/Utils.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -85,7 +84,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public setAndReviseSelectedCampaignId(newCampaignId: number | null): void {
         const listCampaign  = this._listCampaign;
-        const newIndex      = getExisted(listCampaign.getRevisedFirstIndex(v => v?.campaignId === newCampaignId));
+        const newIndex      = listCampaign.getRevisedFirstIndex(v => v?.campaignId === newCampaignId);
         listCampaign.setSelectedItemIndex(newIndex);
         this._updateComponentsForPreviewingCampaignInfo();
     }
@@ -146,13 +145,13 @@ export class Panel extends UiPanel<OpenData> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._labelSinglePlayer.setText(getText(TextType.B0138));
-        this._labelCampaign.setText(getText(TextType.B1135));
-        this._labelChooseCampaign.setText(getText(TextType.B0085));
-        this._labelNoCampaign.setText(getText(TextType.B0278));
-        this._btnHelp.setText(getText(TextType.B0143));
-        this._btnBack.setText(getText(TextType.B0146));
-        this._btnNextStep.setText(getText(TextType.B0566));
+        this._labelSinglePlayer.setLangText(TextType.B0138);
+        this._labelCampaign.setLangText(TextType.B1135);
+        this._labelChooseCampaign.setLangText(TextType.B0085);
+        this._labelNoCampaign.setLangText(TextType.B0278);
+        this._btnHelp.setLangText(TextType.B0143);
+        this._btnBack.setLangText(TextType.B0146);
+        this._btnNextStep.setLangText(TextType.B0566);
 
         this._groupNavigator.arrangeItems();
     }

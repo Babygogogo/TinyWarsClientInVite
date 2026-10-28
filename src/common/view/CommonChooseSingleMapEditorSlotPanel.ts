@@ -333,7 +333,7 @@ class SlotRenderer extends UiListItemRenderer<DataForSlotRenderer> {
             if (campaignMapData == null) {
                 labelSlotIndex.setText(`#${slotIndex} ${getMapReviewStatusText(status) ?? UndefinedError}`);
             } else {
-                labelSlotIndex.setText(`#${slotIndex} ${getText(TextType.B1135)} ${campaignMapData.getCampaignId() ?? 0}-${campaignMapData.getCampaignMapId() ?? 0}`);
+                labelSlotIndex.setText(`#${slotIndex} ${getText(TextType.B1135)} ${campaignMapData.getCampaignId()}-${campaignMapData.getCampaignMapId()}`);
             }
         }
         this._layoutName.arrangeItems();

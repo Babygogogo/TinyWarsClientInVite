@@ -186,7 +186,7 @@ export async function getOngoingWarData(warId: number): Promise<Undefinable<Seri
     if (userId != null) {
         const cachedData = await StoreMpwOngoingWarData.getData(userId, warId);
         if (cachedData != null) {
-            if ((cachedData.getModifiedTime() ?? 0) >= timestamp) {
+            if ((cachedData.getModifiedTime()) >= timestamp) {
                 return cachedData;
             }
             return _ongoingWarDataAccessor.getData(warId, true);
@@ -214,7 +214,7 @@ export async function getHalfwayReplayData(warId: number): Promise<Undefinable<S
     if (userId != null) {
         const cachedData = await StoreMpwHalfwayReplayData.getData(userId, warId);
         if (cachedData != null) {
-            if ((cachedData.getModifiedTime() ?? 0) >= timestamp) {
+            if ((cachedData.getModifiedTime()) >= timestamp) {
                 return cachedData;
             }
             return _halfwayReplayDataAccessor.getData(warId, true);
@@ -396,7 +396,7 @@ export async function checkIsRedForMyWar(progressInfo: Undefinable<MpwWarProgres
 
     const selfUserId        = getSelfUserId();
     const playerIndexInTurn = progressInfo.getPlayerIndexInTurn() ?? 0;
-    return warSettings.getPlayerInfoArray().some(v => (v.getPlayerIndex() === playerIndexInTurn) && (v.getUserId() === selfUserId)) ?? false;
+    return warSettings.getPlayerInfoArray().some(v => (v.getPlayerIndex() === playerIndexInTurn) && (v.getUserId() === selfUserId));
 }
 export async function checkIsRedForAllMyWars(ignoreWarIdArray?: number[]): Promise<boolean> {
     const warIdSet = new Set(await getJoinedMpwIdArray());
@@ -495,13 +495,13 @@ async function createDataForCommonWarBasicSettingsPageForMcw(
 ): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
     const bootTimerParams   = settingsForMcw.getBootTimerParams();
     const timerType         = bootTimerParams[0] as TimerTypeId;
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
-    const warEventFullData  = (await getRawData(settingsForMcw.getNormalMapId() ?? 0))?.getWarEventFullData();
+    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const warEventFullData  = (await getRawData(settingsForMcw.getNormalMapId()))?.getWarEventFullData();
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
                 settingsType        : BasicSettingsTypeId.NormalMapId,
-                currentValue        : settingsForMcw.getNormalMapId() ?? 0,
+                currentValue        : settingsForMcw.getNormalMapId(),
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
                 warEventFullData    : warEventFullData,
@@ -622,13 +622,13 @@ async function createDataForCommonWarBasicSettingsPageForCcw(
 ): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
     const bootTimerParams   = settingsForCcw.getBootTimerParams();
     const timerType         = bootTimerParams[0] as TimerTypeId;
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
-    const warEventFullData  = (await getRawData(settingsForCcw.getNormalMapId() ?? 0))?.getWarEventFullData();
+    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const warEventFullData  = (await getRawData(settingsForCcw.getNormalMapId()))?.getWarEventFullData();
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
                 settingsType        : BasicSettingsTypeId.NormalMapId,
-                currentValue        : settingsForCcw.getNormalMapId() ?? 0,
+                currentValue        : settingsForCcw.getNormalMapId(),
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
                 warEventFullData    : warEventFullData,
@@ -753,13 +753,13 @@ async function createDataForCommonWarBasicSettingsPageForMrw(
     }
 
     const timerType         = bootTimerParams[0] as TimerTypeId;
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
-    const warEventFullData  = (await getRawData(settingsForMrw.getNormalMapId() ?? 0))?.getWarEventFullData();
+    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const warEventFullData  = (await getRawData(settingsForMrw.getNormalMapId()))?.getWarEventFullData();
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
                 settingsType        : BasicSettingsTypeId.NormalMapId,
-                currentValue        : settingsForMrw.getNormalMapId() ?? 0,
+                currentValue        : settingsForMrw.getNormalMapId(),
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
                 warEventFullData    : warEventFullData,
@@ -858,13 +858,13 @@ async function createDataForCommonWarBasicSettingsPageForMmw(
     }
 
     const timerType         = bootTimerParams[0] as TimerTypeId;
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
-    const warEventFullData  = (await getRawData(settingsForMmw.getNormalMapId() ?? 0))?.getWarEventFullData();
+    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const warEventFullData  = (await getRawData(settingsForMmw.getNormalMapId()))?.getWarEventFullData();
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
                 settingsType        : BasicSettingsTypeId.NormalMapId,
-                currentValue        : settingsForMmw.getNormalMapId() ?? 0,
+                currentValue        : settingsForMmw.getNormalMapId(),
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
                 warEventFullData    : warEventFullData,
@@ -961,13 +961,13 @@ async function createDataForCommonWarBasicSettingsPageForAtw(
 ): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
     const bootTimerParams   = DefaultParams.concat();
     const timerType         = bootTimerParams[0] as TimerTypeId;
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
-    const warEventFullData  = (await getRawData(settingsForAtw.getNormalMapId() ?? 0))?.getWarEventFullData();
+    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const warEventFullData  = (await getRawData(settingsForAtw.getNormalMapId()))?.getWarEventFullData();
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
             {
                 settingsType        : BasicSettingsTypeId.NormalMapId,
-                currentValue        : settingsForAtw.getNormalMapId() ?? 0,
+                currentValue        : settingsForAtw.getNormalMapId(),
                 instanceWarRule     : instanceWarRule,
                 gameConfig          : gameConfig,
                 warEventFullData    : warEventFullData,
@@ -1062,7 +1062,7 @@ async function createDataForCommonWarBasicSettingsPageForMfw(
 ): Promise<CommonViewCommonWarBasicSettingsPageOpenData> {
     const bootTimerParams   = settingsForMfw.getBootTimerParams();
     const timerType         = bootTimerParams[0] as TimerTypeId;
-    const gameConfig        = getExisted(await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
+    const gameConfig        = (await getGameConfig(getExisted(settingsForCommon.getConfigVersion())));
     const warEventFullData  = instanceWarRule.getWarEventFullData();
     const openData          : CommonViewCommonWarBasicSettingsPageOpenData = {
         dataArrayForListSettings    : [
@@ -1201,7 +1201,7 @@ export async function createDataForCommonWarPlayerInfoPage(warId: Undefinable<nu
 
     const settingsForCommon     = getExisted(warSettings.getSettingsForCommon());
     const instanceWarRule       = getExisted(settingsForCommon.getInstanceWarRule());
-    const playerStaticInfoArray = getExisted(warSettings.getPlayerInfoArray());
+    const playerStaticInfoArray = warSettings.getPlayerInfoArray();
     const warRuleCommonData     = getExisted(instanceWarRule.getWarRuleCommonData());
     const playerInfoArray       : PlayerInfo[] = [];
     for (const playerProgressInfo of warProgressInfo.getPlayerInfoList()) {

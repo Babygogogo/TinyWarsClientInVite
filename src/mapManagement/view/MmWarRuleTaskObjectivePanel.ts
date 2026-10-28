@@ -82,9 +82,9 @@ export class Panel extends UiPanel<OpenData> {
             showLang(TextType.YouCanNotDoThisRightNow);
         } else {
             const templateWarRule               = openData.templateWarRule;
-            const allTaskObjectiveIdSet         = new Set(taskObjectiveFullData.getTaskObjectiveArray().map(v => v.getObjectiveId() ?? 0));
+            const allTaskObjectiveIdSet         = new Set(taskObjectiveFullData.getTaskObjectiveArray().map(v => v.getObjectiveId()));
             const currentTaskObjectiveIdArray   = templateWarRule.getTaskObjectiveIdArray();
-            for (const taskObjectiveId of currentTaskObjectiveIdArray ?? []) {
+            for (const taskObjectiveId of currentTaskObjectiveIdArray) {
                 allTaskObjectiveIdSet.delete(taskObjectiveId);
             }
             openPanel(getDict().CommonChooseMultiNumberPanel, {
@@ -94,7 +94,7 @@ export class Panel extends UiPanel<OpenData> {
                 getTitleText                    : () => getFormattedText(TextType.F0092, getText(TextType.B1214)),
                 getNumberMainText               : taskObjectiveId => getTruncatedText(
                     getLanguageText({
-                        textArray: taskObjectiveFullData.getTaskObjectiveArray().find(v => (v.getObjectiveId() ?? 0) === taskObjectiveId)?.getDesc()
+                        textArray: taskObjectiveFullData.getTaskObjectiveArray().find(v => (v.getObjectiveId()) === taskObjectiveId)?.getDesc()
                     }) ?? UndefinedError,
                     15
                 ),
@@ -136,7 +136,7 @@ export class Panel extends UiPanel<OpenData> {
 
     private _updateComponentsForLanguage(): void {
         this._labelTitle.setText(`${getText(TextType.B1214)} (R${this.getOpenData()?.templateWarRule.getRuleId()})`);
-        this._labelNoData.setText(getText(TextType.B0278));
+        this._labelNoData.setLangText(TextType.B0278);
     }
     private async _updateListConditionAndLabelNoCondition(): Promise<void> {
         const openData = this.getOpenData();
@@ -241,7 +241,7 @@ class ItemRenderer extends UiListItemRenderer<DataForItemRenderer> {
         this._labelId.setText(`#${taskObjectiveId}`);
         this._labelName.setText(getTruncatedText(
             getLanguageText({
-                textArray: openData.mapRawData.getTaskObjectiveFullData()?.getTaskObjectiveArray().find(v => (v.getObjectiveId() ?? 0) === taskObjectiveId)?.getDesc()
+                textArray: openData.mapRawData.getTaskObjectiveFullData()?.getTaskObjectiveArray().find(v => (v.getObjectiveId()) === taskObjectiveId)?.getDesc()
             }) ?? UndefinedError,
             30
         ));

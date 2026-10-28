@@ -141,7 +141,7 @@ function checkIsMeetConditionForTaskObjective(action: WeaSetTaskObjectiveState, 
 }
 
 function evalActProgress(action: WeaSetTaskObjectiveState, war: IBwWar, objectiveId: number): number {
-    const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId() ?? 0) === objectiveId)?.getCurrentProgress() ?? 0;
+    const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) === objectiveId)?.getCurrentProgress() ?? 0;
     const act           = action.getActProgress();
     if (!act) {
         return defaultValue;
@@ -160,7 +160,7 @@ function evalActProgress(action: WeaSetTaskObjectiveState, war: IBwWar, objectiv
 }
 
 function evalActIsHidden(action: WeaSetTaskObjectiveState, war: IBwWar, objectiveId: number): boolean {
-    const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId() ?? 0) === objectiveId)?.getIsHidden() ?? false;
+    const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) === objectiveId)?.getIsHidden() ?? false;
     const act           = action.getActIsHidden();
     if (!act) {
         return defaultValue;
@@ -179,7 +179,7 @@ function evalActIsHidden(action: WeaSetTaskObjectiveState, war: IBwWar, objectiv
 }
 
 function evalActIsProgressUpdaterDisabled(action: WeaSetTaskObjectiveState, war: IBwWar, objectiveId: number): boolean {
-    const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId() ?? 0) === objectiveId)?.getIsProgressUpdaterDisabled() ?? false;
+    const defaultValue  = war.getTaskObjectiveManager().getStateArray().find(v => (v.getObjectiveId()) === objectiveId)?.getIsProgressUpdaterDisabled() ?? false;
     const act           = action.getActIsProgressUpdaterDisabled();
     if (!act) {
         return defaultValue;
@@ -203,7 +203,7 @@ export function applyWithExtraData(_action: WeaSetTaskObjectiveState): void {
 }
 export function applyWithoutExtraData(action: WeaSetTaskObjectiveState, war: IBwWar): void {
     const newStateArray: TaskObjectiveState[] = [];
-    for (const objectiveId of war.getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray().map(v => v.getObjectiveId() ?? 0).sort((v1, v2) => v1 - v2) ?? []) {
+    for (const objectiveId of war.getInstanceWarRule().getTaskObjectiveFullData()?.getTaskObjectiveArray().map(v => v.getObjectiveId()).sort((v1, v2) => v1 - v2) ?? []) {
         if (checkIsMeetConditionForTaskObjective(action, war, objectiveId)) {
             newStateArray.push(createNewTaskObjectiveState(action, war, objectiveId));
         }

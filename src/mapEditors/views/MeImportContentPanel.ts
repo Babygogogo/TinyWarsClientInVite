@@ -221,7 +221,7 @@ export class Panel extends UiPanel<OpenData> {
                 const war               = openData.war;
                 const existingFullData  = war.getTaskObjectiveFullData() ?? new TaskObjectiveFullData();
                 const existingDataArray = existingFullData.getTaskObjectiveArray();
-                let objectiveId         = (existingDataArray.length ? Math.max(...existingDataArray.map(v => v.getObjectiveId() ?? 0)) : 0) + 1;
+                let objectiveId         = (existingDataArray.length ? Math.max(...existingDataArray.map(v => v.getObjectiveId())) : 0) + 1;
                 for (const data of srcDataArray) {
                     data.setObjectiveId(objectiveId++);
                     existingDataArray.push(data);
@@ -282,7 +282,7 @@ export class Panel extends UiPanel<OpenData> {
             getContent     : () => getText(TextType.AreYouSureYouWantToContinue),
             callback    : () => {
                 const existingDataArray = openData.war.getMapSimpleDialogueArray();
-                let dialogueId          = (existingDataArray.length ? Math.max(...existingDataArray.map(v => v.getDialogueId() ?? 0)) : 0) + 1;
+                let dialogueId          = (existingDataArray.length ? Math.max(...existingDataArray.map(v => v.getDialogueId())) : 0) + 1;
                 for (const data of srcDataArray) {
                     data.setDialogueId(dialogueId++);
                     existingDataArray.push(data);
@@ -399,19 +399,19 @@ function importWarEventFullData(srcData: WarEventFullData, dstData: WarEventFull
 
     const conditionNodeIdMapping = new Map<number, number>();
     {
-        const usedIdSet = new Set(dstData.getConditionNodeArray()?.map(v => v.getNodeId() ?? 0));
+        const usedIdSet = new Set(dstData.getConditionNodeArray()?.map(v => v.getNodeId()));
         let nextId      = usedIdSet.size ? Math.max(...usedIdSet) + 1 : 1;
         for (const data of srcData.getConditionNodeArray()) {
-            conditionNodeIdMapping.set(data.getNodeId() ?? 0, nextId++);
+            conditionNodeIdMapping.set(data.getNodeId(), nextId++);
         }
     }
 
     const eventIdMapping = new Map<number, number>();
     {
-        const usedIdSet = new Set(dstData.getEventArray()?.map(v => v.getEventId() ?? 0));
+        const usedIdSet = new Set(dstData.getEventArray()?.map(v => v.getEventId()));
         let nextId      = usedIdSet.size ? Math.max(...usedIdSet) + 1 : 1;
         for (const data of srcData.getEventArray()) {
-            eventIdMapping.set(data.getEventId() ?? 0, nextId++);
+            eventIdMapping.set(data.getEventId(), nextId++);
         }
     }
 
@@ -419,7 +419,7 @@ function importWarEventFullData(srcData: WarEventFullData, dstData: WarEventFull
     {
         for (const data of newSrcData.getActionArray()) {
             const commonData    = data.createIfNotExistsWeaCommonData();
-            commonData.setActionId(actionIdMapping.get(commonData.getActionId() ?? 0));
+            commonData.setActionId(actionIdMapping.get(commonData.getActionId()));
 
             {
                 const subData = data.getWeaStopPersistentAction();
@@ -431,7 +431,7 @@ function importWarEventFullData(srcData: WarEventFullData, dstData: WarEventFull
 
         for (const data of newSrcData.getConditionArray()) {
             const commonData = data.createIfNotExistsWecCommonData();
-            commonData.setConditionId(conditionIdMapping.get(commonData.getConditionId() ?? 0));
+            commonData.setConditionId(conditionIdMapping.get(commonData.getConditionId()));
 
             {
                 const subData = data.getWecOngoingPersistentActionPresence();
@@ -449,7 +449,7 @@ function importWarEventFullData(srcData: WarEventFullData, dstData: WarEventFull
         }
 
         for (const data of newSrcData.getConditionNodeArray()) {
-            data.setNodeId(conditionNodeIdMapping.get(data.getNodeId() ?? 0));
+            data.setNodeId(conditionNodeIdMapping.get(data.getNodeId()));
 
             for (const conditionId of data.getConditionIdAndFlagsArray()) {
                 conditionId.setConditionId(conditionIdMapping.get(conditionId.getConditionId()) ?? 0);
@@ -460,7 +460,7 @@ function importWarEventFullData(srcData: WarEventFullData, dstData: WarEventFull
         }
 
         for (const data of newSrcData.getEventArray()) {
-            data.setEventId(eventIdMapping.get(data.getEventId() ?? 0));
+            data.setEventId(eventIdMapping.get(data.getEventId()));
 
             for (const rootNodeAndActions of data.getRootNodeAndActionsArray()) {
                 rootNodeAndActions.setActionIdArray(rootNodeAndActions.getActionIdArray().map(v => actionIdMapping.get(v) ?? 0));

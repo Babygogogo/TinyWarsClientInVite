@@ -88,7 +88,7 @@ export class Panel extends UiPanel<OpenData> {
 
     public async setAndReviseSelectedPlayerIndex(newType: number | null, needScroll: boolean): Promise<void> {
         const listType  = this._listType;
-        const index     = getExisted(listType.getRevisedFirstIndex(v => v?.decorationType === newType));
+        const index     = listType.getRevisedFirstIndex(v => v?.decorationType === newType);
         listType.setSelectedItemIndex(index);
         await this._updateListTileDecoration();
 
@@ -204,7 +204,7 @@ export class Panel extends UiPanel<OpenData> {
 
         const list = this._listType;
         await list.bindData(dataArray);
-        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.decorationType === selectedType) ?? (dataArray.length ? 0 : -1));
+        list.setSelectedItemIndex(list.getRevisedFirstIndex(v => v?.decorationType === selectedType));
     }
 
     private async _updateListTileDecoration(): Promise<void> {

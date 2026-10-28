@@ -6,7 +6,7 @@ import { openPanel } from "../../gamePanels/Manager.ts";
 import { getCoHeadFrame, getCoHead } from "../../helpers/ImageSource.ts";
 import { getExisted } from "../../helpers/Misc.ts";
 import { TextType, UndefinedError } from "../../lang/Constants.ts";
-import { getText, getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
+import { getPlayerForceName, getPlayerTeamName } from "../../lang/Utils.ts";
 import type { ScrCreatePlayerInfoChanged } from "../../notifications/DataTypes.ts";
 import { dispatch } from "../../notifications/Dispatcher.ts";
 import { TypeId } from "../../notifications/TypeId.ts";
@@ -87,7 +87,7 @@ export class Page
         const mapRawData    = await openData.warCreator.getMapRawData();
         const listPlayer    = this._listPlayer;
         if (mapRawData) {
-            await listPlayer.bindData(this._createDataForListPlayer(getExisted(mapRawData.getPlayersCountUnneutral())));
+            await listPlayer.bindData(this._createDataForListPlayer(mapRawData.getPlayersCountUnneutral()));
         } else {
             await listPlayer.removeAllItems();
         }
@@ -158,7 +158,7 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         playShortSfx(ShortSfxCode.ButtonNeutral01);
 
         const playerData    = openData.warCreator.getPlayerInfo(openData.playerIndex);
-        const coId          = playerData ? playerData.getCoId() ?? 0 : null;
+        const coId          = playerData ? playerData.getCoId() : null;
         if ((coId != null) && (coId !== CoId.Empty)) {
             openPanel(getDict().CommonCoInfoPanel, {
                 gameConfig  : openData.warCreator.getGcData(),
@@ -231,9 +231,9 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
     }
 
     private _updateComponentsForLanguage(): void {
-        this._btnChangeCo.setText(getText(TextType.B0230));
-        this._btnChangeController.setText(getText(TextType.B0608));
-        this._btnChangeSkinId.setText(getText(TextType.B0609));
+        this._btnChangeCo.setLangText(TextType.B0230);
+        this._btnChangeController.setLangText(TextType.B0608);
+        this._btnChangeSkinId.setLangText(TextType.B0609);
     }
 
     private async _updateComponentsForSettings(): Promise<void> {
@@ -251,13 +251,10 @@ class PlayerRenderer extends UiListItemRenderer<DataForPlayerRenderer> {
         this._labelTeamIndex.setText(getPlayerTeamName(getPlayerRule(warRuleCommonData, playerIndex).getTeamIndex()) || UndefinedError);
 
         const playerData = warCreator.getPlayerInfo(playerIndex);
-        this._imgSkin.loadSource(getCoHeadFrame(getExisted(playerData.getUnitAndTileSkinId())));
-        this._labelPlayerType.setText(playerData.getUserId() == null
-            ? getText(TextType.B0607)
-            : getText(TextType.B0031)
-        );
+        this._imgSkin.loadSource(getCoHeadFrame(playerData.getUnitAndTileSkinId()));
+        this._labelPlayerType.setLangText(playerData.getUserId() == null ? TextType.B0607 : TextType.B0031);
 
-        const coId          = playerData.getCoId() ?? 0;
+        const coId          = playerData.getCoId();
         const gameConfig    = await getGameConfig(getExisted(settingsForCommon.getConfigVersion()));
         const coCfg         = gameConfig.getCoBasicCfg(coId);
         this._labelCo.setText(coCfg ? coCfg.getName() : `??`);

@@ -10,7 +10,7 @@ export function checkIsValid(data: TileCustomNameSchema): boolean {
 }
 export function getErrorCode(data: TileCustomNameSchema): ClientErrorCode {
     {
-        const nameId = data.getNameId() ?? 0;
+        const nameId = data.getNameId();
         if ((nameId > CustomName.MaxId) ||
             (nameId < CustomName.MinId)
         ) {
@@ -39,7 +39,7 @@ export function getErrorCodeForTileCustomNameArray(names: TileCustomNameSchema[]
             return ClientErrorCode.PhStructureTileCustomNames_GetErrorCodeForTileCustomNameArray_00;
         }
 
-        const nameId = nameData.getNameId() ?? 0;
+        const nameId = nameData.getNameId();
         if (idSet.has(nameId)) {
             return ClientErrorCode.PhStructureTileCustomNames_GetErrorCodeForTileCustomNameArray_01;
         }

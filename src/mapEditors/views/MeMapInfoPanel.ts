@@ -223,8 +223,8 @@ export class Panel extends UiPanel<OpenData> {
 
                     const campaignMapData = war.getCampaignMapData();
                     if (campaignMapData != null) {
-                        const campaignId    = campaignMapData.getCampaignId() ?? 0;
-                        const campaignMapId = campaignMapData.getCampaignMapId() ?? 0;
+                        const campaignId    = campaignMapData.getCampaignId();
+                        const campaignMapId = campaignMapData.getCampaignMapId();
                         if ((await getCampaignInfo(campaignId))?.getEnabledCampaignMapIdArray().some(v => v === campaignMapId)) {
                             openPanel(getDict().CommonConfirmPanel, {
                                 getContent         : () => getText(TextType.A0112),
@@ -267,8 +267,8 @@ export class Panel extends UiPanel<OpenData> {
 
                     const campaignMapData = war.getCampaignMapData();
                     if (campaignMapData != null) {
-                        const campaignId    = campaignMapData.getCampaignId() ?? 0;
-                        const campaignMapId = campaignMapData.getCampaignMapId() ?? 0;
+                        const campaignId    = campaignMapData.getCampaignId();
+                        const campaignMapId = campaignMapData.getCampaignMapId();
                         if ((await getCampaignInfo(campaignId))?.getEnabledCampaignMapIdArray().some(v => v === campaignMapId)) {
                             openPanel(getDict().CommonConfirmPanel, {
                                 getContent      : () => getText(TextType.A0109),
@@ -315,7 +315,7 @@ export class Panel extends UiPanel<OpenData> {
                 currentNumberArray      : getDecodedMapTagIdList(currentGroupedMapTagId),
                 showNumber              : true,
                 getTitleText            : () => getFormattedText(TextType.F0092, getText(TextType.B0445)),
-                getNumberMainText       : mapTagId => getLanguageText({ textArray: mapTag?.getMapTagDataArray().find(v => (v.getMapTagId() ?? 0) === mapTagId)?.getNameArray() }) ?? UndefinedError,
+                getNumberMainText       : mapTagId => getLanguageText({ textArray: mapTag?.getMapTagDataArray().find(v => (v.getMapTagId()) === mapTagId)?.getNameArray() }) ?? UndefinedError,
                 callbackOnConfirm       : newMapTagIdArray => {
                     war.setGroupedMapTagId(getEncodedMapTagId(newMapTagIdArray));
                     this._updateLabelMapTag();

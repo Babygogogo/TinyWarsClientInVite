@@ -274,7 +274,7 @@ class MapRenderer extends UiListItemRenderer<DataForMapRenderer> {
         const mapEditorData = openData.mapEditorData;
         gotoMapEditorWar({
             mapRawData                  : openData.mapRawData,
-            slotIndex                   : mapEditorData.getSlotIndex() ?? 0,
+            slotIndex                   : mapEditorData.getSlotIndex(),
             isReview                    : true,
             srcNormalMapIdForAddEvent   : mapEditorData.getSrcNormalMapIdForAddEvent() ?? null,
             gridMarkData                : null,

@@ -13,11 +13,11 @@ export function getBriefDesc(data: Undefinable<WecManualActionStatistics>): stri
     }
 
     const totalActions  = data.getTotalActions();
-    const comparator    = totalActions == null ? null : (totalActions.getComparator() ?? 0);
+    const comparator    = totalActions == null ? null : (totalActions.getComparator());
     return getFormattedText(
         TextType.F0143,
         comparator == null ? UndefinedError : (getComparatorName(comparator) ?? UndefinedError),
-        totalActions == null ? UndefinedError : (totalActions.getValue() ?? UndefinedError)
+        totalActions == null ? UndefinedError : (totalActions.getValue())
     );
 }
 export function getDetailedDesc(data: Undefinable<WecManualActionStatistics>): string | null {
@@ -56,12 +56,12 @@ export function getDetailedDesc(data: Undefinable<WecManualActionStatistics>): s
     }
 
     const totalActions  = data.getTotalActions();
-    const comparator    = totalActions == null ? null : totalActions.getComparator() ?? 0;
+    const comparator    = totalActions == null ? null : totalActions.getComparator();
     return [
         getFormattedText(
             TextType.F0227,
             comparator == null ? UndefinedError : (getComparatorName(comparator) ?? UndefinedError),
-            totalActions == null ? UndefinedError : (totalActions.getValue() ?? UndefinedError)
+            totalActions == null ? UndefinedError : (totalActions.getValue())
         ),
         ...subTextArray
     ].join(`\n`);
@@ -129,8 +129,8 @@ export function checkIsMeet(condition: WecManualActionStatistics, war: IBwWar): 
 
     const totalActions = getExisted(condition.getTotalActions());
     return checkIsMeet1({
-        comparator  : totalActions.getComparator() ?? 0,
-        targetValue : totalActions.getValue() ?? 0,
+        comparator  : totalActions.getComparator(),
+        targetValue : totalActions.getValue(),
         actualValue : war.getWarStatisticsManager().getManualActionsCountForPlayersInRecentTurns(revisedConPlayerIndexSet, condition.getRecentTurnsCount()),
     });
 }

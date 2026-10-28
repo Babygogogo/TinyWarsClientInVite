@@ -141,7 +141,7 @@ export class GameConfig {
     }
     public getAllTileTypeArraySortedByWeight(): number[] {
         return [...this._tileTemplateCfgDict]
-            .sort((v1, v2) => getExisted(v1[1].getSortWeight()) - getExisted(v2[1].getSortWeight()))
+            .sort((v1, v2) => v1[1].getSortWeight() - v2[1].getSortWeight())
             .map(v => v[0]);
     }
     public getTileTypeArrayForTileChart(): number[] {
@@ -180,7 +180,7 @@ export class GameConfig {
     }
     private _getTileTypeIdsByCategory(tileCategory: number): number[] | null {
         const cfg = this.getTileCategoryCfg(tileCategory);
-        return cfg ? cfg.getTileTypeIds() ?? [] : null;
+        return cfg ? cfg.getTileTypeIds() : null;
     }
     public checkIsTileTypeInCategory(tileType: number, tileCategory: number): boolean {
         if (tileCategory === CategoryId.All) {
@@ -214,7 +214,7 @@ export class GameConfig {
     }
     public getUnitTypesByCategory(unitCategory: number): number[] | null {
         const cfg = this.getUnitCategoryCfg(unitCategory);
-        return cfg ? cfg.getUnitTypeIds() ?? [] : null;
+        return cfg ? cfg.getUnitTypeIds() : null;
     }
     public checkIsUnitTypeInCategory(unitType: number, unitCategory: number): boolean {
         if (unitCategory === UnitsConstantsCategoryId.All) {
@@ -284,7 +284,7 @@ export class GameConfig {
     }
     public getWeatherTypeIdsByCategory(category: number): number[] | null {
         const cfg = this.getWeatherCategoryCfg(category);
-        return cfg ? cfg.getWeatherTypeIds() ?? [] : null;
+        return cfg ? cfg.getWeatherTypeIds() : null;
     }
     public checkIsWeatherTypeInCategory(weatherType: number, category: number): boolean {
         if (category === WeathersConstantsCategoryId.All) {
@@ -320,7 +320,7 @@ export class GameConfig {
         if ((checkIsAtw(warType)) || (checkIsMrw(warType))) {
             return this._enabledCoCategoryIdArrayForMrwAndAtw ??= [...new Set([...this._coBasicCfgDict.values()]
                 .filter(v => (v.getCoCategoryId() != null) && (v.getIsEnabled()) && (v.getIsEnabledForMrwAndAtw()))
-                .map(v => v.getCoCategoryId() ?? 0))]
+                .map(v => v.getCoCategoryId()))]
                 .sort((v1, v2) => (this.getCoCategoryCfg(v1)?.getSort() ?? 0) - (this.getCoCategoryCfg(v2)?.getSort() ?? 0));
         } else {
             return this.getAllEnabledCoCategoryIdArray();
@@ -330,7 +330,7 @@ export class GameConfig {
         if ((gameModeId === ModeId.AutoTourney) || (gameModeId === ModeId.RankedMatch)) {
             return this._enabledCoCategoryIdArrayForMrwAndAtw ??= [...new Set([...this._coBasicCfgDict.values()]
                 .filter(v => (v.getCoCategoryId() != null) && (v.getIsEnabled()) && (v.getIsEnabledForMrwAndAtw()))
-                .map(v => v.getCoCategoryId() ?? 0))]
+                .map(v => v.getCoCategoryId()))]
                 .sort((v1, v2) => (this.getCoCategoryCfg(v1)?.getSort() ?? 0) - (this.getCoCategoryCfg(v2)?.getSort() ?? 0));
         } else {
             return this.getAllEnabledCoCategoryIdArray();
@@ -339,7 +339,7 @@ export class GameConfig {
     public getAllEnabledCoCategoryIdArray(): number[] {
         return this._allEnabledCoCategoryIdArray ??= [...new Set([...this._coBasicCfgDict.values()]
             .filter(v => (v.getCoCategoryId() != null) && (v.getIsEnabled()))
-            .map(v => v.getCoCategoryId() ?? 0))]
+            .map(v => v.getCoCategoryId()))]
             .sort((v1, v2) => (this.getCoCategoryCfg(v1)?.getSort() ?? 0) - (this.getCoCategoryCfg(v2)?.getSort() ?? 0));
     }
     public checkIsValidCoCategoryIdSubset(coCategoryIdArray: number[]): boolean {
@@ -445,9 +445,9 @@ export class GameConfig {
         }
 
         switch (skillType) {
-            case SkillTypeId.Passive    : return coConfig.getPassiveSkillIds() ?? [];
-            case SkillTypeId.Power      : return coConfig.getPowerSkillIds() ?? [];
-            case SkillTypeId.SuperPower : return coConfig.getSuperPowerSkillIds() ?? [];
+            case SkillTypeId.Passive    : return coConfig.getPassiveSkillIds();
+            case SkillTypeId.Power      : return coConfig.getPowerSkillIds();
+            case SkillTypeId.SuperPower : return coConfig.getSuperPowerSkillIds();
             default                     : return null;
         }
     }
@@ -474,9 +474,9 @@ export class GameConfig {
         }
 
         switch (languageType) {
-            case LanguageType.Chinese   : return cfg.getTextArray0() ?? null;
-            case LanguageType.English   : return cfg.getTextArray1() ?? null;
-            case LanguageType.Spanish   : return cfg.getTextArray2() ?? null;
+            case LanguageType.Chinese   : return cfg.getTextArray0();
+            case LanguageType.English   : return cfg.getTextArray1();
+            case LanguageType.Spanish   : return cfg.getTextArray2();
             default                                                 : return null;
         }
     }
